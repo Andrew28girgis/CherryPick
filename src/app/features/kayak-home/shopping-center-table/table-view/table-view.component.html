@@ -29,62 +29,8 @@
     </table>
   </div>
 
-  <div style="display: flex; margin: 10px 0; padding: 0">
-    <div class="search-container">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search..."
-        [(ngModel)]="searchQuery"
-        (input)="filterCenters()"
-      />
-    </div>
-    <div class="stage-select-container">
-      <div class="custom-select-wrapper">
-        <button
-          class="custom-select"
-          type="button"
-          id="stageDropdown"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          {{ selectedStageName }}
-          <i class="fa-solid fa-chevron-down ms-2"></i>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="stageDropdown">
-          <li>
-            <a
-              class="dropdown-item"
-              style="cursor: pointer"
-              [class.active]="selectedStageId === 0"
-              (click)="selectStagekan(0)"
-              >All</a
-            >
-          </li>
-          <li *ngFor="let stage of stages">
-            <a
-              class="dropdown-item"
-              style="cursor: pointer"
-              [class.active]="selectedStageId === stage.id"
-              [attr.aria-current]="selectedStageId === stage.id ? 'true' : null"
-              (click)="selectStagekan(stage.id)"
-            >
-              {{ stage.stageName }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div
-    *ngIf="
-      !isLoading &&
-      showShoppingCenters &&
-      shoppingCenters &&
-      shoppingCenters.length > 0
-    "
-  >
+  <!-- Main content -->
+  <div *ngIf="!isLoading && showShoppingCenters && shoppingCenters && shoppingCenters.length > 0">
     <table class="procpect-table">
       <thead class="procpect-table-head">
         <tr>
@@ -135,35 +81,7 @@
               </div>
             </td>
             <td>
-              <!-- <p class="table-text ShoppingCenterStage mb-1">{{shoppingCenter.stageName}}</p> -->
-              <div class="custom-dropdown" style="width: 200px">
-                <div
-                  class="selected-option"
-                  (click)="toggleDropdown(shoppingCenter)"
-                >
-                  {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-                <div
-                  class="dropdown-options"
-                  [class.show]="shoppingCenter.isDropdownOpen"
-                >
-                  <div
-                    *ngFor="let stage of KanbanStages"
-                    class="dropdown-item"
-                    [class.active]="stage.id === shoppingCenter.kanbanStageId"
-                    (click)="
-                      selectStage(
-                        shoppingCenter.MarketSurveyId,
-                        stage.id,
-                        shoppingCenter
-                      )
-                    "
-                  >
-                    {{ stage.stageName }}
-                  </div>
-                </div>
-              </div>
+              <p class="table-text ShoppingCenterStage mb-1">{{shoppingCenter.stageName}}</p>
             </td>
             <td *ngIf="placesRepresentative != false">
               <ng-container

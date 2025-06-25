@@ -2,42 +2,6 @@
   <p class="m-0 f500" style="color: #000">
     {{ cardsSideList.length }} places within map area
   </p>
-  <!-- <div class="stage-select-container">
-    <div class="custom-select-wrapper">
-      <button
-        class="custom-select"
-        type="button"
-        id="stageDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        {{ selectedStageName }}
-        <i class="fa-solid fa-chevron-down ms-2"></i>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="stageDropdown">
-        <li>
-          <a
-            class="dropdown-item"
-            style="cursor: pointer"
-            [class.active]="selectedStageId === 0"
-            (click)="selectStagekan(0)"
-            >All</a
-          >
-        </li>
-        <li *ngFor="let stage of stages">
-          <a
-            class="dropdown-item"
-            style="cursor: pointer"
-            [class.active]="selectedStageId === stage.id"
-            [attr.aria-current]="selectedStageId === stage.id ? 'true' : null"
-            (click)="selectStagekan(stage.id)"
-          >
-            {{ stage.stageName }}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div> -->
 </div>
 
 <div class="row m-0">

@@ -1,5 +1,86 @@
 <div class="tab-view-container">
-  <div 
+  <div class="header-container">
+    <div class="search-container">
+      <i class="fa-solid fa-search search-icon"></i>
+      <input 
+        type="text" 
+        placeholder="Search Properties..." 
+        class="search-input" 
+        [(ngModel)]="searchQuery"
+        (input)="onSearch($event)">
+    </div>
+    <div class="actions-container">
+      <div class="stage-select-container">
+        <div class="custom-select-wrapper">
+          <button
+            class="custom-select"
+            type="button"
+            id="stageDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ selectedStageName }}
+            <i class="fa-solid fa-chevron-down ms-2"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="stageDropdown">
+            <li>
+              <a
+                class="dropdown-item"
+                [class.active]="selectedStageId === 0"
+                (click)="selectStagekan(0)"
+                >All</a
+              >
+            </li>
+            <li *ngFor="let stage of stages">
+              <a
+                class="dropdown-item"
+                [class.active]="selectedStageId === stage.id"
+                [attr.aria-current]="selectedStageId === stage.id ? 'true' : null"
+                (click)="selectStagekan(stage.id)"
+              >
+                {{ stage.stageName }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="sort-container">
+        <button class="action-btn" (click)="toggleSort()">
+          <i class="fa-solid fa-arrow-up-arrow-down"></i>
+          <span>{{ getSelectedSortText() }}</span>
+        </button>
+        <div class="sort-menu" *ngIf="isSortMenuOpen">
+          <div 
+            *ngFor="let option of sortOptions" 
+            class="sort-option"
+            [class.active]="selectedSortId === option.id"
+            (click)="selectSort(option)"
+          >
+            <i [class]="option.icon"></i>
+            <span>{{ option.text }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="action-btn dropdown-toggle" type="button" id="viewDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <img [src]="getCurrentViewIcon()" [alt]="getCurrentViewName()" class="view-icon">
+          <span>{{ getCurrentViewName() }}</span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="viewDropdown">
+          <li *ngFor="let option of dropdowmOptions">
+            <a class="dropdown-item" (click)="selectOption(option)">
+              <img [src]="option.icon" [alt]="option.text" class="view-icon">
+              <span>{{ option.text }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div 
     class="mobileButtons mt-2 d-flex justify-content-between align-items-center "
     style="padding-left: 12px;"
   >
@@ -60,7 +141,7 @@
         </a>
       </button>
     </div>
-  </div>
+  </div> -->
  
   <app-map-view
     *ngIf="currentView == 1"
@@ -77,14 +158,8 @@
     </div>
   </div>
   <app-card-view *ngIf="currentView == 3"></app-card-view>
-  <app-table-view
-    *ngIf="currentView == 4"
-    (viewChange)="onViewChange($event)"
-  ></app-table-view>
-  <app-social-view
-    *ngIf="currentView == 5"
-    (viewChange)="onViewChange($event)"
-  ></app-social-view>
+  <app-table-view *ngIf="currentView == 4" (viewChange)="onViewChange($event)"></app-table-view>
+  <app-social-view *ngIf="currentView == 5" (viewChange)="onViewChange($event)"></app-social-view>
   <app-kanban-view *ngIf="currentView == 6"></app-kanban-view>
 </div>
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>

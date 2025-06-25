@@ -92,7 +92,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() viewChange = new EventEmitter<number>()
   
   // Properties used in template
-  searchQuery = ""
   isLoading = true
   filteredCenters: Center[] = []
   showComments: { [key: number]: boolean } = {}
@@ -232,23 +231,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
     )
 
-    this.subscriptions.add(
-      this.shoppingCenterService.searchQuery$.subscribe((query) => {
-        this.searchQuery = query
-        this.cdr.detectChanges()
-      }),
-    )
-
     setTimeout(() => {
       this.mapsLoaded = true
       this.cdr.markForCheck()
     }, 2000)
 
     window.addEventListener("resize", this.checkMobileView.bind(this))
-  }
-
-  filterCenters() {
-    this.shoppingCenterService.filterCenters(this.searchQuery)
   }
 
   ngAfterViewInit(): void {

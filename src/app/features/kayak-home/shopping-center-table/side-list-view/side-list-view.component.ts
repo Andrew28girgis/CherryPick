@@ -497,20 +497,17 @@ this.cardsSideList.forEach((center: any) => {
 
   // Use the service method for toggling dropdown
   toggleDropdown(shoppingCenter: any): void {
-    this.activeDropdown = this.viewManagerService.toggleDropdown(shoppingCenter, this.activeDropdown)
+    // Removed since stage selection is now handled by parent
   }
 
-  // Use the service method for getting selected stage name
+  // Get stage name for the selected ID
   getSelectedStageName(stageId: number): string {
-    return this.viewManagerService.getSelectedStageName(stageId)
+    return this.viewManagerService.getSelectedStageName(stageId);
   }
 
-  // Use the service method for selecting stage
+  // Select a stage for a shopping center
   selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-    // Close the dropdown
-    shoppingCenter.isDropdownOpen = false
-    this.activeDropdown = null
-    this.viewManagerService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter,this.CampaignId)
+    // Removed since stage selection is now handled by parent
   }
 
   @HostListener("document:click", ["$event"])

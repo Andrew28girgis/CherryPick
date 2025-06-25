@@ -35,8 +35,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
   showShoppingCenters = true
   shoppingCenters: Center[] = []
   filteredCenters: Center[] = []
-
-  searchQuery = ""
   selectedId: number | null = null
   placesRepresentative: boolean | undefined
   StreetViewOnePlace!: boolean
@@ -102,7 +100,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
       this.Campaign = params.campaign
       localStorage.setItem("BuyBoxId", this.BuyBoxId)
       localStorage.setItem("OrgId", this.OrgId)
-      // this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
     })
 
     // Subscribe to data from the centralized service
@@ -154,13 +151,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
     )
 
     this.subscriptions.add(
-      this.shoppingCenterService.searchQuery$.subscribe((query) => {
-        this.searchQuery = query
-        this.cdr.detectChanges()
-      }),
-    )
-
-    this.subscriptions.add(
       this.shoppingCenterService.kanbanStages$.subscribe((stages) => {
         this.KanbanStages = stages
         this.cdr.detectChanges()
@@ -179,9 +169,9 @@ export class TableViewComponent implements OnInit, OnDestroy {
     
    }
 
-  filterCenters() {
-    this.shoppingCenterService.filterCenters(this.searchQuery)
-  }
+  // filterCenters() {
+  //   this.shoppingCenterService.filterCenters(this.searchQuery)
+  // }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.shoppingCenterService.restoreShoppingCenter(MarketSurveyId, Deleted)
@@ -299,19 +289,17 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   // Toggle dropdown for kanban stages
   toggleDropdown(shoppingCenter: any): void {
-    this.activeDropdown = this.shoppingCenterService.toggleDropdown(shoppingCenter, this.activeDropdown)
+    // Removed since stage selection is now handled by parent
   }
 
   // Get stage name for the selected ID
   getSelectedStageName(stageId: number): string {
-    return this.shoppingCenterService.getSelectedStageName(stageId)
+    return this.shoppingCenterService.getSelectedStageName(stageId);
   }
 
   // Select a stage for a shopping center
   selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-    shoppingCenter.isDropdownOpen = false
-    this.activeDropdown = null
-    this.shoppingCenterService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter,this.CampaignId)
+    // Removed since stage selection is now handled by parent
   }
 
   // Handle document clicks to close dropdowns
