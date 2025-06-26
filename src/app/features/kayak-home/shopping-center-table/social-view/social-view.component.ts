@@ -166,6 +166,14 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
     )
 
+    // Subscribe to filtered centers which will already be sorted
+    this.subscriptions.add(
+      this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
+        this.filteredCenters = centers;
+        this.cdr.detectChanges();
+      })
+    );
+
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid
       this.OrgId = params.orgId
@@ -185,13 +193,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.add(
       this.shoppingCenterService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers
-        this.cdr.detectChanges()
-      }),
-    )
-
-    this.subscriptions.add(
-      this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
-        this.filteredCenters = centers
         this.cdr.detectChanges()
       }),
     )

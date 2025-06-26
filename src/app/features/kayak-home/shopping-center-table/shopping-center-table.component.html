@@ -1,7 +1,11 @@
 <div class="tab-view-container">
   <div class="header-container">
     <div class="search-container">
-      <i class="fa-solid fa-search search-icon"></i>
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      
       <input 
         type="text" 
         placeholder="Search Properties..." 
@@ -12,6 +16,11 @@
     <div class="actions-container">
       <div class="stage-select-container">
         <div class="custom-select-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M17.5 6.4585H2.5C2.15833 6.4585 1.875 6.17516 1.875 5.8335C1.875 5.49183 2.15833 5.2085 2.5 5.2085H17.5C17.8417 5.2085 18.125 5.49183 18.125 5.8335C18.125 6.17516 17.8417 6.4585 17.5 6.4585Z" fill="#777199"/>
+            <path d="M15 10.625H5C4.65833 10.625 4.375 10.3417 4.375 10C4.375 9.65833 4.65833 9.375 5 9.375H15C15.3417 9.375 15.625 9.65833 15.625 10C15.625 10.3417 15.3417 10.625 15 10.625Z" fill="#777199"/>
+            <path d="M11.6667 14.7915H8.33337C7.99171 14.7915 7.70837 14.5082 7.70837 14.1665C7.70837 13.8248 7.99171 13.5415 8.33337 13.5415H11.6667C12.0084 13.5415 12.2917 13.8248 12.2917 14.1665C12.2917 14.5082 12.0084 14.7915 11.6667 14.7915Z" fill="#777199"/>
+          </svg>
           <button
             class="custom-select"
             type="button"
@@ -19,8 +28,9 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            {{ selectedStageName }}
-            <i class="fa-solid fa-chevron-down ms-2"></i>
+            {{ selectedStageId === 0 ? 'Filter' : selectedStageName }}
+            <!-- <i class="fa-solid fa-chevron-down ms-2"></i> -->
+            
           </button>
           <ul class="dropdown-menu" aria-labelledby="stageDropdown">
             <li>
@@ -47,7 +57,7 @@
       
       <div class="sort-container">
         <button class="action-btn" (click)="toggleSort()">
-          <i class="fa-solid fa-arrow-up-arrow-down"></i>
+          <i [class]="getSelectedSortIcon()"></i>
           <span>{{ getSelectedSortText() }}</span>
         </button>
         <div class="sort-menu" *ngIf="isSortMenuOpen">

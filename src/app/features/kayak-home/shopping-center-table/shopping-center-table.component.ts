@@ -21,6 +21,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 })
 export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   @ViewChild('mapView') mapView!: MapViewComponent;
+  filteredCenters: any[] = [];
   filteredCampaigns?: ICampaign[];
   isMobile = false;
   currentView = 3;
@@ -35,7 +36,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   StageId = 0;
   stages: Stage[] = [];
   selectedStageId = 0;
-  selectedStageName = "All";
+  selectedStageName = 'Filter';
   encodedName = '';
   searchQuery = '';
   isFilterOpen = false;
@@ -52,13 +53,12 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ];
 
   sortOptions = [
+    { id: 3, text: 'Default', icon: 'fa-solid fa-ban' },
     { id: 1, text: 'Name (A-Z)', icon: 'fa-solid fa-sort-alpha-down' },
-    { id: 2, text: 'Name (Z-A)', icon: 'fa-solid fa-sort-alpha-up' },
-    { id: 3, text: 'Date Added (Newest)', icon: 'fa-solid fa-calendar-arrow-down' },
-    { id: 4, text: 'Date Added (Oldest)', icon: 'fa-solid fa-calendar-arrow-up' }
+    { id: 2, text: 'Name (Z-A)', icon: 'fa-solid fa-sort-alpha-up' }
   ];
   
-  selectedSortId = 1;
+  selectedSortId: number = 0;
   isSortMenuOpen = false;
 
   constructor(
@@ -70,6 +70,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cdr.detectChanges();
+    
+    // Subscribe to filtered centers
+    this.subscriptions.add(
+      this.shoppingCenterService.filteredCenters$.subscribe(centers => {
+        this.filteredCenters = centers;
+        this.cdr.detectChanges();
+      })
+    );
     
     // Set default view to card view (3) if current view is map view (1)
     const savedView = localStorage.getItem('currentViewDashBord');
@@ -163,11 +171,15 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectStagekan(id: number): void {
-    this.selectedStageId = id;
-    this.updateStageName(id);
-    this.shoppingCenterService.setSelectedStageId(id);
-    this.cdr.detectChanges();
+  selectStagekan(stageId: number): void {
+    this.selectedStageId = stageId;
+    if (stageId === 0) {
+      this.selectedStageName = 'Filter';
+    } else {
+      const stage = this.stages.find((s) => s.id === stageId);
+      this.selectedStageName = stage ? stage.stageName : 'Filter';
+    }
+    this.shoppingCenterService.setSelectedStageId(stageId);
   }
 
   onSearch(event: any): void {
@@ -223,9 +235,21 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.shoppingCenterService.setSortOption(sortOption.id);
   }
 
-  getSelectedSortText(): string {
+  getSelectedSortIcon(): string {
+    // Always show sort icon for initial state
+    if (this.selectedSortId === 0) {
+      return 'fa-solid fa-sort';
+    }
     const option = this.sortOptions.find(opt => opt.id === this.selectedSortId);
-    return option ? option.text : this.sortOptions[0].text;
+    return option?.icon || 'fa-solid fa-sort';
+  }
+
+  getSelectedSortText(): string {
+    if (this.selectedSortId === 0) {
+      return 'Sort';
+    }
+    const option = this.sortOptions.find(opt => opt.id === this.selectedSortId);
+    return option?.text || 'Sort';
   }
 
   @HostListener('document:click', ['$event'])

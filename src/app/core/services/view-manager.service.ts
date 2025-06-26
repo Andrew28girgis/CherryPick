@@ -825,8 +825,29 @@ public updatePlaceKanbanStage(
   }
 
   setSortOption(sortId: number): void {
-    this.sortOptionSubject.next(sortId)
-    // Here you would implement the actual sorting logic
-    // For example, resorting the centers array based on the sort option
+    this.sortOptionSubject.next(sortId);
+    
+    // Get current centers and apply sorting
+    const centers = this._filteredCenters.getValue();
+    if (!centers) return;
+
+    let sortedCenters = [...centers];
+    
+    // Only sort if not "Default" option
+    if (sortId !== 3) {
+      sortedCenters.sort((a, b) => {
+        switch (sortId) {
+          case 1: // Name (A-Z)
+            return (a.CenterName || '').localeCompare(b.CenterName || '');
+          case 2: // Name (Z-A)
+            return (b.CenterName || '').localeCompare(a.CenterName || '');
+          default:
+            return 0;
+        }
+      });
+    }
+
+    // Update the filtered centers with the sorted results
+    this._filteredCenters.next(sortedCenters);
   }
 }

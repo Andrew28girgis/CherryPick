@@ -16,15 +16,7 @@
   transition: transform 0.2s, background-color 0.2s;
   border: 1px solid rgb(190, 190, 190);
 }
-.action-btn {
-  height: 34px;
-  color: #fff;
-  background-color: #4d65b4;
-  border: none;
-  border-radius: 10px;
-  margin: 0 5px;
-  font-size: 13px;
-}
+ 
 
 .icon-image {
   filter: brightness(1) invert(1);
@@ -203,111 +195,155 @@
 
 .actions-container {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
+  gap: 12px;
 }
 
-.stage-select-container, .sort-container {
-  position: relative;
+.stage-select-container {
+  margin-right: 8px;
 }
 
-.custom-select, .action-btn {
-  gap: 4px;
+.action-btn, .custom-select {
   display: flex;
+  padding: 0 8px;
   align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  gap: 4px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 24px;
   font-size: 14px;
+  color: #707791;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
-  justify-content: space-between;
-  color: #333;
+  transition: all 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.custom-select:hover, .action-btn:hover {
-  background-color: #f8f9fa;
-  border-color: #d0d7de;
+.action-btn:hover, .custom-select:hover {
+  background-color: rgba(77, 101, 180, 0.05);
+  color: #4D65B4;
 }
 
-.custom-select i, .action-btn i {
-  margin-left: 0.5rem;
-  font-size: 12px;
-  color: #666;
+.action-btn i, .custom-select i {
+  font-size: 14px;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.view-icon{
+  width: 24px;
+}
+
+.custom-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  height: 36px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
+  color: #707791;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-select:hover {
+  background-color: rgba(77, 101, 180, 0.05);
+  color: #4D65B4;
+}
+
+.custom-select i {
+  font-size: 14px;
+  flex-shrink: 0;
+  color: inherit;
 }
 
 .dropdown-menu {
-  min-width: 200px;
-  padding: 0.5rem 0;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  min-width: 180px;
+  padding: 8px 0;
+  border-radius: 8px;
+  border: none;
+  background: #FFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 
 .dropdown-item {
   display: flex;
   align-items: center;
-  padding: 0.625rem 1rem;
+  gap: 12px;
+  padding: 8px 16px;
   font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  color: #707791;
 }
 
 .dropdown-item:hover {
-  background-color: #f8f9fa;
+  background-color: rgba(77, 101, 180, 0.05);
+  color: #4D65B4;
 }
 
 .dropdown-item.active {
-  background-color: #e8f0fe;
-  color: #1a73e8;
+  background-color: rgba(77, 101, 180, 0.1);
+  color: #4D65B4;
 }
 
-.dropdown-item img {
-  width: 16px;
-  height: 16px;
-  margin-right: 0.75rem;
-  object-fit: contain;
+.dropdown-item i {
+  color: inherit;
+}
+
+.sort-container {
+  position: relative;
+  margin: 0 8px;
 }
 
 .sort-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 4px);
   right: 0;
-  margin-top: 0.5rem;
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #FFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
   z-index: 1000;
-  min-width: 180px;
+  padding: 4px 0;
+  border: 1px solid #E0E0E0;
 }
 
 .sort-option {
+  padding: 8px 12px;
   display: flex;
   align-items: center;
-  padding: 0.625rem 1rem;
-  font-size: 14px;
-  color: #333;
+  gap: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s;
+  font-size: 14px;
 }
 
 .sort-option:hover {
-  background-color: #f8f9fa;
+  background-color: #F5F5F5;
 }
 
 .sort-option.active {
-  background-color: #e8f0fe;
-  color: #1a73e8;
+  background-color: #EEF2FF;
+  color: #4D65B4;
 }
 
 .sort-option i {
-  margin-right: 0.75rem;
   font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
 }
 
 /* Mobile responsiveness */
