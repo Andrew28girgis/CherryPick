@@ -1,4 +1,44 @@
+<!-- Tenant Header -->
+<div class="tenant-header  d-flex justify-content-between align-items-center">
+  <div class="d-flex align-items-center gap-3">
+    <div>
+      <img
+        class="tenant-logo"
+        [src]="tenantImageUrl"
+        [alt]="tenantName"
+      />
+    </div>
+    <div class="d-flex flex-column gap-2">
+      
+      <div class="tenant-name">
+        {{ tenantName }}
+      </div>
+    </div>
+  </div>
+  <div class="d-flex">
+    <button
+        class=" send-email-button"
+        [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
+      >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M6.16665 5.2668L13.2417 2.90846C16.4167 1.85013 18.1417 3.58346 17.0917 6.75846L14.7333 13.8335C13.15 18.5918 10.55 18.5918 8.96665 13.8335L8.26665 11.7335L6.16665 11.0335C1.40832 9.45013 1.40832 6.85846 6.16665 5.2668Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8.42505 11.375L11.4084 8.3833" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+        <span>Send Message</span>
+      </button>
+  </div>
+</div>
+
+
+
 <div class="tab-view-container">
+  <div class="nav-tabs-container">
+    <div class="nav-tabs">
+      <a class="nav-tab"    [routerLink]="['/campaigns/ataglance', CampaignId]" routerLinkActive="active">Campaigns</a>
+      <a class="nav-tab active" [routerLink]="['/dashboard']" routerLinkActive="active">Properties</a>
+      <a class="nav-tab" [href]="generateSafeUrl()" routerLinkActive="active">Market Survey</a>
+    </div>
+  </div>
   <div class="header-container">
     <div class="search-container">
       <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -91,11 +131,11 @@
     </div>
   </div>
 
-  <!-- <div 
+  <div 
     class="mobileButtons mt-2 d-flex justify-content-between align-items-center "
     style="padding-left: 12px;"
   >
-    <div class="custom-icon-container">
+    <!-- <div class="custom-icon-container">
       <div
         class="icon-option"
         *ngFor="let option of dropdowmOptions"
@@ -114,27 +154,19 @@
           option.text
         }}</span> 
       </div>
-    </div>
+    </div> -->
     <div class="d-flex">
-      <button
+      <!-- <button
         style="border: none; background: none"
         class="border-none mx-2 d-sm-flex d-none"
       >
         <app-link-microsoft style="height: 25px"></app-link-microsoft>
-      </button>
+      </button> -->
 
-      <button
-        class="action-btn optionMobileColor"
-        [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
-      >
-        <i
-          class="fa-regular fa-envelope me-2 optionMobile"
-          style="color: #fff"
-        ></i>
-        <span>Emily</span>
-      </button>
+      <!-- Navigation Tabs -->
 
-      <button
+
+      <!-- <button
         class="action-btn optionMobileColor"
         [routerLink]="['/campaigns/ataglance', CampaignId]"
       >
@@ -150,9 +182,9 @@
           <i class="fa-solid fa-house"></i>
           <span> Market Survey </span>
         </a>
-      </button>
+      </button> -->
     </div>
-  </div> -->
+  </div>
  
   <app-map-view
     *ngIf="currentView == 1"

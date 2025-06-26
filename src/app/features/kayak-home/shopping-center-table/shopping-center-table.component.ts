@@ -42,6 +42,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   isFilterOpen = false;
   isSortOpen = false;
   private subscriptions = new Subscription();
+  tenantName: string = '';
+  tenantImageUrl: string = '';
 
   dropdowmOptions = [
     { id: 1, text: 'Map View', icon: '../../../assets/Images/Icons/map.png' },
@@ -98,11 +100,17 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
+      this.tenantName = params.buyboxName || '';
       this.encodedName = encodeURIComponent(this.BuyBoxName);
       this.CampaignId = params.campaignId;
       
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+
+      // Set tenant image URL
+      if (this.OrgId) {
+        this.tenantImageUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${this.OrgId}`;
+      }
 
       if (Number(localStorage.getItem('currentViewDashBord')) !== 1) {
         this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
