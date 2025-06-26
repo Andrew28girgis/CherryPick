@@ -153,12 +153,15 @@ export class TasksComponent implements OnInit, OnDestroy {
       if (googleAccessToken) {
         this.googleState = 3;
         this.GoogleGetContactFolders();
-       }
+      }
 
       if (microsoftAccessToken) {
         this.microsoftState = 3;
         this.GetContactFolders();
-       }
+      }
+
+      // Update intervals based on linked services
+      this.updateIntervals();
     }
   }
 
@@ -515,6 +518,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       this.googleContactFolders = [];
       this.googleDomainList = [];
       this.googleEmailsList = [];
+      this.updateIntervals();
     });
   }
 
@@ -609,6 +613,33 @@ export class TasksComponent implements OnInit, OnDestroy {
     if (this.mailCountInterval) {
       clearInterval(this.mailCountInterval);
       this.mailCountInterval = null;
+    }
+  }
+
+  protected isAnyServiceLinked(): boolean {
+    return this.microsoftState === 3 || this.googleState === 3;
+  }
+
+  private updateIntervals() {
+    // Clear existing interval
+    this.clearMailCountInterval();
+    
+    // Only start new interval if at least one service is linked
+    if (this.isAnyServiceLinked()) {
+      this.startMailCountInterval();
+      // Initial fetch
+      this.getDiamondsCount();
+      this.getTotalMailsCount();
+    } else {
+      // Reset counts when no services are linked
+      this.counts = {
+        mailCount: 0,
+        contactCount: 0,
+        organizationCount: 0,
+        shoppingCentersCount: 0,
+        placeCount: 0
+      };
+      this.totalProgressedMessage = 0;
     }
   }
 }
