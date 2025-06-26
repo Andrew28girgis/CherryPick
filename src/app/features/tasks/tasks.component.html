@@ -1,3 +1,23 @@
+@if (isCollectingMicrosoftData || isCollectingGoogleData) {
+<div class="data-collection-container">
+  @if (isCollectingMicrosoftData) {
+    <app-diamond-loader
+      [progress]="microsoftProgress"
+      [actionText]="'Getting data from Microsoft'"
+      [counts]="counts"
+     />
+  }
+
+  @if (isCollectingGoogleData) {
+    <app-diamond-loader
+      [progress]="googleProgress"
+      [actionText]="'Getting data from Google'"
+      [counts]="counts"
+     />
+  }
+</div>
+}
+
 <div class="row g-4 mb-4">
   <div class="col-6">
     <div class="x-section h-100">
@@ -121,6 +141,29 @@
         }
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Test Button Section -->
+<!-- <div class="row g-4 mb-4">
+  <div class="col-12">
+    <div class="x-section">
+      <button class="w-100 btn card-btn" (click)="getDiamondsCount()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 4V16M4 10H16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Show Data Statistics</span>
+      </button>
+    </div>
+  </div>
+</div> -->
+
+<div class="row g-4 mb-4">
+  <div class="col-12">
+    <app-diamond-loader 
+      [counts]="counts"
+      [totalProgressedMessage]="totalProgressedMessage">
+    </app-diamond-loader>
   </div>
 </div>
 

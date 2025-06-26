@@ -21,20 +21,63 @@ import { firstValueFrom, forkJoin, Observable, Subscription } from 'rxjs';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { DiamondLoaderComponent } from './diamond-loader/diamond-loader.component';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+
+interface DataCollectionProgress {
+  step1: boolean;
+  step2: boolean;
+  step3: boolean;
+  step4: boolean;
+}
+
+interface CountData {
+  mailCount: number;
+  contactCount: number;
+  organizationCount: number;
+  shoppingCentersCount: number;
+  placeCount: number;
+}
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DiamondLoaderComponent, ProgressBarComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent implements OnInit, OnDestroy {
   private guid!: string;
   private contactId!: number;
+  private microsoftProgressSubscription?: Subscription;
+  private googleProgressSubscription?: Subscription;
+  private mailCountInterval: any;
 
-  protected microsoftState: number = 1;
+  protected microsoftState: number = 1; // 1: not linked, 2: linking, 3: linked
   protected googleState: number = 1;
+  protected isCollectingMicrosoftData: boolean = false;
+  protected isCollectingGoogleData: boolean = false;
+  protected counts: CountData = {
+    mailCount: 0,
+    contactCount: 0,
+    organizationCount: 0,
+    shoppingCentersCount: 0,
+    placeCount: 0
+  };
+  protected diamondsCount: number = 0;
+  protected microsoftDataProgress: DataCollectionProgress = {
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false
+  };
+  protected googleDataProgress: DataCollectionProgress = {
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false
+  };
 
   protected MICROSOFT_CONNECT_LINK = '';
   protected GOOGLE_CONNECT_LINK = '';
@@ -55,13 +98,21 @@ export class TasksComponent implements OnInit {
   googleEmailsList: { email: string; isAdded: boolean }[] = [];
   googleDomainList: { domain: string; isAdded: boolean }[] = [];
 
+  microsoftProgress: number = 0;
+  googleProgress: number = 0;
+  totalMailsCount: any;
+  totalProgressedMessage: any;
   constructor(
     private genericApiService: PlacesService,
     private http: HttpClient,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    setTimeout(() => {
+       this.getDiamondsCount();
+    }, 2000);
     const guid = localStorage.getItem('guid');
     const contactId = localStorage.getItem('contactId');
     if (guid) this.guid = guid;
@@ -71,6 +122,13 @@ export class TasksComponent implements OnInit {
     this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${this.contactId}`;
 
     this.checkOwnerData();
+    this.startMailCountInterval();
+  }
+
+  ngOnDestroy(): void {
+    this.microsoftProgressSubscription?.unsubscribe();
+    this.googleProgressSubscription?.unsubscribe();
+    this.clearMailCountInterval();
   }
 
   private getOwnerData(guid: string): Observable<any> {
@@ -90,11 +148,17 @@ export class TasksComponent implements OnInit {
     const response = await firstValueFrom(this.getOwnerData(this.guid.trim()));
     if (response.json && response.json.length) {
       const googleAccessToken = response.json[0].googleAccessToken;
+      const microsoftAccessToken = response.json[0].microsoftAccessToken;
 
       if (googleAccessToken) {
         this.googleState = 3;
         this.GoogleGetContactFolders();
-      }
+       }
+
+      if (microsoftAccessToken) {
+        this.microsoftState = 3;
+        this.GetContactFolders();
+       }
     }
   }
 
@@ -454,6 +518,7 @@ export class TasksComponent implements OnInit {
     });
   }
 
+
   GoogleGetSavedData() {
     forkJoin({
       folders: this.GoogleGetDBFolders(),
@@ -490,5 +555,60 @@ export class TasksComponent implements OnInit {
         ];
       }
     });
+  }
+
+  getDiamondsCount(): void {
+    const body = {
+      Name: 'GetGemsCount',
+      Params: {}
+    };
+
+    this.genericApiService.GenericAPI(body).subscribe({
+      next: (response) => {
+        if (response.json && response.json.length > 0) {
+          const data = response.json[0];
+          this.counts = {
+            mailCount: data.mailCount || 0,
+            contactCount: data.contactCount || 0,
+            organizationCount: data.organizationCount || 0,
+            shoppingCentersCount: data.shoppingCentersCount || 0,
+            placeCount: data.placeCount || 0
+          };
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching counts:', error);
+      }
+    });
+  }
+  getTotalMailsCount(): void {
+    const body = {
+      Name: 'TotalMails',
+      Params: {}
+    };
+    this.genericApiService.GenericAPI(body).subscribe({
+      next: (response) => {
+        this.totalProgressedMessage = response.json[0].totalProgressedMessage;
+       },
+      complete: () => {
+       }
+    });
+  }
+ 
+ 
+
+  private startMailCountInterval() {
+    // Update mail count and diamonds count every 5 seconds
+    this.mailCountInterval = setInterval(() => {
+      this.getDiamondsCount();  // Get updated mail count
+      this.getTotalMailsCount(); // Get updated progress
+    }, 5000);
+  }
+
+  private clearMailCountInterval() {
+    if (this.mailCountInterval) {
+      clearInterval(this.mailCountInterval);
+      this.mailCountInterval = null;
+    }
   }
 }
