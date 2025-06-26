@@ -1,0 +1,19 @@
+<div class="progress-container">
+  <button class="cancel-btn" (click)="onCancel()">Cancel</button>
+  
+  <div class="progress-content">
+    <div class="progress-text">
+      <p class="status-text">{{ statusText }}</p>
+      <h3 class="main-text">{{ mainText }}</h3>
+    </div>
+    
+    <div class="progress-section">
+      <div class="progress-bar-container">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progress"></div>
+        </div>
+      </div>
+      <span class="progress-percentage">{{ progress }}%</span>
+    </div>
+  </div>
+</div> 

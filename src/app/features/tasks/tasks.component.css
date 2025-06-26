@@ -142,3 +142,11 @@
   border-color: #007bff;
   color: #004a99;
 }
+
+.data-collection-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+ 

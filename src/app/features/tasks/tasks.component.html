@@ -1,3 +1,5 @@
+ 
+
 <div class="row g-4 mb-4">
   <div class="col-6">
     <div class="x-section h-100">
@@ -123,6 +125,17 @@
     </div>
   </div>
 </div>
+
+@if (isAnyServiceLinked()) {
+<div class="row g-4 mb-4">
+  <div class="col-12">
+    <app-diamond-loader 
+      [counts]="counts"
+      [totalProgressedMessage]="totalProgressedMessage">
+    </app-diamond-loader>
+  </div>
+</div>
+}
 
 <ng-template #msConfiguration let-modal>
   <div class="modal-content">
