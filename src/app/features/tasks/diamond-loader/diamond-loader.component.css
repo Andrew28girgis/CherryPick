@@ -209,11 +209,13 @@ background-blend-mode: screen, overlay, overlay, normal;
 }
 
 .progress-diamonds {
+  flex-direction: column;
   display: flex;
   align-items: center;
   gap: 24px;
   justify-content: space-between;
   min-height: 100%;
+
 }
 
 .progress-container {
