@@ -43,7 +43,7 @@ interface CountData {
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, RouterModule, DiamondLoaderComponent, ProgressBarComponent],
+  imports: [CommonModule, RouterModule, DiamondLoaderComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
