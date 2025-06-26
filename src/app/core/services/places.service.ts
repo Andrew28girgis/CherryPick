@@ -50,6 +50,72 @@ export class PlacesService {
     return this.http.get(`${environment.api}/DropBox/GetUserTokens?Email=${email}`);
   }
 
+    public BetaGenericAPI(body: any): Observable<any> {
+    let encoded: string | undefined;
+    const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
+    encoded = this.base62.encode(utf8Bytes);
+    let dropboxPath = `/cache/${encoded}.json`;
+
+    if (this.appMode === 'api') {
+      return this.http.post<any>(`${environment.API_URL}/GenericAPI/Execute`, body);
+    } else {
+      let hasUploaded = false;
+      const tryDownload = (): Observable<any> => {
+        return this.dropbox.downloadFile(dropboxPath!).pipe(
+          map((fileContent: string) => {
+            try {
+              const convertedBytes = JSON.parse(fileContent);
+              console.log('Converted Bytes:', convertedBytes);
+
+              // Check if we got a meaningful result (not empty)
+              if (convertedBytes && Object.keys(convertedBytes).length > 0) {
+                return convertedBytes;
+              } else {
+                // If empty result, continue polling
+                throw new Error('Empty result, continue polling');
+              }
+            } catch (err) {
+              console.error(
+                'Error parsing JSON from Dropbox file content:',
+                err
+              );
+              throw err;
+            }
+          }),
+          catchError((error: any) => {
+            if (
+              (error.status === 409 || error.status === 404) &&
+              !hasUploaded &&
+              encoded
+            ) {
+              hasUploaded = true;
+              const emptyJsonBlob = new Blob(['{}'], {
+                type: 'application/json',
+              });
+              const newPath = `/new/${encoded}.json`;
+
+              return this.dropbox.uploadFile(emptyJsonBlob, newPath).pipe(
+                tap((res) => console.log('Dropbox upload succeeded:', res)),
+                switchMap(() => {
+                  return this.pollForResult(tryDownload);
+                })
+              );
+            }
+
+            if (hasUploaded) {
+              return this.pollForResult(tryDownload);
+            }
+
+            return throwError(error);
+          })
+        );
+      };
+
+      return tryDownload();
+    }
+  }
+
+
   public GenericAPI(body: any): Observable<any> {
     let encoded: string | undefined;
     const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));

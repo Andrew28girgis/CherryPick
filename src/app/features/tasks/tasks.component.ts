@@ -139,7 +139,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       },
     };
 
-    return this.genericApiService.GenericAPI(contactRequestBody);
+    return this.genericApiService.BetaGenericAPI(contactRequestBody);
   }
 
   private async checkOwnerData(): Promise<void> {
