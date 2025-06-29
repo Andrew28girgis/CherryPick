@@ -6,13 +6,14 @@ import {
   ChangeDetectorRef,
   OnDestroy,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { Stage } from 'src/app/shared/models/shoppingCenters';
 import { Subscription } from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { Tenant } from 'src/app/shared/models/tenants';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -45,6 +46,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   tenantName: string = '';
   tenantImageUrl: string = '';
 
+  // Add tenant dropdown properties
+  tenants: Tenant[] = [];
+  selectedTenant: Tenant | null = null;
+  showTenantDropdown: boolean = false; // Make sure this is defined
+  filteredTenants: Tenant[] = [];
+
+  // Add grouped tenants property
+  groupedTenants: { [key: string]: Tenant[] } = {};
+  alphabetKeys: string[] = [];
+
   dropdowmOptions = [
     { id: 1, text: 'Map View', icon: '../../../assets/Images/Icons/map.png' },
     { id: 2, text: 'Side View', icon: '../../../assets/Images/Icons/element-3.png' },
@@ -62,12 +73,15 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   
   selectedSortId: number = 0;
   isSortMenuOpen = false;
+  imageLoadingStates: { [key: number]: boolean } = {}; // Track loading state for each image
+  imageErrorStates: { [key: number]: boolean } = {}; // Track error state for each image
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
     private placesService: PlacesService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -139,6 +153,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
+
+    // Add this to load tenants
+    this.getUserBuyBoxes();
   }
 
   private updateStageName(id: number): void {
@@ -260,6 +277,62 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     return option?.text || 'Sort';
   }
 
+  // Add these methods
+  getUserBuyBoxes(): void {
+    const body: any = {
+      Name: 'GetUserBuyBoxes',
+      Params: {},
+    };
+    
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.tenants = data.json;
+        this.filteredTenants = this.tenants;
+        this.groupTenantsByAlphabet();
+        this.selectedTenant = this.tenants.find(t => t.Id == this.BuyBoxId) || null;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading tenants:', error);
+      }
+    });
+  }
+
+  groupTenantsByAlphabet(): void {
+    // Sort tenants alphabetically
+    const sortedTenants = [...this.filteredTenants].sort((a, b) => 
+      a.Name.localeCompare(b.Name)
+    );
+
+    // Group by first letter
+    this.groupedTenants = {};
+    sortedTenants.forEach(tenant => {
+      const firstLetter = tenant.Name.charAt(0).toUpperCase();
+      if (!this.groupedTenants[firstLetter]) {
+        this.groupedTenants[firstLetter] = [];
+      }
+      this.groupedTenants[firstLetter].push(tenant);
+    });
+
+    // Get sorted alphabet keys
+    this.alphabetKeys = Object.keys(this.groupedTenants).sort();
+  }
+
+  goToTenant(tenant: Tenant) {
+    this.router.navigate([
+      '/dashboard',
+      tenant.Id,
+      tenant.OrganizationId,
+      tenant.Name,
+      tenant.Campaigns[0].Id,
+    ]);
+  }
+
+  selectTenant(tenant: Tenant) {
+    this.selectedTenant = tenant;
+    this.goToTenant(tenant);
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const sortButton = document.querySelector('.sort-container');
@@ -293,4 +366,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const safeEncodedName = encodeURIComponent(this.BuyBoxName || '');
     return `/market-survey?buyBoxId=${this.BuyBoxId}&orgId=${this.OrgId}&name=${safeEncodedName}&campaignId=${this.CampaignId}`;
   }
+
+  // Add this method to handle dropdown state changes
+  onDropdownOpenChange(isOpen: boolean) {
+    this.showTenantDropdown = isOpen;
+  }
+
+  onImageError(event: any) {
+    event.target.src = 'assets/Images/placeholder.png';
+  }
+  
 }
