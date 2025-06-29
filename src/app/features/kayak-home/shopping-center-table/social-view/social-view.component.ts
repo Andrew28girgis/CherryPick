@@ -105,7 +105,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   heartX = 0
   heartY = 0
   isMobileView = false
-  
+  imageLoadingStates: { [key: number]: boolean } = {}; // Track loading state for each image
+  imageErrorStates: { [key: number]: boolean } = {}; // Track error state for each image
+
   // Core data
   shoppingCenters: Center[] = []
   stages: Stage[] = []
@@ -771,5 +773,27 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentUserName = user.firstName || user.FirstName || '';
       this.currentUserImage = user.profileImage || user.ProfileImage || '';
     }
+  }
+
+  onImageLoad(shoppingId: number): void {
+    this.imageLoadingStates[shoppingId] = false;
+    this.imageErrorStates[shoppingId] = false;
+    this.cdr.detectChanges();
+  }
+
+  onImageError(shopping: any): void {
+    this.imageLoadingStates[shopping.Id] = false;
+    this.imageErrorStates[shopping.Id] = true;
+    
+    // Try to load the image again with a different URL if available
+    if (shopping.MainImage && !shopping.MainImage.includes('DefaultImage.png')) {
+      // If the current image is not the default one, try the default
+      shopping.MainImage = 'assets/Images/DefaultImage.png';
+    }
+    this.cdr.detectChanges();
+  }
+
+  getImageUrl(shopping: any): string {
+    return shopping.MainImage || 'assets/Images/DefaultImage.png';
   }
 }

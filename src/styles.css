@@ -8,6 +8,8 @@
 
 body {
   font-family: var(--app-font) !important; 
+  background-color: #F1F1F5;
+
 }
 
 a {

@@ -20,11 +20,17 @@
               >
                 <div class="main-img">
                   <img
-                    src="{{
-                      place.MainImage || 'assets/Images/DefaultImage.png'
-                    }}"
+                    [src]="getImageUrl(place)"
+                    [title]="place.CenterName"
+                    [ngClass]="{'loading': imageLoadingStates[place.Id]}"
+                    (error)="onImageError(place)"
+                    (load)="onImageLoad(place.Id)"
                     loading="lazy"
+                    alt="{{ place.CenterName }}"
                   />
+                  <div class="image-placeholder" *ngIf="imageLoadingStates[place.Id]">
+                    <div class="loading-spinner"></div>
+                  </div>
                 </div>
               </a>
               <div class="content-wrap card-content">

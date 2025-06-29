@@ -53,10 +53,17 @@
         >
           <div class="main-img">
             <img
-              src="{{ shopping.MainImage
-               || 'assets/Images/DefaultImage.png' }}"
+              [src]="getImageUrl(shopping)"
               [title]="shopping.CenterName"
+              (error)="onImageError(shopping)"
+              (load)="onImageLoad(shopping.Id)"
+              [ngClass]="{'loading': imageLoadingStates[shopping.Id]}"
+              loading="lazy"
+              alt="{{ shopping.CenterName }}"
             />
+            <div class="image-placeholder" *ngIf="imageLoadingStates[shopping.Id]">
+              <div class="loading-spinner"></div>
+            </div>
           </div>
           <div class="-container"></div>
         </a>

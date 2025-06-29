@@ -35,7 +35,7 @@
   <div class="nav-tabs-container">
     <div class="nav-tabs">
       <a class="nav-tab"    [routerLink]="['/campaigns/ataglance', CampaignId]" routerLinkActive="active">Campaigns</a>
-      <a class="nav-tab active" [routerLink]="['/dashboard']" routerLinkActive="active">Properties</a>
+      <a class="nav-tab active" [routerLink]="['/dashboard', BuyBoxId, OrgId, CampaignId]" routerLinkActive="active">Properties</a>
       <a class="nav-tab" [href]="generateSafeUrl()" routerLinkActive="active">Market Survey</a>
     </div>
   </div>
