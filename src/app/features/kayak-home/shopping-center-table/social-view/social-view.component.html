@@ -54,10 +54,17 @@
     <div class="property-main">
       <div class="property-image-container" (dblclick)="handleContentDoubleClick($event, shopping)">
         <img 
-          [src]="shopping.MainImage && shopping.MainImage !== '' ? shopping.MainImage : 'assets/Images/DefaultImage.png'" 
+          [src]="getImageUrl(shopping)" 
           [alt]="shopping.CenterName"
           class="property-image"
+          [ngClass]="{'loading': imageLoadingStates[shopping.Id]}"
+          (error)="onImageError(shopping)"
+          (load)="onImageLoad(shopping.Id)"
+          loading="lazy"
         >
+        <div class="image-placeholder" *ngIf="imageLoadingStates[shopping.Id]">
+          <div class="loading-spinner"></div>
+        </div>
         
         <!-- Property Info Overlay -->
         <div class="property-overlay">
@@ -151,7 +158,12 @@
                 <!-- Reply Input -->
                 <div class="reply-input-container" *ngIf="replyingTo[shopping.MarketSurveyId] === comment.Id">
                   <div class="user-avatar">
-                    <img src="assets/Images/placeholder.png" alt="User Avatar">
+                    <ng-container *ngIf="currentUserImage; else userInitial">
+                      <img [src]="currentUserImage" alt="User Avatar">
+                    </ng-container>
+                    <ng-template #userInitial>
+                      <div class="avatar-initial">{{ currentUserName.charAt(0).toUpperCase()  }}</div>
+                    </ng-template>
                   </div>
                   <div class="input-wrapper">
                     <input 
