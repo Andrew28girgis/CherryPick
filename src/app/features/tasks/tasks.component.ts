@@ -137,7 +137,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       Params: {
         GUIDSignature: guid,
       },
-    };
+    };    
 
     return this.genericApiService.BetaGenericAPI(contactRequestBody);
   }
