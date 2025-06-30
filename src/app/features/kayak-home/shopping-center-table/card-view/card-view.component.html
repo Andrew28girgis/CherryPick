@@ -33,19 +33,7 @@
 
 <!-- Actual content when loaded -->
 <div class="row m-0" *ngIf="!isLoading">
-  <div style="display: flex; margin: 10px 0;">
-    <!-- <div class="search-container">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search..."
-        [(ngModel)]="searchQuery"
-        (input)="filterCenters()"
-      />
-    </div> -->
-  </div>
-
-  <ng-container *ngFor="let shopping of filteredCenters">
+  <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
     <div class="card-window cursor col-md-4 col-sm-4 col-12">
       <div class="cardResponsive">
         <a
@@ -94,19 +82,13 @@
                 style="display: flex; justify-content: space-between; gap: 5px"
               >
                 <div *ngIf="shopping.stageName">
-                  <!-- <p class="ShoppingCenterStage mb-1">{{ shopping.stageName }}</p> -->
-                  <div class="custom-dropdown">
+                  <div class="custom-dropdown" style="width: 200px">
                     <div
                       class="selected-option"
-                      (click)="toggleDropdown(shopping)"
+                      (click)="toggleDropdown(shopping, $event)"
                     >
-                      <span style="width: max-content">{{
-                        getSelectedStageName(shopping.kanbanStageId)
-                      }}</span>
-                      <i
-                        class="fas fa-chevron-down"
-                        [class.rotate]="shopping.isDropdownOpen"
-                      ></i>
+                      {{ getSelectedStageName(shopping.kanbanStageId) }}
+                      <i class="fas fa-chevron-down"></i>
                     </div>
                     <div
                       class="dropdown-options"
@@ -116,13 +98,7 @@
                         *ngFor="let stage of KanbanStages"
                         class="dropdown-item"
                         [class.active]="stage.id === shopping.kanbanStageId"
-                        (click)="
-                          selectStage(
-                            shopping.MarketSurveyId,
-                            stage.id,
-                            shopping
-                          )
-                        "
+                        (click)="selectStage(shopping.MarketSurveyId, stage.id, shopping, $event)"
                       >
                         {{ stage.stageName }}
                       </div>
@@ -278,30 +254,15 @@
                         Center Status</a
                       >
                     </li>
-                    <!-- <li *ngIf="shopping.Deleted != true" class="cursor">
-                      <a
-                        class="target"
-                        (click)="
-                          openDeleteShoppingCenterModal(
-                            deleteSingleShoppingCenterModal,
-                            shopping
-                          );
-                          toggleShortcuts(shopping.Id, 'close')
-                        "
-                      >
-                        <i class="fa-regular fa-trash-can emily"></i>
-                        Remove Shopping
-                      </a>
-                    </li> -->
                     <li *ngIf="shopping.Deleted == true">
                       <a
                         class="target"
                         (click)="
                           RestoreShoppingCenter(
                             shopping.MarketSurveyId,
-                            shopping.Deleted
-                          );
-                          toggleShortcuts(shopping.Id, 'close')
+                            shopping.Deleted,
+                            shopping.Id
+                          )
                         "
                       >
                         <i class="fa-solid fa-trash-arrow-up emily"></i>
@@ -327,11 +288,6 @@
             </div>
 
             <div>
-              <!-- <p
-                class="ShoppingCenterUnitSize"
-                [innerHTML]="getShoppingCenterUnitSize(shopping)"
-              ></p> -->
-              <!-- table places here -->
               <div
                 *ngIf="shopping.ShoppingCenter?.Places?.length"
                 class="table-responsive mt-2"
@@ -439,24 +395,6 @@
                       }}</span>
                     </span>
                   </div>
-                  <!-- <li
-                      *ngFor="let m of mails"
-                      class="mail-item"
-                      (click)="openMailPopup(m.Id)"
-                    >
-                      <ng-container [ngSwitch]="m.Direction">
-                        <span *ngSwitchCase="2" class="sent">Sent</span>
-                        <span *ngSwitchCase="-1" class="outbox">Outbox</span>
-                        <span *ngSwitchCase="1" class="inbox">Inbox</span>
-                        <span *ngSwitchCase="4" class="drafts">Drafts</span>
-                        <span *ngSwitchDefault class="unknown">
-                          Unknown ({{ m.Direction }})
-                        </span>
-                      </ng-container>
-                      <span class="mail-date">
-                        {{ m.Date | date : "yyyy-MM-dd HH:mm:ss" }}
-                      </span>
-                    </li> -->
                 </ng-container>
               </div>
             </div>
@@ -481,8 +419,6 @@
                     />
                   </p>
                 </div>
-
-                <!-- sent mails  -->
               </div>
             </div>
           </div>
@@ -520,7 +456,6 @@
                   [placement]="'top'"
                 />
               </div>
-              <!-- <br /> -->
               <ng-template #popoverContent>
                 <div
                   *ngFor="
@@ -544,7 +479,6 @@
             </div>
           </div>
 
-          <!-- Button to open modal -->
           <button
             *ngIf="checkSubmission(shopping?.ShoppingCenter?.UserSubmmision)"
             class="submission-button"
@@ -578,26 +512,10 @@
       </div>
     </div>
   </ng-container>
-
-  <!-- paginator -->
-  <!-- <div class="flex items-center justify-start" *ngIf="!isLoading">
-    <p-paginator
-      (onPageChange)="onPageChange($event)"
-      [first]="first"
-      [rows]="rows"
-      [totalRecords]="totalRecords"
-      [showFirstLastIcon]="false"
-      currentPageReportTemplate="{first} - {last} of {totalRecords}"
-    ></p-paginator>
-  </div> -->
-</div>
-<!-- Skeleton loading for paginator -->
-<div class="flex items-center justify-start" *ngIf="isLoading">
-  <div class="skeleton-paginator"></div>
 </div>
 
 <ng-template #MapViewPlace let-modal>
-  <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
+  <div id="mappopup" class="h700"></div>
 </ng-template>
 
 <ng-template #ShareLink let-modal>
@@ -662,7 +580,6 @@
     ></button>
   </div>
   <div class="modal-body">
-    <!-- Render the skeleton loader or fetched content -->
     <div *ngIf="isLoadingstatus; else contentTemplate">
       <div class="skeleton-loader">
         <div
@@ -714,7 +631,6 @@
   </div>
 </ng-template>
 
-<!-- NgbModal Content -->
 <ng-template #submission let-modal>
   <div class="modal-header d-flex justify-content-between">
     <h4 class="modal-title">Submissions</h4>
@@ -798,7 +714,6 @@
           <div class="match-percentage">
             <div class="circle-progress">
               <svg viewBox="0 0 36 36" class="circle-svg">
-                <!-- Background path (gray) -->
                 <path
                   class="circle-bg"
                   d="M18 2.0845
@@ -808,7 +723,6 @@
                     getCircleProgressBackground(submission?.Percentage)
                   "
                 />
-                <!-- Foreground path (green) -->
                 <path
                   class="circle-fg"
                   d="M18 2.0845

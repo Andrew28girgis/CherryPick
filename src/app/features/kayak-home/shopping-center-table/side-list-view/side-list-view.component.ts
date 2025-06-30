@@ -8,12 +8,12 @@ import {
    TemplateRef,
   ViewChild,
 } from "@angular/core"
-import   { ActivatedRoute } from "@angular/router"
-import   { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap"
-import   { BuyboxCategory } from "src/app/shared/models/buyboxCategory"
-import   { Center, SentMails, Stage } from "../../../../shared/models/shoppingCenters"
-import   { BbPlace } from "src/app/shared/models/buyboxPlaces"
-import   { Polygon } from "src/app/shared/models/polygons"
+import  { ActivatedRoute } from "@angular/router"
+import  { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap"
+import  { BuyboxCategory } from "src/app/shared/models/buyboxCategory"
+import  { Center, SentMails, Stage } from "../../../../shared/models/shoppingCenters"
+import  { BbPlace } from "src/app/shared/models/buyboxPlaces"
+import  { Polygon } from "src/app/shared/models/polygons"
 import { General } from "src/app/shared/models/domain"
 import   { DomSanitizer, SafeHtml } from "@angular/platform-browser"
 import   { PlacesService } from "src/app/core/services/places.service"
@@ -21,9 +21,10 @@ import   { MapsService } from "src/app/core/services/maps.service"
 import   { ViewManagerService } from "src/app/core/services/view-manager.service"
 import { Subscription } from "rxjs"
 import { ContactBrokerComponent } from "../contact-broker/contact-broker.component"
-import { Email } from "src/app/shared/models/email"
+import   { Email } from "src/app/shared/models/email"
 
 declare const google: any
+
 @Component({
   selector: "app-side-list-view",
   templateUrl: "./side-list-view.component.html",
@@ -51,26 +52,29 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   shareLink: any
   StreetViewOnePlace!: boolean
   KanbanStages: any[] = []
-  activeDropdown: any = null
+
+  // Improved dropdown management
+  activeDropdownId: number | null = null
+  isUpdatingStage = false
+
   @ViewChild("statusModal", { static: true }) statusModal!: TemplateRef<any>
   htmlContent!: SafeHtml
   private modalRef?: NgbModalRef
   isLoadingstatus = true
   isLoading = true
-  skeletonItems = Array(6) // render 6 placeholder cards
+  skeletonItems = Array(6)
   selectedStageName = "All"
   stages: Stage[] = []
-  selectedStageId = 0 // Default to 0 (All)
-  allShoppingCenters: Center[] = [] // Store all shopping centers
+  selectedStageId = 0
+  allShoppingCenters: Center[] = []
   CampaignId!: any
-  @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
+  @ViewChild("mailModal", { static: true }) mailModalTpl!: TemplateRef<any>
 
-  selectedMailSubject = '';
-  selectedMailDate   = new Date();
-  selectedMailBody: SafeHtml = '';
-  openedEmail!: Email ;
+  selectedMailSubject = ""
+  selectedMailDate = new Date()
+  selectedMailBody: SafeHtml = ""
+  openedEmail!: Email
 
-  // Subscriptions
   private subscriptions: Subscription[] = []
   private subscripe = new Subscription()
 
@@ -78,8 +82,8 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   @ViewChild("submission", { static: true }) submissionModal!: TemplateRef<any>
   Campaign: any
 
-  imageLoadingStates: { [key: number]: boolean } = {}; // Track loading state for each image
-  imageErrorStates: { [key: number]: boolean } = {}; // Track error state for each image
+  imageLoadingStates: { [key: number]: boolean } = {}
+  imageErrorStates: { [key: number]: boolean } = {}
 
   constructor(
     private markerService: MapsService,
@@ -96,11 +100,9 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     this.isLoading = true
     this.loadStages()
 
-    // Subscribe to the selectedStageId from the service
     this.subscriptions.push(
       this.viewManagerService.selectedStageId$.subscribe((id) => {
         this.selectedStageId = id
-        // Update the selected stage name for display
         if (id === 0) {
           this.selectedStageName = "All"
         } else {
@@ -121,9 +123,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
 
       localStorage.setItem("BuyBoxId", this.BuyBoxId)
       localStorage.setItem("OrgId", this.orgId)
-
-      // Initialize data using the service
-      // this.viewManagerService.initializeData(this.CampaignId, this.orgId);
     })
 
     this.subscripe.add(
@@ -132,7 +131,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges()
       }),
     )
-    // Subscribe to service observables
+
     this.subscriptions.push(
       this.viewManagerService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers
@@ -151,34 +150,30 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           this.cardsSideList = centers
         })
 
+        this.cardsSideList.forEach((center: any) => {
+          center.lastOutgoingEmail = null
+          center.lastIncomingEmail = null
+          // Initialize dropdown state if not exists
+          if (center.isDropdownOpen === undefined) {
+            center.isDropdownOpen = false
+          }
 
-this.cardsSideList.forEach((center: any) => { 
-  // Initialize with null if no emails exist
-  center.lastOutgoingEmail = null;
-  center.lastIncomingEmail = null;
+          if (center.SentMails && Array.isArray(center.SentMails)) {
+            const outgoing = center.SentMails.filter((mail: any) => mail.Direction == 2).sort(
+              (a: any, b: any) => new Date(b.Date).getTime() - new Date(a.Date).getTime(),
+            )
 
-  // Only proceed if SentMails exists and is an array
-  if (center.SentMails && Array.isArray(center.SentMails)) {
-    const outgoing = center.SentMails.filter(
-      (mail: any) => mail.Direction == 2
-    ).sort(
-      (a: any, b: any) =>
-        new Date(b.Date).getTime() - new Date(a.Date).getTime()
-    );
-    
-    const incoming = center.SentMails.filter(
-      (mail: any) => mail.Direction == 1
-    ).sort(
-      (a: any, b: any) =>
-        new Date(b.Date).getTime() - new Date(a.Date).getTime()
-    );
+            const incoming = center.SentMails.filter((mail: any) => mail.Direction == 1).sort(
+              (a: any, b: any) => new Date(b.Date).getTime() - new Date(a.Date).getTime(),
+            )
 
-    center.lastOutgoingEmail = outgoing.length > 0 ? outgoing[0] : null;
-    center.lastIncomingEmail = incoming.length > 0 ? incoming[0] : null;
-  }
-});
+            center.lastOutgoingEmail = outgoing.length > 0 ? outgoing[0] : null
+            center.lastIncomingEmail = incoming.length > 0 ? incoming[0] : null
+          }
+        })
+
         if (centers && centers.length > 0) {
-          this.isLoading = false // Hide the skeleton loader
+          this.isLoading = false
         }
       }),
     )
@@ -214,7 +209,6 @@ this.cardsSideList.forEach((center: any) => {
       }),
     )
 
-    // Listen for data loaded event
     this.subscriptions.push(
       this.viewManagerService.dataLoadedEvent$.subscribe(() => {
         // Data is loaded, perform any additional initialization
@@ -223,11 +217,91 @@ this.cardsSideList.forEach((center: any) => {
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
     this.subscriptions.forEach((sub) => sub.unsubscribe())
-    
-   }
+  }
 
+  // Fixed dropdown toggle method
+  toggleDropdown(place: any, event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    // Don't allow toggle if currently updating stage
+    if (this.isUpdatingStage) {
+      return
+    }
+
+    // Close all other dropdowns first
+    this.cardsSideList.forEach((p) => {
+      if (p.Id !== place.Id) {
+        p.isDropdownOpen = false
+      }
+    })
+
+    // Toggle the current dropdown
+    place.isDropdownOpen = !place.isDropdownOpen
+    this.activeDropdownId = place.isDropdownOpen ? place.Id : null
+
+    // Force change detection
+    this.cdr.detectChanges()
+  }
+
+  // Fixed select stage method
+  selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any, event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    // Set updating flag to prevent dropdown toggle during update
+    this.isUpdatingStage = true
+
+    // Update the shopping center's stage immediately for UI feedback
+    shoppingCenter.kanbanStageId = stageId
+
+    // Close the dropdown
+    shoppingCenter.isDropdownOpen = false
+    this.activeDropdownId = null
+
+    // Update the stage through the service
+    this.viewManagerService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter, this.CampaignId)
+
+    // Force change detection
+    this.cdr.detectChanges()
+
+    // Reset updating flag after a short delay
+    setTimeout(() => {
+      this.isUpdatingStage = false
+    }, 100)
+  }
+
+  // Improved document click handler
+  @HostListener("document:click", ["$event"])
+  handleDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null
+
+    // Only handle clicks if not currently updating stage
+    if (this.isUpdatingStage) {
+      return
+    }
+
+    // Check if click is outside any stage dropdown
+    if (this.activeDropdownId && target) {
+      const clickedDropdown = target.closest(".custom-dropdown")
+
+      // If clicked outside all dropdowns, close them
+      if (!clickedDropdown) {
+        this.cardsSideList.forEach((place) => {
+          place.isDropdownOpen = false
+        })
+        this.activeDropdownId = null
+        this.cdr.detectChanges()
+      }
+    }
+  }
+
+  // Rest of your existing methods remain the same...
   onMouseHighlight(place: any) {
     this.markerService.onMouseEnter(this.map, place)
   }
@@ -238,7 +312,6 @@ this.cardsSideList.forEach((center: any) => {
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true
-    // Use the service method instead
     this.map = await this.viewManagerService.initializeMap("mappopup", lat, lng)
   }
 
@@ -374,17 +447,14 @@ this.cardsSideList.forEach((center: any) => {
     })
   }
 
-  // Use the service method for getting shopping center unit size
   getShoppingCenterUnitSize(shoppingCenter: any): string {
     return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter)
   }
 
-  // Use the service method for getting category name
   getNeareastCategoryName(categoryId: number): string {
     return this.viewManagerService.getNearestCategoryName(categoryId)
   }
 
-  // Use the service method for checking if item is last
   isLast(currentItem: any, array: any[]): boolean {
     return this.viewManagerService.isLast(currentItem, array)
   }
@@ -417,7 +487,6 @@ this.cardsSideList.forEach((center: any) => {
   }
 
   setIframeUrl(url: string): void {
-    // Use the service method
     this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url)
   }
 
@@ -431,7 +500,6 @@ this.cardsSideList.forEach((center: any) => {
     setTimeout(() => {
       const streetViewElement = document.getElementById("street-view")
       if (streetViewElement) {
-        // Use the service method
         this.viewManagerService.initializeStreetView("street-view", lat, lng, heading, pitch)
       }
     })
@@ -451,7 +519,6 @@ this.cardsSideList.forEach((center: any) => {
 
   async deleteShCenter() {
     try {
-      // Use the service method
       await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete!)
       this.modalService.dismissAll()
     } catch (error) {
@@ -461,7 +528,6 @@ this.cardsSideList.forEach((center: any) => {
 
   async RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean, placeId: number) {
     try {
-      // Use the service method
       await this.viewManagerService.restoreShoppingCenter(+MarketSurveyId, Deleted)
       this.toggleShortcuts(placeId, "close")
     } catch (error) {
@@ -493,35 +559,12 @@ this.cardsSideList.forEach((center: any) => {
     }
   }
 
-  // Use the service method for toggling shortcuts
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
     this.viewManagerService.toggleShortcuts(id, close, event)
   }
 
-  // Use the service method for toggling dropdown
-  toggleDropdown(shoppingCenter: any): void {
-    // Removed since stage selection is now handled by parent
-  }
-
-  // Get stage name for the selected ID
   getSelectedStageName(stageId: number): string {
-    return this.viewManagerService.getSelectedStageName(stageId);
-  }
-
-  // Select a stage for a shopping center
-  selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-    // Removed since stage selection is now handled by parent
-  }
-
-  @HostListener("document:click", ["$event"])
-  handleDocumentClick(event: MouseEvent): void {
-    // Check if click is outside any dropdown
-    const target = event.target as HTMLElement | null
-    if (this.activeDropdown && target && !target.closest(".custom-dropdown")) {
-      this.activeDropdown.isDropdownOpen = false
-      this.activeDropdown = null
-      this.cdr.detectChanges()
-    }
+    return this.viewManagerService.getSelectedStageName(stageId)
   }
 
   openContactModal(center: Center): void {
@@ -537,29 +580,25 @@ this.cardsSideList.forEach((center: any) => {
   trackById(index: number, place: any): number {
     return place.Id
   }
+
   requestCenterStatus(shoppingCenterId: number, campaignId: any) {
-    // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true
 
-    // Open the modal immediately
     this.modalRef = this.modalService.open(this.statusModal, {
       size: "lg",
       scrollable: true,
     })
 
-    // Fetch the actual data
     this.placesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
       next: (res: any) => {
-        // Update the content with the fetched data
         this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res)
-        this.isLoadingstatus = false // Hide the skeleton loader
-        this.cdr.detectChanges() // Trigger change detection
+        this.isLoadingstatus = false
+        this.cdr.detectChanges()
       },
       error: () => {
-        // Handle errors and show fallback content
         const errHtml = "<p>Error loading content</p>"
         this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml)
-        this.isLoadingstatus = false // Hide the skeleton loader
+        this.isLoadingstatus = false
         this.cdr.detectChanges()
       },
     })
@@ -569,17 +608,16 @@ this.cardsSideList.forEach((center: any) => {
     this.submissions = submissions
     this.modalService.open(submissionModal, { size: "md", scrollable: true })
   }
+
   getCircleProgress(percentage: number): string {
     const circumference = 2 * Math.PI * 15.9155
     const totalLength = circumference
-    const gapSize = (5 / 100) * totalLength // 5% gap size
+    const gapSize = (5 / 100) * totalLength
 
-    // If 100%, return full circle without gaps
     if (percentage === 100) {
       return `${totalLength} 0`
     }
 
-    // Calculate the length for the green progress
     const progressLength = (percentage / 100) * (totalLength - 2 * gapSize)
     return `${progressLength} ${totalLength}`
   }
@@ -587,28 +625,27 @@ this.cardsSideList.forEach((center: any) => {
   getCircleProgressBackground(percentage: number): string {
     const circumference = 2 * Math.PI * 15.9155
     const totalLength = circumference
-    const gapSize = (5 / 100) * totalLength // 5% gap
+    const gapSize = (5 / 100) * totalLength
 
-    // If 100%, don't show background
     if (percentage === 100) {
       return `0 ${totalLength}`
     }
 
-    // Calculate the remaining percentage
     const remainingPercentage = 100 - percentage
     const bgLength = (remainingPercentage / 100) * (totalLength - 2 * gapSize)
     const startPosition = (percentage / 100) * (totalLength - 2 * gapSize) + gapSize
 
     return `0 ${startPosition} ${bgLength} ${totalLength}`
   }
+
   checkSubmission(submissions: any[] | undefined): boolean {
     if (!submissions || !Array.isArray(submissions)) {
       return false
     }
 
-    // Loop through submissions and return true if any submission has a SubmmisionLink
     return submissions.some((submission) => submission.SubmmisionLink !== null)
   }
+
   loadStages(): void {
     const body = {
       Name: "GetKanbanTemplateStages",
@@ -617,7 +654,6 @@ this.cardsSideList.forEach((center: any) => {
 
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        // Assuming the API returns { json: Stage[] }
         this.stages = res.json
           .map((s: any) => ({
             id: +s.id,
@@ -628,7 +664,6 @@ this.cardsSideList.forEach((center: any) => {
           }))
           .sort((a: Stage, b: Stage) => a.stageOrder - b.stageOrder)
 
-        // Update the selected stage name after loading stages
         if (this.selectedStageId === 0) {
           this.selectedStageName = "All"
         } else {
@@ -642,90 +677,87 @@ this.cardsSideList.forEach((center: any) => {
   }
 
   onStageChange(id: number) {
-    // Client-side filtering
     this.selectedStageId = id
     this.viewManagerService.setSelectedStageId(id)
   }
 
   selectStagekan(id: number) {
-    // Use the service to update the stage ID
     this.viewManagerService.setSelectedStageId(id)
   }
-    getSentMails(shopping: any): SentMails[] {
-      const raw: any[] = shopping?.SentMails ?? [];
-      return raw.map(mail => ({
-        Id:         mail.ID,
-        Date:       new Date(mail.Date),
-        Direction:  mail.Direction,
-      }));
-    }
-    openMailPopup(mailId: number): void {
-      const payload = {
-        Name:       "GetMail", 
-        Params:     { mailid: mailId }, 
-      };
-  
-      // call the HTML-returning variant
-      this.placesService.GenericAPIHtml(payload).subscribe({
-        next: (res: any) => {
-          this.openedEmail = res.json[0];
-          
-          this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(this.openedEmail.Body);
-  
-          // **THIS** must be your TemplateRef, not a string
-          this.modalService.open(this.mailModalTpl, {
-            size:    'lg',
-           });
-        },
-       });
-    }
-       onCheckboxChange(event: Event, placeId: number, campaignId: number): void {
-  const checkbox = event.target as HTMLInputElement;
-  
-  if (checkbox.checked) {
-    this.AddPlaceToMarketSurvery(campaignId, placeId);
-  } else {
-    console.log(`Unchecked place with ID ${placeId} from shopping center ${campaignId}`);
-    this.AddPlaceToMarketSurvery(campaignId, placeId);
-  }
-}
 
-AddPlaceToMarketSurvery(campaignId: number, placeId: number): void {
-  const body: any = {
-    Name: 'AddPlaceToMarketSurvery',
-    MainEntity: null,
-    Params: { 
-      CampaignID: campaignId,
-      PlaceID: placeId,
-    },
-    Json: null,
-  };
-  this.placesService.GenericAPI(body).subscribe({
-    next: (data) => {
-      console.log("API response data:", data);
+  getSentMails(shopping: any): SentMails[] {
+    const raw: any[] = shopping?.SentMails ?? []
+    return raw.map((mail) => ({
+      Id: mail.ID,
+      Date: new Date(mail.Date),
+      Direction: mail.Direction,
+    }))
+  }
+
+  openMailPopup(mailId: number): void {
+    const payload = {
+      Name: "GetMail",
+      Params: { mailid: mailId },
     }
-  });
-}
-  
+
+    this.placesService.GenericAPIHtml(payload).subscribe({
+      next: (res: any) => {
+        this.openedEmail = res.json[0]
+
+        this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(this.openedEmail.Body)
+
+        this.modalService.open(this.mailModalTpl, {
+          size: "lg",
+        })
+      },
+    })
+  }
+
+  onCheckboxChange(event: Event, placeId: number, campaignId: number): void {
+    const checkbox = event.target as HTMLInputElement
+
+    if (checkbox.checked) {
+      this.AddPlaceToMarketSurvery(campaignId, placeId)
+    } else {
+      console.log(`Unchecked place with ID ${placeId} from shopping center ${campaignId}`)
+      this.AddPlaceToMarketSurvery(campaignId, placeId)
+    }
+  }
+
+  AddPlaceToMarketSurvery(campaignId: number, placeId: number): void {
+    const body: any = {
+      Name: "AddPlaceToMarketSurvery",
+      MainEntity: null,
+      Params: {
+        CampaignID: campaignId,
+        PlaceID: placeId,
+      },
+      Json: null,
+    }
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        console.log("API response data:", data)
+      },
+    })
+  }
+
   onImageLoad(shoppingId: number): void {
-    this.imageLoadingStates[shoppingId] = false;
-    this.imageErrorStates[shoppingId] = false;
-    this.cdr.detectChanges();
+    this.imageLoadingStates[shoppingId] = false
+    this.imageErrorStates[shoppingId] = false
+    this.cdr.detectChanges()
   }
 
   onImageError(shopping: any): void {
-    this.imageLoadingStates[shopping.Id] = false;
-    this.imageErrorStates[shopping.Id] = true;
-    
-    // Try to load the image again with a different URL if available
-    if (shopping.MainImage && !shopping.MainImage.includes('DefaultImage.png')) {
-      // If the current image is not the default one, try the default
-      shopping.MainImage = 'assets/Images/DefaultImage.png';
+    this.imageLoadingStates[shopping.Id] = false
+    this.imageErrorStates[shopping.Id] = true
+
+    if (shopping.MainImage && !shopping.MainImage.includes("DefaultImage.png")) {
+      shopping.MainImage = "assets/Images/DefaultImage.png"
     }
-    this.cdr.detectChanges();
+    this.cdr.detectChanges()
   }
 
   getImageUrl(shopping: any): string {
-    return shopping.MainImage || 'assets/Images/DefaultImage.png';
+    return shopping.MainImage || "assets/Images/DefaultImage.png"
   }
 }

@@ -22,13 +22,16 @@
                   <img
                     [src]="getImageUrl(place)"
                     [title]="place.CenterName"
-                    [ngClass]="{'loading': imageLoadingStates[place.Id]}"
+                    [ngClass]="{ loading: imageLoadingStates[place.Id] }"
                     (error)="onImageError(place)"
                     (load)="onImageLoad(place.Id)"
                     loading="lazy"
                     alt="{{ place.CenterName }}"
                   />
-                  <div class="image-placeholder" *ngIf="imageLoadingStates[place.Id]">
+                  <div
+                    class="image-placeholder"
+                    *ngIf="imageLoadingStates[place.Id]"
+                  >
                     <div class="loading-spinner"></div>
                   </div>
                 </div>
@@ -64,7 +67,7 @@
                         <div class="custom-dropdown" style="width: 200px">
                           <div
                             class="selected-option"
-                            (click)="toggleDropdown(place)"
+                            (click)="toggleDropdown(place, $event)"
                           >
                             {{ getSelectedStageName(place.kanbanStageId) }}
                             <i class="fas fa-chevron-down"></i>
@@ -81,7 +84,8 @@
                                 selectStage(
                                   place.MarketSurveyId,
                                   stage.id,
-                                  place
+                                  place,
+                                  $event
                                 )
                               "
                             >
@@ -371,12 +375,19 @@
                       </table>
                     </div>
 
-                    <div *ngIf="place.ShoppingCenter?.Places?.length" class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
+                    <div
+                      *ngIf="place.ShoppingCenter?.Places?.length"
+                      class="table-responsive mt-2"
+                      style="max-height: 150px; overflow-y: auto"
+                    >
                       <p class="mb-0 pt-1"><b>Notes</b></p>
-                      <table class="table table-sm table-striped mb-0 small-table" style="font-size: 0.75rem;">
+                      <table
+                        class="table table-sm table-striped mb-0 small-table"
+                        style="font-size: 0.75rem"
+                      >
                         <tbody>
                           <tr *ngFor="let place of place.ShoppingCenter.Places">
-                            <td>{{ place.Notes || '—' }}</td>
+                            <td>{{ place.Notes || "—" }}</td>
                           </tr>
                         </tbody>
                       </table>

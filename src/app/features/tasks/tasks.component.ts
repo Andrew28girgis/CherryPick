@@ -1,29 +1,12 @@
-import {
-  Component,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonModule } from '@angular/common';
-import {
-  EmailNotificationResponse,
-  notificationCategory,
-  SubmissionNotificationResponse,
-  SyncNotificationResponse,
-} from 'src/app/shared/models/notificationCategory';
 import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EmilyService } from 'src/app/core/services/emily.service';
 import { firstValueFrom, forkJoin, Observable, Subscription } from 'rxjs';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DiamondLoaderComponent } from './diamond-loader/diamond-loader.component';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
-import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
 interface DataCollectionProgress {
   step1: boolean;
@@ -118,9 +101,6 @@ export class TasksComponent implements OnInit, OnDestroy {
     if (guid) this.guid = guid;
     if (contactId) this.contactId = +contactId;
 
-    this.MICROSOFT_CONNECT_LINK = `${environment.API_URL}/auth/signin?ContactId=${this.contactId}`;
-    this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${this.contactId}`;
-
     this.checkOwnerData();
     this.startMailCountInterval();
   }
@@ -150,6 +130,10 @@ export class TasksComponent implements OnInit, OnDestroy {
       const googleAccessToken = response.json[0].googleAccessToken;
       const microsoftAccessToken = response.json[0].microsoftAccessToken;
 
+      if(googleAccessToken||microsoftAccessToken){
+        this.router.navigate(['/campaigns'])
+      }
+
       if (googleAccessToken) {
         this.googleState = 3;
         this.GoogleGetContactFolders();
@@ -158,6 +142,11 @@ export class TasksComponent implements OnInit, OnDestroy {
       if (microsoftAccessToken) {
         this.microsoftState = 3;
         this.GetContactFolders();
+      }
+
+      if (response.json[0].id) {
+        this.MICROSOFT_CONNECT_LINK = `${environment.API_URL}/auth/signin?ContactId=${response.json[0].id}`;
+        this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${response.json[0].id}`;
       }
 
       // Update intervals based on linked services
@@ -591,7 +580,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     };
     this.genericApiService.GenericAPI(body).subscribe({
       next: (response) => {
-        this.totalProgressedMessage = response.json[0].totalProgressedMessage;
+        this.totalProgressedMessage = response.json[0]?.totalProgressedMessage;
       },
       complete: () => {},
     });

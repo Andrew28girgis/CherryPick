@@ -1,530 +1,617 @@
-import { SentMails } from './../../../../shared/models/shoppingCenters';
 import {
+    ChangeDetectorRef,
   Component,
-  OnInit,
-  ChangeDetectorRef,
-  TemplateRef,
-  OnDestroy,
   HostListener,
+   NgZone,
+   OnInit,
+   OnDestroy,
+   TemplateRef,
   ViewChild,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
-import { Center } from '../../../../shared/models/shoppingCenters';
-import { General } from 'src/app/shared/models/domain';
-import { Subscription } from 'rxjs';
-import { ViewManagerService } from 'src/app/core/services/view-manager.service';
-import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { PlacesService } from 'src/app/core/services/places.service';
-import { Email } from 'src/app/shared/models/email';
+} from "@angular/core"
+import { ActivatedRoute } from "@angular/router"
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap"
+import { BuyboxCategory } from "src/app/shared/models/buyboxCategory"
+import { Center, SentMails, Stage } from "../../../../shared/models/shoppingCenters"
+import { BbPlace } from "src/app/shared/models/buyboxPlaces"
+import { Polygon } from "src/app/shared/models/polygons"
+import { General } from "src/app/shared/models/domain"
+import   { DomSanitizer, SafeHtml } from "@angular/platform-browser"
+import   { PlacesService } from "src/app/core/services/places.service"
+import   { MapsService } from "src/app/core/services/maps.service"
+import   { ViewManagerService } from "src/app/core/services/view-manager.service"
+import { Subscription } from "rxjs"
+import { ContactBrokerComponent } from "../contact-broker/contact-broker.component"
+import   { Email } from "src/app/shared/models/email"
 
 @Component({
-  selector: 'app-card-view',
-  templateUrl: './card-view.component.html',
-  styleUrls: ['./card-view.component.css'],
+  selector: "app-card-view",
+  templateUrl: "./card-view.component.html",
+  styleUrls: ["./card-view.component.css"],
 })
 export class CardViewComponent implements OnInit, OnDestroy {
-  // Properties
-  SentMails: SentMails[] = [];
-  General: General = new General();
-  buyboxCategories: BuyboxCategory[] = [];
-  shoppingCenters: Center[] = [];
-  filteredCenters: Center[] = [];
-  allShoppingCenters: Center[] = []; // Store all shopping centers
-  selectedId: number | null = null;
-  selectedIdCard: number | null = null;
-  BuyBoxId!: any;
-  OrgId!: any;
-  activeDropdown: any = null;
-  KanbanStages: any[] = [];
-  isLoading = true;
-  placesRepresentative: boolean | undefined;
-  mapViewOnePlacex = false;
-  sanitizedUrl!: any;
-  shareLink: any;
-  shoppingCenterIdToDelete: number | null = null;
-  DeletedSC: any;
-  @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
-  @ViewChild('submission', { static: true }) submissionModal!: TemplateRef<any>;
-  htmlContent!: SafeHtml;
-  private modalRef?: NgbModalRef;
-  isLoadingstatus = true;
-  private subscriptions = new Subscription();
-  private outsideClickHandler: ((e: Event) => void) | null = null;
-  submissions: any;
-  isModalOpen = false;
-  BuyBoxName: any;
-  Campaign: any;
-  CampaignId!: any;
-  isMobileView = false;
-  @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
-  selectedMailSubject = '';
-  selectedMailDate = new Date();
-  selectedMailBody: SafeHtml = '';
-  openedEmail!: Email;
-  imageLoadingStates: { [key: number]: boolean } = {}; // Track loading state for each image
-  imageErrorStates: { [key: number]: boolean } = {}; // Track error state for each image
+  General: General = new General()
+  cardsSideList: Center[] = []
+  map: any
+  BuyBoxId!: any
+  orgId!: any
+  mapViewOnePlacex = false
+  buyboxCategories: BuyboxCategory[] = []
+  shoppingCenters: Center[] = []
+  shoppingCenter: any
+  buyboxPlaces: BbPlace[] = []
+  savedMapView: any
+  Polygons: Polygon[] = []
+  placesRepresentative: boolean | undefined
+  selectedId: number | null = null
+  selectedIdCard: number | null = null
+  shoppingCenterIdToDelete: number | null = null
+  DeletedSC: any
+  sanitizedUrl!: any
+  shareLink: any
+  StreetViewOnePlace!: boolean
+  KanbanStages: any[] = []
+
+  // Improved dropdown management
+  activeDropdownId: number | null = null
+  isUpdatingStage = false
+
+  @ViewChild("statusModal", { static: true }) statusModal!: TemplateRef<any>
+  htmlContent!: SafeHtml
+  private modalRef?: NgbModalRef
+  isLoadingstatus = true
+  isLoading = true
+  skeletonItems = Array(6)
+  selectedStageName = "All"
+  stages: Stage[] = []
+  selectedStageId = 0
+  allShoppingCenters: Center[] = []
+  CampaignId!: any
+  @ViewChild("mailModal", { static: true }) mailModalTpl!: TemplateRef<any>
+
+  selectedMailSubject = ""
+  selectedMailDate = new Date()
+  selectedMailBody: SafeHtml = ""
+  openedEmail!: Email
+
+  private subscriptions: Subscription[] = []
+  private subscripe = new Subscription()
+
+  submissions: any
+  @ViewChild("submission", { static: true }) submissionModal!: TemplateRef<any>
+  Campaign: any
+
+  imageLoadingStates: { [key: number]: boolean } = {}
+  imageErrorStates: { [key: number]: boolean } = {}
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private markerService: MapsService,
+    public activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private cdr: ChangeDetectorRef,
-    public shoppingCenterService: ViewManagerService,
     private placesService: PlacesService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private viewManagerService: ViewManagerService,
   ) {}
 
   ngOnInit(): void {
-    this.checkMobileView();
+    this.isLoading = true
+    this.loadStages()
+
+    this.subscriptions.push(
+      this.viewManagerService.selectedStageId$.subscribe((id) => {
+        this.selectedStageId = id
+        if (id === 0) {
+          this.selectedStageName = "All"
+        } else {
+          const stage = this.stages.find((s) => s.id === id)
+          this.selectedStageName = stage ? stage.stageName : ""
+        }
+        this.cdr.detectChanges()
+      }),
+    )
+
+    this.General = new General()
+    this.savedMapView = localStorage.getItem("mapView")
 
     this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
-      this.OrgId = params.orgId;
-      this.Campaign = params.campaign;
-      localStorage.setItem("BuyBoxId", this.BuyBoxId);
-      localStorage.setItem("OrgId", this.OrgId);
-    });
+      this.BuyBoxId = params.buyboxid
+      this.orgId = params.orgid
+      this.Campaign = params.campaign
 
-    this.subscriptions.add(
-      this.shoppingCenterService.isLoading$.subscribe((loading) => {
-        this.isLoading = loading;
-        this.cdr.detectChanges();
-      })
-    );
+      localStorage.setItem("BuyBoxId", this.BuyBoxId)
+      localStorage.setItem("OrgId", this.orgId)
+    })
 
-    this.subscriptions.add(
-      this.shoppingCenterService.shoppingCenters$.subscribe((centers) => {
-        this.shoppingCenters = centers;
-        this.cdr.detectChanges();
-      })
-    );
+    this.subscripe.add(
+      this.viewManagerService.allShoppingCenters$.subscribe((centers) => {
+        this.allShoppingCenters = centers
+        this.cdr.detectChanges()
+      }),
+    )
 
-    this.subscriptions.add(
-      this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
-        this.filteredCenters = centers;
-        this.cdr.detectChanges();
-      })
-    );
+    this.subscriptions.push(
+      this.viewManagerService.shoppingCenters$.subscribe((centers) => {
+        this.shoppingCenters = centers
+      }),
+    )
 
-    this.subscriptions.add(
-      this.shoppingCenterService.buyboxCategories$.subscribe((categories) => {
-        this.buyboxCategories = categories;
-        this.cdr.detectChanges();
-      })
-    );
+    this.isLoading = true
+    this.skeletonItems = Array(6)
 
-    this.subscriptions.add(
-      this.shoppingCenterService.selectedId$.subscribe((id) => {
-        this.selectedId = id;
-        this.cdr.detectChanges();
-      })
-    );
+    this.subscriptions.push(
+      this.viewManagerService.filteredCenters$.subscribe((centers) => {
+        this.ngZone.run(() => {
+          this.cardsSideList = centers
+        })
 
-    this.subscriptions.add(
-      this.shoppingCenterService.selectedIdCard$.subscribe((id) => {
-        this.selectedIdCard = id;
-        this.cdr.detectChanges();
-      })
-    );
+        this.cardsSideList.forEach((center: any) => {
+          center.lastOutgoingEmail = null
+          center.lastIncomingEmail = null
+          // Initialize dropdown state if not exists
+          if (center.isDropdownOpen === undefined) {
+            center.isDropdownOpen = false
+          }
 
-    this.subscriptions.add(
-      this.shoppingCenterService.kanbanStages$.subscribe((stages) => {
-        this.KanbanStages = stages;
-        this.cdr.detectChanges();
-      })
-    );
+          if (center.SentMails && Array.isArray(center.SentMails)) {
+            const outgoing = center.SentMails.filter((mail: any) => mail.Direction == 2).sort(
+              (a: any, b: any) => new Date(b.Date).getTime() - new Date(a.Date).getTime(),
+            )
+
+            const incoming = center.SentMails.filter((mail: any) => mail.Direction == 1).sort(
+              (a: any, b: any) => new Date(b.Date).getTime() - new Date(a.Date).getTime(),
+            )
+
+            center.lastOutgoingEmail = outgoing.length > 0 ? outgoing[0] : null
+            center.lastIncomingEmail = incoming.length > 0 ? incoming[0] : null
+          }
+        })
+
+        if (centers && centers.length > 0) {
+          this.isLoading = false
+        }
+      }),
+    )
+
+    this.subscriptions.push(
+      this.viewManagerService.buyboxCategories$.subscribe((categories) => {
+        this.buyboxCategories = categories
+      }),
+    )
+
+    this.subscriptions.push(
+      this.viewManagerService.buyboxPlaces$.subscribe((places) => {
+        this.buyboxPlaces = places
+      }),
+    )
+
+    this.subscriptions.push(
+      this.viewManagerService.kanbanStages$.subscribe((stages) => {
+        this.KanbanStages = stages
+        this.cdr.detectChanges()
+      }),
+    )
+
+    this.subscriptions.push(
+      this.viewManagerService.selectedId$.subscribe((id) => {
+        this.selectedId = id
+      }),
+    )
+
+    this.subscriptions.push(
+      this.viewManagerService.selectedIdCard$.subscribe((id) => {
+        this.selectedIdCard = id
+      }),
+    )
+
+    this.subscriptions.push(
+      this.viewManagerService.dataLoadedEvent$.subscribe(() => {
+        // Data is loaded, perform any additional initialization
+      }),
+    )
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.subscriptions.forEach((sub) => sub.unsubscribe())
+  }
 
-    // Remove any document event listeners
-    if (this.outsideClickHandler) {
-      document.removeEventListener('click', this.outsideClickHandler);
-      this.outsideClickHandler = null;
+  // Fixed dropdown toggle method - EXACTLY like side view
+  toggleDropdown(place: any, event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    // Don't allow toggle if currently updating stage
+    if (this.isUpdatingStage) {
+      return
+    }
+
+    // Close all other dropdowns first
+    this.cardsSideList.forEach((p) => {
+      if (p.Id !== place.Id) {
+        p.isDropdownOpen = false
+      }
+    })
+
+    // Toggle the current dropdown
+    place.isDropdownOpen = !place.isDropdownOpen
+    this.activeDropdownId = place.isDropdownOpen ? place.Id : null
+
+    // Force change detection
+    this.cdr.detectChanges()
+  }
+
+  // Fixed select stage method - EXACTLY like side view
+  selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any, event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    // Set updating flag to prevent dropdown toggle during update
+    this.isUpdatingStage = true
+
+    // Update the shopping center's stage immediately for UI feedback
+    shoppingCenter.kanbanStageId = stageId
+
+    // Close the dropdown
+    shoppingCenter.isDropdownOpen = false
+    this.activeDropdownId = null
+
+    // Update the stage through the service
+    this.viewManagerService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter, this.CampaignId)
+
+    // Force change detection
+    this.cdr.detectChanges()
+
+    // Reset updating flag after a short delay
+    setTimeout(() => {
+      this.isUpdatingStage = false
+    }, 100)
+  }
+
+  // Improved document click handler - EXACTLY like side view
+  @HostListener("document:click", ["$event"])
+  handleDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null
+
+    // Only handle clicks if not currently updating stage
+    if (this.isUpdatingStage) {
+      return
+    }
+
+    // Check if click is outside any stage dropdown
+    if (this.activeDropdownId && target) {
+      const clickedDropdown = target.closest(".custom-dropdown")
+
+      // If clicked outside all dropdowns, close them
+      if (!clickedDropdown) {
+        this.cardsSideList.forEach((place) => {
+          place.isDropdownOpen = false
+        })
+        this.activeDropdownId = null
+        this.cdr.detectChanges()
+      }
     }
   }
 
-  // filterCenters(): void {
-  //   this.shoppingCenterService.filterCenters(this.searchQuery);
-  // }
-
-  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
-    this.shoppingCenterService.restoreShoppingCenter(MarketSurveyId, Deleted);
-  }
-
-  openDeleteShoppingCenterModal(
-    modalTemplate: TemplateRef<any>,
-    shoppingCenter: any
-  ): void {
-    this.DeletedSC = shoppingCenter;
-    this.shoppingCenterIdToDelete = shoppingCenter.Id;
-    this.modalService.open(modalTemplate, {
-      ariaLabelledBy: 'modal-basic-title',
-    });
-  }
-
-  async deleteShCenter(): Promise<void> {
-    if (this.shoppingCenterIdToDelete) {
-      await this.shoppingCenterService.deleteShoppingCenter(
-        this.BuyBoxId,
-        this.shoppingCenterIdToDelete
-      );
-      this.modalService.dismissAll();
-    }
-  }
-
-  getNeareastCategoryName(categoryId: number): string {
-    return this.shoppingCenterService.getNearestCategoryName(categoryId);
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true
+    this.map = await this.viewManagerService.initializeMap("mappopup", lat, lng)
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): string {
-    return this.shoppingCenterService.getShoppingCenterUnitSize(shoppingCenter);
+    return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter)
   }
 
-  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    this.shoppingCenterService.toggleShortcuts(id, close, event);
-  }
-
-  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
-    event?.stopPropagation();
-
-    // If clicking on the same card that's already selected, close it
-    if (this.selectedIdCard === id) {
-      this.selectedIdCard = null;
-      this.shoppingCenterService.setSelectedIdCard(null);
-
-      // Remove the outside click handler
-      if (this.outsideClickHandler) {
-        document.removeEventListener('click', this.outsideClickHandler);
-        this.outsideClickHandler = null;
-      }
-    } else {
-      // Otherwise, select the new card
-      this.selectedIdCard = id;
-      this.shoppingCenterService.setSelectedIdCard(id);
-
-      // Add event listener to handle clicks outside
-      if (this.outsideClickHandler) {
-        document.removeEventListener('click', this.outsideClickHandler);
-      }
-
-      this.outsideClickHandler = (e: Event) => {
-        const targetElement = e.target as HTMLElement;
-        const isInside = targetElement.closest(
-          '.shortcuts_iconCard, .ellipsis_icont'
-        );
-
-        if (!isInside) {
-          this.selectedIdCard = null;
-          this.shoppingCenterService.setSelectedIdCard(null);
-          document.removeEventListener('click', this.outsideClickHandler!);
-          this.outsideClickHandler = null;
-          this.cdr.detectChanges();
-        }
-      };
-
-      setTimeout(() => {
-        document.addEventListener('click', this.outsideClickHandler!);
-      });
-    }
+  getNeareastCategoryName(categoryId: number): string {
+    return this.viewManagerService.getNearestCategoryName(categoryId)
   }
 
   isLast(currentItem: any, array: any[]): boolean {
-    return this.shoppingCenterService.isLast(currentItem, array);
+    return this.viewManagerService.isLast(currentItem, array)
   }
 
-  openMapViewPlace(content: any, modalObject?: any): void {
+  openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
+      ariaLabelledBy: "modal-basic-title",
+      size: "lg",
       scrollable: true,
-    });
-    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+    })
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude)
   }
 
-  async viewOnMap(lat: number, lng: number): Promise<void> {
-    this.mapViewOnePlacex = true;
-    await this.shoppingCenterService.initializeMap('mappopup', lat, lng);
-  }
-
-  openStreetViewPlace(content: any, modalObject?: any): void {
+  openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
+      ariaLabelledBy: "modal-basic-title",
+      size: "lg",
       scrollable: true,
-    });
+    })
 
-    this.General.modalObject = modalObject;
+    this.General.modalObject = modalObject
 
     if (this.General.modalObject.StreetViewURL) {
-      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+      this.setIframeUrl(this.General.modalObject.StreetViewURL)
     } else {
       setTimeout(() => {
-        this.viewOnStreet(this.General.modalObject);
-      }, 100);
+        this.viewOnStreet()
+      }, 100)
     }
-  }
-
-  viewOnStreet(modalObject: any): void {
-    const lat = +modalObject.StreetLatitude;
-    const lng = +modalObject.StreetLongitude;
-    const heading = modalObject.Heading || 165;
-    const pitch = modalObject.Pitch || 0;
-
-    setTimeout(() => {
-      this.shoppingCenterService.initializeStreetView(
-        'street-view',
-        lat,
-        lng,
-        heading,
-        pitch
-      );
-    });
   }
 
   setIframeUrl(url: string): void {
-    this.sanitizedUrl = this.shoppingCenterService.sanitizeUrl(url);
+    this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url)
+  }
+
+  viewOnStreet() {
+    this.StreetViewOnePlace = true
+    const lat = +this.General.modalObject.StreetLatitude
+    const lng = +this.General.modalObject.StreetLongitude
+    const heading = this.General.modalObject.Heading || 165
+    const pitch = this.General.modalObject.Pitch || 0
+
+    setTimeout(() => {
+      const streetViewElement = document.getElementById("street-view")
+      if (streetViewElement) {
+        this.viewManagerService.initializeStreetView("street-view", lat, lng, heading, pitch)
+      }
+    })
   }
 
   copyLink(link: string) {
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        // Success
-      })
-      .catch((err) => {
-        // Error
-        console.error('Could not copy text: ', err);
-      });
+    navigator.clipboard.writeText(link)
   }
 
-  // Toggle dropdown for kanban stages
-  toggleDropdown(shoppingCenter: any): void {
-    this.activeDropdown = this.shoppingCenterService.toggleDropdown(
-      shoppingCenter,
-      this.activeDropdown
-    );
+  openDeleteShoppingCenterModal(modalTemplate: TemplateRef<any>, shoppingCenter: any) {
+    this.DeletedSC = shoppingCenter
+    this.shoppingCenterIdToDelete = shoppingCenter.Id
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: "modal-basic-title",
+    })
   }
 
-  // Get stage name for the selected ID
-  getSelectedStageName(stageId: number): string {
-    return this.shoppingCenterService.getSelectedStageName(stageId);
-  }
-
-  // Select a stage for a shopping center
-  selectStage(
-    marketSurveyId: number,
-    stageId: number,
-    shoppingCenter: any
-  ): void {
-    shoppingCenter.isDropdownOpen = false;
-    this.activeDropdown = null;
-    this.shoppingCenterService.updatePlaceKanbanStage(
-      marketSurveyId,
-      stageId,
-      shoppingCenter,
-      this.CampaignId
-    );
-  }
-
-  // Handle document clicks to close dropdowns
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-    if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
-      this.activeDropdown.isDropdownOpen = false;
-      this.activeDropdown = null;
-      this.cdr.detectChanges();
+  async deleteShCenter() {
+    try {
+      await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete!)
+      this.modalService.dismissAll()
+    } catch (error) {
+      console.error("Error deleting shopping center:", error)
     }
+  }
+
+  async RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean, placeId: number) {
+    try {
+      await this.viewManagerService.restoreShoppingCenter(+MarketSurveyId, Deleted)
+      this.toggleShortcuts(placeId, "close")
+    } catch (error) {
+      console.error("Error restoring shopping center:", error)
+    }
+  }
+
+  outsideClickHandler = (event: Event): void => {
+    const targetElement = event.target as HTMLElement
+    const isInside = targetElement.closest(".shortcuts_iconCard, .ellipsis_icont")
+
+    if (!isInside) {
+      this.viewManagerService.setSelectedIdCard(null)
+      document.removeEventListener("click", this.outsideClickHandler)
+    }
+  }
+
+  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
+    event?.stopPropagation()
+
+    if (this.selectedIdCard === id) {
+      this.viewManagerService.setSelectedIdCard(null)
+      document.removeEventListener("click", this.outsideClickHandler)
+    } else {
+      this.viewManagerService.setSelectedIdCard(id)
+      setTimeout(() => {
+        document.addEventListener("click", this.outsideClickHandler)
+      })
+    }
+  }
+
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    this.viewManagerService.toggleShortcuts(id, close, event)
+  }
+
+  getSelectedStageName(stageId: number): string {
+    return this.viewManagerService.getSelectedStageName(stageId)
   }
 
   openContactModal(center: Center): void {
     const modalRef = this.modalService.open(ContactBrokerComponent, {
-      size: 'xl',
+      size: "xl",
       centered: true,
-      windowClass: 'contact-broker-modal-class',
-    });
-    modalRef.componentInstance.center = center;
-    modalRef.componentInstance.buyboxId = this.BuyBoxId;
+      windowClass: "contact-broker-modal-class",
+    })
+    modalRef.componentInstance.center = center
+    modalRef.componentInstance.buyboxId = this.BuyBoxId
+  }
+
+  trackById(index: number, place: any): number {
+    return place.Id
   }
 
   requestCenterStatus(shoppingCenterId: number, campaignId: any) {
-    // Set loading state to true to show the skeleton loader
-    this.isLoadingstatus = true;
+    this.isLoadingstatus = true
 
-    // Open the modal immediately
     this.modalRef = this.modalService.open(this.statusModal, {
-      size: 'lg',
+      size: "lg",
       scrollable: true,
-    });
+    })
 
-    // Fetch the actual data
-    this.placesService
-      .GetSiteCurrentStatus(shoppingCenterId, campaignId)
-      .subscribe({
-        next: (res: any) => {
-          // Update the content with the fetched data
-          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
-          this.isLoadingstatus = false; // Hide the skeleton loader
-          this.cdr.detectChanges(); // Trigger change detection
-        },
-        error: () => {
-          // Handle errors and show fallback content
-          const errHtml = '<p>Error loading content</p>';
-          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
-          this.isLoadingstatus = false; // Hide the skeleton loader
-          this.cdr.detectChanges();
-        },
-      });
+    this.placesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
+      next: (res: any) => {
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res)
+        this.isLoadingstatus = false
+        this.cdr.detectChanges()
+      },
+      error: () => {
+        const errHtml = "<p>Error loading content</p>"
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml)
+        this.isLoadingstatus = false
+        this.cdr.detectChanges()
+      },
+    })
   }
 
-  openModalSubmission(
-    submissions: any[],
-    submissionModal: TemplateRef<any>
-  ): void {
-    this.submissions = submissions;
-    this.modalService.open(submissionModal, { size: 'md', scrollable: true });
+  openModalSubmission(submissions: any[], submissionModal: TemplateRef<any>): void {
+    this.submissions = submissions
+    this.modalService.open(submissionModal, { size: "md", scrollable: true })
   }
+
   getCircleProgress(percentage: number): string {
-    const circumference = 2 * Math.PI * 15.9155;
-    const totalLength = circumference;
-    const gapSize = (5 / 100) * totalLength; // 5% gap size
+    const circumference = 2 * Math.PI * 15.9155
+    const totalLength = circumference
+    const gapSize = (5 / 100) * totalLength
 
-    // If 100%, return full circle without gaps
     if (percentage === 100) {
-      return `${totalLength} 0`;
+      return `${totalLength} 0`
     }
 
-    // Calculate the length for the green progress
-    const progressLength = (percentage / 100) * (totalLength - 2 * gapSize);
-    return `${progressLength} ${totalLength}`;
+    const progressLength = (percentage / 100) * (totalLength - 2 * gapSize)
+    return `${progressLength} ${totalLength}`
   }
 
   getCircleProgressBackground(percentage: number): string {
-    const circumference = 2 * Math.PI * 15.9155;
-    const totalLength = circumference;
-    const gapSize = (5 / 100) * totalLength; // 5% gap
+    const circumference = 2 * Math.PI * 15.9155
+    const totalLength = circumference
+    const gapSize = (5 / 100) * totalLength
 
-    // If 100%, don't show background
     if (percentage === 100) {
-      return `0 ${totalLength}`;
+      return `0 ${totalLength}`
     }
 
-    // Calculate the remaining percentage
-    const remainingPercentage = 100 - percentage;
-    const bgLength = (remainingPercentage / 100) * (totalLength - 2 * gapSize);
-    const startPosition =
-      (percentage / 100) * (totalLength - 2 * gapSize) + gapSize;
+    const remainingPercentage = 100 - percentage
+    const bgLength = (remainingPercentage / 100) * (totalLength - 2 * gapSize)
+    const startPosition = (percentage / 100) * (totalLength - 2 * gapSize) + gapSize
 
-    return `0 ${startPosition} ${bgLength} ${totalLength}`;
+    return `0 ${startPosition} ${bgLength} ${totalLength}`
   }
+
   checkSubmission(submissions: any[] | undefined): boolean {
     if (!submissions || !Array.isArray(submissions)) {
-      return false;
+      return false
     }
 
-    // Loop through submissions and return true if any submission has a SubmmisionLink
-    return submissions.some((submission) => submission.SubmmisionLink !== null);
-  }
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkMobileView();
+    return submissions.some((submission) => submission.SubmmisionLink !== null)
   }
 
-  checkMobileView(): void {
-    this.isMobileView = window.innerWidth <= 768;
-    this.cdr.detectChanges();
+  loadStages(): void {
+    const body = {
+      Name: "GetKanbanTemplateStages",
+      Params: { KanbanTemplateId: 6 },
+    }
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.stages = res.json
+          .map((s: any) => ({
+            id: +s.id,
+            stageName: s.stageName,
+            stageOrder: +s.stageOrder,
+            isQualified: s.isQualified,
+            kanbanTemplateId: +s.kanbanTemplateId,
+          }))
+          .sort((a: Stage, b: Stage) => a.stageOrder - b.stageOrder)
+
+        if (this.selectedStageId === 0) {
+          this.selectedStageName = "All"
+        } else {
+          const current = this.stages.find((s) => s.id === this.selectedStageId)
+          this.selectedStageName = current ? current.stageName : "Stage"
+        }
+        this.cdr.detectChanges()
+      },
+      error: (err) => console.error("Error loading kanban stages:", err),
+    })
+  }
+
+  onStageChange(id: number) {
+    this.selectedStageId = id
+    this.viewManagerService.setSelectedStageId(id)
+  }
+
+  selectStagekan(id: number) {
+    this.viewManagerService.setSelectedStageId(id)
   }
 
   getSentMails(shopping: any): SentMails[] {
-    const raw: any[] = shopping?.SentMails ?? [];
+    const raw: any[] = shopping?.SentMails ?? []
     return raw.map((mail) => ({
       Id: mail.ID,
       Date: new Date(mail.Date),
       Direction: mail.Direction,
-    }));
+    }))
   }
+
   openMailPopup(mailId: number): void {
     const payload = {
-      Name: 'GetMail',
+      Name: "GetMail",
       Params: { mailid: mailId },
-    };
-  
-    // Call the HTML-returning variant
+    }
+
     this.placesService.GenericAPIHtml(payload).subscribe({
       next: (res: any) => {
-        this.openedEmail = res.json[0];
-  
-        this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(
-          this.openedEmail.Body
-        );
-  
-        // Open the modal
-        const modalRef = this.modalService.open(this.mailModalTpl, {
-          size: 'lg',
-        });
-  
-        // Ensure the scroll position is at the top of the modal
-        modalRef.result.finally(() => {
-          const modalElement = document.querySelector('.modal-content');
-          if (modalElement) {
-            modalElement.scrollTop = 0;
-          }
-        });
+        this.openedEmail = res.json[0]
+
+        this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(this.openedEmail.Body)
+
+        this.modalService.open(this.mailModalTpl, {
+          size: "lg",
+        })
       },
-    });
+    })
   }
-   onCheckboxChange(event: Event, placeId: number, campaignId: number): void {
-  const checkbox = event.target as HTMLInputElement;
-  
-  if (checkbox.checked) {
-    this.AddPlaceToMarketSurvery(campaignId, placeId);
-  } else {
-    console.log(`Unchecked place with ID ${placeId} from shopping center ${campaignId}`);
-    this.AddPlaceToMarketSurvery(campaignId, placeId);
-  }
-}
 
-AddPlaceToMarketSurvery(campaignId: number, placeId: number): void {
-  const body: any = {
-    Name: 'AddPlaceToMarketSurvery',
-    MainEntity: null,
-    Params: { 
-      CampaignID: campaignId,
-      PlaceID: placeId,
-    },
-    Json: null,
-  };
-  this.placesService.GenericAPI(body).subscribe({
-    next: (data) => {
-      console.log("API response data:", data);
+  onCheckboxChange(event: Event, placeId: number, campaignId: number): void {
+    const checkbox = event.target as HTMLInputElement
+
+    if (checkbox.checked) {
+      this.AddPlaceToMarketSurvery(campaignId, placeId)
+    } else {
+      console.log(`Unchecked place with ID ${placeId} from shopping center ${campaignId}`)
+      this.AddPlaceToMarketSurvery(campaignId, placeId)
     }
-  });
-}
-
-// Add new methods for image handling
-onImageLoad(shoppingId: number): void {
-  this.imageLoadingStates[shoppingId] = false;
-  this.imageErrorStates[shoppingId] = false;
-  this.cdr.detectChanges();
-}
-
-onImageError(shopping: any): void {
-  this.imageLoadingStates[shopping.Id] = false;
-  this.imageErrorStates[shopping.Id] = true;
-  
-  // Try to load the image again with a different URL if available
-  if (shopping.MainImage && !shopping.MainImage.includes('DefaultImage.png')) {
-    // If the current image is not the default one, try the default
-    shopping.MainImage = 'assets/Images/DefaultImage.png';
   }
-  this.cdr.detectChanges();
-}
 
-getImageUrl(shopping: any): string {
-  return shopping.MainImage || 'assets/Images/placeholder.png';
-}
+  AddPlaceToMarketSurvery(campaignId: number, placeId: number): void {
+    const body: any = {
+      Name: "AddPlaceToMarketSurvery",
+      MainEntity: null,
+      Params: {
+        CampaignID: campaignId,
+        PlaceID: placeId,
+      },
+      Json: null,
+    }
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        console.log("API response data:", data)
+      },
+    })
+  }
+
+  onImageLoad(shoppingId: number): void {
+    this.imageLoadingStates[shoppingId] = false
+    this.imageErrorStates[shoppingId] = false
+    this.cdr.detectChanges()
+  }
+
+  onImageError(shopping: any): void {
+    this.imageLoadingStates[shopping.Id] = false
+    this.imageErrorStates[shopping.Id] = true
+
+    if (shopping.MainImage && !shopping.MainImage.includes("DefaultImage.png")) {
+      shopping.MainImage = "assets/Images/DefaultImage.png"
+    }
+    this.cdr.detectChanges()
+  }
+
+  getImageUrl(shopping: any): string {
+    return shopping.MainImage || "assets/Images/DefaultImage.png"
+  }
 }
