@@ -260,4 +260,9 @@ export class SummeryComponent implements OnInit {
   openAddTenants() {
     this.router.navigate(['/add-tenant']);
   }
+
+
+  onImageError(event: any) {
+    event.target.src = "assets/Images/placeholder.png"
+  }
 }

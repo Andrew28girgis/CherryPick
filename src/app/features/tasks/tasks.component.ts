@@ -1,29 +1,12 @@
-import {
-  Component,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonModule } from '@angular/common';
-import {
-  EmailNotificationResponse,
-  notificationCategory,
-  SubmissionNotificationResponse,
-  SyncNotificationResponse,
-} from 'src/app/shared/models/notificationCategory';
 import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EmilyService } from 'src/app/core/services/emily.service';
 import { firstValueFrom, forkJoin, Observable, Subscription } from 'rxjs';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DiamondLoaderComponent } from './diamond-loader/diamond-loader.component';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
-import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
 interface DataCollectionProgress {
   step1: boolean;
@@ -43,7 +26,7 @@ interface CountData {
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, RouterModule, DiamondLoaderComponent, ProgressBarComponent],
+  imports: [CommonModule, RouterModule, DiamondLoaderComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
@@ -63,20 +46,20 @@ export class TasksComponent implements OnInit, OnDestroy {
     contactCount: 0,
     organizationCount: 0,
     shoppingCentersCount: 0,
-    placeCount: 0
+    placeCount: 0,
   };
   protected diamondsCount: number = 0;
   protected microsoftDataProgress: DataCollectionProgress = {
     step1: false,
     step2: false,
     step3: false,
-    step4: false
+    step4: false,
   };
   protected googleDataProgress: DataCollectionProgress = {
     step1: false,
     step2: false,
     step3: false,
-    step4: false
+    step4: false,
   };
 
   protected MICROSOFT_CONNECT_LINK = '';
@@ -111,7 +94,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     setTimeout(() => {
-       this.getDiamondsCount();
+      this.getDiamondsCount();
     }, 2000);
     const guid = localStorage.getItem('guid');
     const contactId = localStorage.getItem('contactId');
@@ -522,7 +505,6 @@ export class TasksComponent implements OnInit, OnDestroy {
     });
   }
 
-
   GoogleGetSavedData() {
     forkJoin({
       folders: this.GoogleGetDBFolders(),
@@ -564,7 +546,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   getDiamondsCount(): void {
     const body = {
       Name: 'GetGemsCount',
-      Params: {}
+      Params: {},
     };
 
     this.genericApiService.GenericAPI(body).subscribe({
@@ -576,35 +558,32 @@ export class TasksComponent implements OnInit, OnDestroy {
             contactCount: data.contactCount || 0,
             organizationCount: data.organizationCount || 0,
             shoppingCentersCount: data.shoppingCentersCount || 0,
-            placeCount: data.placeCount || 0
+            placeCount: data.placeCount || 0,
           };
         }
       },
       error: (error) => {
         console.error('Error fetching counts:', error);
-      }
+      },
     });
   }
   getTotalMailsCount(): void {
     const body = {
       Name: 'TotalMails',
-      Params: {}
+      Params: {},
     };
     this.genericApiService.GenericAPI(body).subscribe({
       next: (response) => {
         this.totalProgressedMessage = response.json[0].totalProgressedMessage;
-       },
-      complete: () => {
-       }
+      },
+      complete: () => {},
     });
   }
- 
- 
 
   private startMailCountInterval() {
     // Update mail count and diamonds count every 5 seconds
     this.mailCountInterval = setInterval(() => {
-      this.getDiamondsCount();  // Get updated mail count
+      this.getDiamondsCount(); // Get updated mail count
       this.getTotalMailsCount(); // Get updated progress
     }, 5000);
   }
@@ -623,7 +602,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   private updateIntervals() {
     // Clear existing interval
     this.clearMailCountInterval();
-    
+
     // Only start new interval if at least one service is linked
     if (this.isAnyServiceLinked()) {
       this.startMailCountInterval();
@@ -637,7 +616,7 @@ export class TasksComponent implements OnInit, OnDestroy {
         contactCount: 0,
         organizationCount: 0,
         shoppingCentersCount: 0,
-        placeCount: 0
+        placeCount: 0,
       };
       this.totalProgressedMessage = 0;
     }

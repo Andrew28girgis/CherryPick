@@ -587,6 +587,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
+
 .tenant-dropdown :focus {
   outline: none;
   box-shadow: none;
@@ -604,4 +605,8 @@
 .tenant-img:hover
 {
   background-color: transparent !important;
+}
+
+.tenant-item.active {
+  background-color: #e0e0e0 !important;
 }

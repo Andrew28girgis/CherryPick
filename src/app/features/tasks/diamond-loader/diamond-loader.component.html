@@ -2,10 +2,10 @@
   <div class="progress-diamonds">
 
      <!-- Progress Bar Section -->
-     <div class="progress-container">
+     <div class="progress-container"*ngIf="!hidden">
       <button class="cancel-btn" (click)="onCancel()">Cancel</button>
       <div class="progress-text">
-        <div class="status-text">Catching In Progress...</div>
+        <div class="status-text " style="width: fit-content;">Catching In Progress...</div>
         <div class="main-text">{{actionText}}</div>
       </div>
       <div class="progress-section">
