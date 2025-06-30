@@ -1,3 +1,8 @@
+.start-new-campaign{
+  color: #4c4c4c;
+  text-transform: capitalize;
+}
+
 .add-new-campaign-container {
   height: 100vh;
   padding-block: 1rem;
