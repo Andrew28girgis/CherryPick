@@ -21,6 +21,8 @@ export class LoginComponent implements OnInit {
   private readonly MAP_VIEW_KEY = 'mapView';
   private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
+  private guid!: string;
+
 
   public loginData!: AdminLogin;
   private loginToken: string | null = null;
@@ -44,6 +46,38 @@ export class LoginComponent implements OnInit {
     this.initializeData();
     this.handleRouteParams();
   }
+
+ 
+  
+    private async checkOwnerData(): Promise<void> {
+      if (!this.guid) return;
+
+       const contactRequestBody = {
+        Name: 'GetContactDataFromGUID',
+        Params: {
+          GUIDSignature: this.guid.trim(),
+        },
+      };  
+  
+      this.placesService.BetaGenericAPI(contactRequestBody).subscribe((response:any)=>{
+if (response.json && response.json.length) {
+        const googleAccessToken = response.json[0].googleAccessToken;
+        const microsoftAccessToken = response.json[0].microsoftAccessToken;
+  
+        if(googleAccessToken||microsoftAccessToken){
+          this.router.navigate(['/campaigns'])
+        }else{
+          this.navigateToHome()
+        }
+  
+       
+      
+  
+    
+      }
+      })
+      
+    }
 
   private initializeData(): void {
     this.loginData = new AdminLogin();
@@ -158,13 +192,16 @@ export class LoginComponent implements OnInit {
     );
     localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
     localStorage.setItem(this.ORG_ID_KEY, response.orgId);
+     if (response.guidSignature) {
+      localStorage.setItem('guid', response.guidSignature);
+      this.guid=response.guidSignature
+    }
     if (response.token) {
       this.authService.setToken(response.token);
-      this.navigateToHome();
+      this.checkOwnerData()
+      // this.navigateToHome();
     }
-    if (response.guidSignature) {
-      localStorage.setItem('guid', response.guidSignature);
-    }
+   
   }
 
   private navigateToHome(): void {
