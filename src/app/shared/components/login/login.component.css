@@ -52,13 +52,12 @@ input::placeholder {
 }
 
 .right-container {
+  display: flex !important;
   background-color: #ebe9fb;
-  /* box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; */
   padding: 40px;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
   justify-content: center;
-  display: flex;
   flex-direction: column;
 }
 
@@ -174,7 +173,6 @@ input::placeholder {
   line-height: 30px; /* 187.5% */
 }
 
-
 .create-account-btn:hover {
   background: #f8f9ff;
   border-color: #2d1ba8;
@@ -186,13 +184,11 @@ input::placeholder {
 
 .cherry-desc {
   color: var(--Body-Text-and-Icons, #777199);
-
-  /* Body/14/24/Regular */
   font-family: Montserrat, sans-serif;
-  font-size: 14px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 171.429% */
+  line-height: 40px;
   letter-spacing: -0.07px;
   align-self: stretch;
 }
@@ -233,7 +229,7 @@ input::placeholder {
   font-size: 12px;
   font-weight: bold;
   color: white;
-} 
+}
 
 .termsofservice {
   text-decoration: underline;
@@ -303,12 +299,15 @@ input::placeholder {
   .login-container {
     padding: 20px;
     border-radius: 1rem;
-   }
+  }
 
   .right-container {
+    display: flex !important;
     border-radius: 1rem;
     border-top-right-radius: 0;
     margin-top: 0;
+    align-items: center;
+    justify-content: center;
   }
 
   .social-login-container {
@@ -392,9 +391,9 @@ input::placeholder {
 }
 
 .alert-danger {
-  background-color: #FFF2F2;
-  color: #DC2626;
-  border-left: 4px solid #DC2626;
+  background-color: #fff2f2;
+  color: #dc2626;
+  border-left: 4px solid #dc2626;
 }
 
 .alert.fade-out {
