@@ -259,6 +259,8 @@
                   "
                   [alt]="c.name"
                   class="tenant-logo-card"
+                  (error)="onImageError($event)" 
+
                 />
                 <h3 
                 style="cursor: pointer;"
@@ -480,6 +482,8 @@
                         [alt]="c.name"
                         class="tenant-logo"
                         style="width: 48px; height: 48px; border-radius: 50%"
+                        (error)="onImageError($event)" 
+
                       />
                       <span
                         class="tenant-name"

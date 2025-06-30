@@ -321,4 +321,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
     this.dataLoaded = true;
   }
+
+
+  onImageError(event: any) {
+    event.target.src = "assets/Images/placeholder.png"
+  }
 }
