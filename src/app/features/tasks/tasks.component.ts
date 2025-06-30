@@ -131,7 +131,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       const microsoftAccessToken = response.json[0].microsoftAccessToken;
 
       if(googleAccessToken||microsoftAccessToken){
-        this.router.navigate(['/summary'])
+        this.router.navigate(['/campaigns'])
       }
 
       if (googleAccessToken) {
