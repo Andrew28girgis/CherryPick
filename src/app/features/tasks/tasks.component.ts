@@ -147,6 +147,10 @@ export class TasksComponent implements OnInit, OnDestroy {
       const googleAccessToken = response.json[0].googleAccessToken;
       const microsoftAccessToken = response.json[0].microsoftAccessToken;
 
+      if(googleAccessToken||microsoftAccessToken){
+        this.router.navigate(['/summary'])
+      }
+
       if (googleAccessToken) {
         this.googleState = 3;
         this.GoogleGetContactFolders();
@@ -593,7 +597,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     };
     this.genericApiService.GenericAPI(body).subscribe({
       next: (response) => {
-        this.totalProgressedMessage = response.json[0].totalProgressedMessage;
+        this.totalProgressedMessage = response.json[0]?.totalProgressedMessage;
       },
       complete: () => {},
     });
