@@ -117,7 +117,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       Params: {
         GUIDSignature: guid,
       },
-    };    
+    };
 
     return this.genericApiService.BetaGenericAPI(contactRequestBody);
   }
@@ -208,7 +208,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   GetContactInfos() {
     this.http
       .get<any>(
-        `${environment.API_URL}/MicrosoftMails/GetContactInfos?ContactId=${this.contactId}`
+        `${environment.api}/MicrosoftMails/GetContactInfos?ContactId=${this.contactId}`
       )
       .subscribe({
         next: (data: any) => {
@@ -227,7 +227,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     };
     this.http
       .post<any>(
-        `${environment.API_URL}/MicrosoftMails/AddFolderToBeRead`,
+        `${environment.api}/MicrosoftMails/AddFolderToBeRead`,
         payload
       )
       .subscribe(() => {});
@@ -250,7 +250,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
       this.http
         .post<any>(
-          `${environment.API_URL}/MicrosoftMails/AddEmailsToBeRead`,
+          `${environment.api}/MicrosoftMails/AddEmailsToBeRead`,
           payload
         )
         .subscribe(() => {
@@ -292,7 +292,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
     this.http
       .post<any>(
-        `${environment.API_URL}/MicrosoftMails/AddDomainToBeRead`,
+        `${environment.api}/MicrosoftMails/AddDomainToBeRead`,
         payload
       )
       .subscribe(() => {
@@ -499,10 +499,11 @@ export class TasksComponent implements OnInit, OnDestroy {
     const body = {
       Name: 'UnlinkGoogle',
       Params: {
-        ContactId: this.contactId,
+        GUIDSignature: this.guid,
       },
     };
     this.genericApiService.GenericAPI(body).subscribe((response) => {
+      this.genericApiService.BetaGenericAPI(body).subscribe();
       this.googleState = 1;
       this.googleContactFolders = [];
       this.googleDomainList = [];
