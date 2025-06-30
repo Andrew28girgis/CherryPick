@@ -118,9 +118,6 @@ export class TasksComponent implements OnInit, OnDestroy {
     if (guid) this.guid = guid;
     if (contactId) this.contactId = +contactId;
 
-    this.MICROSOFT_CONNECT_LINK = `${environment.API_URL}/auth/signin?ContactId=${this.contactId}`;
-    this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${this.contactId}`;
-
     this.checkOwnerData();
     this.startMailCountInterval();
   }
@@ -158,6 +155,11 @@ export class TasksComponent implements OnInit, OnDestroy {
       if (microsoftAccessToken) {
         this.microsoftState = 3;
         this.GetContactFolders();
+      }
+
+      if (response.json[0].id) {
+        this.MICROSOFT_CONNECT_LINK = `${environment.API_URL}/auth/signin?ContactId=${response.json[0].id}`;
+        this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${response.json[0].id}`;
       }
 
       // Update intervals based on linked services
