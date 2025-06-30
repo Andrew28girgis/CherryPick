@@ -101,9 +101,6 @@ export class TasksComponent implements OnInit, OnDestroy {
     if (guid) this.guid = guid;
     if (contactId) this.contactId = +contactId;
 
-    this.MICROSOFT_CONNECT_LINK = `${environment.API_URL}/auth/signin?ContactId=${this.contactId}`;
-    this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${this.contactId}`;
-
     this.checkOwnerData();
     this.startMailCountInterval();
   }
@@ -133,6 +130,10 @@ export class TasksComponent implements OnInit, OnDestroy {
       const googleAccessToken = response.json[0].googleAccessToken;
       const microsoftAccessToken = response.json[0].microsoftAccessToken;
 
+      if(googleAccessToken||microsoftAccessToken){
+        this.router.navigate(['/summary'])
+      }
+
       if (googleAccessToken) {
         this.googleState = 3;
         this.GoogleGetContactFolders();
@@ -141,6 +142,11 @@ export class TasksComponent implements OnInit, OnDestroy {
       if (microsoftAccessToken) {
         this.microsoftState = 3;
         this.GetContactFolders();
+      }
+
+      if (response.json[0].id) {
+        this.MICROSOFT_CONNECT_LINK = `${environment.API_URL}/auth/signin?ContactId=${response.json[0].id}`;
+        this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${response.json[0].id}`;
       }
 
       // Update intervals based on linked services
@@ -574,7 +580,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     };
     this.genericApiService.GenericAPI(body).subscribe({
       next: (response) => {
-        this.totalProgressedMessage = response.json[0].totalProgressedMessage;
+        this.totalProgressedMessage = response.json[0]?.totalProgressedMessage;
       },
       complete: () => {},
     });

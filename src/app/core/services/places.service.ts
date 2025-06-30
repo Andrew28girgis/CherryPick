@@ -46,18 +46,23 @@ export class PlacesService {
     );
   }
 
-  public userToken(email:string){
-    return this.http.get(`${environment.api}/DropBox/GetUserTokens?Email=${email}`);
+  public userToken(email: string) {
+    return this.http.get(
+      `${environment.api}/DropBox/GetUserTokens?Email=${email}`
+    );
   }
 
-    public BetaGenericAPI(body: any): Observable<any> {
+  public BetaGenericAPI(body: any): Observable<any> {
     let encoded: string | undefined;
     const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
     encoded = this.base62.encode(utf8Bytes);
     let dropboxPath = `/cache/${encoded}.json`;
 
     if (this.appMode === 'api') {
-      return this.http.post<any>(`${environment.API_URL}/GenericAPI/Execute`, body);
+      return this.http.post<any>(
+        `${environment.API_URL}/GenericAPI/Execute`,
+        body
+      );
     } else {
       let hasUploaded = false;
       const tryDownload = (): Observable<any> => {
@@ -114,7 +119,6 @@ export class PlacesService {
       return tryDownload();
     }
   }
-
 
   public GenericAPI(body: any): Observable<any> {
     let encoded: string | undefined;

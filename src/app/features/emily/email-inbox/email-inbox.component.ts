@@ -299,12 +299,12 @@ export class EmailInboxComponent implements OnInit {
 
   transformToDTO(data: any): GetContactManagerDTO {
     const center =
-      data.ShoppingCenters && data.ShoppingCenters.length > 0
+      data?.ShoppingCenters && data.ShoppingCenters?.length > 0
         ? data.ShoppingCenters[0]
         : null;
     return {
-      ContactId: data.ContactId,
-      ContactName: `${data.Firstname} ${data.Lastname}`,
+      ContactId: data?.ContactId,
+      ContactName: `${data?.Firstname} ${data?.Lastname}`,
       ShoppingCentersName: center ? [center.CenterName.trim()] : [],
       ShoppingCentersID: center ? [center.id.toString()] : [],
     };
