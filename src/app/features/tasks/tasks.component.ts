@@ -63,20 +63,20 @@ export class TasksComponent implements OnInit, OnDestroy {
     contactCount: 0,
     organizationCount: 0,
     shoppingCentersCount: 0,
-    placeCount: 0
+    placeCount: 0,
   };
   protected diamondsCount: number = 0;
   protected microsoftDataProgress: DataCollectionProgress = {
     step1: false,
     step2: false,
     step3: false,
-    step4: false
+    step4: false,
   };
   protected googleDataProgress: DataCollectionProgress = {
     step1: false,
     step2: false,
     step3: false,
-    step4: false
+    step4: false,
   };
 
   protected MICROSOFT_CONNECT_LINK = '';
@@ -111,7 +111,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     setTimeout(() => {
-       this.getDiamondsCount();
+      this.getDiamondsCount();
     }, 2000);
     const guid = localStorage.getItem('guid');
     const contactId = localStorage.getItem('contactId');
@@ -522,7 +522,6 @@ export class TasksComponent implements OnInit, OnDestroy {
     });
   }
 
-
   GoogleGetSavedData() {
     forkJoin({
       folders: this.GoogleGetDBFolders(),
@@ -564,7 +563,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   getDiamondsCount(): void {
     const body = {
       Name: 'GetGemsCount',
-      Params: {}
+      Params: {},
     };
 
     this.genericApiService.GenericAPI(body).subscribe({
@@ -576,35 +575,32 @@ export class TasksComponent implements OnInit, OnDestroy {
             contactCount: data.contactCount || 0,
             organizationCount: data.organizationCount || 0,
             shoppingCentersCount: data.shoppingCentersCount || 0,
-            placeCount: data.placeCount || 0
+            placeCount: data.placeCount || 0,
           };
         }
       },
       error: (error) => {
         console.error('Error fetching counts:', error);
-      }
+      },
     });
   }
   getTotalMailsCount(): void {
     const body = {
       Name: 'TotalMails',
-      Params: {}
+      Params: {},
     };
     this.genericApiService.GenericAPI(body).subscribe({
       next: (response) => {
         this.totalProgressedMessage = response.json[0].totalProgressedMessage;
-       },
-      complete: () => {
-       }
+      },
+      complete: () => {},
     });
   }
- 
- 
 
   private startMailCountInterval() {
     // Update mail count and diamonds count every 5 seconds
     this.mailCountInterval = setInterval(() => {
-      this.getDiamondsCount();  // Get updated mail count
+      this.getDiamondsCount(); // Get updated mail count
       this.getTotalMailsCount(); // Get updated progress
     }, 5000);
   }
@@ -623,7 +619,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   private updateIntervals() {
     // Clear existing interval
     this.clearMailCountInterval();
-    
+
     // Only start new interval if at least one service is linked
     if (this.isAnyServiceLinked()) {
       this.startMailCountInterval();
@@ -637,7 +633,7 @@ export class TasksComponent implements OnInit, OnDestroy {
         contactCount: 0,
         organizationCount: 0,
         shoppingCentersCount: 0,
-        placeCount: 0
+        placeCount: 0,
       };
       this.totalProgressedMessage = 0;
     }
