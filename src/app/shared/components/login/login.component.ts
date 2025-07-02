@@ -8,6 +8,7 @@ import * as CryptoJS from 'crypto-js';
 import { EncodeService } from 'src/app/core/services/encode.service';
 import { DecodeService } from 'src/app/core/services/decode.service';
 import { DropboxService } from 'src/app/core/services/dropbox.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,6 @@ export class LoginComponent implements OnInit {
   private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
   private guid!: string;
-
 
   public loginData!: AdminLogin;
   private loginToken: string | null = null;
@@ -45,39 +45,37 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.initializeData();
     this.handleRouteParams();
+    this.route.queryParamMap.subscribe((parms) => {
+      const guid = parms.get('guid');
+      if (guid) this.autoLoginWithGuid(guid);
+    });
   }
 
- 
-  
-    private async checkOwnerData(): Promise<void> {
-      if (!this.guid) return;
+  private async checkOwnerData(): Promise<void> {
+    if (!this.guid) return;
 
-       const contactRequestBody = {
-        Name: 'GetContactDataFromGUID',
-        Params: {
-          GUIDSignature: this.guid.trim(),
-        },
-      };  
-  
-      this.placesService.BetaGenericAPI(contactRequestBody).subscribe((response:any)=>{
-if (response.json && response.json.length) {
-        const googleAccessToken = response.json[0].googleAccessToken;
-        const microsoftAccessToken = response.json[0].microsoftAccessToken;
-  
-        if(googleAccessToken||microsoftAccessToken){
-          this.router.navigate(['/campaigns'])
-        }else{
-          this.navigateToHome()
+    const contactRequestBody = {
+      Name: 'GetContactDataFromGUID',
+      Params: {
+        GUIDSignature: this.guid.trim(),
+      },
+    };
+
+    this.placesService
+      .BetaGenericAPI(contactRequestBody)
+      .subscribe((response: any) => {
+        if (response.json && response.json.length) {
+          const googleAccessToken = response.json[0].googleAccessToken;
+          const microsoftAccessToken = response.json[0].microsoftAccessToken;
+
+          if (googleAccessToken || microsoftAccessToken) {
+            this.router.navigate(['/campaigns']);
+          } else {
+            this.navigateToHome();
+          }
         }
-  
-       
-      
-  
-    
-      }
-      })
-      
-    }
+      });
+  }
 
   private initializeData(): void {
     this.loginData = new AdminLogin();
@@ -142,6 +140,22 @@ if (response.json && response.json.length) {
     return encryptedLoginData;
   }
 
+  public autoLoginWithGuid(guid: string): void {
+    this.spinner.show();
+    this.placesService.autoLoginWithGuid(guid).subscribe({
+      next: (response) => {
+        this.handleLoginSuccess(response);
+      },
+      error: (error) => {
+        console.error(error);
+        this.handleLoginError();
+      },
+      complete: () => {
+        this.spinner.hide();
+      },
+    });
+  }
+
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
     this.userEmail = loginRequest.Email;
@@ -192,16 +206,15 @@ if (response.json && response.json.length) {
     );
     localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
     localStorage.setItem(this.ORG_ID_KEY, response.orgId);
-     if (response.guidSignature) {
+    if (response.guidSignature) {
       localStorage.setItem('guid', response.guidSignature);
-      this.guid=response.guidSignature
+      this.guid = response.guidSignature;
     }
     if (response.token) {
       this.authService.setToken(response.token);
-      this.checkOwnerData()
+      this.checkOwnerData();
       // this.navigateToHome();
     }
-   
   }
 
   private navigateToHome(): void {

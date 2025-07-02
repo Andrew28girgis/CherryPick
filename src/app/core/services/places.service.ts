@@ -373,4 +373,9 @@ export class PlacesService {
       requestPayload
     );
   }
+
+  public autoLoginWithGuid(guid: string) {
+    const url = environment.API_URL + `/BuyBox/LoginWithGuid?Guid=${guid}`;
+    return this.http.post(url, {});
+  }
 }

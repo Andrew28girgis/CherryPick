@@ -26,10 +26,15 @@ import { RegisterationComponent } from './shared/components/registeration/regist
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
-import {   AccountLinkedGuard} from './core/guards/account-linked.guard';
+import { AccountLinkedGuard } from './core/guards/account-linked.guard';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent, data: { hideHeader: true } },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+    data: { hideHeader: true },
+  },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
   // {
   //   path: 'registeration',
@@ -59,7 +64,7 @@ const routes: Routes = [
       import('../app/features/properties/properties.module').then(
         (m) => m.PropertiesModule
       ),
-    canActivate: [AuthGuardService,  ],
+    canActivate: [AuthGuardService],
   },
   {
     path: 'organizations',
@@ -67,7 +72,7 @@ const routes: Routes = [
       import('../app/features/organizations/organizations.module').then(
         (m) => m.OrganizationsModule
       ),
-    canActivate: [AuthGuardService,  ],
+    canActivate: [AuthGuardService],
   },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
@@ -80,17 +85,17 @@ const routes: Routes = [
       import('./features/landlord/landlord.module').then(
         (m) => m.LandlordModule
       ),
-    canActivate: [LandlordAccessGuard, ],
+    canActivate: [LandlordAccessGuard],
   },
   {
     path: 'summary',
     component: SummeryComponent,
-    canActivate: [AuthGuardService,  ],
+    canActivate: [AuthGuardService],
   },
   {
     path: 'canvas',
     component: CanvasHomeComponent,
-    canActivate: [AuthGuardService, ],
+    canActivate: [AuthGuardService],
   },
   {
     path: 'overview',
@@ -100,12 +105,12 @@ const routes: Routes = [
   {
     path: 'data-sources',
     component: DataSourcesComponent,
-    canActivate: [TenantOnlyGuard, ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'submissions/:campaignId',
     component: SubmissionsComponent,
-    canActivate: [TenantOnlyGuard, ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'campaigns',
@@ -113,28 +118,28 @@ const routes: Routes = [
       import('./features/campaign/campaign.module').then(
         (m) => m.CampaignModule
       ),
-    canActivate: [TenantOnlyGuard,  ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'add-tenant',
     component: AddTenantsComponent,
-    canActivate: [TenantOnlyGuard,  ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'summary/:orgId',
     component: SummeryComponent,
-    canActivate: [TenantOnlyGuard,  ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard,  ],
+    canActivate: [AuthGuardService, TenantOnlyGuard],
     data: { hideHeader: true },
   },
   {
     path: 'market-survey',
     component: MarketSurveyComponent,
-    canActivate: [TenantOnlyGuard, AuthGuardService,  ],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
     data: { hideHeader: true },
   },
   {
@@ -146,56 +151,56 @@ const routes: Routes = [
   {
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
-    canActivate: [TenantOnlyGuard,  ],
+    canActivate: [TenantOnlyGuard],
     data: { hideHeader: true },
   },
   {
     path: 'Kanban',
     loadChildren: () =>
       import('./features/kanban/kanban.module').then((m) => m.KanbanModule),
-    canActivate: [AuthGuardService, TenantOnlyGuard,  ],
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
 
   {
     path: 'Kanban/:id',
     component: KanbanComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard,  ],
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'MutipleEmail/:campaignId',
     component: NewMulipleEmailComponent,
-    canActivate: [TenantOnlyGuard,  ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'MailsList/:MailContextId/:IsSent',
     component: MailsGenerateOrSendComponent,
-    canActivate: [TenantOnlyGuard,  ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'tenantWithPolygons',
     component: AddTenantsComponent,
-    canActivate: [TenantOnlyGuard,  ],
+    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'organization-mail/:buyBoxId/:organizationId/:campaignId',
     component: InboxComponent,
-    canActivate: [AuthGuardService,  ],
+    canActivate: [AuthGuardService],
   },
   {
     path: 'contacts',
     component: ContactsComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard,  ],
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'shoppingcenters',
     component: ShoppingComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard,  ],
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName/:campaignId',
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
-    canActivate: [AuthGuardService, TenantOnlyGuard,  ],
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: ':guid',
@@ -212,7 +217,6 @@ const routes: Routes = [
     component: TenantComponent,
     data: { hideHeader: true },
   },
- 
 ];
 
 @NgModule({
