@@ -31,8 +31,7 @@
 
 .x-section {
   width: 100%;
-  padding: 1rem; /* Reduced from 1.5rem */
-  border-radius: 1rem; /* Slightly reduced */
+  padding: 1rem 0; /* Reduced from 1.5rem */ 
   background-color: transparent;
    display: flex;
   flex-direction: column;
