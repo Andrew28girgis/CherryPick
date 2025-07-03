@@ -250,7 +250,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.guid = res.json[0].guid;
-        console.log('Campaign GUID from email:', this.guid);
       },
     });
   }

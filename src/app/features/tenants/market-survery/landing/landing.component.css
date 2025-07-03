@@ -1,6 +1,4 @@
 .cherry-logo {
-  max-width: 30px;
-  max-height: 30px !important;
   height: auto;
   transition: all 0.3s ease;
   cursor: pointer;
