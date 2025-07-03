@@ -41,12 +41,19 @@
   flex-direction: row;
   justify-content: center;
   align-items: stretch;
-  gap: 20px;
-  padding: 40px;
+  gap: 17px;
+  padding: 24px;
   flex-wrap: nowrap;
    width: 100%;
   min-width: 0;
   flex: 2;
+}
+.bottom-right-fixed{
+  position: fixed;
+  bottom: 20px;
+  right: 8%;
+  z-index: 1000;
+  max-width: 300px;
 }
 
 .diamond-card {
@@ -54,7 +61,7 @@
   flex-direction: column;
   align-items: center;
   min-width: 180px;
-   padding: 32px;
+   padding: 10px;
   border-radius: 24px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -137,13 +144,12 @@ background-blend-mode: screen, overlay, overlay, normal;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 24px;
-  transition: all 0.3s ease;
+   transition: all 0.3s ease;
 }
 
 .diamond-wrapper svg {
-  width: 100%;
-  height: 100%;
+  width: 75%;
+  height: 70%;
   transition: transform 0.5s ease;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
 }
@@ -212,14 +218,18 @@ background-blend-mode: screen, overlay, overlay, normal;
   flex-direction: column;
   display: flex;
   align-items: center;
-  gap: 24px;
-  justify-content: space-between;
+   justify-content: space-between;
   min-height: 100%;
 
 }
 
 .progress-container {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  background: #2F82FF; /* Base blue color from your diamond cards */
+  background-image: 
+    linear-gradient(135deg, #3922d2 0%, #2F82FF 50%, #6366f1 100%),
+    linear-gradient(105deg, rgba(53, 53, 53, 0.3) 13.77%, rgba(53, 53, 53, 0.00) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%); 
+  background-blend-mode: normal, color-burn, normal;
   border-radius: 12px;
   padding: 24px;
   position: relative;

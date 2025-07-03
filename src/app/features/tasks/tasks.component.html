@@ -1,7 +1,5 @@
- 
-
-<div class="row g-4 mb-4">
-  <div class="col-6">
+<div class="row g-4 mb-4 justify-content-center">
+  <div class="col-lg-4 col-md-5 col-sm-6">
     <div class="x-section h-100">
       <img
         class="section-img"
@@ -63,7 +61,7 @@
     </div>
   </div>
 
-  <div class="col-6">
+  <div class="col-lg-4 col-md-5 col-sm-6">
     <div class="x-section h-100">
       <img
         class="section-img"
@@ -73,7 +71,7 @@
       <div class="w-100 d-flex align-items-center gap-2">
         <a
           [href]="GOOGLE_CONNECT_LINK"
-          class="w-100 btn card-btn"
+          class="w-100 btn card-btn "
           [ngClass]="{ 'card-btn-unlink': googleState == 3 }"
           (click)="googleState == 3 ? UnlinkGoogle($event) : null"
         >
@@ -126,7 +124,6 @@
   </div>
 </div>
 
-@if (isAnyServiceLinked() ) {
 <div class="row g-4 mb-4">
   <div class="col-12">
     <app-diamond-loader 
@@ -135,8 +132,7 @@
     </app-diamond-loader>
   </div>
 </div>
-}
-
+ 
 <ng-template #msConfiguration let-modal>
   <div class="modal-content">
     <div class="modal-header">
