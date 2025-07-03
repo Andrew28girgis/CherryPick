@@ -27,6 +27,7 @@ import { DataSourcesComponent } from './features/data-sources/data-sources.compo
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
 import { AccountLinkedGuard } from './core/guards/account-linked.guard';
+import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
 
 const routes: Routes = [
   {
@@ -194,6 +195,11 @@ const routes: Routes = [
   {
     path: 'shoppingcenters',
     component: ShoppingComponent,
+    canActivate: [AuthGuardService, TenantOnlyGuard],
+  },
+  {
+    path: 'extractShopping/:id',
+    component: ExtractShoppingCenterComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {

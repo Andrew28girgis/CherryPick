@@ -55,6 +55,7 @@ import { NotFoundComponent } from './shared/components/not-found/not-found.compo
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
+import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { ShoppingComponent } from './features/shopping/shopping.component';
     DataSourcesComponent,
     ContactsComponent,
     ShoppingComponent,
+    ExtractShoppingCenterComponent,
   ],
   imports: [
     BrowserModule,
