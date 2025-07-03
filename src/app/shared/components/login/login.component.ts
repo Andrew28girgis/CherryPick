@@ -159,7 +159,7 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
     this.userEmail = loginRequest.Email;
-    this.getUserToken(this.userEmail);
+    //this.getUserToken(this.userEmail);
     this.placesService.newLoginUser(loginRequest).subscribe({
       next: (response: any) => {
         this.handleLoginSuccess(response);
