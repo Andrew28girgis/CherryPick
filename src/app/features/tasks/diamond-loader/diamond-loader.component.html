@@ -1,22 +1,7 @@
 <div class="loader-container">
   <div class="progress-diamonds">
 
-     <!-- Progress Bar Section -->
-     <div class="progress-container"*ngIf="!hidden">
-      <button class="cancel-btn" (click)="onCancel()">Cancel</button>
-      <div class="progress-text">
-        <div class="status-text " style="width: fit-content;">Catching In Progress...</div>
-        <div class="main-text">{{actionText}}</div>
-      </div>
-      <div class="progress-section">
-        <div class="progress-bar-container">
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="calculateProgress()"></div>
-          </div>
-        </div>
-        <div class="progress-percentage">{{calculateProgress()}}%</div>
-      </div>
-    </div>
+   
     <!-- Diamond Cards Section -->
     <div class="diamonds-container">
       <div class="diamond-card" *ngFor="let item of countItems; let i = index">
@@ -282,6 +267,23 @@
       </div>
     </div>
 
-   
+     <!-- Progress Bar Section -->
+      <div class="progress-main bottom-right-fixed">
+     <div class="progress-container"*ngIf="!hidden">
+      <button class="cancel-btn" (click)="onCancel()">Cancel</button>
+      <div class="progress-text">
+        <div class="status-text " style="width: fit-content;">Catching In Progress...</div>
+        <div class="main-text">{{actionText}}</div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-bar-container">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="calculateProgress()"></div>
+          </div>
+        </div>
+        <div class="progress-percentage">{{calculateProgress()}}%</div>
+      </div>
+    </div>
+    </div>
   </div>
 </div> 
