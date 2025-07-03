@@ -200,7 +200,7 @@ const routes: Routes = [
   {
     path: 'extractShopping/:id',
     component: ExtractShoppingCenterComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard],
+    // canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName/:campaignId',
