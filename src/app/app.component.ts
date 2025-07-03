@@ -44,8 +44,8 @@ export class AppComponent implements OnInit {
   onResize() {
     this.checkScreenSize();
   }
+
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
-    // On mobile, always use the responsive card view
   }
 }
