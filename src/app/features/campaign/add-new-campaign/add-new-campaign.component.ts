@@ -85,6 +85,9 @@ export class AddNewCampaignComponent
       this.contactId = +contact;
     }
 
+    const bbId = localStorage.getItem('BuyBoxId');
+    if (bbId) this.buyBoxId = +bbId;
+
     this.mapBoundsChangeListeners();
     this.featureAddedListeners();
     this.getUserBuyBoxes();
