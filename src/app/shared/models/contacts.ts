@@ -1,3 +1,8 @@
+export interface OrganizationWithContacts {
+  id: number;
+  name: string;
+  contacts: Contact[];
+}
 export interface Contact {
     id: number;
     firstname: string;

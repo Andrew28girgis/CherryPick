@@ -8,22 +8,48 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding-top: 24px;
-  padding: 24px 0 0 0;
-  margin: 0;
+  margin: 24px 0;
+}
+.organization-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 24px 0;
+}
+.contact-card.empty {
+  background-color: #f9fafb;
+  border: 1px dashed #ccc;
+  justify-content: center;
+  align-items: center;
+  min-height: 190px;
+  text-align: center;
+}
+
+.contact-card.empty .contact-info {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .contact-card {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 24px;
   border-radius: 16px;
   gap: 24px;
-  height: auto;
   background: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+.organization-card .row {
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.organization-card .col-12,
+.organization-card .col-md-6 {
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .contact-avatar {
@@ -767,7 +793,6 @@
   margin: 0;
 }
 
- 
 .skeleton-card {
   display: flex;
   align-items: flex-start;
