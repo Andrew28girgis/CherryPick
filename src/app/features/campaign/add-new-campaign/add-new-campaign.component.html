@@ -508,7 +508,9 @@
         />
       </svg>
     </div>
-    <ng-container *ngIf="!buyBoxId && userBuyBoxes && userBuyBoxes.length > 0">
+    <ng-container
+      *ngIf="showSelectMenu && userBuyBoxes && userBuyBoxes.length > 0"
+    >
       <label
         for="user-buybox"
         class="form-label w-100 d-flex justify-content-start"
