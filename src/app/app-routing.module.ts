@@ -67,14 +67,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuardService],
   },
-  {
-    path: 'organizations',
-    loadChildren: () =>
-      import('../app/features/organizations/organizations.module').then(
-        (m) => m.OrganizationsModule
-      ),
-    canActivate: [AuthGuardService],
-  },
+  // {
+  //   path: 'organizations',
+  //   loadChildren: () =>
+  //     import('../app/features/organizations/organizations.module').then(
+  //       (m) => m.OrganizationsModule
+  //     ),
+  //   canActivate: [AuthGuardService],
+  // },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
@@ -188,7 +188,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
-    path: 'contacts',
+    path: 'organizations',
     component: ContactsComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
