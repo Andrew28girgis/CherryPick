@@ -33,9 +33,9 @@ interface CountData {
 export class TasksComponent implements OnInit, OnDestroy {
   private guid!: string;
   private contactId!: number;
-  private microsoftProgressSubscription?: Subscription;
-  private googleProgressSubscription?: Subscription;
-  private mailCountInterval: any;
+   private mailCountInterval: any;
+  private totalMailsSubscription?: Subscription;
+  private diamondsCountSubscription?: Subscription;
 
   protected microsoftState: number = 1; // 1: not linked, 2: linking, 3: linked
   protected googleState: number = 1;
@@ -106,8 +106,8 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.microsoftProgressSubscription?.unsubscribe();
-    this.googleProgressSubscription?.unsubscribe();
+     this.totalMailsSubscription?.unsubscribe();
+    this.diamondsCountSubscription?.unsubscribe();
     this.clearMailCountInterval();
   }
 
@@ -556,7 +556,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       Params: {},
     };
 
-    this.genericApiService.GenericAPI(body).subscribe({
+    this.diamondsCountSubscription = this.genericApiService.GenericAPI(body).subscribe({
       next: (response) => {
         if (response.json && response.json.length > 0) {
           const data = response.json[0];
@@ -579,7 +579,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       Name: 'TotalMails',
       Params: {},
     };
-    this.genericApiService.GenericAPI(body).subscribe({
+    this.totalMailsSubscription = this.genericApiService.GenericAPI(body).subscribe({
       next: (response) => {
         this.totalProgressedMessage = response.json[0]?.totalProgressedMessage;
       },
