@@ -86,9 +86,9 @@ export class LoginComponent implements OnInit {
     this.route.queryParamMap.subscribe((params) => {
       this.loginToken = params.get('t');
       if (this.loginToken) {
-        this.router.navigate(['/not-found']);
-        // localStorage.setItem('loginToken', this.loginToken || '');
-        // this.loginWithGUID();
+ //       this.router.navigate(['/not-found']);
+        localStorage.setItem('loginToken', this.loginToken || '');
+        this.loginWithGUID();
       }
     });
   }
@@ -120,6 +120,10 @@ export class LoginComponent implements OnInit {
     } = response.json[0];
     localStorage.setItem(this.ORG_ID_KEY, organizationId);
 
+    let c = localStorage.getItem(this.CONTACT_ID_KEY);
+    console.log(c);
+    console.log(campaignId);
+    
     this.router.navigate(['/market-survey'], {
       queryParams: {
         buyBoxId: buyBoxId,
