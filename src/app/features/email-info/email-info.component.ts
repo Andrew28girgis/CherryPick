@@ -22,7 +22,7 @@ export class EmailInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.mailId = params.get('mailId') || '121931';
+      this.mailId = params.get('mailId')  ;
       this.getEmailInfo();
     });
   }
