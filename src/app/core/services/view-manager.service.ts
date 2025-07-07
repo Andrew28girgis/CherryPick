@@ -798,6 +798,7 @@ public getCurrentLoadingState(): boolean
 
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
+          
           const centers = data.json;
 
           // Store all centers
