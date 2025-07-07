@@ -1,0 +1,107 @@
+ <div class="email-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading email information...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <h3>Error</h3>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Email Data -->
+  <div *ngIf="emailData && !loading" class="email-content">
+    <!-- Email Header -->
+    <div class="email-header">
+      <h2 class="email-subject">{{ emailData.subject }}</h2>
+      <div class="email-meta">
+         <span class="email-date">{{ formatDate(emailData.date) }}</span>
+        <span class="email-direction" [ngClass]="'direction-' + emailData.direction">
+          {{ getDirectionText(emailData.direction) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Email Body -->
+    <div class="email-body">
+      <h3>Message Content</h3>
+      <div class="body-content" [innerHTML]="formatBody(emailData.body)"></div>
+    </div>
+
+    <!-- Campaign Information -->
+    <div class="campaign-section">
+      <h3>Campaign Information</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Campaign Name:</label>
+          <span>{{ emailData.campaignName }}</span>
+        </div>
+         <div class="info-item">
+          <label>Created Date:</label>
+          <span>{{ formatDate(emailData.campaignCreatedDate) }}</span>
+        </div>
+        <div class="info-item">
+          <label>Privacy Level:</label>
+          <span>{{ emailData.campaignPrivacy }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buybox Information -->
+    <div class="buybox-section">
+      <h3>Property Requirements</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Buybox Name:</label>
+          <span>{{ emailData.buyboxName }}</span>
+        </div>
+      
+        <div class="info-item">
+          <label>Building Size Range:</label>
+          <span>{{ emailData.minBuildingSize | number }} - {{ emailData.maxBuildingSize | number }} sq.ft.</span>
+        </div>
+        <div class="info-item" *ngIf="emailData.minLandSize || emailData.maxLandSize">
+          <label>Land Size Range:</label>
+          <span>
+            {{ emailData.minLandSize ? (emailData.minLandSize | number) : 'N/A' }} - 
+            {{ emailData.maxLandSize ? (emailData.maxLandSize | number) : 'N/A' }} sq.ft.
+          </span>
+        </div>
+        <div class="info-item" *ngIf="emailData.buildingType">
+          <label>Building Type:</label>
+          <span>{{ emailData.buildingType }}</span>
+        </div>
+        <div class="info-item" *ngIf="emailData.purchasePrice">
+          <label>Purchase Price:</label>
+          <span>{{ emailData.purchasePrice | currency }}</span>
+        </div>
+        <div class="info-item" *ngIf="emailData.zoning">
+          <label>Zoning:</label>
+          <span>{{ emailData.zoning }}</span>
+        </div>
+        <div class="info-item" *ngIf="emailData.vehiclePerDay">
+          <label>Vehicles Per Day:</label>
+          <span>{{ emailData.vehiclePerDay | number }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="additional-info">
+      <h3>Additional Details</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>To Address:</label>
+          <span>{{ emailData.toAddress || 'Not specified' }}</span>
+        </div>
+        <div class="info-item">
+          <label>From Address:</label>
+          <span>{{ emailData.fromAddress || 'Not specified' }}</span>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

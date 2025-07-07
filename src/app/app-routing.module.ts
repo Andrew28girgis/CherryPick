@@ -28,6 +28,7 @@ import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
 import { AccountLinkedGuard } from './core/guards/account-linked.guard';
 import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
+import { EmailInfoComponent } from './features/email-info/email-info.component';
 
 const routes: Routes = [
   {
@@ -208,6 +209,10 @@ const routes: Routes = [
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
+      {
+    path: 'emailInfo/:mailId',
+    component: EmailInfoComponent,
+  },
   {
     path: ':guid',
     component: TenantComponent,
@@ -223,6 +228,7 @@ const routes: Routes = [
     component: TenantComponent,
     data: { hideHeader: true },
   },
+
 ];
 
 @NgModule({
