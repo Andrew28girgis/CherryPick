@@ -15,20 +15,19 @@ import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
-import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
-import { RegisterationComponent } from './shared/components/registeration/registeration.component';
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
 import { AccountLinkedGuard } from './core/guards/account-linked.guard';
 import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
 import { EmailInfoComponent } from './features/email-info/email-info.component';
+import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 
 const routes: Routes = [
   {
@@ -141,7 +140,6 @@ const routes: Routes = [
   {
     path: 'market-survey',
     component: MarketSurveyComponent,
-    canActivate: [TenantOnlyGuard, AuthGuardService],
     data: { hideHeader: true },
   },
   {
@@ -209,7 +207,7 @@ const routes: Routes = [
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-      {
+  {
     path: 'emailInfo/:mailId',
     component: EmailInfoComponent,
   },
@@ -228,7 +226,6 @@ const routes: Routes = [
     component: TenantComponent,
     data: { hideHeader: true },
   },
-
 ];
 
 @NgModule({
