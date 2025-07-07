@@ -326,14 +326,12 @@
 }
 
 .center-name {
-  color: var(--Body-Heading-Color, #18171f);
-
-  /* Body/16/30/SemiBold */
+  color: var(--Body-Heading-Color, #18171f); 
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 30px; /* 187.5% */
+  line-height: 30px; 
   margin-bottom: 0;
 }
 

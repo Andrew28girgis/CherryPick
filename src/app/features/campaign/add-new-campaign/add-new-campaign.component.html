@@ -508,7 +508,9 @@
         />
       </svg>
     </div>
-    <!-- <ng-container *ngIf="userBuyBoxes && userBuyBoxes.length > 0">
+    <ng-container
+      *ngIf="showSelectMenu && userBuyBoxes && userBuyBoxes.length > 0"
+    >
       <label
         for="user-buybox"
         class="form-label w-100 d-flex justify-content-start"
@@ -527,7 +529,7 @@
           </option>
         </ng-container>
       </select>
-    </ng-container> -->
+    </ng-container>
     <input
       type="text"
       class="form-control mb-3 campaign-name-input"

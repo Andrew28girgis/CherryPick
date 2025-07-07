@@ -258,17 +258,21 @@
         <div class="card-kayak mt-3 mb-3" (click)="goToTenant(tenant)">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
-              <div>
+              <div >
                 <img
                   (click)="$event.stopPropagation()"
                   class="Kayak__img cursor"
-                  [routerLink]="[
-                    '/dashboard',
-                    tenant.Id,
-                    tenant.OrganizationId,
-                    tenant.Name,
-                    tenant.Campaigns[0].Id
-                  ]"
+             [routerLink]="
+                    tenant.Campaigns
+                      ? [
+                          '/dashboard',
+                          tenant.Id,
+                          tenant.OrganizationId,
+                          tenant.Name,
+                          tenant.Campaigns[0].Id
+                        ]
+                      : null
+                  "
                   [src]="
                     'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
                     tenant.OrganizationId
@@ -284,13 +288,17 @@
 
                 <div
                   class="card__Kayak_title cursor"
-                  [routerLink]="[
-                    '/dashboard',
-                    tenant.Id,
-                    tenant.OrganizationId,
-                    tenant.Name,
-                    tenant.Campaigns[0].Id
-                  ]"
+                  [routerLink]="
+                    tenant.Campaigns
+                      ? [
+                          '/dashboard',
+                          tenant.Id,
+                          tenant.OrganizationId,
+                          tenant.Name,
+                          tenant.Campaigns[0].Id
+                        ]
+                      : null
+                  "
                 >
                   {{ tenant.Name }}
                 </div>
@@ -313,14 +321,19 @@
               </div>
             </div>
             <div
+              
               class="chevronicon cursor"
-              [routerLink]="[
-                '/dashboard',
-                tenant.Id,
-                tenant.OrganizationId,
-                tenant.Name,
-                tenant.Campaigns[0].Id
-              ]"
+            [routerLink]="
+                    tenant.Campaigns
+                      ? [
+                          '/dashboard',
+                          tenant.Id,
+                          tenant.OrganizationId,
+                          tenant.Name,
+                          tenant.Campaigns[0].Id
+                        ]
+                      : null
+                  "
             >
               <i class="fa-solid fa-chevron-right"></i>
             </div>
