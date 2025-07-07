@@ -3,13 +3,26 @@
 <div class="container">
   <div class="back-nav">
     <a [routerLink]="['/summary']" class="back-link">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M12.5 16.6L7.0667 11.1667C6.42503 10.525 6.42503 9.47503 7.0667 8.83336L12.5 3.40002" stroke="#707791" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+      >
+        <path
+          d="M12.5 16.6L7.0667 11.1667C6.42503 10.525 6.42503 9.47503 7.0667 8.83336L12.5 3.40002"
+          stroke="#707791"
+          stroke-width="1.5"
+          stroke-miterlimit="10"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </svg>
       Back to Tenants
     </a>
   </div>
-  <div class=" mb-2">
+  <div class="mb-2">
     <form [formGroup]="siteDetailsForm" (ngSubmit)="onSubmitForm()">
       <div class="row m-0">
         <div class="col-12 mb-2">
@@ -17,7 +30,11 @@
         </div>
       </div>
       <div class="d-flex flex-column">
-        <p-stepper [linear]="true" styleClass="custom-stepper" [activeIndex]="currentStep">
+        <p-stepper
+          [linear]="true"
+          styleClass="custom-stepper"
+          [activeIndex]="currentStep"
+        >
           <p-stepperPanel>
             <ng-template
               pTemplate="content"
@@ -70,7 +87,8 @@
                       />
                       <ul
                         *ngIf="
-                          showOrganizationSuggestions && organizations.length > 0
+                          showOrganizationSuggestions &&
+                          organizations.length > 0
                         "
                         class="list-group position-absolute"
                         style="width: 88%"
@@ -149,7 +167,8 @@
                           'is-invalid':
                             siteDetailsForm.get('BuildingSquareFootage')
                               ?.invalid &&
-                            siteDetailsForm.get('BuildingSquareFootage')?.touched
+                            siteDetailsForm.get('BuildingSquareFootage')
+                              ?.touched
                         }"
                       />
                     </div>
@@ -202,7 +221,9 @@
                     <div
                       class="form-control d-flex align-items-center justify-content-between"
                     >
-                      <label class="label-style" style="color: #000;">Drive-Thru</label>
+                      <label class="label-style" style="color: #000"
+                        >Drive-Thru</label
+                      >
                       <p-selectButton
                         [options]="Options"
                         formControlName="DriveThru"
@@ -328,7 +349,8 @@
                 <div class="row m-0">
                   <div class="col-12 mt-3">
                     <label class="Head-line"
-                      ><span class="Step-num">2</span> Zoning & Regulatory</label
+                      ><span class="Step-num">2</span> Zoning &
+                      Regulatory</label
                     >
                   </div>
                   <div class="col-12 col-sm-6 mt-3">
@@ -558,7 +580,8 @@
                     >
                   </div>
                   <div class="p-3" style="height: 500px">
-                    <app-campaign-drawing></app-campaign-drawing>
+                    <app-add-new-campaign></app-add-new-campaign>
+                    <!-- <app-campaign-drawing></app-campaign-drawing> -->
                   </div>
                 </div>
               </div>
