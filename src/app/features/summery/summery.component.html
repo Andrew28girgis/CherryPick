@@ -284,15 +284,13 @@
 
                 <div
                   class="card__Kayak_title cursor"
-                  [routerLink]="  [
-                          '/dashboard',
-                          tenant.Id,
-                          tenant.OrganizationId,
-                          tenant.Name,
-                         tenant.Campaigns ? tenant.Campaigns[0].Id : null
-                        ]
-                
-                  "
+                  [routerLink]="[
+                    '/dashboard',
+                    tenant.Id,
+                    tenant.OrganizationId,
+                    tenant.Name,
+                    tenant.Campaigns ? tenant.Campaigns[0].Id : null
+                  ]"
                 >
                   {{ tenant.Name }}
                 </div>
@@ -316,14 +314,13 @@
             </div>
             <div
               class="chevronicon cursor"
-              [routerLink]="  [
-                      '/dashboard',
-                      tenant.Id,
-                      tenant.OrganizationId,
-                      tenant.Name,
-                      tenant.Campaigns?  tenant.Campaigns[0].Id : null
-                    ]
-              "
+              [routerLink]="[
+                '/dashboard',
+                tenant.Id,
+                tenant.OrganizationId,
+                tenant.Name,
+                tenant.Campaigns ? tenant.Campaigns[0].Id : null
+              ]"
             >
               <i class="fa-solid fa-chevron-right"></i>
             </div>
