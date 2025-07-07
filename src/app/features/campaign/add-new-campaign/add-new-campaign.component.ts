@@ -62,6 +62,7 @@ export class AddNewCampaignComponent
   protected lastDisplayMode: number = 1;
   protected selectedCityName: string = '';
   protected userBuyBoxes!: { Id: number; Name: string }[];
+  protected showSelectMenu: boolean = false;
 
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
 
@@ -96,6 +97,9 @@ export class AddNewCampaignComponent
   }
 
   ngAfterViewInit(): void {
+    if (!this.buyBoxId) {
+      this.showSelectMenu = true;
+    }
     this.campaignDrawingService.initializeMap(this.gmapContainer);
     this.campaignDrawingService.initializeStaticDrawingManager();
     const map = this.campaignDrawingService.getMap();
