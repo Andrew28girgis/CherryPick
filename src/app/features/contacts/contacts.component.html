@@ -184,30 +184,30 @@
   </div>
 
   <!-- Skeleton Loading State -->
-<div class="skeleton-container" *ngIf="isLoading">
-  <div class="skeleton-grid">
-    <!-- Simulate each organization card -->
-    <div class="skeleton-org-card" *ngFor="let i of [1, 2, 3, 4]">
-      <!-- Organization Header (Logo + Title) -->
-      <div class="skeleton-org-header d-flex align-items-center mb-3">
-        <div class="skeleton-org-logo"></div>
-        <div class="skeleton-org-title"></div>
-      </div>
+  <div class="skeleton-container" *ngIf="isLoading">
+    <div class="skeleton-grid">
+      <!-- Simulate each organization card -->
+      <div class="skeleton-org-card" *ngFor="let i of [1, 2, 3, 4]">
+        <!-- Organization Header (Logo + Title) -->
+        <div class="skeleton-org-header d-flex align-items-center mb-3">
+          <div class="skeleton-org-logo"></div>
+          <div class="skeleton-org-title"></div>
+        </div>
 
-      <!-- Simulate 2-3 contact blocks per org -->
-      <div class="row w-100">
-        <div class="col-md-4" *ngFor="let j of [1, 2, 3]">
-          <div class="skeleton-contact-card p-3">
-            <div class="skeleton-contact-name"></div>
-            <div class="skeleton-contact-title"></div>
-            <div class="skeleton-contact-detail"></div>
-            <div class="skeleton-contact-detail short"></div>
+        <!-- Simulate 2-3 contact blocks per org -->
+        <div class="row w-100">
+          <div class="col-md-4" *ngFor="let j of [1, 2, 3]">
+            <div class="skeleton-contact-card p-3">
+              <div class="skeleton-contact-name"></div>
+              <div class="skeleton-contact-title"></div>
+              <div class="skeleton-contact-detail"></div>
+              <div class="skeleton-contact-detail short"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Real Content -->
   <div class="contacts-container" *ngIf="!isLoading">
@@ -225,9 +225,16 @@
           />
           <h2 class="organization-title mb-0">{{ org.name }}</h2>
         </div>
-        <!-- Contacts exist -->
+        <!-- Contacts Grid -->
         <div class="row w-100" *ngIf="org.contacts.length > 0">
-          <div class="col-md-4" *ngFor="let contact of org.contacts">
+          <div
+            class="col-md-4"
+            *ngFor="
+              let contact of expandedOrgs[org.id]
+                ? org.contacts
+                : org.contacts.slice(0, 3)
+            "
+          >
             <div class="contact-info p-3 h-100">
               <h3 class="contact-name">
                 {{ contact.firstname }} {{ contact.lastname }}
@@ -254,6 +261,13 @@
 
             </div>
           </div>
+        </div>
+
+        <!-- Show See More / See Less -->
+        <div class="text-end w-100" *ngIf="org.contacts.length > 3">
+          <button class="btn btn-link px-0" style="color: black; font-weight: 600;" (click)="toggleExpand(org.id)">
+            {{ expandedOrgs[org.id] ? "See Less" : "See More" }}
+          </button>
         </div>
 
         <!-- No contacts fallback -->

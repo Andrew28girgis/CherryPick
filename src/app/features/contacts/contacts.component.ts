@@ -59,6 +59,9 @@ export class ContactsComponent implements OnInit {
     { value: 'oldest', label: 'Oldest to Newest' },
     { value: 'status', label: 'Status' },
   ];
+  // Tracks which organizations are expanded
+expandedOrgs: { [orgId: number]: boolean } = {};
+
 
   constructor(private http: HttpClient, private PlacesService: PlacesService) {
     this.loadContacts();
@@ -111,6 +114,11 @@ export class ContactsComponent implements OnInit {
     this.applyFiltersAndSort();
   }
 
+  toggleExpand(orgId: number): void {
+  this.expandedOrgs[orgId] = !this.expandedOrgs[orgId];
+}
+
+
   onSearch(): void {
     this.applyFiltersAndSort();
   }
@@ -157,6 +165,8 @@ export class ContactsComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.updatePage(page);
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onPageSizeChange(): void {
