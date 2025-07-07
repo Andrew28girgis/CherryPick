@@ -13,22 +13,7 @@
 
   <!-- Email Data -->
   <div *ngIf="emailData && !loading" class="email-content">
-    <!-- Email Header -->
-    <div class="email-header">
-      <h2 class="email-subject">{{ emailData.subject }}</h2>
-      <div class="email-meta">
-         <span class="email-date">{{ formatDate(emailData.date) }}</span>
-        <span class="email-direction" [ngClass]="'direction-' + emailData.direction">
-          {{ getDirectionText(emailData.direction) }}
-        </span>
-      </div>
-    </div>
-
-    <!-- Email Body -->
-    <div class="email-body">
-      <h3>Message Content</h3>
-      <div class="body-content" [innerHTML]="formatBody(emailData.body)"></div>
-    </div>
+ 
 
     <!-- Campaign Information -->
     <div class="campaign-section">
