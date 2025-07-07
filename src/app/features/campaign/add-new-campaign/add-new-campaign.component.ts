@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   TemplateRef,
@@ -40,7 +41,8 @@ export class AddNewCampaignComponent
   }[] = [];
   private mapBounds: IMapBounds | null = null;
 
-  protected buyBoxId!: number;
+  @Input() buyBoxId!: number;
+  // protected buyBoxId!: number;
   protected selectedDrawingModeId: number = 1;
   protected visabilityOptions: any[] = [
     { label: 'Private', value: 1 },
@@ -85,8 +87,8 @@ export class AddNewCampaignComponent
       this.contactId = +contact;
     }
 
-    const bbId = localStorage.getItem('BuyBoxId');
-    if (bbId) this.buyBoxId = +bbId;
+    // const bbId = localStorage.getItem('BuyBoxId');
+    // if (bbId) this.buyBoxId = +bbId;
 
     this.mapBoundsChangeListeners();
     this.featureAddedListeners();
