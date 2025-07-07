@@ -33,9 +33,7 @@ interface CountData {
 export class TasksComponent implements OnInit, OnDestroy {
   private guid!: string;
   private contactId!: number;
-  private microsoftProgressSubscription?: Subscription;
-  private googleProgressSubscription?: Subscription;
-  private mailCountInterval: any;
+   private mailCountInterval: any;
   private totalMailsSubscription?: Subscription;
   private diamondsCountSubscription?: Subscription;
 
@@ -108,9 +106,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.microsoftProgressSubscription?.unsubscribe();
-    this.googleProgressSubscription?.unsubscribe();
-    this.totalMailsSubscription?.unsubscribe();
+     this.totalMailsSubscription?.unsubscribe();
     this.diamondsCountSubscription?.unsubscribe();
     this.clearMailCountInterval();
   }
