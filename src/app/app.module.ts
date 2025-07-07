@@ -56,7 +56,7 @@ import { DataSourcesComponent } from './features/data-sources/data-sources.compo
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
 import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
-
+ import { EmailInfoComponent } from './features/email-info/email-info.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -88,6 +88,7 @@ import { ExtractShoppingCenterComponent } from './features/extract-shopping-cent
     ContactsComponent,
     ShoppingComponent,
     ExtractShoppingCenterComponent,
+    EmailInfoComponent,
   ],
   imports: [
     BrowserModule,
