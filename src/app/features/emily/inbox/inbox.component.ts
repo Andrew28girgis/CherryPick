@@ -74,6 +74,8 @@ export class InboxComponent implements OnInit {
   selectedEmailForSend: EmailInfo | null = null;
   emailSubjectModal?: string = '';
   emailBodySafeModal: SafeHtml = '';
+  emailContactId: any;
+  selectedContactID: any;
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -276,6 +278,7 @@ export class InboxComponent implements OnInit {
         );
         this.emailBodySafeModal = this.emailBodySafe;
         this.emailSubjectModal = this.selectedEmail?.Subject;
+        this.emailContactId = this.selectedEmail?.ContactId;
       },
     });
   }
@@ -306,6 +309,8 @@ export class InboxComponent implements OnInit {
 
   openmodel(modal: any, body: any, contactId: any) {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
+        console.log('cc',contactId);
+    this.selectedContactID = contactId;
   }
 
   getDirectionIcon(direction: number): string {
