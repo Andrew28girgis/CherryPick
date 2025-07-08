@@ -30,6 +30,7 @@ export class EmailInboxComponent implements OnInit {
   contactId!: any;
   BatchGuid!: string;
   campaignId: any;
+  buyBoxIdGenerate: any;
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
@@ -95,6 +96,7 @@ export class EmailInboxComponent implements OnInit {
 
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
+      this.buyBoxIdGenerate = params.get('buyBoxId');
     });
 
     this.emilyService
@@ -325,7 +327,7 @@ export class EmailInboxComponent implements OnInit {
       IsReply: true,
       OldMail: this.emailBodyReply,
       ContactId: this.contactId,
-      BuyBoxId: this.buyBoxId,
+      BuyBoxId: this.buyBoxIdGenerate,
       CampaignId: this.campaignId,
       AddMinMaxSize: this.showMinBuildingSize,
       AddCompetitors: this.ShowCompetitors,
@@ -368,7 +370,7 @@ export class EmailInboxComponent implements OnInit {
       Name: 'PutMailsDraft',
       MainEntity: null,
       Params: {
-        BuyBoxId: this.buyBoxId,
+        BuyBoxId: this.buyBoxIdGenerate,
         ContactId: this.contactId,
         PromptId: promptId,
         IsCC: IsCC,
