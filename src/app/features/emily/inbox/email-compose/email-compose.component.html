@@ -257,13 +257,21 @@
 
       <!--     *ngIf="currentStep === 3 && sanitizedEmailBody" -->
       <button
-        (click)="openSendModal()"
+        (click)="UpdateEmailData()"
         type="button"
         class="btn btn-success"
         *ngIf="currentStep === 3 && sanitizedEmailBody"
       >
         Send
       </button>
+      <!-- <button
+        (click)="openSendModal()"
+        type="button"
+        class="btn btn-success"
+        *ngIf="currentStep === 3 && sanitizedEmailBody"
+      >
+        Send
+      </button> -->
     </div>
   </div>
 </div>

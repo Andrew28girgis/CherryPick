@@ -56,6 +56,7 @@ export class EmailComposeComponent implements OnInit {
   GetManagersShoppingCenters: IManager[] = [];
   @ViewChild('sendModal') sendModal: any;
   CCEmail: any;
+  mailId: any;
   constructor(
     public modal: NgbActiveModal,
     private spinner: NgxSpinnerService,
@@ -373,6 +374,7 @@ export class EmailComposeComponent implements OnInit {
             this.emailBody
           );
           this.emailSubject = response[0].Subject;
+          this.mailId = response[0].MailId;
           this.spinner.hide();
       },
     });
@@ -389,6 +391,24 @@ export class EmailComposeComponent implements OnInit {
         Subject: this.emailSubject,
         Body: this.emailBody,
       },
+    };
+    this.places.GenericAPI(body).subscribe(() => {
+      this.spinner.hide();
+      this.modal.close('sent');
+      this.modalService.dismissAll();
+    });
+  }
+  UpdateEmailData(){
+    this.spinner.show();
+    const body = {
+      Name: 'UpdateEmailData',
+      MainEntity: null,
+      Params: {
+        MailId: this.mailId,
+        Subject: this.emailSubject,
+        Body: this.emailBody,
+      },
+      Json: null,
     };
     this.places.GenericAPI(body).subscribe(() => {
       this.spinner.hide();
