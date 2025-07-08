@@ -73,6 +73,7 @@ export class EmailComposeComponent implements OnInit {
     await this.loadPrompts();
     this.GetCCEmail();
   }
+
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
   }
@@ -158,8 +159,7 @@ export class EmailComposeComponent implements OnInit {
     mgr.selected = input.checked;
   }
 
-  private async loadPrompts() {
-    // 1) get category
+  private async loadPrompts() {    
     const catResp = await firstValueFrom(
       this.places.GenericAPI({
         name: 'GetPromptsCategoryId',
@@ -169,7 +169,6 @@ export class EmailComposeComponent implements OnInit {
     const catId = catResp?.json?.[0]?.Id;
     if (!catId) return;
 
-    // 2) get prompts
     const prResp = await firstValueFrom(
       this.places.GenericAPI({
         name: 'GetPrompts',
@@ -184,7 +183,7 @@ export class EmailComposeComponent implements OnInit {
       name: p.Name,
       promptText: p.PromptText,
     }));
-    // default select first
+    
     if (this.prompts.length) {
       this.selectedPromptId = this.prompts[0].id;
     }
@@ -315,7 +314,6 @@ export class EmailComposeComponent implements OnInit {
     };
     this.places.GenericAPI(body).subscribe((res) => {
       const CEmail = res.json[0].virtualEmail;
-     console.log('CEmail', CEmail);
      this.CCEmail= CEmail;
      
     });

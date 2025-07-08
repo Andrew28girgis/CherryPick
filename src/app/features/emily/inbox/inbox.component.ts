@@ -129,7 +129,7 @@ export class InboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        this.filteredEmails = this.sortEmails(data.json);
+        this.filteredEmails =  data.json ? this.sortEmails(data.json) : []; 
         // Apply the current filter
         this.filterEmails(this.selectedFilter);
       },
@@ -214,7 +214,7 @@ export class InboxComponent implements OnInit {
       this.emptyMessage = '';
       this.selectedEmail = null;
       this.selected = null; // Reset selected email to show the list view
-    } else if (this.emailsSentContact.length > 0) {
+    } else if (this.emailsSentContact?.length > 0) {
       return;
     }
     // Since the API returns emails directly, use them as-is.
@@ -236,14 +236,14 @@ export class InboxComponent implements OnInit {
     // console.log('matchingEmails', this.emailsSentContact);
 
     this.filterEmails(this.selectedFilter);
-    if (this.emailsSentContact.length === 0) {
+    if (this.emailsSentContact?.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
     } else if (this.filteredEmails.length > 0) {
     }
   }
 
   sortEmails(emails: Mail[]): Mail[] {
-    return [...emails].sort((a, b) => {
+    return [...emails]?.sort((a, b) => {
       const dateA = new Date(a.Date).getTime();
       const dateB = new Date(b.Date).getTime();
       return dateB - dateA;
