@@ -78,6 +78,7 @@ export class InboxComponent implements OnInit {
   selectedContactID: any;
   emailContextId: number | undefined;
   selectedContextID: any;
+  showAll: boolean = false; // Flag to toggle showing all emails
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -109,20 +110,7 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  // getAllEmails(): void {
-  //   const body: any = {
-  //     Name: 'GetBuyBoxEmails',
-  //     MainEntity: null,
-  //     Params: { buyboxid: this.buyBoxId },
-  //     Json: null,
-  //   };
-  //   this.PlacesService.GenericAPI(body).subscribe({
-  //     next: (data) => {
-  //       this.BuyBoxEmails = data.json;
-  //       this.filteredEmails = this.sortEmails(data.json);
-  //     },
-  //   });
-  // }
+
   getAllEmails(): void {
     const body: any = {
       Name: 'GetBuyBoxEmails',
@@ -133,8 +121,7 @@ export class InboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        this.filteredEmails =  data.json ? this.sortEmails(data.json) : []; 
-        // Apply the current filter
+        this.filteredEmails =  data.json ? this.sortEmails(data.json) : [];    
         this.filterEmails(this.selectedFilter);
       },
     });
@@ -165,8 +152,9 @@ export class InboxComponent implements OnInit {
         const microDeal = this.BuyBoxMicroDeals.find(
           (deal) => deal.OrganizationId === this.orgId
         );
-
+        
         if (microDeal) {
+          
           this.selectedMicro = microDeal.OrganizationId;
           this.contacts = microDeal.Contact;
           this.getEmailsForContact(this.contacts[0]);
@@ -184,31 +172,7 @@ export class InboxComponent implements OnInit {
       },
     });
   }
-  // @ViewChildren('itemRef') itemRefs: QueryList<any> | undefined;
-  // ngAfterViewChecked() {
-  //   // After view checks, try scrolling to the first opened item
-  //   const firstOpenItem = this.BuyBoxMicroDeals.find((item) => item.isOpen);
-  //   if (firstOpenItem) {
-  //     this.scrollToOpenItem(firstOpenItem);
-  //   }
-  // }
-  // scrollToOpenItem(bb: any): void {
-  //   // Find the corresponding element using the data-org-id attribute
-  //   const element = this.itemRefs
-  //     ?.toArray()
-  //     .find(
-  //       (item) =>
-  //         item.nativeElement.getAttribute('data-org-id') ===
-  //         bb.OrganizationId.toString()
-  //     );
-  //   if (element) {
-  //     // Scroll the item into view
-  //     element.nativeElement.scrollIntoView({
-  //       behavior: 'smooth',
-  //       block: 'start',
-  //     });
-  //   }
-  // }
+
 
   getEmailsForContact(contact: Contact): void {
     if (this.selectedContact?.ContactId !== contact.ContactId) {
@@ -237,10 +201,8 @@ export class InboxComponent implements OnInit {
           ))
     );
 
-    // console.log('matchingEmails', this.emailsSentContact);
-
     this.filterEmails(this.selectedFilter);
-    if (this.emailsSentContact?.length === 0) {
+    if (this.emailsSentContact?.length === 0 && this.showAll === true) {
       this.emptyMessage = 'No emails available for this contact';
     } else if (this.filteredEmails.length > 0) {
     }
@@ -354,54 +316,7 @@ export class InboxComponent implements OnInit {
     }
   }
 
-  // filterEmails(filterType: string): void {
-  //   this.selectedFilter = filterType;
-  //   this.selected = null; // Reset selected email to show the list view
 
-  //   // If no emails or contact selected, don't try to filter.
-  //   if (!this.selectedContact || this.emailsSentContact?.length === 0) {
-  //     this.filteredEmails = [];
-  //     this.selectedEmail = null;
-  //     return;
-  //   }
-  //   // Apply the filter based on the selected type.
-  //   let filtered: Mail[] = [];
-  //   switch (filterType) {
-  //     case 'inbox':
-  //       filtered = this.emailsSentContact.filter(
-  //         (email) => email.Direction === 1
-  //       );
-  //       break;
-  //     case 'outbox':
-  //       filtered = this.emailsSentContact.filter(
-  //         (email) => email.Direction === -1
-  //       );
-  //       break;
-  //     case 'sent':
-  //       filtered = this.emailsSentContact.filter(
-  //         (email) => email.Direction === 2
-  //       );
-  //       break;
-  //     case 'drafts':
-  //       filtered = this.emailsSentContact.filter(
-  //         (email) => email.Direction === 4
-  //       );
-  //       break;
-  //     case 'all':
-  //     default:
-  //       filtered = [...this.emailsSentContact];
-  //       break;
-  //   }
-  //   this.filteredEmails = this.sortEmails(filtered);
-  //   if (this.filteredEmails.length === 0) {
-  //     this.emptyMessage = `No ${filterType} emails available for this contact`;
-  //     this.selectedEmail = null;
-  //   } else if (
-  //     !this.selectedEmail ||
-  //     !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
-  //   ) {
-  //   }
-  // }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
     this.selected = null; // Reset selected email to show the list view
@@ -415,14 +330,7 @@ export class InboxComponent implements OnInit {
       sourceEmails = this.BuyBoxEmails as any[] as Mail[];
       // You might need to adjust this depending on the actual structure of BuyBoxEmails
     }
-    // If no emails available, don't try to filter
-    if (!sourceEmails || sourceEmails.length === 0) {
-      this.filteredEmails = [];
-      this.selectedEmail = null;
-      this.emptyMessage = 'No emails available';
-      return;
-    }
-    // Apply the filter based on the selected type
+
     let filtered: Mail[] = [];
     switch (filterType) {
       case 'inbox':
@@ -447,21 +355,6 @@ export class InboxComponent implements OnInit {
       // this.emptyMessage = `No ${filterType} emails available`;
       this.selectedEmail = null;
     }
-  }
-
-  onCheckboxChange(event: any, item: any) {
-    this.showGenerateSection = true;
-    if (event.target.checked) {
-      if (!this.listcenterName.includes(item.centerName)) {
-        this.listcenterName.push(item.centerName);
-      }
-    } else {
-      const index = this.listcenterName.indexOf(item.centerName);
-      if (index > -1) {
-        this.listcenterName.splice(index, 1);
-      }
-    }
-    this.showGenerateSection = this.listcenterName.length > 0;
   }
 
   generateContext() {
@@ -533,6 +426,7 @@ export class InboxComponent implements OnInit {
       },
     });
   }
+  
   onContentChange(event: Event) {
     const target = event.target as HTMLElement;
     this.emailBody = target.innerText;
@@ -559,7 +453,6 @@ export class InboxComponent implements OnInit {
           }, 3000);
         } else {
           this.emailBody = response[0].body; // <-- Must assign plain string here!
-          // If you want to display safely elsewhere, use this:
           this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
           );
@@ -602,22 +495,18 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  // showAllEmails() {
-  //   this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
-  //   this.getAllEmails();
-  // }
   showAllEmails() {
-    // Close all organization dropdowns
+    this.showAll != this.showAll;
     this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
-    // Clear the selected contact
     this.selectedContact = null;
-    // Reset to show all emails
     this.emailsSentContact = [];
     this.getAllEmails();
-    // Apply the current filter to all emails
     this.filterEmails(this.selectedFilter);
   }
 
+  checkShowAll(){
+    return  this.BuyBoxMicroDeals.filter((item) => (item.isOpen = false)) ? false : true;
+  }
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -627,15 +516,7 @@ export class InboxComponent implements OnInit {
       toast!.classList.remove('show');
     }, 3000);
   }
-  // openCompoase(modal: any, contactId: number) {
-  //   this.listcenterName = [];
-  //   this.emailSubject = '';
-  //   this.emailBody = '';
-  //   this.ContextEmail = '';
-  //   this.showGenerateSection = false;
-  //   this.GetContactShoppingCenters(contactId);
-  //   this.modalService.open(modal, { size: 'xl', backdrop: true });
-  // }
+
   openCompose(contact: Contact) {
     const modalRef = this.modalService.open(EmailComposeComponent, {
       size: 'xl',
