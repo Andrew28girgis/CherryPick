@@ -70,6 +70,7 @@ export class EmailInboxComponent implements OnInit {
     templateTwo: string;
   }[] = [];
   ResponseContextEmail: any;
+  mailContextId!: number;
 
   @Input() buyBoxIdReply!: number;
   @Input() orgIdReply!: number;
@@ -84,6 +85,9 @@ export class EmailInboxComponent implements OnInit {
   contactFirstName: any;
   contactLastName: any;
   contactCenterName: any;
+  // New properties for email generation flow
+  dataLoaded: boolean = true;
+  isEmailGenerated: boolean = false;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -306,7 +310,7 @@ export class EmailInboxComponent implements OnInit {
     this.showMoreRelations[categoryId] = !this.showMoreRelations[categoryId];
   }
 
-    GetContactManagerNameWithShoppingCenterData() {
+  GetContactManagerNameWithShoppingCenterData() {
     const body: any = {
       Name: 'GetContactManagerNameWithShoppingCenterData',
       MainEntity: null,
@@ -325,12 +329,10 @@ export class EmailInboxComponent implements OnInit {
           this.ContactManagerNameWithShoppingCenterData?.[0]?.centerName || '';
           console.log('contactFirstName', this.contactFirstName);
           console.log('contactLastName', this.contactLastName);
-          console.log('contactCenterName', this.contactCenterName); 
-          
+          console.log('contactCenterName', this.contactCenterName);
       },
     });
   }
-
 
   transformToDTO(data: any): GetContactManagerDTO {
     const center =
@@ -346,7 +348,6 @@ export class EmailInboxComponent implements OnInit {
   }
 
   async GenerateContext(): Promise<void> {
-
     const trimQuotes = (str: string) => {
       if (typeof str !== 'string') return str;
       return str.replace(/^"+|"+$/g, '').trim();
@@ -400,12 +401,18 @@ export class EmailInboxComponent implements OnInit {
   }
 
   async PutMailsDraft(): Promise<void> {
-    await this.GenerateContext();
-
     if (!this.selectedPromptId) {
       this.showToast('Please select a prompt to Generate.');
       return;
     }
+    // Reset email state
+    this.emailBody = '';
+    this.emailSubject = '';
+    this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml('');
+    this.dataLoaded = false;
+    this.isEmailGenerated = false;
+    // First generate context
+    await this.GenerateContext();
 
     this.spinner.show();
     const promptId = Number(this.selectedPromptId);
@@ -430,21 +437,33 @@ export class EmailInboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         const x = data.json;
-        this.AddMailContextReceivers(x[0].id, x[0].organizationId).subscribe({
-          next: () => {},
-          error: () => {},
-          complete: () => {
-            this.ReadSpecificMails(x[0].id);
-            this.spinner.hide();
-          },
-        });
+        if (x && x.length > 0 && x[0].id) {
+          this.mailContextId = x[0].id;
+          this.AddMailContextReceivers(x[0].id, x[0].organizationId).subscribe({
+            next: () => {},
+            error: () => {},
+            complete: () => {
+              // Start the email generation monitoring flow
+              this.getGeneratedEmails();
+              this.checkMailGenerated();
+            },
+          });
+        } else {
+          this.spinner.hide();
+          this.dataLoaded = true;
+          this.showToast('Failed to create email draft.');
+        }
+      },
+      error: (error) => {
+        console.error('Error in PutMailsDraft:', error);
+        this.spinner.hide();
+        this.dataLoaded = true;
+        this.showToast('Error generating email draft.');
       },
     });
   }
 
   AddMailContextReceivers(Mid: number, OrgID: number): Observable<any> {
-    this.spinner.show();
-
     // Assuming this.selectedContactContactId is a single contact object
     const manager = this.selectedContactContactId;
     // If ShoppingCenters is an array and you need to combine something, do so appropriately:
@@ -463,16 +482,85 @@ export class EmailInboxComponent implements OnInit {
       Json: null,
     };
 
-    // You might not even need forkJoin if you're only calling one API
     return this.PlacesService.GenericAPI(body).pipe(
       tap(() => {
-        this.spinner.hide();
+        console.log('Mail context receivers added');
       })
     );
   }
 
+  async getGeneratedEmails() {
+    const body: any = {
+      Name: 'GetMailContextGenerated',
+      MainEntity: null,
+      Params: {
+        campaignId: this.campaignId,
+        ContactId: this.selectedContactContactId,
+      },
+      Json: null,
+    };
+
+    try {
+      const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
+      if (data.json) {
+        this.returnGetMailContextGenerated = data.json;
+        console.log('Generated emails fetched:', this.returnGetMailContextGenerated);
+      }
+    } catch (error) {
+      console.error('Error fetching generated emails:', error);
+    }
+  }
+
+  checkMailGenerated(): void {
+    const body = {
+      Name: 'CheckMailGenerated',
+      Params: {
+        MailContextId: this.selectedContactContextId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        if (response.json && response.json.length > 0) {
+          const data: {
+            isGenerated: boolean;
+            errorMessage: string | null;
+          } = response.json[0];
+
+          if (data.errorMessage) {
+            this.dataLoaded = true;
+            this.spinner.hide();
+            this.showToast(
+              'Email generation is taking longer than expected. Please try again later.'
+            );
+            return;
+          } else if (data.isGenerated) {
+            // Email is ready, now read it
+            this.ReadSpecificMails(this.selectedContactContextId);
+            return;
+          }
+
+          // If not generated yet, check again after 3 seconds
+          setTimeout(() => {
+            this.checkMailGenerated();
+          }, 3000);
+        } else {
+          // No response, try again
+          setTimeout(() => {
+            this.checkMailGenerated();
+          }, 3000);
+        }
+      },
+      error: (error) => {
+        console.error('Error checking mail generation:', error);
+        this.spinner.hide();
+        this.dataLoaded = true;
+        this.showToast('Error checking email generation status.');
+      },
+    });
+  }
+
   ReadSpecificMails(mailContextId: number): void {
-    this.spinner.show();
     const body: any = {
       Name: 'ReadSpecificMails',
       MainEntity: null,
@@ -487,18 +575,28 @@ export class EmailInboxComponent implements OnInit {
       next: (data) => {
         const response = data.json;
         if (!response || response.length === 0) {
+          // Email not ready yet, try again after 3 seconds
           setTimeout(() => {
             this.ReadSpecificMails(mailContextId);
           }, 3000);
         } else {
+          // Email is ready
           this.emailBody = response[0].body;
           this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
           );
-
           this.emailSubject = response[0].subject;
+          this.isEmailGenerated = true;
+          this.dataLoaded = true;
           this.spinner.hide();
+          console.log('Email generated successfully');
         }
+      },
+      error: (error) => {
+        console.error('Error reading specific mails:', error);
+        this.spinner.hide();
+        this.dataLoaded = true;
+        this.showToast('Error reading generated email.');
       },
     });
   }
@@ -512,6 +610,10 @@ export class EmailInboxComponent implements OnInit {
   }
 
   Send() {
+    if (!this.isEmailGenerated) {
+      this.showToast('Please generate an email first.');
+      return;
+    }
     this.spinner.show();
     const body: any = {
       Name: 'ComposeEmail',
@@ -529,6 +631,12 @@ export class EmailInboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.spinner.hide();
+        this.showToast('Email sent successfully!');
+      },
+      error: (error) => {
+        console.error('Error sending email:', error);
+        this.spinner.hide();
+        this.showToast('Error sending email.');
       },
     });
   }
@@ -536,10 +644,12 @@ export class EmailInboxComponent implements OnInit {
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
-    toastMessage!.innerText = message;
-    toast!.classList.add('show');
-    setTimeout(() => {
-      toast!.classList.remove('show');
-    }, 3000);
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
   }
 }
