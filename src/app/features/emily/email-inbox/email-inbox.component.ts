@@ -85,6 +85,7 @@ export class EmailInboxComponent implements OnInit {
   contactFirstName: any;
   contactLastName: any;
   contactCenterName: any;
+  contactCenterId: any;
   // New properties for email generation flow
   dataLoaded: boolean = true;
   isEmailGenerated: boolean = false;
@@ -325,11 +326,14 @@ export class EmailInboxComponent implements OnInit {
         this.ContactManagerNameWithShoppingCenterData = data.json || [];
         this.contactFirstName = this.ContactManagerNameWithShoppingCenterData?.[0]?.firstName || '';
         this.contactLastName = this.ContactManagerNameWithShoppingCenterData?.[0]?.lastName || '';
+        this.contactCenterId = this.ContactManagerNameWithShoppingCenterData?.[0]?.id || '';
         this.contactCenterName =
           this.ContactManagerNameWithShoppingCenterData?.[0]?.centerName || '';
           console.log('contactFirstName', this.contactFirstName);
           console.log('contactLastName', this.contactLastName);
           console.log('contactCenterName', this.contactCenterName);
+          console.log('contactCenterId', this.contactCenterId);
+          
       },
     });
   }
@@ -381,7 +385,7 @@ export class EmailInboxComponent implements OnInit {
         {
           ContactId: Number(this.selectedContactContactId),
           ContactName: trimQuotes(this.contactFirstName) + ' ' + trimQuotes(this.contactLastName),
-          ShoppingCentersName: this.contactCenterName,
+          ShoppingCentersName: [this.contactCenterName],
         },
       ],
       OrganizationId: this.orgIdReply,
@@ -414,7 +418,7 @@ export class EmailInboxComponent implements OnInit {
     // First generate context
     await this.GenerateContext();
 
-    this.spinner.show();
+    // this.spinner.show();
     const promptId = Number(this.selectedPromptId);
     const IsCC = this.isISCcSelected;
 
@@ -449,14 +453,14 @@ export class EmailInboxComponent implements OnInit {
             },
           });
         } else {
-          this.spinner.hide();
+          // this.spinner.hide();
           this.dataLoaded = true;
           this.showToast('Failed to create email draft.');
         }
       },
       error: (error) => {
         console.error('Error in PutMailsDraft:', error);
-        this.spinner.hide();
+        // this.spinner.hide();
         this.dataLoaded = true;
         this.showToast('Error generating email draft.');
       },
@@ -467,17 +471,27 @@ export class EmailInboxComponent implements OnInit {
     // Assuming this.selectedContactContactId is a single contact object
     const manager = this.selectedContactContactId;
     // If ShoppingCenters is an array and you need to combine something, do so appropriately:
-    const ContactSCIds = manager.ShoppingCenters.map(
+    const ContactSCIds = manager?.ShoppingCenters?.map(
       (sc: { id: any }) => sc.id
     ).join(',');
+
+    // Ensure ShoppingCenterIds is always a comma-separated string (even if single or multiple IDs)
+    let shoppingCenterIds = '';
+    if (Array.isArray(this.contactCenterId)) {
+      shoppingCenterIds = this.contactCenterId.join(',');
+    } else if (typeof this.contactCenterId === 'string') {
+      shoppingCenterIds = this.contactCenterId;
+    } else if (typeof this.contactCenterId === 'number') {
+      shoppingCenterIds = this.contactCenterId.toString();
+    }
 
     const body: any = {
       Name: 'AddMailContextReceivers',
       MainEntity: null,
       Params: {
         MailContextId: Mid,
-        ContactId: manager.ContactId,
-        ShoppingCenterIds: ContactSCIds,
+        ContactId: this.selectedContactContactId,
+        ShoppingCenterIds: shoppingCenterIds, // Always comma-separated string
       },
       Json: null,
     };
@@ -515,7 +529,7 @@ export class EmailInboxComponent implements OnInit {
     const body = {
       Name: 'CheckMailGenerated',
       Params: {
-        MailContextId: this.selectedContactContextId,
+        MailContextId: this.mailContextId, // returned from api
       },
     };
 
@@ -536,7 +550,7 @@ export class EmailInboxComponent implements OnInit {
             return;
           } else if (data.isGenerated) {
             // Email is ready, now read it
-            this.ReadSpecificMails(this.selectedContactContextId);
+            this.ReadSpecificMails(this.mailContextId); // returned from api
             return;
           }
 
@@ -580,16 +594,19 @@ export class EmailInboxComponent implements OnInit {
             this.ReadSpecificMails(mailContextId);
           }, 3000);
         } else {
-          // Email is ready
-          this.emailBody = response[0].body;
-          this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(
-            this.emailBody
-          );
-          this.emailSubject = response[0].subject;
+          // Email is ready, handle the new response structure
+          const mail = response[0];
+          this.emailBody = mail.Body || mail.body || '';
+          this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(this.emailBody);
+          this.emailSubject = mail.Subject || mail.subject || '';
+          // Optionally, handle organizations and contacts if needed:
+          // this.organizations = mail.O || [];
+          // Example: extract all emails from all organizations
+          // const allEmails = (mail.O || []).flatMap(org => (org.C || []).map(c => c.Email));
           this.isEmailGenerated = true;
           this.dataLoaded = true;
           this.spinner.hide();
-          console.log('Email generated successfully');
+          console.log('Email generated successfully', mail);
         }
       },
       error: (error) => {
