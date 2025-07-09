@@ -75,10 +75,15 @@ export class EmailInboxComponent implements OnInit {
   @Input() orgIdReply!: number;
   @Input() emailBodyReply!: any;
   @Input() selectedContactContactId!: any;
+  @Input() selectedContactContextId!: any;
   @Input() modal: any;
   emailSubject: string = '';
   emailBodyResponse!: SafeHtml;
   isEditing = false; // Flag indicating if currently editing
+  ContactManagerNameWithShoppingCenterData: any;
+  contactFirstName: any;
+  contactLastName: any;
+  contactCenterName: any;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -93,6 +98,7 @@ export class EmailInboxComponent implements OnInit {
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
     console.log('selectedContactContactId', this.selectedContactContactId);
+    console.log('selectedContactContextId', this.selectedContactContextId);
 
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
@@ -130,6 +136,7 @@ export class EmailInboxComponent implements OnInit {
     this.GetBuyBoxInfo();
     this.GetBuyBoxInfoDetails();
     this.GetRetailRelationCategories();
+    this.GetContactManagerNameWithShoppingCenterData();
   }
 
   GetPrompts() {
@@ -299,6 +306,32 @@ export class EmailInboxComponent implements OnInit {
     this.showMoreRelations[categoryId] = !this.showMoreRelations[categoryId];
   }
 
+    GetContactManagerNameWithShoppingCenterData() {
+    const body: any = {
+      Name: 'GetContactManagerNameWithShoppingCenterData',
+      MainEntity: null,
+      Params: {
+        ContactId: this.selectedContactContactId,
+        MailContextId: this.selectedContactContextId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.ContactManagerNameWithShoppingCenterData = data.json || [];
+        this.contactFirstName = this.ContactManagerNameWithShoppingCenterData?.[0]?.firstName || '';
+        this.contactLastName = this.ContactManagerNameWithShoppingCenterData?.[0]?.lastName || '';
+        this.contactCenterName =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.centerName || '';
+          console.log('contactFirstName', this.contactFirstName);
+          console.log('contactLastName', this.contactLastName);
+          console.log('contactCenterName', this.contactCenterName); 
+          
+      },
+    });
+  }
+
+
   transformToDTO(data: any): GetContactManagerDTO {
     const center =
       data?.ShoppingCenters && data.ShoppingCenters?.length > 0
@@ -313,6 +346,12 @@ export class EmailInboxComponent implements OnInit {
   }
 
   async GenerateContext(): Promise<void> {
+
+    const trimQuotes = (str: string) => {
+      if (typeof str !== 'string') return str;
+      return str.replace(/^"+|"+$/g, '').trim();
+    };
+
     const dto: GetContactManagerDTO = this.transformToDTO(
       this.selectedContactContactId
     );
@@ -337,7 +376,13 @@ export class EmailInboxComponent implements OnInit {
       AddBuyBoxDesc: this.showBuyBoxDescription,
       AddLandLordPage: this.isLandingSelected,
       IsCC: this.isISCcSelected,
-      GetContactManagers: [dto],
+      GetContactManagers: [
+        {
+          ContactId: Number(this.selectedContactContactId),
+          ContactName: trimQuotes(this.contactFirstName) + ' ' + trimQuotes(this.contactLastName),
+          ShoppingCentersName: this.contactCenterName,
+        },
+      ],
       OrganizationId: this.orgIdReply,
     };
 

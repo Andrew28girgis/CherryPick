@@ -294,7 +294,8 @@
               openmodel(
                 replyEmail,
                 selectedEmail?.Body,
-                emailContactId
+                emailContactId,
+                emailContextId
               )
             "
           >
@@ -331,6 +332,7 @@
           [orgIdReply]="orgId"
           [emailBodyReply]="selectedEmail?.Body"
           [selectedContactContactId]="selectedContactID"
+          [selectedContactContextId]="selectedContextID"
           [modal]="modal"
         >
         </app-email-inbox>
