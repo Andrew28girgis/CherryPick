@@ -17,8 +17,7 @@ export interface UploadArgs {
 })
 export class DropboxService {
   private readonly UPLOAD_URL = 'https://content.dropboxapi.com/2/files/upload';
-  private tokenSubject = new BehaviorSubject<string>('');// Initialize with empty token
-  // Public observable for components to subscribe to token changes
+  private tokenSubject = new BehaviorSubject<string>('');
   currentToken$ = this.tokenSubject.asObservable();
 
   token!:string;
