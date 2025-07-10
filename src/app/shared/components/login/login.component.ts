@@ -7,7 +7,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import * as CryptoJS from 'crypto-js';
 import { DecodeService } from 'src/app/core/services/decode.service';
 import { DropboxService } from 'src/app/core/services/dropbox.service';
-
+ 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getUserBuyBoxes();
     this.initializeData();
     this.handleRouteParams();
     this.route.queryParamMap.subscribe((parms) => {
@@ -247,5 +248,24 @@ export class LoginComponent implements OnInit {
       }
     );
     return encrypted.toString();
+  }
+
+  getUserBuyBoxes(): void { 
+    const body: any = {
+      Name: 'GetUserBuyBoxes',
+      Params: {},
+    };
+
+    this.placesService.GenericAPIHtml(body).subscribe({
+      next: (data: any) => {
+        console.log(`from login component`);
+        
+       this.placesService.setAppMode('api');
+      },
+      error: (error: any) => { 
+       this.placesService.setAppMode('dropbox');
+       console.log('Error fetching user buy boxes:', error);
+      },
+    });
   }
 }

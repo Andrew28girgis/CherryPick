@@ -22,20 +22,26 @@ import { DropboxService } from './dropbox.service';
   providedIn: 'root',
 })
 export class PlacesService {
-  appMode: string = 'api';
+  appMode!: string ;
 
   constructor(
     private http: HttpClient,
     private base62: EncodeService,
     private dropbox: DropboxService
-  ) {
-    if (environment.API_URL) {
-      this.appMode = 'api';
-    } else {
-      this.appMode = 'dropbox';
-    }
-  }
+  ) { }
 
+  setAppMode(mode: string) {
+    this.appMode = mode;  
+    console.log(`from ss`);
+    console.log(this.appMode);
+    
+      
+  }
+  
+  getAppMode(): string {
+    return this.appMode;
+  }
+  
   public GetBuyBoxPlaces(buyBoxId: any) {
     return this.http.get<any>(
       `${environment.api}/BuyBox/GetBuyBoxPlaces?buyboxid=${buyBoxId}`

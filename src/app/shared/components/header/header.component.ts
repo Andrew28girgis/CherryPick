@@ -7,8 +7,8 @@ import {
 } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { PlacesService } from 'src/app/core/services/places.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
-
 export type UserView = 'campaigns' | 'landlord';
 
 @Component({
@@ -32,7 +32,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     public router: Router,
     private userViewService: UserViewService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private placesService: PlacesService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +47,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.showlink = Number(localStorage.getItem('contactId')) === 15562;
       });
+  }
+
+  getMode(): string {
+    return this.placesService.getAppMode();
   }
 
   ngOnDestroy(): void {
