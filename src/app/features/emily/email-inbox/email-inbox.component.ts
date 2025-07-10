@@ -324,16 +324,14 @@ export class EmailInboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.ContactManagerNameWithShoppingCenterData = data.json || [];
-        this.contactFirstName = this.ContactManagerNameWithShoppingCenterData?.[0]?.firstName || '';
-        this.contactLastName = this.ContactManagerNameWithShoppingCenterData?.[0]?.lastName || '';
-        this.contactCenterId = this.ContactManagerNameWithShoppingCenterData?.[0]?.id || '';
+        this.contactFirstName =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.firstName || '';
+        this.contactLastName =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.lastName || '';
+        this.contactCenterId =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.id || '';
         this.contactCenterName =
           this.ContactManagerNameWithShoppingCenterData?.[0]?.centerName || '';
-          console.log('contactFirstName', this.contactFirstName);
-          console.log('contactLastName', this.contactLastName);
-          console.log('contactCenterName', this.contactCenterName);
-          console.log('contactCenterId', this.contactCenterId);
-          
       },
     });
   }
@@ -384,7 +382,10 @@ export class EmailInboxComponent implements OnInit {
       GetContactManagers: [
         {
           ContactId: Number(this.selectedContactContactId),
-          ContactName: trimQuotes(this.contactFirstName) + ' ' + trimQuotes(this.contactLastName),
+          ContactName:
+            trimQuotes(this.contactFirstName) +
+            ' ' +
+            trimQuotes(this.contactLastName),
           ShoppingCentersName: [this.contactCenterName],
         },
       ],
@@ -518,7 +519,10 @@ export class EmailInboxComponent implements OnInit {
       const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
       if (data.json) {
         this.returnGetMailContextGenerated = data.json;
-        console.log('Generated emails fetched:', this.returnGetMailContextGenerated);
+        console.log(
+          'Generated emails fetched:',
+          this.returnGetMailContextGenerated
+        );
       }
     } catch (error) {
       console.error('Error fetching generated emails:', error);
@@ -597,7 +601,9 @@ export class EmailInboxComponent implements OnInit {
           // Email is ready, handle the new response structure
           const mail = response[0];
           this.emailBody = mail.Body || mail.body || '';
-          this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(this.emailBody);
+          this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(
+            this.emailBody
+          );
           this.emailSubject = mail.Subject || mail.subject || '';
           // Optionally, handle organizations and contacts if needed:
           // this.organizations = mail.O || [];
