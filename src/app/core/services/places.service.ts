@@ -60,7 +60,7 @@ export class PlacesService {
 
   public userToken(email: string) {
     return this.http.get(
-      `${environment.api}/DropBox/GetUserTokens?Email=${email}`
+      `http://10.0.0.15:8082/DropBox/GetUserTokens?Email=${email}`
     );
   }
 
