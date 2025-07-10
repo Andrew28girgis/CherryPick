@@ -160,15 +160,17 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
     this.userEmail = loginRequest.Email;
-    //this.getUserToken(this.userEmail);
+    this.getUserToken(this.userEmail);
     this.placesService.newLoginUser(loginRequest).subscribe({
       next: (response: any) => {
+        this.placesService.setAppMode('dropbox');
         this.handleLoginSuccess(response);
       },
       error: (err: any) => {
         this.handleLoginError();
       },
       complete: () => {
+        this.router.navigate(['/campaigns']);
         this.spinner.hide();
       },
     });

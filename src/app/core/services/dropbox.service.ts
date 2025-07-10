@@ -95,7 +95,7 @@ export class DropboxService {
   }
 
   private refreshToken(): Observable<any> {
-    const url = `http://10.0.0.15:8082/DropBox/GetNewAccessToken`;
+    const url = `http://10.0.0.15:8082/api/DropBox/GetNewAccessToken`;
     const headers = new HttpHeaders({
       'accept': 'application/json',
       'Content-Type': 'application/json-patch+json'

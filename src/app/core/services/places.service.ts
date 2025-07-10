@@ -60,7 +60,7 @@ export class PlacesService {
 
   public userToken(email: string) {
     return this.http.get(
-      `http://10.0.0.15:8082/DropBox/GetUserTokens?Email=${email}`
+      `http://10.0.0.15:8082/api/DropBox/GetUserTokens?Email=${email}`
     );
   }
 
@@ -151,6 +151,8 @@ export class PlacesService {
 
               // Check if we got a meaningful result (not empty)
               if (convertedBytes && Object.keys(convertedBytes).length > 0) {
+                console.log(`returning convertedBytes`);
+                
                 return convertedBytes;
               } else {
                 // If empty result, continue polling
