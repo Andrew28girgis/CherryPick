@@ -28,7 +28,13 @@ export class PlacesService {
     private http: HttpClient,
     private base62: EncodeService,
     private dropbox: DropboxService
-  ) {}
+  ) {
+    if (environment.API_URL) {
+      this.appMode = 'api';
+    } else {
+      this.appMode = 'dropbox';
+    }
+  }
 
   public GetBuyBoxPlaces(buyBoxId: any) {
     return this.http.get<any>(

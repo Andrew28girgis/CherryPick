@@ -5,10 +5,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import * as CryptoJS from 'crypto-js';
-import { EncodeService } from 'src/app/core/services/encode.service';
 import { DecodeService } from 'src/app/core/services/decode.service';
 import { DropboxService } from 'src/app/core/services/dropbox.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -51,32 +49,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  private async checkOwnerData(): Promise<void> {
-    if (!this.guid) return;
-
-    const contactRequestBody = {
-      Name: 'GetContactDataFromGUID',
-      Params: {
-        GUIDSignature: this.guid.trim(),
-      },
-    };
-
-    this.placesService
-      .BetaGenericAPI(contactRequestBody)
-      .subscribe((response: any) => {
-        if (response.json && response.json.length) {
-          const googleAccessToken = response.json[0].googleAccessToken;
-          const microsoftAccessToken = response.json[0].microsoftAccessToken;
-
-          if (googleAccessToken || microsoftAccessToken) {
-            this.router.navigate(['/campaigns']);
-          } else {
-            this.navigateToHome();
-          }
-        }
-      });
-  }
-
   private initializeData(): void {
     this.loginData = new AdminLogin();
     localStorage.clear();
@@ -86,7 +58,7 @@ export class LoginComponent implements OnInit {
     this.route.queryParamMap.subscribe((params) => {
       this.loginToken = params.get('t');
       if (this.loginToken) {
- //       this.router.navigate(['/not-found']);
+        //       this.router.navigate(['/not-found']);
         localStorage.setItem('loginToken', this.loginToken || '');
         this.loginWithGUID();
       }
@@ -121,9 +93,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem(this.ORG_ID_KEY, organizationId);
 
     let c = localStorage.getItem(this.CONTACT_ID_KEY);
-    console.log(c);
-    console.log(campaignId);
-    
+
     this.router.navigate(['/market-survey'], {
       queryParams: {
         buyBoxId: buyBoxId,
@@ -132,6 +102,32 @@ export class LoginComponent implements OnInit {
         campaignId: campaignId,
       },
     });
+  }
+
+  private async checkOwnerData(): Promise<void> {
+    if (!this.guid) return;
+
+    const contactRequestBody = {
+      Name: 'GetContactDataFromGUID',
+      Params: {
+        GUIDSignature: this.guid.trim(),
+      },
+    };
+
+    this.placesService
+      .BetaGenericAPI(contactRequestBody)
+      .subscribe((response: any) => {
+        if (response.json && response.json.length) {
+          const googleAccessToken = response.json[0].googleAccessToken;
+          const microsoftAccessToken = response.json[0].microsoftAccessToken;
+
+          if (googleAccessToken || microsoftAccessToken) {
+            this.router.navigate(['/campaigns']);
+          } else {
+            this.navigateToHome();
+          }
+        }
+      });
   }
 
   private prepareLoginRequest(): AdminLogin {
@@ -193,9 +189,6 @@ export class LoginComponent implements OnInit {
         } else {
           this.errorMessage = 'Failed to retrieve user token.';
         }
-      },
-      error: (err: any) => {
-        // this.errorMessage = 'Error retrieving user token. Please try again.';
       },
       complete: () => {
         this.spinner.hide();
