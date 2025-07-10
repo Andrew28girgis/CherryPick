@@ -92,8 +92,9 @@ export class SummeryComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        this.tenants = data.Json;
+        this.tenants = data.json;
         this.filteredTenants = this.tenants;
+
         if (!this.tenants || this.tenants.length === 0) {
           this.router.navigate(['/add-tenant']);
           // this.modalOpened = true;
