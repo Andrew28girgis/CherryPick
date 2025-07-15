@@ -1,0 +1,424 @@
+.diamond-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.diamond-wrapper {
+  animation: diamondRotate 10s linear infinite;
+}
+
+.content {
+  position: absolute;
+  top: 100%;
+  margin-top: 10px;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.content.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* .count-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #614edb;
+  margin-bottom: 5px;
+} */
+
+.count-label {
+  font-size: 14px;
+  color: #887ae4;
+  white-space: nowrap;
+}
+
+.diamonds-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 17px;
+  padding: 24px;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 0;
+  flex: 2;
+}
+/* .bottom-right-fixed {
+  position: fixed;
+  bottom: 20px;
+  right: 8%;
+  z-index: 1000;
+  max-width: 300px;
+} */
+
+.diamond-card {
+  width: 100%;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* min-width: 180px; */
+  padding: 10px;
+  border-radius: 24px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Yellow Diamond Card */
+.diamond-card:nth-child(1) {
+  background: #ff961c;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background-blend-mode: normal, color-burn, normal;
+}
+
+/* Blue Diamond Card */
+.diamond-card:nth-child(2) {
+  background: #2f82ff;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background-blend-mode: normal, color-burn, normal;
+}
+
+/* Purple Diamond Card */
+.diamond-card:nth-child(3) {
+  background: #b158e7;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background-blend-mode: normal, color-burn, normal;
+}
+
+/* Pink Diamond Card */
+.diamond-card:nth-child(4) {
+  background: #ff6a8e;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background-blend-mode: normal, color-burn, normal;
+}
+
+/* Rainbow Diamond Card */
+.diamond-card:nth-child(5) {
+  background: radial-gradient(
+      100% 100% at 50% 50%,
+      rgba(0, 255, 224, 0.2) 0%,
+      rgba(0, 0, 0, 0.9) 80%
+    ),
+    radial-gradient(
+      40% 40% at 60% 40%,
+      rgba(253, 156, 255, 0.15) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      50% 50% at 30% 60%,
+      rgba(0, 255, 117, 0.1) 0%,
+      transparent 100%
+    ),
+    linear-gradient(180deg, #11101a 0%, #0a0910 100%);
+
+  background-blend-mode: screen, overlay, overlay, normal;
+}
+
+.diamond-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.diamond-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at top right,
+    rgba(255, 255, 255, 0.1),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.diamond-wrapper {
+  /* position: relative; */
+  /* width: 120px; */
+  /* height: 120px; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  transition: all 0.3s ease;
+}
+
+.diamond-wrapper svg {
+  width: auto;
+  height: 1.75rem;
+  transition: transform 0.5s ease;
+  /* filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)); */
+}
+
+.diamond-wrapper.active svg {
+  transform: scale(1.1);
+  /* filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)); */
+}
+
+.diamond-wrapper.complete svg {
+  transform: scale(1.05);
+  /* filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5)); */
+}
+
+.card-content {
+}
+
+.diamond-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.diamond-description {
+  display: none;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.stats.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.count-value {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.6);
+  /* font-weight: bold; */
+  /* margin-bottom: 4px; */
+  /* background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%); */
+  /* -webkit-background-clip: text; */
+  /* -webkit-text-fill-color: transparent; */
+}
+
+.count-label {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.loader-container {
+  width: 100%;
+}
+
+.progress-diamonds {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100%;
+}
+
+.progress-container {
+  background: #2f82ff; /* Base blue color from your diamond cards */
+  background-image: linear-gradient(
+      135deg,
+      #3922d2 0%,
+      #2f82ff 50%,
+      #6366f1 100%
+    ),
+    linear-gradient(
+      105deg,
+      rgba(53, 53, 53, 0.3) 13.77%,
+      rgba(53, 53, 53, 0) 98.5%
+    ),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);
+  background-blend-mode: normal, color-burn, normal;
+  border-radius: 12px;
+  padding: 24px;
+  /* position: relative; */
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  width: 50%;
+  margin: 0;
+  /* flex: 1; */
+  align-self: center;
+  text-align: center;
+}
+
+.cancel-btn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.progress-content {
+  margin-top: 8px;
+}
+
+.progress-text {
+  margin-bottom: 20px;
+}
+
+.status-text {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0 0 4px 0;
+  font-weight: 400;
+}
+
+.main-text {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.progress-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.progress-bar-container {
+  flex: 1;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: white;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-percentage {
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 45px;
+  text-align: right;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .progress-container {
+    padding: 20px 16px;
+  }
+
+  .main-text {
+    font-size: 18px;
+  }
+
+  .progress-percentage {
+    font-size: 16px;
+    min-width: 40px;
+  }
+}
+
+/* Pentagon Loader Styles */
+.pentagon-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.pentagon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.pentagon-wrapper polygon {
+  fill: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.pentagon-wrapper polygon.active {
+  fill: #ff69b4;
+}
+
+.pentagon-wrapper:nth-child(2) polygon.active {
+  fill: #ff7f50;
+}
+
+.pentagon-wrapper polygon.complete {
+  fill: #4caf50;
+}
+
+.dianmond-container {
+  display: flex;
+  width: 600px;
+  padding: 128px 64px 64px 64px;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  align-self: stretch;
+  border-radius: 64px;
+  border: 1.333px solid rgba(63, 63, 63, 0.3);
+  background: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    lightgray 0% 0% / 50px 50px repeat,
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%),
+    #ff961c;
+  background-blend-mode: normal, color-burn, normal, normal, normal;
+  box-shadow: 0px 1.333px 1.333px 0px rgba(255, 255, 255, 0.1) inset;
+}

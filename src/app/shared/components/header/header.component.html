@@ -15,7 +15,6 @@
             currentRoute.includes('landlord') ? ['/landlord'] : ['/summary']
           "
         />
- 
       </div>
     </div>
 
@@ -26,7 +25,6 @@
       id="navbarNav"
     >
       <ul class="navbar-nav mb-2 mb-lg-0">
-     
         <!-- <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/summary']"
@@ -85,7 +83,7 @@
             <span class="nav-text">Configurations</span>
           </a>
         </li>
-           <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
+        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/campaigns']"
             routerLinkActive="active-route"
@@ -253,6 +251,10 @@
             <a class="dropdown-item" [routerLink]="['/NewPassword']">
               Change Password
             </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item" [routerLink]="['/settings']"> Settings </a>
           </li>
 
           <li><hr class="dropdown-divider" /></li>

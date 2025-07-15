@@ -3,8 +3,8 @@ import {
   Input,
   Output,
   EventEmitter,
-   SimpleChanges,
-   OnInit,
+  SimpleChanges,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 

@@ -1,0 +1,35 @@
+<div class="stages-contaciner">
+  <div class="d-flex align-items-center justify-content-between total-mails">
+    <span>Total Mails</span>
+    <div class="normal-chip">{{ totalMails }} Mails</div>
+  </div>
+
+  <div class="stages-sub-contaciner">
+    @for (stage of stagesList; track stage.id; let last = $last) {
+    <div class="stage-item">
+      <div
+        class="stage-dot"
+        [ngClass]="{ 'not-ready': !stage.mailsCount && stage.mailsCount != 0 }"
+      ></div>
+      <div
+        class="stage-message"
+        [ngClass]="{ 'not-ready': !stage.mailsCount && stage.mailsCount != 0 }"
+      >
+        {{ stage.stageMessage }}
+      </div>
+      <div
+        class="normal-chip ms-auto"
+        [class.in-progress-chip]="stage.inProgress && !stage.mailsCount"
+      >
+        {{
+          stage.mailsCount || stage.mailsCount == 0
+            ? stage.mailsCount + " Mails"
+            : "In Progress"
+        }}
+      </div>
+    </div>
+    @if (!last) {
+    <hr class="w-100" />
+    } }
+  </div>
+</div>

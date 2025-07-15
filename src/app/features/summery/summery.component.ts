@@ -277,8 +277,7 @@ export class SummeryComponent implements OnInit {
     this.router.navigate(['/add-tenant']);
   }
 
-
   onImageError(event: any) {
-    event.target.src = "assets/Images/placeholder.png"
+    event.target.src = 'assets/Images/placeholder.png';
   }
 }

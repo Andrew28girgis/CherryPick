@@ -37,6 +37,23 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
+  {
+    path: 'accounts-link',
+    loadChildren: () =>
+      import('./features/settings/settings.module').then(
+        (m) => m.SettingsModule
+      ),
+    data: { hideHeader: true },
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./features/settings/settings.module').then(
+        (m) => m.SettingsModule
+      ),
+    canActivate: [AuthGuardService],
+  },
   // {
   //   path: 'registeration',
   //   component: RegisterationComponent,

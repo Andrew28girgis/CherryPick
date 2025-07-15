@@ -7,7 +7,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import * as CryptoJS from 'crypto-js';
 import { DecodeService } from 'src/app/core/services/decode.service';
 import { DropboxService } from 'src/app/core/services/dropbox.service';
- 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -121,12 +121,19 @@ export class LoginComponent implements OnInit {
         if (response.json && response.json.length) {
           const googleAccessToken = response.json[0].googleAccessToken;
           const microsoftAccessToken = response.json[0].microsoftAccessToken;
+          const wantToLinkAccount = response.json[0].wantToLinkAccount;
 
-          if (googleAccessToken || microsoftAccessToken) {
-            this.router.navigate(['/campaigns']);
-          } else {
+          if (wantToLinkAccount == false) {
             this.navigateToHome();
+          } else {
+            this.router.navigate(['/accounts-link']);
           }
+
+          // if (googleAccessToken || microsoftAccessToken) {
+          //   this.router.navigate(['/campaigns']);
+          // } else {
+          //   this.navigateToHome();
+          // }
         }
       });
   }
@@ -158,12 +165,14 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit(): void {
+    if (!this.placesService.getAppMode()) return;
+
     const loginRequest = this.prepareLoginRequest();
     this.userEmail = loginRequest.Email;
     this.getUserToken(this.userEmail);
     this.placesService.newLoginUser(loginRequest).subscribe({
       next: (response: any) => {
-        this.placesService.setAppMode('dropbox');
+        // this.placesService.setAppMode('dropbox');
         this.handleLoginSuccess(response);
       },
       error: (err: any) => {
@@ -218,7 +227,7 @@ export class LoginComponent implements OnInit {
   }
 
   private navigateToHome(): void {
-    this.router.navigate(['/overview']);
+    this.router.navigate(['/summary']);
   }
 
   private handleLoginError(): void {
@@ -252,7 +261,7 @@ export class LoginComponent implements OnInit {
     return encrypted.toString();
   }
 
-  getUserBuyBoxes(): void { 
+  getUserBuyBoxes(): void {
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {},
@@ -261,12 +270,12 @@ export class LoginComponent implements OnInit {
     this.placesService.GenericAPIHtml(body).subscribe({
       next: (data: any) => {
         console.log(`from login component`);
-        
-       this.placesService.setAppMode('api');
+
+        this.placesService.setAppMode('api');
       },
-      error: (error: any) => { 
-       this.placesService.setAppMode('dropbox');
-       console.log('Error fetching user buy boxes:', error);
+      error: (error: any) => {
+        this.placesService.setAppMode('dropbox');
+        console.log('Error fetching user buy boxes:', error);
       },
     });
   }

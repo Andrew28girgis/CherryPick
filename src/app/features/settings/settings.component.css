@@ -1,0 +1,39 @@
+/* .main-container {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
+.main-container * {
+  width: 100%;
+} */
+
+.step-title{
+  font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* CSS */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);   /* start 30 px lower */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);      /* end at natural spot */
+  }
+}
+
+.fade-up {
+  /* pick whatever you like for these */
+  animation: fadeUp 600ms ease-out forwards;   /* forwards ≙ keep final state */
+  /* optional quality-of-life tweaks */
+  will-change: opacity, transform;             /* hints for smoother paint */
+}
+
+
+.animation-delay { animation-delay: 1000ms; }

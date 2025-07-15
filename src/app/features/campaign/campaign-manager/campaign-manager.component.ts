@@ -124,7 +124,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
         } else {
-          this.router.navigate(['/campaigns/add-campaign']);
+          this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
           this.filteredCampaigns = [];
         }
@@ -322,8 +322,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.dataLoaded = true;
   }
 
-
   onImageError(event: any) {
-    event.target.src = "assets/Images/placeholder.png"
+    event.target.src = 'assets/Images/placeholder.png';
   }
 }
