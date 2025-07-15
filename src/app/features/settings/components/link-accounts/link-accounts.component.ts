@@ -1,4 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { firstValueFrom, Observable } from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { environment } from 'src/environments/environment';
@@ -11,6 +13,7 @@ import { environment } from 'src/environments/environment';
 export class LinkAccountsComponent implements OnInit {
   private guid!: string;
 
+  protected firstTimeOpen: boolean = true;
   protected MICROSOFT_CONNECT_LINK = '';
   protected GOOGLE_CONNECT_LINK = '';
   protected microsoftState: number = 1; // 1: not linked, 2: linking, 3: linked
@@ -18,9 +21,15 @@ export class LinkAccountsComponent implements OnInit {
 
   @Output() accountUnlinked = new EventEmitter<boolean>();
 
-  constructor(private genericApiService: PlacesService) {}
+  constructor(
+    private genericApiService: PlacesService,
+    private router: Router,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
+    if (this.router.url.includes('settings')) this.firstTimeOpen = false;
+
     const guid = localStorage.getItem('guid');
     if (guid) this.guid = guid;
     this.checkOwnerData();
@@ -78,6 +87,18 @@ export class LinkAccountsComponent implements OnInit {
       // this.googleDomainList = [];
       // this.googleEmailsList = [];
       // this.updateIntervals();
+    });
+  }
+
+  protected contactDidntWantToLinkAccount(): void {
+    this.spinner.show();
+    const body = {
+      Name: 'ContactDidntWantToLinkAccount',
+      Params: {},
+    };
+    this.genericApiService.BetaGenericAPI(body).subscribe((response) => {
+      this.spinner.hide();
+      this.router.navigate(['/campaigns']);
     });
   }
 }

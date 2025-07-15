@@ -11,7 +11,6 @@ import { firstValueFrom } from 'rxjs';
 export class EmailStagesComponent implements OnInit {
   private guid!: string;
 
-  protected totalMails: number = 0;
   protected stagesList: EmailStage[] = [];
 
   @Input() emailStages!: EmailStage[];
@@ -38,7 +37,6 @@ export class EmailStagesComponent implements OnInit {
       if (typeof count === 'number') {
         this.stagesList[0].inProgress = false;
         this.stagesList[0].mailsCount = count;
-        this.totalMails += count;
       }
     }
     this.removeDuplication();

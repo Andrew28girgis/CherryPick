@@ -123,7 +123,7 @@ export class LoginComponent implements OnInit {
           const microsoftAccessToken = response.json[0].microsoftAccessToken;
           const wantToLinkAccount = response.json[0].wantToLinkAccount;
 
-          if (wantToLinkAccount == false) {
+          if (wantToLinkAccount == false || googleAccessToken) {
             this.navigateToHome();
           } else {
             this.router.navigate(['/accounts-link']);
@@ -179,7 +179,6 @@ export class LoginComponent implements OnInit {
         this.handleLoginError();
       },
       complete: () => {
-        this.router.navigate(['/campaigns']);
         this.spinner.hide();
       },
     });
@@ -227,7 +226,7 @@ export class LoginComponent implements OnInit {
   }
 
   private navigateToHome(): void {
-    this.router.navigate(['/summary']);
+    this.router.navigate(['/campaigns']);
   }
 
   private handleLoginError(): void {
@@ -272,9 +271,11 @@ export class LoginComponent implements OnInit {
         console.log(`from login component`);
 
         this.placesService.setAppMode('api');
+        localStorage.setItem('apiMode', JSON.stringify(true));
       },
       error: (error: any) => {
         this.placesService.setAppMode('dropbox');
+        localStorage.setItem('apiMode', JSON.stringify(false));
         console.log('Error fetching user buy boxes:', error);
       },
     });

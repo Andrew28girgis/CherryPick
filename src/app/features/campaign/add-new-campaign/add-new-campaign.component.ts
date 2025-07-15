@@ -10,7 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
@@ -75,7 +75,8 @@ export class AddNewCampaignComponent
     private httpClient: HttpClient,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +88,11 @@ export class AddNewCampaignComponent
     if (contact) {
       this.contactId = +contact;
     }
+
+    this.activatedRoute.paramMap.subscribe((parms) => {
+      const buyboxId = parms.get('buyboxId');
+      if (buyboxId) this.buyBoxId = +buyboxId;
+    });
 
     // const bbId = localStorage.getItem('BuyBoxId');
     // if (bbId) this.buyBoxId = +bbId;

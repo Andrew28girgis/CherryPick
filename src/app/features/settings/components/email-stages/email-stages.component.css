@@ -3,6 +3,7 @@
   border: 1px solid #e4e3eb;
   padding: 1.5rem;
   border-radius: 1rem;
+  background-color: #fff;
 }
 .total-mails span {
   color: #18171f;
@@ -17,13 +18,7 @@
   padding: 0.5rem 0.75rem;
   border-radius: 1rem;
 }
-.stages-sub-contaciner {
-  /* height: 15rem; */
-  /* overflow: auto; */
-  scrollbar-color: #887ae4 transparent;
-  padding-right: 0.5rem;
-  margin-top: 1rem;
-}
+
 .stage-item {
   display: flex;
   align-items: center;

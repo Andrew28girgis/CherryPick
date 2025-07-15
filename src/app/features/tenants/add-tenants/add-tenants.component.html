@@ -579,10 +579,11 @@
                       ><span class="Step-num">4</span> Polygons</label
                     >
                   </div>
-                  <div class="p-3" style="height: 500px">
+                  <div class="p-3" >
                     <app-add-new-campaign
                       [buyBoxId]="newBuyboxId"
                     ></app-add-new-campaign>
+
                     <!-- <app-campaign-drawing></app-campaign-drawing> -->
                   </div>
                 </div>
@@ -590,7 +591,9 @@
               <div class="d-flex pt-4 justify-content-end">
                 <!-- <p-button (onClick)="prevCallback.emit()" class="p-button-left"><i
                     class="fa-solid fa-arrow-left me-2"></i> Back</p-button> -->
-                <!-- <button (click)="CreatePolygons()" class="Add__button">Finished</button> -->
+                <button routerLink="/summary" class="Add__button">
+                  Skip Campaign
+                </button>
               </div>
             </ng-template>
           </p-stepperPanel>

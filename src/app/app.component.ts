@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { PlacesService } from './core/services/places.service';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +12,18 @@ export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   display: boolean = false;
   isMobile = false;
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
   isSocialView: boolean = false;
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private placeService: PlacesService
+  ) {}
 
   ngOnInit() {
+    const apiMode = this.localStorage.getItem('apiMode');
+    if (apiMode && JSON.parse(apiMode)) {
+      this.placeService.setAppMode('api');
+    }
     this.checkScreenSize();
     this.isSocialView =
       this.localStorage.getItem('currentViewDashBord') === '5';

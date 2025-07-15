@@ -56,41 +56,14 @@
   opacity: 1;
 }
 .add-campaign {
-  display: flex;
-  padding: 10px 7px;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border-radius: var(--Radius-Radius-16, 16px);
-  background: var(--Button-Primary-BG, #3922d2);
-  border: none;
-  transition: background 0.2s, box-shadow 0.2s;
+  text-decoration: underline;
+  color: #3922d2;
+  font-size: 0.85rem;
   cursor: pointer;
 }
 
-.add-campaign:hover,
-.add-campaign:focus {
-  background: #2a18a6; /* Slightly darker for hover */
-  box-shadow: 0 2px 8px rgba(57, 34, 210, 0.15);
-  outline: none;
-}
-
-.add-campaign:active {
-  background: #1d116b; /* Even darker for active */
-  box-shadow: 0 1px 4px rgba(57, 34, 210, 0.18);
-}
-
-.add-campaign span {
-  color: var(--Button-Primary-Label, #fff);
-  text-align: center;
-  font-family: Montserrat;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 25px;
-}
-
 .offcanvas-addcampaign {
+  width: 100%;
   display: flex;
   padding: 10px 7px;
   justify-content: center;

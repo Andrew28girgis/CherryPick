@@ -318,27 +318,13 @@
                   </ng-container>
 
                   <ng-template #showSendButton>
-                    <button
+                    <a
                       class="add-campaign"
-                      [routerLink]="['/campaigns/add-campagin', tenant.Id]"
+                      [routerLink]="['/campaigns/add-campaign', tenant.Id]"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M6 12H18M12 18V6"
-                          stroke="white"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                      <span>Add Campaign</span>
-                    </button>
+                    
+                     Add Campaign
+                    </a>
                   </ng-template>
                 </div>
               </div>
@@ -400,7 +386,7 @@
           <div class="offcanvas-body">
             <button
               class="offcanvas-addcampaign"
-              [routerLink]="['/campaigns/add-campagin', tenant.Id]"
+              [routerLink]="['/campaigns/add-campaign', tenant.Id]"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

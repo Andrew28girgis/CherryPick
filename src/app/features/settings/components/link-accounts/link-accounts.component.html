@@ -105,3 +105,14 @@
     </div>
   </div>
 </div>
+
+<div
+  *ngIf="firstTimeOpen"
+  class="w-100 d-flex align-items-center justify-content-center mt-4"
+>
+  <button class="skip-btn" (click)="contactDidntWantToLinkAccount()">
+    <span>Skip This Step For Now</span>
+  </button>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

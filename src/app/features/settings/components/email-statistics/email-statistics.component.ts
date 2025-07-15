@@ -28,6 +28,7 @@ export class EmailStatisticsComponent implements OnInit, OnDestroy {
   private gemsCountInterval!: number;
   private statProgressInterval!: number;
 
+  protected firstTimeOpen: boolean = true;
   protected stats: Statistics = {
     mailCount: 0,
     contactCount: 0,
@@ -82,6 +83,8 @@ export class EmailStatisticsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if (this.router.url.includes('settings')) this.firstTimeOpen = false;
+
     this.gemsCountInterval = setInterval(() => {
       this.getGemsCount();
     }, 1000);
@@ -331,7 +334,8 @@ export class EmailStatisticsComponent implements OnInit, OnDestroy {
             if (this.statProgressInterval) {
               clearInterval(this.statProgressInterval);
               clearInterval(this.gemsCountInterval);
-              this.router.navigate(['/campaigns'], { replaceUrl: true });
+              if (this.firstTimeOpen)
+                this.router.navigate(['/campaigns'], { replaceUrl: true });
             }
           }
         }
