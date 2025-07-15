@@ -76,7 +76,7 @@ export class SummeryComponent implements OnInit {
     this.stateService.clearAll();
     this.route.queryParams.subscribe((params) => {
       this.getUserBuyBoxes();
-      this.organizationId = localStorage.getItem('orgId');
+      this.organizationId = localStorage.getItem('orgId');      
     });
     this.modalOpened = false;
     this.checkScreenSize();
@@ -147,7 +147,6 @@ export class SummeryComponent implements OnInit {
       { label: 'My Tenants', url: '/summary' },
     ]);
   }
-
   goToTenant(tenant: Tenant) {
     this.router.navigate([
       '/dashboard',

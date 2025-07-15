@@ -301,14 +301,45 @@
                   aria-controls="campaignDetails"
                   (click)="$event.stopPropagation()"
                 >
-                  <span class="nomberofcampains" *ngIf="tenant.Campaigns">{{
-                    tenant.Campaigns.length
-                  }}</span>
-                  <span class="campaingstext">Campaigns</span>
-                  <img
-                    src="../../../assets/Images/Icons/info.png"
-                    alt="Info Icon"
-                  />
+                  <ng-container
+                    *ngIf="
+                      tenant.Campaigns && tenant.Campaigns.length > 0;
+                      else showSendButton
+                    "
+                  >
+                    <span class="nomberofcampains">{{
+                      tenant.Campaigns.length
+                    }}</span>
+                    <span class="campaingstext">Campaigns</span>
+                    <img
+                      src="../../../assets/Images/Icons/info.png"
+                      alt="Info Icon"
+                    />
+                  </ng-container>
+
+                  <ng-template #showSendButton>
+                    <button
+                      class="add-campaign"
+                      [routerLink]="['/campaigns/add-campagin', tenant.Id]"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M6 12H18M12 18V6"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <span>Add Campaign</span>
+                    </button>
+                  </ng-template>
                 </div>
               </div>
             </div>
@@ -365,7 +396,29 @@
             ></button>
           </div>
           <div class="line"></div>
+
           <div class="offcanvas-body">
+            <button
+              class="offcanvas-addcampaign"
+              [routerLink]="['/campaigns/add-campagin', tenant.Id]"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M6 12H18M12 18V6"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Add Campaign</span>
+            </button>
             <div class="offcanvas-background">
               <ng-container *ngFor="let campaign of tenant.Campaigns">
                 <div class="d-flex align-items-center justify-content-between">

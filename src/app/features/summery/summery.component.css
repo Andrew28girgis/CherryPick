@@ -55,6 +55,76 @@
   visibility: visible;
   opacity: 1;
 }
+.add-campaign {
+  display: flex;
+  padding: 10px 7px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #3922d2);
+  border: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.add-campaign:hover,
+.add-campaign:focus {
+  background: #2a18a6; /* Slightly darker for hover */
+  box-shadow: 0 2px 8px rgba(57, 34, 210, 0.15);
+  outline: none;
+}
+
+.add-campaign:active {
+  background: #1d116b; /* Even darker for active */
+  box-shadow: 0 1px 4px rgba(57, 34, 210, 0.18);
+}
+
+.add-campaign span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+.offcanvas-addcampaign {
+  display: flex;
+  padding: 10px 7px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #3922d2);
+  border: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.offcanvas-addcampaign:hover,
+.offcanvas-addcampaign:focus {
+  background: #2a18a6; /* Slightly darker for hover */
+  box-shadow: 0 2px 8px rgba(57, 34, 210, 0.15);
+  outline: none;
+}
+
+.offcanvas-addcampaign:active {
+  background: #1d116b; /* Even darker for active */
+  box-shadow: 0 1px 4px rgba(57, 34, 210, 0.18);
+}
+
+.offcanvas-addcampaign span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 25px;
+}
 
 .card-kayak {
   /* height: 142px; */
@@ -218,6 +288,14 @@
 }
 
 @media (max-width: 567px) {
+  .add-campaign {
+    padding: 10px 7px;
+  }
+  .add-campaign span {
+    font-size: 13px;
+    line-height: 25px;
+    white-space: nowrap;
+  }
   .card__Kayak {
     margin-bottom: 1rem;
   }
@@ -250,6 +328,14 @@
   }
 }
 @media (max-width: 767px) {
+  .add-campaign {
+    padding: 10px 7px;
+  }
+  .add-campaign span {
+    font-size: 13px;
+    line-height: 25px;
+    white-space: nowrap;
+  }
   .skeleton-container {
     padding: 20px 10px;
   }
@@ -315,8 +401,8 @@
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  border: 1px solid #E4E3EB;
-  background: #FFF;
+  border: 1px solid #e4e3eb;
+  background: #fff;
   padding: 0 16px;
   gap: 8px;
 }
@@ -327,7 +413,7 @@
   outline: none;
   background: transparent;
   font-size: 14px;
-  color: #16181D;
+  color: #16181d;
   padding: 0;
 }
 
@@ -341,7 +427,7 @@
 }
 
 .icon-input:focus-within {
-  border-color: #3922D2;
+  border-color: #3922d2;
   box-shadow: 0 0 0 2px rgba(57, 34, 210, 0.1);
 }
 
@@ -532,7 +618,7 @@
   width: 56px;
   height: 56px;
   border-radius: 100px;
-  background: #3922D2;
+  background: #3922d2;
   border: none;
   display: flex;
   justify-content: center;
@@ -544,7 +630,7 @@
 }
 
 .fab-button:hover {
-  background: #22147E;
+  background: #22147e;
   transform: scale(1.05);
 }
 
