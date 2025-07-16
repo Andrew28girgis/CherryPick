@@ -96,6 +96,8 @@ export class EmailStatisticsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    clearInterval(this.statProgressInterval);
+    clearInterval(this.gemsCountInterval);
     this.clearIntervals();
   }
 

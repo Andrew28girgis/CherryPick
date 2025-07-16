@@ -12,7 +12,7 @@
           class="cherry-logo"
           src="../../../assets/Images/Emily Logo-1.png"
           [routerLink]="
-            currentRoute.includes('landlord') ? ['/landlord'] : ['/summary']
+            currentRoute.includes('landlord') ? ['/landlord'] : ['/campaigns']
           "
         />
       </div>
@@ -68,7 +68,7 @@
             <span>Cadence</span>
           </a>
         </li> -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a
             class="nav-link"
             [routerLink]="['/overview']"
@@ -82,7 +82,7 @@
             />
             <span class="nav-text">Configurations</span>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/campaigns']"
