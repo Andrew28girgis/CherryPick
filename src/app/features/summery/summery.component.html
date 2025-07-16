@@ -322,8 +322,7 @@
                       class="add-campaign"
                       [routerLink]="['/campaigns/add-campaign', tenant.Id]"
                     >
-                    
-                     Add Campaign
+                      Add Campaign
                     </a>
                   </ng-template>
                 </div>
@@ -482,13 +481,18 @@
   </div>
 </div>
 
-<button class="fab-button" (click)="openAddTenants()" *ngIf="!showCampaigns">
+<!-- Floating Action Button -->
+<button
+  class="fab-button btn btn-danger"
+  *ngIf="!showCampaigns"
+  (click)="openModal()"
+>
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
-    viewBox="0 0 24 24"
     fill="none"
+    viewBox="0 0 24 24"
   >
     <path
       d="M6 12H18M12 18V6"
@@ -499,3 +503,130 @@
     />
   </svg>
 </button>
+
+<!-- Backdrop -->
+<div
+  class="modal-backdrop fade"
+  [class.show]="isModalOpen"
+  *ngIf="isModalOpen"
+></div>
+
+<div
+  class="modal"
+  tabindex="-1"
+  *ngIf="isModalOpen"
+  [class.show]="isModalOpen"
+  style="display: block"
+  (click)="onBackdropClick($event)"
+>
+  <div
+    class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable"
+  >
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Tenant</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+
+      <!-- Modal Form -->
+      <form (ngSubmit)="addTenant()" #tenantForm="ngForm">
+        <div class="modal-body">
+          <!-- Name Input -->
+          <div class="mb-3">
+            <label
+              for="name"
+              class="form-label d-flex align-items-center gap-2"
+            >
+              Name *
+              <span
+                class="text-danger name-isrequired"
+                *ngIf="nameInput.invalid && nameInput.touched"
+              >
+                Name is required
+              </span>
+            </label>
+
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              name="name"
+              required
+              [(ngModel)]="tenant.name"
+              #nameInput="ngModel"
+              [ngClass]="{
+                'is-invalid': nameInput.invalid && nameInput.touched
+              }"
+            />
+          </div>
+
+          <!-- URL Input -->
+          <div class="mb-3">
+            <label for="url" class="form-label">URL</label>
+            <input
+              type="url"
+              id="url"
+              class="form-control"
+              name="url"
+              pattern="https?://.+"
+              [(ngModel)]="tenant.url"
+              #urlInput="ngModel"
+            />
+          </div>
+
+          <!-- LinkedIn Input -->
+          <div class="mb-3">
+            <label for="linkedin" class="form-label">LinkedIn</label>
+            <input
+              type="text"
+              id="linkedin"
+              class="form-control"
+              name="linkedin"
+              [(ngModel)]="tenant.linkedin"
+            />
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer justify-content-end">
+          <button
+            type="button"
+            class="modal-btn cancel-btn"
+            (click)="closeModal()"
+          >
+            <span>Cancel</span>
+          </button>
+
+          <button
+            type="submit"
+            class="modal-btn add-tenant"
+            [disabled]="tenantForm.invalid"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M6 12H18M12 18V6"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Add Tenant</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

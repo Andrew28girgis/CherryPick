@@ -99,8 +99,88 @@
   line-height: 25px;
 }
 
+.modal-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 15px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.modal-btn span {
+  text-align: center;
+}
+
+/* Hover & Focus (shared) */
+.modal-btn:hover,
+.modal-btn:focus {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+/* Active (shared) */
+.modal-btn:active {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+.add-tenant {
+  background:  #3922d2;
+  padding: 10px 20px;
+}
+
+.add-tenant:hover,
+.add-tenant:focus {
+  background: #2a18a6;
+}
+
+.add-tenant:active {
+  background: #1d116b;
+}
+
+.add-tenant span {
+  color: var(--Button-Primary-Label, #fff);
+}
+.add-tenant:disabled {
+  background: #bcbcbc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.add-tenant:disabled span {
+  color: #ffffff;
+}
+
+.add-tenant:disabled svg path {
+  stroke: #ffffff;
+}
+
+.cancel-btn {
+  background: #fff;
+  padding: 10px 20px;
+  border: 1px solid #3922d2 ;
+}
+
+.cancel-btn:hover,
+.cancel-btn:focus {
+  background: #fff;
+}
+
+.cancel-btn:active {
+  background: #fff;
+}
+
+.cancel-btn span {
+  color: #3922d2;
+}
+
 .card-kayak {
-  /* height: 142px; */
   padding: 20px;
   cursor: pointer;
   border-radius: 19px;
@@ -609,4 +689,21 @@
 
 .fab-button:active {
   transform: scale(0.95);
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1040;
+}
+
+.modal {
+  z-index: 1050;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

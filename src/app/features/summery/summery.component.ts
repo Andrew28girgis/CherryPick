@@ -24,6 +24,7 @@ import {
   styleUrls: ['./summery.component.css'],
 })
 export class SummeryComponent implements OnInit {
+  @ViewChild('tenantModal') tenantModal!: TemplateRef<any>;
   tenants: Tenant[] = [];
   Token: any;
   orgId!: number;
@@ -37,7 +38,13 @@ export class SummeryComponent implements OnInit {
   currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
   isMobile = false;
   campaignsLoaded = false;
-
+  // Add Tenant Modal
+  isModalOpen = false;
+  tenant = {
+    name: '',
+    url: '',
+    linkedin: '',
+  };
   // Search
   searchQuery: string = '';
   filteredTenants: Tenant[] = [];
@@ -66,7 +73,7 @@ export class SummeryComponent implements OnInit {
     private modalService: NgbModal,
     private breadcrumbService: BreadcrumbService,
     private base62: EncodeService,
-    private dropbox: DropboxService
+    private dropbox: DropboxService,
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +83,7 @@ export class SummeryComponent implements OnInit {
     this.stateService.clearAll();
     this.route.queryParams.subscribe((params) => {
       this.getUserBuyBoxes();
-      this.organizationId = localStorage.getItem('orgId');      
+      this.organizationId = localStorage.getItem('orgId');
     });
     this.modalOpened = false;
     this.checkScreenSize();
@@ -279,4 +286,27 @@ export class SummeryComponent implements OnInit {
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
   }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.resetForm();
+  }
+
+  addTenant() {
+    if (!this.tenant.name) return;
+
+    console.log('Tenant Added:', this.tenant);
+    this.closeModal();
+  }
+
+  resetForm() {
+    this.tenant = { name: '', url: '', linkedin: '' };
+  }
+  onBackdropClick(event: MouseEvent): void {
+  this.closeModal(); 
+}
 }
