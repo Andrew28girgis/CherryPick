@@ -63,62 +63,64 @@ export class RegisterationComponent implements OnInit {
     });
   }
 
- public onSubmit(): void {
-  const orgName = this.loginData.OrganizationName;
-  const orgRequest = {
-    Name: 'CreateOrganizationByName',
-    Params: {
-      'Name': orgName,
-    },
-  };
+  public onSubmit(): void {
+    const orgName = this.loginData.OrganizationName;
+    const orgRequest = {
+      Name: 'CreateOrganizationByName',
+      Params: {
+        Name: orgName,
+        URL: '',
+        LinkedIn: '',
+      },
+    };
 
-  this.spinner.show();
+    this.spinner.show();
 
-  this.placesService.GenericAPI(orgRequest).subscribe({
-    next: (orgResponse: any) => {
-      const orgId = orgResponse?.json?.[0]?.id;
+    this.placesService.GenericAPI(orgRequest).subscribe({
+      next: (orgResponse: any) => {
+        const orgId = orgResponse?.json?.[0]?.id;
 
-      if (!orgId) {
-        this.errorMessage = 'Failed to retrieve organization ID.';
-        this.spinner.hide();
-        return;
-      }
-
-      const contactRequest = {
-        Name: 'CreateContact',
-        Params: {
-          'Firstname': this.loginData.FirstName,
-          'Lastname': this.loginData.LastName,
-          'OrganizationId': orgId,
-          'Email': this.loginData.Email,
-          'Password': this.encrypt(this.loginData.Password),
-        },
-      };
-
-      this.placesService.GenericAPI(contactRequest).subscribe({
-        next: () => {
-          const loginRequest = {
-            Email: this.loginData.Email,
-            Password: this.encrypt(this.loginData.Password)
-          };
-
-          this.placesService.loginUser(loginRequest).subscribe({
-            next: (loginResponse: any) => {
-              this.handleLoginSuccess(loginResponse); 
-            },
-            complete: () => {
-              this.spinner.hide();
-            }
-          });
-        },
-        error: () => {
-          this.errorMessage = 'Failed to create contact.';
+        if (!orgId) {
+          this.errorMessage = 'Failed to retrieve organization ID.';
           this.spinner.hide();
+          return;
         }
-      });
-    },
-  });
-}
+
+        const contactRequest = {
+          Name: 'CreateContact',
+          Params: {
+            Firstname: this.loginData.FirstName,
+            Lastname: this.loginData.LastName,
+            OrganizationId: orgId,
+            Email: this.loginData.Email,
+            Password: this.encrypt(this.loginData.Password),
+          },
+        };
+
+        this.placesService.GenericAPI(contactRequest).subscribe({
+          next: () => {
+            const loginRequest = {
+              Email: this.loginData.Email,
+              Password: this.encrypt(this.loginData.Password),
+            };
+
+            this.placesService.loginUser(loginRequest).subscribe({
+              next: (loginResponse: any) => {
+                this.handleLoginSuccess(loginResponse);
+              },
+              complete: () => {
+                this.spinner.hide();
+              },
+            });
+          },
+          error: () => {
+            this.errorMessage = 'Failed to create contact.';
+            this.spinner.hide();
+          },
+        });
+      },
+    });
+  }
 
   private handleLoginSuccess(response: any): void {
     localStorage.setItem(
