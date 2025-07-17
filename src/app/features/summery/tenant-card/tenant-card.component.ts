@@ -15,27 +15,36 @@ export class TenantCardComponent {
   protected campaignMinSize: number = 100;
   protected campaignMaxSize: number = 100;
 
-  constructor(private offcanvasService: NgbOffcanvas,private modalService:NgbModal,private router:Router) {}
+  constructor(
+    private offcanvasService: NgbOffcanvas,
+    private modalService: NgbModal,
+    private router: Router
+  ) {}
 
   protected onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
   }
 
   protected openOffcanvas(content: TemplateRef<any>): void {
+    console.log(this.tenant);
+
     this.offcanvasService.open(content, {
       position: 'end',
       panelClass: 'offcanvas-panel-class',
     });
   }
 
-
   protected openCampaignModal(content: any): void {
     this.modalService.open(content, { centered: true });
   }
 
+  protected closeOffcanvas(): void {
+    this.offcanvasService.dismiss();
+  }
+
   protected navigateToCampaign(): void {
     this.modalService.dismissAll();
-    this.offcanvasService.dismiss();
+    this.closeOffcanvas();
     this.router.navigate(['/campaigns/add-campaign', this.tenant.id], {
       queryParams: {
         minSize: this.campaignMinSize,

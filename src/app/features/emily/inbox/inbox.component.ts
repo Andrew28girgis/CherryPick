@@ -55,7 +55,7 @@ export class InboxComponent implements OnInit {
   sanitizedEmailBodyDraft!: SafeHtml;
   emailSubject: string = '';
   @Input() orgId!: number;
-  @Input() buyBoxId!: number;
+  // @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
   contactId!: any;
   BatchGuid!: string;
@@ -91,24 +91,24 @@ export class InboxComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = Number(params.get('buyBoxId'));
+      // this.buyBoxId = Number(params.get('buyBoxId'));
       this.campaignId = params.get('campaignId') || null;
       this.orgId = Number(params.get('organizationId'));
       this.contactId = localStorage.getItem('contactId');
     });
-    this.updateBreadcrumb();
+    // this.updateBreadcrumb();
     this.getOrganizations();
     this.getAllEmails();
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
   }
 
-  updateBreadcrumb() {
-    this.breadcrumbService.addBreadcrumb({
-      label: 'Emily',
-      url: `/organization-mail/${this.buyBoxId}/${this.orgId}/${this.campaignId}`,
-    });
-  }
+  // updateBreadcrumb() {
+  //   this.breadcrumbService.addBreadcrumb({
+  //     label: 'Emily',
+  //     url: `/organization-mail/${this.buyBoxId}/${this.orgId}/${this.campaignId}`,
+  //   });
+  // }
 
   getAllEmails(): void {
     const body: any = {
@@ -362,7 +362,7 @@ export class InboxComponent implements OnInit {
     this.spinner.show();
     const body: GenerateContextDTO = {
       ContactId: this.contactId,
-      BuyBoxId: this.buyBoxId,
+      // BuyBoxId: n'ull,
       CampaignId: this.campaignId,
       AddMinMaxSize: true,
       AddCompetitors: true,
@@ -401,7 +401,7 @@ export class InboxComponent implements OnInit {
       Name: 'PutMailsDraft',
       MainEntity: null,
       Params: {
-        BuyBoxId: this.buyBoxId,
+        // BuyBoxId: this.buyBoxId,
         ContactId: this.contactId,
         PromptId: 21,
         IsCC: true,
@@ -460,36 +460,36 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  sendEmail() {
-    this.spinner.show();
-    const body: any = {
-      Name: 'ComposeEmail',
-      MainEntity: null,
-      Params: {
-        BuyBoxId: +this.buyBoxId,
-        CampaignId: +this.campaignId,
-        RecieverId: [Number(this.selectedContact?.ContactId)].join(','),
-        Subject: this.emailSubject,
-        Body: this.emailBody,
-      },
-      Json: null,
-    };
+  // sendEmail() {
+  //   this.spinner.show();
+  //   const body: any = {
+  //     Name: 'ComposeEmail',
+  //     MainEntity: null,
+  //     Params: {
+  //       // BuyBoxId: +this.buyBoxId,
+  //       CampaignId: +this.campaignId,
+  //       RecieverId: [Number(this.selectedContact?.ContactId)].join(','),
+  //       Subject: this.emailSubject,
+  //       Body: this.emailBody,
+  //     },
+  //     Json: null,
+  //   };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.GenrateEmail = data.json;
-        this.spinner.hide();
-        this.showGenerateSection = false;
-        this.modalService.dismissAll();
-        this.listcenterName = [];
-        this.emailSubject = '';
-        this.emailBody = '';
-        this.ContextEmail = '';
-        this.sanitizedEmailBody = '';
-        this.showToast('Send Success');
-      },
-    });
-  }
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.GenrateEmail = data.json;
+  //       this.spinner.hide();
+  //       this.showGenerateSection = false;
+  //       this.modalService.dismissAll();
+  //       this.listcenterName = [];
+  //       this.emailSubject = '';
+  //       this.emailBody = '';
+  //       this.ContextEmail = '';
+  //       this.sanitizedEmailBody = '';
+  //       this.showToast('Send Success');
+  //     },
+  //   });
+  // }
 
   showAllEmails() {
     this.showAll != this.showAll;
@@ -521,7 +521,7 @@ export class InboxComponent implements OnInit {
       backdrop: true,
     });
     modalRef.componentInstance.contactId = contact.ContactId;
-    modalRef.componentInstance.buyBoxId = this.buyBoxId;
+    // modalRef.componentInstance.buyBoxId = this.buyBoxId;
     modalRef.componentInstance.BBName = this.selectedMicroName;
     modalRef.componentInstance.BBId = this.selectedMicroId;
     modalRef.componentInstance.orgId = this.orgId;

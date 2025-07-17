@@ -33,7 +33,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
   markers: any[] = [];
   infoWindows: any[] = [];
   General: General = new General();
-  BuyBoxId!: any;
+  // BuyBoxId!: any;
   OrgId!: any;
   shoppingCenters: Center[] = [];
   buyboxPlaces: BbPlace[] = [];
@@ -63,11 +63,11 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.selectedState = '';
     this.selectedCity = '';
     this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+      // this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
       this.CampaignId = params.campaignId;
-      localStorage.setItem('BuyBoxId', this.BuyBoxId);
+      // localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
 
@@ -118,7 +118,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.clearMarkers();
   }
 
-  getShoppingCenters(buyboxId: number): void {
+  getShoppingCenters(): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
       return;
@@ -127,7 +127,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.CampaignId,
       },
     };
 
@@ -135,12 +135,12 @@ export class MapViewComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json); 
-        this.getBuyBoxPlaces(this.BuyBoxId);
+        this.getBuyBoxPlaces(this.CampaignId);
       },
     });
   }
 
-  getBuyBoxPlaces(buyboxId: number): void {
+  getBuyBoxPlaces(campaignId: number): void {
     if (this.stateService.getBuyboxPlaces()?.length > 0) {
       this.buyboxPlaces = this.stateService.getBuyboxPlaces();
       this.getAllMarker();
@@ -150,7 +150,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -190,24 +190,24 @@ export class MapViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  BuyBoxPlacesCategories(buyboxId: number): void {
+  BuyBoxPlacesCategories(): void {
     if (this.stateService.getBuyboxCategories().length > 0) {
       this.buyboxCategories = this.stateService.getBuyboxCategories();
-      this.getShoppingCenters(buyboxId);
+      this.getShoppingCenters();
       return;
     }
 
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.CampaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
-        this.getShoppingCenters(this.BuyBoxId);
+        this.getShoppingCenters();
       },
     });
   }

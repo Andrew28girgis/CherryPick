@@ -294,7 +294,8 @@
                     [routerLink]="[
                       '/dashboard',
                       campaign.OrganizationId,
-                      campaign.OrganizationName
+                      campaign.OrganizationName,
+                      campaign.Id
                     ]"
                     style="cursor: pointer"
                     xmlns="http://www.w3.org/2000/svg"
@@ -364,11 +365,11 @@
               </div>
             </div>
           </div>
-          <a
+          <!-- <a
             class="inbox text-center"
             [routerLink]="['./ataglance', campaign.Id]"
             >At a Glance</a
-          >
+          > -->
           <div class="campaign-actions">
             <div class="inbox mail d-flex justify-content-between">
               <i class="fa-regular fa-envelope"></i>
@@ -512,13 +513,13 @@
                   <div
                     class="d-flex justify-content-between align-items-center"
                   >
-                    <div>
+                    <!-- <div>
                       <a
                         class="inbox text-center"
                         [routerLink]="['./ataglance', campaign.Id]"
                         >At a Glance</a
                       >
-                    </div>
+                    </div> -->
                     <div
                       class="inbox mail text-center"
                       [routerLink]="[
@@ -563,7 +564,8 @@
                     [routerLink]="[
                       '/dashboard',
                       campaign.OrganizationId,
-                      campaign.OrganizationName
+                      campaign.OrganizationName,
+                      campaign.Id
                     ]"
                     style="cursor: pointer"
                     xmlns="http://www.w3.org/2000/svg"
@@ -790,7 +792,7 @@
 
     <button
       class="x-btn x-btn-primary"
-      [disabled]="campaignForm.invalid"
+      [disabled]="campaignForm.invalid || campaignMaxSize < campaignMinSize"
       (click)="navigateToCampaign()"
     >
       <span>Get Start</span>

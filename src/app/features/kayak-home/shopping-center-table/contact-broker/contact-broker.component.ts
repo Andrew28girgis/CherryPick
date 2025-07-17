@@ -17,7 +17,7 @@ export class ContactBrokerComponent {
   protected mailContextId!: number;
 
   @Input() center!: Center;
-  @Input() buyboxId!: number;
+  // @Input() buyboxId!: number;
 
   constructor(private activeModal: NgbActiveModal) {}
 

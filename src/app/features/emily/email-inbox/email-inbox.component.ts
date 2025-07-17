@@ -26,7 +26,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrl: './email-inbox.component.css',
 })
 export class EmailInboxComponent implements OnInit {
-  buyBoxId!: any;
+  // buyBoxId!: any;
   contactId!: any;
   BatchGuid!: string;
   campaignId: any;
@@ -72,7 +72,7 @@ export class EmailInboxComponent implements OnInit {
   ResponseContextEmail: any;
   mailContextId!: number;
 
-  @Input() buyBoxIdReply!: number;
+  // @Input() buyBoxIdReply!: number;
   @Input() orgIdReply!: number;
   @Input() emailBodyReply!: any;
   @Input() selectedContactContactId!: any;
@@ -121,7 +121,7 @@ export class EmailInboxComponent implements OnInit {
             ) as buyboxChecklist;
           }
         }
-        this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+        // this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
         this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
       });
 
@@ -132,14 +132,14 @@ export class EmailInboxComponent implements OnInit {
         JSON.stringify(parsedChecklist) !== JSON.stringify(this.buyboxChecklist)
       ) {
         this.buyboxChecklist = parsedChecklist;
-        this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+        // this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
         this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
       }
     }
 
     this.GetPrompts();
-    this.GetBuyBoxInfo();
-    this.GetBuyBoxInfoDetails();
+    // this.GetBuyBoxInfo();
+    // this.GetBuyBoxInfoDetails();
     this.GetRetailRelationCategories();
     this.GetContactManagerNameWithShoppingCenterData();
   }
@@ -197,61 +197,61 @@ export class EmailInboxComponent implements OnInit {
     }
   }
 
-  GetBuyBoxInfo() {
-    const body: any = {
-      Name: 'GetBuyBoxInfo',
-      MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.generated = data.json || [];
-        this.ManagerOrganizationName =
-          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
-        this.BuyBoxOrganizationName =
-          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
+  // GetBuyBoxInfo() {
+  //   const body: any = {
+  //     Name: 'GetBuyBoxInfo',
+  //     MainEntity: null,
+  //     Params: {
+  //       buyboxid: this.buyBoxId,
+  //     },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.generated = data.json || [];
+  //       this.ManagerOrganizationName =
+  //         this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
+  //       this.BuyBoxOrganizationName =
+  //         this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
-        const buyBox = this.generated?.[0]?.Buybox?.[0];
-        if (buyBox) {
-          this.ManagerOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
-              ?.ManagerOrganizationName || '';
-          this.BuyBoxOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.Name || '';
-        }
+  //       const buyBox = this.generated?.[0]?.Buybox?.[0];
+  //       if (buyBox) {
+  //         this.ManagerOrganizationName =
+  //           buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
+  //             ?.ManagerOrganizationName || '';
+  //         this.BuyBoxOrganizationName =
+  //           buyBox.BuyBoxOrganization?.[0]?.Name || '';
+  //       }
 
-        this.generated?.[0]?.Releations?.forEach((r) => {
-          r.relationSelect = true;
-        });
-      },
-    });
-  }
+  //       this.generated?.[0]?.Releations?.forEach((r) => {
+  //         r.relationSelect = true;
+  //       });
+  //     },
+  //   });
+  // }
 
-  GetBuyBoxInfoDetails() {
-    const body: any = {
-      Name: 'GetWizardBuyBoxesById',
-      MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.buybox = data.json;
-      },
-    });
-  }
+  // GetBuyBoxInfoDetails() {
+  //   const body: any = {
+  //     Name: 'GetWizardBuyBoxesById',
+  //     MainEntity: null,
+  //     Params: {
+  //       buyboxid: this.buyBoxId,
+  //     },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data: any) => {
+  //       this.buybox = data.json;
+  //     },
+  //   });
+  // }
 
   GetRetailRelationCategories() {
     const body: any = {
       Name: 'GetRetailRelationCategories',
       MainEntity: null,
       Params: {
-        buyboxid: this.buyBoxId,
+        CampaignId: this.campaignId,
       },
       Json: null,
     };
@@ -369,7 +369,7 @@ export class EmailInboxComponent implements OnInit {
       IsReply: true,
       OldMail: this.emailBodyReply,
       ContactId: this.contactId,
-      BuyBoxId: this.buyBoxIdGenerate,
+      // BuyBoxId: this.buyBoxIdGenerate,
       CampaignId: this.campaignId,
       AddMinMaxSize: this.showMinBuildingSize,
       AddCompetitors: this.ShowCompetitors,
@@ -632,37 +632,37 @@ export class EmailInboxComponent implements OnInit {
     this.emailBody = target.innerHTML; // or innerText if needed
   }
 
-  Send() {
-    if (!this.isEmailGenerated) {
-      this.showToast('Please generate an email first.');
-      return;
-    }
-    this.spinner.show();
-    const body: any = {
-      Name: 'ComposeEmail',
-      MainEntity: null,
-      Params: {
-        BuyBoxId: +this.buyBoxId,
-        CampaignId: +this.campaignId,
-        RecieverId: [Number(this.selectedContactContactId.ContactId)].join(','),
-        Subject: this.emailSubject,
-        Body: this.emailBody,
-      },
-      Json: null,
-    };
+  // Send() {
+  //   if (!this.isEmailGenerated) {
+  //     this.showToast('Please generate an email first.');
+  //     return;
+  //   }
+  //   this.spinner.show();
+  //   const body: any = {
+  //     Name: 'ComposeEmail',
+  //     MainEntity: null,
+  //     Params: {
+  //       BuyBoxId: +this.buyBoxId,
+  //       CampaignId: +this.campaignId,
+  //       RecieverId: [Number(this.selectedContactContactId.ContactId)].join(','),
+  //       Subject: this.emailSubject,
+  //       Body: this.emailBody,
+  //     },
+  //     Json: null,
+  //   };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.spinner.hide();
-        this.showToast('Email sent successfully!');
-      },
-      error: (error) => {
-        console.error('Error sending email:', error);
-        this.spinner.hide();
-        this.showToast('Error sending email.');
-      },
-    });
-  }
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.spinner.hide();
+  //       this.showToast('Email sent successfully!');
+  //     },
+  //     error: (error) => {
+  //       console.error('Error sending email:', error);
+  //       this.spinner.hide();
+  //       this.showToast('Error sending email.');
+  //     },
+  //   });
+  // }
 
   showToast(message: string) {
     const toast = document.getElementById('customToast');

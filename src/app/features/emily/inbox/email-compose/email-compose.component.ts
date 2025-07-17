@@ -17,7 +17,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class EmailComposeComponent implements OnInit {
   @Input() contactId!: number;
-  @Input() buyBoxId!: number;
+  // @Input() buyBoxId!: number;
   @Input() orgId!: number;
   @Input() campaignId!: string | null;
   @Input() contactName!: string;
@@ -249,7 +249,7 @@ export class EmailComposeComponent implements OnInit {
   // 3) build your dto
     const dto: any = {
       ContactId: this.localStorageContactId,
-      BuyBoxId: this.buyBoxId,
+      // BuyBoxId: this.buyBoxId,
       CampaignId: this.campaignId ? +this.campaignId : 0,
       GetContactManagers: selectedManagers,
       OrganizationId: this.orgId,
@@ -273,7 +273,7 @@ export class EmailComposeComponent implements OnInit {
     const body = {
       Name: 'PutMailsDraft',
       Params: {
-        BuyBoxId: this.buyBoxId,
+        // BuyBoxId: this.buyBoxId,
         ContactId: this.localStorageContactId,
         PromptId: this.selectedPromptId,
         IsCC: true,
@@ -380,24 +380,24 @@ export class EmailComposeComponent implements OnInit {
     });
   }
 
-  send() {
-    this.spinner.show();
-    const body = {
-      Name: 'ComposeEmail',
-      Params: {
-        BuyBoxId: this.buyBoxId,
-        CampaignId: this.campaignId,
-        RecieverId: this.contactId.toString(),
-        Subject: this.emailSubject,
-        Body: this.emailBody,
-      },
-    };
-    this.places.GenericAPI(body).subscribe(() => {
-      this.spinner.hide();
-      this.modal.close('sent');
-      this.modalService.dismissAll();
-    });
-  }
+  // send() {
+  //   this.spinner.show();
+  //   const body = {
+  //     Name: 'ComposeEmail',
+  //     Params: {
+  //       BuyBoxId: this.buyBoxId,
+  //       CampaignId: this.campaignId,
+  //       RecieverId: this.contactId.toString(),
+  //       Subject: this.emailSubject,
+  //       Body: this.emailBody,
+  //     },
+  //   };
+  //   this.places.GenericAPI(body).subscribe(() => {
+  //     this.spinner.hide();
+  //     this.modal.close('sent');
+  //     this.modalService.dismissAll();
+  //   });
+  // }
   UpdateEmailData(){
     this.spinner.show();
     const body = {

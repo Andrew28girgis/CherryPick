@@ -3,7 +3,7 @@ export interface GenerateContextDTO
      IsReply? :boolean;
      OldMail?:string;
      ContactId : number;
-     BuyBoxId : number;
+     // BuyBoxId : number|null;
      CampaignId : number;
      OrganizationId : number;
      AddMinMaxSize : boolean;

@@ -29,8 +29,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   currentView = 3;
   isSocialView = false;
   isMapView = false;
-  BuyBoxId!: any;
-  BuyBoxName!: string;
+  // BuyBoxId!: any;
+  // BuyBoxName!: string;
+  organizationName!:string
   CampaignId!: any;
   OrgId!: any;
   selectedOption = 5;
@@ -133,14 +134,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.checkScreenSize();
 
     this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+      // this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
-      this.BuyBoxName = params.buyboxName;
-      this.tenantName = params.buyboxName || '';
-      this.encodedName = encodeURIComponent(this.BuyBoxName);
+      this.organizationName = params.orgName;
+      this.tenantName = params.orgName || '';
+      this.encodedName = encodeURIComponent(this.organizationName);
       this.CampaignId = params.campaignId;
 
-      localStorage.setItem('BuyBoxId', this.BuyBoxId);
+      // localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
 
       // Set tenant image URL
@@ -177,7 +178,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     );
 
     // Add this to load tenants
-    this.getUserBuyBoxes();
+    // this.getUserBuyBoxes();
 
     // Subscribe to stage updates from child components
     this.subscriptions.add(
@@ -339,26 +340,26 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     return option?.text || 'Sort';
   }
 
-  getUserBuyBoxes(): void {
-    const body: any = {
-      Name: 'GetUserBuyBoxes',
-      Params: {},
-    };
+  // getUserBuyBoxes(): void {
+  //   const body: any = {
+  //     Name: 'GetUserBuyBoxes',
+  //     Params: {},
+  //   };
 
-    this.placesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.tenants = data.json;
-        this.filteredTenants = this.tenants;
-        this.groupTenantsByAlphabet();
-        this.selectedTenant =
-          this.tenants.find((t) => t.Id == this.BuyBoxId) || null;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading tenants:', error);
-      },
-    });
-  }
+  //   this.placesService.GenericAPI(body).subscribe({
+  //     next: (data: any) => {
+  //       this.tenants = data.json;
+  //       this.filteredTenants = this.tenants;
+  //       this.groupTenantsByAlphabet();
+  //       this.selectedTenant =
+  //         this.tenants.find((t) => t.Id == this.BuyBoxId) || null;
+  //       this.cdr.detectChanges();
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading tenants:', error);
+  //     },
+  //   });
+  // }
 
   groupTenantsByAlphabet(): void {
     const sortedTenants = [...this.filteredTenants].sort((a, b) =>
@@ -426,8 +427,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   generateSafeUrl(): string {
-    const safeEncodedName = encodeURIComponent(this.BuyBoxName || '');
-    return `/market-survey?buyBoxId=${this.BuyBoxId}&orgId=${this.OrgId}&name=${safeEncodedName}&campaignId=${this.CampaignId}`;
+    const safeEncodedName = encodeURIComponent(this.organizationName || '');
+    return `/market-survey?orgId=${this.OrgId}&name=${safeEncodedName}&campaignId=${this.CampaignId}`;
   }
 
   // Add this method to handle dropdown state changes

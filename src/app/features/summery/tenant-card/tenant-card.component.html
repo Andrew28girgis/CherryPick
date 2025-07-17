@@ -34,10 +34,7 @@
           <img src="../../../assets/Images/Icons/info.png" alt="Info Icon" />
         </ng-container>
         <ng-template #showSendButton>
-          <a
-            class="add-campaign"
-            (click)="openCampaignModal(campaignModal)"
-          >
+          <a class="add-campaign" (click)="openCampaignModal(campaignModal)">
             Add Campaign
           </a>
         </ng-template>
@@ -63,9 +60,10 @@
   </div>
   <div class="offcanvas-body">
     <hr />
+    <h5 class="tenant-card-title mb-3">Campaign List</h5>
     <button
-      class="offcanvas-addcampaign"
-      (click)="openCampaignModal(campaignModal);"
+      class="x-btn x-btn-primary w-100 mb-3"
+      (click)="openCampaignModal(campaignModal)"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -84,63 +82,75 @@
       </svg>
       <span>Add Campaign</span>
     </button>
-    <div class="offcanvas-background">
-      <ng-container *ngFor="let campaign of tenant.Campaigns">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex flex-column justify-content-center gap-1">
-            <div class="private">
-              <div class="privatedot"></div>
-              <p class="privatetext">Public</p>
+    <ng-container *ngFor="let campaign of tenant.Campaigns; let last = last">
+      <div class="campaign-card" [ngClass]="{ 'mb-3': !last }">
+        <div class="d-flex flex-column justify-content-center gap-1">
+          <div
+            class="campaign-privacy"
+            [ngClass]="{
+              'campaign-privacy-public': campaign.CampaignPrivacy == 0,
+              'campaign-privacy-private': campaign.CampaignPrivacy == 1
+            }"
+          >
+            <div class="campaign-privacy-icon"></div>
+            <span>
+              {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
+            </span>
+          </div>
+          <a
+            class="campaign-name"
+            [routerLink]="['/dashboard', tenant.id, tenant.name, campaign.Id]"
+            (click)="closeOffcanvas()"
+          >
+            {{ campaign.CampaignName }}
+          </a>
+          <div class="campaign-creation-date">
+            {{ campaign.CreatedDate | date }}
+          </div>
+        </div>
+
+        <hr />
+
+        <div
+          *ngIf="campaign.Sites"
+          class="d-flex align-items-center justify-content-between"
+        >
+          <div class="campaign-stats-details">Sites</div>
+          <div class="black-bold">
+            {{ campaign.Sites }}
+          </div>
+        </div>
+        <div
+          *ngIf="campaign.MailsSent"
+          class="d-flex align-items-center justify-content-between"
+        >
+          <div class="campaign-stats-details">Mail Sent</div>
+          <div class="black-bold">
+            {{ campaign.MailsSent }}
+          </div>
+        </div>
+        <hr />
+
+        <div class="campaign-name">Campaign Workflow</div>
+
+        <ng-container *ngFor="let stage of campaign.Kanban; let last = last">
+          <div class="d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-start gap-2">
+              <div class="stage-dot">
+                <span></span>
+              </div>
+              <div class="campaign-stats-details">
+                {{ stage.stageName }}
+              </div>
+              <div class="black-bold ms-auto">
+                {{ stage.MarketSurveyShoppingCenters.length || 0 }}
+              </div>
             </div>
-            <div class="firsttradelist">
-              <span>{{ campaign.CampaignName }}</span>
-            </div>
-            <div class="graytext">
-              <span>{{ campaign.CreatedDate | date }}</span>
-            </div>
           </div>
-        </div>
-        <div class="customline"></div>
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="graytext">
-            <span>Sites</span>
-          </div>
-          <div class="blackbold">
-            <!-- <span>{{ campaign.Sites }}</span> -->
-          </div>
-        </div>
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="graytext">
-            <span>Mail Sent</span>
-          </div>
-          <div class="blackbold">
-            <!-- <span>{{ campaign.MailsSent }}</span> -->
-          </div>
-        </div>
-        <div class="CampaignWorkfow">
-          <span>Campaign Workflow</span>
-        </div>
-        <!-- <ng-container
-                  *ngFor="let stage of campaign.Kanban; let first = first"
-                >
-                  <div *ngIf="!first" class="smallline"></div>
-                  <div class="d-flex flex-column">
-                    <div
-                      class="d-flex align-items-center justify-content-between"
-                    >
-                      <div class="graytext">
-                        <span>{{ stage.stageName }}</span>
-                      </div>
-                      <div class="blackbold">
-                        <span>{{
-                          stage.MarketSurveyShoppingCenters.length || 0
-                        }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container> -->
-      </ng-container>
-    </div>
+          <hr *ngIf="!last" />
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -254,7 +264,7 @@
 
     <button
       class="x-btn x-btn-primary"
-      [disabled]="campaignForm.invalid"
+      [disabled]="campaignForm.invalid || campaignMaxSize < campaignMinSize"
       (click)="navigateToCampaign()"
     >
       <span>Get Start</span>

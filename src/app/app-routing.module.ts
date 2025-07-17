@@ -199,7 +199,7 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: 'organization-mail/:buyBoxId/:organizationId/:campaignId',
+    path: 'organization-mail/:organizationId/:campaignId',
     component: InboxComponent,
     canActivate: [AuthGuardService],
   },
@@ -219,7 +219,7 @@ const routes: Routes = [
     // canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
-    path: 'dashboard/:buyboxid/:orgId/:buyboxName/:campaignId',
+    path: 'dashboard/:orgId/:orgName/:campaignId',
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],

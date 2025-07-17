@@ -125,6 +125,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
+          console.log(this.filteredCampaigns);
+          
         } else {
           this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
@@ -154,33 +156,33 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUserBuyBoxes(): void {
-    this.isLoading = true; // Show skeleton
+  // getUserBuyBoxes(): void {
+  //   this.isLoading = true; // Show skeleton
 
-    const body: any = {
-      Name: 'GetUserBuyBoxes',
-      Params: {},
-    };
+  //   const body: any = {
+  //     Name: 'GetUserBuyBoxes',
+  //     Params: {},
+  //   };
 
-    const subscription = this.placesService.GenericAPI(body).subscribe({
-      next: (response) => {
-        if (response.json && response.json.length > 0) {
-          this.userBuyBoxes = response.json.map((buybox: any) => {
-            return {
-              id: buybox.id,
-              name: buybox.name,
-            };
-          });
-          this.selectedBuyBoxId = this.userBuyBoxes[0].id;
-        } else {
-          this.userBuyBoxes = [];
-        }
-      },
-      error: () => {},
-    });
+  //   const subscription = this.placesService.GenericAPI(body).subscribe({
+  //     next: (response) => {
+  //       if (response.json && response.json.length > 0) {
+  //         this.userBuyBoxes = response.json.map((buybox: any) => {
+  //           return {
+  //             id: buybox.id,
+  //             name: buybox.name,
+  //           };
+  //         });
+  //         this.selectedBuyBoxId = this.userBuyBoxes[0].id;
+  //       } else {
+  //         this.userBuyBoxes = [];
+  //       }
+  //     },
+  //     error: () => {},
+  //   });
 
-    this.subscriptions.add(subscription);
-  }
+  //   this.subscriptions.add(subscription);
+  // }
 
   onCampaignCreated(): void {
     this.getAllCampaigns();
@@ -309,7 +311,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.getAllCampaigns();
-    this.getUserBuyBoxes();
+    // this.getUserBuyBoxes();
 
     // Check if there's a saved preference for view mode
     const savedViewMode = localStorage.getItem('campaignViewMode') as

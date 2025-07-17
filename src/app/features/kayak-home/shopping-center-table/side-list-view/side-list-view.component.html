@@ -15,7 +15,7 @@
             (mouseleave)="onMouseLeaveHighlight(place)"
           >
             <div class="card-window_c">
-              <a
+              <!-- <a
                 [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]"
               >
                 <div class="main-img">
@@ -35,11 +35,11 @@
                     <div class="loading-spinner"></div>
                   </div>
                 </div>
-              </a>
+              </a> -->
               <div class="content-wrap card-content">
                 <div>
                   <div class="d-flex justify-content-between">
-                    <a
+                    <!-- <a
                       style="max-width: 45%"
                       [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]"
                     >
@@ -60,7 +60,7 @@
                         *ngIf="place.Deleted == true"
                         >Deleted</span
                       >
-                    </a>
+                    </a> -->
                     <div style="display: flex; gap: 5px">
                       <div *ngIf="place.stageName">
                         <!-- <p class="ShoppingCenterStage mb-1">{{place.stageName}}</p> -->
@@ -120,7 +120,7 @@
                             </a>
                           </li> -->
                           <li (click)="toggleShortcuts(place.Id, 'close')">
-                            <a
+                            <!-- <a
                               class="target"
                               [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,BuyBoxId]"
                             >
@@ -157,7 +157,7 @@
                                 />
                               </svg>
                               View Details
-                            </a>
+                            </a> -->
                           </li>
                           <li>
                             <a class="target" (click)="openContactModal(place)">

@@ -9,8 +9,8 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
   styleUrls: ['./kayak-home.component.css'],
 })
 export class KayakHomeComponent implements OnInit {
-  BuyboxName: string | null = '';
-  Buyboxid: any | null = '';
+  organizationName: string | null = '';
+  // Buyboxid: any | null = '';
   orgId!: any | null;
   constructor(
     public router: Router,
@@ -20,18 +20,18 @@ export class KayakHomeComponent implements OnInit {
 
   async ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      this.BuyboxName = params.get('buyboxName');
+      this.organizationName = params.get('orgName');
       this.orgId = params.get('orgId');
 
-      this.Buyboxid = params.get('buyboxid');
+      // this.Buyboxid = params.get('buyboxid');
     });
 
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'My Tenants', url: '/summary' },
-      {
-        label: `${this.BuyboxName}`,
-        url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`,
-      },
-    ]);
+    // this.breadcrumbService.setBreadcrumbs([
+    //   { label: 'My Tenants', url: '/summary' },
+    //   {
+    //     label: `${this.BuyboxName}`,
+    //     url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`,
+    //   },
+    // ]);
   }
 }

@@ -20,7 +20,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class MarketSideViewComponent implements OnInit {
  General: any = {};
-  BuyBoxId!: any;
+  // BuyBoxId!: any;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
   buyboxPlaces: BbPlace[] = [];
@@ -66,30 +66,30 @@ export class MarketSideViewComponent implements OnInit {
   ngOnInit() {
     this.General = new General();
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.BuyBoxId = params.buyBoxId;
+      // this.BuyBoxId = params.buyBoxId;
       this.campaignId = params.campaignId;
       this.spinner.show();
-      this.BuyBoxPlacesCategories(this.BuyBoxId);
+      this.BuyBoxPlacesCategories();
     });
   }
 
-  BuyBoxPlacesCategories(buyboxId: number): void {
+  BuyBoxPlacesCategories(): void {
     if (this.stateService.getBuyboxCategories().length > 0) {
       this.buyboxCategories = this.stateService.getBuyboxCategories();
-      this.getShoppingCenters(buyboxId);
+      this.getShoppingCenters();
       return;
     }
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
-        this.getShoppingCenters(this.BuyBoxId);
+        this.getShoppingCenters();
       },
       error: (err) => {
         console.error('Error loading categories:', err);
@@ -98,10 +98,10 @@ export class MarketSideViewComponent implements OnInit {
     });
   }
 
-  getShoppingCenters(buyboxId: number): void {
+  getShoppingCenters(): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
-      this.getBuyBoxPlaces(this.BuyBoxId);
+      this.getBuyBoxPlaces(this.campaignId);
       return;
     }
     const body: any = {
@@ -126,7 +126,7 @@ export class MarketSideViewComponent implements OnInit {
         );
         this.cardsSideList = [...this.shoppingCenters];
         this.stateService.setShoppingCenters(this.shoppingCenters);
-        this.getBuyBoxPlaces(this.BuyBoxId);
+        this.getBuyBoxPlaces(this.campaignId);
       },
       error: (err) => {
         console.error('Error loading shopping centers:', err);
@@ -135,7 +135,7 @@ export class MarketSideViewComponent implements OnInit {
     });
   }
 
-  getBuyBoxPlaces(buyboxId: number): void {
+  getBuyBoxPlaces(campaignId: number): void {
     if (this.stateService.getBuyboxPlaces()?.length > 0) {
       this.buyboxPlaces = this.stateService.getBuyboxPlaces();
       this.processCategories();
@@ -145,7 +145,7 @@ export class MarketSideViewComponent implements OnInit {
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -217,7 +217,7 @@ export class MarketSideViewComponent implements OnInit {
     const body: any = {
       Name: 'PolygonStats',
       Params: {
-        buyboxid: this.BuyBoxId,
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -312,7 +312,7 @@ export class MarketSideViewComponent implements OnInit {
     const body: any = {
       Name: 'GetBuyBoxSCsIntersectPolys',
       Params: {
-        BuyBoxId: this.BuyBoxId,
+        CampaignId: this.campaignId,
         PolygonSourceId: 0,
       },
     };

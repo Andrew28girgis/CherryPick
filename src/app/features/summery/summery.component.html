@@ -311,7 +311,7 @@
 
     <button
       class="x-btn x-btn-primary"
-      [disabled]="campaignForm.invalid"
+      [disabled]="campaignForm.invalid || campaignMaxSize < campaignMinSize"
       (click)="navigateToCampaign()"
     >
       <span>Get Start</span>
