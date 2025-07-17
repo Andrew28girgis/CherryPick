@@ -36,7 +36,7 @@
         <ng-template #showSendButton>
           <a
             class="add-campaign"
-            [routerLink]="['/campaigns/add-campaign', tenant.id]"
+            (click)="openCampaignModal(campaignModal)"
           >
             Add Campaign
           </a>
@@ -65,7 +65,7 @@
     <hr />
     <button
       class="offcanvas-addcampaign"
-      [routerLink]="['/campaigns/add-campaign', tenant.id]"
+      (click)="openCampaignModal(campaignModal);"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -141,5 +141,123 @@
                 </ng-container> -->
       </ng-container>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #campaignModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title" ngbAutofocus>
+      Launch Your Campaign
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form #campaignForm="ngForm">
+      <div class="mb-3">
+        <label
+          for="minSizeInput"
+          class="form-label d-flex align-items-center gap-2"
+        >
+          Min Size (sf) *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="minSizeInput.invalid && minSizeInput.touched"
+          >
+            required
+          </span>
+        </label>
+
+        <input
+          type="number"
+          id="minSizeInput"
+          class="form-control"
+          name="minSizeInput"
+          required
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMinSize"
+          #minSizeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': minSizeInput.invalid && minSizeInput.touched
+          }"
+        />
+
+        <input
+          type="range"
+          id="customRange3"
+          class="form-range"
+          name="minSizeRange"
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMinSize"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label
+          for="maxSizeInput"
+          class="form-label d-flex align-items-center gap-2"
+        >
+          Max Size (sf) *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="maxSizeInput.invalid && maxSizeInput.touched"
+          >
+            required
+          </span>
+        </label>
+
+        <input
+          type="number"
+          id="maxSizeInput"
+          class="form-control"
+          name="maxSizeInput"
+          required
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMaxSize"
+          #maxSizeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': maxSizeInput.invalid && maxSizeInput.touched
+          }"
+        />
+
+        <input
+          type="range"
+          id="customRange4"
+          class="form-range"
+          name="maxSizeRange"
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMaxSize"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="x-btn x-btn-outline"
+      (click)="modal.close('Save click')"
+    >
+      <span>Cancel</span>
+    </button>
+
+    <button
+      class="x-btn x-btn-primary"
+      [disabled]="campaignForm.invalid"
+      (click)="navigateToCampaign()"
+    >
+      <span>Get Start</span>
+    </button>
   </div>
 </ng-template>

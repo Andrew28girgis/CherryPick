@@ -110,18 +110,17 @@ export class InboxComponent implements OnInit {
     });
   }
 
-
   getAllEmails(): void {
     const body: any = {
       Name: 'GetBuyBoxEmails',
       MainEntity: null,
-      Params: { buyboxid: this.buyBoxId },
+      Params: { camapignId: this.campaignId },
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        this.filteredEmails =  data.json ? this.sortEmails(data.json) : [];    
+        this.filteredEmails = data.json ? this.sortEmails(data.json) : [];
         this.filterEmails(this.selectedFilter);
       },
     });
@@ -142,7 +141,7 @@ export class InboxComponent implements OnInit {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
       MainEntity: null,
-      Params: { buyboxid: this.buyBoxId },
+      Params: { camapignId: this.campaignId },
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -152,9 +151,8 @@ export class InboxComponent implements OnInit {
         const microDeal = this.BuyBoxMicroDeals.find(
           (deal) => deal.OrganizationId === this.orgId
         );
-        
+
         if (microDeal) {
-          
           this.selectedMicro = microDeal.OrganizationId;
           this.contacts = microDeal.Contact;
           this.getEmailsForContact(this.contacts[0]);
@@ -172,7 +170,6 @@ export class InboxComponent implements OnInit {
       },
     });
   }
-
 
   getEmailsForContact(contact: Contact): void {
     if (this.selectedContact?.ContactId !== contact.ContactId) {
@@ -272,11 +269,11 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  openmodel(modal: any, body: any, contactId: any, contextId:any) {
+  openmodel(modal: any, body: any, contactId: any, contextId: any) {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
-        console.log('cc',contactId);
+    console.log('cc', contactId);
     this.selectedContactID = contactId;
-    this.selectedContextID  = contextId;
+    this.selectedContextID = contextId;
   }
 
   getDirectionIcon(direction: number): string {
@@ -315,7 +312,6 @@ export class InboxComponent implements OnInit {
         return '#e2e3e5'; // Unknown - grey
     }
   }
-
 
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
@@ -426,7 +422,7 @@ export class InboxComponent implements OnInit {
       },
     });
   }
-  
+
   onContentChange(event: Event) {
     const target = event.target as HTMLElement;
     this.emailBody = target.innerText;
@@ -504,8 +500,10 @@ export class InboxComponent implements OnInit {
     this.filterEmails(this.selectedFilter);
   }
 
-  checkShowAll(){
-    return  this.BuyBoxMicroDeals.filter((item) => (item.isOpen = false)) ? false : true;
+  checkShowAll() {
+    return this.BuyBoxMicroDeals.filter((item) => (item.isOpen = false))
+      ? false
+      : true;
   }
   showToast(message: string) {
     const toast = document.getElementById('customToast');
@@ -564,7 +562,7 @@ export class InboxComponent implements OnInit {
       Direction: mail.Direction,
       Subject: mail.Subject,
       Body: mail.body, // Mail body
-      O:[],
+      O: [],
       isEditing: false, // Adjust this based on your needs
     };
 

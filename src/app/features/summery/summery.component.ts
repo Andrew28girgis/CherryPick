@@ -42,17 +42,21 @@ export class SummeryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getUserBuyBoxes();
+    this.getAllActiveOrganizations();
   }
 
-  private getUserBuyBoxes(): void {
+  private getAllActiveOrganizations(): void {
     const body: any = {
-      Name: 'GetAllOrganizations',
+      Name: 'GetAllActiveOrganizations',
       Params: {},
     };
 
     this.placeService.GenericAPI(body).subscribe({
       next: (data: any) => {
+        if (!data.json || !data.json.length) {
+          this.openAddTenantModal(this.tenantModal);
+          return;
+        }
         this.tenants = data.json;
         this.tenants = this.tenants.map((t) => ({
           ...t,
@@ -97,7 +101,6 @@ export class SummeryComponent implements OnInit {
         return;
       } else {
         this.newTenantId = orgId;
-        this.getUserBuyBoxes();
         this.modalService.dismissAll();
         this.resetAddTenantForm();
         this.openCampaignModal(this.campaignModal);
@@ -144,5 +147,10 @@ export class SummeryComponent implements OnInit {
         maxSize: this.campaignMaxSize,
       },
     });
+  }
+
+  protected skipCreateCampaign(): void {
+    this.modalService.dismissAll();
+    this.getAllActiveOrganizations();
   }
 }

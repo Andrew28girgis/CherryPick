@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: '', component: CampaignManagerComponent },
   // { path: 'add-campaign', component: AddCampaignComponent },
   { path: 'add-campaign', component: AddNewCampaignComponent },
-  { path: 'add-campaign/:buyboxId', component: AddNewCampaignComponent },
+  { path: 'add-campaign/:organizationId', component: AddNewCampaignComponent },
   {
     path: 'ataglance/:id',
     loadChildren: () =>

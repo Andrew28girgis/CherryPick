@@ -285,7 +285,7 @@
 }
 
 /* Modal Body */
-.modal-body {
+/* .modal-body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -295,7 +295,7 @@
 
 .modal-body {
   height: 80vh;
-}
+} */
 
 /* Campaign Drawing Component */
 .campaign-drawing-component {

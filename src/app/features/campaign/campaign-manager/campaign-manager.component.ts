@@ -25,6 +25,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./campaign-manager.component.css'],
 })
 export class CampaignManagerComponent implements OnInit, OnDestroy {
+  protected campaignMinSize: number = 100;
+  protected campaignMaxSize: number = 100;
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
   @Input() set viewMode(value: 'table' | 'card') {
@@ -143,11 +145,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   onSearchCampaign(): void {
     if (this.searchCampaign && this.searchCampaign.trim().length > 0) {
       this.filteredCampaigns = this.campaigns.filter((c) =>
-        c.Campaigns.some((campaign) =>
-          campaign.CampaignName.toLowerCase().includes(
+       c.CampaignName.toLowerCase().includes(
             this.searchCampaign.toLowerCase()
           )
-        )
       );
     } else {
       this.filteredCampaigns = this.campaigns;
@@ -193,15 +193,15 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
     if (withOrg) {
-      this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
+      this.getCampaignOrganizations(campaign.OrganizationId, campaign.Id);
     } else {
-      const emilyObject: { buyboxId: number[]; organizations: any[] } = {
-        buyboxId: [campaign.id],
-        organizations: [],
-      };
-      this.emilyService.updateCheckList(emilyObject);
+      // const emilyObject: { buyboxId: number[]; organizations: any[] } = {
+      //   buyboxId: [campaign.id],
+      //   organizations: [],
+      // };
+      // this.emilyService.updateCheckList(emilyObject);
 
-      this.router.navigate(['/MutipleEmail', campaign.id]);
+      // this.router.navigate(['/MutipleEmail', campaign.id]);
     }
   }
 
@@ -324,5 +324,19 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
+  }
+
+   protected openCampaignModal(content: any): void {
+    this.modalService.open(content, { centered: true });
+  }
+
+   protected navigateToCampaign(): void {
+    this.modalService.dismissAll();
+    this.router.navigate(['/campaigns/add-campaign'], {
+      queryParams: {
+        minSize: this.campaignMinSize,
+        maxSize: this.campaignMaxSize,
+      },
+    });
   }
 }
