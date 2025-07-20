@@ -21,8 +21,8 @@ export class AddCampaignPopupComponent implements OnInit {
     { label: 'Private', value: 1 },
     { label: 'Public', value: 0 },
   ];
-  protected campaignMinSize: number = 100;
-  protected campaignMaxSize: number = 100;
+  protected campaignMinSize: number = 500;
+  protected campaignMaxSize: number = 500;
   protected allOrganizations!: Tenant[];
   protected displayOrganizationsList: boolean = false;
 
