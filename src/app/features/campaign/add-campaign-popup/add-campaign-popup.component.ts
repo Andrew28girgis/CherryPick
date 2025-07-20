@@ -70,7 +70,8 @@ export class AddCampaignPopupComponent implements OnInit {
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        window.location.href = `https://www.google.com/maps?campaignId=${response.json[0].id}&campaignName=${this.campaignName}&organizationId=${this.organizationId}`;
+        const url = 'https://www.google.com/maps/search/shopping+centers+malls';
+        window.location.href = `${url}?campaignId=${response.json[0].id}&campaignName=${this.campaignName}&organizationId=${this.organizationId}`;
       } else {
         this.activeModalService.close();
       }
