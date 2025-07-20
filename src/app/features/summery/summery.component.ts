@@ -131,7 +131,6 @@ export class SummeryComponent implements OnInit {
 
   protected addNewTenant() {
     if (!this.newTenant.name.trim().length) return;
-
     this.createNewTenant();
   }
 
