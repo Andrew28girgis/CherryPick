@@ -31,7 +31,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   isMapView = false;
   // BuyBoxId!: any;
   // BuyBoxName!: string;
-  organizationName!:string
+  organizationName!: string;
   CampaignId!: any;
   OrgId!: any;
   selectedOption = 5;
@@ -438,5 +438,10 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
+  }
+
+  navigateToMap(): void {
+    const url = 'https://www.google.com/maps/search/shopping+centers+malls';
+    window.location.href = `${url}?campaignId=${this.CampaignId}&campaignName=${this.organizationName}&organizationId=${this.OrgId}`;
   }
 }
