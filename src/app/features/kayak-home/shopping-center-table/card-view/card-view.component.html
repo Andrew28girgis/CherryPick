@@ -37,7 +37,7 @@
     <div class="card-window cursor col-md-4 col-sm-4 col-12">
       <div class="cardResponsive">
         <a
-          [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId]"
+          [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
         >
           <div class="main-img">
             <img
@@ -45,11 +45,14 @@
               [title]="shopping.CenterName"
               (error)="onImageError(shopping)"
               (load)="onImageLoad(shopping.Id)"
-              [ngClass]="{'loading': imageLoadingStates[shopping.Id]}"
+              [ngClass]="{ loading: imageLoadingStates[shopping.Id] }"
               loading="lazy"
               alt="{{ shopping.CenterName }}"
             />
-            <div class="image-placeholder" *ngIf="imageLoadingStates[shopping.Id]">
+            <div
+              class="image-placeholder"
+              *ngIf="imageLoadingStates[shopping.Id]"
+            >
               <div class="loading-spinner"></div>
             </div>
           </div>
@@ -61,7 +64,7 @@
               <a
                 style="max-width: 45%"
                 class="textdecoration"
-                [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,BuyBoxId]"
+                [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,shopping.CampaignId]"
               >
                 <div class="content-title cursor" style="white-space: pre-line">
                   {{
@@ -98,7 +101,14 @@
                         *ngFor="let stage of KanbanStages"
                         class="dropdown-item"
                         [class.active]="stage.id === shopping.kanbanStageId"
-                        (click)="selectStage(shopping.MarketSurveyId, stage.id, shopping, $event)"
+                        (click)="
+                          selectStage(
+                            shopping.MarketSurveyId,
+                            stage.id,
+                            shopping,
+                            $event
+                          )
+                        "
                       >
                         {{ stage.stageName }}
                       </div>
@@ -119,7 +129,7 @@
                     <li (click)="toggleShortcuts(shopping.Id, 'close')">
                       <a
                         class="target"
-                        [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId]"
+                        [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
                       >
                         <svg
                           width="24"
@@ -360,12 +370,19 @@
                 </table>
               </div>
 
-              <div *ngIf="shopping.ShoppingCenter?.Places?.length" class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
+              <div
+                *ngIf="shopping.ShoppingCenter?.Places?.length"
+                class="table-responsive mt-2"
+                style="max-height: 150px; overflow-y: auto"
+              >
                 <p class="mb-0 pt-1"><b>Notes</b></p>
-                <table class="table table-sm table-striped mb-0 small-table" style="font-size: 0.75rem;">
+                <table
+                  class="table table-sm table-striped mb-0 small-table"
+                  style="font-size: 0.75rem"
+                >
                   <tbody>
                     <tr *ngFor="let place of shopping.ShoppingCenter.Places">
-                      <td>{{ place.Notes || '—' }}</td>
+                      <td>{{ place.Notes || "—" }}</td>
                     </tr>
                   </tbody>
                 </table>
