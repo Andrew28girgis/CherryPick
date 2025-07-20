@@ -45,11 +45,14 @@
               [title]="shopping.CenterName"
               (error)="onImageError(shopping)"
               (load)="onImageLoad(shopping.Id)"
-              [ngClass]="{'loading': imageLoadingStates[shopping.Id]}"
+              [ngClass]="{ loading: imageLoadingStates[shopping.Id] }"
               loading="lazy"
               alt="{{ shopping.CenterName }}"
             />
-            <div class="image-placeholder" *ngIf="imageLoadingStates[shopping.Id]">
+            <div
+              class="image-placeholder"
+              *ngIf="imageLoadingStates[shopping.Id]"
+            >
               <div class="loading-spinner"></div>
             </div>
           </div>
@@ -98,7 +101,14 @@
                         *ngFor="let stage of KanbanStages"
                         class="dropdown-item"
                         [class.active]="stage.id === shopping.kanbanStageId"
-                        (click)="selectStage(shopping.MarketSurveyId, stage.id, shopping, $event)"
+                        (click)="
+                          selectStage(
+                            shopping.MarketSurveyId,
+                            stage.id,
+                            shopping,
+                            $event
+                          )
+                        "
                       >
                         {{ stage.stageName }}
                       </div>
@@ -360,12 +370,19 @@
                 </table>
               </div>
 
-              <div *ngIf="shopping.ShoppingCenter?.Places?.length" class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
+              <div
+                *ngIf="shopping.ShoppingCenter?.Places?.length"
+                class="table-responsive mt-2"
+                style="max-height: 150px; overflow-y: auto"
+              >
                 <p class="mb-0 pt-1"><b>Notes</b></p>
-                <table class="table table-sm table-striped mb-0 small-table" style="font-size: 0.75rem;">
+                <table
+                  class="table table-sm table-striped mb-0 small-table"
+                  style="font-size: 0.75rem"
+                >
                   <tbody>
                     <tr *ngFor="let place of shopping.ShoppingCenter.Places">
-                      <td>{{ place.Notes || '—' }}</td>
+                      <td>{{ place.Notes || "—" }}</td>
                     </tr>
                   </tbody>
                 </table>
