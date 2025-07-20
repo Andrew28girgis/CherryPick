@@ -1,22 +1,9 @@
-import {
-  Component,
-  HostListener,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { StateService } from 'src/app/core/services/state.service';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
-import { Tenant } from 'src/app/shared/models/tenants';
-import { EncodeService } from 'src/app/core/services/encode.service';
-import {
-  DropboxService,
-  UploadArgs,
-} from 'src/app/core/services/dropbox.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Tenant } from 'src/app/shared/models/tenant';
 
 @Component({
   selector: 'app-summery',
@@ -24,260 +11,146 @@ import {
   styleUrls: ['./summery.component.css'],
 })
 export class SummeryComponent implements OnInit {
-  tenants: Tenant[] = [];
-  Token: any;
-  orgId!: number;
-  organizationId!: any;
-  Obj!: BuyBoxModel;
-  @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;
-  modalOpened: boolean = false;
-  isLoading = true;
-  showCampaigns: boolean = false;
-  campaignsViewMode: 'table' | 'card' = 'table';
-  currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
-  isMobile = false;
-  campaignsLoaded = false;
+  @ViewChild('tenantModal', { static: true })
+  private tenantModal!: TemplateRef<any>;
+  @ViewChild('campaignModal', { static: true })
+  private campaignModal!: TemplateRef<any>;
+  private tenants: Tenant[] = [];
+  private newTenantId!: number;
 
-  // Search
-  searchQuery: string = '';
-  filteredTenants: Tenant[] = [];
-
-  // Filter
-  showFilterDropdown: boolean = false;
-  showSortDropdown: boolean = false;
-  filters = {
-    active: false,
-    inactive: false,
-    fastFood: false,
-    sportswear: false,
-    luxury: false,
-    fastFashion: false,
+  protected sortBy: string = 'newest';
+  protected sortOptions = [
+    { value: 'alphabetical', label: 'Alphabetical' },
+    { value: 'newest', label: 'Newest to Oldest' },
+    { value: 'oldest', label: 'Oldest to Newest' },
+  ];
+  protected newTenant = {
+    name: '',
+    url: '',
+    linkedin: '',
   };
-
-  // Sort
-  sortField: 'alphabetical' | 'newest' | 'oldest' = 'alphabetical';
+  protected campaignMinSize: number = 100;
+  protected campaignMaxSize: number = 100;
+  protected searchQuery: string = '';
+  protected filteredTenants: Tenant[] = [];
 
   constructor(
-    public activatedRoute: ActivatedRoute,
     public router: Router,
-    private PlacesService: PlacesService,
-    private route: ActivatedRoute,
-    private stateService: StateService,
+    private placeService: PlacesService,
     private modalService: NgbModal,
-    private breadcrumbService: BreadcrumbService,
-    private base62: EncodeService,
-    private dropbox: DropboxService
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'My Tenants', url: '/summary' },
-    ]);
-    this.stateService.clearAll();
-    this.route.queryParams.subscribe((params) => {
-      this.getUserBuyBoxes();
-      this.organizationId = localStorage.getItem('orgId');
-    });
-    this.modalOpened = false;
-    this.checkScreenSize();
-    this.filteredTenants = this.tenants;
+    this.getAllActiveOrganizations();
   }
 
-  getUserBuyBoxes(): void {
-    this.isLoading = true;
+  private getAllActiveOrganizations(): void {
     const body: any = {
-      Name: 'GetUserBuyBoxes',
+      Name: 'GetAllActiveOrganizations',
       Params: {},
     };
 
-    this.PlacesService.GenericAPI(body).subscribe({
+    this.placeService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        this.tenants = data.json;
-        this.filteredTenants = this.tenants;
-        if (!this.tenants || this.tenants.length === 0) {
-          this.router.navigate(['/add-tenant']);
-          // this.modalOpened = true;
-          // this.openAddTenant(this.buyBoxProperty);
+        if (!data.json || !data.json.length) {
+          this.openAddTenantModal(this.tenantModal);
+          return;
         }
-        this.isLoading = false;
+        this.tenants = data.json;
+        this.tenants = this.tenants.map((t) => ({
+          ...t,
+          Campaigns:
+            t.Campaigns?.length && !t.Campaigns[0]?.Id ? [] : t.Campaigns,
+        }));
+        this.filteredTenants = this.tenants;
+
+        if (!this.tenants || this.tenants.length === 0) {
+          this.openAddTenantModal(this.tenantModal);
+        }
       },
     });
   }
 
-  openAddTenant(content: any) {
-    const modalRef = this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      scrollable: true,
-      size: 'xl',
-    });
-    this.Obj = new BuyBoxModel();
-    modalRef.result.then((result) => {
-      if (result && result.created) {
-        this.getUserBuyBoxes();
+  private resetAddTenantForm() {
+    this.newTenant = { name: '', url: '', linkedin: '' };
+  }
+
+  private openCampaignModal(content: any): void {
+    this.modalService.open(content, { centered: true });
+  }
+
+  private createNewTenant(): void {
+    this.spinner.show();
+    const body = {
+      Name: 'CreateOrganizationByName',
+      Params: {
+        Name: this.newTenant.name,
+        URL: this.newTenant.url.trim().length ? this.newTenant.url : '',
+        LinkedIn: this.newTenant.linkedin.trim().length
+          ? this.newTenant.linkedin
+          : '',
+      },
+    };
+
+    this.placeService.GenericAPI(body).subscribe((orgResponse: any) => {
+      this.spinner.hide();
+      const orgId = orgResponse?.json?.[0]?.id;
+      if (!orgId) {
+        alert('Tenant creation failed. Please try again.');
+        return;
+      } else {
+        this.newTenantId = orgId;
         this.modalService.dismissAll();
+        this.resetAddTenantForm();
+        this.openCampaignModal(this.campaignModal);
       }
     });
   }
 
-  showCampaignsTable() {
-    this.showCampaigns = true;
-    this.campaignsViewMode = 'table';
-    this.currentView = 'campaigns-table';
-    this.campaignsLoaded = true;
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'Campaigns', url: '/campaigns' },
-    ]);
-  }
+  protected filterTenants(): void {
+    let tenants = this.tenants.filter((tenant) =>
+      this.searchQuery.trim().length
+        ? tenant.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        : true
+    );
 
-  showCampaignsCard() {
-    this.showCampaigns = true;
-    this.campaignsViewMode = 'card';
-    this.currentView = 'campaigns-card';
-    this.campaignsLoaded = true;
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'Campaigns', url: '/campaigns' },
-    ]);
-  }
-
-  showTenants() {
-    this.showCampaigns = false;
-    this.currentView = 'tenants';
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'My Tenants', url: '/summary' },
-    ]);
-  }
-
-  goToTenant(tenant: Tenant) {
-    this.router.navigate([
-      '/dashboard',
-      tenant.Id,
-      tenant.OrganizationId,
-      tenant.Name,
-      tenant.Campaigns[0].Id,
-    ]);
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth <= 767;
-    if (this.isMobile) {
-      this.campaignsViewMode = 'card';
-    } else {
-      const savedViewMode = localStorage.getItem('campaignViewMode') as
-        | 'table'
-        | 'card';
-      if (savedViewMode) {
-        this.campaignsViewMode = savedViewMode;
-      }
-    }
-  }
-
-  // Search and Filter Functions
-  filterTenants() {
-    this.filteredTenants = this.tenants.filter((tenant) => {
-      // Search filter
-      const matchesSearch =
-        !this.searchQuery ||
-        tenant.Name.toLowerCase().includes(this.searchQuery.toLowerCase());
-
-      // Status filters
-      const statusMatch =
-        (!this.filters.active && !this.filters.inactive) ||
-        (this.filters.active && tenant.Status === 'Active') ||
-        (this.filters.inactive && tenant.Status === 'Inactive');
-
-      // Category filters
-      const categoryMatch =
-        (!this.filters.fastFood &&
-          !this.filters.sportswear &&
-          !this.filters.luxury &&
-          !this.filters.fastFashion) ||
-        (this.filters.fastFood && tenant.Category === 'Fast Food Brand') ||
-        (this.filters.sportswear && tenant.Category === 'Sportswear') ||
-        (this.filters.luxury && tenant.Category === 'Luxury Brands') ||
-        (this.filters.fastFashion &&
-          tenant.Category === 'Basic & Everyday Wear');
-
-      return matchesSearch && statusMatch && categoryMatch;
-    });
-
-    // Maintain current sort
-    this.sortTenants(this.sortField);
-  }
-
-  // Sort Functions
-  sortTenants(field: 'alphabetical' | 'newest' | 'oldest') {
-    this.sortField = field;
-
-    this.filteredTenants.sort((a, b) => {
-      switch (field) {
+    this.filteredTenants = tenants.sort((a, b) => {
+      switch (this.sortBy) {
         case 'alphabetical':
-          return a.Name.localeCompare(b.Name);
+          return (a.name || '').localeCompare(b.name || '');
         case 'newest':
-          return (
-            new Date(b.CreatedDate).getTime() -
-            new Date(a.CreatedDate).getTime()
-          );
+          return (b.id || 0) - (a.id || 0);
         case 'oldest':
-          return (
-            new Date(a.CreatedDate).getTime() -
-            new Date(b.CreatedDate).getTime()
-          );
+          return (a.id || 0) - (b.id || 0);
         default:
           return 0;
       }
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    // Get the clicked element
-    const clickedElement = event.target as HTMLElement;
+  protected addNewTenant() {
+    if (!this.newTenant.name.trim().length) return;
 
-    // Check if click is outside filter button and dropdown
-    if (
-      !clickedElement.closest('.filter-btn') &&
-      !clickedElement.closest('.filter-dropdown')
-    ) {
-      this.showFilterDropdown = false;
-    }
-
-    // Check if click is outside sort button and dropdown
-    if (
-      !clickedElement.closest('.sort-btn') &&
-      !clickedElement.closest('.sort-dropdown')
-    ) {
-      this.showSortDropdown = false;
-    }
+    this.createNewTenant();
   }
 
-  // Toggle Dropdowns
-  toggleFilter(event?: MouseEvent) {
-    if (event) {
-      event.stopPropagation();
-    }
-    this.showFilterDropdown = !this.showFilterDropdown;
-    this.showSortDropdown = false;
+  protected openAddTenantModal(content: any): void {
+    this.modalService.open(content, { centered: true });
   }
 
-  toggleSort(event?: MouseEvent) {
-    if (event) {
-      event.stopPropagation();
-    }
-    this.showSortDropdown = !this.showSortDropdown;
-    this.showFilterDropdown = false;
+  protected navigateToCampaign(): void {
+    this.modalService.dismissAll();
+    this.router.navigate(['/campaigns/add-campaign', this.newTenantId], {
+      queryParams: {
+        minSize: this.campaignMinSize,
+        maxSize: this.campaignMaxSize,
+      },
+    });
   }
 
-  openAddTenants() {
-    this.router.navigate(['/add-tenant']);
-  }
-
-
-  onImageError(event: any) {
-    event.target.src = "assets/Images/placeholder.png"
+  protected skipCreateCampaign(): void {
+    this.modalService.dismissAll();
+    this.getAllActiveOrganizations();
   }
 }

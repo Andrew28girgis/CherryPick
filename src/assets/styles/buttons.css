@@ -1,0 +1,60 @@
+.x-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: Montserrat, sans-serif;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+.x-btn span {
+  text-align: center;
+}
+.x-btn-primary {
+  background-color: #3922d2;
+  border-color: #3922d2;
+  color: #fff;
+}
+.x-btn-primary:hover,
+.x-btn-primary:focus {
+  background-color: #2a18a6;
+  border-color: #2a18a6;
+}
+.x-btn-primary:active {
+  background-color: #1d116b;
+  border-color: #1d116b;
+}
+.x-btn-primary:disabled {
+  background-color: #bcbcbc;
+  border-color: #bcbcbc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.x-btn-primary:disabled span {
+  color: #ffffff;
+}
+.x-btn-outline {
+  background: #fff;
+  border-color: #3922d2;
+  color: #3922d2;
+}
+.x-btn-outline:hover,
+.x-btn-outline:focus {
+  background: #3922d2;
+  color: #fff;
+}
+.x-btn-outline:active {
+  background: #2a18a6;
+  color: #fff;
+}
+.x-btn-outline:disabled {
+  border-color: #bcbcbc;
+  color: #bcbcbc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}

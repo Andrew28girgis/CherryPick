@@ -4,12 +4,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
@@ -19,6 +20,7 @@ import { GenericMapService } from 'src/app/core/services/generic-map.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { IMapBounds } from 'src/app/shared/interfaces/imap-bounds';
 import { IMapState } from 'src/app/shared/interfaces/imap-state';
+import { Tenant } from 'src/app/shared/models/tenant';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -39,8 +41,11 @@ export class AddNewCampaignComponent
     name: string;
   }[] = [];
   private mapBounds: IMapBounds | null = null;
+  private campaignMinSize!: number;
+  private campaignMaxSize!: number;
 
-  protected buyBoxId!: number;
+  protected organizationId!: number;
+  // protected buyBoxId!: number;
   protected selectedDrawingModeId: number = 1;
   protected visabilityOptions: any[] = [
     { label: 'Private', value: 1 },
@@ -59,7 +64,8 @@ export class AddNewCampaignComponent
   protected displayMode: number = 1;
   protected lastDisplayMode: number = 1;
   protected selectedCityName: string = '';
-  protected userBuyBoxes!: { Id: number; Name: string }[];
+  protected allOrganizations!: Tenant[];
+  protected showSelectMenu: boolean = false;
 
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
 
@@ -72,7 +78,8 @@ export class AddNewCampaignComponent
     private httpClient: HttpClient,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -85,12 +92,31 @@ export class AddNewCampaignComponent
       this.contactId = +contact;
     }
 
+    this.activatedRoute.paramMap.subscribe((parms) => {
+      const organizationId = parms.get('organizationId');
+      if (organizationId) this.organizationId = +organizationId;
+    });
+
+    this.activatedRoute.queryParamMap.subscribe((parms) => {
+      const minSize = parms.get('minSize');
+      const maxSize = parms.get('maxSize');
+
+      if (minSize) this.campaignMinSize = +minSize;
+      if (maxSize) this.campaignMaxSize = +maxSize;
+    });
+
+    // const bbId = localStorage.getItem('BuyBoxId');
+    // if (bbId) this.buyBoxId = +bbId;
+
     this.mapBoundsChangeListeners();
     this.featureAddedListeners();
-    this.getUserBuyBoxes();
+    this.getAllOrganizations();
   }
 
   ngAfterViewInit(): void {
+    if (!this.organizationId) {
+      this.showSelectMenu = true;
+    }
     this.campaignDrawingService.initializeMap(this.gmapContainer);
     this.campaignDrawingService.initializeStaticDrawingManager();
     const map = this.campaignDrawingService.getMap();
@@ -143,16 +169,16 @@ export class AddNewCampaignComponent
         );
         const newStates: IMapState[] = response.json
           .filter(
-            (s: { state_id: string }) => !existingStateCodes.has(s.state_id)
+            (s: { stateId: string }) => !existingStateCodes.has(s.stateId)
           )
-          .map((s: { state_id: string }) => ({ code: s.state_id }));
+          .map((s: { stateId: string }) => ({ code: s.stateId }));
 
         const combinedStates = [...this.mapStates, ...newStates];
 
         this.mapStates = response.json
           .map(
-            (s: { state_id: string }) =>
-              combinedStates.find((state) => state.code === s.state_id)!
+            (s: { stateId: string }) =>
+              combinedStates.find((state) => state.code === s.stateId)!
           )
           .sort((a: IMapState, b: IMapState) => a.code.localeCompare(b.code));
 
@@ -169,11 +195,11 @@ export class AddNewCampaignComponent
     });
   }
 
-  private getUserBuyBoxes(): void {
+  private getAllOrganizations(): void {
     this.spinner.show();
 
     const body: any = {
-      Name: 'GetUserBuyBoxes',
+      Name: 'GetAllOrganizations',
       Params: {},
     };
 
@@ -181,14 +207,9 @@ export class AddNewCampaignComponent
       next: (response) => {
         this.spinner.hide();
         if (response.json && response.json.length > 0) {
-          this.userBuyBoxes = response.json.map((buybox: any) => {
-            return {
-              Id: buybox.Id,
-              Name: buybox.Name,
-            };
-          });
+          this.allOrganizations = response.json;
         } else {
-          this.userBuyBoxes = [];
+          this.allOrganizations = [];
         }
       },
     });
@@ -472,7 +493,12 @@ export class AddNewCampaignComponent
   }
 
   protected createNewCampaign(): void {
-    if (!this.buyBoxId) {
+    if (!this.campaignMinSize || !this.campaignMaxSize) {
+      alert('Plese select a min and max size first.');
+      this.router.navigate(['/campaigns'], { replaceUrl: true });
+      return;
+    }
+    if (!this.organizationId) {
       alert('Plese select a buybox first.');
       return;
     }
@@ -488,8 +514,9 @@ export class AddNewCampaignComponent
       Params: {
         CampaignName: this.campaignName,
         CampaignPrivacy: this.isPrivateCampaign,
-        BuyBoxId: this.buyBoxId,
-        CreatedDate: new Date(),
+        OrganizationId: this.organizationId,
+        minunitsize: this.campaignMinSize,
+        maxunitsize: this.campaignMaxSize,
       },
     };
 
@@ -498,7 +525,7 @@ export class AddNewCampaignComponent
         setTimeout(() => {
           this.spinner.hide();
           this.modalService.dismissAll();
-          this.router.navigate(['/summary']);
+          this.router.navigate(['/campaigns']);
         }, 1000);
         this.attachAreasToCampaign(response.json[0].id);
         this.attachFeaturesToCampaign(response.json[0].id);

@@ -35,8 +35,12 @@ import { AddNewCampaignComponent } from './add-new-campaign/add-new-campaign.com
     TooltipModule,
     InputTextModule,
     AutoCompleteModule,
-    ButtonModule
+    ButtonModule,
   ],
-  exports: [CampaignDrawingComponent,CampaignManagerComponent],
+  exports: [
+    CampaignDrawingComponent,
+    CampaignManagerComponent,
+    AddNewCampaignComponent,
+  ],
 })
 export class CampaignModule {}

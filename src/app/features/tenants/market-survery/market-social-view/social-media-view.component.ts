@@ -31,7 +31,7 @@ export class SocialMediaViewComponent implements OnInit {
   General: any = {};
   shoppingCenters: Center[] = [];
   buyboxCategories: BuyboxCategory[] = [];
-  BuyBoxId!: any;
+  // BuyBoxId!: any;
   buyboxPlaces: BbPlace[] = [];
   globalClickListener!: (() => void)[];
   showComments: { [key: number]: boolean } = {};
@@ -95,7 +95,7 @@ export class SocialMediaViewComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.BuyBoxId = params.buyBoxId;
+      // this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.campaignId = params.campaignId;
       this.currentView = localStorage.getItem('currentView') || '2';
@@ -103,7 +103,7 @@ export class SocialMediaViewComponent implements OnInit {
     });
 
     this.currentView = this.isMobileView ? '5' : '2';
-    this.BuyBoxPlacesCategories(this.BuyBoxId);
+    this.BuyBoxPlacesCategories();
   }
   encrypt(value: string): string {
     const encrypted = CryptoJS.AES.encrypt(
@@ -262,30 +262,30 @@ export class SocialMediaViewComponent implements OnInit {
     };
   }
 
-  BuyBoxPlacesCategories(buyboxId: number): void {
+  BuyBoxPlacesCategories(): void {
     if (this.stateService.getBuyboxCategories().length > 0) {
       this.buyboxCategories = this.stateService.getBuyboxCategories();
-      this.getShoppingCenters(buyboxId);
+      this.getShoppingCenters();
       return;
     }
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
-        this.getShoppingCenters(this.BuyBoxId);
+        this.getShoppingCenters();
       },
     });
   }
-  getShoppingCenters(buyboxId: number): void {
+  getShoppingCenters(): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
-      this.getBuyBoxPlaces(this.BuyBoxId);
+      this.getBuyBoxPlaces(this.campaignId);
       return;
     }
 
@@ -312,15 +312,15 @@ export class SocialMediaViewComponent implements OnInit {
 
         this.stateService.setShoppingCenters(this.shoppingCenters);
 
-        this.getBuyBoxPlaces(this.BuyBoxId);
+        this.getBuyBoxPlaces(this.campaignId);
       },
     });
   }
-  getBuyBoxPlaces(buyboxId: number): void {
+  getBuyBoxPlaces(campaignId: number): void {
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -571,26 +571,26 @@ export class SocialMediaViewComponent implements OnInit {
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
 
-  OpenShareWithContactModal(content: any): void {
-    const body: any = {
-      Name: 'GetBuyBoxGUID',
-      Params: {
-        BuyBoxId: +this.BuyBoxId,
-        OrganizationId: +this.OrgId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.Guid = data.json[0].buyBoxLink;
-        if (this.Guid) {
-          this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
-        } else {
-          this.GuidLink = '';
-        }
-      },
-    });
-    this.modalService.open(this.ShareWithContact, { size: 'lg' });
-  }
+  // OpenShareWithContactModal(content: any): void {
+  //   const body: any = {
+  //     Name: 'GetBuyBoxGUID',
+  //     Params: {
+  //       BuyBoxId: +this.BuyBoxId,
+  //       OrganizationId: +this.OrgId,
+  //     },
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.Guid = data.json[0].buyBoxLink;
+  //       if (this.Guid) {
+  //         this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
+  //       } else {
+  //         this.GuidLink = '';
+  //       }
+  //     },
+  //   });
+  //   this.modalService.open(this.ShareWithContact, { size: 'lg' });
+  // }
   toggleShortcutsCard(id: number | null, close?: string): void {
     if (close === 'close') {
       this.selectedIdCard = null;
@@ -608,7 +608,7 @@ export class SocialMediaViewComponent implements OnInit {
       Params: {
         PlaceID: placeId,
         shoppingcenterId: ShoppingcenterId,
-        buyboxid: this.BuyBoxId,
+        CampaignId: this.campaignId,
       },
     };
 

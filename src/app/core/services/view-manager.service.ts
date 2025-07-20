@@ -798,6 +798,7 @@ public getCurrentLoadingState(): boolean
 
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
+          
           const centers = data.json;
 
           // Store all centers
@@ -822,12 +823,12 @@ public getCurrentLoadingState(): boolean
   /**
    * Load buybox categories
    */
-  private loadBuyBoxCategories(buyboxId: number): Promise<void> {
+  private loadBuyBoxCategories(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      const body: any = {
+     const body: any = {
         Name: 'GetRetailRelationCategories',
         Params: {
-          BuyBoxId: buyboxId,
+          CampaignId: campaignId,
         },
       };
 
@@ -874,12 +875,12 @@ public getCurrentLoadingState(): boolean
   /**
    * Load buybox places
    */
-  private loadBuyBoxPlaces(buyboxId: number): Promise<void> {
+  private loadBuyBoxPlaces(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       const body: any = {
         Name: 'BuyBoxRelatedRetails',
         Params: {
-          BuyBoxId: buyboxId,
+          CampaignId: campaignId,
         },
       };
 

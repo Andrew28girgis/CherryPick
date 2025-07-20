@@ -1,0 +1,231 @@
+.email-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e3e3e3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.error-container {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #f5c6cb;
+  text-align: center;
+}
+
+/* Email Content */
+.email-content {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Email Header */
+.email-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+}
+
+.email-subject {
+  margin: 0 0 15px 0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.email-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.email-meta span {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.direction-1 {
+  background-color: rgba(40, 167, 69, 0.3) !important;
+}
+.direction-2 {
+  background-color: rgba(0, 123, 255, 0.3) !important;
+}
+.direction-3 {
+  background-color: rgba(255, 193, 7, 0.3) !important;
+}
+.direction-4 {
+  background-color: rgba(108, 117, 125, 0.3) !important;
+}
+
+/* Sections */
+.campaign-section,
+.buybox-section,
+.additional-info {
+  padding: 30px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.campaign-section:last-child,
+.buybox-section:last-child,
+.additional-info:last-child {
+  border-bottom: none;
+}
+
+.campaign-section h3,
+.buybox-section h3,
+.additional-info h3 {
+  margin: 0 0 25px 0;
+  color: #495057;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.campaign-section h3::before {
+  content: "📊";
+  margin-right: 10px;
+}
+
+.buybox-section h3::before {
+  content: "🏢";
+  margin-right: 10px;
+}
+
+.additional-info h3::before {
+  content: "ℹ️";
+  margin-right: 10px;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  background-color: #e9ecef;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.info-item span {
+  color: #495057;
+  font-size: 14px;
+  font-weight: 500;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .email-container {
+    padding: 10px;
+    overflow-x: hidden;
+  }
+
+  .email-header {
+    padding: 20px;
+  }
+
+  .email-subject {
+    font-size: 20px;
+  }
+
+  .email-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .campaign-section,
+  .buybox-section,
+  .additional-info {
+    padding: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .email-container {
+    padding: 5px;
+  }
+
+  .email-header {
+    padding: 15px;
+  }
+
+  .email-subject {
+    font-size: 18px;
+  }
+
+  .campaign-section,
+  .buybox-section,
+  .additional-info {
+    padding: 15px;
+  }
+}

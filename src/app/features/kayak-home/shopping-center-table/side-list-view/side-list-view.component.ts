@@ -34,7 +34,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   General: General = new General()
   cardsSideList: Center[] = []
   map: any
-  BuyBoxId!: any
+  // BuyBoxId!: any
   orgId!: any
   mapViewOnePlacex = false
   buyboxCategories: BuyboxCategory[] = []
@@ -117,11 +117,11 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     this.savedMapView = localStorage.getItem("mapView")
 
     this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid
+      // this.BuyBoxId = params.buyboxid
       this.orgId = params.orgid
       this.Campaign = params.campaign
 
-      localStorage.setItem("BuyBoxId", this.BuyBoxId)
+      // localStorage.setItem("BuyBoxId", this.BuyBoxId)
       localStorage.setItem("OrgId", this.orgId)
     })
 
@@ -422,7 +422,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     const body: any = {
       Name: "PolygonStats",
       Params: {
-        buyboxid: this.BuyBoxId,
+        CampaignId: this.CampaignId,
       },
     }
     this.placesService.GenericAPI(body).subscribe({
@@ -437,7 +437,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     const body: any = {
       Name: "GetBuyBoxSCsIntersectPolys",
       Params: {
-        BuyBoxId: this.BuyBoxId,
+        CampaignId: this.CampaignId,
         PolygonSourceId: 0,
       },
     }
@@ -519,7 +519,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
 
   async deleteShCenter() {
     try {
-      await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete!)
+      // await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete!)
       this.modalService.dismissAll()
     } catch (error) {
       console.error("Error deleting shopping center:", error)
@@ -574,7 +574,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       windowClass: "contact-broker-modal-class",
     })
     modalRef.componentInstance.center = center
-    modalRef.componentInstance.buyboxId = this.BuyBoxId
+    // modalRef.componentInstance.buyboxId = this.BuyBoxId
   }
 
   trackById(index: number, place: any): number {

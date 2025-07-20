@@ -15,19 +15,19 @@ import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
-import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
-import { RegisterationComponent } from './shared/components/registeration/registeration.component';
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
 import { AccountLinkedGuard } from './core/guards/account-linked.guard';
 import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
+import { EmailInfoComponent } from './features/email-info/email-info.component';
+import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 
 const routes: Routes = [
   {
@@ -37,6 +37,23 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
+  {
+    path: 'accounts-link',
+    loadChildren: () =>
+      import('./features/settings/settings.module').then(
+        (m) => m.SettingsModule
+      ),
+    data: { hideHeader: true },
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./features/settings/settings.module').then(
+        (m) => m.SettingsModule
+      ),
+    canActivate: [AuthGuardService],
+  },
   // {
   //   path: 'registeration',
   //   component: RegisterationComponent,
@@ -67,14 +84,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuardService],
   },
-  {
-    path: 'organizations',
-    loadChildren: () =>
-      import('../app/features/organizations/organizations.module').then(
-        (m) => m.OrganizationsModule
-      ),
-    canActivate: [AuthGuardService],
-  },
+  // {
+  //   path: 'organizations',
+  //   loadChildren: () =>
+  //     import('../app/features/organizations/organizations.module').then(
+  //       (m) => m.OrganizationsModule
+  //     ),
+  //   canActivate: [AuthGuardService],
+  // },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
@@ -140,7 +157,6 @@ const routes: Routes = [
   {
     path: 'market-survey',
     component: MarketSurveyComponent,
-    canActivate: [TenantOnlyGuard, AuthGuardService],
     data: { hideHeader: true },
   },
   {
@@ -183,12 +199,12 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: 'organization-mail/:buyBoxId/:organizationId/:campaignId',
+    path: 'organization-mail/:organizationId/:campaignId',
     component: InboxComponent,
     canActivate: [AuthGuardService],
   },
   {
-    path: 'contacts',
+    path: 'organizations',
     component: ContactsComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
@@ -203,10 +219,14 @@ const routes: Routes = [
     // canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
-    path: 'dashboard/:buyboxid/:orgId/:buyboxName/:campaignId',
+    path: 'dashboard/:orgId/:orgName/:campaignId',
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
+  },
+  {
+    path: 'emailInfo/:mailId',
+    component: EmailInfoComponent,
   },
   {
     path: ':guid',

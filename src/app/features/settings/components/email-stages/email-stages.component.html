@@ -1,0 +1,28 @@
+<div class="stages-contaciner">
+  @for (stage of stagesList; track stage.id; let last = $last) {
+  <div class="stage-item">
+    <div
+      class="stage-dot"
+      [ngClass]="{ 'not-ready': !stage.mailsCount && stage.mailsCount != 0 }"
+    ></div>
+    <div
+      class="stage-message"
+      [ngClass]="{ 'not-ready': !stage.mailsCount && stage.mailsCount != 0 }"
+    >
+      {{ stage.stageMessage }}
+    </div>
+    <div
+      class="normal-chip ms-auto"
+      [class.in-progress-chip]="stage.inProgress && !stage.mailsCount"
+    >
+      {{
+        stage.mailsCount || stage.mailsCount == 0
+          ? stage.mailsCount + " Mails"
+          : "In Progress"
+      }}
+    </div>
+  </div>
+  @if (!last) {
+  <hr class="w-100" />
+  } }
+</div>

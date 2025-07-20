@@ -1,0 +1,118 @@
+<div class="row g-4">
+  <div class="col-lg-6 col-12">
+    <div class="x-section h-100">
+      <img
+        class="section-img"
+        src="../../../assets/icons/microsoft.png"
+        alt="microsoft"
+      />
+      <div class="w-100 d-flex align-items-center gap-2">
+        <a
+          [href]="MICROSOFT_CONNECT_LINK"
+          class="w-100 btn card-btn"
+          [ngClass]="{ 'card-btn-unlink': microsoftState == 3 }"
+          (click)="microsoftState == 3 ? $event.preventDefault() : null"
+        >
+          @if (microsoftState == 2) {
+          <div
+            class="spinner-border spinner-border-sm text-light"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          }@else {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M10.8832 9.11667C12.7582 10.9917 12.7582 14.025 10.8832 15.8917C9.00821 17.7583 5.97487 17.7667 4.1082 15.8917C2.24154 14.0167 2.2332 10.9833 4.1082 9.11667"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M8.8248 11.175C6.8748 9.225 6.8748 6.05833 8.8248 4.1C10.7748 2.14167 13.9415 2.15 15.8998 4.1C17.8581 6.05 17.8498 9.21667 15.8998 11.175"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>
+            {{ microsoftState == 3 ? "UnLink" : "Link" }}
+          </span>
+          }
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-12">
+    <div class="x-section h-100">
+      <img
+        class="section-img"
+        src="../../../assets/icons/google.png"
+        alt="google"
+      />
+      <div class="w-100 d-flex align-items-center gap-2">
+        <a
+          [href]="GOOGLE_CONNECT_LINK"
+          class="w-100 btn card-btn"
+          [ngClass]="{ 'card-btn-unlink': googleState == 3 }"
+          (click)="googleState == 3 ? UnlinkGoogle($event) : null"
+        >
+          @if (googleState == 2) {
+          <div
+            class="spinner-border spinner-border-sm text-light"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          }@else {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M10.8832 9.11667C12.7582 10.9917 12.7582 14.025 10.8832 15.8917C9.00821 17.7583 5.97487 17.7667 4.1082 15.8917C2.24154 14.0167 2.2332 10.9833 4.1082 9.11667"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M8.8248 11.175C6.8748 9.225 6.8748 6.05833 8.8248 4.1C10.7748 2.14167 13.9415 2.15 15.8998 4.1C17.8581 6.05 17.8498 9.21667 15.8998 11.175"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>
+            {{ googleState == 3 ? "UnLink" : "Link" }}
+          </span>
+          }
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="firstTimeOpen"
+  class="w-100 d-flex align-items-center justify-content-center mt-4"
+>
+  <button class="skip-btn" (click)="contactDidntWantToLinkAccount()">
+    <span>Skip This Step For Now</span>
+  </button>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

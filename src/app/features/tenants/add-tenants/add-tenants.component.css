@@ -1,8 +1,6 @@
 .container {
   overflow-y: auto;
-
   display: flex;
-  width: 900px;
   padding: var(--Card-Section-Padding-All-Sides, 32px);
   flex-direction: column;
   align-items: flex-start;
@@ -174,7 +172,7 @@ textarea.form-control {
   gap: 8px;
   flex: 1 0 0;
   width: 406px;
-  color: #3922D2;
+  color: #3922d2;
 }
 
 .p-button-right ::ng-deep .p-button {

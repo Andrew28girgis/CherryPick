@@ -22,14 +22,26 @@ import { DropboxService } from './dropbox.service';
   providedIn: 'root',
 })
 export class PlacesService {
-  appMode: string = 'api';
+  appMode!: string ;
 
   constructor(
     private http: HttpClient,
     private base62: EncodeService,
     private dropbox: DropboxService
-  ) {}
+  ) { }
 
+  setAppMode(mode: string) {
+    this.appMode = mode;  
+    console.log(`from ss`);
+    console.log(this.appMode);
+    
+      
+  }
+  
+  getAppMode(): string {
+    return this.appMode;
+  }
+  
   public GetBuyBoxPlaces(buyBoxId: any) {
     return this.http.get<any>(
       `${environment.api}/BuyBox/GetBuyBoxPlaces?buyboxid=${buyBoxId}`
@@ -48,7 +60,7 @@ export class PlacesService {
 
   public userToken(email: string) {
     return this.http.get(
-      `${environment.api}/DropBox/GetUserTokens?Email=${email}`
+      `http://10.0.0.15:8082/api/DropBox/GetUserTokens?Email=${email}`
     );
   }
 
@@ -139,6 +151,8 @@ export class PlacesService {
 
               // Check if we got a meaningful result (not empty)
               if (convertedBytes && Object.keys(convertedBytes).length > 0) {
+                console.log(`returning convertedBytes`);
+                
                 return convertedBytes;
               } else {
                 // If empty result, continue polling

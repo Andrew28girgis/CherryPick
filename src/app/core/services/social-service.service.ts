@@ -48,7 +48,7 @@ export class SocialServiceService {
     });
   }
 
-  getBuyBoxPlaces(buyboxId: number): Promise<BbPlace[]> {
+  getBuyBoxPlaces(campaignId: number): Promise<BbPlace[]> {
     return new Promise((resolve, reject) => {
       if (this.stateService.getBuyboxPlaces()?.length > 0) {
         resolve(this.stateService.getBuyboxPlaces());
@@ -58,7 +58,7 @@ export class SocialServiceService {
       const body: any = {
         Name: 'BuyBoxRelatedRetails',
         Params: {
-          BuyBoxId: buyboxId,
+          CampaignId: campaignId,
         },
       };
 
@@ -72,7 +72,7 @@ export class SocialServiceService {
     });
   }
 
-  getBuyBoxCategories(buyboxId: number): Promise<BuyboxCategory[]> {
+  getBuyBoxCategories(campaignId: number): Promise<BuyboxCategory[]> {
     return new Promise((resolve, reject) => {
       if (this.stateService.getBuyboxCategories().length > 0) {
         resolve(this.stateService.getBuyboxCategories());
@@ -82,7 +82,7 @@ export class SocialServiceService {
       const body: any = {
         Name: 'GetRetailRelationCategories',
         Params: {
-          BuyBoxId: buyboxId,
+          CampaignId: campaignId,
         },
       };
 

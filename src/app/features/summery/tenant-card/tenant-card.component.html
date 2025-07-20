@@ -1,91 +1,273 @@
-<div class="row">
-  <ng-container *ngIf="tenants && tenants.length > 0">
-    <ng-container *ngFor="let tenant of tenants">
-      <div class="col-12 col-sm-6">
-        <div class="card-kayak mt-3 mb-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
-              <div>
-                <img
-                  (click)="$event.stopPropagation()"
-                  class="Kayak__img cursor"
-                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                    tenant.OrganizationId
-                  }}"
-                />
-              </div>
-              <div class="d-flex flex-column gap-2">
-                <div class="active">
-                  <div class="dot"></div>
-                  <p class="text">Active</p>
-                </div>
+<div class="tenant-card">
+  <div class="d-flex align-items-center gap-3">
+    <img
+      class="tenant-card-img"
+      [src]="
+        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+        tenant.id
+      "
+      (error)="onImageError($event)"
+    />
+    <div
+      class="d-flex flex-column align-items-start justify-content-center gap-2"
+    >
+      <div class="active">
+        <div class="dot"></div>
+        <p class="text">Active</p>
+      </div>
+      <div class="tenant-card-title">
+        {{ tenant.name }}
+      </div>
+      <div
+        class="d-flex align-items-center gap-1"
+        style="cursor: pointer"
+        (click)="openOffcanvas(offcanvasContent)"
+      >
+        <ng-container
+          *ngIf="
+            tenant.Campaigns && tenant.Campaigns.length > 0;
+            else showSendButton
+          "
+        >
+          <span class="campaigns-count">{{ tenant.Campaigns.length }}</span>
+          <span class="campaign-label">Campaigns</span>
+          <img src="../../../assets/Images/Icons/info.png" alt="Info Icon" />
+        </ng-container>
+        <ng-template #showSendButton>
+          <a class="add-campaign" (click)="openCampaignModal(campaignModal)">
+            Add Campaign
+          </a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
 
-                <div class="card__Kayak_title cursor">
-                  {{ tenant.Name }}
-                </div>
-                <div
-                  class="d-flex align-items-center gap-2 cursor"
-                  data-bs-toggle="offcanvas"
-                  [attr.data-bs-target]="'#campaignDetails' + tenant.Id"
-                  aria-controls="campaignDetails"
-                  (click)="$event.stopPropagation()"
-                >
-                  <span class="nomberofcampains" *ngIf="tenant.Campaigns">{{
-                    tenant.Campaigns.length
-                  }}</span>
-                  <span class="campaingstext">Campaigns</span>
-                  <img
-                    src="../../../assets/Images/Icons/info.png"
-                    alt="Info Icon"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="chevronicon cursor">
-              <i class="fa-solid fa-chevron-right"></i>
-            </div>
+<ng-template #offcanvasContent let-offcanvas>
+  <div class="offcanvas-header">
+    <h5 class="d-flex align-items-center gap-3 m-0" ngbAutofocus>
+      <img
+        class="tenant-offcanvas-img"
+        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+          tenant.id
+        }}"
+        [alt]="tenant.name + 'logo'"
+      />
+      <div class="tenant-card-title">
+        {{ tenant.name }}
+      </div>
+    </h5>
+  </div>
+  <div class="offcanvas-body">
+    <hr />
+    <h5 class="tenant-card-title mb-3">Campaign List</h5>
+    <button
+      class="x-btn x-btn-primary w-100 mb-3"
+      (click)="openCampaignModal(campaignModal)"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M6 12H18M12 18V6"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span>Add Campaign</span>
+    </button>
+    <ng-container *ngFor="let campaign of tenant.Campaigns; let last = last">
+      <div class="campaign-card" [ngClass]="{ 'mb-3': !last }">
+        <div class="d-flex flex-column justify-content-center gap-1">
+          <div
+            class="campaign-privacy"
+            [ngClass]="{
+              'campaign-privacy-public': campaign.CampaignPrivacy == 0,
+              'campaign-privacy-private': campaign.CampaignPrivacy == 1
+            }"
+          >
+            <div class="campaign-privacy-icon"></div>
+            <span>
+              {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
+            </span>
+          </div>
+          <a
+            class="campaign-name"
+            [routerLink]="['/dashboard', tenant.id, tenant.name, campaign.Id]"
+            (click)="closeOffcanvas()"
+          >
+            {{ campaign.CampaignName }}
+          </a>
+          <div class="campaign-creation-date">
+            {{ campaign.CreatedDate | date }}
+          </div>
+        </div>
+
+        <hr />
+
+        <div
+          *ngIf="campaign.Sites"
+          class="d-flex align-items-center justify-content-between"
+        >
+          <div class="campaign-stats-details">Sites</div>
+          <div class="black-bold">
+            {{ campaign.Sites }}
           </div>
         </div>
         <div
-          class="offcanvas offcanvas-end"
-          tabindex="-1"
-          [id]="'campaignDetails' + tenant.Id"
-          aria-labelledby="campaignDetailsLabel"
-          (click)="$event.stopPropagation()"
+          *ngIf="campaign.MailsSent"
+          class="d-flex align-items-center justify-content-between"
         >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="campaignDetailsLabel">
-              <div class="d-flex align-items-center gap-3">
-                <div>
-                  <img
-                    class="Kayak__img"
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      tenant.OrganizationId
-                    }}"
-                    alt=""
-                  />
-                </div>
-                <div class="d-flex flex-column gap-2">
-                  <div class="active">
-                    <div class="dot"></div>
-                    <p class="text">Active</p>
-                  </div>
-
-                  <div class="card__Kayak_title">
-                    {{ tenant.Name }}
-                  </div>
-                </div>
-              </div>
-            </h5>
-            <button
-              type="button"
-              class="btn-close text-reset"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
+          <div class="campaign-stats-details">Mail Sent</div>
+          <div class="black-bold">
+            {{ campaign.MailsSent }}
           </div>
         </div>
+        <hr />
+
+        <div class="campaign-name">Campaign Workflow</div>
+
+        <ng-container *ngFor="let stage of campaign.Kanban; let last = last">
+          <div class="d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-start gap-2">
+              <div class="stage-dot">
+                <span></span>
+              </div>
+              <div class="campaign-stats-details">
+                {{ stage.stageName }}
+              </div>
+              <div class="black-bold ms-auto">
+                {{ stage.MarketSurveyShoppingCenters.length || 0 }}
+              </div>
+            </div>
+          </div>
+          <hr *ngIf="!last" />
+        </ng-container>
       </div>
     </ng-container>
-  </ng-container>
-</div>
+  </div>
+</ng-template>
+
+<ng-template #campaignModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title" ngbAutofocus>
+      Launch Your Campaign
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form #campaignForm="ngForm">
+      <div class="mb-3">
+        <label
+          for="minSizeInput"
+          class="form-label d-flex align-items-center gap-2"
+        >
+          Min Size (sf) *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="minSizeInput.invalid && minSizeInput.touched"
+          >
+            required
+          </span>
+        </label>
+
+        <input
+          type="number"
+          id="minSizeInput"
+          class="form-control"
+          name="minSizeInput"
+          required
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMinSize"
+          #minSizeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': minSizeInput.invalid && minSizeInput.touched
+          }"
+        />
+
+        <input
+          type="range"
+          id="customRange3"
+          class="form-range"
+          name="minSizeRange"
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMinSize"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label
+          for="maxSizeInput"
+          class="form-label d-flex align-items-center gap-2"
+        >
+          Max Size (sf) *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="maxSizeInput.invalid && maxSizeInput.touched"
+          >
+            required
+          </span>
+        </label>
+
+        <input
+          type="number"
+          id="maxSizeInput"
+          class="form-control"
+          name="maxSizeInput"
+          required
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMaxSize"
+          #maxSizeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': maxSizeInput.invalid && maxSizeInput.touched
+          }"
+        />
+
+        <input
+          type="range"
+          id="customRange4"
+          class="form-range"
+          name="maxSizeRange"
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMaxSize"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="x-btn x-btn-outline"
+      (click)="modal.close('Save click')"
+    >
+      <span>Cancel</span>
+    </button>
+
+    <button
+      class="x-btn x-btn-primary"
+      [disabled]="campaignForm.invalid || campaignMaxSize < campaignMinSize"
+      (click)="navigateToCampaign()"
+    >
+      <span>Get Start</span>
+    </button>
+  </div>
+</ng-template>

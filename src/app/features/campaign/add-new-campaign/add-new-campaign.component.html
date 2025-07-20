@@ -508,7 +508,9 @@
         />
       </svg>
     </div>
-    <ng-container *ngIf="userBuyBoxes && userBuyBoxes.length > 0">
+    <ng-container
+      *ngIf="showSelectMenu && allOrganizations && allOrganizations.length > 0"
+    >
       <label
         for="user-buybox"
         class="form-label w-100 d-flex justify-content-start"
@@ -519,11 +521,11 @@
         class="form-select mb-3"
         aria-label="Buybox select"
         name="userBuybox"
-        [(ngModel)]="buyBoxId"
+        [(ngModel)]="organizationId"
       >
-        <ng-container *ngFor="let buyBox of userBuyBoxes">
-          <option [value]="buyBox.Id">
-            {{ buyBox.Name }}
+        <ng-container *ngFor="let organization of allOrganizations">
+          <option [value]="organization.id">
+            {{ organization.name }}
           </option>
         </ng-container>
       </select>

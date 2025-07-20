@@ -85,7 +85,7 @@ export class GenerateEmailComponent implements OnInit {
   protected emails!: IEmailContent[];
   protected dataLoaded: boolean = true;
 
-  @Input() buyBoxId!: number;
+  // @Input() buyBoxId!: number;
   @Input() center!: Center;
   @Input() chooseBrokerObject!: IChooseBroker;
   @Input() managedByBrokerArray!: IManagedByBroker[];
@@ -103,8 +103,8 @@ export class GenerateEmailComponent implements OnInit {
     this.getCCEmail();
     this.contactId = localStorage.getItem('contactId');
 
-    await this.GetBuyBoxDetails();
-    await this.GetBuyBoxInfo();
+    // await this.GetBuyBoxDetails();
+    // await this.GetBuyBoxInfo();
     await this.GetRetailRelationCategories();
     await this.GetPrompts();
     const guid = crypto.randomUUID();
@@ -113,48 +113,48 @@ export class GenerateEmailComponent implements OnInit {
     this.spinner.hide();
   }
 
-  async GetBuyBoxDetails() {
-    const body = {
-      Name: 'GetWizardBuyBoxesById',
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-    };
-    const response = await firstValueFrom(this.placeService.GenericAPI(body));
-    if (response.json) {
-      this.buyboxDetails = response.json;
-    }
-  }
+  // async GetBuyBoxDetails() {
+  //   const body = {
+  //     Name: 'GetWizardBuyBoxesById',
+  //     Params: {
+  //       buyboxid: this.buyBoxId,
+  //     },
+  //   };
+  //   const response = await firstValueFrom(this.placeService.GenericAPI(body));
+  //   if (response.json) {
+  //     this.buyboxDetails = response.json;
+  //   }
+  // }
 
-  async GetBuyBoxInfo() {
-    const body: any = {
-      Name: 'GetBuyBoxInfo',
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-    };
-    const data = await firstValueFrom(this.placeService.GenericAPI(body));
-    this.generated = data.json || [];
+  // async GetBuyBoxInfo() {
+  //   const body: any = {
+  //     Name: 'GetBuyBoxInfo',
+  //     Params: {
+  //       buyboxid: this.buyBoxId,
+  //     },
+  //   };
+  //   const data = await firstValueFrom(this.placeService.GenericAPI(body));
+  //   this.generated = data.json || [];
 
-    this.ManagerOrganizationName =
-      this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
-    this.BuyBoxOrganizationName =
-      this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
+  //   this.ManagerOrganizationName =
+  //     this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
+  //   this.BuyBoxOrganizationName =
+  //     this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
-    const buyBox = this.generated?.[0]?.Buybox?.[0];
-    if (buyBox) {
-      this.ManagerOrganizationName =
-        buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
-          ?.ManagerOrganizationName || '';
-      this.BuyBoxOrganizationName = buyBox.BuyBoxOrganization?.[0]?.Name || '';
-    }
+  //   const buyBox = this.generated?.[0]?.Buybox?.[0];
+  //   if (buyBox) {
+  //     this.ManagerOrganizationName =
+  //       buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
+  //         ?.ManagerOrganizationName || '';
+  //     this.BuyBoxOrganizationName = buyBox.BuyBoxOrganization?.[0]?.Name || '';
+  //   }
 
-    // Extract Shopping Centers safely
+  //   // Extract Shopping Centers safely
 
-    this.generated?.[0]?.Releations?.forEach((r) => {
-      r.relationSelect = true;
-    });
-  }
+  //   this.generated?.[0]?.Releations?.forEach((r) => {
+  //     r.relationSelect = true;
+  //   });
+  // }
 
   toggleRelationNames(event: any) {
     this.showRelationNames = event.target.checked;
@@ -204,7 +204,7 @@ export class GenerateEmailComponent implements OnInit {
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
-        buyboxid: this.buyBoxId,
+        CampaignId:this.center.CampaignId,
       },
     };
     const data = await firstValueFrom(this.placeService.GenericAPI(body));
@@ -328,7 +328,7 @@ export class GenerateEmailComponent implements OnInit {
             Name: 'PutMailsDraft',
             MainEntity: null,
             Params: {
-              BuyBoxId: this.buyBoxId,
+              // BuyBoxId: this.buyBoxId,
               ContactId: this.contactId,
               PromptId: promptId,
               IsCC: this.chooseBrokerObject.sendAsCC,
@@ -448,7 +448,7 @@ export class GenerateEmailComponent implements OnInit {
     const requests = this.ManagerOrgDTO.map(async (managerOrg) => {
       const body: GenerateContextDTO = {
         ContactId: this.contactId,
-        BuyBoxId: this.buyBoxId,
+        // BuyBoxId: this.buyBoxId,
         CampaignId: this.center.CampaignId!,
         AddMinMaxSize: this.showMinBuildingSize,
         AddCompetitors: this.ShowCompetitors,

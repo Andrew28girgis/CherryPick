@@ -36,6 +36,7 @@ export class AddTenantsComponent implements OnInit {
   ];
   currentStep = 1;
   totalSteps = 3;
+  newBuyboxId!: number;
 
   constructor(
     private router: Router,
@@ -194,6 +195,7 @@ export class AddTenantsComponent implements OnInit {
         next: (data) => {
           if (data.json && data.json.length > 0 && data.json[0].id) {
             localStorage.setItem('BuyBoxId', data.json[0].id);
+            this.newBuyboxId = data.json[0].id;
           }
 
           this.getUserBuyBoxes();
@@ -221,9 +223,11 @@ export class AddTenantsComponent implements OnInit {
         'MaxBuildingSize',
       ];
 
-      if (controlsToCheck.every(
+      if (
+        controlsToCheck.every(
           (control) => this.siteDetailsForm.get(control)?.valid
-        )) {
+        )
+      ) {
         this.nextStep();
         nextCallback.emit();
       } else {

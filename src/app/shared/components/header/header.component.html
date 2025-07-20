@@ -12,10 +12,9 @@
           class="cherry-logo"
           src="../../../assets/Images/Emily Logo-1.png"
           [routerLink]="
-            currentRoute.includes('landlord') ? ['/landlord'] : ['/summary']
+            currentRoute.includes('landlord') ? ['/landlord'] : ['/campaigns']
           "
         />
- 
       </div>
     </div>
 
@@ -26,20 +25,6 @@
       id="navbarNav"
     >
       <ul class="navbar-nav mb-2 mb-lg-0">
-        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
-          <a
-            [routerLink]="['/campaigns']"
-            routerLinkActive="active-route"
-            class="nav-link"
-            title="Campaigns"
-          >
-            <img
-              class="img-icn"
-              src="../../../assets/Images/Icons/task-square.svg"
-            />
-            <span class="nav-text">Campaigns</span>
-          </a>
-        </li>
         <!-- <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/summary']"
@@ -83,7 +68,7 @@
             <span>Cadence</span>
           </a>
         </li> -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a
             class="nav-link"
             [routerLink]="['/overview']"
@@ -96,6 +81,20 @@
               class="img-icn"
             />
             <span class="nav-text">Configurations</span>
+          </a>
+        </li> -->
+        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
+          <a
+            [routerLink]="['/campaigns']"
+            routerLinkActive="active-route"
+            class="nav-link"
+            title="Campaigns"
+          >
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/task-square.svg"
+            />
+            <span class="nav-text">Campaigns</span>
           </a>
         </li>
         <li class="nav-item">
@@ -117,7 +116,7 @@
         <li class="nav-item">
           <a
             class="nav-link"
-            [routerLink]="['/contacts']"
+            [routerLink]="['/organizations']"
             routerLinkActive="active-route"
             title="Contacts"
           >
@@ -126,7 +125,7 @@
               alt="Contacts"
               class="img-icn"
             />
-            <span class="nav-text">Contacts</span>
+            <span class="nav-text">Organizations</span>
           </a>
         </li>
 
@@ -252,6 +251,10 @@
             <a class="dropdown-item" [routerLink]="['/NewPassword']">
               Change Password
             </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item" [routerLink]="['/settings']"> Settings </a>
           </li>
 
           <li><hr class="dropdown-divider" /></li>

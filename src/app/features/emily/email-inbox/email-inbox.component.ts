@@ -26,10 +26,11 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrl: './email-inbox.component.css',
 })
 export class EmailInboxComponent implements OnInit {
-  buyBoxId!: any;
+  // buyBoxId!: any;
   contactId!: any;
   BatchGuid!: string;
   campaignId: any;
+  buyBoxIdGenerate: any;
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
@@ -69,15 +70,25 @@ export class EmailInboxComponent implements OnInit {
     templateTwo: string;
   }[] = [];
   ResponseContextEmail: any;
+  mailContextId!: number;
 
-  @Input() buyBoxIdReply!: number;
+  // @Input() buyBoxIdReply!: number;
   @Input() orgIdReply!: number;
   @Input() emailBodyReply!: any;
   @Input() selectedContactContactId!: any;
+  @Input() selectedContactContextId!: any;
   @Input() modal: any;
   emailSubject: string = '';
   emailBodyResponse!: SafeHtml;
   isEditing = false; // Flag indicating if currently editing
+  ContactManagerNameWithShoppingCenterData: any;
+  contactFirstName: any;
+  contactLastName: any;
+  contactCenterName: any;
+  contactCenterId: any;
+  // New properties for email generation flow
+  dataLoaded: boolean = true;
+  isEmailGenerated: boolean = false;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -92,9 +103,11 @@ export class EmailInboxComponent implements OnInit {
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
     console.log('selectedContactContactId', this.selectedContactContactId);
+    console.log('selectedContactContextId', this.selectedContactContextId);
 
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
+      this.buyBoxIdGenerate = params.get('buyBoxId');
     });
 
     this.emilyService
@@ -108,7 +121,7 @@ export class EmailInboxComponent implements OnInit {
             ) as buyboxChecklist;
           }
         }
-        this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+        // this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
         this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
       });
 
@@ -119,15 +132,16 @@ export class EmailInboxComponent implements OnInit {
         JSON.stringify(parsedChecklist) !== JSON.stringify(this.buyboxChecklist)
       ) {
         this.buyboxChecklist = parsedChecklist;
-        this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+        // this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
         this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
       }
     }
 
     this.GetPrompts();
-    this.GetBuyBoxInfo();
-    this.GetBuyBoxInfoDetails();
+    // this.GetBuyBoxInfo();
+    // this.GetBuyBoxInfoDetails();
     this.GetRetailRelationCategories();
+    this.GetContactManagerNameWithShoppingCenterData();
   }
 
   GetPrompts() {
@@ -183,61 +197,61 @@ export class EmailInboxComponent implements OnInit {
     }
   }
 
-  GetBuyBoxInfo() {
-    const body: any = {
-      Name: 'GetBuyBoxInfo',
-      MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.generated = data.json || [];
-        this.ManagerOrganizationName =
-          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
-        this.BuyBoxOrganizationName =
-          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
+  // GetBuyBoxInfo() {
+  //   const body: any = {
+  //     Name: 'GetBuyBoxInfo',
+  //     MainEntity: null,
+  //     Params: {
+  //       buyboxid: this.buyBoxId,
+  //     },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.generated = data.json || [];
+  //       this.ManagerOrganizationName =
+  //         this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
+  //       this.BuyBoxOrganizationName =
+  //         this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
-        const buyBox = this.generated?.[0]?.Buybox?.[0];
-        if (buyBox) {
-          this.ManagerOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
-              ?.ManagerOrganizationName || '';
-          this.BuyBoxOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.Name || '';
-        }
+  //       const buyBox = this.generated?.[0]?.Buybox?.[0];
+  //       if (buyBox) {
+  //         this.ManagerOrganizationName =
+  //           buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
+  //             ?.ManagerOrganizationName || '';
+  //         this.BuyBoxOrganizationName =
+  //           buyBox.BuyBoxOrganization?.[0]?.Name || '';
+  //       }
 
-        this.generated?.[0]?.Releations?.forEach((r) => {
-          r.relationSelect = true;
-        });
-      },
-    });
-  }
+  //       this.generated?.[0]?.Releations?.forEach((r) => {
+  //         r.relationSelect = true;
+  //       });
+  //     },
+  //   });
+  // }
 
-  GetBuyBoxInfoDetails() {
-    const body: any = {
-      Name: 'GetWizardBuyBoxesById',
-      MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.buybox = data.json;
-      },
-    });
-  }
+  // GetBuyBoxInfoDetails() {
+  //   const body: any = {
+  //     Name: 'GetWizardBuyBoxesById',
+  //     MainEntity: null,
+  //     Params: {
+  //       buyboxid: this.buyBoxId,
+  //     },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data: any) => {
+  //       this.buybox = data.json;
+  //     },
+  //   });
+  // }
 
   GetRetailRelationCategories() {
     const body: any = {
       Name: 'GetRetailRelationCategories',
       MainEntity: null,
       Params: {
-        buyboxid: this.buyBoxId,
+        CampaignId: this.campaignId,
       },
       Json: null,
     };
@@ -297,6 +311,31 @@ export class EmailInboxComponent implements OnInit {
     this.showMoreRelations[categoryId] = !this.showMoreRelations[categoryId];
   }
 
+  GetContactManagerNameWithShoppingCenterData() {
+    const body: any = {
+      Name: 'GetContactManagerNameWithShoppingCenterData',
+      MainEntity: null,
+      Params: {
+        ContactId: this.selectedContactContactId,
+        MailContextId: this.selectedContactContextId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.ContactManagerNameWithShoppingCenterData = data.json || [];
+        this.contactFirstName =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.firstName || '';
+        this.contactLastName =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.lastName || '';
+        this.contactCenterId =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.id || '';
+        this.contactCenterName =
+          this.ContactManagerNameWithShoppingCenterData?.[0]?.centerName || '';
+      },
+    });
+  }
+
   transformToDTO(data: any): GetContactManagerDTO {
     const center =
       data?.ShoppingCenters && data.ShoppingCenters?.length > 0
@@ -311,6 +350,11 @@ export class EmailInboxComponent implements OnInit {
   }
 
   async GenerateContext(): Promise<void> {
+    const trimQuotes = (str: string) => {
+      if (typeof str !== 'string') return str;
+      return str.replace(/^"+|"+$/g, '').trim();
+    };
+
     const dto: GetContactManagerDTO = this.transformToDTO(
       this.selectedContactContactId
     );
@@ -325,7 +369,7 @@ export class EmailInboxComponent implements OnInit {
       IsReply: true,
       OldMail: this.emailBodyReply,
       ContactId: this.contactId,
-      BuyBoxId: this.buyBoxId,
+      // BuyBoxId: this.buyBoxIdGenerate,
       CampaignId: this.campaignId,
       AddMinMaxSize: this.showMinBuildingSize,
       AddCompetitors: this.ShowCompetitors,
@@ -335,7 +379,16 @@ export class EmailInboxComponent implements OnInit {
       AddBuyBoxDesc: this.showBuyBoxDescription,
       AddLandLordPage: this.isLandingSelected,
       IsCC: this.isISCcSelected,
-      GetContactManagers: [dto],
+      GetContactManagers: [
+        {
+          ContactId: Number(this.selectedContactContactId),
+          ContactName:
+            trimQuotes(this.contactFirstName) +
+            ' ' +
+            trimQuotes(this.contactLastName),
+          ShoppingCentersName: [this.contactCenterName],
+        },
+      ],
       OrganizationId: this.orgIdReply,
     };
 
@@ -353,14 +406,20 @@ export class EmailInboxComponent implements OnInit {
   }
 
   async PutMailsDraft(): Promise<void> {
-    await this.GenerateContext();
-
     if (!this.selectedPromptId) {
       this.showToast('Please select a prompt to Generate.');
       return;
     }
+    // Reset email state
+    this.emailBody = '';
+    this.emailSubject = '';
+    this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml('');
+    this.dataLoaded = false;
+    this.isEmailGenerated = false;
+    // First generate context
+    await this.GenerateContext();
 
-    this.spinner.show();
+    // this.spinner.show();
     const promptId = Number(this.selectedPromptId);
     const IsCC = this.isISCcSelected;
 
@@ -368,7 +427,7 @@ export class EmailInboxComponent implements OnInit {
       Name: 'PutMailsDraft',
       MainEntity: null,
       Params: {
-        BuyBoxId: this.buyBoxId,
+        BuyBoxId: this.buyBoxIdGenerate,
         ContactId: this.contactId,
         PromptId: promptId,
         IsCC: IsCC,
@@ -383,49 +442,143 @@ export class EmailInboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         const x = data.json;
-        this.AddMailContextReceivers(x[0].id, x[0].organizationId).subscribe({
-          next: () => {},
-          error: () => {},
-          complete: () => {
-            this.ReadSpecificMails(x[0].id);
-            this.spinner.hide();
-          },
-        });
+        if (x && x.length > 0 && x[0].id) {
+          this.mailContextId = x[0].id;
+          this.AddMailContextReceivers(x[0].id, x[0].organizationId).subscribe({
+            next: () => {},
+            error: () => {},
+            complete: () => {
+              // Start the email generation monitoring flow
+              this.getGeneratedEmails();
+              this.checkMailGenerated();
+            },
+          });
+        } else {
+          // this.spinner.hide();
+          this.dataLoaded = true;
+          this.showToast('Failed to create email draft.');
+        }
+      },
+      error: (error) => {
+        console.error('Error in PutMailsDraft:', error);
+        // this.spinner.hide();
+        this.dataLoaded = true;
+        this.showToast('Error generating email draft.');
       },
     });
   }
 
   AddMailContextReceivers(Mid: number, OrgID: number): Observable<any> {
-    this.spinner.show();
-
     // Assuming this.selectedContactContactId is a single contact object
     const manager = this.selectedContactContactId;
     // If ShoppingCenters is an array and you need to combine something, do so appropriately:
-    const ContactSCIds = manager.ShoppingCenters.map(
+    const ContactSCIds = manager?.ShoppingCenters?.map(
       (sc: { id: any }) => sc.id
     ).join(',');
+
+    // Ensure ShoppingCenterIds is always a comma-separated string (even if single or multiple IDs)
+    let shoppingCenterIds = '';
+    if (Array.isArray(this.contactCenterId)) {
+      shoppingCenterIds = this.contactCenterId.join(',');
+    } else if (typeof this.contactCenterId === 'string') {
+      shoppingCenterIds = this.contactCenterId;
+    } else if (typeof this.contactCenterId === 'number') {
+      shoppingCenterIds = this.contactCenterId.toString();
+    }
 
     const body: any = {
       Name: 'AddMailContextReceivers',
       MainEntity: null,
       Params: {
         MailContextId: Mid,
-        ContactId: manager.ContactId,
-        ShoppingCenterIds: ContactSCIds,
+        ContactId: this.selectedContactContactId,
+        ShoppingCenterIds: shoppingCenterIds, // Always comma-separated string
       },
       Json: null,
     };
 
-    // You might not even need forkJoin if you're only calling one API
     return this.PlacesService.GenericAPI(body).pipe(
       tap(() => {
-        this.spinner.hide();
+        console.log('Mail context receivers added');
       })
     );
   }
 
+  async getGeneratedEmails() {
+    const body: any = {
+      Name: 'GetMailContextGenerated',
+      MainEntity: null,
+      Params: {
+        campaignId: this.campaignId,
+        ContactId: this.selectedContactContactId,
+      },
+      Json: null,
+    };
+
+    try {
+      const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
+      if (data.json) {
+        this.returnGetMailContextGenerated = data.json;
+        console.log(
+          'Generated emails fetched:',
+          this.returnGetMailContextGenerated
+        );
+      }
+    } catch (error) {
+      console.error('Error fetching generated emails:', error);
+    }
+  }
+
+  checkMailGenerated(): void {
+    const body = {
+      Name: 'CheckMailGenerated',
+      Params: {
+        MailContextId: this.mailContextId, // returned from api
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        if (response.json && response.json.length > 0) {
+          const data: {
+            isGenerated: boolean;
+            errorMessage: string | null;
+          } = response.json[0];
+
+          if (data.errorMessage) {
+            this.dataLoaded = true;
+            this.spinner.hide();
+            this.showToast(
+              'Email generation is taking longer than expected. Please try again later.'
+            );
+            return;
+          } else if (data.isGenerated) {
+            // Email is ready, now read it
+            this.ReadSpecificMails(this.mailContextId); // returned from api
+            return;
+          }
+
+          // If not generated yet, check again after 3 seconds
+          setTimeout(() => {
+            this.checkMailGenerated();
+          }, 3000);
+        } else {
+          // No response, try again
+          setTimeout(() => {
+            this.checkMailGenerated();
+          }, 3000);
+        }
+      },
+      error: (error) => {
+        console.error('Error checking mail generation:', error);
+        this.spinner.hide();
+        this.dataLoaded = true;
+        this.showToast('Error checking email generation status.');
+      },
+    });
+  }
+
   ReadSpecificMails(mailContextId: number): void {
-    this.spinner.show();
     const body: any = {
       Name: 'ReadSpecificMails',
       MainEntity: null,
@@ -440,18 +593,33 @@ export class EmailInboxComponent implements OnInit {
       next: (data) => {
         const response = data.json;
         if (!response || response.length === 0) {
+          // Email not ready yet, try again after 3 seconds
           setTimeout(() => {
             this.ReadSpecificMails(mailContextId);
           }, 3000);
         } else {
-          this.emailBody = response[0].body;
+          // Email is ready, handle the new response structure
+          const mail = response[0];
+          this.emailBody = mail.Body || mail.body || '';
           this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
           );
-
-          this.emailSubject = response[0].subject;
+          this.emailSubject = mail.Subject || mail.subject || '';
+          // Optionally, handle organizations and contacts if needed:
+          // this.organizations = mail.O || [];
+          // Example: extract all emails from all organizations
+          // const allEmails = (mail.O || []).flatMap(org => (org.C || []).map(c => c.Email));
+          this.isEmailGenerated = true;
+          this.dataLoaded = true;
           this.spinner.hide();
+          console.log('Email generated successfully', mail);
         }
+      },
+      error: (error) => {
+        console.error('Error reading specific mails:', error);
+        this.spinner.hide();
+        this.dataLoaded = true;
+        this.showToast('Error reading generated email.');
       },
     });
   }
@@ -464,35 +632,47 @@ export class EmailInboxComponent implements OnInit {
     this.emailBody = target.innerHTML; // or innerText if needed
   }
 
-  Send() {
-    this.spinner.show();
-    const body: any = {
-      Name: 'ComposeEmail',
-      MainEntity: null,
-      Params: {
-        BuyBoxId: +this.buyBoxId,
-        CampaignId: +this.campaignId,
-        RecieverId: [Number(this.selectedContactContactId.ContactId)].join(','),
-        Subject: this.emailSubject,
-        Body: this.emailBody,
-      },
-      Json: null,
-    };
+  // Send() {
+  //   if (!this.isEmailGenerated) {
+  //     this.showToast('Please generate an email first.');
+  //     return;
+  //   }
+  //   this.spinner.show();
+  //   const body: any = {
+  //     Name: 'ComposeEmail',
+  //     MainEntity: null,
+  //     Params: {
+  //       BuyBoxId: +this.buyBoxId,
+  //       CampaignId: +this.campaignId,
+  //       RecieverId: [Number(this.selectedContactContactId.ContactId)].join(','),
+  //       Subject: this.emailSubject,
+  //       Body: this.emailBody,
+  //     },
+  //     Json: null,
+  //   };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.spinner.hide();
-      },
-    });
-  }
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.spinner.hide();
+  //       this.showToast('Email sent successfully!');
+  //     },
+  //     error: (error) => {
+  //       console.error('Error sending email:', error);
+  //       this.spinner.hide();
+  //       this.showToast('Error sending email.');
+  //     },
+  //   });
+  // }
 
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
-    toastMessage!.innerText = message;
-    toast!.classList.add('show');
-    setTimeout(() => {
-      toast!.classList.remove('show');
-    }, 3000);
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
   }
 }

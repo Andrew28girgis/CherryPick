@@ -17,7 +17,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class EmailComposeComponent implements OnInit {
   @Input() contactId!: number;
-  @Input() buyBoxId!: number;
+  // @Input() buyBoxId!: number;
   @Input() orgId!: number;
   @Input() campaignId!: string | null;
   @Input() contactName!: string;
@@ -56,6 +56,7 @@ export class EmailComposeComponent implements OnInit {
   GetManagersShoppingCenters: IManager[] = [];
   @ViewChild('sendModal') sendModal: any;
   CCEmail: any;
+  mailId: any;
   constructor(
     public modal: NgbActiveModal,
     private spinner: NgxSpinnerService,
@@ -73,6 +74,7 @@ export class EmailComposeComponent implements OnInit {
     await this.loadPrompts();
     this.GetCCEmail();
   }
+
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
   }
@@ -158,8 +160,7 @@ export class EmailComposeComponent implements OnInit {
     mgr.selected = input.checked;
   }
 
-  private async loadPrompts() {
-    // 1) get category
+  private async loadPrompts() {    
     const catResp = await firstValueFrom(
       this.places.GenericAPI({
         name: 'GetPromptsCategoryId',
@@ -169,7 +170,6 @@ export class EmailComposeComponent implements OnInit {
     const catId = catResp?.json?.[0]?.Id;
     if (!catId) return;
 
-    // 2) get prompts
     const prResp = await firstValueFrom(
       this.places.GenericAPI({
         name: 'GetPrompts',
@@ -184,7 +184,7 @@ export class EmailComposeComponent implements OnInit {
       name: p.Name,
       promptText: p.PromptText,
     }));
-    // default select first
+    
     if (this.prompts.length) {
       this.selectedPromptId = this.prompts[0].id;
     }
@@ -249,7 +249,7 @@ export class EmailComposeComponent implements OnInit {
   // 3) build your dto
     const dto: any = {
       ContactId: this.localStorageContactId,
-      BuyBoxId: this.buyBoxId,
+      // BuyBoxId: this.buyBoxId,
       CampaignId: this.campaignId ? +this.campaignId : 0,
       GetContactManagers: selectedManagers,
       OrganizationId: this.orgId,
@@ -273,7 +273,7 @@ export class EmailComposeComponent implements OnInit {
     const body = {
       Name: 'PutMailsDraft',
       Params: {
-        BuyBoxId: this.buyBoxId,
+        // BuyBoxId: this.buyBoxId,
         ContactId: this.localStorageContactId,
         PromptId: this.selectedPromptId,
         IsCC: true,
@@ -315,7 +315,6 @@ export class EmailComposeComponent implements OnInit {
     };
     this.places.GenericAPI(body).subscribe((res) => {
       const CEmail = res.json[0].virtualEmail;
-     console.log('CEmail', CEmail);
      this.CCEmail= CEmail;
      
     });
@@ -375,22 +374,41 @@ export class EmailComposeComponent implements OnInit {
             this.emailBody
           );
           this.emailSubject = response[0].Subject;
+          this.mailId = response[0].MailId;
           this.spinner.hide();
       },
     });
   }
 
-  send() {
+  // send() {
+  //   this.spinner.show();
+  //   const body = {
+  //     Name: 'ComposeEmail',
+  //     Params: {
+  //       BuyBoxId: this.buyBoxId,
+  //       CampaignId: this.campaignId,
+  //       RecieverId: this.contactId.toString(),
+  //       Subject: this.emailSubject,
+  //       Body: this.emailBody,
+  //     },
+  //   };
+  //   this.places.GenericAPI(body).subscribe(() => {
+  //     this.spinner.hide();
+  //     this.modal.close('sent');
+  //     this.modalService.dismissAll();
+  //   });
+  // }
+  UpdateEmailData(){
     this.spinner.show();
     const body = {
-      Name: 'ComposeEmail',
+      Name: 'UpdateEmailData',
+      MainEntity: null,
       Params: {
-        BuyBoxId: this.buyBoxId,
-        CampaignId: this.campaignId,
-        RecieverId: this.contactId.toString(),
+        MailId: this.mailId,
         Subject: this.emailSubject,
         Body: this.emailBody,
       },
+      Json: null,
     };
     this.places.GenericAPI(body).subscribe(() => {
       this.spinner.hide();

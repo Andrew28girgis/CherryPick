@@ -1,8 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { Contact } from 'src/app/shared/models/contacts';
-
+import {
+  Contact,
+  OrganizationWithContacts,
+} from 'src/app/shared/models/contacts';
 
 @Component({
   selector: 'app-contacts',
@@ -24,8 +26,8 @@ export class ContactsComponent implements OnInit {
   
   // Store both full and filtered lists
   contacts: Contact[] = [];
-  filteredContacts: Contact[] = [];
-  paginatedContacts: Contact[] = [];
+  filteredContacts: OrganizationWithContacts[] = [];
+  paginatedContacts: OrganizationWithContacts[] = [];
   isLoading: boolean = true;
 
   // Form data for new contact
@@ -35,7 +37,7 @@ export class ContactsComponent implements OnInit {
     email: '',
     password: '',
     organizationId: '',
-    guidSignature: null
+    guidSignature: null,
   };
 
   // Filter and sort options
@@ -57,6 +59,9 @@ export class ContactsComponent implements OnInit {
     { value: 'oldest', label: 'Oldest to Newest' },
     { value: 'status', label: 'Status' },
   ];
+  // Tracks which organizations are expanded
+expandedOrgs: { [orgId: number]: boolean } = {};
+
 
   constructor(private http: HttpClient, private PlacesService: PlacesService) {
     this.loadContacts();
@@ -75,7 +80,7 @@ export class ContactsComponent implements OnInit {
         console.log('API Response:', data);
         if (data && data.json) {
           this.contacts = data.json;
-        }  
+        }
         this.applyFiltersAndSort();
         this.isLoading = false;
       },
@@ -88,8 +93,8 @@ export class ContactsComponent implements OnInit {
 
   private loadOrganizations() {
     const params = {
-      Name: "RetrieveOrganizations",
-      Params: {}
+      Name: 'RetrieveOrganizations',
+      Params: {},
     };
 
     this.PlacesService.GenericAPI(params).subscribe(
@@ -109,56 +114,46 @@ export class ContactsComponent implements OnInit {
     this.applyFiltersAndSort();
   }
 
+  toggleExpand(orgId: number): void {
+  this.expandedOrgs[orgId] = !this.expandedOrgs[orgId];
+}
+
+
   onSearch(): void {
     this.applyFiltersAndSort();
   }
 
   applyFiltersAndSort(): void {
-    let filtered = [...this.contacts];
+    let orgs = [...this.organizations];
 
-    // Apply search filter
     if (this.searchTerm) {
-      const searchLower = this.searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(
-        (contact) => {
-          const fullName = `${contact.firstname || ''} ${contact.lastname || ''}`.toLowerCase();
-          const email = (contact.email || '').toLowerCase();
-          const cellPhone = (contact.cellPhone || '').toLowerCase();
-          const area = (contact.area || '').toLowerCase();
-
-          return fullName.includes(searchLower) ||
-                 email.includes(searchLower) ||
-                 cellPhone.includes(searchLower) ||
-                 area.includes(searchLower);
-        }
+      const searchLower = this.searchTerm.toLowerCase();
+      orgs = orgs.filter((org) =>
+        (org.name || '').toLowerCase().includes(searchLower)
       );
     }
 
-    // Apply sorting
-    filtered.sort((a, b) => {
+    // Sort organizations
+    orgs.sort((a, b) => {
       switch (this.sortBy) {
         case 'alphabetical':
-          const getDisplayValue = (contact: Contact) => {
-            const fullName = `${contact.firstname || ''} ${contact.lastname || ''}`.trim();
-            return fullName || contact.email || ''; // Use email if name is empty
-          };
-          const valueA = getDisplayValue(a).toLowerCase();
-          const valueB = getDisplayValue(b).toLowerCase();
-          return valueA.localeCompare(valueB);
+          return (a.name || '').localeCompare(b.name || '');
         case 'newest':
           return (b.id || 0) - (a.id || 0);
         case 'oldest':
           return (a.id || 0) - (b.id || 0);
-        case 'status':
-          return (a.isOwner === b.isOwner) ? 0 : a.isOwner ? -1 : 1;
         default:
           return 0;
       }
     });
 
-    this.filteredContacts = filtered;
+    // Group contacts under each organization
+    this.filteredContacts = orgs.map((org) => ({
+      ...org,
+      contacts: this.contacts.filter((c) => c.organizationId === org.id),
+    }));
     this.totalItems = this.filteredContacts.length;
-    this.updatePage(1); // Reset to first page after filtering
+    this.updatePage(1);
   }
 
   updatePage(page: number): void {
@@ -170,6 +165,8 @@ export class ContactsComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.updatePage(page);
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onPageSizeChange(): void {
@@ -198,7 +195,10 @@ export class ContactsComponent implements OnInit {
       startPage = Math.max(1, endPage - maxPages + 1);
     }
     
-    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
   }
 
   onAddNew(): void {
@@ -225,12 +225,16 @@ export class ContactsComponent implements OnInit {
       email: '',
       password: '',
       organizationId: '',
-      guidSignature: null
+      guidSignature: null,
     };
   }
 
   saveContact(): void {
-    if (this.newContact.firstname && this.newContact.email && this.newContact.organizationId) {
+    if (
+      this.newContact.firstname &&
+      this.newContact.email &&
+      this.newContact.organizationId
+    ) {
       const params = {
         name: 'CreateContact',
         mainEntity: null,
@@ -240,9 +244,9 @@ export class ContactsComponent implements OnInit {
           OrganizationId: this.newContact.organizationId,
           Email: this.newContact.email,
           Password: this.newContact.password,
-          GUIDSignature: ""
+          GUIDSignature: '',
         },
-        json: null
+        json: null,
       };
 
       this.PlacesService.GenericAPI(params).subscribe(

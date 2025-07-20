@@ -1,4 +1,13 @@
 .cherry-logo {
+    width: 160px;
+    cursor: pointer;
+}
+.cherry-logo {
+    height: auto;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+/* .cherry-logo {
   max-width: 30px;
   max-height: 30px !important;
   height: auto;
@@ -16,7 +25,7 @@
 }
 .pick {
   font-weight: 300;
-}
+} */
 .nav-right {
     display: flex;
     align-items: center;

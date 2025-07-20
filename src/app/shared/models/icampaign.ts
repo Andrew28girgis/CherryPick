@@ -1,13 +1,8 @@
 export interface ICampaign {
-  id: number;
-  name: string;
-  organizationid: number;
-  Campaigns: Campaign[];
-}
-
-export interface Campaign {
   Id: number;
+  OrganizationId: number;
   CampaignPrivacy: number;
+  OrganizationName: string;
   CampaignName: string;
   CreatedDate: string;
   MailsSent: number;

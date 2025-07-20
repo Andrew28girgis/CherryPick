@@ -25,6 +25,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./campaign-manager.component.css'],
 })
 export class CampaignManagerComponent implements OnInit, OnDestroy {
+  protected campaignMinSize: number = 100;
+  protected campaignMaxSize: number = 100;
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
   @Input() set viewMode(value: 'table' | 'card') {
@@ -123,8 +125,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
+          console.log(this.filteredCampaigns);
+          
         } else {
-          this.router.navigate(['/campaigns/add-campaign']);
+          this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
           this.filteredCampaigns = [];
         }
@@ -143,44 +147,42 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   onSearchCampaign(): void {
     if (this.searchCampaign && this.searchCampaign.trim().length > 0) {
       this.filteredCampaigns = this.campaigns.filter((c) =>
-        c.Campaigns.some((campaign) =>
-          campaign.CampaignName.toLowerCase().includes(
+       c.CampaignName.toLowerCase().includes(
             this.searchCampaign.toLowerCase()
           )
-        )
       );
     } else {
       this.filteredCampaigns = this.campaigns;
     }
   }
 
-  getUserBuyBoxes(): void {
-    this.isLoading = true; // Show skeleton
+  // getUserBuyBoxes(): void {
+  //   this.isLoading = true; // Show skeleton
 
-    const body: any = {
-      Name: 'GetUserBuyBoxes',
-      Params: {},
-    };
+  //   const body: any = {
+  //     Name: 'GetUserBuyBoxes',
+  //     Params: {},
+  //   };
 
-    const subscription = this.placesService.GenericAPI(body).subscribe({
-      next: (response) => {
-        if (response.json && response.json.length > 0) {
-          this.userBuyBoxes = response.json.map((buybox: any) => {
-            return {
-              id: buybox.id,
-              name: buybox.name,
-            };
-          });
-          this.selectedBuyBoxId = this.userBuyBoxes[0].id;
-        } else {
-          this.userBuyBoxes = [];
-        }
-      },
-      error: () => {},
-    });
+  //   const subscription = this.placesService.GenericAPI(body).subscribe({
+  //     next: (response) => {
+  //       if (response.json && response.json.length > 0) {
+  //         this.userBuyBoxes = response.json.map((buybox: any) => {
+  //           return {
+  //             id: buybox.id,
+  //             name: buybox.name,
+  //           };
+  //         });
+  //         this.selectedBuyBoxId = this.userBuyBoxes[0].id;
+  //       } else {
+  //         this.userBuyBoxes = [];
+  //       }
+  //     },
+  //     error: () => {},
+  //   });
 
-    this.subscriptions.add(subscription);
-  }
+  //   this.subscriptions.add(subscription);
+  // }
 
   onCampaignCreated(): void {
     this.getAllCampaigns();
@@ -193,15 +195,15 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
     if (withOrg) {
-      this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
+      this.getCampaignOrganizations(campaign.OrganizationId, campaign.Id);
     } else {
-      const emilyObject: { buyboxId: number[]; organizations: any[] } = {
-        buyboxId: [campaign.id],
-        organizations: [],
-      };
-      this.emilyService.updateCheckList(emilyObject);
+      // const emilyObject: { buyboxId: number[]; organizations: any[] } = {
+      //   buyboxId: [campaign.id],
+      //   organizations: [],
+      // };
+      // this.emilyService.updateCheckList(emilyObject);
 
-      this.router.navigate(['/MutipleEmail', campaign.id]);
+      // this.router.navigate(['/MutipleEmail', campaign.id]);
     }
   }
 
@@ -309,7 +311,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.getAllCampaigns();
-    this.getUserBuyBoxes();
+    // this.getUserBuyBoxes();
 
     // Check if there's a saved preference for view mode
     const savedViewMode = localStorage.getItem('campaignViewMode') as
@@ -322,8 +324,21 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.dataLoaded = true;
   }
 
-
   onImageError(event: any) {
-    event.target.src = "assets/Images/placeholder.png"
+    event.target.src = 'assets/Images/placeholder.png';
+  }
+
+   protected openCampaignModal(content: any): void {
+    this.modalService.open(content, { centered: true });
+  }
+
+   protected navigateToCampaign(): void {
+    this.modalService.dismissAll();
+    this.router.navigate(['/campaigns/add-campaign'], {
+      queryParams: {
+        minSize: this.campaignMinSize,
+        maxSize: this.campaignMaxSize,
+      },
+    });
   }
 }

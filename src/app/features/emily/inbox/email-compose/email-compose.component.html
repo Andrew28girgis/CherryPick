@@ -257,13 +257,21 @@
 
       <!--     *ngIf="currentStep === 3 && sanitizedEmailBody" -->
       <button
-        (click)="openSendModal()"
+        (click)="UpdateEmailData()"
         type="button"
         class="btn btn-success"
         *ngIf="currentStep === 3 && sanitizedEmailBody"
       >
         Send
       </button>
+      <!-- <button
+        (click)="openSendModal()"
+        type="button"
+        class="btn btn-success"
+        *ngIf="currentStep === 3 && sanitizedEmailBody"
+      >
+        Send
+      </button> -->
     </div>
   </div>
 </div>
@@ -306,7 +314,7 @@
         </div>
       </a>
 
-      <div class="mb-3 w-100" style="cursor: pointer" (click)="send()">
+      <div class="mb-3 w-100" style="cursor: pointer" >
         <div class="card-email d-flex align-items-center gap-5">
           <img [src]="'../../../assets/Images/Icons/logo-icon.svg'" />
         </div>

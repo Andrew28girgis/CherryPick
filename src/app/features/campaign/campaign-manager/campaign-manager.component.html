@@ -32,7 +32,10 @@
         />
       </svg>
     </div> -->
-    <div class="d-flex align-items-center gap-3 toggle-cont"  *ngIf="!hideViewToggles">
+    <div
+      class="d-flex align-items-center gap-3 toggle-cont"
+      *ngIf="!hideViewToggles"
+    >
       <div class="view-toggle">
         <button
           class="toggle-btn"
@@ -80,7 +83,10 @@
           </svg>
         </button>
       </div>
-      <button class="add-new-campaign" routerLink="add-campaign">
+      <button
+        class="add-new-campaign"
+        (click)="openCampaignModal(campaignModal)"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -224,97 +230,366 @@
     class="campaign-manager-body"
   >
     <div class="campaign-cards-container" *ngIf="viewMode === 'card'">
-      <ng-container *ngFor="let c of filteredCampaigns">
-        <ng-container *ngFor="let campaign of c.Campaigns; let index = index">
-          <div class="campaign-card">
-            <div class="date-privacy d-flex justify-content-between">
-              <div class="tenant-section-card">
-                <div class="date-created-card">
-                  {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
+      <ng-container
+        *ngFor="let campaign of filteredCampaigns; let index = index"
+      >
+        <div class="campaign-card">
+          <div class="date-privacy d-flex justify-content-between">
+            <div class="tenant-section-card">
+              <div class="date-created-card">
+                {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
+              </div>
+            </div>
+            <div
+              class="campaign-privacy"
+              [ngClass]="{
+                'campaign-privacy-public': campaign.CampaignPrivacy == 0,
+                'campaign-privacy-private': campaign.CampaignPrivacy == 1
+              }"
+            >
+              <div class="campaign-privacy-icon"></div>
+              <span>
+                {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
+              </span>
+            </div>
+          </div>
+          <div class="campaign-card-header">
+            <div
+              class="d-flex align-items-center gap-2 d-flex flex-column tenant-header"
+            >
+              <img
+                *ngIf="campaign.OrganizationId"
+                [src]="
+                  'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                  campaign.OrganizationId
+                "
+                [alt]="campaign.OrganizationName"
+                class="tenant-logo-card"
+                (error)="onImageError($event)"
+              />
+              <h3
+                style="cursor: pointer"
+                [routerLink]="[
+                  '/dashboard',
+                  campaign.OrganizationId,
+                  campaign.OrganizationName,
+                  campaign.Id
+                ]"
+                class="campaign-name"
+              >
+                {{ campaign.CampaignName }}
+              </h3>
+            </div>
+          </div>
+
+          <div class="campaign-stats">
+            <div class="stat-item">
+              <div class="stat-label">Sites</div>
+              <div class="stat-value">
+                <div
+                  class="d-flex align-items-center justify-content-center gap-2"
+                >
+                  <div>{{ campaign.Sites }}</div>
+                  <svg
+                    [routerLink]="[
+                      '/dashboard',
+                      campaign.OrganizationId,
+                      campaign.OrganizationName,
+                      campaign.Id
+                    ]"
+                    style="cursor: pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                      fill="#292D32"
+                    />
+                    <path
+                      d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
+                      fill="#292D32"
+                    />
+                    <path
+                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                      fill="#292D32"
+                    />
+                  </svg>
                 </div>
               </div>
-              <div
-                class="campaign-privacy"
-                [ngClass]="{
-                  'campaign-privacy-public': campaign.CampaignPrivacy == 0,
-                  'campaign-privacy-private': campaign.CampaignPrivacy == 1
-                }"
-              >
-                <div class="campaign-privacy-icon"></div>
-                <span>
-                  {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
-                </span>
-              </div>
             </div>
-            <div class="campaign-card-header">
+            <div class="stat-item">
+              <div class="stat-label">Submissions</div>
               <div
-              
-                class="d-flex align-items-center gap-2 d-flex flex-column tenant-header"
+                class="d-flex align-items-center justify-content-center gap-3"
               >
-                <img
-                  *ngIf="c.organizationid"
-                  [src]="
-                    'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                    c.organizationid
-                  "
-                  [alt]="c.name"
-                  class="tenant-logo-card"
-                  (error)="onImageError($event)" 
-
-                />
-                <h3 
-                style="cursor: pointer;"
-                [routerLink]="[
-                '/dashboard',
-                c.id,
-                c.organizationid,
-                c.name ,
-                campaign.Id
-              ]" class="campaign-name"
-                >{{ campaign.CampaignName }}</h3>
-              </div>
-            </div>
-
-            <div class="campaign-stats">
-              <div class="stat-item">
-                <div class="stat-label">Sites</div>
-                <div class="stat-value">
-                  <div
-                    class="d-flex align-items-center justify-content-center gap-2"
+                <!-- [routerLink]="['/submissions', campaign.Id]" -->
+                <div *ngIf="campaign.Submissions" style="cursor: pointer">
+                  <span style="color: orange" title="New Submissions">{{
+                    getSubmissionsCountNew(campaign.Submissions)
+                  }}</span>
+                  |
+                  <span
+                    style="color: rgb(0, 207, 35)"
+                    title="Accepted Submissions"
+                    >{{
+                      getSumbmissionsCountAcceppted(campaign.Submissions)
+                    }}</span
                   >
-                    <div>{{ campaign.Sites }}</div>
-                    <svg
+                  |
+                  <span
+                    style="color: rgb(207, 0, 0)"
+                    title="Rejected Submissions"
+                    >{{
+                      getSumbmissionsCountRejected(campaign.Submissions)
+                    }}</span
+                  >
+
+                  <ng-container
+                    *ngFor="
+                      let submission of sortedSubmissions(campaign.Submissions);
+                      let i = index
+                    "
+                  >
+                  </ng-container>
+                </div>
+                <div *ngIf="!campaign.Submissions">N/A</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Mails Sent</div>
+              <div class="stat-value" *ngIf="campaign.MailsSent">
+                {{ campaign.MailsSent }}
+              </div>
+            </div>
+          </div>
+          <!-- <a
+            class="inbox text-center"
+            [routerLink]="['./ataglance', campaign.Id]"
+            >At a Glance</a
+          > -->
+          <div class="campaign-actions">
+            <div class="inbox mail d-flex justify-content-between">
+              <i class="fa-regular fa-envelope"></i>
+              <a
+                [routerLink]="[
+                  '/organization-mail',
+                  campaign.OrganizationId,
+                  campaign.Id
+                ]"
+                >Emily</a
+              >
+            </div>
+
+            <button
+              class="expand-btn"
+              (click)="toggleExpand(campaign)"
+              *ngIf="campaign.Kanban"
+            >
+              {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                [style.transform]="
+                  campaign.expanded ? 'rotate(180deg)' : 'rotate(0)'
+                "
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div class="campaign-stages" [class.expanded]="campaign.expanded">
+            <div class="stages-grid">
+              <ng-container *ngFor="let kanbanStage of campaign.Kanban">
+                <div class="stage-item">
+                  <div class="stage-name">{{ kanbanStage.stageName }}</div>
+                  <div class="stage-value">
+                    {{
+                      kanbanStage.MarketSurveyShoppingCenters[0].Id
+                        ? kanbanStage.MarketSurveyShoppingCenters.length
+                        : 0
+                    }}
+                  </div>
+                  <!-- <a
+                    class="hyber-link"
+                    *ngIf="
+                      kanbanStage.stageName.toLowerCase() ==
+                      'Precontact'.toLowerCase()
+                    "
+                    (click)="goToEmily(c, index, true)"
+                    >Launch Campaign</a
+                  > -->
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Original Table View -->
+    <div class="table-responsive" *ngIf="viewMode === 'table'">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th style="width: 250px">Name</th>
+            <th style="text-align: center">Date</th>
+            <th style="text-align: center">Privacy</th>
+            <th style="text-align: center">Sites</th>
+            <th style="text-align: center">Submissions</th>
+            <th style="text-align: center">Sent</th>
+            <ng-container *ngFor="let stage of stages">
+              <th scope="col" style="text-align: center">
+                {{ stage.stageName }}
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+            *ngFor="let campaign of filteredCampaigns; let index = index"
+          >
+            <tr>
+              <td style="width: 250px; vertical-align: top">
+                <div
+                  class="d-flex flex-column gap-2"
+                  style="min-height: 100%; padding: 8px"
+                >
+                  <div
+                    style="font-weight: 600"
+                    [routerLink]="[
+                      '/dashboard',
+                      campaign.OrganizationId,
+                      campaign.OrganizationName,
+                      campaign.Id
+                    ]"
+                  >
+                    {{ campaign.CampaignName }}
+                  </div>
+
+                  <div
+                    class="d-flex align-items-center gap-2"
+                    style="flex-wrap: wrap; margin-block: 5px"
+                  >
+                    <img
+                      *ngIf="campaign.OrganizationId"
+                      [src]="
+                        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                        campaign.OrganizationId
+                      "
+                      [alt]="campaign.OrganizationName"
+                      class="tenant-logo"
+                      style="width: 48px; height: 48px; border-radius: 50%"
+                      (error)="onImageError($event)"
+                    />
+                    <span
+                      class="tenant-name"
                       [routerLink]="[
                         '/dashboard',
-                        c.id,
-                        c.organizationid,
-                        c.name
+                        campaign.OrganizationId,
+                        campaign.OrganizationName,
+                        campaign.Id
                       ]"
-                      style="cursor: pointer"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
+                      style="
+                        font-size: 14px;
+                        color: #333;
+                        max-width: 150px;
+                        word-break: break-word;
+                      "
                     >
-                      <path
-                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                        fill="#292D32"
-                      />
-                      <path
-                        d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                        fill="#292D32"
-                      />
-                      <path
-                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                        fill="#292D32"
-                      />
-                    </svg>
+                      {{ campaign.OrganizationName }}
+                    </span>
+                  </div>
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <!-- <div>
+                      <a
+                        class="inbox text-center"
+                        [routerLink]="['./ataglance', campaign.Id]"
+                        >At a Glance</a
+                      >
+                    </div> -->
+                    <div
+                      class="inbox mail text-center"
+                      [routerLink]="[
+                        '/organization-mail',
+                        campaign.OrganizationId,
+                        campaign.Id
+                      ]"
+                    >
+                      <i class="fa-regular fa-envelope me-2"></i>
+                      <a>Emily</a>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-label">Submissions</div>
+              </td>
+
+              <td style="text-align: center">
+                {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
+              </td>
+              <td style="text-align: center">
+                <div
+                  class="campaign-privacy"
+                  [ngClass]="{
+                    'campaign-privacy-public': campaign.CampaignPrivacy == 0,
+                    'campaign-privacy-private': campaign.CampaignPrivacy == 1
+                  }"
+                >
+                  <div class="campaign-privacy-icon"></div>
+                  <span>
+                    {{
+                      campaign.CampaignPrivacy == 0 ? "Public" : "Private"
+                    }}</span
+                  >
+                </div>
+              </td>
+
+              <td style="text-align: center">
+                <div
+                  class="d-flex align-items-center justify-content-center gap-3"
+                >
+                  <div>{{ campaign.Sites }}</div>
+                  <svg
+                    [routerLink]="[
+                      '/dashboard',
+                      campaign.OrganizationId,
+                      campaign.OrganizationName,
+                      campaign.Id
+                    ]"
+                    style="cursor: pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                      fill="#292D32"
+                    />
+                    <path
+                      d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
+                      fill="#292D32"
+                    />
+                    <path
+                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                      fill="#292D32"
+                    />
+                  </svg>
+                </div>
+              </td>
+              <td style="text-align: center">
                 <div
                   class="d-flex align-items-center justify-content-center gap-3"
                 >
@@ -352,296 +627,25 @@
                   </div>
                   <div *ngIf="!campaign.Submissions">N/A</div>
                 </div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-label">Mails Sent</div>
-                <div class="stat-value" *ngIf="campaign.MailsSent">
-                  {{ campaign.MailsSent }}
-                </div>
-              </div>
-            </div>
-            <a
-              class="inbox text-center"
-              [routerLink]="['./ataglance', campaign.Id]"
-              >At a Glance</a
-            >
-            <div class="campaign-actions">
-              <div class="inbox mail d-flex justify-content-between">
-                <i class="fa-regular fa-envelope"></i>
-                <a
-                  [routerLink]="[
-                    '/organization-mail',
-                    c.id,
-                    c.organizationid,
-                    campaign.Id
-                  ]"
-                  >Emily</a
+              </td>
+              <td style="text-align: center">
+                <ng-container *ngIf="campaign.MailsSent">
+                  {{ campaign.MailsSent }}</ng-container
                 >
-              </div>
+              </td>
 
-              <button class="expand-btn" (click)="toggleExpand(campaign) " *ngIf="campaign.Kanban ">
-                {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  [style.transform]="
-                    campaign.expanded ? 'rotate(180deg)' : 'rotate(0)'
-                  "
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-
-            <div class="campaign-stages" [class.expanded]="campaign.expanded">
-              <div class="stages-grid">
-                <ng-container *ngFor="let kanbanStage of campaign.Kanban">
-                  <div class="stage-item">
-                    <div class="stage-name">{{ kanbanStage.stageName }}</div>
-                    <div class="stage-value">
-                      {{
-                        kanbanStage.MarketSurveyShoppingCenters[0].Id
-                          ? kanbanStage.MarketSurveyShoppingCenters.length
-                          : 0
-                      }}
-                    </div>
-                    <!-- <a
-                      class="hyber-link"
-                      *ngIf="
-                        kanbanStage.stageName.toLowerCase() ==
-                        'Precontact'.toLowerCase()
-                      "
-                      (click)="goToEmily(c, index, true)"
-                      >Launch Campaign</a
-                    > -->
-                  </div>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
-    </div>
-
-    <!-- Original Table View -->
-    <div class="table-responsive" *ngIf="viewMode === 'table'">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th style="width: 250px">Name</th>
-            <th style="text-align: center">Date</th>
-            <th style="text-align: center">Privacy</th>
-            <th style="text-align: center">Sites</th>
-            <th style="text-align: center">Submissions</th>
-            <th style="text-align: center">Sent</th>
-            <ng-container *ngFor="let stage of stages">
-              <th scope="col" style="text-align: center">
-                {{ stage.stageName }}
-              </th>
-            </ng-container>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let c of filteredCampaigns">
-            <ng-container
-              *ngFor="let campaign of c.Campaigns; let index = index"
-            >
-              <tr>
-                <td style="width: 250px; vertical-align: top">
-                  <div
-                    class="d-flex flex-column gap-2"
-                    style="min-height: 100%; padding: 8px"
-                  >
-                    <div style="font-weight: 600" [routerLink]="[
-                    '/dashboard',
-                    c.id,
-                    c.organizationid,
-                    c.name ,
-                    campaign.Id
-                  ]">
-                      {{ campaign.CampaignName }}
-                    </div>
-
-                    <div
-                      class="d-flex align-items-center gap-2"
-                      style="flex-wrap: wrap; margin-block: 5px"
-                    >
-                      <img
-                        *ngIf="c.organizationid"
-                        [src]="
-                          'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                          c.organizationid
-                        "
-                        [alt]="c.name"
-                        class="tenant-logo"
-                        style="width: 48px; height: 48px; border-radius: 50%"
-                        (error)="onImageError($event)" 
-
-                      />
-                      <span
-                        class="tenant-name"
-                        [routerLink]="[
-                          '/dashboard',
-                          c.id,
-                          c.organizationid,
-                          c.name ,
-                          campaign.Id
-                        ]"
-                        style="
-                          font-size: 14px;
-                          color: #333;
-                          max-width: 150px;
-                          word-break: break-word;
-                        "
-                      >
-                        {{ c.name }}
-                      </span>
-                    </div>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div>
-                        <a
-                          class="inbox text-center"
-                          [routerLink]="['./ataglance', campaign.Id]"
-                          >At a Glance</a
-                        >
-                      </div>
-                      <div
-                        class="inbox mail text-center"
-                        [routerLink]="[
-                          '/organization-mail',
-                          c.id,
-                          c.organizationid,
-                          campaign.Id
-                        ]"
-                      >
-                        <i class="fa-regular fa-envelope me-2"></i>
-                        <a>Emily</a>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-
-                <td style="text-align: center">
-                  {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-                </td>
+              <ng-container *ngFor="let stage of stages">
                 <td style="text-align: center">
                   <div
-                    class="campaign-privacy"
-                    [ngClass]="{
-                      'campaign-privacy-public': campaign.CampaignPrivacy == 0,
-                      'campaign-privacy-private': campaign.CampaignPrivacy == 1
-                    }"
+                    class="d-flex flex-column align-items-center justify-content-center gap-2"
                   >
-                    <div class="campaign-privacy-icon"></div>
-                    <span>
-                      {{
-                        campaign.CampaignPrivacy == 0 ? "Public" : "Private"
-                      }}</span
-                    >
-                  </div>
-                </td>
-
-                <td style="text-align: center">
-                  <div
-                    class="d-flex align-items-center justify-content-center gap-3"
-                  >
-                    <div>{{ campaign.Sites }}</div>
-                    <svg
-                      [routerLink]="[
-                        '/dashboard',
-                        c.id,
-                        c.organizationid,
-                        c.name
-                      ]"
-                      style="cursor: pointer"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                        fill="#292D32"
-                      />
-                      <path
-                        d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                        fill="#292D32"
-                      />
-                      <path
-                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                        fill="#292D32"
-                      />
-                    </svg>
-                  </div>
-                </td>
-                <td style="text-align: center">
-                  <div
-                    class="d-flex align-items-center justify-content-center gap-3"
-                  >
-                    <!-- [routerLink]="['/submissions', campaign.Id]" -->
-                    <div *ngIf="campaign.Submissions" style="cursor: pointer">
-                      <span style="color: orange" title="New Submissions">{{
-                        getSubmissionsCountNew(campaign.Submissions)
-                      }}</span>
-                      |
-                      <span
-                        style="color: rgb(0, 207, 35)"
-                        title="Accepted Submissions"
-                        >{{
-                          getSumbmissionsCountAcceppted(campaign.Submissions)
-                        }}</span
-                      >
-                      |
-                      <span
-                        style="color: rgb(207, 0, 0)"
-                        title="Rejected Submissions"
-                        >{{
-                          getSumbmissionsCountRejected(campaign.Submissions)
-                        }}</span
-                      >
-
-                      <ng-container
-                        *ngFor="
-                          let submission of sortedSubmissions(
-                            campaign.Submissions
-                          );
-                          let i = index
-                        "
-                      >
-                      </ng-container>
+                    <div>
+                      {{ getKanbanCount(stage.stageName, campaign.Kanban) }}
                     </div>
-                    <div *ngIf="!campaign.Submissions">N/A</div>
                   </div>
                 </td>
-                <td style="text-align: center">
-                  <ng-container *ngIf="campaign.MailsSent">
-                    {{ campaign.MailsSent }}</ng-container
-                  >
-                </td>
-
-                <ng-container *ngFor="let stage of stages">
-                  <td style="text-align: center">
-                    <div
-                      class="d-flex flex-column align-items-center justify-content-center gap-2"
-                    >
-                      <div>
-                        {{ getKanbanCount(stage.stageName, campaign.Kanban) }}
-                      </div>
-                    </div>
-                  </td>
-                </ng-container>
-              </tr>
-            </ng-container>
+              </ng-container>
+            </tr>
           </ng-container>
         </tbody>
       </table>
@@ -675,6 +679,124 @@
         (onCampaignCreated)="onCampaignCreated()"
       ></app-campaign-drawing>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #campaignModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title" ngbAutofocus>
+      Launch Your Campaign
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form #campaignForm="ngForm">
+      <div class="mb-3">
+        <label
+          for="minSizeInput"
+          class="form-label d-flex align-items-center gap-2"
+        >
+          Min Size (sf) *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="minSizeInput.invalid && minSizeInput.touched"
+          >
+            required
+          </span>
+        </label>
+
+        <input
+          type="number"
+          id="minSizeInput"
+          class="form-control"
+          name="minSizeInput"
+          required
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMinSize"
+          #minSizeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': minSizeInput.invalid && minSizeInput.touched
+          }"
+        />
+
+        <input
+          type="range"
+          id="customRange3"
+          class="form-range"
+          name="minSizeRange"
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMinSize"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label
+          for="maxSizeInput"
+          class="form-label d-flex align-items-center gap-2"
+        >
+          Max Size (sf) *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="maxSizeInput.invalid && maxSizeInput.touched"
+          >
+            required
+          </span>
+        </label>
+
+        <input
+          type="number"
+          id="maxSizeInput"
+          class="form-control"
+          name="maxSizeInput"
+          required
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMaxSize"
+          #maxSizeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': maxSizeInput.invalid && maxSizeInput.touched
+          }"
+        />
+
+        <input
+          type="range"
+          id="customRange4"
+          class="form-range"
+          name="maxSizeRange"
+          min="100"
+          max="100000"
+          step="50"
+          [(ngModel)]="campaignMaxSize"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="x-btn x-btn-outline"
+      (click)="modal.close('Save click')"
+    >
+      <span>Cancel</span>
+    </button>
+
+    <button
+      class="x-btn x-btn-primary"
+      [disabled]="campaignForm.invalid || campaignMaxSize < campaignMinSize"
+      (click)="navigateToCampaign()"
+    >
+      <span>Get Start</span>
+    </button>
   </div>
 </ng-template>
 

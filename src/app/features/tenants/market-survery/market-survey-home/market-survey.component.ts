@@ -16,9 +16,10 @@ import * as html2pdf from 'html2pdf.js';
 })
 export class MarketSurveyComponent implements OnInit {
   General!: General;
-  BuyBoxId!: any;
+  // BuyBoxId!: any;
   OrgId!: any;
-  BuyBoxName: string = '';
+  // BuyBoxName: string = '';
+  organizationName!:string
   ContactId!: any;
   currentView: any;
   buyboxCategories: BuyboxCategory[] = [];
@@ -75,12 +76,12 @@ export class MarketSurveyComponent implements OnInit {
   ngOnInit() {
     this.General = new General();
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.BuyBoxId = params.buyBoxId;
+      // this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
-      this.BuyBoxName = params.buyboxName;
+      this.organizationName = params.name;
       this.campaignId = params.campaignId;
 
-      localStorage.setItem('BuyBoxId', this.BuyBoxId);
+      // localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
       localStorage.setItem('CampaignId', this.campaignId);
 

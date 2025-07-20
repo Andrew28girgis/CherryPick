@@ -86,6 +86,7 @@ export interface EmailInfo {
   BuyBoxId: number
   IsCC: boolean
   ParentMailId: number
+  MailContextId: number
 
   // ID: number
   // Body: string
