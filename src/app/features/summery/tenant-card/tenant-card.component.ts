@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Tenant } from 'src/app/shared/models/tenant';
+import { AddCampaignPopupComponent } from '../../campaign/add-campaign-popup/add-campaign-popup.component';
 
 @Component({
   selector: 'app-tenant-card',
@@ -17,8 +17,7 @@ export class TenantCardComponent {
 
   constructor(
     private offcanvasService: NgbOffcanvas,
-    private modalService: NgbModal,
-    private router: Router
+    private modalService: NgbModal
   ) {}
 
   protected onImageError(event: any) {
@@ -34,22 +33,14 @@ export class TenantCardComponent {
     });
   }
 
-  protected openCampaignModal(content: any): void {
-    this.modalService.open(content, { centered: true });
+  protected openCampaignModal(): void {
+    const modalRef = this.modalService.open(AddCampaignPopupComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.organizationId = this.tenant.id;
   }
 
   protected closeOffcanvas(): void {
     this.offcanvasService.dismiss();
-  }
-
-  protected navigateToCampaign(): void {
-    this.modalService.dismissAll();
-    this.closeOffcanvas();
-    this.router.navigate(['/campaigns/add-campaign', this.tenant.id], {
-      queryParams: {
-        minSize: this.campaignMinSize,
-        maxSize: this.campaignMaxSize,
-      },
-    });
   }
 }

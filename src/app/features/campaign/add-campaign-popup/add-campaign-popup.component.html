@@ -1,0 +1,201 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title" ngbAutofocus>
+    {{popupTitle}}
+  </h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="closeActiveModal()"
+  ></button>
+</div>
+<div class="modal-body">
+  <form #campaignForm="ngForm">
+    <div class="mb-3">
+      <ng-container
+        *ngIf="
+          displayOrganizationsList &&
+          allOrganizations &&
+          allOrganizations.length > 0
+        "
+      >
+        <label
+          for="user-buybox"
+          class="form-label w-100 d-flex justify-content-start gap-2"
+          >Select Tenants *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="organizationIdVar.invalid && organizationIdVar.touched"
+          >
+            required
+          </span>
+        </label>
+        <select
+          required
+          id="user-buybox"
+          class="form-select mb-3"
+          aria-label="Buybox select"
+          name="userBuybox"
+          [(ngModel)]="organizationId"
+          #organizationIdVar="ngModel"
+          [ngClass]="{
+            'is-invalid': organizationIdVar.invalid && organizationIdVar.touched
+          }"
+        >
+          <ng-container *ngFor="let organization of allOrganizations">
+            <option [value]="organization.id">
+              {{ organization.name }}
+            </option>
+          </ng-container>
+        </select>
+      </ng-container>
+    </div>
+
+    <div class="mb-3">
+      <label
+        for="campaign-name"
+        class="form-label d-flex align-items-center gap-2"
+      >
+        Campaign Name *
+        <span
+          class="text-danger name-isrequired"
+          *ngIf="campaignNameVar.invalid && campaignNameVar.touched"
+        >
+          required
+        </span>
+      </label>
+      <input
+        required
+        type="text"
+        class="form-control mb-3 campaign-name-input"
+        placeholder="Campaign Name"
+        name="campaign-name"
+        id="campaign-name"
+        #campaignNameVar="ngModel"
+        [(ngModel)]="campaignName"
+        [ngClass]="{
+          'is-invalid': campaignNameVar.invalid && campaignNameVar.touched
+        }"
+      />
+    </div>
+
+    <!-- <div
+      class="d-flex align-items-center justify-content-between mb-3 campaign-visability"
+    >
+      <div class="campaign-status">Status</div>
+      <div class="campaign-status">
+        <p-selectButton
+          [options]="visabilityOptions"
+          [(ngModel)]="isPrivateCampaign"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </div>
+    </div> -->
+
+    <div class="mb-3">
+      <label
+        for="minSizeInput"
+        class="form-label d-flex align-items-center gap-2"
+      >
+        Min Size (sf) *
+        <span
+          class="text-danger name-isrequired"
+          *ngIf="minSizeInput.invalid && minSizeInput.touched"
+        >
+          required
+        </span>
+      </label>
+
+      <input
+        type="number"
+        id="minSizeInput"
+        class="form-control"
+        name="minSizeInput"
+        required
+        min="100"
+        max="100000"
+        step="50"
+        [(ngModel)]="campaignMinSize"
+        #minSizeInput="ngModel"
+        [ngClass]="{
+          'is-invalid': minSizeInput.invalid && minSizeInput.touched
+        }"
+      />
+
+      <input
+        type="range"
+        id="customRange3"
+        class="form-range"
+        name="minSizeRange"
+        min="100"
+        max="100000"
+        step="50"
+        [(ngModel)]="campaignMinSize"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label
+        for="maxSizeInput"
+        class="form-label d-flex align-items-center gap-2"
+      >
+        Max Size (sf) *
+        <span
+          class="text-danger name-isrequired"
+          *ngIf="maxSizeInput.invalid && maxSizeInput.touched"
+        >
+          required
+        </span>
+      </label>
+
+      <input
+        type="number"
+        id="maxSizeInput"
+        class="form-control"
+        name="maxSizeInput"
+        required
+        min="100"
+        max="100000"
+        step="50"
+        [(ngModel)]="campaignMaxSize"
+        #maxSizeInput="ngModel"
+        [ngClass]="{
+          'is-invalid': maxSizeInput.invalid && maxSizeInput.touched
+        }"
+      />
+
+      <input
+        type="range"
+        id="customRange4"
+        class="form-range"
+        name="maxSizeRange"
+        min="100"
+        max="100000"
+        step="50"
+        [(ngModel)]="campaignMaxSize"
+      />
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="x-btn x-btn-outline"
+    (click)="closeActiveModal()"
+  >
+    <span>
+      {{ secondaryButtonText }}
+    </span>
+  </button>
+
+  <button
+    class="x-btn x-btn-primary"
+    [disabled]="campaignForm.invalid || campaignMaxSize < campaignMinSize"
+    (click)="createNewCampaign()"
+  >
+    <span>Get Start</span>
+  </button>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
