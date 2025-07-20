@@ -18,6 +18,7 @@ import { EmilyService } from 'src/app/core/services/emily.service';
 import { Router } from '@angular/router';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { Subscription } from 'rxjs';
+import { AddCampaignPopupComponent } from '../add-campaign-popup/add-campaign-popup.component';
 
 @Component({
   selector: 'app-campaign-manager',
@@ -126,7 +127,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
           console.log(this.filteredCampaigns);
-          
         } else {
           this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
@@ -147,9 +147,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   onSearchCampaign(): void {
     if (this.searchCampaign && this.searchCampaign.trim().length > 0) {
       this.filteredCampaigns = this.campaigns.filter((c) =>
-       c.CampaignName.toLowerCase().includes(
-            this.searchCampaign.toLowerCase()
-          )
+        c.CampaignName.toLowerCase().includes(this.searchCampaign.toLowerCase())
       );
     } else {
       this.filteredCampaigns = this.campaigns;
@@ -202,7 +200,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       //   organizations: [],
       // };
       // this.emilyService.updateCheckList(emilyObject);
-
       // this.router.navigate(['/MutipleEmail', campaign.id]);
     }
   }
@@ -328,11 +325,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     event.target.src = 'assets/Images/placeholder.png';
   }
 
-   protected openCampaignModal(content: any): void {
-    this.modalService.open(content, { centered: true });
+  protected openCampaignModal(): void {
+    this.modalService.open(AddCampaignPopupComponent, { centered: true });
   }
 
-   protected navigateToCampaign(): void {
+  protected navigateToCampaign(): void {
     this.modalService.dismissAll();
     this.router.navigate(['/campaigns/add-campaign'], {
       queryParams: {

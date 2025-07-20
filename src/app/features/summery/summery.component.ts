@@ -4,6 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Tenant } from 'src/app/shared/models/tenant';
+import { AddCampaignPopupComponent } from '../campaign/add-campaign-popup/add-campaign-popup.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-summery',
@@ -13,8 +15,6 @@ import { Tenant } from 'src/app/shared/models/tenant';
 export class SummeryComponent implements OnInit {
   @ViewChild('tenantModal', { static: true })
   private tenantModal!: TemplateRef<any>;
-  @ViewChild('campaignModal', { static: true })
-  private campaignModal!: TemplateRef<any>;
   private tenants: Tenant[] = [];
   private newTenantId!: number;
 
@@ -76,8 +76,22 @@ export class SummeryComponent implements OnInit {
     this.newTenant = { name: '', url: '', linkedin: '' };
   }
 
-  private openCampaignModal(content: any): void {
-    this.modalService.open(content, { centered: true });
+  private openCampaignModal(): void {
+    const modalRef = this.modalService.open(AddCampaignPopupComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.popupTitle = 'Launch Your First Campaign';
+    modalRef.componentInstance.secondaryButtonText = 'Skip';
+    modalRef.componentInstance.organizationId = this.newTenantId;
+    const subscription: Subscription =
+      modalRef.componentInstance.onSecondaryButtonClicked.subscribe(
+        (value: boolean) => {
+          if (value) {
+            this.getAllActiveOrganizations();
+            subscription.unsubscribe();
+          }
+        }
+      );
   }
 
   private createNewTenant(): void {
@@ -103,7 +117,7 @@ export class SummeryComponent implements OnInit {
         this.newTenantId = orgId;
         this.modalService.dismissAll();
         this.resetAddTenantForm();
-        this.openCampaignModal(this.campaignModal);
+        this.openCampaignModal();
       }
     });
   }
@@ -136,20 +150,5 @@ export class SummeryComponent implements OnInit {
 
   protected openAddTenantModal(content: any): void {
     this.modalService.open(content, { centered: true });
-  }
-
-  protected navigateToCampaign(): void {
-    this.modalService.dismissAll();
-    this.router.navigate(['/campaigns/add-campaign', this.newTenantId], {
-      queryParams: {
-        minSize: this.campaignMinSize,
-        maxSize: this.campaignMaxSize,
-      },
-    });
-  }
-
-  protected skipCreateCampaign(): void {
-    this.modalService.dismissAll();
-    this.getAllActiveOrganizations();
   }
 }
