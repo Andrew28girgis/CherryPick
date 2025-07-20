@@ -93,7 +93,7 @@ const routes: Routes = [
   //   canActivate: [AuthGuardService],
   // },
   {
-    path: 'landing/:id/:shoppiongCenterId/:buyboxid',
+    path: 'landing/:id/:shoppiongCenterId/:campaignId',
     component: LandingComponent,
     data: { hideHeader: true },
   },

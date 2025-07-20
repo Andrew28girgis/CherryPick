@@ -38,7 +38,7 @@ export class LandingComponent {
   initDomain!: any;
   theRating!: any;
   rating: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  BuyBoxId!: number;
+  // BuyBoxId!: number;
   contactId!: number;
   showFirstCol = true; // Toggle to false to hide the first col-md-7
   mapViewOnePlacex!: boolean;
@@ -64,7 +64,7 @@ export class LandingComponent {
   enriche!: Enriche;
   placeId!: any;
   shoppingId!: any;
-  buyBoxId!: any;
+  campaignId!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -83,7 +83,7 @@ export class LandingComponent {
     this.activatedRoute.paramMap.subscribe(params => {
       this.placeId = params.get('placeId');
       this.shoppingId = params.get('shoppingId');
-      this.buyBoxId = params.get('buyBoxId');
+      this.campaignId = params.get('campaignId');
     });
     
     this.windowHistrony = window.history.length;
@@ -92,40 +92,39 @@ export class LandingComponent {
 
     this.breadcrumbService.addBreadcrumb({
       label: 'Details',
-      url: `/landing/${this.placeId}/${this.shoppingId}/${this.buyBoxId}`,
+      url: `/landing/${this.placeId}/${this.shoppingId}/${this.campaignId}`,
     });
   }
 
-  GetCustomSections(buyboxId: number): void {
-    const body: any = {
-      Name: 'GetCustomSections',
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-    };
+  // GetCustomSections(): void {
+  //   const body: any = {
+  //     Name: 'GetCustomSections',
+  //     Params: {
+  //       CampaignId: this.campaignId,
+  //     },
+  //   };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.Permission = data.json;
-        this.placesRepresentative = this.Permission?.find(
-          (item: permission) => item.sectionName === 'PlacesRepresentative'
-        )?.visible;
-      },
-    });
-  }
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.Permission = data.json;
+  //       this.placesRepresentative = this.Permission?.find(
+  //         (item: permission) => item.sectionName === 'PlacesRepresentative'
+  //       )?.visible;
+  //     },
+  //   });
+  // }
 
   private initializeParams(): void {
     this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+      this.campaignId = params.campaignId;
       this.PlaceId = params.id;
       this.ShoppingCenterId = params.shoppiongCenterId;
       // this.OrgId = params.orgId;
-      this.GetCustomSections(this.BuyBoxId);
+      // this.GetCustomSections();
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(
           this.ShoppingCenterId,
           0,
-          this.BuyBoxId
         );
 
         this.GetPlaceDetails(0, this.ShoppingCenterId);
@@ -133,7 +132,6 @@ export class LandingComponent {
         this.GetBuyBoxOrganizationDetails(
           this.ShoppingCenterId,
           this.PlaceId,
-          this.BuyBoxId
         );
 
         this.GetPlaceDetails(this.PlaceId, 0);
@@ -156,7 +154,7 @@ export class LandingComponent {
       Params: {
         PlaceID: placeId,
         shoppingcenterId: ShoppingcenterId,
-        buyboxid: this.BuyBoxId,
+        CampaignId: this.campaignId,
       },
     };
 
@@ -205,7 +203,7 @@ export class LandingComponent {
       Params: {
         ShoppingCenterId: this.ShoppingCenterId,
         PlaceID: placeId,
-        buyboxid: this.BuyBoxId,
+        CampaignId: this.campaignId,
       },
     };
 
@@ -244,14 +242,13 @@ export class LandingComponent {
   GetBuyBoxOrganizationDetails(
     Shoppingcenterid: number,
     PlaceId: number,
-    Buyboxid: number
   ): void {
     const body: any = {
       Name: 'GetBuyBoxOrganizationDetails',
       Params: {
         shoppingcenterid: +Shoppingcenterid,
         placeId: +PlaceId,
-        buyboxid: +Buyboxid,
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -423,7 +420,7 @@ export class LandingComponent {
       Params: {
         PlaceID: placeId,
         ShoppingCenterId: this.ShoppingCenterId,
-        BuyBoxId: this.BuyBoxId,
+        CampaignId: this.campaignId,
       },
     };
 
@@ -834,28 +831,28 @@ export class LandingComponent {
     });
   }
 
-  sendFeedBack(reaction: string) {
-    this.place.reaction = reaction;
-    let feedback: any = {};
-    feedback['note'] = this.place.feedBack;
-    feedback['placeId'] = this.PlaceId;
+  // sendFeedBack(reaction: string) {
+  //   this.place.reaction = reaction;
+  //   let feedback: any = {};
+  //   feedback['note'] = this.place.feedBack;
+  //   feedback['placeId'] = this.PlaceId;
 
-    if (reaction != '') {
-      feedback['Reaction'] = reaction;
-    }
-    feedback['buyboxId'] = +this.BuyBoxId;
-    this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
-      (data) => {
-        this.showAlert = true;
-        if (reaction == '') {
-          setTimeout(() => {
-            this.showAlert = false;
-          }, 3000);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }
-    );
-  }
+  //   if (reaction != '') {
+  //     feedback['Reaction'] = reaction;
+  //   }
+  //   feedback['buyboxId'] = +this.BuyBoxId;
+  //   this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
+  //     (data) => {
+  //       this.showAlert = true;
+  //       if (reaction == '') {
+  //         setTimeout(() => {
+  //           this.showAlert = false;
+  //         }, 3000);
+  //         window.scrollTo({ top: 0, behavior: 'smooth' });
+  //       }
+  //     }
+  //   );
+  // }
 
   viewOnStreet() {
     let lat = this.getStreetLat();
