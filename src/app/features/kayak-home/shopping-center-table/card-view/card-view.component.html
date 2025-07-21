@@ -469,16 +469,18 @@
               </div>
             </div>
           </div>
-          <div
-            class="col-md-12 spec"
-            *ngIf="
-              shopping.ShoppingCenter?.ManagerOrganization &&
-              placesRepresentative != false
-            "
-          >
+          <div class="col-md-12 spec">
             <hr class="small-hr mt-1 mb-1" />
-            <span class="managed-by">Leased by</span>
-            <div class="spec-head between">
+            <div
+              class="spec-head between"
+              *ngIf="
+                shopping.ShoppingCenter?.ManagerOrganization &&
+                  placesRepresentative != false;
+                else findContacts
+              "
+            >
+              <span class="managed-by">Leased by</span>
+
               <div>
                 <img
                   class="logo"
@@ -524,6 +526,19 @@
                 </div>
               </ng-template>
             </div>
+            <ng-template #findContacts>
+              <a
+                class="target"
+                href="https://www.google.com/search?q=lease at+{{
+                  shopping.CenterName
+                }}+{{ shopping.CenterCity }}+{{ shopping.CenterState }}+{{
+                  shopping.ZipCode
+                }}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
+                target="_blank"
+              >
+                Find Contacts
+              </a>
+            </ng-template>
           </div>
 
           <button
