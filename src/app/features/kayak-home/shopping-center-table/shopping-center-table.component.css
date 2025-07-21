@@ -478,10 +478,8 @@
   border-radius: 6px;
   cursor: pointer;
   align-items: center;
-  padding: 0px var(--Space-Space-12, 12px);
   display: inline-flex;
   justify-content: center;
-  gap: var(--Space-Space-12, 12px);
 }
 
 .tenant-name::after {
