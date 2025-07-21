@@ -122,9 +122,16 @@ export class LoginComponent implements OnInit {
           const googleAccessToken = response.json[0].googleAccessToken;
           const microsoftAccessToken = response.json[0].microsoftAccessToken;
           const wantToLinkAccount = response.json[0].wantToLinkAccount;
+          const mailCount = response.json[0].mailsCount;
 
-          if (wantToLinkAccount == false || googleAccessToken) {
-            this.navigateToHome();
+          if (wantToLinkAccount == false) {
+            this.router.navigate(['/campaigns']);
+          } else if (googleAccessToken) {
+            if (mailCount && mailCount > 100) {
+              this.router.navigate(['/campaigns']);
+            } else {
+              this.router.navigate(['/settings']);
+            }
           } else {
             this.router.navigate(['/accounts-link']);
           }
