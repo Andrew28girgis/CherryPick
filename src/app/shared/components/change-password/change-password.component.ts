@@ -16,7 +16,6 @@ import * as CryptoJS from 'crypto-js';
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css'],
 })
-
 export class ResetPasswordComponent implements OnInit {
   public ResetPassword!: ResetPassword;
   public general: General = new General();

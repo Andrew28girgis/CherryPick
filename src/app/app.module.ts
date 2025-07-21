@@ -51,7 +51,6 @@ import { EmailInboxComponent } from './features/emily/email-inbox/email-inbox.co
 import { EmailComposeComponent } from './features/emily/inbox/email-compose/email-compose.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 import { TenantCardComponent } from './features/summery/tenant-card/tenant-card.component';
-import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
@@ -83,7 +82,6 @@ import { ExtractShoppingCenterComponent } from './features/extract-shopping-cent
     EmailComposeComponent,
     CanvasHomeComponent,
     TenantCardComponent,
-    NotFoundComponent,
     DataSourcesComponent,
     ContactsComponent,
     ShoppingComponent,

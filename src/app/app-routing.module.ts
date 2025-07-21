@@ -20,7 +20,6 @@ import { TasksComponent } from './features/tasks/tasks.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
-import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
@@ -162,12 +161,6 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   {
-    path: 'not-found',
-    component: NotFoundComponent,
-    data: { hideHeader: true },
-  },
-
-  {
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [TenantOnlyGuard],
@@ -179,7 +172,6 @@ const routes: Routes = [
       import('./features/kanban/kanban.module').then((m) => m.KanbanModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-
   {
     path: 'Kanban/:id',
     component: KanbanComponent,
