@@ -345,9 +345,13 @@
                          <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
                       <a
                         class="target"
-                        href="https://www.google.com/search?q={{
+                         href="https://www.google.com/search?q=lease at+{{
                           shoppingCenter.CenterName
-                        }}&rlz=1C1FHFK_enEG1100EG1100&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
+                        }}+{{ shoppingCenter.CenterCity }}+{{
+                          shoppingCenter.CenterState
+                        }}+{{
+                          shoppingCenter.ZipCode
+                        }}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
                         target="_blank"
                       >
                         <svg
