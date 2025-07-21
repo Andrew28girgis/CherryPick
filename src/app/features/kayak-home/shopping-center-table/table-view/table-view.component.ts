@@ -67,6 +67,10 @@ export class TableViewComponent implements OnInit, OnDestroy {
   Campaign: any
   CampaignId!: any
 
+  orgId!: any
+  cId!:number;   
+  orgName!: string
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -96,8 +100,11 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid
-      this.OrgId = params.orgId
+      this.orgId = params.orgId
       this.Campaign = params.campaign
+      this.cId = params.campaignId ;
+      this.orgName = params.orgName;
+      
       localStorage.setItem("BuyBoxId", this.BuyBoxId)
       localStorage.setItem("OrgId", this.OrgId)
     })

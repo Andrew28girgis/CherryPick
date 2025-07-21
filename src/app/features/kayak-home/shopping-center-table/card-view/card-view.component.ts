@@ -82,7 +82,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   imageLoadingStates: { [key: number]: boolean } = {}
   imageErrorStates: { [key: number]: boolean } = {}
-
+  cId!:number;   
+  orgName!: string
   constructor(
     private markerService: MapsService,
     public activatedRoute: ActivatedRoute,
@@ -116,11 +117,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid
-      this.orgId = params.orgid
+      this.orgId = +params.orgId
       this.Campaign = params.campaign
-
+      this.cId = params.campaignId ;
+      this.orgName = params.orgName;
       localStorage.setItem("BuyBoxId", this.BuyBoxId)
       localStorage.setItem("OrgId", this.orgId)
+      console.log(this.orgId);
+      
+
     })
 
     this.subscripe.add(
