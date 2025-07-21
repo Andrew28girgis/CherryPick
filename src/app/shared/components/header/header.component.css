@@ -2,11 +2,9 @@
   background-color: #f1f1f5;
   display: flex;
   width: 100%;
-  padding: var(--Space-Space-16, 16px) 32px;
+  padding: 10px  ;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 0;
 }
 
 .container-fluid {

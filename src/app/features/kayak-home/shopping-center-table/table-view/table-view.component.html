@@ -342,6 +342,32 @@
                             View Details
                           </a>
                         </li>
+                         <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
+                      <a
+                        class="target"
+                        href="https://www.google.com/search?q={{
+                          shoppingCenter.CenterName
+                        }}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
+                        target="_blank"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path
+                            d="M21.12 9.88h-7.19v2.46h4.11c-.18 1.17-.73 2.06-1.62 2.68-.91.63-2.09 1.02-3.51 1.02-2.69 0-4.88-2.18-4.88-4.88s2.19-4.88 4.88-4.88c1.31 0 2.45.49 3.33 1.29l2.28-2.28C16.95 3.17 14.91 2.25 12.61 2.25c-5.69 0-10.25 4.56-10.25 10.25s4.56 10.25 10.25 10.25c5.43 0 9.71-4.2 9.71-10.05 0-.73-.08-1.25-.2-1.82z"
+                          />
+                        </svg>
+                        Google Search
+                      </a>
+                    </li>
                         <li>
                           <a
                             class="target"

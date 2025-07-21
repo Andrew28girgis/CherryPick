@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KayakRoutingModule } from './kayak-routing.module';
-import { KayakHomeComponent } from './kayak-home.component';
 import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-center-table.component';
 import { NgbCollapseModule, NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
-  import { FormsModule } from '@angular/forms';
-  import { SharedModule } from 'src/app/shared/shared.module';
+import { FormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
 import { SocialViewComponent } from './shopping-center-table/social-view/social-view.component';
 import { TableViewComponent } from './shopping-center-table/table-view/table-view.component';
 import { CardViewComponent } from './shopping-center-table/card-view/card-view.component';
@@ -30,7 +29,6 @@ import { FilterRepliesPipe } from './shopping-center-table/social-view/social-vi
 
 @NgModule({
   declarations: [
-    KayakHomeComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     SocialViewComponent,
@@ -64,7 +62,6 @@ import { FilterRepliesPipe } from './shopping-center-table/social-view/social-vi
     NgbCollapseModule
   ],
   exports: [
-    KayakHomeComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     SocialViewComponent,
