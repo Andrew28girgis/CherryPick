@@ -28,6 +28,7 @@ import { AccountLinkedGuard } from './core/guards/account-linked.guard';
 import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
 import { EmailInfoComponent } from './features/email-info/email-info.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
+import { AiSpinnerComponent } from './shared/components/ai-spinner/ai-spinner.component';
 
 const routes: Routes = [
   {
@@ -217,6 +218,11 @@ const routes: Routes = [
     path: 'extractShopping/:id',
     component: ExtractShoppingCenterComponent,
     // canActivate: [AuthGuardService, TenantOnlyGuard],
+  },
+  {
+    path: 'spinner',
+    component:AiSpinnerComponent ,
+    data: { hideHeader: true },
   },
   {
     path: 'dashboard/:orgId/:orgName/:campaignId',
