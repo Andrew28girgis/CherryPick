@@ -29,6 +29,7 @@ import { ExtractShoppingCenterComponent } from './features/extract-shopping-cent
 import { EmailInfoComponent } from './features/email-info/email-info.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 import { AiSpinnerComponent } from './shared/components/ai-spinner/ai-spinner.component';
+import { AiFailedComponent } from './shared/components/ai-failed/ai-failed.component';
 
 const routes: Routes = [
   {
@@ -222,6 +223,11 @@ const routes: Routes = [
   {
     path: 'spinner',
     component:AiSpinnerComponent ,
+    data: { hideHeader: true },
+  },
+    {
+    path: 'aiFailed',
+    component:AiFailedComponent ,
     data: { hideHeader: true },
   },
   {

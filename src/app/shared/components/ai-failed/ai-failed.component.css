@@ -1,0 +1,198 @@
+.ai-falied {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.error-container {
+  text-align: center;
+  color: white;
+  animation: slideInDown 0.8s ease-out;
+  max-width: 500px;
+  padding: 40px 20px;
+}
+
+.error-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 30px;
+  position: relative;
+  animation: shake 2s ease-in-out infinite;
+}
+
+.error-icon::before {
+  content: "⚠";
+  font-size: 80px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  display: block;
+  line-height: 1;
+}
+
+.error-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.error-message {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.6;
+  opacity: 0.9;
+  margin-bottom: 30px;
+  animation: fadeIn 1s ease-out 0.6s both;
+}
+
+.retry-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 1s ease-out 0.9s both;
+}
+
+.retry-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.retry-button:active {
+  transform: translateY(0);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-3px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Background effects */
+.bg-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.particle:nth-child(1) {
+  width: 20px;
+  height: 20px;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  width: 15px;
+  height: 15px;
+  left: 20%;
+  animation-delay: 2s;
+}
+
+.particle:nth-child(3) {
+  width: 25px;
+  height: 25px;
+  left: 80%;
+  animation-delay: 4s;
+}
+
+.particle:nth-child(4) {
+  width: 12px;
+  height: 12px;
+  left: 70%;
+  animation-delay: 1s;
+}
+
+.particle:nth-child(5) {
+  width: 18px;
+  height: 18px;
+  left: 90%;
+  animation-delay: 3s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10vh) rotate(180deg);
+  }
+}
+
+.error-code {
+  font-size: 14px;
+  font-family: "Courier New", monospace;
+  opacity: 0.6;
+  margin-top: 20px;
+  animation: fadeIn 1s ease-out 1.2s both;
+}
