@@ -298,6 +298,54 @@
     </ng-container>
   </tbody>
 </table>
+<!-- No Shopping Centers Message -->
+<div 
+  *ngIf="!shoppingCenters || shoppingCenters.length === 0" 
+  class="no-shopping-centers-container d-flex flex-column align-items-center justify-content-center p-5"
+>
+  <div class="text-center">
+    <!-- Icon -->
+    <svg 
+      width="80" 
+      height="80" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+      class="mb-3"
+      style="color: #6c757d;"
+    >
+      <path 
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" 
+        fill="currentColor"
+      />
+    </svg>
+    
+    <!-- Main Message -->
+    <h4 class="mb-3" style="color: #495057; font-weight: 600;">
+      No Shopping Centers Available
+    </h4>
+    
+    <!-- Description -->
+    <p class="mb-0" style="color: #6c757d; font-size: 16px; max-width: 400px; line-height: 1.5;">
+      To display shopping centers in this view, you need to change status to 'Shared With Tenant'. 
+      Please update the shopping center status from your management dashboard.
+    </p>
+    
+    <!-- Optional: Action Button -->
+
+    <!-- <div class="mt-4">
+      <button 
+        class="btn btn-primary px-4"
+        onclick="window.location.reload()"
+        style="background-color: #007bff; border-color: #007bff;"
+      >
+        <i class="fa fa-refresh me-2"></i>
+        Refresh View
+      </button>
+    </div> -->
+  </div>
+</div>
+
             <!-- <div class="action-buttons mt-3 d-flex justify-content-between flex-column">
               <button 
                 class="action-btn accept" 
