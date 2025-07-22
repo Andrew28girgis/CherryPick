@@ -22,29 +22,30 @@ export class ContactBrokerComponent {
   constructor(private activeModal: NgbActiveModal) {}
 
   onStepDone(event: any): void {
-    switch (this.currentStep) {
-      case 1: {
-        this.chooseBrokerObject = event;
-        this.currentStep++;
-        break;
-      }
-      case 2: {
-        this.managedByBrokerArray = event;
-        this.currentStep++;
-        break;
-      }
-      case 3: {
-        this.closeActiveModal();
-        break;
-      }
-      // case 4: {
-      //   this.closeActiveModal();
-      //   break;
-      // }
+    this.closeActiveModal();
+    // switch (this.currentStep) {
+    //   case 1: {
+    //     this.chooseBrokerObject = event;
+    //     this.currentStep++;
+    //     break;
+    //   }
+    //   case 2: {
+    //     this.managedByBrokerArray = event;
+    //     this.currentStep++;
+    //     break;
+    //   }
+    //   case 3: {
+    //     this.closeActiveModal();
+    //     break;
+    //   }
+    //   // case 4: {
+    //   //   this.closeActiveModal();
+    //   //   break;
+    //   // }
 
-      default:
-        break;
-    }
+    //   default:
+    //     break;
+    // }
   }
 
   closeActiveModal() {

@@ -1,6 +1,6 @@
 <div *ngIf="center" class="contact-broker-container">
   <div class="contact-broker-header">
-    @switch (currentStep) { @case (1) {
+    <!-- @switch (currentStep) { @case (1) {
     <div class="center-name">
       Composing email for shopping center : {{ center.CenterName }}
     </div>
@@ -19,7 +19,11 @@
     <div class="center-name">
       Composing email for shopping center : {{ center.CenterName }}
     </div>
-    }}
+    }} -->
+
+    <div class="center-name">
+      Composing email for shopping center : {{ center.CenterName }}
+    </div>
     <div
       class="close-icon"
       [ngClass]="{
@@ -35,15 +39,15 @@
     </div>
   </div>
 
-  <div class="contact-broker-stepper">
+  <!-- <div class="contact-broker-stepper">
     <ul>
       @for (step of stepperSteps; track $index) {
       <li [ngClass]="{ 'active-step': step <= currentStep }"></li>
       }
     </ul>
-  </div>
+  </div> -->
 
-  @switch (currentStep) { @case (1) {
+  <!-- @switch (currentStep) { @case (1) {
   <div class="contact-broker-step step-one">
     <div class="step-header">
       <div class="step-number-icon">
@@ -89,21 +93,25 @@
     </div>
   </div>
   }
-  <!-- @case (4) {
-  <div class="contact-broker-step step-three">
-    <div class="step-header">
+ 
+ } -->
+  <div class="contact-broker-step step-one">
+    <!-- <div class="step-header">
       <div class="step-number-icon">
         {{ currentStep }}
       </div>
-      <div class="step-title">Preview Emails</div>
-    </div>
+      <div class="step-title">Choose Brokers</div>
+    </div> -->
     <div class="step-content">
-      <app-preview-email
-        [mailContextId]="mailContextId"
+      <app-new-contact-broker
+        [contacts]="center.ShoppingCenter.ManagerOrganization"
+        [center]="center"
         (onStepDone)="onStepDone($event)"
-      ></app-preview-email>
+      ></app-new-contact-broker>
+      <!-- <app-choose-broker
+        [contacts]="center.ShoppingCenter.ManagerOrganization"
+        (onStepDone)="onStepDone($event)"
+      ></app-choose-broker> -->
     </div>
   </div>
-  } -->
- }
 </div>

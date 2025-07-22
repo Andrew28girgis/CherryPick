@@ -67,9 +67,7 @@
                 [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,shopping.CampaignId]"
               >
                 <div class="content-title cursor" style="white-space: pre-line">
-                  {{
-                    shopping.CenterName
-                  }}
+                  {{ shopping.CenterName }}
                 </div>
                 <span
                   class="badge badge-danger mx-2"
@@ -165,16 +163,25 @@
                       </a>
                     </li>
                     <li (click)="toggleShortcuts(shopping.Id, 'close')">
-                    <a
-                class="target"
-                href="https://www.google.com/search?q=leasing manager for+{{
-                  shopping.CenterName
-                }}+{{ shopping.CenterAddress }}+{{ shopping.CenterCity }}+{{
-                  shopping.CenterState
-                }}+{{
-                  shopping.ZipCode}}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{ shopping.CenterAddress }},{{shopping.CenterCity }},{{ shopping.CenterState }},{{ shopping.ZipCode }}&shoppingCenterName={{shopping.CenterName}}&organizationId={{orgId}}&organizationName={{orgName}}&campaignId={{cId}}"
-                target="_blank"
-              >
+                      <a
+                        class="target"
+                        href="https://www.google.com/search?q=leasing manager for+{{
+                          shopping.CenterName
+                        }}+{{ shopping.CenterAddress }}+{{
+                          shopping.CenterCity
+                        }}+{{ shopping.CenterState }}+{{
+                          shopping.ZipCode
+                        }}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{
+                          shopping.CenterAddress
+                        }},{{ shopping.CenterCity }},{{
+                          shopping.CenterState
+                        }},{{ shopping.ZipCode }}&shoppingCenterName={{
+                          shopping.CenterName
+                        }}&organizationId={{ orgId }}&organizationName={{
+                          orgName
+                        }}&campaignId={{ cId }}"
+                        target="_blank"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -524,7 +531,7 @@
               </ng-template>
             </div>
             <ng-template #findContacts>
-                    <a
+              <a
                 class="target"
                 href="https://www.google.com/search?q=leasing manager for+{{
                   shopping.CenterName
@@ -532,8 +539,24 @@
                   
                   shopping.CenterState
                 }}+{{
-                  shopping.ZipCode}}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{ shopping.CenterAddress }},{{shopping.CenterCity }},{{ shopping.CenterState }},{{ shopping.ZipCode }}&shoppingCenterName={{shopping.CenterName}}&organizationId={{orgId}}&organizationName={{orgName}}&campaignId={{cId}}"
+                  shopping.ZipCode
+                }}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{
+                  shopping.CenterAddress
+                }},{{ shopping.CenterCity }},{{ shopping.CenterState }},{{
+                  shopping.ZipCode
+                }}&shoppingCenterName={{
+                  shopping.CenterName
+                }}&organizationId={{ orgId }}&organizationName={{
+                  orgName
+                }}&campaignId={{ cId }}"
                 target="_blank"
+                (click)="
+                  finContactMessage(
+                    shopping.Id,
+                    shopping.CenterName,
+                    shopping.CenterAddress
+                  )
+                "
               >
                 Find Contacts
               </a>
