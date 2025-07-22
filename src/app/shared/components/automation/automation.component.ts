@@ -13,6 +13,8 @@ import { PlacesService } from 'src/app/core/services/places.service';
 export class AutomationComponent implements OnInit {
   automationId!: number;
   automationResponses: any[] = []; // Changed to array to hold multiple responses
+  tableColumns: string[] = [];
+  shoppingCenterId!: number; // Added to hold shopping center ID
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -37,13 +39,15 @@ export class AutomationComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        // Process each response in the array and flatten contacts
+        this.shoppingCenterId = data.json[0].shoppingCenterId;
+
         this.automationResponses = [];
+        const columnSet = new Set<string>();
 
         data.json.forEach((item: any, responseIndex: number) => {
           let parsedJsonResponse = null;
 
-          // Parse the JSON string to an object/array
+          // Parse JSON string to object/array
           if (
             item.automationJsonResponse &&
             typeof item.automationJsonResponse === 'string'
@@ -55,13 +59,10 @@ export class AutomationComponent implements OnInit {
               parsedJsonResponse = null;
             }
           } else {
-            // Already an object
             parsedJsonResponse = item.automationJsonResponse;
           }
 
-          // Check if parsedJsonResponse is an array (multiple contacts)
           if (Array.isArray(parsedJsonResponse)) {
-            // Add each contact as a separate response item
             parsedJsonResponse.forEach((contact: any, contactIndex: number) => {
               this.automationResponses.push({
                 textResponse: item.automationTextResponse,
@@ -69,17 +70,22 @@ export class AutomationComponent implements OnInit {
                 originalResponseIndex: responseIndex,
                 contactIndex: contactIndex,
               });
+
+              // Collect keys for table columns
+              Object.keys(contact).forEach((key) => columnSet.add(key));
             });
           } else if (parsedJsonResponse) {
-            // Single contact object
             this.automationResponses.push({
               textResponse: item.automationTextResponse,
               jsonResponse: parsedJsonResponse,
               originalResponseIndex: responseIndex,
               contactIndex: 0,
             });
+
+            Object.keys(parsedJsonResponse).forEach((key) =>
+              columnSet.add(key)
+            );
           } else {
-            // No valid JSON response, still add the text response
             this.automationResponses.push({
               textResponse: item.automationTextResponse,
               jsonResponse: null,
@@ -89,7 +95,10 @@ export class AutomationComponent implements OnInit {
           }
         });
 
+        // Set unique dynamic columns
+        this.tableColumns = Array.from(columnSet);
         console.log('Automation Responses:', this.automationResponses);
+        console.log('Dynamic Table Columns:', this.tableColumns);
       },
       error: (error) => {
         console.error('Error fetching automation response:', error);
@@ -102,7 +111,9 @@ export class AutomationComponent implements OnInit {
   }
 
   respondToAutomation(response: any): void {
-    if (!response?.Email || response.Email.trim() === '') {
+    const contact = response.jsonResponse;
+
+    if (!contact?.Email || contact.Email.trim() === '') {
       console.warn('Email missing. Skipping contact creation.');
       return;
     }
@@ -110,10 +121,11 @@ export class AutomationComponent implements OnInit {
     const body: any = {
       Name: 'CreateContactAfterAutomation',
       Params: {
-        OrganizationName: response.OrganizationName || '',
-        FirstName: response.Firstname || '',
-        LastName: response.Lastname || '',
-        Email: response.Email || '',
+        OrganizationName: contact.OrganizationName || '',
+        FirstName: contact.Firstname || '',
+        LastName: contact.Lastname || '',
+        Email: contact.Email || '',
+        ShoppingCenterId: this.shoppingCenterId,
       },
     };
 
@@ -129,10 +141,10 @@ export class AutomationComponent implements OnInit {
 
   acceptAll(): void {
     this.automationResponses.forEach((item, index) => {
-      const response = item.jsonResponse;
+      const contact = item.jsonResponse;
 
-      if (response?.Email && response.Email.trim() !== '') {
-        this.respondToAutomation(response);
+      if (contact?.Email && contact.Email.trim() !== '') {
+        this.respondToAutomation(item); // Pass full response object
       } else {
         console.warn(`Skipped index ${index}: Missing email.`);
       }
