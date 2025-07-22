@@ -531,7 +531,7 @@
               </ng-template>
             </div>
             <ng-template #findContacts>
-              <a
+              <!-- <a
                 class="target"
                 href="https://www.google.com/search?q=leasing manager for+{{
                   shopping.CenterName
@@ -559,7 +559,20 @@
                 "
               >
                 Find Contacts
-              </a>
+              </a> -->
+                 <button
+                class="btn"
+               style="color:blue;"
+                (click)="
+                  finContactMessage(
+                    shopping.Id,
+                    shopping.CenterName,
+                    shopping.CenterAddress
+                  )
+                "
+              >
+                Find Contacts
+              </button>
             </ng-template>
           </div>
 
