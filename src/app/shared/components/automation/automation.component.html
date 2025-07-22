@@ -1,5 +1,11 @@
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
+
 <div class="automation-container">
-  <h2>Automation Responses</h2>
+  <h2>{{ shoppingCenterName }}</h2>
   <!-- Accept All button -->
   <div
     class="action-section d-flex justify-content-end m-4"
@@ -43,26 +49,23 @@
     <td>{{ i + 1 }}</td>
 
     <td *ngFor="let col of tableColumns" [ngClass]="{ 'email-cell': col.toLowerCase() === 'email' }">
-      {{ response.jsonResponse?.[col] || '-' }}
+      <ng-container *ngIf="col === 'Name'; else defaultColumn">
+        {{
+          ((response.jsonResponse?.Firstname || '') + ' ' + (response.jsonResponse?.Lastname || '')).trim()
+        }}
+      </ng-container>
+      <ng-template #defaultColumn>
+        {{ response.jsonResponse?.[col] || '-' }}
+      </ng-template>
     </td>
 
     <td>
-      <ng-container
-        *ngIf="
-          response.jsonResponse?.Email &&
-          response.jsonResponse.Email.trim() !== ''
-        "
-      >
+      <ng-container *ngIf="response.jsonResponse?.Email && response.jsonResponse.Email.trim() !== ''">
         <button class="accept-button" (click)="respondToAutomation(response)">
           Add Contact
         </button>
       </ng-container>
-      <ng-container
-        *ngIf="
-          !response.jsonResponse?.Email ||
-          response.jsonResponse.Email.trim() === ''
-        "
-      >
+      <ng-container *ngIf="!response.jsonResponse?.Email || response.jsonResponse.Email.trim() === ''">
         <button class="add-email-button">Find Email</button>
       </ng-container>
     </td>

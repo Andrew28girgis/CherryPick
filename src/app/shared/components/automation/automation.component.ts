@@ -15,7 +15,8 @@ export class AutomationComponent implements OnInit {
   automationResponses: any[] = []; // Changed to array to hold multiple responses
   tableColumns: string[] = [];
   shoppingCenterId!: number; // Added to hold shopping center ID
-
+  shoppingCenterDetails: any; // Added to hold shopping center details
+  shoppingCenterName: string = '';
   constructor(
     public activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService
@@ -47,7 +48,6 @@ export class AutomationComponent implements OnInit {
         data.json.forEach((item: any, responseIndex: number) => {
           let parsedJsonResponse = null;
 
-          // Parse JSON string to object/array
           if (
             item.automationJsonResponse &&
             typeof item.automationJsonResponse === 'string'
@@ -62,29 +62,23 @@ export class AutomationComponent implements OnInit {
             parsedJsonResponse = item.automationJsonResponse;
           }
 
-          if (Array.isArray(parsedJsonResponse)) {
-            parsedJsonResponse.forEach((contact: any, contactIndex: number) => {
-              this.automationResponses.push({
-                textResponse: item.automationTextResponse,
-                jsonResponse: contact,
-                originalResponseIndex: responseIndex,
-                contactIndex: contactIndex,
-              });
-
-              // Collect keys for table columns
-              Object.keys(contact).forEach((key) => columnSet.add(key));
-            });
-          } else if (parsedJsonResponse) {
+          const pushContact = (contact: any, contactIndex: number) => {
             this.automationResponses.push({
               textResponse: item.automationTextResponse,
-              jsonResponse: parsedJsonResponse,
+              jsonResponse: contact,
               originalResponseIndex: responseIndex,
-              contactIndex: 0,
+              contactIndex: contactIndex,
             });
 
-            Object.keys(parsedJsonResponse).forEach((key) =>
-              columnSet.add(key)
-            );
+            Object.keys(contact).forEach((key) => columnSet.add(key));
+          };
+
+          if (Array.isArray(parsedJsonResponse)) {
+            parsedJsonResponse.forEach((contact: any, contactIndex: number) => {
+              pushContact(contact, contactIndex);
+            });
+          } else if (parsedJsonResponse) {
+            pushContact(parsedJsonResponse, 0);
           } else {
             this.automationResponses.push({
               textResponse: item.automationTextResponse,
@@ -95,13 +89,48 @@ export class AutomationComponent implements OnInit {
           }
         });
 
-        // Set unique dynamic columns
-        this.tableColumns = Array.from(columnSet);
+        // Handle column names: merge Firstname + Lastname into one 'Name' column
+        let columnArray = Array.from(columnSet);
+
+        if (columnArray.includes('Firstname') || columnArray.includes('Lastname')) {
+          columnArray = columnArray.filter(col => col !== 'Firstname' && col !== 'Lastname');
+          columnArray.unshift('Name'); // or push if you want it at the end
+        }
+
+        this.tableColumns = columnArray;
+
         console.log('Automation Responses:', this.automationResponses);
         console.log('Dynamic Table Columns:', this.tableColumns);
       },
       error: (error) => {
         console.error('Error fetching automation response:', error);
+      },
+    });
+
+    this.GetShoppingCenterDetailsById();
+  }
+
+  GetShoppingCenterDetailsById(): void {
+    if (!this.shoppingCenterId) {
+      // Wait and retry after a short delay if shoppingCenterId is not yet set
+      setTimeout(() => this.GetShoppingCenterDetailsById(), 100);
+      return;
+    }
+    const body: any = {
+      Name: 'GetShoppingCenterDetailsById',
+      MainEntity: null,
+      Params: {
+        shoppingCenterId: this.shoppingCenterId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.shoppingCenterDetails = data.json;
+        this.shoppingCenterName =
+          this.shoppingCenterDetails?.CenterName || 'Unknown Shopping Center';
+        console.log('Shopping Center Details:', this.shoppingCenterDetails);
+        console.log('Shopping Center Name:', this.shoppingCenterName);
       },
     });
   }
@@ -130,8 +159,8 @@ export class AutomationComponent implements OnInit {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        console.log('Contact created successfully:', data);
+      next: () => {
+        this.showToast('Contact created successfully!');
       },
       error: (error) => {
         console.error('Error creating contact:', error);
@@ -149,5 +178,18 @@ export class AutomationComponent implements OnInit {
         console.warn(`Skipped index ${index}: Missing email.`);
       }
     });
+  }
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    } else {
+      console.warn('Toast elements not found in DOM.');
+    }
   }
 }
