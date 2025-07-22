@@ -105,6 +105,8 @@ export class MarketCardViewComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
           [42,  44].includes(element.kanbanTemplateStageId)
         );
+        console.log('Shopping Centers:', this.shoppingCenters);
+        
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.campainId);

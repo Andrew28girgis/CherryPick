@@ -1,9 +1,11 @@
 <div class="row g-4">
   <ng-container *ngFor="let shopping of shoppingCenters">
-    <div [ngClass]="{
+    <div
+      [ngClass]="{
         'col-12 col-sm-4': layout === 'grid',
         'col-12 col-sm-6': layout === 'side'
-      }">
+      }"
+    >
       <div class="card-window total">
         <div class="card-window_c">
           <!-- <a
@@ -14,10 +16,17 @@
               BuyBoxId 
             ]"
           > -->
-          <a class="info-value text-dark px-1" href="{{ shopping.DocsLink }}" target="_blank">
+          <a
+            class="info-value text-dark px-1"
+            href="{{ shopping.DocsLink }}"
+            target="_blank"
+          >
             <div class="main-img">
-              <img class="card-photo" src="{{ shopping.MainImage || 'assets/Images/DefaultImage.png' }}"
-                alt="{{ shopping.CenterName }}" />
+              <img
+                class="card-photo"
+                [src]="shopping.MainImage"
+                alt="{{ shopping.CenterName }}"
+              />
             </div>
           </a>
           <div class="content-wrap card-content">
@@ -30,24 +39,30 @@
                   : 0,
                 shopping.Id,
                 BuyBoxId 
-              ]">
-                  <p class="content-title total">
-                    {{
+              ]"> -->
+                <p class="content-title total">
+                  {{
                     shopping.CenterName.length > 22
-                    ? (shopping.CenterName | titlecase).slice(0, 22) + "..."
-                    : (shopping.CenterName | titlecase)
-                    }}
+                      ? (shopping.CenterName | titlecase).slice(0, 22) + "..."
+                      : (shopping.CenterName | titlecase)
+                  }}
 
-                    <span *ngIf="
-                        shopping.kanbanTemplateStageId === 43 ||
-                        shopping.kanbanTemplateStageId === 44
-                      " class="center-address shoppingcenterdata total">
-                      <b> ( {{ shopping.stageName | titlecase }} )</b>
-                    </span>
-                  </p>
-                </a> -->
+                  <span
+                    *ngIf="
+                      shopping.kanbanTemplateStageId === 43 ||
+                      shopping.kanbanTemplateStageId === 44
+                    "
+                    class="center-address shoppingcenterdata total"
+                  >
+                    <b> ( {{ shopping.stageName | titlecase }} )</b>
+                  </span>
+                </p>
+                <!-- </a> -->
 
-                <div class="card-address total" (click)="openMapViewPlace(MapViewPlace, shopping)">
+                <div
+                  class="card-address total"
+                  (click)="openMapViewPlace(MapViewPlace, shopping)"
+                >
                   <span class="mb-5">
                     {{ shopping.CenterAddress }},
                     {{ shopping.CenterCity | titlecase }},
@@ -62,79 +77,94 @@
                 </div> -->
 
                 <div class="row m-0">
-                  <div *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
-                    class="col-12 d-flex flex-column spec">
+                  <div
+                    *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+                    class="col-12 d-flex flex-column spec"
+                  >
                     <div class="d-flex flex-column">
                       <p class="nearset-category" style="color: #000">
                         <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
                       </p>
                       <p style="color: #000">
                         {{ item.RelationOrganizationName }}
-                        <img class="logo ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        <img
+                          class="logo ms-2"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                             item.RelationOrganizationId
-                          }}" [title]="item.RelationOrganizationName" alt="" />
+                          }}"
+                          [title]="item.RelationOrganizationName"
+                          alt=""
+                        />
                       </p>
                     </div>
                   </div>
                 </div>
-                <div *ngIf="getCheckedPlaces(shopping.ShoppingCenter.Places).length > 0" class="table-responsive mt-2"
-                  style="max-height: 150px; overflow-y: auto">
-                  <table class="table table-sm table-striped mb-0 small-table" style="font-size: 0.75rem">
-                    <thead>
-                      <tr>
-                        <th scope="col" style="min-width: 60px">Size (SF)</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Extras</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">S.Type</th>
-                        <!-- <th scope="col">Privacy</th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let place of shopping.ShoppingCenter.Places">
-                        <ng-container *ngIf="place.Checked">
-                          <td>{{ place.BuildingSizeSf | number }}</td>
-                          <td>
-                            {{
-                            place.ForLeasePrice
-                            ? (place.ForLeasePrice
-                            | currency : "USD" : "symbol" : "1.0-0")
-                            : "On Request"
-                            }}
-                          </td>
-                          <td>{{ place.Extras || "—" }}</td>
-                          <td>{{ place.LeaseType }}</td>
-                          <td>{{ place.SecondaryType }}</td>
-                          <!-- <td>
-                        <i
-                          *ngIf="!place.CampaignId"
-                          class="fa-solid fa-lock-open"
-                        ></i>
-                        <i
-                          *ngIf="place.CampaignId"
-                          class="fa-solid fa-lock"
-                          style="cursor: pointer"
-                          (click)="openMailPopup(shopping.lastOutgoingEmail.ID)"
-                        ></i>
-                      </td> -->
-                        </ng-container>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <ng-container *ngIf="shopping.ShoppingCenter">
+                  <div
+                    *ngIf="
+                      getCheckedPlaces(shopping.ShoppingCenter.Places).length >
+                      0
+                    "
+                    class="table-responsive mt-2"
+                    style="max-height: 150px; overflow-y: auto"
+                  >
+                    <table
+                      class="table table-sm table-striped mb-0 small-table"
+                      style="font-size: 0.75rem"
+                    >
+                      <thead>
+                        <tr>
+                          <th scope="col" style="min-width: 60px">Size (SF)</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Extras</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">S.Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let place of shopping.ShoppingCenter.Places"
+                        >
+                          <ng-container *ngIf="place.Checked">
+                            <td>{{ place.BuildingSizeSf | number }}</td>
+                            <td>
+                              {{
+                                place.ForLeasePrice
+                                  ? (place.ForLeasePrice
+                                    | currency : "USD" : "symbol" : "1.0-0")
+                                  : "On Request"
+                              }}
+                            </td>
+                            <td>{{ place.Extras || "—" }}</td>
+                            <td>{{ place.LeaseType }}</td>
+                            <td>{{ place.SecondaryType }}</td>
+                          </ng-container>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </ng-container>
               </div>
-              <div class="col-md-12 spec" *ngIf="
+              <div
+                class="col-md-12 spec"
+                *ngIf="
                   shopping.ShoppingCenter?.ManagerOrganization &&
                   placesRepresentative != false
-                ">
+                "
+              >
                 <hr class="small-hr mt-2" />
                 <span class="managed-by">Leased by</span>
                 <p class="spec-head">
-                  <img class="logo" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  <img
+                    class="logo"
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       shopping.ShoppingCenter.ManagerOrganization[0].ID
-                    }}" [title]="
+                    }}"
+                    [title]="
                       shopping.ShoppingCenter.ManagerOrganization[0].Name
-                    " alt="" />
+                    "
+                    alt=""
+                  />
                   {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
 
                   <!-- <img
@@ -148,21 +178,26 @@
                   /> -->
                   <br />
                   <ng-template #popoverContent>
-                    <div *ngFor="
+                    <div
+                      *ngFor="
                         let org of shopping.ShoppingCenter.ManagerOrganization
-                      " class="contact-container table-texttt">
+                      "
+                      class="contact-container table-texttt"
+                    >
                       <p class="text-bold m-0">
                         {{ org.Firstname | titlecase }}
                         {{ org.LastName | titlecase }}
                       </p>
                       <p class="m-0">{{ org.CellPhone }}</p>
                       <p class="m-0">{{ org.Email }}</p>
-                      <hr *ngIf="
+                      <hr
+                        *ngIf="
                           !isLast(
                             org,
                             shoppingCenter.ShoppingCenter.ManagerOrganization
                           )
-                        " />
+                        "
+                      />
                     </div>
                   </ng-template>
                 </p>
@@ -235,7 +270,6 @@
             </svg>
           </div>
         </div> -->
-
           </div>
         </div>
       </div>
@@ -244,38 +278,47 @@
 </div>
 
 <!-- No Shopping Centers Message -->
-<div 
-  *ngIf="!shoppingCenters || shoppingCenters.length === 0" 
+<div
+  *ngIf="!shoppingCenters || shoppingCenters.length === 0"
   class="no-shopping-centers-container d-flex flex-column align-items-center justify-content-center p-5"
 >
   <div class="text-center">
     <!-- Icon -->
-    <svg 
-      width="80" 
-      height="80" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg" 
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       class="mb-3"
-      style="color: #6c757d;"
+      style="color: #6c757d"
     >
-      <path 
-        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" 
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
         fill="currentColor"
       />
     </svg>
-    
+
     <!-- Main Message -->
-    <h4 class="mb-3" style="color: #495057; font-weight: 600;">
+    <h4 class="mb-3" style="color: #495057; font-weight: 600">
       No Shopping Centers Available
     </h4>
-    
+
     <!-- Description -->
-    <p class="mb-0" style="color: #6c757d; font-size: 16px; max-width: 400px; line-height: 1.5;">
-      To display shopping centers in this view, you need to change status to 'Shared With Tenant'. 
-      Please update the shopping center status from your management dashboard.
+    <p
+      class="mb-0"
+      style="
+        color: #6c757d;
+        font-size: 16px;
+        max-width: 400px;
+        line-height: 1.5;
+      "
+    >
+      To display shopping centers in this view, you need to change status to
+      'Shared With Tenant'. Please update the shopping center status from your
+      management dashboard.
     </p>
-    
+
     <!-- Optional: Action Button -->
 
     <!-- <div class="mt-4">
