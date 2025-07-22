@@ -39,10 +39,15 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.spinner.hide();
+      console.log(`from initzzz`);
+      
     this.checkMailGenerated();
   }
 
   ngAfterViewInit(): void {
+    console.log(`testing`);
+    console.log(this.emails);
+    
     const interval = setInterval(() => {
       if (this.emails && this.emails.length > 0) {
         this.bodyDivs.forEach((divRef, index) => {
