@@ -26,6 +26,7 @@ import { ManagedByBrokerComponent } from './shopping-center-table/contact-broker
 import { GenerateEmailComponent } from './shopping-center-table/contact-broker/components/generate-email/generate-email.component';
 import { PreviewEmailComponent } from './shopping-center-table/contact-broker/components/preview-email/preview-email.component';
 import { FilterRepliesPipe } from './shopping-center-table/social-view/social-view.component';
+import { NewContactBrokerComponent } from './shopping-center-table/contact-broker/components/new-contact-broker/new-contact-broker.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { FilterRepliesPipe } from './shopping-center-table/social-view/social-vi
     GenerateEmailComponent,
     PreviewEmailComponent,
     FilterRepliesPipe,
+    NewContactBrokerComponent,
   ],
   imports: [
     CommonModule,
