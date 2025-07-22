@@ -686,9 +686,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
     (window as any).chrome.webview.postMessage(
       JSON.stringify({
         type: 'find-contacts',
-        shoppingCenterName: { shoppingCenterName },
-        shoppingCenterAddress: { shoppingCenterAddress },
-        shoppingCenterId: { shoppingCenterId },
+        shoppingCenterName: shoppingCenterName,
+        shoppingCenterAddress: shoppingCenterAddress,
+        shoppingCenterId: shoppingCenterId,
       })
     );
   }
