@@ -214,12 +214,12 @@ const routes: Routes = [
   },
   {
     path: 'spinner',
-    component:AiSpinnerComponent ,
+    component: AiSpinnerComponent,
     data: { hideHeader: true },
   },
-    {
+  {
     path: 'aiFailed',
-    component:AiFailedComponent ,
+    component: AiFailedComponent,
     data: { hideHeader: true },
   },
   {
