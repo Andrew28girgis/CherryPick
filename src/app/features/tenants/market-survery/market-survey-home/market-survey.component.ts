@@ -89,7 +89,7 @@ export class MarketSurveyComponent implements OnInit {
       this.loginSharedToken = localStorage.getItem('loginToken');
     });
 
-    this.currentView = this.isMobileView ? '4' : '4';
+    this.currentView = this.isMobileView ? '5' : '3';
 
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
