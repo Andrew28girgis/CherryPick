@@ -29,6 +29,7 @@ import { EmailInfoComponent } from './features/email-info/email-info.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 import { AiSpinnerComponent } from './shared/components/ai-spinner/ai-spinner.component';
 import { AiFailedComponent } from './shared/components/ai-failed/ai-failed.component';
+import { AutomationComponent } from './shared/components/automation/automation.component';
 
 const routes: Routes = [
   {
@@ -214,12 +215,17 @@ const routes: Routes = [
   },
   {
     path: 'spinner',
-    component:AiSpinnerComponent ,
+    component: AiSpinnerComponent,
     data: { hideHeader: true },
   },
-    {
+  {
     path: 'aiFailed',
-    component:AiFailedComponent ,
+    component: AiFailedComponent,
+    data: { hideHeader: true },
+  },
+  {
+    path: 'automation/:automationId',
+    component: AutomationComponent,
     data: { hideHeader: true },
   },
   {
