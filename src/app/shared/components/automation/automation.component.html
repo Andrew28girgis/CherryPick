@@ -1,1 +1,78 @@
-<p>automation works!</p>
+<div class="automation-container">
+  <h2>Automation Responses</h2>
+  <!-- Accept All button -->
+  <div
+    class="action-section d-flex justify-content-end m-4"
+    *ngIf="automationResponses.length > 0"
+  >
+    <button class="accept-button" (click)="acceptAll()">
+      Add All Contacts
+    </button>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="automationResponses.length === 0">
+    <p>No automation responses found.</p>
+  </div>
+
+  <!-- Message Box (shown only once) -->
+  <div
+    class="response-section"
+    *ngIf="
+      automationResponses.length > 0 && automationResponses[0]?.textResponse
+    "
+  >
+    <h4>Message</h4>
+    <div class="message-box">
+      {{ automationResponses[0].textResponse }}
+    </div>
+  </div>
+
+  <!-- Table View -->
+  <div class="table-responsive">
+    <table class="contacts-table" *ngIf="automationResponses.length > 0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let response of automationResponses; let i = index">
+          <td>{{ i + 1 }}</td>
+
+          <td>{{ response.jsonResponse?.Firstname || "-" }}</td>
+          <td>{{ response.jsonResponse?.Lastname || "-" }}</td>
+          <td class="email-cell">{{ response.jsonResponse?.Email || "-" }}</td>
+
+          <td>
+            <ng-container
+              *ngIf="
+                response.jsonResponse?.Email &&
+                response.jsonResponse.Email.trim() !== ''
+              "
+            >
+              <button
+                class="accept-button"
+                (click)="respondToAutomation(response)"
+              >
+                Add Contact
+              </button>
+            </ng-container>
+            <ng-container
+              *ngIf="
+                !response.jsonResponse?.Email ||
+                response.jsonResponse.Email.trim() === ''
+              "
+            >
+              <button class="add-email-button">Find Email</button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
