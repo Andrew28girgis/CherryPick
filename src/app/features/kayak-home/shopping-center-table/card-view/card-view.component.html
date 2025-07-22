@@ -68,9 +68,7 @@
               >
                 <div class="content-title cursor" style="white-space: pre-line">
                   {{
-                    shopping.CenterName.length > 22
-                      ? (shopping.CenterName | titlecase).slice(0, 22) + "..."
-                      : (shopping.CenterName | titlecase)
+                    shopping.CenterName
                   }}
                 </div>
                 <span
