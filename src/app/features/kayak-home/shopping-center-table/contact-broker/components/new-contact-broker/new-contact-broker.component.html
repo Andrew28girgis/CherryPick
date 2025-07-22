@@ -68,37 +68,37 @@
       </div>
     </div>
 
-    <!-- <div class="generate-btn">
-    <button [disabled]="!dataLoaded" (click)="PutMailsDraft()">
-      <span>Generate Email </span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 256 256"
-        id="arrow-right"
-      >
-        <rect width="256" height="256" fill="none"></rect>
-        <line
-          x1="40"
-          x2="216"
-          y1="128"
-          y2="128"
-          fill="none"
-          stroke="#fff"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="24"
-        ></line>
-        <polyline
-          fill="none"
-          stroke="#fff"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="24"
-          points="144 56 216 128 144 200"
-        ></polyline>
-      </svg>
-    </button>
-  </div> -->
+    <div class="generate-btn">
+      <button [disabled]="!dataLoaded" (click)="PutMailsDraft()">
+        <span>Generate Email </span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 256 256"
+          id="arrow-right"
+        >
+          <rect width="256" height="256" fill="none"></rect>
+          <line
+            x1="40"
+            x2="216"
+            y1="128"
+            y2="128"
+            fill="none"
+            stroke="#fff"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="24"
+          ></line>
+          <polyline
+            fill="none"
+            stroke="#fff"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="24"
+            points="144 56 216 128 144 200"
+          ></polyline>
+        </svg>
+      </button>
+    </div>
     @if (!dataLoaded) {
     <div
       class="h-100 w-100 d-flex flex-column align-items-center justify-content-center gap-3"
@@ -151,67 +151,6 @@
       }
     </div>
     }
-  </div>
-
-  <div class="continue-btn">
-    <button [disabled]="!dataLoaded" (click)="PutMailsDraft()">
-      <span>Generate Email </span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 256 256"
-        id="arrow-right"
-      >
-        <rect width="256" height="256" fill="none"></rect>
-        <line
-          x1="40"
-          x2="216"
-          y1="128"
-          y2="128"
-          fill="none"
-          stroke="#fff"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="24"
-        ></line>
-        <polyline
-          fill="none"
-          stroke="#fff"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="24"
-          points="144 56 216 128 144 200"
-        ></polyline>
-      </svg>
-    </button>
-    <!-- <button (click)="onSubmit()">
-      <span>Save & Continue</span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 256 256"
-        id="arrow-right"
-      >
-        <rect width="256" height="256" fill="none"></rect>
-        <line
-          x1="40"
-          x2="216"
-          y1="128"
-          y2="128"
-          fill="none"
-          stroke="#fff"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="24"
-        ></line>
-        <polyline
-          fill="none"
-          stroke="#fff"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="24"
-          points="144 56 216 128 144 200"
-        ></polyline>
-      </svg>
-    </button> -->
   </div>
 </div>
 
