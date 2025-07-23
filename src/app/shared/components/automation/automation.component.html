@@ -21,16 +21,14 @@
     <p>No automation responses found.</p>
   </div>
 
-  <!-- Message Box (shown only once) -->
+  <!-- Message Box (now shows ConclusionMessage) -->
   <div
     class="response-section"
-    *ngIf="
-      automationResponses.length > 0 && automationResponses[0]?.textResponse
-    "
+    *ngIf="automationResponses.length > 0 && conclusionMessage"
   >
     <h4>Message</h4>
     <div class="message-box">
-      {{ automationResponses[0].textResponse }}
+      {{ conclusionMessage }}
     </div>
   </div>
 
@@ -39,14 +37,14 @@
     <table class="contacts-table" *ngIf="automationResponses.length > 0">
       <thead>
         <tr>
-          <th>#</th>
+          <!-- <th>#</th> -->
           <th *ngFor="let col of tableColumns">{{ col }}</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let response of automationResponses; let i = index">
-          <td>{{ i + 1 }}</td>
+          <!-- <td>{{ i + 1 }}</td> -->
 
           <td
             *ngFor="let col of tableColumns"
@@ -55,9 +53,9 @@
             <ng-container *ngIf="col === 'Name'; else defaultColumn">
               {{
                 (
-                  (response.jsonResponse?.Firstname || "") +
+                  (response.jsonResponse?.firstname || "") +
                   " " +
-                  (response.jsonResponse?.Lastname || "")
+                  (response.jsonResponse?.lastname || "")
                 ).trim()
               }}
             </ng-container>
@@ -67,7 +65,8 @@
           </td>
 
           <td>
-            <ng-container *ngIf="isValidEmail(response.jsonResponse?.Email)">
+            <!-- Show Add Contact button only for valid emails (contains @) -->
+            <ng-container *ngIf="isValidEmail(response.jsonResponse?.email)">
               <button
                 class="accept-button"
                 (click)="respondToAutomation(response)"
@@ -75,12 +74,8 @@
                 Add Contact
               </button>
             </ng-container>
-            <ng-container
-              *ngIf="
-                !isValidEmail(response.jsonResponse?.Email) ||
-                response.jsonResponse.Email.trim() === ''
-              "
-            >
+            <!-- Show Find Email button for invalid or missing emails -->
+            <ng-container *ngIf="!isValidEmail(response.jsonResponse?.email)">
               <button class="add-email-button">Find Email</button>
             </ng-container>
           </td>

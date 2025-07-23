@@ -17,12 +17,13 @@ export class AutomationComponent implements OnInit {
   shoppingCenterId!: number;
   shoppingCenterDetails: any;
   shoppingCenterName: string = '';
+  conclusionMessage: string = ''; // Added to store the conclusion message
   constructor(
     public activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService
   ) {}
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       const id = params['automationId'];
       this.automationId = id;
@@ -62,9 +63,14 @@ export class AutomationComponent implements OnInit {
             parsedJsonResponse = item.automationJsonResponse;
           }
 
+          // Extract the conclusion message
+          if (parsedJsonResponse?.ConclusionMessage) {
+            this.conclusionMessage = parsedJsonResponse.ConclusionMessage;
+          }
+
           const pushContact = (contact: any, contactIndex: number) => {
             this.automationResponses.push({
-              textResponse: item.automationTextResponse,
+              conclusionMessage: this.conclusionMessage, // Store the message with each contact
               jsonResponse: contact,
               originalResponseIndex: responseIndex,
               contactIndex: contactIndex,
@@ -73,15 +79,24 @@ export class AutomationComponent implements OnInit {
             Object.keys(contact).forEach((key) => columnSet.add(key));
           };
 
-          if (Array.isArray(parsedJsonResponse)) {
-            parsedJsonResponse.forEach((contact: any, contactIndex: number) => {
+          // Handle the new structure with Contacts
+          if (parsedJsonResponse?.Contacts && Array.isArray(parsedJsonResponse.Contacts)) {
+            parsedJsonResponse.Contacts.forEach((contact: any, contactIndex: number) => {
               pushContact(contact, contactIndex);
             });
-          } else if (parsedJsonResponse) {
-            pushContact(parsedJsonResponse, 0);
+          } else if (parsedJsonResponse && !parsedJsonResponse.Contacts) {
+            // Fallback for old structure
+            if (Array.isArray(parsedJsonResponse)) {
+              parsedJsonResponse.forEach((contact: any, contactIndex: number) => {
+                pushContact(contact, contactIndex);
+              });
+            } else {
+              pushContact(parsedJsonResponse, 0);
+            }
           } else {
+            // No contacts found
             this.automationResponses.push({
-              textResponse: item.automationTextResponse,
+              conclusionMessage: this.conclusionMessage,
               jsonResponse: null,
               originalResponseIndex: responseIndex,
               contactIndex: 0,
@@ -89,15 +104,15 @@ export class AutomationComponent implements OnInit {
           }
         });
 
-        // Handle column names: merge Firstname + Lastname into one 'Name' column
+        // Handle column names: merge firstname + lastname into one 'Name' column
         let columnArray = Array.from(columnSet);
 
         if (
-          columnArray.includes('Firstname') ||
-          columnArray.includes('Lastname')
+          columnArray.includes('firstname') ||
+          columnArray.includes('lastname')
         ) {
           columnArray = columnArray.filter(
-            (col) => col !== 'Firstname' && col !== 'Lastname'
+            (col) => col !== 'firstname' && col !== 'lastname'
           );
           columnArray.unshift('Name'); // or push if you want it at the end
         }
@@ -106,6 +121,7 @@ export class AutomationComponent implements OnInit {
 
         console.log('Automation Responses:', this.automationResponses);
         console.log('Dynamic Table Columns:', this.tableColumns);
+        console.log('Consolidated Message:', this.conclusionMessage);
       },
       error: (error) => {
         console.error('Error fetching automation response:', error);
@@ -153,7 +169,7 @@ export class AutomationComponent implements OnInit {
   respondToAutomation(response: any): void {
     const contact = response.jsonResponse;
 
-    if (!this.isValidEmail(contact?.Email)) {
+    if (!this.isValidEmail(contact?.email)) {
       console.warn('Invalid or missing email. Skipping contact creation.');
       return;
     }
@@ -161,10 +177,10 @@ export class AutomationComponent implements OnInit {
     const body: any = {
       Name: 'CreateContactAfterAutomation',
       Params: {
-        OrganizationName: contact.OrganizationName || '',
-        FirstName: contact.Firstname || '',
-        LastName: contact.Lastname || '',
-        Email: contact.Email || '',
+        OrganizationName: contact.organizationname || '',
+        FirstName: contact.firstname || '',
+        LastName: contact.lastname || '',
+        Email: contact.email || '',
         ShoppingCenterId: this.shoppingCenterId,
       },
     };
@@ -175,6 +191,7 @@ export class AutomationComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating contact:', error);
+        this.showToast('Error creating contact. Please try again.');
       },
     });
   }
@@ -183,7 +200,7 @@ export class AutomationComponent implements OnInit {
     this.automationResponses.forEach((item, index) => {
       const contact = item.jsonResponse;
 
-      if (this.isValidEmail(contact?.Email)) {
+      if (this.isValidEmail(contact?.email)) {
         this.respondToAutomation(item);
       } else {
         console.warn(`Skipped index ${index}: Invalid or missing email.`);
