@@ -702,13 +702,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
           Name: c.name,
           Firstname: c.firstname ?? '',
           LastName: c.lastname ?? '', // no source in original, so set to empty or default
-          CellPhone: 0, // no source in original, set to default number
           Email: c.email,
           ContactId: c.contactId,
         }));
         console.log('after refactor', newContacts);
 
-        const center = this.cardsSideList.find((sc) => (sc.Id = centerId));
+        const center = this.cardsSideList.find((sc) => sc.Id == centerId);
 
         if (!center) {
           return;
