@@ -179,7 +179,7 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button
+  <!-- <button
     type="button"
     class="x-btn x-btn-outline"
     (click)="closeActiveModal()"
@@ -187,14 +187,14 @@
     <span>
       {{ secondaryButtonText }}
     </span>
-  </button>
+  </button> -->
 
   <button
     class="x-btn x-btn-primary"
     [disabled]="campaignForm.invalid || campaignMaxSize < campaignMinSize"
     (click)="createNewCampaign()"
   >
-    <span>Get Start</span>
+    <span>Get Started</span>
   </button>
 </div>
 

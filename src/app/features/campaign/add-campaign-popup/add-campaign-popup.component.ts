@@ -11,9 +11,11 @@ import { Tenant } from 'src/app/shared/models/tenant';
 })
 export class AddCampaignPopupComponent implements OnInit {
   @Input() organizationId!: number;
+  @Input() organizationName!: number;
   @Input() popupTitle: string = 'Launch Your Campaign';
   @Input() secondaryButtonText: string = 'Cancel';
   @Output() onSecondaryButtonClicked = new EventEmitter<boolean>();
+  campaignId!: number;
 
   protected campaignName: string = '';
   protected isPrivateCampaign: number = 1;
@@ -70,8 +72,11 @@ export class AddCampaignPopupComponent implements OnInit {
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        const url = 'https://www.google.com/maps/search/shopping+centers+malls';
-        window.location.href = `${url}?campaignId=${response.json[0].id}&campaignName=${this.campaignName}&organizationId=${this.organizationId}`;
+        const campaignId = response.json[0].id;
+        this.campaignId = campaignId;
+        this.navigateToMap();
+        // const url = 'https://www.google.com/maps/search/shopping+centers+malls';
+        // window.location.href = `${url}?campaignId=${response.json[0].id}&campaignName=${this.campaignName}&organizationId=${this.organizationId}`;
       } else {
         this.activeModalService.close();
       }
@@ -81,5 +86,9 @@ export class AddCampaignPopupComponent implements OnInit {
   protected closeActiveModal(): void {
     this.onSecondaryButtonClicked.emit(true);
     this.activeModalService.close();
+  }
+    navigateToMap(): void {
+    const url = 'https://www.google.com/maps/search/shopping+centers+malls';
+    window.location.href = `${url}?campaignId=${this.campaignId}&campaignName=${this.organizationName}&organizationId=${this.organizationId}`;
   }
 }
