@@ -708,7 +708,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         }));
         console.log('after refactor', newContacts);
 
-        const center = this.cardsSideList.find((sc) => (sc.Id = centerId));
+        const center = this.cardsSideList.find((sc) => sc.Id == centerId);
 
         if (!center) {
           return;
