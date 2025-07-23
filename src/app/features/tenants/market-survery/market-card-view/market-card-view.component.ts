@@ -32,7 +32,7 @@ export class MarketCardViewComponent implements OnInit {
 
   @Input() layout: 'grid' | 'side' = 'grid'; // default layout
   campainId!: any;
-
+  isLoadingShoppingCenters: boolean = true;
   constructor(
     public activatedRoute: ActivatedRoute,
     private stateService: StateService,
@@ -78,9 +78,10 @@ export class MarketCardViewComponent implements OnInit {
       },
     });
   }
-  getShoppingCenters(): void {
+getShoppingCenters(): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
+      this.isLoadingShoppingCenters = false; // Set loading to false
       this.getBuyBoxPlaces(this.campainId);
       return;
     }
@@ -89,8 +90,7 @@ export class MarketCardViewComponent implements OnInit {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         CampaignId: this.campainId,
-        ShoppingCenterStageId: 0, // Load all centers
-
+        ShoppingCenterStageId: 0,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -103,14 +103,20 @@ export class MarketCardViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
         this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
-          [42,  44].includes(element.kanbanTemplateStageId)
+          [42, 44].includes(element.kanbanTemplateStageId)
         );
+
         console.log('Shopping Centers:', this.shoppingCenters);
-        
         this.stateService.setShoppingCenters(this.shoppingCenters);
+        this.isLoadingShoppingCenters = false; // Set loading to false after data is loaded
         this.spinner.hide();
         this.getBuyBoxPlaces(this.campainId);
       },
+      error: (error) => {
+        console.error('Error loading shopping centers:', error);
+        this.isLoadingShoppingCenters = false; // Set loading to false on error
+        this.spinner.hide();
+      }
     });
   }
   getBuyBoxPlaces(campaignId: number): void {

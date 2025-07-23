@@ -279,7 +279,7 @@
 
 <!-- No Shopping Centers Message -->
 <div
-  *ngIf="!shoppingCenters || shoppingCenters.length === 0"
+  *ngIf="!isLoadingShoppingCenters"
   class="no-shopping-centers-container d-flex flex-column align-items-center justify-content-center p-5"
 >
   <div class="text-center">

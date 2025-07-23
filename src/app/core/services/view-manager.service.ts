@@ -665,32 +665,103 @@ public getCurrentLoadingState(): boolean
   /**
    * Initialize street view
    */
-  public initializeStreetView(
-    elementId: string,
-    lat: number,
-    lng: number,
-    heading = 165,
-    pitch = 0
-  ): any {
-    const streetViewElement = document.getElementById(elementId);
+private streetViewLastRequestTime = 0;
+private readonly STREET_VIEW_MIN_DELAY = 5000; // 1 second between requests
+private activeStreetViews: {[key: string]: google.maps.StreetViewPanorama} = {};
+private streetViewCache: {[key: string]: any} = {};
 
-    if (!streetViewElement) {
-      return null;
+public async initializeStreetView(
+  elementId: string,
+  lat: number,
+  lng: number,
+  heading = 165,
+  pitch = 0
+): Promise<any> {
+  try {
+    // Throttle requests
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.streetViewLastRequestTime;
+    
+    if (timeSinceLastRequest < this.STREET_VIEW_MIN_DELAY) {
+      await new Promise(resolve => 
+        setTimeout(resolve, this.STREET_VIEW_MIN_DELAY - timeSinceLastRequest)
+      );
+    }
+    
+    this.streetViewLastRequestTime = Date.now();
+
+    // Check cache
+    const cacheKey = `${lat.toFixed(6)}_${lng.toFixed(6)}`;
+    if (this.streetViewCache[cacheKey]) {
+      return this.streetViewCache[cacheKey];
     }
 
-    const panorama = new google.maps.StreetViewPanorama(
-      streetViewElement as HTMLElement,
-      {
-        position: { lat, lng },
-        pov: { heading, pitch },
-        zoom: 1,
-      }
-    );
+    // Clean up previous instance
+    if (this.activeStreetViews[elementId]) {
+      this.activeStreetViews[elementId].unbind('pano_changed');
+      this.activeStreetViews[elementId].setVisible(false);
+      delete this.activeStreetViews[elementId];
+    }
 
-    this.addMarkerToStreetView(panorama, lat, lng);
+    const streetViewElement = document.getElementById(elementId);
+    if (!streetViewElement) {
+      throw new Error('Street View container element not found');
+    }
 
-    return panorama;
+    streetViewElement.innerHTML = '';
+
+    const { StreetViewService, StreetViewPanorama } = await google.maps.importLibrary('streetView') as any;
+    const svService = new StreetViewService();
+    
+    return new Promise((resolve) => {
+      svService.getPanorama({
+        location: { lat, lng },
+        radius: 50,
+        source: google.maps.StreetViewSource.OUTDOOR
+      }, (data: any, status: any) => {
+        if (status === 'OK') {
+          const panorama = new StreetViewPanorama(streetViewElement, {
+            position: { lat, lng },
+            pov: { heading, pitch },
+            zoom: 1,
+            addressControl: false,
+            linksControl: false,
+            panControl: false,
+            enableCloseButton: false,
+            showRoadLabels: false,
+            disableDefaultUI: true
+          });
+
+          this.addMarkerToStreetView(panorama, lat, lng);
+          this.activeStreetViews[elementId] = panorama;
+          this.streetViewCache[cacheKey] = panorama;
+          setTimeout(() => delete this.streetViewCache[cacheKey], 300000);
+          resolve(panorama);
+        } else {
+          streetViewElement.innerHTML = `
+            <div class="street-view-fallback">
+              <i class="fa-solid fa-street-view"></i>
+              <p>Street View is not available for this location</p>
+            </div>
+          `;
+          resolve(null);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error initializing Street View:', error);
+    const streetViewElement = document.getElementById(elementId);
+    if (streetViewElement) {
+      streetViewElement.innerHTML = `
+        <div class="street-view-error">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>Error loading Street View</p>
+        </div>
+      `;
+    }
+    return null;
   }
+}
 
   /**
    * Add marker to street view

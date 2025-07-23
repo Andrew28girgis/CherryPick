@@ -622,7 +622,7 @@
   </div>
 </ng-template>
 
-<ng-template #StreetViewPlace let-modal>
+<!-- <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
     <iframe
       [src]="sanitizedUrl"
@@ -638,6 +638,9 @@
     class="h700"
     *ngIf="!General.modalObject.StreetViewURL"
   ></div>
+</ng-template> -->
+<ng-template #StreetViewPlace let-modal>
+  <div id="street-view" class="h700"></div>
 </ng-template>
 
 <ng-template #deleteSingleShoppingCenterModal let-modal>
