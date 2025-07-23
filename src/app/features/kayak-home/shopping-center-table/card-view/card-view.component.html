@@ -317,8 +317,6 @@
                   >Deleted</span
                 >
               </a>
-
-
             </div>
             <div
               class="card-address cursor"
@@ -504,9 +502,9 @@
                 <img
                   class="ms-2 cursor"
                   src="../../../assets/Images/Icons/eye.png"
-                  alt="View Manager Details"
+                  alt="Organization Brokers"
                   [ngbPopover]="popoverContent"
-                  popoverTitle="Organization Contact Info"
+                  popoverTitle="Organization Brokers"
                   triggers="click:outside"
                   [placement]="'top'"
                 />
@@ -562,16 +560,16 @@
               >
                 Find Contacts
               </a> -->
-                 <button
+              <button
                 class="btn"
-               style="color:blue;"
+                style="color: blue"
                 (click)="
                   finContactMessage(
                     shopping
                   )
                 "
               >
-                Find Contacts
+                Find Broker
               </button>
             </ng-template>
           </div>
@@ -622,7 +620,7 @@
   </div>
 </ng-template>
 
-<ng-template #StreetViewPlace let-modal>
+<!-- <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
     <iframe
       [src]="sanitizedUrl"
@@ -638,6 +636,9 @@
     class="h700"
     *ngIf="!General.modalObject.StreetViewURL"
   ></div>
+</ng-template> -->
+<ng-template #StreetViewPlace let-modal>
+  <div id="street-view" class="h700"></div>
 </ng-template>
 
 <ng-template #deleteSingleShoppingCenterModal let-modal>

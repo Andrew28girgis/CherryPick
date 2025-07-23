@@ -17,6 +17,7 @@ export class SummeryComponent implements OnInit {
   private tenantModal!: TemplateRef<any>;
   private tenants: Tenant[] = [];
   private newTenantId!: number;
+  private newTenantName!: string;
 
   protected sortBy: string = 'newest';
   protected sortOptions = [
@@ -83,6 +84,8 @@ export class SummeryComponent implements OnInit {
     modalRef.componentInstance.popupTitle = 'Launch Your First Campaign';
     modalRef.componentInstance.secondaryButtonText = 'Skip';
     modalRef.componentInstance.organizationId = this.newTenantId;
+    modalRef.componentInstance.organizationName = this.newTenantName;
+    
     const subscription: Subscription =
       modalRef.componentInstance.onSecondaryButtonClicked.subscribe(
         (value: boolean) => {
@@ -110,11 +113,13 @@ export class SummeryComponent implements OnInit {
     this.placeService.GenericAPI(body).subscribe((orgResponse: any) => {
       this.spinner.hide();
       const orgId = orgResponse?.json?.[0]?.id;
+      const orgName = orgResponse?.json?.[0]?.name;
       if (!orgId) {
         alert('Tenant creation failed. Please try again.');
         return;
       } else {
         this.newTenantId = orgId;
+        this.newTenantName = orgName;
         this.modalService.dismissAll();
         this.resetAddTenantForm();
         this.openCampaignModal();

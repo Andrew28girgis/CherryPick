@@ -32,11 +32,11 @@ export class MarketSurveyComponent implements OnInit {
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
     },
-    {
-      text: 'Side',
-      icon: '../../../assets/Images/Icons/element-3.png',
-      status: 2,
-    },
+    // {
+    //   text: 'Side',
+    //   icon: '../../../assets/Images/Icons/element-3.png',
+    //   status: 2,
+    // },
     {
       text: 'Cards',
       icon: '../../../assets/Images/Icons/grid-1.png',
@@ -47,11 +47,11 @@ export class MarketSurveyComponent implements OnInit {
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
-    {
-      text: 'Social',
-      icon: '../../../assets/Images/Icons/globe-solid.svg',
-      status: 5,
-    },
+    // {
+    //   text: 'Social',
+    //   icon: '../../../assets/Images/Icons/globe-solid.svg',
+    //   status: 5,
+    // },
   ];
   selectedOption!: number;
   isMobileView!: boolean;
@@ -97,6 +97,9 @@ export class MarketSurveyComponent implements OnInit {
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
     }
+  }
+    goBack(): void {
+    window.history.back();
   }
 
   getNeareastCategoryName(categoryId: number) {

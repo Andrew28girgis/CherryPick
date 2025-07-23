@@ -7,9 +7,12 @@
         class="nav-right-responsive col-4 justify-content-strat justify-content-sm-strat gap-0 gap-sm-2"
       >
 <img _ngcontent-ng-c222951368="" src="../../../assets/Images/Emily Logo-1.png" class="cherry-logo" tabindex="0" ng-reflect-router-link="/summary">
-        <p class="titleResponsive m-0 ms-2 d-none d-sm-flex">
+        <!-- <p class="titleResponsive m-0 ms-2 d-none d-sm-flex">
           {{ organizationName }}
-        </p>
+        </p> -->
+        <div class="mx-2">
+          <a (click)="goBack()" style="cursor:pointer; text-decoration:underline; color: blue;">Back to {{organizationName}}</a>
+        </div>
       </div>
 
       <div

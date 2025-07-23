@@ -181,6 +181,7 @@ export class AutomationComponent implements OnInit {
         FirstName: contact.firstname || '',
         LastName: contact.lastname || '',
         Email: contact.email || '',
+        Position: contact.position || '',
         ShoppingCenterId: this.shoppingCenterId,
       },
     };
@@ -219,5 +220,9 @@ export class AutomationComponent implements OnInit {
     } else {
       console.warn('Toast elements not found in DOM.');
     }
+  }
+  close(){
+    (window as any).chrome.webview.postMessage('close-automation-window');
+      return false;
   }
 }
