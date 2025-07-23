@@ -462,14 +462,14 @@
                   </p>
                   <p>
                     {{ item.RelationOrganizationName }}
-                    <img
+                    <!-- <img
                       class="logo ms-2"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         item.RelationOrganizationId
                       }}"
                       [title]="item.RelationOrganizationName"
                       alt=""
-                    />
+                    /> -->
                   </p>
                 </div>
               </div>
@@ -488,14 +488,14 @@
               <span class="managed-by">Leased by</span>
 
               <div>
-                <img
+                <!-- <img
                   class="logo"
                   src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                     shopping.ShoppingCenter.ManagerOrganization[0].ID
                   }}"
                   [title]="shopping.ShoppingCenter.ManagerOrganization[0].Name"
                   alt=""
-                />
+                /> -->
               </div>
               <div class="width55">
                 {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
