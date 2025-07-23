@@ -98,6 +98,9 @@ export class MarketSurveyComponent implements OnInit {
       this.selectedOption = selectedOption.status;
     }
   }
+    goBack(): void {
+    window.history.back();
+  }
 
   getNeareastCategoryName(categoryId: number) {
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
