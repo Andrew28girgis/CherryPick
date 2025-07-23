@@ -221,4 +221,8 @@ export class AutomationComponent implements OnInit {
       console.warn('Toast elements not found in DOM.');
     }
   }
+  close(){
+    (window as any).chrome.webview.postMessage('close-automation-window');
+      return false;
+  }
 }
