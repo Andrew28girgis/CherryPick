@@ -7,6 +7,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import * as CryptoJS from 'crypto-js';
 import { DecodeService } from 'src/app/core/services/decode.service';
 import { DropboxService } from 'src/app/core/services/dropbox.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -84,6 +85,24 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  private async getMailsCount(): Promise<void> {
+    const request = {
+      Name: 'GetMailsCount',
+      Params: {},
+    };
+    const response = await firstValueFrom(
+      this.placesService.GenericAPI(request)
+    );
+    if (response.json && response.json[0]) {
+      const mailCount = response.json[0].mailCount;
+      if (mailCount && mailCount > 100) {
+        this.router.navigate(['/campaigns']);
+      } else {
+        this.router.navigate(['/settings']);
+      }
+    }
+  }
+
   private handleGUIDLoginSuccess(response: any): void {
     const {
       organizationId,
@@ -127,11 +146,7 @@ export class LoginComponent implements OnInit {
           if (wantToLinkAccount == false) {
             this.router.navigate(['/campaigns']);
           } else if (googleAccessToken) {
-            if (mailCount && mailCount > 100) {
-              this.router.navigate(['/campaigns']);
-            } else {
-              this.router.navigate(['/settings']);
-            }
+            this.getMailsCount();
           } else {
             this.router.navigate(['/accounts-link']);
           }
