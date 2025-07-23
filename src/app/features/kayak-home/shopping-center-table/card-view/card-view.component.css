@@ -932,3 +932,14 @@ img[alt="logo"] {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+@media screen and (max-width: 1024px) {
+  .main-img {
+    height: 150px;
+  }
+  .loading-spinner {
+    width: 30px;
+    height: 30px;
+  }
+  
+}

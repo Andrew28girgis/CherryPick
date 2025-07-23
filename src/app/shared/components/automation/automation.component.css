@@ -199,7 +199,7 @@ h3 {
   }
   /* Email column specific style */
   .contacts-table td.email-cell {
-    max-width: 160px; /* Approx 10-15 characters depending on font */
+    min-width: 90px;
     width: 160px;
     word-break: break-word;
     overflow-wrap: break-word;
@@ -209,6 +209,6 @@ h3 {
     margin: 0;
     padding: 6px;
     font-size: 15px;
-    white-space: nowrap;
+    /* white-space: nowrap; */
   }
 }
