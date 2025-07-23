@@ -68,6 +68,19 @@
       </div>
     </div>
 
+    <div class="w-100 mx-3 mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label"
+        >Signature (remember to regenerate after update your signature)</label
+      >
+      <textarea
+        class="form-control"
+        id="exampleFormControlTextarea1"
+        rows="4"
+        style="resize: none"
+        (input)="onSignatureChange($event)"
+      ></textarea>
+    </div>
+
     <div class="generate-btn">
       <button [disabled]="!dataLoaded" (click)="PutMailsDraft()">
         <span>Generate Email </span>
