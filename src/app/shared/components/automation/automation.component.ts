@@ -181,6 +181,7 @@ export class AutomationComponent implements OnInit {
         FirstName: contact.firstname || '',
         LastName: contact.lastname || '',
         Email: contact.email || '',
+        Position: contact.position || '',
         ShoppingCenterId: this.shoppingCenterId,
       },
     };
