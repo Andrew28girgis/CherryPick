@@ -269,6 +269,7 @@ export class AutomationComponent implements OnInit {
     this.showCloseConfirmation = false;
     this.performClose();
   }
+  
   cancelClose() {
     this.showCloseConfirmation = false;
   }
