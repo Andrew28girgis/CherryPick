@@ -12,10 +12,10 @@ import { PlacesService } from 'src/app/core/services/places.service';
 })
 export class AutomationComponent implements OnInit {
   automationId!: number;
-  automationResponses: any[] = []; // Changed to array to hold multiple responses
+  automationResponses: any[] = [];
   tableColumns: string[] = [];
-  shoppingCenterId!: number; // Added to hold shopping center ID
-  shoppingCenterDetails: any; // Added to hold shopping center details
+  shoppingCenterId!: number;
+  shoppingCenterDetails: any;
   shoppingCenterName: string = '';
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -92,8 +92,13 @@ export class AutomationComponent implements OnInit {
         // Handle column names: merge Firstname + Lastname into one 'Name' column
         let columnArray = Array.from(columnSet);
 
-        if (columnArray.includes('Firstname') || columnArray.includes('Lastname')) {
-          columnArray = columnArray.filter(col => col !== 'Firstname' && col !== 'Lastname');
+        if (
+          columnArray.includes('Firstname') ||
+          columnArray.includes('Lastname')
+        ) {
+          columnArray = columnArray.filter(
+            (col) => col !== 'Firstname' && col !== 'Lastname'
+          );
           columnArray.unshift('Name'); // or push if you want it at the end
         }
 
@@ -138,12 +143,18 @@ export class AutomationComponent implements OnInit {
   getObjectKeys(obj: any): string[] {
     return obj ? Object.keys(obj) : [];
   }
+  // New method to validate email format
+  isValidEmail(email: string): boolean {
+    return (
+      typeof email === 'string' && email.trim() !== '' && email.includes('@')
+    );
+  }
 
   respondToAutomation(response: any): void {
     const contact = response.jsonResponse;
 
-    if (!contact?.Email || contact.Email.trim() === '') {
-      console.warn('Email missing. Skipping contact creation.');
+    if (!this.isValidEmail(contact?.Email)) {
+      console.warn('Invalid or missing email. Skipping contact creation.');
       return;
     }
 
@@ -172,10 +183,10 @@ export class AutomationComponent implements OnInit {
     this.automationResponses.forEach((item, index) => {
       const contact = item.jsonResponse;
 
-      if (contact?.Email && contact.Email.trim() !== '') {
-        this.respondToAutomation(item); // Pass full response object
+      if (this.isValidEmail(contact?.Email)) {
+        this.respondToAutomation(item);
       } else {
-        console.warn(`Skipped index ${index}: Missing email.`);
+        console.warn(`Skipped index ${index}: Invalid or missing email.`);
       }
     });
   }
