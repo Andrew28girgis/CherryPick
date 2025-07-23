@@ -1,4 +1,4 @@
-<div class="row g-4">
+<div class="row g-4" *ngIf="shoppingCenters.length > 0 ; else noShoppingCenters">
   <ng-container *ngFor="let shopping of shoppingCenters">
     <div
       [ngClass]="{
@@ -276,7 +276,8 @@
     </div>
   </ng-container>
 </div>
-
+<ng-template   #noShoppingCenters
+>
 <!-- No Shopping Centers Message -->
 <div
   *ngIf="!isLoadingShoppingCenters"
@@ -333,6 +334,8 @@
     </div> -->
   </div>
 </div>
+</ng-template>
+
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
