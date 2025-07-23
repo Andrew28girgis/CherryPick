@@ -182,7 +182,7 @@
 
 .checkbox-section-select {
   padding-bottom: 3px;
-  margin-inline: 1rem;
+  /* margin-inline: 1rem; */
 }
 
 .checkbox-section-select > label {

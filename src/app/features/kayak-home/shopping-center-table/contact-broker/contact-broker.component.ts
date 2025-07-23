@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Center } from 'src/app/shared/models/shoppingCenters';
 import { IChooseBroker } from './models/ichoose-broker';
@@ -10,6 +10,8 @@ import { IManagedByBroker } from './models/imanaged-by-broker';
   styleUrl: './contact-broker.component.css',
 })
 export class ContactBrokerComponent {
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+
   protected stepperSteps: number[] = Array.from({ length: 3 }, (_, i) => i + 1);
   protected currentStep: number = 1;
   protected chooseBrokerObject!: IChooseBroker;
@@ -50,5 +52,10 @@ export class ContactBrokerComponent {
 
   closeActiveModal() {
     this.activeModal.close();
+  }
+
+  onScrollDown(): void {
+    const container = this.scrollContainer.nativeElement;
+    container.scrollTop = container.scrollHeight;
   }
 }

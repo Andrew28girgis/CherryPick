@@ -1,4 +1,4 @@
-<div class="row g-4" *ngIf="shoppingCenters.length > 0 ; else noShoppingCenters">
+<div class="row g-4" *ngIf="shoppingCenters.length > 0; else noShoppingCenters">
   <ng-container *ngFor="let shopping of shoppingCenters">
     <div
       [ngClass]="{
@@ -276,53 +276,51 @@
     </div>
   </ng-container>
 </div>
-<ng-template   #noShoppingCenters
->
-<!-- No Shopping Centers Message -->
-<div
-  *ngIf="!isLoadingShoppingCenters"
-  class="no-shopping-centers-container d-flex flex-column align-items-center justify-content-center p-5"
->
-  <div class="text-center">
-    <!-- Icon -->
-    <svg
-      width="80"
-      height="80"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      class="mb-3"
-      style="color: #6c757d"
-    >
-      <path
-        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-        fill="currentColor"
-      />
-    </svg>
+<ng-template #noShoppingCenters>
+   <div
+    *ngIf="!isLoadingShoppingCenters"
+    class="no-shopping-centers-container d-flex flex-column align-items-center justify-content-center p-5"
+  >
+    <div class="text-center">
+      <!-- Icon -->
+      <svg
+        width="80"
+        height="80"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="mb-3"
+        style="color: #6c757d"
+      >
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+          fill="currentColor"
+        />
+      </svg>
 
-    <!-- Main Message -->
-    <h4 class="mb-3" style="color: #495057; font-weight: 600">
-      No Shopping Centers Available
-    </h4>
+      <!-- Main Message -->
+      <h4 class="mb-3" style="color: #495057; font-weight: 600">
+        No Shopping Centers Available
+      </h4>
 
-    <!-- Description -->
-    <p
-      class="mb-0"
-      style="
-        color: #6c757d;
-        font-size: 16px;
-        max-width: 400px;
-        line-height: 1.5;
-      "
-    >
-      To display shopping centers in this view, you need to change status to
-      'Shared With Tenant'. Please update the shopping center status from your
-      management dashboard.
-    </p>
+      <!-- Description -->
+      <p
+        class="mb-0"
+        style="
+          color: #6c757d;
+          font-size: 16px;
+          max-width: 400px;
+          line-height: 1.5;
+        "
+      >
+        To display shopping centers in this view, you need to change status to
+        'Shared With Tenant'. Please update the shopping center status from your
+        management dashboard.
+      </p>
 
-    <!-- Optional: Action Button -->
+      <!-- Optional: Action Button -->
 
-    <!-- <div class="mt-4">
+      <!-- <div class="mt-4">
       <button 
         class="btn btn-primary px-4"
         onclick="window.location.reload()"
@@ -332,10 +330,9 @@
         Refresh View
       </button>
     </div> -->
+    </div>
   </div>
-</div>
 </ng-template>
-
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>

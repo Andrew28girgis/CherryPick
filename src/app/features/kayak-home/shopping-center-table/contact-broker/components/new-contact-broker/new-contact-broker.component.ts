@@ -80,6 +80,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
   chooseBrokerObject!: IChooseBroker;
   managedByBrokerArray: IManagedByBroker[] = [];
   @Output() onStepDone = new EventEmitter<void>();
+  @Output() scrollDown = new EventEmitter<void>();
   CCEmail: any;
 
   constructor(
@@ -288,6 +289,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         complete: async () => {
           await this.getGeneratedEmails();
           this.checkMailGenerated();
+          // this.scrollDown.emit();
           // this.onSubmit();
         },
       });
@@ -482,6 +484,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
               const text = this.emails[index].Subject;
               divRef.nativeElement.innerText = text;
             });
+            this.scrollDown.emit();
             clearInterval(interval);
           }
         }, 100);
@@ -614,5 +617,31 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
       btoa(target).replaceAll('=', '')
     );
     return redirectURL;
+  }
+
+  onSignatureChange(event: any): void {
+    console.log(event.target.value);
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'UpdateContactSignature',
+      MainEntity: null,
+      Params: {
+        Signature: event.target.value,
+      },
+      Json: null,
+    };
+
+    this.placeService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+
+        // this.showToast('Email sent successfully');
+        // this.emails = this.emails.filter((e) => e.MailId !== email.MailId);
+        // if (this.emails.length === 0) {
+        //   this.onStepDone.emit();
+        // }
+      },
+    });
   }
 }

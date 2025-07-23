@@ -682,18 +682,76 @@ openStreetViewPlace(content: any, modalObject?: any) {
     return shopping.MainImage || 'assets/Images/DefaultImage.png';
   }
 
-  finContactMessage(
-    shoppingCenterId: any,
-    shoppingCenterName: any,
-    shoppingCenterAddress: any
-  ): void {
+  getShoppingCenterContact(centerId: any): void {
+    const body: any = {
+      Name: 'GetShoppingCenterContact',
+      MainEntity: null,
+      Params: {
+        ShoppingCenterId: centerId,
+      },
+      Json: null,
+    };
+    this.placesService.GenericAPI(body).subscribe((data) => {
+      console.log('API response data:', data);
+      if (data.json && data.json.length) {
+        const newContacts = data.json.map((c: any) => ({
+          ID: c.id,
+          Name: c.name,
+          Firstname: c.firstname ?? '',
+          LastName: c.lastname ?? '', // no source in original, so set to empty or default
+          CellPhone: 0, // no source in original, set to default number
+          Email: c.email,
+          ContactId: c.contactId,
+        }));
+
+        const index = this.cardsSideList.findIndex((sc) => (sc.Id = centerId));
+
+        if (!this.cardsSideList[index].ShoppingCenter) {
+          this.cardsSideList[index].ShoppingCenter = {
+            Places: [],
+            Comments: [],
+            Reactions: [],
+            BuyBoxPlaces: [],
+            ManagerOrganization: [...newContacts], // Initialize with the new one
+            UserSubmmision: [],
+          };
+        } else {
+          // If ManagerOrganization exists, append; else create and assign
+          if (
+            this.cardsSideList[index].ShoppingCenter.ManagerOrganization &&
+            Array.isArray(
+              this.cardsSideList[index].ShoppingCenter.ManagerOrganization
+            )
+          ) {
+            this.cardsSideList[index].ShoppingCenter.ManagerOrganization.push(
+              ...newContacts
+            );
+          } else {
+            this.cardsSideList[index].ShoppingCenter.ManagerOrganization = [
+              ...newContacts,
+            ];
+          }
+        }
+      } else {
+        setTimeout(() => {
+          this.getShoppingCenterContact(centerId);
+        }, 4000);
+      }
+    });
+  }
+
+  finContactMessage(shoppingCenter: Center): void {
+    console.log(shoppingCenter);
+
     (window as any).chrome.webview.postMessage(
       JSON.stringify({
         type: 'find-contacts',
-        shoppingCenterName: shoppingCenterName,
-        shoppingCenterAddress: shoppingCenterAddress,
-        shoppingCenterId: shoppingCenterId,
+        shoppingCenterName: shoppingCenter.CenterName,
+        shoppingCenterAddress: shoppingCenter.CenterAddress,
+        shoppingCenterId: shoppingCenter.Id,
       })
     );
+
+    this.getShoppingCenterContact(shoppingCenter.Id);
   }
 }

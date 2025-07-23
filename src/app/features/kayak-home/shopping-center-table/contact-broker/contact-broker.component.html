@@ -102,11 +102,12 @@
       </div>
       <div class="step-title">Choose Brokers</div>
     </div> -->
-    <div class="step-content">
+    <div #scrollContainer class="step-content">
       <app-new-contact-broker
         [contacts]="center.ShoppingCenter.ManagerOrganization"
         [center]="center"
         (onStepDone)="onStepDone($event)"
+        (scrollDown)="onScrollDown()"
       ></app-new-contact-broker>
       <!-- <app-choose-broker
         [contacts]="center.ShoppingCenter.ManagerOrganization"
