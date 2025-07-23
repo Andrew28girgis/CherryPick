@@ -23,7 +23,7 @@ export class AutomationComponent implements OnInit {
     private PlacesService: PlacesService
   ) {}
 
- ngOnInit(): void {
+  ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       const id = params['automationId'];
       this.automationId = id;
@@ -80,16 +80,23 @@ export class AutomationComponent implements OnInit {
           };
 
           // Handle the new structure with Contacts
-          if (parsedJsonResponse?.Contacts && Array.isArray(parsedJsonResponse.Contacts)) {
-            parsedJsonResponse.Contacts.forEach((contact: any, contactIndex: number) => {
-              pushContact(contact, contactIndex);
-            });
+          if (
+            parsedJsonResponse?.Contacts &&
+            Array.isArray(parsedJsonResponse.Contacts)
+          ) {
+            parsedJsonResponse.Contacts.forEach(
+              (contact: any, contactIndex: number) => {
+                pushContact(contact, contactIndex);
+              }
+            );
           } else if (parsedJsonResponse && !parsedJsonResponse.Contacts) {
             // Fallback for old structure
             if (Array.isArray(parsedJsonResponse)) {
-              parsedJsonResponse.forEach((contact: any, contactIndex: number) => {
-                pushContact(contact, contactIndex);
-              });
+              parsedJsonResponse.forEach(
+                (contact: any, contactIndex: number) => {
+                  pushContact(contact, contactIndex);
+                }
+              );
             } else {
               pushContact(parsedJsonResponse, 0);
             }
@@ -221,8 +228,14 @@ export class AutomationComponent implements OnInit {
       console.warn('Toast elements not found in DOM.');
     }
   }
-  close(){
-    (window as any).chrome.webview.postMessage('close-automation-window');
-      return false;
+  close() {
+    if ((window as any).chrome?.webview?.postMessage) {
+      (window as any).chrome.webview.postMessage('close-automation-window');
+      console.log('Close message sent to webview');
+    } else {
+      console.warn('chrome.webview is not available on this platform');
+    }
+
+    return false;
   }
 }
