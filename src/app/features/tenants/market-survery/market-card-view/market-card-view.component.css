@@ -6,7 +6,6 @@
   border-radius: 18px;
   min-height: 100%;
   display: grid;
-  height: 600px;
 }
 .h700 {
   height: 700px;
@@ -17,12 +16,7 @@
   border-radius: 18px 18px 0 0;
   /* aspect-ratio: 16/9; */
 }
-/* .card-photo {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-} */
+
 .fitcontent {
   height: fit-content;
   overflow: auto;
@@ -71,8 +65,6 @@
 .card-content {
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  min-height: 250px;
-  max-height: 350px;
   cursor: auto;
   display: flex;
   flex-direction: column;
