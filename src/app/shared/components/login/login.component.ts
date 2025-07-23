@@ -143,18 +143,15 @@ export class LoginComponent implements OnInit {
           const wantToLinkAccount = response.json[0].wantToLinkAccount;
           const mailCount = response.json[0].mailsCount;
 
-          if (wantToLinkAccount == false) {
-            this.router.navigate(['/campaigns']);
-          } else if (googleAccessToken) {
-            this.getMailsCount();
-          } else {
-            this.router.navigate(['/accounts-link']);
-          }
+          // to be removed
+          this.router.navigate(['/campaigns']);
 
-          // if (googleAccessToken || microsoftAccessToken) {
+          // if (wantToLinkAccount == false) {
           //   this.router.navigate(['/campaigns']);
+          // } else if (googleAccessToken) {
+          //   this.getMailsCount();
           // } else {
-          //   this.navigateToHome();
+          //   this.router.navigate(['/accounts-link']);
           // }
         }
       });
