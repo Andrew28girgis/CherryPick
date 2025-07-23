@@ -32,6 +32,7 @@ export class MarketTableViewComponent implements OnInit {
   isMobileView!: boolean;
   selectedActionType: { [key: number]: string } = {};
   campainId!: any;
+  isLoadingShoppingCenters: boolean = true;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -77,6 +78,8 @@ export class MarketTableViewComponent implements OnInit {
   getShoppingCenters(): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
+            this.isLoadingShoppingCenters = false; // Set loading to false
+
       this.getBuyBoxPlaces(this.campainId);
       return;
     }
@@ -103,9 +106,8 @@ export class MarketTableViewComponent implements OnInit {
           [42, 44].includes(element.kanbanTemplateStageId)
         );
 
-        console.log(`xx`);
+              this.isLoadingShoppingCenters = false; // Set loading to false
 
-        console.log(this.shoppingCenters);
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.campainId);

@@ -1,3 +1,5 @@
+<div  *ngIf="shoppingCenters.length > 0; else noShoppingCenters">
+
 <table
   class="procpect-table"
   *ngIf="shoppingCenters && shoppingCenters.length > 0"
@@ -8,20 +10,20 @@
       <th>Address</th>
       <th>City</th>
       <th>State</th>
-      <th>Stage</th>
+      <!-- <th>Stage</th>
 
       <th *ngIf="placesRepresentative != false">Leased by</th>
-      <th class="w250">Unit Size & Lease Price</th>
-      <th>
+      <th class="w250">Unit Size & Lease Price</th> -->
+      <!-- <th>
         <ng-container
           *ngFor="
-            let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
+            let item of shoppingCenters[0].ShoppingCenter?.BuyBoxPlaces;
             let i = index
           "
         >
           {{ getNeareastCategoryName(item.CategoryId) }}
         </ng-container>
-      </th>
+      </th> -->
       <!-- <th>Actions</th> -->
     </tr>
   </thead>
@@ -56,7 +58,7 @@
             </span>
           </div>
         </td>
-        <td>
+        <!-- <td>
           <div
             *ngIf="
               shoppingCenter.kanbanTemplateStageId === 43 ||
@@ -166,8 +168,8 @@
               >Property Docs</a
             >
           </div>
-        </td>
-        <td>
+        </td> -->
+        <!-- <td>
           <ng-container
             *ngIf="shoppingCenter?.ShoppingCenter?.BuyBoxPlaces; else emptyTd"
           >
@@ -194,7 +196,7 @@
               </div>
             </ng-container>
           </ng-container>
-        </td>
+        </td> -->
         <ng-template #emptyTd> </ng-template>
 
         <!-- <td>
@@ -298,9 +300,12 @@
     </ng-container>
   </tbody>
 </table>
-<!-- No Shopping Centers Message -->
-<div 
-  *ngIf="!shoppingCenters || shoppingCenters.length === 0" 
+</div>
+
+<ng-template #noShoppingCenters>
+<div  
+    *ngIf="!isLoadingShoppingCenters"
+
   class="no-shopping-centers-container d-flex flex-column align-items-center justify-content-center p-5"
 >
   <div class="text-center">
@@ -345,21 +350,8 @@
     </div> -->
   </div>
 </div>
-
-            <!-- <div class="action-buttons mt-3 d-flex justify-content-between flex-column">
-              <button 
-                class="action-btn accept" 
-                [class.selected]="selectedActionType[shoppingCenter.Id] === 'accept'"
-                (click)="acceptShoppingCenter(shoppingCenter)">
-                Accept
-              </button>
-              <button 
-                class="action-btn reject" 
-                [class.selected]="selectedActionType[shoppingCenter.Id] === 'reject'"
-                (click)="rejectShoppingCenter(shoppingCenter)">
-                Reject
-              </button>
-            </div> -->
+</ng-template>
+       
 <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
     <iframe
