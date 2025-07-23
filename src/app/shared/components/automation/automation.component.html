@@ -4,17 +4,33 @@
   </div>
 </div>
 
+<!-- Close Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showCloseConfirmation">
+  <div class="confirmation-modal">
+    <div class="modal-header">
+      <h4>Confirm Close</h4>
+    </div>
+    <div class="modal-body">
+      <p>You haven't added any contacts yet. Are you sure you want to close without adding any contacts?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cancelClose()">Cancel</button>
+      <button class="btn btn-danger" (click)="confirmClose()">Close Anyway</button>
+    </div>
+  </div>
+</div>
+
 <div class="automation-container">
   <h2>{{ shoppingCenterName }}</h2>
-
   <div class="d-flex justify-content-end mx-4">
     <button class="btn btn-danger" (click)="close()">Close</button>
   </div>
+  
   <!-- Empty state -->
   <div class="empty-state" *ngIf="automationResponses.length === 0">
     <p>Emily Could Not Find Brokers.</p>
   </div>
-
+  
   <!-- Message Box (now shows ConclusionMessage) -->
   <div class="response-section" *ngIf="conclusionMessage">
     <h4>Message</h4>
@@ -22,7 +38,7 @@
       {{ conclusionMessage }}
     </div>
   </div>
-  
+ 
   <!-- Accept All button -->
   <div
     class="action-section d-flex justify-content-end m-4"
@@ -32,21 +48,18 @@
       Add All Contacts
     </button>
   </div>
-
+  
   <!-- Table View -->
   <div class="table-responsive">
     <table class="contacts-table" *ngIf="automationResponses.length > 0">
       <thead>
         <tr>
-          <!-- <th>#</th> -->
           <th *ngFor="let col of tableColumns">{{ col }}</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let response of automationResponses; let i = index">
-          <!-- <td>{{ i + 1 }}</td> -->
-
           <td
             *ngFor="let col of tableColumns"
             [ngClass]="{ 'email-cell': col.toLowerCase() === 'email' }"
@@ -64,7 +77,6 @@
               {{ response.jsonResponse?.[col] || '-' }}
             </ng-template>
           </td>
-
           <td>
             <!-- Show Add Contact button only for valid emails (contains @) -->
             <ng-container *ngIf="isValidEmail(response.jsonResponse?.email)">

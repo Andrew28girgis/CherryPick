@@ -18,6 +18,9 @@ export class AutomationComponent implements OnInit {
   shoppingCenterDetails: any;
   shoppingCenterName: string = '';
   conclusionMessage: string = ''; // Added to store the conclusion message
+  hasAddedContacts: boolean = false; // Track if any contacts have been added
+  showCloseConfirmation: boolean = false; // Track confirmation dialog visibility
+
   constructor(
     public activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService
@@ -172,6 +175,12 @@ export class AutomationComponent implements OnInit {
       typeof email === 'string' && email.trim() !== '' && email.includes('@')
     );
   }
+  // Check if there are any contacts with valid emails that could be added
+  hasValidContactsToAdd(): boolean {
+    return this.automationResponses.some(response => 
+      this.isValidEmail(response.jsonResponse?.email)
+    );
+  }
 
   respondToAutomation(response: any): void {
     const contact = response.jsonResponse;
@@ -195,6 +204,7 @@ export class AutomationComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
+        this.hasAddedContacts = true; // Mark that a contact has been added
         this.showToast('Contact created successfully!');
       },
       error: (error) => {
@@ -205,15 +215,21 @@ export class AutomationComponent implements OnInit {
   }
 
   acceptAll(): void {
+    let addedCount = 0;
     this.automationResponses.forEach((item, index) => {
       const contact = item.jsonResponse;
 
       if (this.isValidEmail(contact?.email)) {
         this.respondToAutomation(item);
+        addedCount++;
       } else {
         console.warn(`Skipped index ${index}: Invalid or missing email.`);
       }
     });
+
+    if (addedCount > 0) {
+      this.hasAddedContacts = true; // Mark that contacts have been added
+    }
   }
   showToast(message: string) {
     const toast = document.getElementById('customToast');
@@ -228,14 +244,32 @@ export class AutomationComponent implements OnInit {
       console.warn('Toast elements not found in DOM.');
     }
   }
+  // Updated close method with confirmation logic
   close() {
+    // If no contacts have been added AND there are valid contacts available, show confirmation
+    if (!this.hasAddedContacts && this.hasValidContactsToAdd()) {
+      this.showCloseConfirmation = true;
+      return false;
+    }
+    // Otherwise, close normally
+    this.performClose();
+    return false;
+  }
+  // Method to actually perform the close action
+  performClose() {
     if ((window as any).chrome?.webview?.postMessage) {
       (window as any).chrome.webview.postMessage('close-automation-window');
       console.log('Close message sent to webview');
     } else {
       console.warn('chrome.webview is not available on this platform');
     }
-
-    return false;
+  }
+  // Method to handle confirmation dialog actions
+  confirmClose() {
+    this.showCloseConfirmation = false;
+    this.performClose();
+  }
+  cancelClose() {
+    this.showCloseConfirmation = false;
   }
 }
