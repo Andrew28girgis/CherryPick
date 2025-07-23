@@ -5,22 +5,11 @@
 </div>
 
 <div class="automation-container">
-  <div class="d-flex justify-content-end">
-    <button class="close" (click)="close()">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
   <h2>{{ shoppingCenterName }}</h2>
-  <!-- Accept All button -->
-  <div
-    class="action-section d-flex justify-content-end m-4"
-    *ngIf="automationResponses.length > 0"
-  >
-    <button class="accept-button" (click)="acceptAll()">
-      Add All Contacts
-    </button>
-  </div>
 
+  <div class="d-flex justify-content-end mx-4">
+    <button class="btn btn-danger" (click)="close()">Close</button>
+  </div>
   <!-- Empty state -->
   <div class="empty-state" *ngIf="automationResponses.length === 0">
     <p>Emily Could Not Find Brokers.</p>
@@ -32,6 +21,16 @@
     <div class="message-box">
       {{ conclusionMessage }}
     </div>
+  </div>
+  
+  <!-- Accept All button -->
+  <div
+    class="action-section d-flex justify-content-end m-4"
+    *ngIf="automationResponses.length > 0"
+  >
+    <button class="accept-button" (click)="acceptAll()">
+      Add All Contacts
+    </button>
   </div>
 
   <!-- Table View -->
