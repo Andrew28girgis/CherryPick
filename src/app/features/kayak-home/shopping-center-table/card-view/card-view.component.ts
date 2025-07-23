@@ -349,28 +349,31 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
-openStreetViewPlace(content: any, modalObject?: any) {
-  const modalRef = this.modalService.open(content, {
-    ariaLabelledBy: 'modal-basic-title',
-    size: 'lg',
-    scrollable: true
-  });
+  openStreetViewPlace(content: any, modalObject?: any) {
+    const modalRef = this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
 
-  // Store the modal object
-  this.General.modalObject = modalObject;
+    // Store the modal object
+    this.General.modalObject = modalObject;
 
-  // Initialize street view after modal is opened
-  modalRef.result.then(() => {
-    // Cleanup if needed
-  }, () => {
-    // Cleanup if needed
-  });
+    // Initialize street view after modal is opened
+    modalRef.result.then(
+      () => {
+        // Cleanup if needed
+      },
+      () => {
+        // Cleanup if needed
+      }
+    );
 
-  // Use setTimeout to ensure DOM is ready
-  setTimeout(() => {
-    this.viewOnStreet();
-  },100);
-}
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+      this.viewOnStreet();
+    }, 100);
+  }
 
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url);
@@ -692,8 +695,8 @@ openStreetViewPlace(content: any, modalObject?: any) {
       Json: null,
     };
     this.placesService.GenericAPI(body).subscribe((data) => {
-      console.log('API response data:', data);
       if (data.json && data.json.length) {
+        console.log('API response data:', data);
         const newContacts = data.json.map((c: any) => ({
           ID: c.id,
           Name: c.name,
@@ -703,11 +706,15 @@ openStreetViewPlace(content: any, modalObject?: any) {
           Email: c.email,
           ContactId: c.contactId,
         }));
+        console.log('after refactor', newContacts);
 
-        const index = this.cardsSideList.findIndex((sc) => (sc.Id = centerId));
+        const center = this.cardsSideList.find((sc) => (sc.Id = centerId));
 
-        if (!this.cardsSideList[index].ShoppingCenter) {
-          this.cardsSideList[index].ShoppingCenter = {
+        if (!center) {
+          return;
+        }
+        if (!center.ShoppingCenter) {
+          center.ShoppingCenter = {
             Places: [],
             Comments: [],
             Reactions: [],
@@ -717,21 +724,10 @@ openStreetViewPlace(content: any, modalObject?: any) {
           };
         } else {
           // If ManagerOrganization exists, append; else create and assign
-          if (
-            this.cardsSideList[index].ShoppingCenter.ManagerOrganization &&
-            Array.isArray(
-              this.cardsSideList[index].ShoppingCenter.ManagerOrganization
-            )
-          ) {
-            this.cardsSideList[index].ShoppingCenter.ManagerOrganization.push(
-              ...newContacts
-            );
-          } else {
-            this.cardsSideList[index].ShoppingCenter.ManagerOrganization = [
-              ...newContacts,
-            ];
-          }
+          center.ShoppingCenter.ManagerOrganization = [...newContacts];
         }
+
+        console.log('center after update ', center);
       } else {
         setTimeout(() => {
           this.getShoppingCenterContact(centerId);
