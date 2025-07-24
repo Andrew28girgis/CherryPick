@@ -15,11 +15,12 @@ export class AutomationComponent implements OnInit {
   automationResponses: any[] = [];
   tableColumns: string[] = [];
   shoppingCenterId!: number;
+  automationTaskId!: number;
   shoppingCenterDetails: any;
   shoppingCenterName: string = '';
-  conclusionMessage: string = ''; // Added to store the conclusion message
-  hasAddedContacts: boolean = false; // Track if any contacts have been added
-  showCloseConfirmation: boolean = false; // Track confirmation dialog visibility
+  conclusionMessage: string = '';
+  hasAddedContacts: boolean = false;
+  showCloseConfirmation: boolean = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -45,6 +46,7 @@ export class AutomationComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenterId = data.json[0].shoppingCenterId;
+        this.automationTaskId = data.json[0].automationTaskLockupId;
 
         this.automationResponses = [];
         const columnSet = new Set<string>();
