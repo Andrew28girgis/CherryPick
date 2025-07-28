@@ -82,7 +82,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
   @Output() onStepDone = new EventEmitter<void>();
   @Output() scrollDown = new EventEmitter<void>();
   CCEmail: any;
-
+  contactSignature: string = '';
   constructor(
     private placeService: PlacesService,
     private spinner: NgxSpinnerService,
@@ -96,6 +96,20 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
 
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
+    this.GetContactSignature();
+  }
+
+  GetContactSignature(): void {
+    this.spinner.show();
+    const body = {
+      Name: 'GetContactSignature',
+      Params: {},
+    };
+
+    this.placeService.GenericAPI(body).subscribe((response) => {
+      this.contactSignature = response.json[0].signature;
+      this.spinner.hide();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

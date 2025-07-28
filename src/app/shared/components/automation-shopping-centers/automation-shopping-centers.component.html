@@ -1,0 +1,125 @@
+<div class="automation-container" *ngIf="automationData">
+  <div class="p-4 d-flex justify-content-center">
+    <h2 class="mb-0">{{ automationData.centerName }}</h2>
+  </div>
+
+  <div class="px-4 d-flex justify-content-end">
+    <!-- <button class="card-action">Accept All Centers</button> -->
+    <button class="btn btn-danger" (click)="performClose()">Close</button>
+  </div>
+
+  <!-- Images -->
+  <!-- IMAGE CAROUSEL CARD -->
+  <div class="shopping-center-card" *ngIf="automationData">
+    <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div
+          *ngFor="let image of automationData.imageUrls; let i = index"
+          class="carousel-item"
+          [class.active]="i === 0"
+        >
+          <img
+            [src]="image"
+            class="d-block w-100 card-image"
+            alt="Image {{ i + 1 }}"
+            referrerpolicy="no-referrer"
+          />
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselImages"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselImages"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+
+    <div class="card-content">
+      <h2 class="card-title">{{ automationData.centerName }}</h2>
+      <p class="card-location d-flex justify-content-center">
+        {{ automationData.address }}, {{ automationData.city }},
+        {{ automationData.stateCode }} {{ automationData.zipcode }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Tenants -->
+  <div class="section-card" *ngIf="automationData?.tenants">
+    <h3>Tenants (Page {{ currentTenantPage }} of {{ totalTenantPages }})</h3>
+    <ul>
+      <li *ngFor="let tenant of paginatedTenants">
+        <strong>{{ tenant.name }}</strong> – {{ tenant.category }}
+      </li>
+    </ul>
+    <div class="pagination-buttons">
+      <button
+        class="btn btn-outline-primary"
+        (click)="changeTenantPage(-1)"
+        [disabled]="currentTenantPage === 1"
+      >
+        Previous
+      </button>
+      <button
+        class="btn btn-outline-primary"
+        (click)="changeTenantPage(1)"
+        [disabled]="currentTenantPage === totalTenantPages"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  <!-- Available Spaces -->
+  <div class="section-card" *ngIf="automationData?.availableSpaces">
+    <h3>
+      Available Spaces (Page {{ currentSpacePage }} of {{ totalSpacePages }})
+    </h3>
+    <ul>
+      <li *ngFor="let space of paginatedSpaces">
+        {{ space.sizeSqFt }} SqFt –
+        {{ space.secondGeneration ? "Second Gen" : "First Gen" }}
+      </li>
+    </ul>
+    <div class="pagination-buttons">
+      <button
+        class="btn btn-outline-secondary"
+        (click)="changeSpacePage(-1)"
+        [disabled]="currentSpacePage === 1"
+      >
+        Previous
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        (click)="changeSpacePage(1)"
+        [disabled]="currentSpacePage === totalSpacePages"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  <!-- Brokers -->
+  <div class="section-card" *ngIf="automationData?.brokers">
+    <h3>Brokers</h3>
+    <ul>
+      <li *ngFor="let broker of automationData.brokers">
+        <strong>{{ broker.firstName }} {{ broker.lastName }}</strong> –
+        {{ broker.position }} ({{ broker.organizationName }})
+      </li>
+    </ul>
+  </div>
+
+  <div class="d-flex justify-content-center mb-3">
+    <button class="card-action">Add Center</button>
+  </div>
+</div>

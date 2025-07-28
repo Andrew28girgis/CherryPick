@@ -30,6 +30,7 @@ import { MarketSurveyComponent } from './features/tenants/market-survery/market-
 import { AiSpinnerComponent } from './shared/components/ai-spinner/ai-spinner.component';
 import { AiFailedComponent } from './shared/components/ai-failed/ai-failed.component';
 import { AutomationComponent } from './shared/components/automation/automation.component';
+import { AutomationShoppingCentersComponent } from './shared/components/automation-shopping-centers/automation-shopping-centers.component';
 
 const routes: Routes = [
   {
@@ -226,6 +227,11 @@ const routes: Routes = [
   {
     path: 'automation/:automationId',
     component: AutomationComponent,
+    data: { hideHeader: true },
+  },
+  {
+    path: 'automationCenters/:automationId',
+    component: AutomationShoppingCentersComponent,
     data: { hideHeader: true },
   },
   {

@@ -26,7 +26,7 @@
   </div>
 
   <div class="w-100 load-another-contact" (click)="getContactsByOrgID()">
-    Show all {{ contacts[0].Name }} contacts
+    Show all {{ contacts[0].Name }} Brokers
   </div>
 
   <div class="send-as">
@@ -73,6 +73,7 @@
         >Signature (remember to regenerate after update your signature)</label
       >
       <textarea
+        [(ngModel)]="contactSignature"
         class="form-control"
         id="exampleFormControlTextarea1"
         rows="4"
