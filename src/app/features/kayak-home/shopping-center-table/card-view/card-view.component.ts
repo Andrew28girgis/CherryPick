@@ -738,9 +738,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   finContactMessage(shoppingCenter: Center): void {
     console.log(shoppingCenter);
 
-    (window as any).chrome.webview.postMessage(
+    (window as any).electronMessage.invoke(
       JSON.stringify({
-        type: 'find-contacts',
         shoppingCenterName: shoppingCenter.CenterName,
         shoppingCenterAddress: shoppingCenter.CenterAddress,
         shoppingCenterId: shoppingCenter.Id,
