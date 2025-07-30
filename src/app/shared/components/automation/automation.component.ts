@@ -259,12 +259,7 @@ export class AutomationComponent implements OnInit {
   }
   // Method to actually perform the close action
   performClose() {
-    if ((window as any).chrome?.webview?.postMessage) {
-      (window as any).chrome.webview.postMessage('close-automation-window');
-      console.log('Close message sent to webview');
-    } else {
-      console.warn('chrome.webview is not available on this platform');
-    }
+    (window as any).electronMessage.closeSideBrowser();
   }
   // Method to handle confirmation dialog actions
   confirmClose() {
