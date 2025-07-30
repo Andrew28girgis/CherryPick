@@ -738,7 +738,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   finContactMessage(shoppingCenter: Center): void {
     console.log(`uploaded`);
     
-    (window as any).electronMessage.invoke(
+    (window as any).electronMessage.findContacts(
       JSON.stringify({
         shoppingCenterName: shoppingCenter.CenterName,
         shoppingCenterAddress: shoppingCenter.CenterAddress,
