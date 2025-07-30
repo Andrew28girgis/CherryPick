@@ -108,6 +108,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.GetAllActiveOrganizations();
     this.cdr.detectChanges();
 
     // Subscribe to filtered centers
@@ -361,14 +362,48 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   //   });
   // }
 
+  GetAllActiveOrganizations(): void {
+    const body: any = {
+      Name: 'GetAllActiveOrganizations',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.tenants = data.json.map((tenant: any) => ({
+          ...tenant,
+          // Map the properties to match your Tenant interface
+          id: tenant.id,
+          name: tenant.name,
+          URL: tenant.URL,
+          LinkedIn: tenant.LinkedIn,
+          Campaigns: tenant.Campaigns || [],
+        }));
+
+        this.filteredTenants = this.tenants;
+        this.groupTenantsByAlphabet();
+        // Find the tenant that matches the current route params
+        this.selectedTenant =
+          this.tenants.find(
+            (t) => t.id.toString() === this.OrgId || t.name === this.tenantName
+          ) || null;
+
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading tenants:', error);
+      },
+    });
+  }
+
   groupTenantsByAlphabet(): void {
     const sortedTenants = [...this.filteredTenants].sort((a, b) =>
-      a.Name.localeCompare(b.Name)
+      a.name.localeCompare(b.name)
     );
 
     this.groupedTenants = {};
     sortedTenants.forEach((tenant) => {
-      const firstLetter = tenant.Name.charAt(0).toUpperCase();
+      const firstLetter = tenant.name.charAt(0).toUpperCase();
       if (!this.groupedTenants[firstLetter]) {
         this.groupedTenants[firstLetter] = [];
       }
@@ -378,20 +413,24 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.alphabetKeys = Object.keys(this.groupedTenants).sort();
   }
 
-  goToTenant(tenant: Tenant) {
-    this.router.navigate([
-      '/dashboard',
-      tenant.Id,
-      tenant.OrganizationId,
-      tenant.Name,
-      tenant.Campaigns[0].Id,
-    ]);
+  goToTenant(tenant: any) {
+    const campaignId =
+      tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : 0;
+    this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
   }
 
-  selectTenant(tenant: Tenant) {
+  selectTenant(tenant: any): void {
     this.selectedTenant = tenant;
-    this.goToTenant(tenant);
-    this.tenantDropdownRef.close();
+    // Find the first campaign if available
+    const campaignId =
+      tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : 0;
+    // Navigate to the new tenant's dashboard
+    this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
+
+    // Close the dropdown
+    if (this.tenantDropdownRef) {
+      this.tenantDropdownRef.close();
+    }
   }
 
   @HostListener('document:click', ['$event'])

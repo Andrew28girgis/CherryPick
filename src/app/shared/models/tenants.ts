@@ -1,40 +1,36 @@
 export class Tenant {
-    Id!: number;
-    Name!: string;
-    Description!: string;
-    ComparableTypeId!: number;
-    MinBuildingSize!: number;
-    MaxBuildingSize!: number;
-    OrganizationId!: number;
-    ManagerOrganizationId!: number;
-    ManagerContactId!: number;
+    id!: number;
+    name!: string;
+    URL!: string;
+    LinkedIn!: string;
     Campaigns!: Campaign[];
-    Status!: 'Active' | 'Inactive';
-    Category!: 'Fast Food Brand' | 'Sportswear' | 'Luxury Brands' | 'Basic & Everyday Wear';
-    CreatedDate!: string;
-  
-  }
-  
-  export class Campaign {
+
+    // Optional: You can keep these properties if they're used elsewhere in your application
+    OrganizationId?: number; // Seems to be the same as id in the API response
+    Name?: string; // Legacy property, can use name instead
+    Id?: number; // Legacy property, can use id instead
+}
+
+export class Campaign {
     Id!: number;
-    CampaignPrivacy!: number;
     CampaignName!: string;
+    CampaignPrivacy!: number;
     CreatedDate!: string;
-    Sites!: number;
-    MailsSent!: number;
     Kanban!: Kanban[];
-  }
-  
-  export class Kanban {
+    MailsSent!: number;
+    Sites!: number;
+}
+
+export class Kanban {
     Id!: number;
     stageName!: string;
     stageOrder!: number;
     isQualified!: boolean;
     KanbanTemplateId!: number;
-    MarketSurveyShoppingCenters!: MarketSurveyShoppingCenter[];
-  }
-  
-  export class MarketSurveyShoppingCenter {
+    MarketSurveyShoppingCenters?: MarketSurveyShoppingCenter[];
+}
+
+export class MarketSurveyShoppingCenter {
     Id!: number;
     kanbanStageId!: number;
     BuyboxId!: number;
@@ -43,5 +39,4 @@ export class Tenant {
     CampaignId!: number;
     SiteSelectionReason!: string;
     CampaignPolygonId!: number;
-  }
-  
+}
