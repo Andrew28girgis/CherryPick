@@ -1,3 +1,60 @@
+.loading-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  margin: 20px 0;
+}
+
+.loading-message {
+  text-align: center;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.loading-message h4 {
+  color: #007bff;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.loading-message p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 16px;
+}
+
+.no-results-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  margin: 20px 0;
+}
+
+.no-results-message {
+  text-align: center;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.no-results-message h4 {
+  color: #6c757d;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.no-results-message p {
+  color: #868e96;
+  margin: 0;
+  font-size: 16px;
+}
 /* Modal Overlay */
 .modal-overlay {
   position: fixed;

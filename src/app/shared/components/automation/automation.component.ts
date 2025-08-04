@@ -21,6 +21,7 @@ export class AutomationComponent implements OnInit {
   conclusionMessage: string = '';
   hasAddedContacts: boolean = false;
   showCloseConfirmation: boolean = false;
+  isLoading: boolean = true; // Add loading state
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -36,6 +37,8 @@ export class AutomationComponent implements OnInit {
   }
 
   GetAutomationResponseForShoppingCenter(): void {
+    this.isLoading = true; // Set loading to true when API call starts
+    
     const body: any = {
       Name: 'GetAutomationResponseForShoppingCenter',
       Params: {
@@ -45,6 +48,8 @@ export class AutomationComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
+        this.isLoading = false; // Set loading to false when API responds
+        
         this.shoppingCenterId = data.json[0].shoppingCenterId;
         this.automationTaskId = data.json[0].automationTaskLockupId;
 
@@ -136,6 +141,7 @@ export class AutomationComponent implements OnInit {
         console.log('Consolidated Message:', this.conclusionMessage);
       },
       error: (error) => {
+        this.isLoading = false; // Set loading to false on error
         console.error('Error fetching automation response:', error);
       },
     });
@@ -208,7 +214,6 @@ export class AutomationComponent implements OnInit {
       next: () => {
         this.hasAddedContacts = true; // Mark that a contact has been added
         this.showToast('Contact created successfully!');
-        this.performClose();
       },
       error: (error) => {
         console.error('Error creating contact:', error);

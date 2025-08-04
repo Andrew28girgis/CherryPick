@@ -25,35 +25,40 @@
   <div class="d-flex justify-content-end mx-4">
     <button class="btn btn-danger" (click)="close()">Close</button>
   </div>
-  
-  <!-- Message Box (now shows ConclusionMessage) -->
-  <div class="response-section" *ngIf="conclusionMessage">
+  <!-- Loading State -->
+  <div class="loading-section" *ngIf="isLoading">
+    <div class="loading-message">
+      <h4>Loading...</h4>
+      <p>Emily is searching for brokers...</p>
+    </div>
+  </div>
+  <!-- Message Box (shows ConclusionMessage when not loading) -->
+  <div class="response-section" *ngIf="!isLoading && conclusionMessage">
     <h4>Message</h4>
     <div class="message-box">
       {{ conclusionMessage }}
     </div>
   </div>
-  <!-- No Results Message -->
-  <div class="no-results-section" *ngIf="automationResponses.length === 0">
+  <!-- No Results Message (only show when not loading and no results) -->
+  <div class="no-results-section" *ngIf="!isLoading && automationResponses.length === 0">
     <div class="no-results-message">
       <h4>No Brokers Found</h4>
       <p>Emily Could Not Find Brokers</p>
     </div>
   </div>
  
-  <!-- Accept All button -->
+  <!-- Accept All button (only show when not loading and has results) -->
   <div
     class="action-section d-flex justify-content-end m-4"
-    *ngIf="automationResponses.length > 0"
+    *ngIf="!isLoading && automationResponses.length > 0"
   >
     <button class="accept-button" (click)="acceptAll()">
       Add All Contacts
     </button>
   </div>
-  
-  <!-- Table View -->
+  <!-- Table View (only show when not loading and has results) -->
   <div class="table-responsive">
-    <table class="contacts-table" *ngIf="automationResponses.length > 0">
+    <table class="contacts-table" *ngIf="!isLoading && automationResponses.length > 0">
       <thead>
         <tr>
           <th *ngFor="let col of tableColumns">{{ col }}</th>
