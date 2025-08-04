@@ -162,7 +162,7 @@ export class EmailComposeComponent implements OnInit {
 
   private async loadPrompts() {    
     const catResp = await firstValueFrom(
-      this.places.GenericAPI({
+      this.places.BetaGenericAPI({
         name: 'GetPromptsCategoryId',
         params: { Name: 'Availability' },
       })
@@ -171,7 +171,7 @@ export class EmailComposeComponent implements OnInit {
     if (!catId) return;
 
     const prResp = await firstValueFrom(
-      this.places.GenericAPI({
+      this.places.BetaGenericAPI({
         name: 'GetPrompts',
         MainEntity: null,
         params: { Id: catId },

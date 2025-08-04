@@ -195,7 +195,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         params: { Name: 'Availability' },
       };
       const catResponse = await firstValueFrom(
-        this.placeService.GenericAPI(categoryBody)
+        this.placeService.BetaGenericAPI(categoryBody)
       );
       const categoryId = catResponse?.json?.[0]?.Id;
 
@@ -213,7 +213,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         Json: null,
       };
       const promptsResponse = await firstValueFrom(
-        this.placeService.GenericAPI(promptsBody)
+        this.placeService.BetaGenericAPI(promptsBody)
       );
       const promptsData = promptsResponse?.json || [];
 

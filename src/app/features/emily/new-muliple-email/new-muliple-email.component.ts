@@ -560,7 +560,7 @@ export class NewMulipleEmailComponent implements OnInit {
         Name: 'Availability',
       },
     };
-    this.PlacesService.GenericAPI(categoryBody).subscribe({
+    this.PlacesService.BetaGenericAPI(categoryBody).subscribe({
       next: (catResponse: any) => {
         const categoryId = catResponse?.json?.[0]?.Id;
         if (!categoryId) {
@@ -574,7 +574,7 @@ export class NewMulipleEmailComponent implements OnInit {
           },
           Json: null,
         };
-        this.PlacesService.GenericAPI(promptsBody).subscribe({
+        this.PlacesService.BetaGenericAPI(promptsBody).subscribe({
           next: (promptsResponse: any) => {
             const promptsData = promptsResponse?.json || [];
             if (promptsData.length > 0) {
