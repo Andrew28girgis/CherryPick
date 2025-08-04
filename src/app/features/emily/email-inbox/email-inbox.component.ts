@@ -449,7 +449,7 @@ export class EmailInboxComponent implements OnInit {
             error: () => {},
             complete: () => {
               // Start the email generation monitoring flow
-              this.getGeneratedEmails();
+              // this.getGeneratedEmails();
               this.checkMailGenerated();
             },
           });
@@ -504,30 +504,30 @@ export class EmailInboxComponent implements OnInit {
     );
   }
 
-  async getGeneratedEmails() {
-    const body: any = {
-      Name: 'GetMailContextGenerated',
-      MainEntity: null,
-      Params: {
-        campaignId: this.campaignId,
-        ContactId: this.selectedContactContactId,
-      },
-      Json: null,
-    };
+  // async getGeneratedEmails() {
+  //   const body: any = {
+  //     Name: 'GetMailContextGenerated',
+  //     MainEntity: null,
+  //     Params: {
+  //       campaignId: this.campaignId,
+  //       ContactId: this.selectedContactContactId,
+  //     },
+  //     Json: null,
+  //   };
 
-    try {
-      const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
-      if (data.json) {
-        this.returnGetMailContextGenerated = data.json;
-        console.log(
-          'Generated emails fetched:',
-          this.returnGetMailContextGenerated
-        );
-      }
-    } catch (error) {
-      console.error('Error fetching generated emails:', error);
-    }
-  }
+  //   try {
+  //     const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
+  //     if (data.json) {
+  //       this.returnGetMailContextGenerated = data.json;
+  //       console.log(
+  //         'Generated emails fetched:',
+  //         this.returnGetMailContextGenerated
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching generated emails:', error);
+  //   }
+  // }
 
   checkMailGenerated(): void {
     const body = {
