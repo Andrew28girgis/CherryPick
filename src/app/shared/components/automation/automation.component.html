@@ -48,7 +48,7 @@
   
   <!-- Table View -->
   <div class="table-responsive">
-    <table class="contacts-table" *ngIf="automationResponses.length > 0 else NotFound">
+    <table class="contacts-table" *ngIf="automationResponses.length > 0 ">
       <thead>
         <tr>
           <th *ngFor="let col of tableColumns">{{ col }}</th>
@@ -92,10 +92,6 @@
         </tr>
       </tbody>
     </table>
-    <ng-template #NotFound>
-      <div class="not-found-message">
-    <p>Emily Could Not Find Brokers.</p>
-      </div>
-    </ng-template>
+ 
   </div>
 </div>
