@@ -150,12 +150,10 @@
             (input)="updateMailBody($event, index)"
           ></div>
           <div class="email-actions">
-            <button
-              class="send-btn"
-              (click)="openSendMailsModal(sendMailsContact, email)"
-            >
+            <button class="send-btn" (click)="email && sendEmail(email)">
               Send
             </button>
+            <!-- (click)="openSendMailsModal(sendMailsContact, email)" -->
           </div>
         </div>
         }@empty {
