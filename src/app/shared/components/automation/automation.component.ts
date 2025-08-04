@@ -208,6 +208,7 @@ export class AutomationComponent implements OnInit {
       next: () => {
         this.hasAddedContacts = true; // Mark that a contact has been added
         this.showToast('Contact created successfully!');
+        this.performClose();
       },
       error: (error) => {
         console.error('Error creating contact:', error);

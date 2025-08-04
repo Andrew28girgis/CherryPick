@@ -26,13 +26,18 @@
     <button class="btn btn-danger" (click)="close()">Close</button>
   </div>
   
- 
-  
   <!-- Message Box (now shows ConclusionMessage) -->
   <div class="response-section" *ngIf="conclusionMessage">
     <h4>Message</h4>
     <div class="message-box">
       {{ conclusionMessage }}
+    </div>
+  </div>
+  <!-- No Results Message -->
+  <div class="no-results-section" *ngIf="automationResponses.length === 0">
+    <div class="no-results-message">
+      <h4>No Brokers Found</h4>
+      <p>Emily Could Not Find Brokers</p>
     </div>
   </div>
  
@@ -48,7 +53,7 @@
   
   <!-- Table View -->
   <div class="table-responsive">
-    <table class="contacts-table" *ngIf="automationResponses.length > 0 ">
+    <table class="contacts-table" *ngIf="automationResponses.length > 0">
       <thead>
         <tr>
           <th *ngFor="let col of tableColumns">{{ col }}</th>
@@ -92,6 +97,5 @@
         </tr>
       </tbody>
     </table>
- 
   </div>
 </div>
