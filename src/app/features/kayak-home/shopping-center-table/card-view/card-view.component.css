@@ -3,6 +3,9 @@
   flex-direction: column;
   gap: 5px;
 }
+.cursor {
+  cursor: pointer;
+}
 .striped-notes .note-item {
   font-size: 0.75rem;
   border-bottom: 1px solid #e0e0e0;
