@@ -483,4 +483,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const url = 'https://www.google.com/maps/search/shopping+centers+malls';
     window.location.href = `${url}?campaignId=${this.CampaignId}&campaignName=${this.organizationName}&organizationId=${this.OrgId}`;
   }
+
+  findAllContacts() {
+    (window as any).electronMessage.findAllContacts();
+  }
 }
