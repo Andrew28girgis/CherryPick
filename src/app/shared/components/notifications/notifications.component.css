@@ -13,6 +13,11 @@
   align-items: center;
   justify-content: center;
 }
+.uploadOM{
+  color: blue; 
+  text-decoration: underline; 
+  cursor: pointer
+}
 
 .notification-button:hover svg path {
   fill: var(--primary-color, #007bff);
