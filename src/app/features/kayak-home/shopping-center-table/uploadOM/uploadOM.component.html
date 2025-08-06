@@ -1,0 +1,115 @@
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
+
+<div class="shopping-center-container">
+  <div class="shopping-center-card" *ngIf="BrokerShoppingCenters">
+    <!-- Hero Image Section -->
+    <div class="hero-section">
+      <ng-template #noImages>
+        <div class="placeholder-image">
+          <img src="https://placehold.co/1200x600/EBF0F6/7F8C9F?text=No+Image+Available" 
+               alt="Placeholder for {{ BrokerShoppingCenters.CenterName }}">
+        </div>
+      </ng-template>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="card-content">
+      <div class="header-section">
+        <h1 class="card-title">{{ BrokerShoppingCenters.CenterName }}</h1>
+        <div class="location-section">
+          <svg class="location-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 11.5C13.3807 11.5 14.5 10.3807 14.5 9C14.5 7.61929 13.3807 6.5 12 6.5C10.6193 6.5 9.5 7.61929 9.5 9C9.5 10.3807 10.6193 11.5 12 11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="card-location">
+            {{ BrokerShoppingCenters.CenterAddress }}, {{ BrokerShoppingCenters.CenterCity }},
+            {{ BrokerShoppingCenters.CenterState }} {{ BrokerShoppingCenters.ZipCode }}
+          </p>
+        </div>
+      </div>
+      
+      <!-- Details Sections -->
+      <div class="details-grid">
+        <!-- Tenants Section -->
+        <div *ngIf="BrokerShoppingCenters.Tenants && BrokerShoppingCenters.Tenants.length > 0" class="details-section tenants-section">
+          <div class="section-header">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3 class="section-title">Major Tenants</h3>
+          </div>
+          <div class="tenants-grid">
+            <div *ngFor="let tenant of BrokerShoppingCenters.Tenants" class="tenant-item">
+              <span class="tenant-name">{{ tenant.Name }}</span>
+              <a *ngIf="tenant.OrgUrl" [href]="tenant.OrgUrl" target="_blank" class="tenant-link">
+                <span>Visit Website</span>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M15 3H21V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Availability Section -->
+        <div *ngIf="BrokerShoppingCenters.Availability && BrokerShoppingCenters.Availability.length > 0" class="details-section availability-section">
+          <div class="section-header">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9H21M7 3V5M17 3V5M6 13H8M11 13H13M16 13H18M6 17H8M11 17H13M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3 class="section-title">Available Spaces</h3>
+          </div>
+          <div class="availability-grid">
+            <div *ngFor="let space of BrokerShoppingCenters.Availability" class="space-item">
+              <div class="space-details">
+                <div class="suite-badge">Suite {{ space.Suite }}</div>
+                <div class="space-info">
+                  <div class="size">{{ space.BuildingSizeSf | number }} SF</div>
+                  <div class="price">${{ space.ForLeasePrice }}/SF</div>
+                </div>
+                <div *ngIf="space.Extras" class="extras">{{ space.Extras }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacts Section -->
+        <div *ngIf="BrokerShoppingCenters.Contacts && BrokerShoppingCenters.Contacts.length > 0" class="details-section contacts-section">
+          <div class="section-header">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 16.92V19.92C22 20.47 21.55 20.92 21 20.92H19C18.45 20.92 18 20.47 18 19.92V16.92C18 16.37 18.45 15.92 19 15.92H21C21.55 15.92 22 16.37 22 16.92ZM22 10.92V13.92C22 14.47 21.55 14.92 21 14.92H19C18.45 14.92 18 14.47 18 13.92V10.92C18 10.37 18.45 9.92 19 9.92H21C21.55 9.92 22 10.37 22 10.92Z" fill="currentColor"/>
+              <path d="M11.05 10.92C11.63 10.92 12.1 10.45 12.1 9.92C12.1 9.39 11.63 8.92 11.05 8.92H3.05C2.47 8.92 2 9.39 2 9.92C2 10.45 2.47 10.92 3.05 10.92H11.05ZM17.05 16.92C17.63 16.92 18.1 16.45 18.1 15.92C18.1 15.39 17.63 14.92 17.05 14.92H3.05C2.47 14.92 2 15.39 2 15.92C2 16.45 2.47 16.92 3.05 16.92H17.05ZM17.05 4.92H3.05C2.47 4.92 2 5.39 2 5.92C2 6.45 2.47 6.92 3.05 6.92H17.05C17.63 6.92 18.1 6.45 18.1 5.92C18.1 5.39 17.63 4.92 17.05 4.92Z" fill="currentColor"/>
+            </svg>
+            <h3 class="section-title">Contacts</h3>
+          </div>
+          <div class="contacts-list">
+            <div *ngFor="let contact of BrokerShoppingCenters.Contacts" class="contact-item">
+              <div class="contact-avatar">
+                {{ contact.firstName.charAt(0) }}{{ contact.lastName.charAt(0) }}
+              </div>
+              <div class="contact-details">
+                <span class="contact-name">{{ contact.firstName }} {{ contact.lastName }}</span>
+                <a [href]="'mailto:' + contact.email" class="contact-email">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {{ contact.email }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

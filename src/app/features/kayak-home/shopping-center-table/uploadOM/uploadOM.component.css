@@ -1,0 +1,310 @@
+/* Main Container */
+.shopping-center-container {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 0;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.shopping-center-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Hero Section */
+.hero-section {
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.placeholder-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* Header Section */
+.header-section {
+  padding: 30px 40px;
+  border-bottom: 1px solid #eee;
+}
+
+.card-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 10px 0;
+}
+
+.location-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.location-icon {
+  width: 20px;
+  height: 20px;
+  color: #7f8c8d;
+}
+
+.card-location {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+/* Details Grid Layout */
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 30px 40px;
+}
+
+@media (max-width: 768px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Common Section Styles */
+.details-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.details-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.section-icon {
+  width: 24px;
+  height: 24px;
+  color: #3498db;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+/* Tenants Section */
+.tenants-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.tenant-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.tenant-item:hover {
+  background: #e9ecef;
+}
+
+.tenant-name {
+  font-weight: 500;
+  color: #34495e;
+}
+
+.tenant-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #3498db;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.tenant-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+.tenant-link:hover {
+  color: #2980b9;
+}
+
+/* Availability Section */
+.availability-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.space-item {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.space-item:hover {
+  background: #e9ecef;
+}
+
+.space-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suite-badge {
+  background: #3498db;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.space-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.size, .price {
+  font-weight: 500;
+}
+
+.price {
+  color: #27ae60;
+}
+
+.extras {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+/* Contacts Section */
+.contacts-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.contact-item:hover {
+  background: #e9ecef;
+}
+
+.contact-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-name {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.contact-email {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-email svg {
+  width: 14px;
+  height: 14px;
+}
+
+.contact-email:hover {
+  color: #3498db;
+}
+
+/* Toast Notification */
+.custom-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #2c3e50;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.custom-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toast-content p {
+  margin: 0;
+}

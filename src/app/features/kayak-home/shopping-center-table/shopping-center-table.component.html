@@ -1,3 +1,8 @@
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
 <!-- Tenant Header -->
 <div class="tenant-header d-flex justify-content-between align-items-center">
   <div class="d-flex align-items-center gap-3" style="padding-bottom: 12px">
@@ -10,23 +15,50 @@
       />
     </div> -->
     <div class="d-flex flex-column gap-2">
-      <div class="tenant-dropdown-container" [class.active]="showTenantDropdown" ngbDropdown #tenantDropdown="ngbDropdown" (openChange)="onDropdownOpenChange($event)">
-        <button class="tenant-name" type="button" id="tenantDropdown" ngbDropdownToggle [attr.aria-expanded]="showTenantDropdown">
+      <div
+        class="tenant-dropdown-container"
+        [class.active]="showTenantDropdown"
+        ngbDropdown
+        #tenantDropdown="ngbDropdown"
+        (openChange)="onDropdownOpenChange($event)"
+      >
+        <button
+          class="tenant-name"
+          type="button"
+          id="tenantDropdown"
+          ngbDropdownToggle
+          [attr.aria-expanded]="showTenantDropdown"
+        >
           <span class="tenant-name-text">
             {{ selectedTenant?.name || tenantName }}
           </span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <path d="M16 22.4008C15.0667 22.4008 14.1334 22.0408 13.4267 21.3342L4.73336 12.6408C4.34669 12.2542 4.34669 11.6142 4.73336 11.2275C5.12003 10.8408 5.76003 10.8408 6.14669 11.2275L14.84 19.9208C15.48 20.5608 16.52 20.5608 17.16 19.9208L25.8534 11.2275C26.24 10.8408 26.88 10.8408 27.2667 11.2275C27.6534 11.6142 27.6534 12.2542 27.2667 12.6408L18.5734 21.3342C17.8667 22.0408 16.9334 22.4008 16 22.4008Z" fill="#7A8591"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+          >
+            <path
+              d="M16 22.4008C15.0667 22.4008 14.1334 22.0408 13.4267 21.3342L4.73336 12.6408C4.34669 12.2542 4.34669 11.6142 4.73336 11.2275C5.12003 10.8408 5.76003 10.8408 6.14669 11.2275L14.84 19.9208C15.48 20.5608 16.52 20.5608 17.16 19.9208L25.8534 11.2275C26.24 10.8408 26.88 10.8408 27.2667 11.2275C27.6534 11.6142 27.6534 12.2542 27.2667 12.6408L18.5734 21.3342C17.8667 22.0408 16.9334 22.4008 16 22.4008Z"
+              fill="#7A8591"
+            />
           </svg>
         </button>
 
-        <div class="tenant-dropdown-menu" ngbDropdownMenu aria-labelledby="tenantDropdown">
+        <div
+          class="tenant-dropdown-menu"
+          ngbDropdownMenu
+          aria-labelledby="tenantDropdown"
+        >
           <ng-container *ngFor="let letter of alphabetKeys">
             <div class="alphabet-header">{{ letter }}</div>
-            <div class="tenant-item dropdown-item-custom"
-                [class.active]="selectedTenant?.id === tenant.id"
-                *ngFor="let tenant of groupedTenants[letter]"
-                (click)="selectTenant(tenant)">
+            <div
+              class="tenant-item dropdown-item-custom"
+              [class.active]="selectedTenant?.id === tenant.id"
+              *ngFor="let tenant of groupedTenants[letter]"
+              (click)="selectTenant(tenant)"
+            >
               <div class="d-flex align-items-center gap-3 tenant-item-content">
                 <div class="tenant-logo-small">
                   <!-- Optional: Add tenant logo here if available -->
@@ -42,17 +74,18 @@
     </div>
   </div>
   <div class="d-flex">
-    <button class="send-email-button mx-2">
+    <!-- <button class="send-email-button mx-2">
       <a class="action-btn optionMobileColor p-0" (click)="navigateToMap()">
         <i class="fa-solid fa-plus text-light mx-1"></i>
         <span> Add sites </span>
       </a>
+    </button> -->
+    <button class="send-email-button mx-2" (click)="openUpload()">
+      <i class="fa-solid fa-plus text-light mx-1"></i>
+      <span> Add sites </span>
     </button>
     <button class="send-email-button mx-2">
-      <a
-        class="action-btn optionMobileColor p-0"
-        [href]="generateSafeUrl()"
-      >
+      <a class="action-btn optionMobileColor p-0" [href]="generateSafeUrl()">
         <i class="fa-solid fa-house text-light mx-1"></i>
         <span> Market Survey </span>
       </a>
@@ -312,3 +345,140 @@
   <app-kanban-view *ngIf="currentView == 6"></app-kanban-view>
 </div>
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<ng-template #uploadTypes let-modal>
+  <div class="modal-header fancy-modal-header">
+    <h5 class="modal-title fancy-title">Add New Sites</h5>
+    <button
+      type="button"
+      class="btn-close fancy-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body fancy-modal-body">
+    <button class="add-sites-btn google-btn" (click)="navigateToMap()">
+      <div class="btn-content">
+        <img
+          alt="Google Maps Logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png?20200329030310"
+          width="30"
+          height="30"
+          class="btn-icon"
+        />
+        <span class="btn-text">Google Maps</span>
+      </div>
+      <div class="btn-hover-effect"></div>
+    </button>
+    
+    <!-- Updated Upload OM Files button with file drop functionality -->
+    <div class="add-sites-btn om-btn" (click)="openFileUpload()" [class.disabled]="isUploading">
+      <div class="btn-content" *ngIf="!showFileDropArea && !isUploading">
+        <svg
+          class="btn-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <path
+            d="M12 8V16"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <path
+            d="M8 12H16"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="btn-text">Upload OM Files</span>
+      </div>
+      
+      <!-- Loading state -->
+      <div class="btn-content" *ngIf="isUploading">
+        <div class="spinner"></div>
+        <span class="btn-text">Uploading...</span>
+      </div>
+      
+      <div class="btn-hover-effect"></div>
+    </div>
+
+    <!-- File drop area -->
+    <div class="file-drop-container" *ngIf="showFileDropArea && !isUploading">
+      <ngx-file-drop
+        dropZoneLabel="Drop files here or click to browse"
+        (onFileDrop)="dropped($event)"
+        (onFileOver)="fileOver($event)"
+        (onFileLeave)="fileLeave($event)"
+        [accept]="'application/pdf,.pdf'"
+        [multiple]="false"
+        class="file-drop-zone"
+      >
+        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+          <div class="file-drop-content">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p class="mb-0">Drop PDF files here or <button type="button" class="browse-btn" (click)="openFileSelector()">browse</button></p>
+            <small>Only PDF files are accepted</small>
+          </div>
+        </ng-template>
+      </ngx-file-drop>
+      <button class="cancel-btn" (click)="cancelFileUpload()">Cancel</button>
+    </div>
+
+    <button class="add-sites-btn manual-btn">
+      <div class="btn-content">
+        <svg
+          class="btn-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M9 10C9.55228 10 10 9.55228 10 9C10 8.44772 9.55228 8 9 8C8.44772 8 8 8.44772 8 9C8 9.55228 8.44772 10 9 10Z"
+            fill="currentColor"
+          />
+          <path
+            d="M9 15C9.55228 15 10 14.5523 10 14C10 13.4477 9.55228 13 9 13C8.44772 13 8 13.4477 8 14C8 14.5523 8.44772 15 9 15Z"
+            fill="currentColor"
+          />
+          <path
+            d="M9 20C9.55228 20 10 19.5523 10 19C10 18.4477 9.55228 18 9 18C8.44772 18 8 18.4477 8 19C8 19.5523 8.44772 20 9 20Z"
+            fill="currentColor"
+          />
+          <path
+            d="M15 10C15.5523 10 16 9.55228 16 9C16 8.44772 15.5523 8 15 8C14.4477 8 14 8.44772 14 9C14 9.55228 14.4477 10 15 10Z"
+            fill="currentColor"
+          />
+          <path
+            d="M15 15C15.5523 15 16 14.5523 16 14C16 13.4477 15.5523 13 15 13C14.4477 13 14 13.4477 14 14C14 14.5523 14.4477 15 15 15Z"
+            fill="currentColor"
+          />
+          <path
+            d="M15 20C15.5523 20 16 19.5523 16 19C16 18.4477 15.5523 18 15 18C14.4477 18 14 18.4477 14 19C14 19.5523 14.4477 20 15 20Z"
+            fill="currentColor"
+          />
+        </svg>
+        <span class="btn-text">Manual Entry</span>
+      </div>
+      <div class="btn-hover-effect"></div>
+    </button>
+  </div>
+</ng-template>

@@ -5,16 +5,20 @@ import {
   ViewChild,
   ChangeDetectorRef,
   OnDestroy,
+  viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { Stage } from 'src/app/shared/models/shoppingCenters';
 import { Subscription } from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Tenant } from 'src/app/shared/models/tenants';
+import { NgxFileDropEntry } from 'ngx-file-drop';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -98,13 +102,17 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   imageLoadingStates: { [key: number]: boolean } = {}; // Track loading state for each image
   imageErrorStates: { [key: number]: boolean } = {}; // Track error state for each image
   @ViewChild('tenantDropdown') tenantDropdownRef!: NgbDropdown;
-
+  @ViewChild('uploadTypes') uploadTypes!: any;
+  showFileDropArea = false;
+  isUploading = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
     private placesService: PlacesService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -483,4 +491,104 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const url = 'https://www.google.com/maps/search/shopping+centers+malls';
     window.location.href = `${url}?campaignId=${this.CampaignId}&campaignName=${this.organizationName}&organizationId=${this.OrgId}`;
   }
+    showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 5000);
+    } else {
+      console.warn('Toast elements not found in DOM.');
+    }
+  }
+
+  openUpload(): void {
+    if (this.uploadTypes) {
+      this.modalService.open(this.uploadTypes, {
+        size: 'md',
+        backdrop: true,
+        backdropClass: 'fancy-modal-backdrop',
+        keyboard: true,
+        windowClass: 'fancy-modal-window',
+        centered: true
+      });
+    }
+  }
+
+  openFileUpload(): void {
+    if (!this.isUploading) {
+      this.showFileDropArea = true;
+    }
+  }
+
+  cancelFileUpload(): void {
+    this.showFileDropArea = false;
+  }
+
+  dropped(files: NgxFileDropEntry[]): void {
+    if (files.length > 0) {
+      const droppedFile = files[0];
+      
+      // Check if it's a file (not a directory)
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          // Validate file type
+          if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+            this.uploadFile(file);
+          } else {
+            alert('Please select a PDF file only.');
+          }
+        });
+      }
+    }
+  }
+
+  fileOver(event: any): void {
+    console.log('File over drop zone');
+  }
+
+  fileLeave(event: any): void {
+    console.log('File left drop zone');
+  }
+
+  uploadFile(file: File): void {
+    this.isUploading = true;
+    this.showFileDropArea = false;
+
+    const formData = new FormData();
+    formData.append('filename', file);
+
+    const apiUrl = `${environment.api}/BrokerWithChatGPT/UploadOM/${this.CampaignId}`;
+    this.http.post(apiUrl, formData).subscribe({
+      next: (response: any) => {
+        console.log('Upload successful:', response);
+        this.isUploading = false;
+        
+        // Close modal
+        this.modalService.dismissAll();
+        
+         // Check if response contains success message
+        if (response && response.Message === "The PDF has been uploaded successfully") {
+          // Show processing toast message
+          this.showToast('Emily is processing with the PDF and will Notify when finished in the notifications');
+        } else {
+          // Fallback message if response structure is different
+          this.showToast('File uploaded successfully! Emily will process it and notify you when finished.');
+        }
+        // this.router.navigate(['/uploadOM', this.CampaignId], {
+        //   state: { uploadResponse: response }
+        // });
+      },
+      error: (error) => {
+        console.error('Upload failed:', error);
+        this.isUploading = false;
+        this.showToast('Upload failed. Please try again.');
+      }
+    });
+  }
 }
+

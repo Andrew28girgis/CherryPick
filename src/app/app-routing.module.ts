@@ -31,6 +31,7 @@ import { AiSpinnerComponent } from './shared/components/ai-spinner/ai-spinner.co
 import { AiFailedComponent } from './shared/components/ai-failed/ai-failed.component';
 import { AutomationComponent } from './shared/components/automation/automation.component';
 import { AutomationShoppingCentersComponent } from './shared/components/automation-shopping-centers/automation-shopping-centers.component';
+import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 
 const routes: Routes = [
   {
@@ -243,6 +244,11 @@ const routes: Routes = [
   {
     path: 'emailInfo/:mailId',
     component: EmailInfoComponent,
+  },
+  {
+    path: ':uploadOM/:submissionId',
+    component: UploadOMComponent,
+    data: { hideHeader: true },
   },
   {
     path: ':guid',
