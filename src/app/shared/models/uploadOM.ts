@@ -1,7 +1,9 @@
 export interface UploadOM {
   pdfUrl: any
   images: any
+  Images: any
   mainImage: any
+  MainImage: any
   shoppingCenterId: number
   contactId: any
   userSubmissionId: any

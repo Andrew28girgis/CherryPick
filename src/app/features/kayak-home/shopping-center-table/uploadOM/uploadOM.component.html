@@ -8,6 +8,32 @@
   <div class="shopping-center-card" *ngIf="BrokerShoppingCenters">
     <!-- Hero Image Section -->
     <div class="hero-section">
+      <!-- Image Carousel -->
+      <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <!-- Main Image (first) -->
+          <div class="carousel-item active">
+            <img [src]="BrokerShoppingCenters.MainImage" class="d-block w-100" alt="Main image">
+          </div>
+          
+          <!-- Additional Images -->
+          <div *ngFor="let image of imageArray; let i = index" class="carousel-item">
+            <img [src]="image" class="d-block w-100" alt="Image {{i + 1}}">
+          </div>
+        </div>
+        
+        <!-- Navigation Arrows -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      
+      <!-- Fallback if no images -->
       <ng-template #noImages>
         <div class="placeholder-image">
           <img src="https://placehold.co/1200x600/EBF0F6/7F8C9F?text=No+Image+Available" 

@@ -248,7 +248,7 @@ const routes: Routes = [
   {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
-    data: { hideHeader: true },
+    // data: { hideHeader: true },
   },
   {
     path: ':guid',

@@ -15,6 +15,7 @@ export class UploadOMComponent implements OnInit {
   uploadResponse: any = null; // Store the upload response
   isFromUpload = false; // Track if we came from file upload
   showRawJson = false; // Control JSON display toggle
+  imageArray: string[] = []; // Array to hold all images
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -53,8 +54,16 @@ export class UploadOMComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        this.BrokerShoppingCenters = data.json as UploadOM;
-        console.log('BrokerShoppingCenters:', this.BrokerShoppingCenters);
+        try {
+          const rawJson = data.json[0].jsonResponse;
+          this.BrokerShoppingCenters = JSON.parse(rawJson) as UploadOM;
+          console.log('Parsed BrokerShoppingCenters:', this.BrokerShoppingCenters);
+        if (this.BrokerShoppingCenters?.Images) {
+            this.imageArray = this.BrokerShoppingCenters.Images.split(',').map((img: string) => img.trim());
+          }
+        } catch (error) {
+          console.error('Failed to parse jsonResponse:', error);
+        }
       },
     });
   }
