@@ -1,18 +1,16 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { Notification } from 'src/app/shared/models/Notification';
+import { RouterModule } from '@angular/router'; 
 
-interface Notification {
-  id: number;
-  message: string;
-  createdDate: string;
-  isRead: boolean;
-}
+
+
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
 })
@@ -51,6 +49,8 @@ export class NotificationsComponent implements OnInit {
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
         this.notifications = (response.json || []) as Notification[];
+        console.log('Fetched notifications:', this.notifications);
+        
         this.sortNotificationsByDate();
         this.updateNotificationCounts();
       }
@@ -72,6 +72,13 @@ export class NotificationsComponent implements OnInit {
       (notification) => !notification.isRead
     ).length;
   }
+  getUploadRoute(notification: Notification): string | null {
+  if (notification.userSubmissionId) {
+    return `/uploadOM/${notification.userSubmissionId}`;
+  }
+  return null;
+}
+
 
   markNotificationAsRead(notification: Notification): void {
     if (notification.isRead) {
@@ -87,7 +94,7 @@ export class NotificationsComponent implements OnInit {
 
     this.placesService.GenericAPI(request).subscribe({
       next: () => {
-        notification.isRead = true;
+        notification.isRead = 1;
         this.updateNotificationCounts();
       }
     });

@@ -1,5 +1,5 @@
 <div class="notification-container position-relative">
-  <button 
+  <button
     (click)="toggleDropdown()"
     class="notification-button"
     aria-label="Toggle notifications"
@@ -58,6 +58,12 @@
           <p class="notification-message">
             {{ notification.message }}
           </p>
+          <a
+            *ngIf="getUploadRoute(notification)"
+            [routerLink]="getUploadRoute(notification)"
+          >
+            Click Here
+          </a>
           <time class="notification-date" [dateTime]="notification.createdDate">
             {{ notification.createdDate | date : "medium" }}
           </time>
@@ -66,9 +72,7 @@
 
       <!-- Empty State -->
       <ng-template #noNotifications>
-        <div class="no-notifications">
-          No notifications available.
-        </div>
+        <div class="no-notifications">No notifications available.</div>
       </ng-template>
     </div>
   </div>
