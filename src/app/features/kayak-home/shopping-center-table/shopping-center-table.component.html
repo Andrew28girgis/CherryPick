@@ -29,10 +29,25 @@
           ngbDropdownToggle
           [attr.aria-expanded]="showTenantDropdown"
         >
+      <div
+        class="tenant-dropdown-container"
+        [class.active]="showTenantDropdown"
+        ngbDropdown
+        #tenantDropdown="ngbDropdown"
+        (openChange)="onDropdownOpenChange($event)"
+      >
+        <button
+          class="tenant-name"
+          type="button"
+          id="tenantDropdown"
+          ngbDropdownToggle
+          [attr.aria-expanded]="showTenantDropdown"
+        >
           <span class="tenant-name-text">
             {{ selectedTenant?.name || tenantName }}
           </span>
           <svg
+
             xmlns="http://www.w3.org/2000/svg"
             width="32"
             height="32"
@@ -51,8 +66,19 @@
           ngbDropdownMenu
           aria-labelledby="tenantDropdown"
         >
+        <div
+          class="tenant-dropdown-menu"
+          ngbDropdownMenu
+          aria-labelledby="tenantDropdown"
+        >
           <ng-container *ngFor="let letter of alphabetKeys">
             <div class="alphabet-header">{{ letter }}</div>
+            <div
+              class="tenant-item dropdown-item-custom"
+              [class.active]="selectedTenant?.id === tenant.id"
+              *ngFor="let tenant of groupedTenants[letter]"
+              (click)="selectTenant(tenant)"
+            >
             <div
               class="tenant-item dropdown-item-custom"
               [class.active]="selectedTenant?.id === tenant.id"
@@ -67,14 +93,21 @@
                   <div class="tenant-title">{{ tenant.name }}</div>
                 </div>
               </div>
+              </div>
             </div>
           </ng-container>
         </div>
       </div>
     </div>
-  </div>
+
   <div class="d-flex">
-    <!-- <button class="send-email-button mx-2">
+    <button class="send-email-button mx-2">
+      <a class="action-btn optionMobileColor p-0" (click)="findAllContacts()">
+        <i class="fa-regular fa-user text-light mx-1"></i>
+        <span> Find All Contacts </span>
+      </a>
+    </button>
+    <button class="send-email-button mx-2">
       <a class="action-btn optionMobileColor p-0" (click)="navigateToMap()">
         <i class="fa-solid fa-plus text-light mx-1"></i>
         <span> Add sites </span>
@@ -86,6 +119,7 @@
     </button>
     <button class="send-email-button mx-2">
       <a class="action-btn optionMobileColor p-0" [href]="generateSafeUrl()">
+
         <i class="fa-solid fa-house text-light mx-1"></i>
         <span> Market Survey </span>
       </a>
@@ -119,7 +153,7 @@
       <span>Inbox</span>
     </button>
   </div>
-</div>
+
 
 <div class="tab-view-container">
   <div class="nav-tabs-container">

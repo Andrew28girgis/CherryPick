@@ -491,7 +491,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const url = 'https://www.google.com/maps/search/shopping+centers+malls';
     window.location.href = `${url}?campaignId=${this.CampaignId}&campaignName=${this.organizationName}&organizationId=${this.OrgId}`;
   }
-    showToast(message: string) {
+  showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
     if (toast && toastMessage) {
@@ -513,7 +513,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         backdropClass: 'fancy-modal-backdrop',
         keyboard: true,
         windowClass: 'fancy-modal-window',
-        centered: true
+        centered: true,
       });
     }
   }
@@ -531,13 +531,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   dropped(files: NgxFileDropEntry[]): void {
     if (files.length > 0) {
       const droppedFile = files[0];
-      
+
       // Check if it's a file (not a directory)
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           // Validate file type
-          if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+          if (
+            file.type === 'application/pdf' ||
+            file.name.toLowerCase().endsWith('.pdf')
+          ) {
             this.uploadFile(file);
           } else {
             alert('Please select a PDF file only.');
@@ -567,17 +570,24 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       next: (response: any) => {
         console.log('Upload successful:', response);
         this.isUploading = false;
-        
+
         // Close modal
         this.modalService.dismissAll();
-        
-         // Check if response contains success message
-        if (response && response.Message === "The PDF has been uploaded successfully") {
+
+        // Check if response contains success message
+        if (
+          response &&
+          response.Message === 'The PDF has been uploaded successfully'
+        ) {
           // Show processing toast message
-          this.showToast('Emily is processing with the PDF and will Notify when finished in the notifications');
+          this.showToast(
+            'Emily is processing with the PDF and will Notify when finished in the notifications'
+          );
         } else {
           // Fallback message if response structure is different
-          this.showToast('File uploaded successfully! Emily will process it and notify you when finished.');
+          this.showToast(
+            'File uploaded successfully! Emily will process it and notify you when finished.'
+          );
         }
         // this.router.navigate(['/uploadOM', this.CampaignId], {
         //   state: { uploadResponse: response }
@@ -587,8 +597,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         console.error('Upload failed:', error);
         this.isUploading = false;
         this.showToast('Upload failed. Please try again.');
-      }
+      },
     });
   }
 }
-
