@@ -32,7 +32,7 @@
   </div>
 
   <!-- Notifications Dropdown -->
-  <div class="notification-dropdown" *ngIf="dropdownVisible">
+  <div class="notification-dropdown" *ngIf="notificationService.dropdownVisible">
     <div class="notification-card">
       <!-- Header -->
       <div class="notification-header">
@@ -44,22 +44,26 @@
 
       <!-- Notifications List -->
       <div
-        *ngIf="notifications.length > 0; else noNotifications"
+        *ngIf="notificationService.notifications.length > 0; else noNotifications"
         class="notifications-list"
       >
         <div
           class="notification-item"
-          *ngFor="let notification of notifications"
-          (click)="handleNotificationClick(notification)"
+          *ngFor="let notification of notificationService.notifications"
+          (click)="notificationService.markNotificationAsRead(notification)"
           [class.read]="notification.isRead"
-          [class.clickable]="notification.userSubmissionId"
           role="button"
           tabindex="0"
         >
           <p class="notification-message">
             {{ notification.message }}
           </p>
-          
+          <a
+            *ngIf="notificationService.getUploadRoute(notification)"
+            [routerLink]="notificationService.getUploadRoute(notification)"
+          >
+            Click Here
+          </a>
           <time class="notification-date" [dateTime]="notification.createdDate">
             {{ notification.createdDate | date : "medium" }}
           </time>

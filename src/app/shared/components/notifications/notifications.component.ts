@@ -1,11 +1,7 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlacesService } from 'src/app/core/services/places.service';
-import { Notification } from 'src/app/shared/models/Notification';
-import { Router, RouterModule } from '@angular/router'; 
-
-
-
+import { RouterModule } from '@angular/router'; 
+import { NotificationService } from 'src/app/core/services/notification.service';
 
 @Component({
   selector: 'app-notifications',
@@ -14,99 +10,37 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
 })
-export class NotificationsComponent implements OnInit {
-  private contactId: number = 0;
-  notifications: Notification[] = [];
-  dropdownVisible: boolean = false;
-  unreadCount: number = 0;
-  readCount: number = 0;
+export class NotificationsComponent implements OnInit, OnDestroy  {
+unreadCount: any;
+  private intervalId: any;
 
   constructor(
-    private placesService: PlacesService,
     private elementRef: ElementRef,
-    private router: Router
+    public notificationService: NotificationService
   ) {}
 
-  ngOnInit(): void {
-    const storedContactId = localStorage.getItem('contactId');
-    if (storedContactId) {
-      this.contactId = +storedContactId;
-      this.fetchUserNotifications();
+   ngOnInit(): void {
+  this.notificationService.initNotifications();
+
+  this.intervalId = setInterval(() => {
+    this.notificationService.fetchUserNotifications();
+  }, 10000);
+}
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
   }
 
   toggleDropdown(): void {
-    this.dropdownVisible = !this.dropdownVisible;
-  }
-
-  fetchUserNotifications(): void {
-    const request = {
-      Name: 'GetUserNotifications',
-      Params: {
-        ContactId: this.contactId,
-      },
-    };
-
-    this.placesService.GenericAPI(request).subscribe({
-      next: (response: any) => {
-        this.notifications = (response.json || []) as Notification[];
-        console.log('Fetched notifications:', this.notifications);
-        
-        this.sortNotificationsByDate();
-        this.updateNotificationCounts();
-      }
-    });
-  }
-
-  private sortNotificationsByDate(): void {
-    this.notifications.sort(
-      (a, b) =>
-        new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
-    );
-  }
-
-  private updateNotificationCounts(): void {
-    this.readCount = this.notifications.filter(
-      (notification) => notification.isRead
-    ).length;
-    this.unreadCount = this.notifications.filter(
-      (notification) => !notification.isRead
-    ).length;
-  }
-  handleNotificationClick(notification: Notification): void {
-    this.markNotificationAsRead(notification);
-
-    if (notification.userSubmissionId) {
-      const route = `/uploadOM/${notification.userSubmissionId}`;
-      this.router.navigate([route]);
-    }
-  }
-
-
-  markNotificationAsRead(notification: Notification): void {
-    if (notification.isRead) {
-      return;
-    }
-
-    const request = {
-      Name: 'UpdateNotification',
-      Params: {
-        NotificationId: notification.id,
-      },
-    };
-
-    this.placesService.GenericAPI(request).subscribe({
-      next: () => {
-        notification.isRead = 1;
-        this.updateNotificationCounts();
-      }
-    });
+    this.notificationService.dropdownVisible = !this.notificationService.dropdownVisible;
   }
 
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event: Event): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.dropdownVisible = false;
+      this.notificationService.dropdownVisible = false;
     }
   }
 }
