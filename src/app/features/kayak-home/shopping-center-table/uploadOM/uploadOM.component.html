@@ -9,16 +9,20 @@
     <!-- Hero Image Section -->
     <div class="hero-section">
       <!-- Image Carousel -->
-      <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel" style="height: 100%;">
         <div class="carousel-inner">
           <!-- Main Image (first) -->
           <div class="carousel-item active">
-            <img [src]="BrokerShoppingCenters.MainImage" class="d-block w-100" alt="Main image">
+            <img
+            [referrerPolicy]="'no-referrer'"
+            [src]="BrokerShoppingCenters.MainImage && BrokerShoppingCenters.MainImage.trim() !== '' ? BrokerShoppingCenters.MainImage : 'assets/Images/DefaultImage.png'" class="d-block w-100" alt="Main image">
           </div>
           
           <!-- Additional Images -->
           <div *ngFor="let image of imageArray; let i = index" class="carousel-item">
-            <img [src]="image" class="d-block w-100" alt="Image {{i + 1}}">
+            <img
+            [referrerPolicy]="'no-referrer'"
+            [src]="image" class="d-block w-100" alt="Image {{i + 1}}">
           </div>
         </div>
         
@@ -120,16 +124,16 @@
           <div class="contacts-list">
             <div *ngFor="let contact of BrokerShoppingCenters.Contacts" class="contact-item">
               <div class="contact-avatar">
-                {{ contact.firstName.charAt(0) }}{{ contact.lastName.charAt(0) }}
+                {{ contact.FirstName.charAt(0) }}{{ contact.LastName.charAt(0) }}
               </div>
               <div class="contact-details">
-                <span class="contact-name">{{ contact.firstName }} {{ contact.lastName }}</span>
-                <a [href]="'mailto:' + contact.email" class="contact-email">
+                <span class="contact-name">{{ contact.FirstName }} {{ contact.LastName }}</span>
+                <a [href]="'mailto:' + contact.Email" class="contact-email">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  {{ contact.email }}
+                  {{ contact.Email }}
                 </a>
               </div>
             </div>

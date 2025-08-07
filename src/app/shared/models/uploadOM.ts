@@ -35,9 +35,9 @@ export interface UploadOM {
 }
 
 export interface Contact {
-  firstName: string
-  lastName: string
-  email: string
+  FirstName: string
+  LastName: string
+  Email: string
 }
 
 export interface Tenant {

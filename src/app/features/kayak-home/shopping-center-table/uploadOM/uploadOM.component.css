@@ -1,7 +1,7 @@
 /* Main Container */
 .shopping-center-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: #f1f1f5;
   padding: 0;
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -331,9 +331,25 @@
   object-fit: cover;
 }
 
+
 .carousel-control-prev, .carousel-control-next {
   width: 5%;
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+.carousel-control-prev {
+  left: 0 !important;
+}
+
+
+.carousel-control-next {
+  right: 0 !important;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+  width: 2rem;
+  height: 2rem;
 }
 
 .carousel-control-prev-icon, .carousel-control-next-icon {
@@ -343,13 +359,13 @@
 
 /* Make sure the hero section has a defined height */
 .hero-section {
-  height: 500px;
+  height: 400px;
   position: relative;
 }
 
 .placeholder-image {
   width: 100%;
-  height: 500px;
+  height: 400px;
 }
 
 .placeholder-image img {
