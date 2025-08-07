@@ -66,8 +66,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .add-sites-btn.disabled {
@@ -121,7 +125,7 @@
 .json-display pre {
   margin: 0;
   color: #e2e8f0;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   font-size: 14px;
   line-height: 1.4;
 }
@@ -333,7 +337,11 @@
   left: 0;
   width: 0;
   height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.3)
+  );
   transition: width 0.4s ease;
   z-index: 1;
 }
@@ -344,35 +352,35 @@
 
 /* Specific Button Styles */
 .google-btn {
-  border-left: 4px solid #4285F4;
+  border-left: 4px solid #4285f4;
 }
 
 .google-btn:hover .btn-text {
-  color: #4285F4;
+  color: #4285f4;
 }
 
 .om-btn {
-  border-left: 4px solid #FF6B6B;
+  border-left: 4px solid #ff6b6b;
 }
 
 .om-btn:hover .btn-text {
-  color: #FF6B6B;
+  color: #ff6b6b;
 }
 
 .om-btn .btn-icon {
-  color: #FF6B6B;
+  color: #ff6b6b;
 }
 
 .manual-btn {
-  border-left: 4px solid #4ECDC4;
+  border-left: 4px solid #4ecdc4;
 }
 
 .manual-btn:hover .btn-text {
-  color: #4ECDC4;
+  color: #4ecdc4;
 }
 
 .manual-btn .btn-icon {
-  color: #4ECDC4;
+  color: #4ecdc4;
 }
 .fancy-modal-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
@@ -774,11 +782,11 @@
 }
 .send-email-button {
   display: flex;
-  height: 48px;
-  padding: 14px 24px;
+  height: 45px;
+  padding: 10px 10px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   border-radius: var(--Radius-Radius-16, 16px);
   background: var(--Button-Primary-BG, #3922d2);
   border: none;
