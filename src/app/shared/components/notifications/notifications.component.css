@@ -117,9 +117,21 @@
 .notification-message {
   color: var(--text-color, #16181d);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.4;
   margin: 0 0 8px 0;
+}
+
+.notification-item.clickable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.notification-item.clickable p {
+  color: #4d65b4;
+}
+
+.notification-item.clickable:hover {
+  background-color: #eef2f7;
 }
 
 .notification-date {

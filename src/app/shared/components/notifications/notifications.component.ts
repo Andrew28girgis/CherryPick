@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
-import { RouterModule } from '@angular/router'; 
+import { Router, RouterModule } from '@angular/router'; 
 
 
 
@@ -23,7 +23,8 @@ export class NotificationsComponent implements OnInit {
 
   constructor(
     private placesService: PlacesService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -72,12 +73,14 @@ export class NotificationsComponent implements OnInit {
       (notification) => !notification.isRead
     ).length;
   }
-  getUploadRoute(notification: Notification): string | null {
-  if (notification.userSubmissionId) {
-    return `/uploadOM/${notification.userSubmissionId}`;
+  handleNotificationClick(notification: Notification): void {
+    this.markNotificationAsRead(notification);
+
+    if (notification.userSubmissionId) {
+      const route = `/uploadOM/${notification.userSubmissionId}`;
+      this.router.navigate([route]);
+    }
   }
-  return null;
-}
 
 
   markNotificationAsRead(notification: Notification): void {

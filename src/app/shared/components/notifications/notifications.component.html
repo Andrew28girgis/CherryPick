@@ -50,20 +50,16 @@
         <div
           class="notification-item"
           *ngFor="let notification of notifications"
-          (click)="markNotificationAsRead(notification)"
+          (click)="handleNotificationClick(notification)"
           [class.read]="notification.isRead"
+          [class.clickable]="notification.userSubmissionId"
           role="button"
           tabindex="0"
         >
           <p class="notification-message">
             {{ notification.message }}
           </p>
-          <a
-            *ngIf="getUploadRoute(notification)"
-            [routerLink]="getUploadRoute(notification)"
-          >
-            Click Here
-          </a>
+          
           <time class="notification-date" [dateTime]="notification.createdDate">
             {{ notification.createdDate | date : "medium" }}
           </time>
