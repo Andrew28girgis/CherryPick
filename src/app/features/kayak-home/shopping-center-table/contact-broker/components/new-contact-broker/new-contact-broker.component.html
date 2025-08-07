@@ -25,26 +25,28 @@
     }
   </div>
 
-  <div class="w-100 load-another-contact" (click)="getContactsByOrgID()">
-    Show all {{ contacts[0].Name }} Brokers
-  </div>
+  <div class="d-flex justify-content-between w-100 pt-2">
+    <div class="w-100 load-another-contact pt-3" (click)="getContactsByOrgID()">
+      Show all {{ contacts[0].Name }} Brokers
+    </div>
 
-  <div class="send-as">
-    <div class="send-as-title">Send As</div>
-    <div class="send-as-switch">
-      <div
-        class="send-as-to"
-        [ngClass]="{ 'send-as-active': sendAsTo }"
-        (click)="sendAsTo = true; sendAsCC = false"
-      >
-        To
-      </div>
-      <div
-        class="send-as-cc"
-        [ngClass]="{ 'send-as-active': sendAsCC }"
-        (click)="sendAsTo = false; sendAsCC = true"
-      >
-        CC
+    <div class="send-as">
+      <div class="send-as-title">Send As</div>
+      <div class="send-as-switch">
+        <div
+          class="send-as-to"
+          [ngClass]="{ 'send-as-active': sendAsTo }"
+          (click)="sendAsTo = true; sendAsCC = false"
+        >
+          To
+        </div>
+        <div
+          class="send-as-cc"
+          [ngClass]="{ 'send-as-active': sendAsCC }"
+          (click)="sendAsTo = false; sendAsCC = true"
+        >
+          CC
+        </div>
       </div>
     </div>
   </div>
@@ -76,7 +78,7 @@
         [(ngModel)]="contactSignature"
         class="form-control"
         id="exampleFormControlTextarea1"
-        rows="4"
+        rows="3"
         style="resize: none"
         (input)="onSignatureChange($event)"
       ></textarea>

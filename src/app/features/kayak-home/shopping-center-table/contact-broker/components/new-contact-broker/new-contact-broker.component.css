@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 1.5rem;
+  gap: 0.8rem;
 }
 
 .contacts-container {
@@ -23,7 +23,7 @@
 
 .contact-container,
 .send-as {
-  padding: 1rem;
+  padding: 0.5rem;
   border: 1px solid #c6c9d3;
   border-radius: 1.5rem;
 }
@@ -33,7 +33,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 0.5rem;
+  gap: 0.2rem;
 }
 
 .contact-information * {
@@ -46,7 +46,7 @@
 }
 
 .send-as {
-  width: 100%;
+  width: 50%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -123,7 +123,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 1.5rem;
+  gap: 0.5rem;
 }
 
 .generate-email-sub-container {
