@@ -64,32 +64,7 @@ initNotifications(): void {
         (notification) => !notification.isRead
       ).length;
     }
-    handleNotificationClick(notification: Notification): void {
-      this.markNotificationAsRead(notification);
+   
   
-      if (notification.userSubmissionId) {
-        const route = `/uploadOM/${notification.userSubmissionId}`;
-        this.router.navigate([route]);
-      }
-    }
-  
-    markNotificationAsRead(notification: Notification): void {
-      if (notification.isRead) {
-        return;
-      }
-  
-      const request = {
-        Name: 'UpdateNotification',
-        Params: {
-          NotificationId: notification.id,
-        },
-      };
-  
-      this.placesService.GenericAPI(request).subscribe({
-        next: () => {
-          notification.isRead = 1;
-          this.updateNotificationCounts();
-        }
-      });
-    }
+
 }
