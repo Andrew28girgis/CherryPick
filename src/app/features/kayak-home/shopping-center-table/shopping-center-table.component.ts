@@ -600,7 +600,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       },
     });
   }
-    findAllContacts() {
-    (window as any).electronMessage.findAllContacts();
-  }
+  //   findAllContacts() {
+  //   (window as any).electronMessage.findAllContacts();
+  // }
 }
