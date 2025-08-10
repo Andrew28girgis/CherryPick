@@ -19,9 +19,6 @@ import { PlacesService } from 'src/app/core/services/places.service';
   styleUrl: './notifications.component.css',
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
-  unreadCount: any;
-  readCount: number = 0;
-
   private intervalId: any;
   notifications: Notification[] = [];
 
@@ -73,17 +70,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.placesService.GenericAPI(request).subscribe({
       next: () => {
         notification.isRead = 1;
-        this.updateNotificationCounts();
+        this.notificationService.updateNotificationCounts();
       },
     });
-  }
-  private updateNotificationCounts(): void {
-    this.readCount = this.notifications.filter(
-      (notification) => notification.isRead
-    ).length;
-    this.unreadCount = this.notifications.filter(
-      (notification) => !notification.isRead
-    ).length;
   }
 
   @HostListener('document:click', ['$event'])

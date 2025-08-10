@@ -27,8 +27,8 @@
   </button>
 
   <!-- Unread Count Badge -->
-  <div class="notification-badge" *ngIf="unreadCount > 0">
-    {{ unreadCount }}
+  <div class="notification-badge" *ngIf="notificationService.unreadCount > 0">
+    {{ notificationService.unreadCount }}
   </div>
 
   <!-- Notifications Dropdown -->
@@ -40,8 +40,8 @@
       <!-- Header -->
       <div class="notification-header">
         <h2 class="notifications-title">Notifications</h2>
-        <div class="unread-badge" *ngIf="unreadCount > 0">
-          {{ unreadCount }}
+        <div class="unread-badge" *ngIf="notificationService.unreadCount > 0">
+          {{ notificationService.unreadCount }}
         </div>
       </div>
 
