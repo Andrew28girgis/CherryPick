@@ -282,4 +282,8 @@ expandedOrgs: { [orgId: number]: boolean } = {};
       reader.readAsDataURL(file);
     }
   }
+  onImageError(event: any) {
+    event.target.src = 'assets/Images/placeholder.png';
+  }
+
 }

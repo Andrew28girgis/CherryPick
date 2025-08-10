@@ -9,14 +9,8 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
-
-interface Statistics {
-  mailCount: number;
-  contactCount: number;
-  organizationCount: number;
-  shoppingCentersCount: number;
-  placeCount: number;
-}
+import { Statistics } from 'src/app/shared/models/email-statistics';
+ 
 
 @Component({
   selector: 'app-email-statistics',

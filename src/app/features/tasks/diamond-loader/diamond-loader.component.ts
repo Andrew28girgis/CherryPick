@@ -7,14 +7,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CountData } from 'src/app/shared/models/diamonds';
 
-interface CountData {
-  mailCount: number;
-  contactCount: number;
-  organizationCount: number;
-  shoppingCentersCount: number;
-  placeCount: number;
-}
 
 @Component({
   selector: 'app-diamond-loader',
@@ -39,8 +33,7 @@ export class DiamondLoaderComponent implements OnInit {
   private readonly TOTAL_ANIMATION_TIME =
     this.ANIMATION_DURATION + this.COMPLETION_DURATION;
   totalMailsCount: number = 0;
-  private updateInterval: any;
-  hidden: boolean = false;
+   hidden: boolean = false;
 
   ngOnInit() {
     this.totalMailsCount = this.GetTotalMailsCount();

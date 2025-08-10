@@ -4,8 +4,7 @@ import {
   ViewChild,
   ElementRef,
   TemplateRef,
-  Renderer2,
-  ChangeDetectorRef,
+   ChangeDetectorRef,
   AfterViewInit,
   OnDestroy,
   NgZone,
@@ -16,17 +15,14 @@ import {
   PipeTransform,
 } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap"
-import { BuyboxCategory } from "src/app/shared/models/buyboxCategory"
+ import { BuyboxCategory } from "src/app/shared/models/buyboxCategory"
 import { Center, Reaction, Stage } from "../../../../shared/models/shoppingCenters"
 import { General } from "src/app/shared/models/domain"
 import { trigger, style, animate, transition, keyframes } from "@angular/animations"
 import { Subscription } from "rxjs"
 import { ViewManagerService } from "src/app/core/services/view-manager.service"
 import { PlacesService } from "src/app/core/services/places.service"
-import { NgxSpinnerService } from "ngx-spinner"
-import { AuthService } from "src/app/core/services/auth.service"
-
+ 
 @Pipe({
   name: 'filterReplies',
   pure: true
@@ -84,15 +80,14 @@ export class FilterRepliesPipe implements PipeTransform {
     ]),
   ],
 })
-export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SocialViewComponent implements OnInit, OnDestroy {
   currentUserName: string = '';
   currentUserImage: string = '';
   
   @ViewChild("commentsContainer") commentsContainer: ElementRef | undefined
   @Output() viewChange = new EventEmitter<number>()
   
-  // Properties used in template
-  isLoading = true
+   isLoading = true
   filteredCenters: Center[] = []
   showComments: { [key: number]: boolean } = {}
   showDetails: boolean[] = []
@@ -138,15 +133,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private modalService: NgbModal,
-    private renderer: Renderer2,
-    private cdr: ChangeDetectorRef,
+     private cdr: ChangeDetectorRef,
     private PlacesService: PlacesService,
     private ngZone: NgZone,
     private shoppingCenterService: ViewManagerService,
-    private spinner: NgxSpinnerService,
-    private authService: AuthService
-  ) {}
+   ) {}
 
   ngOnInit(): void {
     this.checkMobileView()
@@ -241,11 +232,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     window.addEventListener("resize", this.checkMobileView.bind(this))
   }
-
-  ngAfterViewInit(): void {
-    // No need for global click listener setup since we're not using it
-  }
-
+ 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe()
     window.removeEventListener("resize", this.checkMobileView.bind(this))
@@ -257,18 +244,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-
-  toggleDetails(index: number, shopping: any): void {
-    if (shopping.ShoppingCenter?.BuyBoxPlaces) {
-      this.showDetails[index] = !this.showDetails[index]
-      this.cdr.markForCheck()
-    }
-  }
-
-  getNeareastCategoryName(categoryId: number): string {
-    return this.shoppingCenterService.getNearestCategoryName(categoryId)
-  }
-
+ 
+ 
   getShoppingCenterUnitSize(shoppingCenter: any): string {
     return this.shoppingCenterService.getShoppingCenterUnitSize(shoppingCenter)
   }
@@ -454,16 +431,19 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleClick(shopping: any, likeTpl: TemplateRef<any> | null, index: number): void {
+    // Clear any existing timeout
     if (this.clickTimeout) {
       clearTimeout(this.clickTimeout)
       this.clickTimeout = null
-      this.addLike(shopping, 1)
-    } else {
-      this.clickTimeout = setTimeout(() => {
-        this.addLike(shopping, 1)
-        this.clickTimeout = null
-      }, 250)
+      // This is a double-click, but we'll handle it in handleContentDoubleClick
+      return
     }
+    
+    // Set a timeout for single click
+    this.clickTimeout = setTimeout(() => {
+      this.addLike(shopping, 1)
+      this.clickTimeout = null
+    }, this.DOUBLE_CLICK_THRESHOLD)
   }
 
   isDisliked(shopping: Center): boolean {
@@ -476,22 +456,35 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       reaction => reaction.ReactionId === 2 && reaction.ContactId === contactId
     );
   }
-
   addDislike(shopping: Center, reactionId: number): void {
     const contactIdStr = localStorage.getItem("contactId");
     if (!contactIdStr) return;
     
     const contactId = Number.parseInt(contactIdStr, 10);
     
-    // If already disliked, don't do anything
-    if (this.isDisliked(shopping)) {
-      return;
-    }
-
-    if (!shopping.ShoppingCenter.Reactions) {
+    // Initialize ShoppingCenter object if it doesn't exist
+    if (!shopping.ShoppingCenter) {
+      shopping.ShoppingCenter = {
+        Comments: [],
+        Places: [],
+        Reactions: [],
+        BuyBoxPlaces: [],
+        ManagerOrganization: [],
+        UserSubmmision: []
+      };
+    } else if (!shopping.ShoppingCenter.Reactions) {
       shopping.ShoppingCenter.Reactions = [];
     }
-
+  
+    // Check if already disliked - if so, remove the dislike (toggle functionality)
+    if (this.isDisliked(shopping)) {
+      shopping.ShoppingCenter.Reactions = shopping.ShoppingCenter.Reactions.filter(
+        reaction => !(reaction.ReactionId === 2 && reaction.ContactId === contactId)
+      );
+      this.cdr.detectChanges();
+      return;
+    }
+  
     // Remove any existing like by the user
     if (this.isLiked(shopping)) {
       shopping.ShoppingCenter.Reactions = shopping.ShoppingCenter.Reactions.filter(
@@ -499,7 +492,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.likedShoppings[shopping.MarketSurveyId] = false;
     }
-
+  
     // Add the dislike reaction immediately for UI update
     const newDislike = {
       ReactionId: reactionId,
@@ -509,7 +502,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     
     // Force change detection
     this.cdr.detectChanges();
-
+  
     const body = {
       Name: "CreatePropertyReaction",
       Params: {
@@ -517,7 +510,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         ReactionId: reactionId,
       },
     };
-
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {},
       error: () => {
@@ -548,27 +541,45 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!contactIdStr) return;
     
     const contactId = Number.parseInt(contactIdStr, 10);
-
-    // If already liked, don't do anything
-    if (this.isLiked(shopping)) {
-      return;
-    }
-
+  
     if (this.isLikeInProgress) {
       return;
     }
-
-    if (!shopping.ShoppingCenter.Reactions) {
+  
+    // Initialize ShoppingCenter object if it doesn't exist
+    if (!shopping.ShoppingCenter) {
+      shopping.ShoppingCenter = {
+        Comments: [],
+        Places: [],
+        Reactions: [],
+        BuyBoxPlaces: [],
+        ManagerOrganization: [],
+        UserSubmmision: []
+      };
+    } else if (!shopping.ShoppingCenter.Reactions) {
       shopping.ShoppingCenter.Reactions = [];
     }
-
+  
+    this.isLikeInProgress = true;
+  
+    // Check if already liked - if so, remove the like (toggle functionality)
+    if (this.isLiked(shopping)) {
+      shopping.ShoppingCenter.Reactions = shopping.ShoppingCenter.Reactions.filter(
+        reaction => !(reaction.ReactionId === 1 && reaction.ContactId === contactId)
+      );
+      this.likedShoppings[shopping.MarketSurveyId] = false;
+      this.isLikeInProgress = false;
+      this.cdr.detectChanges();
+      return;
+    }
+  
     // Remove any existing dislike by the user
     if (this.isDisliked(shopping)) {
       shopping.ShoppingCenter.Reactions = shopping.ShoppingCenter.Reactions.filter(
         reaction => !(reaction.ReactionId === 2 && reaction.ContactId === contactId)
       );
     }
-
+  
     // Add the like reaction immediately for UI update
     const newLike = {
       ReactionId: reactionId,
@@ -576,10 +587,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     shopping.ShoppingCenter.Reactions.push(newLike);
     this.likedShoppings[shopping.MarketSurveyId] = true;
-
+  
     // Force change detection
     this.cdr.detectChanges();
-
+  
     const body = {
       Name: "CreatePropertyReaction",
       Params: {
@@ -587,7 +598,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         ReactionId: reactionId,
       },
     };
-
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {},
       error: () => {
@@ -639,70 +650,32 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isMobileView = window.innerWidth <= 768
     this.cdr.detectChanges()
   }
-
-  loadStages(): void {
-    const body = {
-      Name: "GetKanbanTemplateStages",
-      Params: { KanbanTemplateId: 6 },
-    }
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        this.stages = res.json
-          .map((s: any) => ({
-            id: +s.id,
-            stageName: s.stageName,
-            stageOrder: +s.stageOrder,
-            isQualified: s.isQualified,
-            kanbanTemplateId: +s.kanbanTemplateId,
-          }))
-          .sort((a: Stage, b: Stage) => a.stageOrder - b.stageOrder)
-
-        if (this.selectedStageId === 0) {
-          this.selectedStageName = "All"
-        } else {
-          const current = this.stages.find((s) => s.id === this.selectedStageId)
-          this.selectedStageName = current ? current.stageName : "Stage"
-        }
-        this.cdr.detectChanges()
-      },
-      error: (err) => console.error("Error loading kanban stages:", err),
-    })
-  }
-
-  onStageChange(id: number) {
-    this.selectedStageId = id
-    this.shoppingCenterService.setSelectedStageId(id)
-  }
-
-  selectStagekan(id: number) {
-    this.shoppingCenterService.setSelectedStageId(id)
-  }
-
+  
   handleContentDoubleClick(event: MouseEvent, shopping: Center): void {
     const clickTime = new Date().getTime()
     const timeDiff = clickTime - this.lastClickTime
     const contactIdStr = localStorage.getItem("contactId")
+    
     if (!contactIdStr) {
       return
     }
-    const contactId = Number.parseInt(contactIdStr ? contactIdStr : "0", 10)
-    if (
-      shopping.ShoppingCenter.Reactions &&
-      shopping.ShoppingCenter.Reactions.some((reaction: Reaction) => reaction.ContactId === contactId)
-    ) {
-      return
-    }
+    
+    const contactId = Number.parseInt(contactIdStr, 10)
+    
     if (timeDiff < this.DOUBLE_CLICK_THRESHOLD) {
       event.preventDefault()
       event.stopPropagation()
       this.heartX = event.clientX
       this.heartY = event.clientY
-      if (!contactIdStr) {
-        return
-      }
+      
+      // Always show heart animation on double-click
       this.showHeartAnimation()
-      this.addLike(shopping, 1)
+      
+      // Only add like if not already liked (don't remove existing like)
+      if (!this.isLiked(shopping)) {
+        this.addLike(shopping, 1)
+      }
+      
       this.lastClickTime = 0
     } else {
       this.lastClickTime = clickTime
@@ -727,11 +700,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       }, 10)
     })
   }
-
-  toggleComments(marketSurveyId: number): void {
-    this.showAllComments[marketSurveyId] = !this.showAllComments[marketSurveyId];
-    this.cdr.detectChanges();
-  }
+ 
 
   toggleReplies(commentId: number): void {
     this.showAllReplies[commentId] = !this.showAllReplies[commentId];

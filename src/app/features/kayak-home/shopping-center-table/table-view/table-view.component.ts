@@ -269,15 +269,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       }, 100)
     }
   }
-
-  openStatus(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: "modal-basic-title",
-      size: "lg",
-      scrollable: true,
-    })
-    this.General.modalObject = modalObject
-  }
+ 
 
   viewOnStreet(modalObject: any) {
     const lat = +modalObject.StreetLatitude
@@ -293,24 +285,11 @@ export class TableViewComponent implements OnInit, OnDestroy {
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.shoppingCenterService.sanitizeUrl(url)
   }
+ 
+ 
+ 
 
-  // Toggle dropdown for kanban stages
-  toggleDropdown(shoppingCenter: any): void {
-    // Removed since stage selection is now handled by parent
-  }
-
-  // Get stage name for the selected ID
-  getSelectedStageName(stageId: number): string {
-    return this.shoppingCenterService.getSelectedStageName(stageId);
-  }
-
-  // Select a stage for a shopping center
-  selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-    // Removed since stage selection is now handled by parent
-  }
-
-  // Handle document clicks to close dropdowns
-  @HostListener("document:click", ["$event"])
+   @HostListener("document:click", ["$event"])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null
     if (this.activeDropdown && target && !target.closest(".custom-dropdown")) {
@@ -437,24 +416,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
       error: (err) => console.error("Error loading kanban stages:", err),
     })
   }
-
-  onStageChange(id: number) {
-    // Client-side filtering
-    this.selectedStageId = id
-    this.shoppingCenterService.setSelectedStageId(id)
-
-    // Update the selected stage name for display
-    if (id === 0) {
-      this.selectedStageName = "All"
-    } else {
-      const stage = this.stages.find((s) => s.id === id)
-      this.selectedStageName = stage ? stage.stageName : "Stage"
-    }
-  }
-
-  selectStagekan(id: number) {
-    this.shoppingCenterService.setSelectedStageId(id)
-  }
+ 
+ 
      onCheckboxChange(event: Event, placeId: number, campaignId: number): void {
   const checkbox = event.target as HTMLInputElement;
   

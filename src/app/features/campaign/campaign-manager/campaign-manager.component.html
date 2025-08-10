@@ -262,7 +262,7 @@
                       campaign.OrganizationId,
                       campaign.OrganizationName,
                       campaign.Id
-                    ]"
+                    ]"   
                     style="cursor: pointer"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -457,6 +457,9 @@
                       class="tenant-logo"
                       style="width: 48px; height: 48px; border-radius: 50%"
                       (error)="onImageError($event)"
+
+                      (load)="checkImage($event)"
+                   
                     />
                     <span
                       class="tenant-name"

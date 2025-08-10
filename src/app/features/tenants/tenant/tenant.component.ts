@@ -34,15 +34,13 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { OrganizationBranches } from 'src/app/shared/models/organization-branches';
 import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
-import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
-import { ICustomPolygon } from 'src/app/shared/models/custom-polygon.model';
+ import { ICustomPolygon } from 'src/app/shared/models/custom-polygon.model';
 import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter';
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { organizationContacts } from 'src/app/shared/models/organizationContacts';
-import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
+ import * as CryptoJS from 'crypto-js';
 import {
   Bb,
   C,
@@ -80,8 +78,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   uploadProgress: number = 0;
   isConverting: boolean = false;
   images: IFile[] = [];
-  pdfFileName: string = '';
-  contactID!: any;
+   contactID!: any;
   contactIDs!: any;
   shoppingCentersIds!: string;
   TenantResult!: LandingPageTenants;
@@ -97,8 +94,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   CampaignData!: any;
   showFullReason: boolean = false;
   guid!: string;
-  emailguid!: string;
-  removeavailable: boolean = false;
+   removeavailable: boolean = false;
   removetenant: boolean = false;
   userSubmission: any;
   jsonGUID!: string;
@@ -648,7 +644,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       });
     }
   }
-  ////////////
+
   MailisAllForLeasePriceZero(): boolean {
     return this.shoppingCenterInMail[0]?.O[0]?.P.every(
       (place) => place.ForLeasePrice === 0
@@ -1502,5 +1498,4 @@ export class TenantComponent implements OnInit, AfterViewInit {
   isLast(currentItem: any, array: any[]): boolean {
     return this.shoppingCenterService.isLast(currentItem, array);
   }
-  /////////////
-}
+ }

@@ -1,28 +1,10 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { HttpClient } from '@angular/common/http';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal,NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { environment } from 'src/environments/environment';
-import {
-  Children,
-  partitionParent,
-  partitions,
-} from 'src/app/shared/models/partitions';
-import { NonGenericService } from 'src/app/core/services/non-generic.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
-interface ShoppingCenter {
-  mainImage: string;
-  centerName: string;
-  centerAddress: string;
-  buildingSizeSf?: number;
-  forSalePrice?: number;
-  lastForSalePrice?: number;
-  forLeasePrice?: number;
-  id: number;
-  isShared?: boolean;
-}
+import { FileExplorerComponent } from './file-explorer/file-explorer.component'; // Adjust path as needed
+ import { ShoppingCenter } from 'src/app/shared/models/shopping';
 
 @Component({
   selector: 'app-shopping',
@@ -30,19 +12,12 @@ interface ShoppingCenter {
   styleUrls: ['./shopping.component.css'],
 })
 export class ShoppingComponent implements OnInit {
+  @ViewChild('fileExplorer') fileExplorer!: FileExplorerComponent;
+
   Math = Math;
   contactID: any = localStorage.getItem('contactId');
-  DirectoryNames: partitions[] = [];
-  childrenPaths: Children[] = [];
-  selectedDrive = '';
-  selectedPartition = '';
-  selectedFullPath = '';
-  pathStack: string[] = [];
-  currentStep: 'pdf' = 'pdf';
-  pdfPath: string = '';
-  isUploading: boolean = false;
-  uploadProgress: number = 0;
-  private modalRef?: NgbModalRef;
+  
+   private modalRef?: NgbModalRef;
   searchTerm: string = '';
   centers: ShoppingCenter[] = [];
   filteredCenters: ShoppingCenter[] = [];
@@ -72,20 +47,12 @@ export class ShoppingComponent implements OnInit {
   ];
 
   isLoading: boolean = true;
-  private navigationHistory: string[] = [];
-  private currentHistoryIndex: number = -1;
-  forwardHistory: string[] = [];
-  sanitizedPdfUrl: SafeResourceUrl | null = null;
-  showPreview: boolean = false;
-  previewFile: Children | null = null;
 
   constructor(
     private placesService: PlacesService,
     private http: HttpClient,
     private spinner: NgxSpinnerService,
-    private modalService: NgbModal,
-    private nonGenericService: NonGenericService,
-    private sanitizer: DomSanitizer
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -299,147 +266,17 @@ export class ShoppingComponent implements OnInit {
     return this.visiblePages[this.visiblePages.length - 1] < this.totalPages;
   }
 
-  openPartitionModal(content: TemplateRef<any>) {
-    this.currentStep = 'pdf';
-    this.pdfPath = '';
-    this.modalRef = this.modalService.open(content, { size: 'lg' });
-    this.loadPartitions();
-
-    this.modalRef.result.finally(() => {
-      this.resetModalState();
-    });
+  // File Explorer Methods - Updated to call the component's openModal method directly
+  openFileExplorer() {
+    this.fileExplorer.openModal();
   }
 
-  private resetModalState() {
-    this.DirectoryNames = [];
-    this.childrenPaths = [];
-    this.selectedDrive = '';
-    this.selectedPartition = '';
-    this.selectedFullPath = '';
-    this.pathStack = [];
-    this.currentStep = 'pdf';
-    this.pdfPath = '';
-    this.sanitizedPdfUrl = null;
-  }
-
-  private loadPartitions() {
-    this.spinner.show();
-    this.nonGenericService.getPartitions().subscribe({
-      next: (drives) => {
-        this.DirectoryNames = drives;
-        this.childrenPaths = [];
-        this.pathStack = [];
-        this.spinner.hide();
-      },
-      error: (err) => {
-        console.error(err);
-        this.spinner.hide();
-      },
-    });
-  }
-
-  onPartitionSelect(partition: string) {
-    this.selectedDrive = partition;
-    this.pathStack = [partition];
-    this.forwardHistory = [];
-    this.loadChildren(partition);
-  }
-
-  isFile(child: Children): boolean {
-    return child.name.includes('.');
-  }
-
-  isValidFileType(child: Children): boolean {
-    if (!this.isFile(child)) return false;
-    const fileName = child.name.toLowerCase();
-    return fileName.endsWith('.pdf');
-  }
-
-  isImageFile(child: Children): boolean {
-    if (!this.isFile(child)) return false;
-    const fileName = child.name.toLowerCase();
-    return fileName.endsWith('.jpg') || 
-           fileName.endsWith('.jpeg') || 
-           fileName.endsWith('.png') || 
-           fileName.endsWith('.gif');
-  }
-
-  onChildSelect(child: Children) {
-    if (this.isFile(child)) {
-      const fileExtension = child.name.split('.').pop()?.toLowerCase();
-      if (fileExtension === 'pdf') {
-        this.selectedFullPath = child.fullPath;
-      } else {
-        this.showToast('Please select a PDF file');
-      }
-      return;
-    }
-    this.forwardHistory = [];
-    this.pathStack.push(child.fullPath);
-    this.loadChildren(child.fullPath);
-  }
-
-  togglePreview(event: Event, child: Children) {
-    event.stopPropagation();
-    if (this.isFile(child) && child.name.toLowerCase().endsWith('.pdf')) {
-      this.previewFile = child;
-      this.showPreview = true;
-      this.selectedFullPath = child.fullPath;
-      this.createPdfPreviewUrl(child.fullPath);
-    }
-  }
-
-  closePreview() {
-    this.showPreview = false;
-    this.previewFile = null;
-    this.sanitizedPdfUrl = null;
-  }
-
-  private createPdfPreviewUrl(filePath: string) {
-    this.sanitizedPdfUrl = null;
-    
-    const fileUrl = `file://${filePath}`;
-    this.sanitizedPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
-  }
-
-  onBack() {
-    if (this.pathStack.length > 1) {
-      const currentPath = this.pathStack[this.pathStack.length - 1];
-      this.forwardHistory.push(currentPath);
-      this.pathStack.pop();
-      this.loadChildren(this.pathStack[this.pathStack.length - 1]);
-    } else {
-      this.goToRoot();
-    }
-  }
-
-  private loadChildren(path: string) {
-    this.spinner.show();
-    this.nonGenericService.getChildren(path).subscribe({
-      next: (resp) => {
-        this.selectedFullPath = resp.parentFullPath;
-        this.selectedPartition = path;
-        this.childrenPaths = resp.children;
-        this.spinner.hide();
-      },
-      error: (err) => {
-        console.error(err);
-        this.spinner.hide();
-      },
-    });
-  }
-
-  sendPath() {
-    if (!this.selectedFullPath) {
-      this.showToast('Please select a PDF file');
-      return;
-    }
-
+  onFileSelected(filePath: string) {
     this.spinner.show();
     const body = {
       Name: 'AddFile',
       Params: {
-        Path: this.selectedFullPath,
+        Path: filePath,
         isProcessed: false,
         ContactId: this.contactID,
       },
@@ -447,7 +284,6 @@ export class ShoppingComponent implements OnInit {
 
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.modalService.dismissAll();
         this.spinner.hide();
         this.showToast('Shopping center added successfully! 🎉');
         setTimeout(() => {
@@ -461,6 +297,10 @@ export class ShoppingComponent implements OnInit {
     });
   }
 
+  onFileExplorerClose() {
+    // Handle any cleanup when file explorer closes
+  }
+
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -471,74 +311,5 @@ export class ShoppingComponent implements OnInit {
         toast.classList.remove('show');
       }, 3000);
     }
-  }
-
-  onForward() {
-    if (this.forwardHistory.length > 0) {
-      const nextPath = this.forwardHistory.pop()!;
-      this.pathStack.push(nextPath);
-      this.loadChildren(nextPath);
-    }
-  }
-
-  onUp() {
-    if (this.pathStack.length > 1) {
-      this.pathStack.pop();
-      this.loadChildren(this.pathStack[this.pathStack.length - 1]);
-    } else {
-      this.goToRoot();
-    }
-  }
-
-  refreshView() {
-    if (this.selectedDrive) {
-      this.loadChildren(this.pathStack[this.pathStack.length - 1]);
-    } else {
-      this.loadPartitions();
-    }
-  }
-
-  goToRoot() {
-    this.selectedDrive = '';
-    this.selectedPartition = '';
-    this.selectedFullPath = '';
-    this.pathStack = [];
-    this.childrenPaths = [];
-  }
-
-  goToPath(index: number) {
-    if (index < this.pathStack.length - 1) {
-      const removedPaths = this.pathStack.slice(index + 1);
-      this.forwardHistory = [...removedPaths.reverse(), ...this.forwardHistory];
-      
-      const newPath = this.pathStack[index];
-      this.pathStack = this.pathStack.slice(0, index + 1);
-      this.loadChildren(newPath);
-    }
-  }
-
-  getFileType(fileName: string): string {
-    if (!fileName) return 'File';
-    const extension = fileName.split('.').pop()?.toLowerCase();
-    switch (extension) {
-      case 'pdf':
-        return 'PDF Document';
-      case 'jpg':
-      case 'jpeg':
-        return 'JPEG Image';
-      case 'png':
-        return 'PNG Image';
-      case 'gif':
-        return 'GIF Image';
-      default:
-        return 'File';
-    }
-  }
-
-  getItemCount(): number {
-    if (!this.selectedDrive) {
-      return this.DirectoryNames.length;
-    }
-    return this.childrenPaths.length;
   }
 }

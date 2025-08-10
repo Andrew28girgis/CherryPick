@@ -34,14 +34,8 @@ import { PolygonsControllerService } from 'src/app/core/services/polygons-contro
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IPolygon } from 'src/app/shared/models/ipolygons-controller';
 import { environment } from 'src/environments/environment';
-
-interface ShoppingCenter {
-  id: number;
-  centerName: string;
-  latitude: number;
-  longitude: number;
-}
-
+import { ShoppingCenter } from 'src/app/shared/models/campaign-shopping';
+ 
 @Component({
   selector: 'app-campaign-drawing',
   templateUrl: './campaign-drawing.component.html',

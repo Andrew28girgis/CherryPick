@@ -21,8 +21,7 @@ import { Polygon } from 'src/app/shared/models/polygons';
 import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { MapsService } from 'src/app/core/services/maps.service';
-import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription } from 'rxjs';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { Email } from 'src/app/shared/models/email';
@@ -52,8 +51,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   DeletedSC: any;
   sanitizedUrl!: any;
   shareLink: any;
-  StreetViewOnePlace!: boolean;
-  KanbanStages: any[] = [];
+   KanbanStages: any[] = [];
 
   // Improved dropdown management
   activeDropdownId: number | null = null;
@@ -71,11 +69,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   allShoppingCenters: Center[] = [];
   CampaignId!: any;
   @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
-
-  selectedMailSubject = '';
-  selectedMailDate = new Date();
-  selectedMailBody: SafeHtml = '';
-  openedEmail!: Email;
+   openedEmail!: Email;
 
   private subscriptions: Subscription[] = [];
   private subscripe = new Subscription();
@@ -89,8 +83,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   cId!: number;
   orgName!: string;
   constructor(
-    private markerService: MapsService,
-    public activatedRoute: ActivatedRoute,
+     public activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private placesService: PlacesService,
     private sanitizer: DomSanitizer,
@@ -228,35 +221,29 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  // Fixed dropdown toggle method - EXACTLY like side view
-  toggleDropdown(place: any, event?: MouseEvent): void {
+   toggleDropdown(place: any, event?: MouseEvent): void {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
-    // Don't allow toggle if currently updating stage
-    if (this.isUpdatingStage) {
+     if (this.isUpdatingStage) {
       return;
     }
 
-    // Close all other dropdowns first
-    this.cardsSideList.forEach((p) => {
+     this.cardsSideList.forEach((p) => {
       if (p.Id !== place.Id) {
         p.isDropdownOpen = false;
       }
     });
 
-    // Toggle the current dropdown
-    place.isDropdownOpen = !place.isDropdownOpen;
+     place.isDropdownOpen = !place.isDropdownOpen;
     this.activeDropdownId = place.isDropdownOpen ? place.Id : null;
 
-    // Force change detection
-    this.cdr.detectChanges();
+     this.cdr.detectChanges();
   }
 
-  // Fixed select stage method - EXACTLY like side view
-  selectStage(
+   selectStage(
     marketSurveyId: number,
     stageId: number,
     shoppingCenter: any,
@@ -267,49 +254,39 @@ export class CardViewComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
-    // Set updating flag to prevent dropdown toggle during update
-    this.isUpdatingStage = true;
+     this.isUpdatingStage = true;
 
-    // Update the shopping center's stage immediately for UI feedback
-    shoppingCenter.kanbanStageId = stageId;
+     shoppingCenter.kanbanStageId = stageId;
 
-    // Close the dropdown
-    shoppingCenter.isDropdownOpen = false;
+     shoppingCenter.isDropdownOpen = false;
     this.activeDropdownId = null;
 
-    // Update the stage through the service
-    this.viewManagerService.updatePlaceKanbanStage(
+     this.viewManagerService.updatePlaceKanbanStage(
       marketSurveyId,
       stageId,
       shoppingCenter,
       this.CampaignId
     );
 
-    // Force change detection
-    this.cdr.detectChanges();
+     this.cdr.detectChanges();
 
-    // Reset updating flag after a short delay
-    setTimeout(() => {
+     setTimeout(() => {
       this.isUpdatingStage = false;
     }, 100);
   }
 
-  // Improved document click handler - EXACTLY like side view
-  @HostListener('document:click', ['$event'])
+   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
 
-    // Only handle clicks if not currently updating stage
-    if (this.isUpdatingStage) {
+     if (this.isUpdatingStage) {
       return;
     }
 
-    // Check if click is outside any stage dropdown
-    if (this.activeDropdownId && target) {
+     if (this.activeDropdownId && target) {
       const clickedDropdown = target.closest('.custom-dropdown');
 
-      // If clicked outside all dropdowns, close them
-      if (!clickedDropdown) {
+       if (!clickedDropdown) {
         this.cardsSideList.forEach((place) => {
           place.isDropdownOpen = false;
         });
@@ -328,10 +305,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  getShoppingCenterUnitSize(shoppingCenter: any): string {
-    return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
-  }
-
+ 
   getNeareastCategoryName(categoryId: number): string {
     return this.viewManagerService.getNearestCategoryName(categoryId);
   }
@@ -375,9 +349,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  setIframeUrl(url: string): void {
-    this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url);
-  }
+ 
 
   viewOnStreet() {
     if (!this.General.modalObject) return;
@@ -402,17 +374,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   copyLink(link: string) {
     navigator.clipboard.writeText(link);
   }
-
-  openDeleteShoppingCenterModal(
-    modalTemplate: TemplateRef<any>,
-    shoppingCenter: any
-  ) {
-    this.DeletedSC = shoppingCenter;
-    this.shoppingCenterIdToDelete = shoppingCenter.Id;
-    this.modalService.open(modalTemplate, {
-      ariaLabelledBy: 'modal-basic-title',
-    });
-  }
+ 
 
   async deleteShCenter() {
     try {
@@ -486,7 +448,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.buyboxId = this.BuyBoxId;
   }
 
-  trackById(index: number, place: any): number {
+  trackById( place: any): number {
     return place.Id;
   }
 
@@ -592,15 +554,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       error: (err) => console.error('Error loading kanban stages:', err),
     });
   }
-
-  onStageChange(id: number) {
-    this.selectedStageId = id;
-    this.viewManagerService.setSelectedStageId(id);
-  }
-
-  selectStagekan(id: number) {
-    this.viewManagerService.setSelectedStageId(id);
-  }
+ 
 
   getSentMails(shopping: any): SentMails[] {
     const raw: any[] = shopping?.SentMails ?? [];

@@ -222,6 +222,7 @@
             }}"
             [title]="org.name"
             alt=""
+            (error)="onImageError($event)"
           />
           <h2 class="organization-title mb-0">{{ org.name }}</h2>
         </div>

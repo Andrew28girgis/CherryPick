@@ -1,13 +1,14 @@
 <div class="tenant-card">
   <div class="d-flex align-items-center gap-3">
     <img
-      class="tenant-card-img"
-      [src]="
-        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-        tenant.id
-      "
-      (error)="onImageError($event)"
-    />
+    class="tenant-card-img"
+    [src]="getImageUrl(tenant.id)"
+    crossOrigin="anonymous"
+    (load)="checkImage($event)"
+    (error)="onImageError($event)"
+  />
+  
+  
     <div
       class="d-flex flex-column align-items-start justify-content-center gap-2"
     >

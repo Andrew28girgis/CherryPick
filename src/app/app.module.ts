@@ -56,6 +56,7 @@ import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
 import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
  import { EmailInfoComponent } from './features/email-info/email-info.component';
+import { FileExplorerComponent } from './features/shopping/file-explorer/file-explorer.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -87,6 +88,7 @@ import { ExtractShoppingCenterComponent } from './features/extract-shopping-cent
     ShoppingComponent,
     ExtractShoppingCenterComponent,
     EmailInfoComponent,
+    FileExplorerComponent,
   ],
   imports: [
     BrowserModule,

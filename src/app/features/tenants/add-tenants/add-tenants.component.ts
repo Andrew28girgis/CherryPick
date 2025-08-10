@@ -250,24 +250,9 @@ export class AddTenantsComponent implements OnInit {
     this.spinner.hide();
     this.router.navigate(['/summary']);
   }
-
-  isStepActive(step: number): boolean {
-    return this.currentStep === step;
-  }
-
-  isStepCompleted(step: number): boolean {
-    return this.currentStep > step;
-  }
-
   nextStep() {
     if (this.currentStep < this.totalSteps) {
       this.currentStep++;
-    }
-  }
-
-  previousStep() {
-    if (this.currentStep > 1) {
-      this.currentStep--;
     }
   }
 }

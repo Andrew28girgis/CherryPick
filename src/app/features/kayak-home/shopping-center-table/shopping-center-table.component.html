@@ -58,7 +58,7 @@
             >
               <div class="d-flex align-items-center gap-3 tenant-item-content">
                 <div class="tenant-logo-small">
-                  <!-- <img
+                  <img
                     class="tenant-img"
                     [src]="
                       'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -66,7 +66,9 @@
                     "
                     [alt]="tenant.Name"
                     (error)="onImageError($event)"
-                  /> -->
+                    (load)="checkImage($event)"
+
+                  />
                 </div>
                 <div class="tenant-info">
                   <div class="tenant-title">{{ tenant.Name }}</div>

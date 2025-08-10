@@ -264,17 +264,6 @@ textarea.form-control {
   margin-top: 20px;
 }
 
-/* Remove any existing stepper styles that might conflict */
-.stepper-container,
-.step-indicators,
-.step,
-.step-number,
-.step-label,
-.step.active,
-.step.completed {
-  display: none;
-}
-
 .back-link {
   display: flex;
   align-items: center;
@@ -294,26 +283,7 @@ textarea.form-control {
 .back-link:hover svg path {
   stroke: #3922d2;
 }
-
-.step-indicators {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  position: relative;
-  padding: 0;
-  margin: 0;
-}
-
-.step-indicators::before {
-  content: "";
-  position: absolute;
-  top: 16px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #e4e3eb;
-  z-index: 0;
-}
+ 
 
 .step {
   display: flex;
@@ -324,82 +294,10 @@ textarea.form-control {
   position: relative;
   z-index: 1;
 }
-
-.step-number {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #e4e3eb;
-  color: #707791;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.step-label {
-  color: #707791;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.step.active .step-number {
-  background: #3922d2;
-  border-color: #3922d2;
-  color: white;
-}
-
-.step.active .step-label {
-  color: #3922d2;
-  font-weight: 600;
-}
-
-.step.active ~ .step {
-  .step-number {
-    background: #ffffff;
-    border-color: #e4e3eb;
-    color: #707791;
-  }
-  .step-label {
-    color: #707791;
-  }
-}
-
-.step.completed .step-number {
-  background: #3922d2;
-  border-color: #3922d2;
-  color: white;
-}
-
-.step.completed .step-label {
-  color: #3922d2;
-}
-
-.step.completed ~ .step.active .step-number {
-  background: #3922d2;
-  border-color: #3922d2;
-  color: white;
-}
-
-/* Add the blue line between completed steps */
-.step.completed::after {
-  content: "";
-  position: absolute;
-  top: 16px;
-  left: 50%;
-  right: -50%;
-  height: 2px;
-  background: #3922d2;
-  z-index: 0;
-}
-
-/* Remove the line after the last step */
-.step:last-child::after {
-  display: none;
-}
-
+ 
+ 
+  
+  
 .form-content {
   background: #f8f9fb;
   border-radius: 12px;

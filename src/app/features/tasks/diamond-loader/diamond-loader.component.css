@@ -1,11 +1,5 @@
-.diamond-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  }
-
 .diamond-wrapper {
-   animation: diamondRotate 10s linear infinite;
+  animation: diamondRotate 10s linear infinite;
 }
 
 .content {
@@ -14,28 +8,15 @@
   margin-top: 10px;
   text-align: center;
   opacity: 0;
-   transition: all 0.3s ease;
+  transition: all 0.3s ease;
   pointer-events: none;
 }
 
 .content.show {
   opacity: 1;
-   pointer-events: auto;
+  pointer-events: auto;
 }
 
-.count-value {
-  font-size: 24px;
-  font-weight: bold;
-  color: #614EDB;
-  margin-bottom: 5px;
-}
-
-.count-label {
-  font-size: 14px;
-  color: #887AE4;
-  white-space: nowrap;
-}
- 
 .diamonds-container {
   display: flex;
   flex-direction: row;
@@ -44,11 +25,11 @@
   gap: 17px;
   padding: 24px;
   flex-wrap: nowrap;
-   width: 100%;
+  width: 100%;
   min-width: 0;
   flex: 2;
 }
-.bottom-right-fixed{
+.bottom-right-fixed {
   position: fixed;
   bottom: 20px;
   right: 8%;
@@ -61,7 +42,7 @@
   flex-direction: column;
   align-items: center;
   min-width: 180px;
-   padding: 10px;
+  padding: 10px;
   border-radius: 24px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -72,53 +53,76 @@
 
 /* Yellow Diamond Card */
 .diamond-card:nth-child(1) {
-  background: #FF961C;
-  background-image: 
-    radial-gradient(138.97% 96.59% at 0% -32.14%, rgba(175, 175, 175, 0.20) 0%, rgba(175, 175, 175, 0.00) 100%),
-    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0.00) 98.5%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%);
+  background: #ff961c;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
   background-blend-mode: normal, color-burn, normal;
 }
 
 /* Blue Diamond Card */
 .diamond-card:nth-child(2) {
-  background: #2F82FF;
-  background-image: 
-    radial-gradient(138.97% 96.59% at 0% -32.14%, rgba(175, 175, 175, 0.20) 0%, rgba(175, 175, 175, 0.00) 100%),
-    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0.00) 98.5%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%);
+  background: #2f82ff;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
   background-blend-mode: normal, color-burn, normal;
 }
 
 /* Purple Diamond Card */
 .diamond-card:nth-child(3) {
-  background: #B158E7;
-  background-image: 
-    radial-gradient(138.97% 96.59% at 0% -32.14%, rgba(175, 175, 175, 0.20) 0%, rgba(175, 175, 175, 0.00) 100%),
-    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0.00) 98.5%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%);
+  background: #b158e7;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
   background-blend-mode: normal, color-burn, normal;
 }
 
 /* Pink Diamond Card */
 .diamond-card:nth-child(4) {
-  background: #FF6A8E;
-  background-image: 
-    radial-gradient(138.97% 96.59% at 0% -32.14%, rgba(175, 175, 175, 0.20) 0%, rgba(175, 175, 175, 0.00) 100%),
-    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0.00) 98.5%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%);
+  background: #ff6a8e;
+  background-image: radial-gradient(
+      138.97% 96.59% at 0% -32.14%,
+      rgba(175, 175, 175, 0.2) 0%,
+      rgba(175, 175, 175, 0) 100%
+    ),
+    linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0) 98.5%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
   background-blend-mode: normal, color-burn, normal;
 }
 
 /* Rainbow Diamond Card */
 .diamond-card:nth-child(5) {
-  background: 
-  radial-gradient(100% 100% at 50% 50%, rgba(0, 255, 224, 0.2) 0%, rgba(0, 0, 0, 0.9) 80%),
-  radial-gradient(40% 40% at 60% 40%, rgba(253, 156, 255, 0.15) 0%, transparent 100%),
-  radial-gradient(50% 50% at 30% 60%, rgba(0, 255, 117, 0.1) 0%, transparent 100%),
-  linear-gradient(180deg, #11101a 0%, #0a0910 100%);
+  background: radial-gradient(
+      100% 100% at 50% 50%,
+      rgba(0, 255, 224, 0.2) 0%,
+      rgba(0, 0, 0, 0.9) 80%
+    ),
+    radial-gradient(
+      40% 40% at 60% 40%,
+      rgba(253, 156, 255, 0.15) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      50% 50% at 30% 60%,
+      rgba(0, 255, 117, 0.1) 0%,
+      transparent 100%
+    ),
+    linear-gradient(180deg, #11101a 0%, #0a0910 100%);
 
-background-blend-mode: screen, overlay, overlay, normal;
+  background-blend-mode: screen, overlay, overlay, normal;
 }
 
 .diamond-card:hover {
@@ -127,13 +131,17 @@ background-blend-mode: screen, overlay, overlay, normal;
 }
 
 .diamond-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at top right, rgba(255,255,255,0.1), transparent 70%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(255, 255, 255, 0.1),
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -144,24 +152,24 @@ background-blend-mode: screen, overlay, overlay, normal;
   display: flex;
   justify-content: center;
   align-items: center;
-   transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .diamond-wrapper svg {
   width: 75%;
   height: 70%;
   transition: transform 0.5s ease;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .diamond-wrapper.active svg {
   transform: scale(1.1);
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
 }
 
 .diamond-wrapper.complete svg {
   transform: scale(1.05);
-  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
 }
 
 .card-content {
@@ -197,10 +205,11 @@ background-blend-mode: screen, overlay, overlay, normal;
 }
 
 .count-value {
+  color: #614edb;
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 4px;
-  background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+  background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -208,6 +217,7 @@ background-blend-mode: screen, overlay, overlay, normal;
 .count-label {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
 }
 
 .loader-container {
@@ -218,23 +228,30 @@ background-blend-mode: screen, overlay, overlay, normal;
   flex-direction: column;
   display: flex;
   align-items: center;
-   justify-content: space-between;
+  justify-content: space-between;
   min-height: 100%;
-
 }
 
 .progress-container {
-  background: #2F82FF; /* Base blue color from your diamond cards */
-  background-image: 
-    linear-gradient(135deg, #3922d2 0%, #2F82FF 50%, #6366f1 100%),
-    linear-gradient(105deg, rgba(53, 53, 53, 0.3) 13.77%, rgba(53, 53, 53, 0.00) 98.5%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%); 
+  background: #2f82ff; /* Base blue color from your diamond cards */
+  background-image: linear-gradient(
+      135deg,
+      #3922d2 0%,
+      #2f82ff 50%,
+      #6366f1 100%
+    ),
+    linear-gradient(
+      105deg,
+      rgba(53, 53, 53, 0.3) 13.77%,
+      rgba(53, 53, 53, 0) 98.5%
+    ),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);
   background-blend-mode: normal, color-burn, normal;
   border-radius: 12px;
   padding: 24px;
   position: relative;
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:  "Segoe UI", sans-serif;
   width: 400px;
   margin: 0;
   flex: 1;
@@ -315,68 +332,17 @@ background-blend-mode: screen, overlay, overlay, normal;
 }
 
 /* Responsive design */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .progress-container {
     padding: 20px 16px;
   }
-  
+
   .main-text {
     font-size: 18px;
   }
-  
+
   .progress-percentage {
     font-size: 16px;
     min-width: 40px;
   }
 }
-
-/* Pentagon Loader Styles */
-.pentagon-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px 0;
-}
-
-.pentagon-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
- 
-
-.pentagon-wrapper polygon {
-  fill: #E0E0E0;
-  transition: all 0.3s ease;
-}
-
-.pentagon-wrapper polygon.active {
-  fill: #FF69B4;
-}
-
-.pentagon-wrapper:nth-child(2) polygon.active {
-  fill: #FF7F50;
-}
-
-.pentagon-wrapper polygon.complete {
-  fill: #4CAF50;
-}
- 
-
-.dianmond-container{
-  display: flex;
-width: 600px;
-padding: 128px 64px 64px 64px;
-flex-direction: column;
-align-items: center;
-gap: 64px;
-align-self: stretch;
-border-radius: 64px;
-border: 1.333px solid rgba(63, 63, 63, 0.30);
-background: radial-gradient(138.97% 96.59% at 0% -32.14%, rgba(175, 175, 175, 0.20) 0%, rgba(175, 175, 175, 0.00) 100%), linear-gradient(105deg, #353535 13.77%, rgba(53, 53, 53, 0.00) 98.5%),   lightgray 0% 0% / 50px 50px repeat, linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%), #FF961C;
-background-blend-mode: normal, color-burn, normal, normal, normal;
-box-shadow: 0px 1.333px 1.333px 0px rgba(255, 255, 255, 0.10) inset;
-}
-
-

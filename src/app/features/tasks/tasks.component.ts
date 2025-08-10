@@ -1,27 +1,14 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { firstValueFrom, forkJoin, Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DiamondLoaderComponent } from './diamond-loader/diamond-loader.component';
+import { DataCollectionProgress, CountData } from 'src/app/shared/models/diamonds';
 
-interface DataCollectionProgress {
-  step1: boolean;
-  step2: boolean;
-  step3: boolean;
-  step4: boolean;
-}
-
-interface CountData {
-  mailCount: number;
-  contactCount: number;
-  organizationCount: number;
-  shoppingCentersCount: number;
-  placeCount: number;
-}
 
 @Component({
   selector: 'app-tasks',
@@ -39,17 +26,14 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   protected microsoftState: number = 1; // 1: not linked, 2: linking, 3: linked
   protected googleState: number = 1;
-  protected isCollectingMicrosoftData: boolean = false;
-  protected isCollectingGoogleData: boolean = false;
-  protected counts: CountData = {
+   protected counts: CountData = {
     mailCount: 0,
     contactCount: 0,
     organizationCount: 0,
     shoppingCentersCount: 0,
     placeCount: 0,
   };
-  protected diamondsCount: number = 0;
-  protected microsoftDataProgress: DataCollectionProgress = {
+   protected microsoftDataProgress: DataCollectionProgress = {
     step1: false,
     step2: false,
     step3: false,
@@ -81,16 +65,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   googleEmailsList: { email: string; isAdded: boolean }[] = [];
   googleDomainList: { domain: string; isAdded: boolean }[] = [];
 
-  microsoftProgress: number = 0;
-  googleProgress: number = 0;
-  totalMailsCount: any;
-  totalProgressedMessage: any;
+   totalProgressedMessage: any;
   constructor(
     private genericApiService: PlacesService,
     private http: HttpClient,
     private modalService: NgbModal,
-    private router: Router
-  ) {}
+   ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
