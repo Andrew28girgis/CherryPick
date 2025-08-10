@@ -48,6 +48,7 @@
               [ngClass]="{ loading: imageLoadingStates[shopping.Id] }"
               loading="lazy"
               alt="{{ shopping.CenterName }}"
+              referrerpolicy="no-referrer"
             />
             <div
               class="image-placeholder"
@@ -66,7 +67,7 @@
                 style="display: flex; justify-content: end; gap: 5px"
               >
                 <div *ngIf="shopping.stageName">
-                  <div class="custom-dropdown" style="width: 200px">
+                  <div class="custom-dropdown" style="width: 180px">
                     <div
                       class="selected-option"
                       (click)="toggleDropdown(shopping, $event)"

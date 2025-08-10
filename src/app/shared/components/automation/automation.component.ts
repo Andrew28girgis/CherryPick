@@ -15,11 +15,13 @@ export class AutomationComponent implements OnInit {
   automationResponses: any[] = [];
   tableColumns: string[] = [];
   shoppingCenterId!: number;
+  automationTaskId!: number;
   shoppingCenterDetails: any;
   shoppingCenterName: string = '';
-  conclusionMessage: string = ''; // Added to store the conclusion message
-  hasAddedContacts: boolean = false; // Track if any contacts have been added
-  showCloseConfirmation: boolean = false; // Track confirmation dialog visibility
+  conclusionMessage: string = '';
+  hasAddedContacts: boolean = false;
+  showCloseConfirmation: boolean = false;
+  isLoading: boolean = true; // Add loading state
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -35,6 +37,8 @@ export class AutomationComponent implements OnInit {
   }
 
   GetAutomationResponseForShoppingCenter(): void {
+    this.isLoading = true; // Set loading to true when API call starts
+    
     const body: any = {
       Name: 'GetAutomationResponseForShoppingCenter',
       Params: {
@@ -44,7 +48,10 @@ export class AutomationComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
+        this.isLoading = false; // Set loading to false when API responds
+        
         this.shoppingCenterId = data.json[0].shoppingCenterId;
+        this.automationTaskId = data.json[0].automationTaskLockupId;
 
         this.automationResponses = [];
         const columnSet = new Set<string>();
@@ -134,6 +141,7 @@ export class AutomationComponent implements OnInit {
         console.log('Consolidated Message:', this.conclusionMessage);
       },
       error: (error) => {
+        this.isLoading = false; // Set loading to false on error
         console.error('Error fetching automation response:', error);
       },
     });
@@ -257,12 +265,7 @@ export class AutomationComponent implements OnInit {
   }
   // Method to actually perform the close action
   performClose() {
-    if ((window as any).chrome?.webview?.postMessage) {
-      (window as any).chrome.webview.postMessage('close-automation-window');
-      console.log('Close message sent to webview');
-    } else {
-      console.warn('chrome.webview is not available on this platform');
-    }
+    (window as any).electronMessage.closeSideBrowser();
   }
   // Method to handle confirmation dialog actions
   confirmClose() {

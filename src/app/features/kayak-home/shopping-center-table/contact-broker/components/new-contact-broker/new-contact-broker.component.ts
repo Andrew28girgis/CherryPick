@@ -195,7 +195,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         params: { Name: 'Availability' },
       };
       const catResponse = await firstValueFrom(
-        this.placeService.GenericAPI(categoryBody)
+        this.placeService.BetaGenericAPI(categoryBody)
       );
       const categoryId = catResponse?.json?.[0]?.Id;
 
@@ -213,7 +213,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         Json: null,
       };
       const promptsResponse = await firstValueFrom(
-        this.placeService.GenericAPI(promptsBody)
+        this.placeService.BetaGenericAPI(promptsBody)
       );
       const promptsData = promptsResponse?.json || [];
 
@@ -301,7 +301,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
       )
       .subscribe({
         complete: async () => {
-          await this.getGeneratedEmails();
+          // await this.getGeneratedEmails();
           this.checkMailGenerated();
           // this.scrollDown.emit();
           // this.onSubmit();
@@ -370,6 +370,8 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
       this.chooseBrokerObject,
       this.managedByBrokerArray
     );
+    console.log('ManagerOrgDTO:', this.ManagerOrgDTO);
+    // debugger
     const requests = this.ManagerOrgDTO.map(async (managerOrg) => {
       const body: GenerateContextDTO = {
         ContactId: this.contactId,
@@ -403,22 +405,26 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
   }
 
   AddMailContextReceivers(Mid: number, OrgID: number): Observable<any> {
-    const org = this.ManagerOrgDTO.find(
-      (org: any) => org.OrganizationId === OrgID
-    );
+    // const org = this.ManagerOrgDTO.find(
+    //   (org: any) => org.OrganizationId === OrgID
+    // );
 
-    if (
-      !org ||
-      !org.GetContactManagers ||
-      org.GetContactManagers.length === 0
-    ) {
-      return of(null);
-    }
+    // if (
+    //   !org ||
+    //   !org.GetContactManagers ||
+    //   org.GetContactManagers.length === 0
+    // ) {
+    //   return of(null);
+    // }
 
     // this.spinner.show();
 
-    const observables = org.GetContactManagers.map((manager: any) => {
-      const ContactSCIds = manager.ShoppingCentersID.join(',');
+    const selectedContacts: ManagerOrganization[] = Array.from(
+      this.selectedContacts.values()
+    );
+
+    const observables = selectedContacts.map((manager: any) => {
+      // const ContactSCIds = manager.ShoppingCentersID.join(',');
 
       const body: any = {
         Name: 'AddMailContextReceivers',
@@ -426,7 +432,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         Params: {
           MailContextId: Mid,
           ContactId: manager.ContactId,
-          ShoppingCenterIds: ContactSCIds,
+          ShoppingCenterIds: `${this.center.Id}`,
         },
         Json: null,
       };
@@ -441,23 +447,23 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
     );
   }
 
-  async getGeneratedEmails() {
-    var body: any = {
-      Name: 'GetMailContextGenerated',
-      MainEntity: null,
-      Params: {
-        campaignId: this.center.CampaignId,
-        ContactId: this.contactId,
-      },
-      Json: null,
-    };
+  // async getGeneratedEmails() {
+  //   var body: any = {
+  //     Name: 'GetMailContextGenerated',
+  //     MainEntity: null,
+  //     Params: {
+  //       campaignId: this.center.CampaignId,
+  //       ContactId: this.contactId,
+  //     },
+  //     Json: null,
+  //   };
 
-    const data = await firstValueFrom(this.placeService.GenericAPI(body));
+  //   const data = await firstValueFrom(this.placeService.GenericAPI(body));
 
-    if (data.json) {
-      this.returnGetMailContextGenerated = data.json;
-    }
-  }
+  //   if (data.json) {
+  //     this.returnGetMailContextGenerated = data.json;
+  //   }
+  // }
 
   updateMailBody(event: Event, index: number) {
     const div = event.target as HTMLDivElement;

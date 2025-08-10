@@ -151,7 +151,7 @@ export class EmailInboxComponent implements OnInit {
         Name: 'Availability',
       },
     };
-    this.PlacesService.GenericAPI(categoryBody).subscribe({
+    this.PlacesService.BetaGenericAPI(categoryBody).subscribe({
       next: (catResponse: any) => {
         const categoryId = catResponse?.json?.[0]?.Id;
         if (!categoryId) {
@@ -165,7 +165,7 @@ export class EmailInboxComponent implements OnInit {
           },
           Json: null,
         };
-        this.PlacesService.GenericAPI(promptsBody).subscribe({
+        this.PlacesService.BetaGenericAPI(promptsBody).subscribe({
           next: (promptsResponse: any) => {
             const promptsData = promptsResponse?.json || [];
             if (promptsData.length > 0) {
@@ -449,7 +449,7 @@ export class EmailInboxComponent implements OnInit {
             error: () => {},
             complete: () => {
               // Start the email generation monitoring flow
-              this.getGeneratedEmails();
+              // this.getGeneratedEmails();
               this.checkMailGenerated();
             },
           });
@@ -504,30 +504,30 @@ export class EmailInboxComponent implements OnInit {
     );
   }
 
-  async getGeneratedEmails() {
-    const body: any = {
-      Name: 'GetMailContextGenerated',
-      MainEntity: null,
-      Params: {
-        campaignId: this.campaignId,
-        ContactId: this.selectedContactContactId,
-      },
-      Json: null,
-    };
+  // async getGeneratedEmails() {
+  //   const body: any = {
+  //     Name: 'GetMailContextGenerated',
+  //     MainEntity: null,
+  //     Params: {
+  //       campaignId: this.campaignId,
+  //       ContactId: this.selectedContactContactId,
+  //     },
+  //     Json: null,
+  //   };
 
-    try {
-      const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
-      if (data.json) {
-        this.returnGetMailContextGenerated = data.json;
-        console.log(
-          'Generated emails fetched:',
-          this.returnGetMailContextGenerated
-        );
-      }
-    } catch (error) {
-      console.error('Error fetching generated emails:', error);
-    }
-  }
+  //   try {
+  //     const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
+  //     if (data.json) {
+  //       this.returnGetMailContextGenerated = data.json;
+  //       console.log(
+  //         'Generated emails fetched:',
+  //         this.returnGetMailContextGenerated
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching generated emails:', error);
+  //   }
+  // }
 
   checkMailGenerated(): void {
     const body = {

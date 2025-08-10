@@ -2,7 +2,7 @@
   <div class="contacts-container">
     @for (contact of contacts; track contact.ContactId) {
     <div class="contact-container">
-      <div class="d-flex align-items-start gap-3">
+      <div class="d-flex align-items-start gap-1">
         <input
           class="form-check-input"
           type="checkbox"
@@ -16,7 +16,7 @@
           <div class="contact-phone">
             {{ contact.CellPhone }}
           </div>
-          <div class="contact-email">
+          <div class="contact-email" style="font-size: 13px">
             {{ contact.Email }}
           </div>
         </div>
@@ -25,33 +25,35 @@
     }
   </div>
 
-  <div class="w-100 load-another-contact" (click)="getContactsByOrgID()">
-    Show all {{ contacts[0].Name }} Brokers
-  </div>
+  <div class="d-flex justify-content-between w-100">
+    <div class="w-100 load-another-contact pt-3" (click)="getContactsByOrgID()">
+      Show all {{ contacts[0].Name }} Brokers
+    </div>
 
-  <div class="send-as">
-    <div class="send-as-title">Send As</div>
-    <div class="send-as-switch">
-      <div
-        class="send-as-to"
-        [ngClass]="{ 'send-as-active': sendAsTo }"
-        (click)="sendAsTo = true; sendAsCC = false"
-      >
-        To
-      </div>
-      <div
-        class="send-as-cc"
-        [ngClass]="{ 'send-as-active': sendAsCC }"
-        (click)="sendAsTo = false; sendAsCC = true"
-      >
-        CC
+    <div class="send-as">
+      <div class="send-as-title">Send As</div>
+      <div class="send-as-switch">
+        <div
+          class="send-as-to"
+          [ngClass]="{ 'send-as-active': sendAsTo }"
+          (click)="sendAsTo = true; sendAsCC = false"
+        >
+          To
+        </div>
+        <div
+          class="send-as-cc"
+          [ngClass]="{ 'send-as-active': sendAsCC }"
+          (click)="sendAsTo = false; sendAsCC = true"
+        >
+          CC
+        </div>
       </div>
     </div>
   </div>
 
   <div class="generate-email-container">
     <div class="prompt-controls">
-      <div class="w-100 checkbox-section-select pb-2">
+      <div class="w-100 checkbox-section-select">
         <label for="discussionDropdown">Select Prompt</label>
         <select
           class="form-select form-select-lg"
@@ -76,7 +78,7 @@
         [(ngModel)]="contactSignature"
         class="form-control"
         id="exampleFormControlTextarea1"
-        rows="4"
+        rows="3"
         style="resize: none"
         (input)="onSignatureChange($event)"
       ></textarea>
@@ -150,12 +152,10 @@
             (input)="updateMailBody($event, index)"
           ></div>
           <div class="email-actions">
-            <button
-              class="send-btn"
-              (click)="openSendMailsModal(sendMailsContact, email)"
-            >
+            <button class="send-btn" (click)="email && sendEmail(email)">
               Send
             </button>
+            <!-- (click)="openSendMailsModal(sendMailsContact, email)" -->
           </div>
         </div>
         }@empty {

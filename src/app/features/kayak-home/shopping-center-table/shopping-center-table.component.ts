@@ -5,16 +5,20 @@ import {
   ViewChild,
   ChangeDetectorRef,
   OnDestroy,
+  viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { Stage } from 'src/app/shared/models/shoppingCenters';
 import { Subscription } from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Tenant } from 'src/app/shared/models/tenants';
+import { NgxFileDropEntry } from 'ngx-file-drop';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -98,17 +102,21 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   imageLoadingStates: { [key: number]: boolean } = {}; // Track loading state for each image
   imageErrorStates: { [key: number]: boolean } = {}; // Track error state for each image
   @ViewChild('tenantDropdown') tenantDropdownRef!: NgbDropdown;
-
-
-   constructor(
+  @ViewChild('uploadTypes') uploadTypes!: any;
+  showFileDropArea = false;
+  isUploading = false;
+  constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
     private placesService: PlacesService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
+    this.GetAllActiveOrganizations();
     this.cdr.detectChanges();
 
     // Subscribe to filtered centers
@@ -361,29 +369,75 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   //   });
   // }
 
- 
+  GetAllActiveOrganizations(): void {
+    const body: any = {
+      Name: 'GetAllActiveOrganizations',
+      Params: {},
+    };
 
-  goToTenant(tenant: Tenant) {
-    this.router.navigate([
-      '/dashboard',
-      tenant.Id,
-      tenant.OrganizationId,
-      tenant.Name,
-      tenant.Campaigns[0].Id,
-    ]);
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.tenants = data.json.map((tenant: any) => ({
+          ...tenant,
+          // Map the properties to match your Tenant interface
+          id: tenant.id,
+          name: tenant.name,
+          URL: tenant.URL,
+          LinkedIn: tenant.LinkedIn,
+          Campaigns: tenant.Campaigns || [],
+        }));
+
+        this.filteredTenants = this.tenants;
+        this.groupTenantsByAlphabet();
+        // Find the tenant that matches the current route params
+        this.selectedTenant =
+          this.tenants.find(
+            (t) => t.id.toString() === this.OrgId || t.name === this.tenantName
+          ) || null;
+
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading tenants:', error);
+      },
+    });
   }
 
-  selectTenant(tenant: Tenant) {
+  groupTenantsByAlphabet(): void {
+    const sortedTenants = [...this.filteredTenants].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+
+    this.groupedTenants = {};
+    sortedTenants.forEach((tenant) => {
+      const firstLetter = tenant.name.charAt(0).toUpperCase();
+      if (!this.groupedTenants[firstLetter]) {
+        this.groupedTenants[firstLetter] = [];
+      }
+      this.groupedTenants[firstLetter].push(tenant);
+    });
+
+    this.alphabetKeys = Object.keys(this.groupedTenants).sort();
+  }
+
+  goToTenant(tenant: any) {
+    const campaignId =
+      tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : 0;
+    this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
+  }
+
+  selectTenant(tenant: any): void {
     this.selectedTenant = tenant;
-     if (tenant.Campaigns && tenant.Campaigns.length > 0) {
-      this.router.navigate([
-        '/dashboard',
-        tenant.Id,
-         tenant.Name,
-        tenant.Campaigns[0].Id,
-      ]);
+    // Find the first campaign if available
+    const campaignId =
+      tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : 0;
+    // Navigate to the new tenant's dashboard
+    this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
+
+    // Close the dropdown
+    if (this.tenantDropdownRef) {
+      this.tenantDropdownRef.close();
     }
-    this.tenantDropdownRef.close();
   }
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -540,4 +594,116 @@ checkImage(event: Event) {
     }
   }
 }
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 5000);
+    } else {
+      console.warn('Toast elements not found in DOM.');
+    }
+  }
+
+  openUpload(): void {
+    if (this.uploadTypes) {
+      this.modalService.open(this.uploadTypes, {
+        size: 'md',
+        backdrop: true,
+        backdropClass: 'fancy-modal-backdrop',
+        keyboard: true,
+        windowClass: 'fancy-modal-window',
+        centered: true,
+      });
+    }
+  }
+
+  openFileUpload(): void {
+    if (!this.isUploading) {
+      this.showFileDropArea = true;
+    }
+  }
+
+  cancelFileUpload(): void {
+    this.showFileDropArea = false;
+  }
+
+  dropped(files: NgxFileDropEntry[]): void {
+    if (files.length > 0) {
+      const droppedFile = files[0];
+
+      // Check if it's a file (not a directory)
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          // Validate file type
+          if (
+            file.type === 'application/pdf' ||
+            file.name.toLowerCase().endsWith('.pdf')
+          ) {
+            this.uploadFile(file);
+          } else {
+            alert('Please select a PDF file only.');
+          }
+        });
+      }
+    }
+  }
+
+  fileOver(event: any): void {
+    console.log('File over drop zone');
+  }
+
+  fileLeave(event: any): void {
+    console.log('File left drop zone');
+  }
+
+  uploadFile(file: File): void {
+    this.isUploading = true;
+    this.showFileDropArea = false;
+
+    const formData = new FormData();
+    formData.append('filename', file);
+
+    const apiUrl = `${environment.api}/BrokerWithChatGPT/UploadOM/${this.CampaignId}`;
+    this.http.post(apiUrl, formData).subscribe({
+      next: (response: any) => {
+        console.log('Upload successful:', response);
+        this.isUploading = false;
+
+        // Close modal
+        this.modalService.dismissAll();
+
+        // Check if response contains success message
+        if (
+          response &&
+          response.Message === 'The PDF has been uploaded successfully'
+        ) {
+          // Show processing toast message
+          this.showToast(
+            'Emily is processing with the PDF and will Notify when finished in the notifications'
+          );
+        } else {
+          // Fallback message if response structure is different
+          this.showToast(
+            'File uploaded successfully! Emily will process it and notify you when finished.'
+          );
+        }
+        // this.router.navigate(['/uploadOM', this.CampaignId], {
+        //   state: { uploadResponse: response }
+        // });
+      },
+      error: (error) => {
+        console.error('Upload failed:', error);
+        this.isUploading = false;
+        this.showToast('Upload failed. Please try again.');
+      },
+    });
+  }
+  //   findAllContacts() {
+  //   (window as any).electronMessage.findAllContacts();
+  // }
 }

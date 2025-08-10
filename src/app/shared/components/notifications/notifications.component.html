@@ -1,5 +1,5 @@
 <div class="notification-container position-relative">
-  <button 
+  <button
     (click)="toggleDropdown()"
     class="notification-button"
     aria-label="Toggle notifications"
@@ -32,7 +32,10 @@
   </div>
 
   <!-- Notifications Dropdown -->
-  <div class="notification-dropdown" *ngIf="dropdownVisible">
+  <div
+    class="notification-dropdown"
+    *ngIf="notificationService.dropdownVisible"
+  >
     <div class="notification-card">
       <!-- Header -->
       <div class="notification-header">
@@ -44,14 +47,18 @@
 
       <!-- Notifications List -->
       <div
-        *ngIf="notifications.length > 0; else noNotifications"
+        *ngIf="
+          notificationService.notifications.length > 0;
+          else noNotifications
+        "
         class="notifications-list"
       >
         <div
           class="notification-item"
-          *ngFor="let notification of notifications"
-          (click)="markNotificationAsRead(notification)"
+          *ngFor="let notification of notificationService.notifications"
+          (click)="handleNotificationClick(notification)"
           [class.read]="notification.isRead"
+          [class.clickable]="notification.userSubmissionId"
           role="button"
           tabindex="0"
         >
@@ -66,9 +73,7 @@
 
       <!-- Empty State -->
       <ng-template #noNotifications>
-        <div class="no-notifications">
-          No notifications available.
-        </div>
+        <div class="no-notifications">No notifications available.</div>
       </ng-template>
     </div>
   </div>

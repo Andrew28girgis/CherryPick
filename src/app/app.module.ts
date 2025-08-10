@@ -56,7 +56,7 @@ import { ContactsComponent } from './features/contacts/contacts.component';
 import { ShoppingComponent } from './features/shopping/shopping.component';
 import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
  import { EmailInfoComponent } from './features/email-info/email-info.component';
-import { FileExplorerComponent } from './features/shopping/file-explorer/file-explorer.component';
+import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -88,7 +88,7 @@ import { FileExplorerComponent } from './features/shopping/file-explorer/file-ex
     ShoppingComponent,
     ExtractShoppingCenterComponent,
     EmailInfoComponent,
-    FileExplorerComponent,
+    UploadOMComponent,
   ],
   imports: [
     BrowserModule,

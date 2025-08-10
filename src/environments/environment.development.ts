@@ -1,7 +1,8 @@
 export const environment = {
   production: false,
   // api: 'https://apibeta.cherrypick.com/api',
-  api: 'https://emily.app:5000/api',
+  // api: 'https://emily.app/api',
+  api: 'https://127.0.0.1:5443/api', // Local development API for emily Desktop app
   API_URL: 'https://apibeta.cherrypick.com/api',
   geoJsonsFilesPath: 'https://filesbeta.cherrypick.com/geojson',
   // api: 'https://api.cherrypick.com/api',

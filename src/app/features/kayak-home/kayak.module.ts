@@ -27,6 +27,7 @@ import { GenerateEmailComponent } from './shopping-center-table/contact-broker/c
 import { PreviewEmailComponent } from './shopping-center-table/contact-broker/components/preview-email/preview-email.component';
 import { FilterRepliesPipe } from './shopping-center-table/social-view/social-view.component';
 import { NewContactBrokerComponent } from './shopping-center-table/contact-broker/components/new-contact-broker/new-contact-broker.component';
+import { NgxFileDropModule } from "ngx-file-drop";
 
 @NgModule({
   declarations: [
@@ -61,8 +62,9 @@ import { NewContactBrokerComponent } from './shopping-center-table/contact-broke
     CardModule,
     PaginatorModule,
     KanbanModule,
-    NgbCollapseModule
-  ],
+    NgbCollapseModule,
+    NgxFileDropModule
+],
   exports: [
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,

@@ -1,78 +1,63 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { NotificationService } from 'src/app/core/services/notification.service';
+import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
-
-interface Notification {
-  id: number;
-  message: string;
-  createdDate: string;
-  isRead: boolean;
-}
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
 })
-export class NotificationsComponent implements OnInit {
-  private contactId: number = 0;
-  notifications: Notification[] = [];
-  dropdownVisible: boolean = false;
-  unreadCount: number = 0;
+export class NotificationsComponent implements OnInit, OnDestroy {
+  unreadCount: any;
   readCount: number = 0;
 
+  private intervalId: any;
+  notifications: Notification[] = [];
+
   constructor(
+    private elementRef: ElementRef,
+    public notificationService: NotificationService,
     private placesService: PlacesService,
-    private elementRef: ElementRef
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    const storedContactId = localStorage.getItem('contactId');
-    if (storedContactId) {
-      this.contactId = +storedContactId;
-      this.fetchUserNotifications();
+    this.notificationService.initNotifications();
+
+    this.intervalId = setInterval(() => {
+      this.notificationService.fetchUserNotifications();
+    }, 10000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
   }
 
   toggleDropdown(): void {
-    this.dropdownVisible = !this.dropdownVisible;
+    this.notificationService.dropdownVisible =
+      !this.notificationService.dropdownVisible;
   }
+  handleNotificationClick(notification: Notification): void {
+    this.markNotificationAsRead(notification);
 
-  fetchUserNotifications(): void {
-    const request = {
-      Name: 'GetUserNotifications',
-      Params: {
-        ContactId: this.contactId,
-      },
-    };
-
-    this.placesService.GenericAPI(request).subscribe({
-      next: (response: any) => {
-        this.notifications = (response.json || []) as Notification[];
-        this.sortNotificationsByDate();
-        this.updateNotificationCounts();
-      }
-    });
+    if (notification.userSubmissionId) {
+      const route = `/uploadOM/${notification.userSubmissionId}`;
+      this.router.navigate([route]);
+    }
   }
-
-  private sortNotificationsByDate(): void {
-    this.notifications.sort(
-      (a, b) =>
-        new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
-    );
-  }
-
-  private updateNotificationCounts(): void {
-    this.readCount = this.notifications.filter(
-      (notification) => notification.isRead
-    ).length;
-    this.unreadCount = this.notifications.filter(
-      (notification) => !notification.isRead
-    ).length;
-  }
-
   markNotificationAsRead(notification: Notification): void {
     if (notification.isRead) {
       return;
@@ -87,16 +72,24 @@ export class NotificationsComponent implements OnInit {
 
     this.placesService.GenericAPI(request).subscribe({
       next: () => {
-        notification.isRead = true;
+        notification.isRead = 1;
         this.updateNotificationCounts();
-      }
+      },
     });
+  }
+  private updateNotificationCounts(): void {
+    this.readCount = this.notifications.filter(
+      (notification) => notification.isRead
+    ).length;
+    this.unreadCount = this.notifications.filter(
+      (notification) => !notification.isRead
+    ).length;
   }
 
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event: Event): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.dropdownVisible = false;
+      this.notificationService.dropdownVisible = false;
     }
   }
 }
