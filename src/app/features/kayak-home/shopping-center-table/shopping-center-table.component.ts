@@ -528,33 +528,33 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     },
   });
 }
-groupTenantsByAlphabet(): void {
-   if (!this.filteredTenants || this.filteredTenants.length === 0) {
-    this.groupedTenants = {};
-    this.alphabetKeys = [];
-    return;
-  }
+// groupTenantsByAlphabet(): void {
+//    if (!this.filteredTenants || this.filteredTenants.length === 0) {
+//     this.groupedTenants = {};
+//     this.alphabetKeys = [];
+//     return;
+//   }
 
-  const sortedTenants = [...this.filteredTenants].sort((a, b) =>
-     (a.Name || a.Name || '').localeCompare(b.Name || b.Name || '')
-  );
+//   const sortedTenants = [...this.filteredTenants].sort((a, b) =>
+//      (a.Name || a.Name || '').localeCompare(b.Name || b.Name || '')
+//   );
 
-  this.groupedTenants = {};
-  sortedTenants.forEach((tenant) => {
-    const tenantName = tenant.Name || tenant.Name;
-    if (tenant && tenantName) {
-      const firstLetter = tenantName.charAt(0).toUpperCase();
-      if (!this.groupedTenants[firstLetter]) {
-        this.groupedTenants[firstLetter] = [];
-      }
-      this.groupedTenants[firstLetter].push(tenant);
-    }
-  });
+//   this.groupedTenants = {};
+//   sortedTenants.forEach((tenant) => {
+//     const tenantName = tenant.Name || tenant.Name;
+//     if (tenant && tenantName) {
+//       const firstLetter = tenantName.charAt(0).toUpperCase();
+//       if (!this.groupedTenants[firstLetter]) {
+//         this.groupedTenants[firstLetter] = [];
+//       }
+//       this.groupedTenants[firstLetter].push(tenant);
+//     }
+//   });
 
-  this.alphabetKeys = Object.keys(this.groupedTenants).sort();
+//   this.alphabetKeys = Object.keys(this.groupedTenants).sort();
   
  
-}
+// }
 
 checkImage(event: Event) {
   const img = event.target as HTMLImageElement;
