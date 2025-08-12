@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {
   Router,
   NavigationEnd,
   Event as RouterEvent,
   ActivatedRoute,
 } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -28,12 +29,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showRecord: boolean = false;
   showlink: boolean = false;
   private subscriptions: Subscription[] = [];
-
+  @ViewChild('addAIKeyTypes') addAIKeyTypes!: any;
+  AIKey: string = '';
+  isSaving: boolean = false;
+  saveSuccess: boolean = false;
+  errorMessage: string | null = null;
   constructor(
     public router: Router,
     private userViewService: UserViewService,
     private activatedRoute: ActivatedRoute,
-    private placesService: PlacesService
+    private placesService: PlacesService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -132,4 +138,68 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private fetchUserAvatar(): void {
     this.userAvatar = '';
   }
+  openAddAIKey(): void {
+    this.resetModalState();
+    if (this.addAIKeyTypes) {
+      this.modalService.open(this.addAIKeyTypes, {
+        size: 'md',
+        backdrop: 'static',
+        keyboard: false,
+        centered: true,
+        windowClass: 'fancy-modal-window',
+        backdropClass: 'fancy-modal-backdrop'
+      });
+    }
+  }
+
+  SetGPTAPIKey(): void {
+    if (!this.AIKey) {
+      this.errorMessage = 'Please enter an AI Key';
+      return;
+    }
+
+    this.isSaving = true;
+    this.errorMessage = null;
+    
+    const body = {
+      Name: 'SetGPTAPIKey',
+      Params: { OpenAIKey: this.AIKey },
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.isSaving = false;
+        this.saveSuccess = true;
+        this.showToast(
+            'AI Key Has Been Added Successfully'
+          );
+        this.modalService.dismissAll();
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.errorMessage = err.message || 'Failed to save AI Key';
+      }
+    });
+  }
+
+  private resetModalState(): void {
+    this.isSaving = false;
+    this.saveSuccess = false;
+    this.errorMessage = null;
+    this.AIKey = '';
+  }
+    showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 5000);
+    } else {
+      console.warn('Toast elements not found in DOM.');
+    }
+  }
+
 }

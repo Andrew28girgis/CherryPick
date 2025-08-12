@@ -1,3 +1,8 @@
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
 <nav
   class="navbar navbar-expand-lg d-flex align-items-center w-100"
   *ngIf="displayHeader"
@@ -256,6 +261,9 @@
           <li>
             <a class="dropdown-item" [routerLink]="['/settings']"> Settings </a>
           </li>
+          <li>
+            <a class="dropdown-item" (click)="openAddAIKey()"> Add AI Key </a>
+          </li>
 
           <li><hr class="dropdown-divider" /></li>
           <li>
@@ -286,3 +294,36 @@
     </div>
   </div>
 </nav>
+
+<ng-template #addAIKeyTypes let-modal>
+  <div class="fancy-modal-header">
+    <h5 class="fancy-title">Add AI Key</h5>
+    <button type="button" class="btn-close fancy-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="fancy-modal-body">
+    <form>
+      <div class="mb-4">
+        <label for="aiKey" class="form-label text-muted small mb-2">AI Key</label>
+        <input type="text" 
+               class="form-control fancy-input" 
+               id="aiKey" 
+               name="aiKey" 
+               placeholder="Enter your AI Key" 
+               [(ngModel)]="AIKey" />
+      </div>
+    </form>
+  </div>
+  <div class="fancy-modal-footer">
+    <button type="button" 
+            class="fancy-btn secondary-btn" 
+            (click)="modal.dismiss()">
+      Close
+    </button>
+    <button type="button" 
+            class="fancy-btn primary-btn" 
+            (click)="SetGPTAPIKey()">
+      <span class="btn-spinner" *ngIf="isSaving"></span>
+      Save changes
+    </button>
+  </div>
+</ng-template>
