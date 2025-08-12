@@ -228,12 +228,12 @@ const routes: Routes = [
   {
     path: 'automation/:automationId',
     component: AutomationComponent,
-    data: { hideHeader: true },
+    data: { hideHeader: true, hideSidebar: true }, // Add hideSidebar: true here
   },
   {
     path: 'automationCenters/:automationId',
     component: AutomationShoppingCentersComponent,
-    data: { hideHeader: true },
+    data: { hideHeader: true, hideSidebar: true }, // Add hideSidebar: true here
   },
   {
     path: 'dashboard/:orgId/:orgName/:campaignId',

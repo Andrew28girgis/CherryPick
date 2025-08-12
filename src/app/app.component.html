@@ -1,7 +1,7 @@
-<div class="app-shell" [ngClass]="{'no-sidebar': hideSidebar}">
+<div class="app-shell" [ngClass]="{'with-sidebar': isAuthenticated && !hideSidebar}">
   <app-sidebar *ngIf="isAuthenticated && !hideSidebar"></app-sidebar>
 
-  <div class="app-container" [ngClass]="{'full-width': hideSidebar}">
+  <div class="app-container">
     <!-- <app-header style="background-color: #f1f1f5"></app-header> -->
     <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
       <div class="main-content-area">

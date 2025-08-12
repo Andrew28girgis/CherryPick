@@ -37,13 +37,22 @@
 
 .app-shell {
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr); /* sidebar + flexible main */
+  grid-template-columns: minmax(0, 1fr); /* Full width by default */
   min-height: 100vh;
 }
 
 .app-shell > .app-container {
-  grid-column: 2;
+  grid-column: 1; /* Take the first (and only) column by default */
   min-width: 0; /* prevents overflow in grids */
+}
+
+/* With sidebar layout (when sidebar is shown) */
+.app-shell.with-sidebar {
+  grid-template-columns: 96px minmax(0, 1fr); /* sidebar + flexible main */
+}
+
+.app-shell.with-sidebar > .app-container {
+  grid-column: 2; /* Take the second column when sidebar is visible */
 }
 
 :host {

@@ -43,6 +43,13 @@ export class AppComponent implements OnInit {
         currentRoute.data.subscribe((data) => {
           this.display = !data['hideHeader'];
           this.hideSidebar = data['hideSidebar'] === true;
+
+          // Add logging here
+          console.log('Navigation to:', this.router.url);
+          console.log('Route data:', data);
+          console.log('Is authenticated:', this.isAuthenticated);
+          console.log('Hide sidebar:', this.hideSidebar);
+          console.log('Sidebar should be visible:', this.isAuthenticated && !this.hideSidebar);
         });
       });
   }
