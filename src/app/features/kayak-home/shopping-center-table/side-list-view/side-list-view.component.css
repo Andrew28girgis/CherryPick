@@ -21,15 +21,19 @@
 
 .selected-option {
   padding: 2px 8px;
-  border: 1px solid #ced4da;
-  border-radius: 16px 0 0 16px;
-  background-color: #fff;
-  display: flex;
+   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
   gap: 5px;
   height: 30px;
+  color: var(--Body-Heading, #161017);
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 171.429% */
+
 }
 
 .selected-option:hover {
@@ -40,7 +44,7 @@
 .dropdown-options {
   position: absolute;
   top: 100%;
-  left: 0;
+  left: 9px;
   width: 100%;
   max-height: 200px;
   overflow-y: hidden;
@@ -54,6 +58,7 @@
 
 .dropdown-options.show {
   display: block;
+  width: fit-content;
 }
 
 .dropdown-item {
@@ -70,13 +75,14 @@
   font-weight: 500;
 }
 .ellipsis_icont {
-  border: 1.5px solid #7077915b;
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border-radius: 0px 50% 50% 0;
+  width: 32px;
+  height: 32px;
   position: relative;
   z-index: 1;
+  border: none;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
 }
 
 .shortcuts_iconCard {
@@ -221,7 +227,7 @@
 }
 
 .card-content {
-  background-color: #fff;
+  background: none;
   border-radius: 0 0 20px 20px;
   height: max-content;
   cursor: auto;
@@ -229,8 +235,6 @@
   flex-direction: column;
   position: relative;
   justify-content: space-between;
-  /* min-height: 280px;
-  max-height: 350px; */
 }
 
 .emily {
@@ -700,8 +704,12 @@
 
 /* summary line */
 .mail-summary {
-  font-size: 1.1rem;
+  font-size: 14px;
+  cursor: pointer;
   font-weight: 500;
+}
+.mail-summary:hover {
+  text-decoration: underline;
 }
 
 /* each mail item */
@@ -785,6 +793,7 @@
   font-weight: 600;
   color: #1a202c;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+  white-space: pre-line;
 }
 
 /* Date pill at top right */
@@ -870,20 +879,44 @@
   text-decoration: underline;
 }
 
+/* Image and overlay to mirror card-view */
 .main-img {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 280px;
   overflow: hidden;
   background-color: #f5f5f5;
   border-radius: 18px 18px 0 0;
+}
+
+.img-overlay {
+  gap: 12px;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  z-index: 2;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.img-overlay .custom-dropdown .selected-option {
+  border: none;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+}
+
+.img-overlay .dropdown-options {
+  z-index: 3;
 }
 
 .main-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease;
+  display: block;
+  border-radius: var(--Radius-Radius-12, 12px);
 }
 
 .main-img img.loading {

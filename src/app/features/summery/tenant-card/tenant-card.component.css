@@ -2,10 +2,15 @@ hr {
   border-color: #ced1d6;
 }
 .tenant-card {
-  padding: 1.25rem;
-  border-radius: 1rem;
-  color: #16181d;
-  background-color: #fff;
+  display: flex;
+padding: var(--Space-Space-20, 20px);
+align-items: center;
+gap: var(--Space-Space-16, 16px);
+ border-radius: var(--Card-Section-Radius, 20px);
+background: rgba(255, 255, 255, 0.50);
+ backdrop-filter: blur(100px);
+
+ 
 }
 .tenant-card-img {
   width: 6.5rem;
@@ -138,7 +143,7 @@ hr {
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
-  background-color: #3922d2;
+  background-color: #a31c59;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,4 +157,14 @@ hr {
 }
 ::ng-deep .offcanvas-panel-class {
   width: 35% !important;
+}
+
+.add-campaign-btn {
+   background-color: #a31c59;
+   border-radius: 24px;
+   border: none;
+}
+.add-campaign-btn:hover {
+  background-color: #9b2e5f;
+  color: #fff;
 }

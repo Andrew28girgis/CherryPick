@@ -10,13 +10,13 @@
       <ng-container *ngFor="let place of cardsSideList; trackBy: trackById">
         <div class="col-6">
           <div
-            class="card-window total"
+            class="card-window cursor"
             (mouseenter)="onMouseHighlight(place)"
             (mouseleave)="onMouseLeaveHighlight(place)"
           >
             <div class="card-window_c">
-              <!-- <a
-                [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]"
+              <a
+              [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,place.CampaignId]"
               >
                 <div class="main-img">
                   <img
@@ -34,66 +34,40 @@
                   >
                     <div class="loading-spinner"></div>
                   </div>
-                </div>
-              </a> -->
-              <div class="content-wrap card-content">
-                <div>
-                  <div class="d-flex justify-content-between">
-                    <!-- <a
-                      style="max-width: 45%"
-                      [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]"
-                    >
-                      <p
-                        class="content-title total"
-                        style="white-space: pre-line"
-                      >
-                        {{
-                          place.CenterName.length > 22
-                            ? (place.CenterName | titlecase).slice(0, 22) +
-                              "..."
-                            : (place.CenterName | titlecase)
-                        }}
-                      </p>
 
-                      <span
-                        class="badge badge-danger mx-2"
-                        *ngIf="place.Deleted == true"
-                        >Deleted</span
+                  <!-- Overlayed stage chip and actions on image -->
+                  <div class="img-overlay" *ngIf="place.stageName">
+                    <div class="custom-dropdown" style="width: 200px">
+                      <div
+                        class="selected-option"
+                        (click)="toggleDropdown(place, $event)"
                       >
-                    </a> -->
-                    <div style="display: flex; gap: 5px">
-                      <div *ngIf="place.stageName">
-                        <!-- <p class="ShoppingCenterStage mb-1">{{place.stageName}}</p> -->
-                        <div class="custom-dropdown" style="width: 200px">
-                          <div
-                            class="selected-option"
-                            (click)="toggleDropdown(place, $event)"
-                          >
-                            {{ getSelectedStageName(place.kanbanStageId) }}
-                            <i class="fas fa-chevron-down"></i>
-                          </div>
-                          <div
-                            class="dropdown-options"
-                            [class.show]="place.isDropdownOpen"
-                          >
-                            <div
-                              *ngFor="let stage of KanbanStages"
-                              class="dropdown-item"
-                              [class.active]="stage.id === place.kanbanStageId"
-                              (click)="
-                                selectStage(
-                                  place.MarketSurveyId,
-                                  stage.id,
-                                  place,
-                                  $event
-                                )
-                              "
-                            >
-                              {{ stage.stageName }}
-                            </div>
-                          </div>
+                        {{ getSelectedStageName(place.kanbanStageId) }}
+                        <i class="fas fa-chevron-down"></i>
+                      </div>
+                      <div
+                        class="dropdown-options"
+                        [class.show]="place.isDropdownOpen"
+                      >
+                        <div
+                          *ngFor="let stage of KanbanStages"
+                          class="dropdown-item"
+                          [class.active]="stage.id === place.kanbanStageId"
+                          (click)="
+                            selectStage(
+                              place.MarketSurveyId,
+                              stage.id,
+                              place,
+                              $event
+                            )
+                          "
+                        >
+                          {{ stage.stageName }}
                         </div>
                       </div>
+                    </div>
+
+                    <div class="pb-2" style="display: flex; justify-content: end; gap: 5px">
                       <button
                         class="ellipsis_icont"
                         (click)="toggleShortcutsCard(place.Id)"
@@ -105,24 +79,10 @@
                         *ngIf="selectedIdCard === place.Id"
                       >
                         <ul>
-                          <!-- <li class="cursor">
-                            <a class="target" [href]="
-                                  '/emily/' +
-                                  BuyBoxId +
-                                  '/' +
-                                  place.ShoppingCenter.ManagerOrganization[0]
-                                    .ID +
-                                  '/' +
-                                  place?.Id
-                                " target="_blank">
-                              <i class="fa-regular fa-envelope emily"></i>
-                              Emily
-                            </a>
-                          </li> -->
                           <li (click)="toggleShortcuts(place.Id, 'close')">
-                            <!-- <a
+                            <a
                               class="target"
-                              [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,BuyBoxId]"
+                              [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,place.CampaignId]"
                             >
                               <svg
                                 width="24"
@@ -157,7 +117,7 @@
                                 />
                               </svg>
                               View Details
-                            </a> -->
+                            </a>
                           </li>
                           <li>
                             <a class="target" (click)="openContactModal(place)">
@@ -258,16 +218,6 @@
                               Center Status</a
                             >
                           </li>
-                          <!-- <li *ngIf="place.Deleted != true" class="cursor">
-                            <a class="target" (click)="openDeleteShoppingCenterModal(
-                                  deleteSingleShoppingCenterModal,
-                                  place
-                                );toggleShortcuts(place.Id, 'close')
-                              ">
-                              <i class="fa-regular fa-trash-can emily"></i>
-                              Remove Shopping
-                            </a>
-                          </li> -->
                           <li *ngIf="place.Deleted == true">
                             <a
                               class="target"
@@ -287,6 +237,32 @@
                         <i class="fa-solid fa-caret-up"></i>
                       </div>
                     </div>
+                  </div>
+                  <!-- End overlay -->
+                </div>
+              </a>
+              <div class="content-wrap card-content">
+                <div>
+                  <div class="d-flex justify-content-between">
+                    <a
+                      class="textdecoration"
+                      [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,place.CampaignId]"
+                    >
+                      <p
+                        class="content-title total"
+                        style="white-space: pre-line"
+                      >
+                        {{
+                          place.CenterName
+                        }}
+                      </p>
+
+                      <span
+                        class="badge badge-danger mx-2"
+                        *ngIf="place.Deleted == true"
+                        >Deleted</span
+                      >
+                    </a>
                   </div>
 
                   <div
@@ -416,24 +392,6 @@
                           }}</span>
                         </span>
                       </div>
-                      <!-- <li
-                      *ngFor="let m of mails"
-                      class="mail-item"
-                      (click)="openMailPopup(m.Id)"
-                    >
-                      <ng-container [ngSwitch]="m.Direction">
-                        <span *ngSwitchCase="2" class="sent">Sent</span>
-                        <span *ngSwitchCase="-1" class="outbox">Outbox</span>
-                        <span *ngSwitchCase="1" class="inbox">Inbox</span>
-                        <span *ngSwitchCase="4" class="drafts">Drafts</span>
-                        <span *ngSwitchDefault class="unknown">
-                          Unknown ({{ m.Direction }})
-                        </span>
-                      </ng-container>
-                      <span class="mail-date">
-                        {{ m.Date | date : "yyyy-MM-dd HH:mm:ss" }}
-                      </span>
-                    </li> -->
                     </ng-container>
                   </div>
 
@@ -448,57 +406,46 @@
                         </p>
                         <p>
                           {{ item.RelationOrganizationName }}
-                          <!-- <img
-                            class="logo ms-2"
-                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                              item.RelationOrganizationId
-                            }}"
-                            [title]="item.RelationOrganizationName"
-                            alt=""
-                            loading="lazy"
-                          /> -->
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <hr class="small-hr mt-1 mb-1" />
-                <div
-                  class="mt-2"
-                  *ngIf="
-                    place.ShoppingCenter?.ManagerOrganization &&
-                    placesRepresentative != false
-                  "
-                >
-                  <span class="managed-by">Leased by</span>
-                  <div class="spec-head">
-                    <div class="d-flex align-items-center gap-2">
+                <div class="col-md-12 spec">
+                  <hr class="small-hr mt-1 mb-1" />
+                  <div
+                    class="spec-head between"
+                    *ngIf="
+                      place.ShoppingCenter?.ManagerOrganization;
+                      else findContacts
+                    "
+                  >
+                    <span class="managed-by">Leased by</span>
+      
+                    <div>
                       <!-- <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          place.ShoppingCenter.ManagerOrganization[0].ID
+                          shopping.ShoppingCenter.ManagerOrganization[0].ID
                         }}"
-                        [title]="
-                          place.ShoppingCenter.ManagerOrganization[0].Name
-                        "
+                        [title]="shopping.ShoppingCenter.ManagerOrganization[0].Name"
                         alt=""
-                        loading="lazy"
                       /> -->
-                      <span>
-                        {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
-                      </span>
                     </div>
-
-                    <img
-                      class="ms-2 total"
-                      src="../../../assets/Images/Icons/eye.png"
-                      alt="View Manager Details"
-                      [ngbPopover]="popoverContent"
-                      popoverTitle="Organization Contact Info"
-                      [placement]="'left'"
-                      loading="lazy"
-                    />
-                    <!-- <br /> -->
+                    <div class="width55">
+                      {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
+                    </div>
+                    <div>
+                      <img
+                        class="ms-2 cursor"
+                        src="../../../assets/Images/Icons/eye.png"
+                        alt="Organization Brokers"
+                        [ngbPopover]="popoverContent"
+                        popoverTitle="Organization Brokers"
+                        triggers="click:outside"
+                        [placement]="'top'"
+                      />
+                    </div>
                     <ng-template #popoverContent>
                       <div
                         *ngFor="
@@ -514,15 +461,50 @@
                         <p class="m-0">{{ org.Email }}</p>
                         <hr
                           *ngIf="
-                            !isLast(
-                              org,
-                              shoppingCenter.ShoppingCenter.ManagerOrganization
-                            )
+                            !isLast(org, place.ShoppingCenter.ManagerOrganization)
                           "
                         />
                       </div>
                     </ng-template>
                   </div>
+                  <ng-template #findContacts>
+                    <!-- <a
+                      class="target"
+                      href="https://www.google.com/search?q=leasing manager for+{{
+                        shopping.CenterName
+                      }}+{{ shopping.CenterAddress }}+{{ shopping.CenterCity }}+{{
+                        
+                        shopping.CenterState
+                      }}+{{
+                        shopping.ZipCode
+                      }}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{
+                        shopping.CenterAddress
+                      }},{{ shopping.CenterCity }},{{ shopping.CenterState }},{{
+                        shopping.ZipCode
+                      }}&shoppingCenterName={{
+                        shopping.CenterName
+                      }}&organizationId={{ orgId }}&organizationName={{
+                        orgName
+                      }}&campaignId={{ cId }}"
+                      target="_blank"
+                      (click)="
+                        finContactMessage(
+                          shopping.Id,
+                          shopping.CenterName,
+                          shopping.CenterAddress
+                        )
+                      "
+                    >
+                      Find Contacts
+                    </a> -->
+                    <!-- <button
+                      class="btn"
+                      style="color: blue"
+                      (click)="finContactMessage(place)"
+                    >
+                      Find Broker
+                    </button> -->
+                  </ng-template>
                 </div>
                 <button
                   *ngIf="checkSubmission(place?.ShoppingCenter?.UserSubmmision)"

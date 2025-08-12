@@ -1,99 +1,125 @@
+.main {
+  position: relative;
+  z-index: 3; /* Above overlay */
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 24px);
+  height: calc(100dvh - 24px);
+  min-height: 0;
+}
+.main-inner {
+  /* keep your existing styles… */
+  height: 600px;              /* or consider a max-height; see note below */
+  overflow-y: auto;           /* 'auto' avoids scrollbars when not needed */
+  padding: 32px;
+  align-items: center;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(50px);
+
+  /* ✅ the important changes */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;               /* prevents content from forcing overflow */
+  box-sizing: border-box;     /* padding included in the width */
+}
+
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 24px;
+  padding-bottom: 21px;
+}
+
+.search-section {
+  flex: 1;
+  display: flex;
+  max-width: 624px;
+  height: 48px;
+  padding: var(--Input-Padding-Top-button, 8px)
+    var(--Input-Padding-Right-Left, 16px);
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: var(--Input-Radius, 24px);
+  border: 1px solid var(--Input-Border, #e2dce3);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}
+
+.actions-section {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
 .search-container {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 25%;
+  gap: 8px; /* creates gap between icon and input */
+  flex: 1 0 0;
 }
-.search-container svg {
-  position: absolute;
-  left: 0.75rem;
-  height: 1.75rem;
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.search-container svg path {
-  fill: #777199;
+
+.search-icon {
+  width: 20px;
+  height: 20px;
 }
+
 .search-input {
-  outline: none;
-  background: #fff;
-  border-color: #c9c6d6;
-  color: #16181d;
-  padding-left: 2.75rem;
-  height: 3rem;
-  border-radius: 1rem;
-  color: #777199;
+  flex: 1;
+  background: none; /* remove white background */
+  border: none; /* remove border */
+  outline: none; /* remove focus outline */
+  color: #374151;
+  font-size: 14px;
 }
+
 .search-input::placeholder {
-  color: #777199;
+  color: var(--Input-Label-Icon, #704e73);
+
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
 }
-.search-input:focus-within {
-  border-color: #3922d2;
-  box-shadow: none;
-}
-.action-btn {
+
+/* Action buttons */
+.filter-btn,
+.sort-btn {
   display: flex;
+  height: 48px;
+  padding: var(--Space-S-8, 8px) var(--Radius-R-24, 24px);
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.5rem;
-  border: 1px solid #c9c6d6;
-  background-color: #fff;
-  border-radius: 1rem;
-  color: #777199;
-  cursor: pointer;
+  gap: var(--Space-Space-4, 4px);
+  border: none;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(50px);
 }
-.action-btn[ngbDropdownToggle]::after {
-  display: none !important;
+
+.filter-btn:hover,
+.sort-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
 }
+
 .dropdown-menu {
-  padding: 1rem 1.5rem;
-  background: white;
-  border: 1px solid #c9c6d6;
-  border-radius: 1rem;
-  margin-top: 0.25rem !important;
-}
-.radio-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  margin: 0;
-  padding-block: 0.5rem;
-}
-.radio-label input[type="radio"] {
-  appearance: none;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 50%;
-  margin: 0;
-  position: relative;
-  cursor: pointer;
-}
-.radio-label input[type="radio"]:checked {
-  border-color: #3922d2;
-}
-.radio-label input[type="radio"]:checked::after {
-  content: "";
-  position: absolute;
-  width: 0.5rem;
-  height: 0.5rem;
-  background: #3922d2;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.radio-text {
-  color: #777199;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-.radio-text svg {
-  stroke: #777199;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(100px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 16px;
+  margin-top: 8px !important;
 }
 .tenant-container {
-  width: 75%;
+  width: 100%;
 }
 .fab-button {
   position: fixed;

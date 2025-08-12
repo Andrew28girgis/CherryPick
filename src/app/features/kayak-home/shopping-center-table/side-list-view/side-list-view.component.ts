@@ -760,4 +760,69 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   getImageUrl(shopping: any): string {
     return shopping.MainImage || "assets/Images/DefaultImage.png"
   }
+
+  finContactMessage(shoppingCenter: Center): void {
+    console.log(`uploaded`);
+    
+    (window as any).electronMessage.findContacts(
+      JSON.stringify({
+        shoppingCenterName: shoppingCenter.CenterName,
+        shoppingCenterAddress: shoppingCenter.CenterAddress,
+        shoppingCenterId: shoppingCenter.Id,
+      })
+    );
+
+    this.getShoppingCenterContact(shoppingCenter.Id);
+  }
+  getShoppingCenterContact(centerId: any): void {
+    const body: any = {
+      Name: 'GetShoppingCenterContact',
+      MainEntity: null,
+      Params: {
+        ShoppingCenterId: centerId,
+      },
+      Json: null,
+    };
+    this.placesService.GenericAPI(body).subscribe((data) => {
+      if (data.json && data.json.length) {
+        console.log('API response data:', data);
+        const newContacts = data.json.map((c: any) => ({
+          ID: c.id,
+          Name: c.name,
+          Firstname: c.firstname ?? '',
+          LastName: c.lastname ?? '', // no source in original, so set to empty or default
+          Email: c.email,
+          ContactId: c.contactId,
+        }));
+        console.log('after refactor', newContacts);
+
+        const center = this.cardsSideList.find((sc) => sc.Id == centerId);
+
+        if (!center) {
+          return;
+        }
+        if (!center.ShoppingCenter) {
+          center.ShoppingCenter = {
+            Places: [],
+            Comments: [],
+            Reactions: [],
+            BuyBoxPlaces: [],
+            ManagerOrganization: [...newContacts], // Initialize with the new one
+            UserSubmmision: [],
+          };
+        } else {
+          // If ManagerOrganization exists, append; else create and assign
+          center.ShoppingCenter.ManagerOrganization = [...newContacts];
+        }
+
+        console.log('center after update ', center);
+      } else {
+        setTimeout(() => {
+          this.getShoppingCenterContact(centerId);
+        }, 4000);
+      }
+    });
+  }
 }
+
+

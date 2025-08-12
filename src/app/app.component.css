@@ -1,22 +1,18 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100%;
+   width: 100%;
 }
 
 .main-content-area {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100%;
-  background-color: #F1F1F5;
-}
+   width: 100%;
+ }
 
 .full-width-content {
   width: 100%;
-  height: 100vh;
-  overflow-y: auto;
+   overflow-y: auto;
 }
 
 .termsofservice {
@@ -29,5 +25,43 @@
   cursor: pointer;
 }
 .content-container{
-  background-color: #F1F1F5;
+  background-color: none;
+  padding-right: 24px;
+}
+.app-shell {
+  display: grid;
+  grid-template-columns: 96px 1fr; /* first column = sidebar, second = main content */
+  min-height: 100vh; /* fill full height of viewport */
+  z-index: 5;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr); /* sidebar + flexible main */
+  min-height: 100vh;
+}
+
+.app-shell > .app-container {
+  grid-column: 2;
+  min-width: 0; /* prevents overflow in grids */
+}
+
+:host {
+  display: block;
+  position: relative;
+  min-height: 100vh;
+  background: url('../assets/Images/background.png') top center / 100% auto no-repeat;
+  z-index: 0;
+}
+:host::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(117deg, rgba(255, 214, 230, 0.90) 0%, rgba(255, 255, 255, 0.90) 100%);
+  backdrop-filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
 }

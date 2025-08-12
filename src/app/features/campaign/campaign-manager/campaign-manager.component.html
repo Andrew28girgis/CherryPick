@@ -1,11 +1,14 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="campaign-manager-container container-fluid">
-  <div class="w-100 d-flex align-items-center justify-content-end">
+  <div
+    class="w-100 d-flex align-items-center justify-content-end"
+    style="padding-top: 24px; padding-bottom: 21px"
+  >
     <div
       class="d-flex align-items-center gap-3 toggle-cont"
       *ngIf="!hideViewToggles"
     >
-      <div class="view-toggle">
+      <div class="view-toggle" *ngIf="0">
         <button
           class="toggle-btn"
           [class.active]="viewMode === 'table'"
@@ -134,15 +137,15 @@
         <thead>
           <tr>
             <th style="width: 250px">Name</th>
-            <th style="text-align: center">Date</th>
-            <th style="text-align: center">Privacy</th>
-            <th style="text-align: center">Sites</th>
-            <th style="text-align: center">Submissions</th>
-            <th style="text-align: center">Sent</th>
-            <th style="text-align: center">Actions</th>
-            <ng-container *ngFor="let i of skeletonStagesArray">
-              <th scope="col" style="text-align: center">
-                <div class="skeleton-stage-header"></div>
+            <th style="width: 80px; text-align: center">Emily</th>
+            <th style="width: 120px; text-align: center">Date</th>
+            <th style="width: 100px; text-align: center">Privacy</th>
+            <th style="width: 80px; text-align: center">Sites</th>
+            <th style="width: 120px; text-align: center">Submissions</th>
+            <th style="width: 80px; text-align: center">Sent</th>
+            <ng-container *ngFor="let stage of stages">
+              <th scope="col" style="width: 100px; text-align: center">
+                {{ stage.stageName }}
               </th>
             </ng-container>
           </tr>
@@ -214,7 +217,7 @@
               }"
             >
               <div class="campaign-privacy-icon"></div>
-              <span>
+              <span class="campaign-privacy-text">
                 {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
               </span>
             </div>
@@ -262,7 +265,7 @@
                       campaign.OrganizationId,
                       campaign.OrganizationName,
                       campaign.Id
-                    ]"   
+                    ]"
                     style="cursor: pointer"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -405,17 +408,19 @@
 
     <!-- Original Table View -->
     <div class="table-responsive" *ngIf="viewMode === 'table'">
+      <div class="table-inner">
       <table class="table align-middle">
         <thead>
           <tr>
-            <th style="width: 250px">Name</th>
-            <th style="text-align: center">Date</th>
-            <th style="text-align: center">Privacy</th>
-            <th style="text-align: center">Sites</th>
-            <th style="text-align: center">Submissions</th>
-            <th style="text-align: center">Sent</th>
+            <th class="col-name">Name</th>
+            <th class="col-emily">Emily</th>
+            <th class="col-date">Date</th>
+            <th class="col-privacy">Privacy</th>
+            <th class="col-sites">Sites</th>
+            <th class="col-submissions">Submissions</th>
+            <th class="col-sent">Sent</th>
             <ng-container *ngFor="let stage of stages">
-              <th scope="col" style="text-align: center">
+              <th scope="col" class="col-stage">
                 {{ stage.stageName }}
               </th>
             </ng-container>
@@ -426,13 +431,10 @@
             *ngFor="let campaign of filteredCampaigns; let index = index"
           >
             <tr>
-              <td style="width: 250px; vertical-align: top">
-                <div
-                  class="d-flex flex-column gap-2"
-                  style="min-height: 100%; padding: 8px"
-                >
+              <td class="col-name">
+                <div class="campaign-info">
                   <div
-                    style="font-weight: 600"
+                    class="campaign-name"
                     [routerLink]="[
                       '/dashboard',
                       campaign.OrganizationId,
@@ -442,11 +444,8 @@
                   >
                     {{ campaign.CampaignName }}
                   </div>
-
-                  <div
-                    class="d-flex align-items-center gap-2"
-                    style="flex-wrap: wrap; margin-block: 5px"
-                  >
+    
+                  <div class="organization-info">
                     <img
                       *ngIf="campaign.OrganizationId"
                       [src]="
@@ -455,11 +454,8 @@
                       "
                       [alt]="campaign.OrganizationName"
                       class="tenant-logo"
-                      style="width: 48px; height: 48px; border-radius: 50%"
                       (error)="onImageError($event)"
-
                       (load)="checkImage($event)"
-                   
                     />
                     <span
                       class="tenant-name"
@@ -469,45 +465,31 @@
                         campaign.OrganizationName,
                         campaign.Id
                       ]"
-                      style="
-                        font-size: 14px;
-                        color: #333;
-                        max-width: 150px;
-                        word-break: break-word;
-                      "
                     >
                       {{ campaign.OrganizationName }}
                     </span>
                   </div>
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <!-- <div>
-                      <a
-                        class="inbox text-center"
-                        [routerLink]="['./ataglance', campaign.Id]"
-                        >At a Glance</a
-                      >
-                    </div> -->
-                    <div
-                      class="inbox mail text-center"
-                      [routerLink]="[
-                        '/organization-mail',
-                        campaign.OrganizationId,
-                        campaign.Id
-                      ]"
-                    >
-                      <i class="fa-regular fa-envelope me-2"></i>
-                      <a>Emily</a>
-                    </div>
-                  </div>
                 </div>
               </td>
-
-              <td style="text-align: center">
+    
+              <td class="col-emily">
+                <div
+                  class="inbox mail"
+                  [routerLink]="[
+                    '/organization-mail',
+                    campaign.OrganizationId,
+                    campaign.Id
+                  ]"
+                >
+                  <i class="fa-regular fa-envelope"></i>
+                </div>
+              </td>
+              
+              <td class="col-date">
                 {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
               </td>
-              <td style="text-align: center">
+              
+              <td class="col-privacy">
                 <div
                   class="campaign-privacy"
                   [ngClass]="{
@@ -523,11 +505,9 @@
                   >
                 </div>
               </td>
-
-              <td style="text-align: center">
-                <div
-                  class="d-flex align-items-center justify-content-center gap-3"
-                >
+    
+              <td class="col-sites">
+                <div class="sites-info">
                   <div>{{ campaign.Sites }}</div>
                   <svg
                     [routerLink]="[
@@ -536,7 +516,7 @@
                       campaign.OrganizationName,
                       campaign.Id
                     ]"
-                    style="cursor: pointer"
+                    class="external-link-icon"
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
                     height="18"
@@ -558,18 +538,16 @@
                   </svg>
                 </div>
               </td>
-              <td style="text-align: center">
-                <div
-                  class="d-flex align-items-center justify-content-center gap-3"
-                >
-                  <!-- [routerLink]="['/submissions', campaign.Id]" -->
-                  <div *ngIf="campaign.Submissions" style="cursor: pointer">
-                    <span style="color: orange" title="New Submissions">{{
+              
+              <td class="col-submissions">
+                <div class="submissions-info">
+                  <div *ngIf="campaign.Submissions" class="submission-counts">
+                    <span class="count-new" title="New Submissions">{{
                       getSubmissionsCountNew(campaign.Submissions)
                     }}</span>
                     |
                     <span
-                      style="color: rgb(0, 207, 35)"
+                      class="count-accepted"
                       title="Accepted Submissions"
                       >{{
                         getSumbmissionsCountAcceppted(campaign.Submissions)
@@ -577,13 +555,13 @@
                     >
                     |
                     <span
-                      style="color: rgb(207, 0, 0)"
+                      class="count-rejected"
                       title="Rejected Submissions"
                       >{{
                         getSumbmissionsCountRejected(campaign.Submissions)
                       }}</span
                     >
-
+    
                     <ng-container
                       *ngFor="
                         let submission of sortedSubmissions(
@@ -594,23 +572,20 @@
                     >
                     </ng-container>
                   </div>
-                  <div *ngIf="!campaign.Submissions">N/A</div>
+                  <div *ngIf="!campaign.Submissions" class="no-data">N/A</div>
                 </div>
               </td>
-              <td style="text-align: center">
+              
+              <td class="col-sent">
                 <ng-container *ngIf="campaign.MailsSent">
                   {{ campaign.MailsSent }}</ng-container
                 >
               </td>
-
+    
               <ng-container *ngFor="let stage of stages">
-                <td style="text-align: center">
-                  <div
-                    class="d-flex flex-column align-items-center justify-content-center gap-2"
-                  >
-                    <div>
-                      {{ getKanbanCount(stage.stageName, campaign.Kanban) }}
-                    </div>
+                <td class="col-stage">
+                  <div class="stage-count">
+                    {{ getKanbanCount(stage.stageName, campaign.Kanban) }}
                   </div>
                 </td>
               </ng-container>
@@ -618,7 +593,9 @@
           </ng-container>
         </tbody>
       </table>
+      </div>
     </div>
+    
   </div>
 
   <div
@@ -650,4 +627,3 @@
     </div>
   </div>
 </ng-template>
-

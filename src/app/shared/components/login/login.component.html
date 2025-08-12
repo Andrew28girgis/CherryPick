@@ -6,7 +6,7 @@
   class="alert alert-danger alert-dismissible fade show"
   role="alert"
 >
-<i class="fas fa-exclamation-circle me-2"></i>
+  <i class="fas fa-exclamation-circle me-2"></i>
 
   {{ errorMessage }}
 </div>
@@ -18,7 +18,7 @@
         <header class="d-flex align-items-center justify-content-start mb-4">
           <div class="logo-container">
             <img
-              src="assets/Images/Emily Logo-1.png"
+              src="assets/Images/fullLogo.png"
               alt="Cherrypick"
               class="cherry-logo"
             />
@@ -66,7 +66,7 @@
                   <i
                     *ngIf="!showPassword"
                     (click)="togglePassword()"
-                    class="fa-regular fa-eye-slash eye-icon"
+                    class="fa-regular fa- eye-slash eye-icon"
                   ></i>
                 </div>
 
@@ -78,9 +78,12 @@
                 </div>
 
                 <div class="text-center mt-3">
-                  <button class="btn login w-100" type="submit"               [disabled]="!loginForm.form.valid"
+                  <button
+                    class="btn login w-100"
+                    type="submit"
+                    [disabled]="!loginForm.form.valid"
                   >
-                    <span class="login-text">Login</span>
+                     Login
                   </button>
                 </div>
               </form>

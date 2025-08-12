@@ -4,6 +4,8 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -16,11 +18,13 @@ import { PlacesService } from 'src/app/core/services/places.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './notifications.component.html',
-  styleUrl: './notifications.component.css',
+  styleUrls: ['./notifications.component.css'],
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   private intervalId: any;
   notifications: Notification[] = [];
+
+  @Output() dropdownOpenChange = new EventEmitter<boolean>();
 
   constructor(
     private elementRef: ElementRef,
@@ -46,6 +50,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   toggleDropdown(): void {
     this.notificationService.dropdownVisible =
       !this.notificationService.dropdownVisible;
+    this.dropdownOpenChange.emit(this.notificationService.dropdownVisible);
   }
   handleNotificationClick(notification: Notification): void {
     this.markNotificationAsRead(notification);
@@ -79,6 +84,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   handleOutsideClick(event: Event): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.notificationService.dropdownVisible = false;
+      this.dropdownOpenChange.emit(false);
     }
   }
 }

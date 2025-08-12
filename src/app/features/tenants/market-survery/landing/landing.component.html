@@ -1,22 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<nav class="navbars">
-  <div class="navbar-line m-0">
-    <div class="nav-right w-100 d-flex justify-content-between total">
-      <div class="ml8">
-                <div
-          class="sidebar-logo d-flex justify-content-start align-items-center me-4"
-          [routerLink]="['/summary']"
-        >
-          <img
-            class="cherry-logo"
-            src="../../../assets/Images/Emily Logo-1.png"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
-
+ <div class="main-container-all d-flex flex-row" style="overflow-y: scroll;">
+  <div>
   <div class="container">
     <p *ngIf="showAlert" class="alert-container">
       <ngb-alert [dismissible]="false" class="alert-success">
@@ -28,8 +12,12 @@
       class="fa-solid fa-arrow-left goback"
       (click)="goBack()"
     ></i>
+    <div class="image-map-container">
+       <div class="image-section">
+    
     <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
-      <div class="intro-container wow fadeIn">
+      <div class="intro-container wow fadeIn"
+      >
         <h1
           class="mb-2 pb-0"
           *ngIf="ShoppingCenter?.CenterName"
@@ -215,7 +203,15 @@
           </button> -->
         </div>
       </div>
+      
+      
+     
+      
     </section>
+
+  </div>
+</div>
+    </div>
     <div class="main-section" *ngIf="StandAlonePlace && StandAlonePlace.Notes">
       <section id="hero">
         <div class="row m-0">
@@ -420,25 +416,7 @@
             </ul>
           </div>
 
-          <div class="col-md-6">
-            <iframe
-              *ngIf="sanitizedUrl"
-              [src]="sanitizedUrl"
-              class="sanitizedUrll"
-              allowfullscreen=""
-              loading="lazy"
-            >
-            </iframe>
-
-            <div
-              [ngStyle]="{ display: sanitizedUrl ? 'none' : 'block' }"
-              id="street-view"
-              class="streetview"
-            ></div>
-          </div>
-          <div class="col-md-6">
-            <div id="map" class="mapView" *ngIf="mapView"></div>
-          </div>
+        
         </div>
       </section>
     </div>
@@ -534,7 +512,7 @@
     </div>
 
     <div class="row m-0">
-      <div class="col-md-12">
+      <div class="col-md-12 p-0" >
         <div class="main-section">
           <div class="d-flex justify-content-start">
             <p class="rate-location">Please Rate This Property</p>
@@ -928,8 +906,39 @@
       </div>
     </div>
   </div>
+         <!-- Right: Map/Street View Section -->
+  <div class="map-section">
+    <div class="view-toggle">
+      <button [class.active]="isMapView" (click)="isMapView = true">
+        Map View
+      </button>
+      <button [class.active]="!isMapView" (click)="isMapView = false">
+        Street View
+      </button>
+    </div>
 
+    <div class="map-street">
+      <!-- Map View -->
+      <div [hidden]="!isMapView" id="map" class="mapView"></div>
 
+      <!-- Street View -->
+      <div [hidden]="isMapView">
+        <iframe
+          *ngIf="sanitizedUrl"
+          [src]="sanitizedUrl"
+          class="sanitizedUrll"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+        <div
+        [ngStyle]="{ display: sanitizedUrl ? 'none' : 'block' }"
+        id="street-view"
+        class="streetview"
+      ></div>
+    </div>
+      </div>
+    </div>
+  </div>
 <ng-template #mapPopup let-modal>
   <div id="mapInPopup" class="mapViewOneheight" *ngIf="mapViewOnePlacex"></div>
 </ng-template>

@@ -538,47 +538,58 @@
 
 .header-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-radius: 8px;
-  padding: 0 12px;
+  gap: 12px;
+  padding-top: 24px;
+  padding-bottom: 18px;
 }
 
 .search-container {
-  position: relative;
-  flex: 1;
   display: flex;
-  max-width: 432px;
-  height: 48px;
   align-items: center;
-  background: #fff;
-  border-radius: 20px;
-  border: 1px solid #e0e0e0;
-  padding: 0 16px;
+  gap: 8px; /* creates gap between icon and input */
+  flex: 1 0 0;
 }
 
+.search-section {
+  flex: 1;
+  display: flex;
+  max-width: 624px;
+  height: 48px;
+  padding: var(--Input-Padding-Top-button, 8px)
+    var(--Input-Padding-Right-Left, 16px);
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: var(--Input-Radius, 24px);
+  border: 1px solid var(--Input-Border, #e2dce3);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}
 .search-icon {
-  color: #707791;
-  font-size: 16px;
-  margin-right: 12px;
+  width: 20px;
+  height: 20px;
 }
 
 .search-input {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: transparent;
+  flex: 1;
+  background: none; /* remove white background */
+  border: none; /* remove border */
+  outline: none; /* remove focus outline */
+  color: #374151;
   font-size: 14px;
-  color: #16181d;
-  outline: none;
-  padding: 0;
 }
 
 .search-input::placeholder {
-  color: #707791;
-  font-size: 14px;
-}
+  color: var(--Input-Label-Icon, #704e73);
 
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
 .search-container:focus-within {
   border-color: #4d65b4;
   box-shadow: 0 0 0 2px rgba(77, 101, 180, 0.1);
@@ -590,10 +601,7 @@
   gap: 12px;
 }
 
-.stage-select-container {
-  margin-right: 8px;
-}
-
+ 
 .action-btn,
 .custom-select {
   display: flex;
@@ -615,8 +623,8 @@
 
 .action-btn:hover,
 .custom-select:hover {
-  background-color: rgba(77, 101, 180, 0.05);
-  color: #4d65b4;
+  /* background-color: rgba(77, 101, 180, 0.05); */
+  color: #434757;
 }
 
 .action-btn i,
@@ -626,40 +634,6 @@
   color: inherit;
 }
 
-.view-icon {
-  width: 24px;
-}
-
-.custom-select {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: fit-content;
-  height: 36px;
-  padding: 8px 16px;
-  background: transparent;
-  border: none;
-  border-radius: 24px;
-  font-size: 14px;
-  color: #707791;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.custom-select:hover {
-  background-color: rgba(77, 101, 180, 0.05);
-  color: #4d65b4;
-}
-
-.custom-select i {
-  font-size: 14px;
-  flex-shrink: 0;
-  color: inherit;
-}
 
 .dropdown-menu {
   min-width: 180px;
@@ -761,7 +735,8 @@
 
 /* Tenant Header Styles */
 .tenant-header {
-  padding: 0 16px;
+  padding: 0;
+  align-items: flex-start !important;
 }
 
 .tenant-logo {
@@ -781,30 +756,34 @@
   line-height: 56px; /* 127.273% */
 }
 .send-email-button {
+  border: none;
+  cursor: pointer;
   display: flex;
-  height: 45px;
-  padding: 10px 10px;
+  height: 48px;
+  padding: 14px 24px;
   justify-content: center;
   align-items: center;
-  gap: 5px;
-  border-radius: var(--Radius-Radius-16, 16px);
-  background: var(--Button-Primary-BG, #3922d2);
-  border: none;
-  transition: background 0.2s, box-shadow 0.2s;
-  cursor: pointer;
+  gap: 8px;
+  border-radius:   24px;
+  background: var(--Colors-Primary-500, #b51f63);
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 187.5% */
 }
 
 .send-email-button:hover,
 .send-email-button:focus {
-  background: #2a18a6; /* Slightly darker for hover */
-  box-shadow: 0 2px 8px rgba(57, 34, 210, 0.15);
-  outline: none;
+  background: #a31c59; /* Slightly darker for hover */
+   outline: none;
 }
 
 .send-email-button:active {
-  background: #1d116b; /* Even darker for active */
-  box-shadow: 0 1px 4px rgba(57, 34, 210, 0.18);
-}
+  background: #a31c59; /* Even darker for active */
+ }
 
 .send-email-button span {
   color: var(--Button-Primary-Label, #fff);
@@ -820,7 +799,7 @@
 
 /* Navigation Tabs */
 .nav-tabs-container {
-  padding: 0 16px;
+  padding: 0;
   /* margin-top: 24px; */
   margin-bottom: 24px;
 }
@@ -841,13 +820,13 @@
   align-items: center;
   gap: 8px;
   border-radius: 8px;
-  background: #f1f1f5;
-  color: #777199;
+  background: none;
+  color: var(--Body-Text-Icon, #704e73);
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 30px;
+  line-height: 30px; /* 187.5% */
 }
 
 .nav-tab.active {
@@ -857,9 +836,14 @@
   align-items: center;
   gap: 8px;
   border-radius: var(--Radius-Radius-8, 8px);
-  border: 1px solid var(--Colors-Primary-700, #22147e);
-  background: var(--Colors-Primary-100, #d7d3f6);
-  color: var(--Colors-Primary-700, #3922d2);
+  border: 1px solid var(--Colors-Primary-700, #6d133b);
+  background: var(--Colors-Primary-100, #f0d2e0);
+  color: var(--Colors-Primary-500, #b51f63);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 187.5% */
 }
 
 .tenant-dropdown-container {
@@ -999,4 +983,44 @@
 
 .tenant-item.active {
   background-color: #e0e0e0 !important;
+}
+
+.main-inner {
+  /* keep your existing styles… */
+  height: 600px;              /* or consider a max-height; see note below */
+  overflow-y: auto;           /* 'auto' avoids scrollbars when not needed */
+  padding: 32px;
+  align-items: center;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(50px);
+
+  /* ✅ the important changes */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;               /* prevents content from forcing overflow */
+  box-sizing: border-box;     /* padding included in the width */
+}
+
+.view-icon{
+  width: 20px;
+  height: 20px;
+}
+
+.filter-btn,
+.sort-btn {
+  display: flex;
+  height: 48px;
+  padding: var(--Space-S-8, 8px) var(--Radius-R-24, 24px);
+  align-items: center;
+  gap: var(--Space-Space-4, 4px);
+  border: none;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(50px);
+}
+
+.filter-btn:hover,
+.sort-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
 }
