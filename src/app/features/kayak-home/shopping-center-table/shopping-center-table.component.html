@@ -168,11 +168,7 @@
     </div>
   </div>
 
-  <app-map-view
-    *ngIf="currentView == 1"
-    (viewChange)="onViewChange($event)"
-    #mapView
-  ></app-map-view>
+
 
   <div class="main-inner">
     <div
@@ -368,6 +364,11 @@
         ></app-side-list-view>
       </div>
     </div>
+    <app-map-view
+    *ngIf="currentView == 1"
+    (viewChange)="onViewChange($event)"
+    #mapView
+  ></app-map-view>
     <app-card-view *ngIf="currentView == 3"></app-card-view>
     <app-table-view
       *ngIf="currentView == 4"

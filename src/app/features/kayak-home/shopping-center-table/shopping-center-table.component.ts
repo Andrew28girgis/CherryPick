@@ -84,11 +84,11 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       text: 'Social View',
       icon: '../../../assets/Images/Icons/globe-solid.svg',
     },
-    {
-      id: 6,
-      text: 'Kanban View',
-      icon: '../../../../assets/Images/Icons/Cadence.svg',
-    },
+    // {
+    //   id: 6,
+    //   text: 'Kanban View',
+    //   icon: '../../../../assets/Images/Icons/Cadence.svg',
+    // },
   ];
 
   sortOptions = [
