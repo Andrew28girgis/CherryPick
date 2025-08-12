@@ -1,0 +1,12 @@
+.get-started-btn{
+    background-color: #a31c59;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-radius: 24px;
+}
+.get-started-btn:hover {
+    background-color: #6d133b;
+}

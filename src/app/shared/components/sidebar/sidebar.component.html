@@ -67,7 +67,7 @@
           class="nav-btn"
           routerLink="/summary"
           routerLinkActive="active"
-          aria-label="tenants"
+          aria-label="Tenants"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +110,7 @@
           class="nav-btn"
           routerLink="/campaigns"
           routerLinkActive="active"
-          aria-label="campaigns"
+          aria-label="Campaigns"
         >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path d="M5.47003 10.75C4.76003 10.75 4.04003 10.49 3.49003 9.96C1.65003 8.21 0.910033 6.3 1.34003 4.43C1.85003 2.23 3.78003 1.25 5.47003 1.25C7.16003 1.25 9.10003 2.24 9.60003 4.43C10.03 6.3 9.28003 8.21 7.45003 9.96C6.90003 10.49 6.19003 10.75 5.47003 10.75ZM2.80003 4.77C2.42003 6.44 3.53003 7.92 4.53003 8.87C5.06003 9.38 5.89003 9.37 6.42003 8.87C7.42003 7.92 8.53003 6.44 8.14003 4.76C7.80003 3.28 6.49003 2.75 5.48003 2.75C4.46003 2.75 3.15003 3.28 2.80003 4.77Z" fill="#292D32"/>
@@ -214,7 +214,7 @@
           class="nav-btn"
           routerLink="/shoppingcenters"
           routerLinkActive="active"
-          aria-label="shoppingcenters"
+          aria-label="Shopping centers"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +301,7 @@
           class="nav-btn"
           [class.active]="isNotificationsOpen"
           [attr.aria-expanded]="isNotificationsOpen"
-          aria-label="notifcations"
+          aria-label="Notifcations"
         >
           <app-notifications (dropdownOpenChange)="isNotificationsOpen = $event"></app-notifications>
         </div>
@@ -309,7 +309,91 @@
     </nav>
 
     <!-- Bottom avatar -->
+     <div class="avatar-container"           data-bs-toggle="dropdown"
+     aria-expanded="false"
+>
+      
     <a class="avatar" aria-label="Profile">
       <img src="../../../../assets/Images/avatar.jpg" alt="You" />
     </a>
+    
+
+    <ul
+    class="dropdown-menu dropdown-menu-end"
+    aria-labelledby="userDropdown"
+  >
+    <li>
+      <a
+        class="dropdown-item"
+        href="#"
+        (click)="switchView(); $event.preventDefault()"
+      >
+        Switch to
+        {{ currentRoute.includes("landlord") ? "campaigns" : "Landlord" }}
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" [routerLink]="['/NewPassword']">
+        Change Password
+      </a>
+    </li>
+
+    <li>
+      <a class="dropdown-item" [routerLink]="['/settings']"> Settings </a>
+    </li>
+    <li>
+      <a class="dropdown-item" (click)="openAddAIKey()"> ChatGPT Key </a>
+    </li>
+
+    <li><hr class="dropdown-divider" /></li>
+    <li>
+      <a
+        class="dropdown-item d-flex justify-content-between"
+        href="#"
+        (click)="logout(); $event.preventDefault()"
+      >
+        Logout
+        <i
+          class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+        ></i>
+      </a>
+    </li>
+  </ul>
+  </div>
   </aside>
+
+
+
+
+  <ng-template #addAIKeyTypes let-modal>
+    <div class="fancy-modal-header">
+      <h5 class="fancy-title">Add ChatGPT Key</h5>
+      <button type="button" class="btn-close fancy-close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="fancy-modal-body">
+      <form>
+        <div class="mb-4">
+          <label for="aiKey" class="form-label text-muted small mb-2">ChatGPT Key</label>
+          <input type="text" 
+                 class="form-control fancy-input" 
+                 id="aiKey" 
+                 name="aiKey" 
+                 placeholder="Enter your ChatGPT Key" 
+                 [(ngModel)]="AIKey" />
+        </div>
+      </form>
+    </div>
+    <div class="fancy-modal-footer">
+      <button type="button" 
+              class="fancy-btn secondary-btn" 
+              (click)="modal.dismiss()">
+        Close
+      </button>
+      <button type="button" 
+              class="fancy-btn primary-btn" 
+              (click)="SetGPTAPIKey()">
+        <span class="btn-spinner" *ngIf="isSaving"></span>
+        Save changes
+      </button>
+    </div>
+  </ng-template>

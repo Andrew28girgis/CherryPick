@@ -204,7 +204,7 @@
               [attr.aria-expanded]="showTenantDropdown"
             >
               <span class="tenant-name-text">
-                {{ selectedTenant?.name || tenantName }}
+                {{ selectedTenant?.Campaigns?.[0]?.CampaignName || '' }}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -249,7 +249,8 @@
                       />
                     </div>
                     <div class="tenant-info">
-                      <div class="tenant-title">{{ tenant.name }}</div>
+                      <div class="tenant-title">{{ tenant?.Campaigns?.[0]?.CampaignName ||'Campaign' }}</div>
+ 
                     </div>
                   </div>
                 </div>

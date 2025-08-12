@@ -59,7 +59,7 @@
 </div>
 </div>
 </div>
-<button class="fab-button btn" (click)="openAddTenantModal(tenantModal)">
+<button class="fab-button btn add-tenant-btn" (click)="openAddTenantModal(tenantModal)">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -144,14 +144,14 @@
   <div class="modal-footer">
     <button
       type="button"
-      class="x-btn x-btn-outline"
+      class="x-btn x-btn-outline cancel-tenant-btn"
       (click)="modal.close('Save click')"
     >
       <span>Cancel</span>
     </button>
 
     <button
-      class="x-btn x-btn-primary"
+      class="x-btn x-btn-primary add-tenant-btn-text"
       [disabled]="tenantForm.invalid"
       (click)="addNewTenant()"
     >
@@ -170,7 +170,7 @@
           stroke-linejoin="round"
         />
       </svg>
-      <span>Add Tenant</span>
+      <span class="add-tenant-text">Add Tenant</span>
     </button>
   </div>
 </ng-template>

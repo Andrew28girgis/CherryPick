@@ -143,3 +143,28 @@
 .fab-button:active {
   background: #22147e;
 }
+
+.add-tenant-btn{
+  background-color: #a31c59;
+}
+.add-tenant-btn:hover {
+  background-color: #6d133b;
+}
+
+.add-tenant-btn-text{
+  background-color: #a31c59;
+  color: white;
+  border: none;
+}
+.add-tenant-btn-text:hover {
+  background-color: #6d133b;
+}
+.cancel-tenant-btn{
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+.cancel-tenant-btn:hover {
+  background-color: #e2e6ea;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
