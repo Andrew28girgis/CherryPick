@@ -1,25 +1,28 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
 import { UserView } from '../header/header.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   constructor(
     public notificationService: NotificationService,
     private placesService: PlacesService,
     public router: Router,
     private modalService: NgbModal,
-    private userViewService: UserViewService
+    private userViewService: UserViewService,
+    private route: ActivatedRoute
   ) {}
   currentView: UserView = 'campaigns';
+  showSidebar = true;
 
   @ViewChild('addAIKeyTypes') addAIKeyTypes!: any;
   AIKey: string = '';
@@ -28,6 +31,21 @@ export class SidebarComponent {
   errorMessage: string | null = null;
   isNotificationsOpen = false;
   currentRoute = '';
+
+  ngOnInit(): void {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        let currentRoute = this.route;
+        while (currentRoute.firstChild) {
+          currentRoute = currentRoute.firstChild;
+        }
+
+        currentRoute.data.subscribe((data) => {
+          this.showSidebar = !data['hideSidebar'];
+        });
+      });
+  }
 
   openAddAIKey(): void {
     this.resetModalState();

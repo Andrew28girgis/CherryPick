@@ -65,3 +65,24 @@
   z-index: -1;
   pointer-events: none;
 }
+
+/* Add to app.component.css */
+.app-shell.no-sidebar {
+  margin-left: 0;
+  width: 100%;
+}
+
+.no-sidebar .app-container {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Update the no-sidebar class */
+.app-shell.no-sidebar {
+  grid-template-columns: minmax(0, 1fr); /* Only one full-width column when no sidebar */
+}
+
+.app-shell.no-sidebar > .app-container {
+  grid-column: 1; /* Take the first (and only) column */
+  width: 100%;
+}

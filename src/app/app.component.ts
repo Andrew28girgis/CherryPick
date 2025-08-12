@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { PlacesService } from './core/services/places.service';
 import { AuthService } from './core/services/auth.service';
 
@@ -14,6 +14,8 @@ export class AppComponent implements OnInit {
   display: boolean = false;
   isMobile = false;
   isSocialView: boolean = false;
+  hideSidebar = false;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -31,19 +33,17 @@ export class AppComponent implements OnInit {
       this.localStorage.getItem('currentViewDashBord') === '5';
 
     this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => {
-          let route = this.activatedRoute;
-          while (route.firstChild) {
-            route = route.firstChild;
-          }
-          return route;
-        }),
-        mergeMap((route) => route.data)
-      )
-      .subscribe((data: any) => {
-        this.display = !data.hideHeader;
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        let currentRoute = this.activatedRoute;
+        while (currentRoute.firstChild) {
+          currentRoute = currentRoute.firstChild;
+        }
+
+        currentRoute.data.subscribe((data) => {
+          this.display = !data['hideHeader'];
+          this.hideSidebar = data['hideSidebar'] === true;
+        });
       });
   }
 
