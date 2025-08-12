@@ -1,99 +1,217 @@
 <div class="shopping-centers-container" (click)="onDocumentClick()">
   <!-- Header Section -->
-  <div class="header">
-    <div class="search-section">
-      <div class="search-input-container">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M11.5 21.75C5.85 21.75 1.25 17.15 1.25 11.5C1.25 5.85 5.85 1.25 11.5 1.25C17.15 1.25 21.75 5.85 21.75 11.5C21.75 17.15 17.15 21.75 11.5 21.75ZM11.5 2.75C6.67 2.75 2.75 6.68 2.75 11.5C2.75 16.32 6.67 20.25 11.5 20.25C16.33 20.25 20.25 16.32 20.25 11.5C20.25 6.68 16.33 2.75 11.5 2.75Z" fill="#777199"/>
-          <path d="M21.9999 22.7504C21.8099 22.7504 21.6199 22.6804 21.4699 22.5304L19.4699 20.5304C19.1799 20.2404 19.1799 19.7604 19.4699 19.4704C19.7599 19.1804 20.2399 19.1804 20.5299 19.4704L22.5299 21.4704C22.8199 21.7604 22.8199 22.2404 22.5299 22.5304C22.3799 22.6804 22.1899 22.7504 21.9999 22.7504Z" fill="#777199"/>
-        </svg>
-        <input 
-          type="text" 
-          class="search-input" 
-          placeholder="Search Shopping Centers..."
-          [(ngModel)]="searchTerm"
-          (input)="onSearch()"
-          (click)="$event.stopPropagation()"
-        >
+  <div class="header-container d-flex flex-row justify-content-between">
+    <div
+      class="search-filter d-flex flex-row"
+      style="gap: 12px; width: 88% !important"
+    >
+      <div class="search-section">
+        <div class="search-container">
+          <div class="icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M9.58366 18.1248C4.87533 18.1248 1.04199 14.2915 1.04199 9.58317C1.04199 4.87484 4.87533 1.0415 9.58366 1.0415C14.292 1.0415 18.1253 4.87484 18.1253 9.58317C18.1253 14.2915 14.292 18.1248 9.58366 18.1248ZM9.58366 2.2915C5.55866 2.2915 2.29199 5.5665 2.29199 9.58317C2.29199 13.5998 5.55866 16.8748 9.58366 16.8748C13.6087 16.8748 16.8753 13.5998 16.8753 9.58317C16.8753 5.5665 13.6087 2.2915 9.58366 2.2915Z"
+                fill="#704E73"
+              />
+              <path
+                d="M18.3335 18.9585C18.1752 18.9585 18.0169 18.9002 17.8919 18.7752L16.2252 17.1085C15.9835 16.8669 15.9835 16.4669 16.2252 16.2252C16.4669 15.9835 16.8669 15.9835 17.1085 16.2252L18.7752 17.8919C19.0169 18.1335 19.0169 18.5335 18.7752 18.7752C18.6502 18.9002 18.4919 18.9585 18.3335 18.9585Z"
+                fill="#704E73"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            (click)="$event.stopPropagation()"
+          />
+        </div>
       </div>
-      <div class="add-new-actions">
-        <button class="add-new-btn" (click)="openFileExplorer(); $event.stopPropagation()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-            <path d="M5 10H15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M10 15V5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Add New 
-        </button>
+      <div class="actions-section">
+        <!-- Filter Dropdown -->
+        <div class="dropdown" ngbDropdown>
+          <button class="filter-btn" ngbDropdownToggle>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polygon
+                points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"
+              ></polygon>
+            </svg>
+            Filter
+          </button>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <h3 class="dropdown-header">Share Status</h3>
+            <div class="radio-group px-3">
+              <div class="form-check">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="all"
+                  name="share"
+                  value="all"
+                  [(ngModel)]="shareFilter"
+                  (change)="onFilterChange()"
+                />
+                <label class="form-check-label" for="all">All</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="shared"
+                  name="share"
+                  value="shared"
+                  [(ngModel)]="shareFilter"
+                  (change)="onFilterChange()"
+                />
+                <label class="form-check-label" for="shared">Shared</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="not-shared"
+                  name="share"
+                  value="not-shared"
+                  [(ngModel)]="shareFilter"
+                  (change)="onFilterChange()"
+                />
+                <label class="form-check-label" for="not-shared"
+                  >Not Shared</label
+                >
+              </div>
+            </div>
+
+            <h3 class="dropdown-header mt-3">Price</h3>
+            <div class="px-3 mb-3">
+              <div class="input-group input-group-sm">
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="From"
+                  [(ngModel)]="priceFrom"
+                  (input)="onFilterChange()"
+                />
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="To"
+                  [(ngModel)]="priceTo"
+                  (input)="onFilterChange()"
+                />
+              </div>
+            </div>
+
+            <h3 class="dropdown-header">Building Size (SF)</h3>
+            <div class="px-3 mb-3">
+              <div class="input-group input-group-sm">
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="From"
+                  [(ngModel)]="sizeFrom"
+                  (input)="onFilterChange()"
+                />
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="To"
+                  [(ngModel)]="sizeTo"
+                  (input)="onFilterChange()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="dropdown" ngbDropdown>
+          <button class="sort-btn" ngbDropdownToggle>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="7" y1="12" x2="17" y2="12"></line>
+              <line x1="10" y1="18" x2="14" y2="18"></line>
+            </svg>
+            Sort
+          </button>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <div class="px-3">
+              <div class="form-check" *ngFor="let option of sortOptions">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  [id]="option.value"
+                  name="sort"
+                  [value]="option.value"
+                  [(ngModel)]="sortBy"
+                  (change)="onSortChange()"
+                />
+                <label class="form-check-label" [for]="option.value">{{
+                  option.label
+                }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <div class="action-buttons">
-      <!-- Filter Dropdown -->
-      <div class="dropdown" ngbDropdown>
-        <button class="action-btn" ngbDropdownToggle>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"></polygon>
-          </svg>
-          Filter
-        </button>
-        <div class="dropdown-menu" ngbDropdownMenu>
-          <h3 class="dropdown-header">Share Status</h3>
-          <div class="radio-group px-3">
-            <div class="form-check">
-              <input type="radio" class="form-check-input" id="all" name="share" value="all" [(ngModel)]="shareFilter" (change)="onFilterChange()">
-              <label class="form-check-label" for="all">All</label>
-            </div>
-            <div class="form-check">
-              <input type="radio" class="form-check-input" id="shared" name="share" value="shared" [(ngModel)]="shareFilter" (change)="onFilterChange()">
-              <label class="form-check-label" for="shared">Shared</label>
-            </div>
-            <div class="form-check">
-              <input type="radio" class="form-check-input" id="not-shared" name="share" value="not-shared" [(ngModel)]="shareFilter" (change)="onFilterChange()">
-              <label class="form-check-label" for="not-shared">Not Shared</label>
-            </div>
-          </div>
 
-          <h3 class="dropdown-header mt-3">Price</h3>
-          <div class="px-3 mb-3">
-            <div class="input-group input-group-sm">
-              <input type="number" class="form-control" placeholder="From" [(ngModel)]="priceFrom" (input)="onFilterChange()">
-              <input type="number" class="form-control" placeholder="To" [(ngModel)]="priceTo" (input)="onFilterChange()">
-            </div>
-          </div>
-
-          <h3 class="dropdown-header">Building Size (SF)</h3>
-          <div class="px-3 mb-3">
-            <div class="input-group input-group-sm">
-              <input type="number" class="form-control" placeholder="From" [(ngModel)]="sizeFrom" (input)="onFilterChange()">
-              <input type="number" class="form-control" placeholder="To" [(ngModel)]="sizeTo" (input)="onFilterChange()">
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Sort Dropdown -->
-      <div class="dropdown" ngbDropdown>
-        <button class="action-btn" ngbDropdownToggle>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="7" y1="12" x2="17" y2="12"></line>
-            <line x1="10" y1="18" x2="14" y2="18"></line>
-          </svg>
-          Sort
-        </button>
-        <div class="dropdown-menu" ngbDropdownMenu>
-          <div class="px-3">
-            <div class="form-check" *ngFor="let option of sortOptions">
-              <input type="radio" class="form-check-input" [id]="option.value" name="sort" [value]="option.value" [(ngModel)]="sortBy" (change)="onSortChange()">
-              <label class="form-check-label" [for]="option.value">{{ option.label }}</label>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="add-new-actions">
+      <button
+        class="add-new-btn"
+        (click)="openFileExplorer(); $event.stopPropagation()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 20 20"
+          fill="none"
+        >
+          <path
+            d="M5 10H15"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M10 15V5"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Add New
+      </button>
     </div>
   </div>
 
   <!-- Loading State -->
+  <div class="main-inner">
+
   <div class="loading-state" *ngIf="isLoading">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -103,7 +221,7 @@
 
   <!-- Skeleton Loading State -->
   <div class="skeleton-grid" *ngIf="isLoading">
-    <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6,7,8,9]">
+    <div class="skeleton-card" *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9]">
       <div class="skeleton-image">
         <div class="skeleton-overlay">
           <div class="skeleton-badge"></div>
@@ -128,20 +246,34 @@
   <div class="centers-grid" *ngIf="!isLoading">
     <div class="center-card" *ngFor="let center of filteredCenters">
       <div class="image-container">
-        <img 
-          [src]="center.mainImage || 'assets/Images/placeholder.png'" 
+        <img
+          [src]="center.mainImage || 'assets/Images/placeholder.png'"
           [alt]="center.centerName"
           class="center-image"
           (error)="center.mainImage = 'assets/Images/placeholder.png'"
-        >
+        />
         <div class="card-overlay">
           <!-- Only show shared badge if center is shared -->
           <div class="share-badge" *ngIf="center.isShared">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
             Shared
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <circle cx="12" cy="12" r="1"></circle>
             </svg>
           </div>
@@ -154,16 +286,26 @@
           </button> -->
         </div>
       </div>
-      
+
       <div class="center-info">
         <h3 class="center-name">{{ center.centerName }}</h3>
         <p class="center-address">{{ center.centerAddress }}</p>
         <div class="center-details">
-           <span class="purchase-price" *ngIf="center.forSalePrice && center.forSalePrice > 0">Purchase Price</span>
+          <span
+            class="purchase-price"
+            *ngIf="center.forSalePrice && center.forSalePrice > 0"
+            >Purchase Price</span
+          >
         </div>
         <div class="price-line" *ngIf="center.buildingSizeSf">
-          <span *ngIf="center.forSalePrice && center.forSalePrice > 0" class="price-per-sf">1.2% SF-1.568 SF</span>
-          <span *ngIf="center.buildingSizeSf" class="unit-size"> {{center.buildingSizeSf}} SF</span>
+          <span
+            *ngIf="center.forSalePrice && center.forSalePrice > 0"
+            class="price-per-sf"
+            >1.2% SF-1.568 SF</span
+          >
+          <span *ngIf="center.buildingSizeSf" class="unit-size">
+            {{ center.buildingSizeSf }} SF</span
+          >
         </div>
       </div>
     </div>
@@ -171,15 +313,15 @@
 
   <!-- Pagination -->
   <div class="pagination" *ngIf="totalItems > itemsPerPage">
-    <button 
-      class="pagination-btn" 
+    <button
+      class="pagination-btn"
       [disabled]="currentPage === 1"
       (click)="onPageChange(currentPage - 1)"
     >
       Previous
     </button>
 
-    <button 
+    <button
       class="pagination-btn"
       [class.active]="currentPage === 1"
       (click)="onPageChange(1)"
@@ -190,7 +332,7 @@
 
     <span class="pagination-ellipsis" *ngIf="shouldShowLeftDots()">...</span>
 
-    <button 
+    <button
       *ngFor="let page of visiblePages"
       class="pagination-btn"
       [class.active]="currentPage === page"
@@ -201,7 +343,7 @@
 
     <span class="pagination-ellipsis" *ngIf="shouldShowRightDots()">...</span>
 
-    <button 
+    <button
       class="pagination-btn"
       [class.active]="currentPage === totalPages"
       (click)="onPageChange(totalPages)"
@@ -210,8 +352,8 @@
       {{ totalPages }}
     </button>
 
-    <button 
-      class="pagination-btn" 
+    <button
+      class="pagination-btn"
       [disabled]="currentPage === totalPages"
       (click)="onPageChange(currentPage + 1)"
     >
@@ -219,12 +361,17 @@
     </button>
 
     <span class="pagination-info">
-      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, totalItems) }} of {{ totalItems }} items
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
+      {{ Math.min(currentPage * itemsPerPage, totalItems) }} of
+      {{ totalItems }} items
     </span>
   </div>
 
   <!-- No Results Message -->
-  <div class="no-results" *ngIf="!isLoading && filteredCenters.length === 0 && centers.length > 0">
+  <div
+    class="no-results"
+    *ngIf="!isLoading && filteredCenters.length === 0 && centers.length > 0"
+  >
     <p>No shopping centers match your search criteria.</p>
   </div>
 
@@ -233,9 +380,9 @@
     <p>No shopping centers available.</p>
   </div>
 </div>
-
+</div>
 <!-- File Explorer Component - Simplified integration -->
-<app-file-explorer 
+<app-file-explorer
   #fileExplorer
   [contactID]="contactID"
   (fileSelected)="onFileSelected($event)"

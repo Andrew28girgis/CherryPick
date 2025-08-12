@@ -58,7 +58,8 @@ import { ExtractShoppingCenterComponent } from './features/extract-shopping-cent
  import { EmailInfoComponent } from './features/email-info/email-info.component';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { FileExplorerComponent } from './features/shopping/file-explorer/file-explorer.component';
-
+import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
+import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -92,6 +93,7 @@ import { FileExplorerComponent } from './features/shopping/file-explorer/file-ex
     EmailInfoComponent,
     UploadOMComponent,
     FileExplorerComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,6 +122,7 @@ import { FileExplorerComponent } from './features/shopping/file-explorer/file-ex
     SelectButtonModule,
     EditorModule,
     CampaignModule,
+    NotificationsComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

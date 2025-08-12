@@ -4,185 +4,43 @@
   </div>
 </div>
 <!-- Tenant Header -->
-<div class="tenant-header d-flex justify-content-between align-items-center">
-  <div class="d-flex align-items-center gap-3" style="padding-bottom: 12px">
-    <!-- <div>
-      <img
-        class="tenant-logo"
-        [src]="tenantImageUrl"
-        [alt]="tenantName"
-        (error)="onImageError($event)"
-      />
-    </div> -->
-    <div class="d-flex flex-column gap-2">
-      <div
-        class="tenant-dropdown-container"
-        [class.active]="showTenantDropdown"
-        ngbDropdown
-        #tenantDropdown="ngbDropdown"
-        (openChange)="onDropdownOpenChange($event)"
-      >
-        <button
-          class="tenant-name"
-          type="button"
-          id="tenantDropdown"
-          ngbDropdownToggle
-          [attr.aria-expanded]="showTenantDropdown"
-        >
-          <span class="tenant-name-text">
-            {{ selectedTenant?.name || tenantName }}
-          </span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            fill="none"
-          >
-            <path
-              d="M16 22.4008C15.0667 22.4008 14.1334 22.0408 13.4267 21.3342L4.73336 12.6408C4.34669 12.2542 4.34669 11.6142 4.73336 11.2275C5.12003 10.8408 5.76003 10.8408 6.14669 11.2275L14.84 19.9208C15.48 20.5608 16.52 20.5608 17.16 19.9208L25.8534 11.2275C26.24 10.8408 26.88 10.8408 27.2667 11.2275C27.6534 11.6142 27.6534 12.2542 27.2667 12.6408L18.5734 21.3342C17.8667 22.0408 16.9334 22.4008 16 22.4008Z"
-              fill="#7A8591"
-            />
-          </svg>
-        </button>
-
-        <div
-          class="tenant-dropdown-menu"
-          ngbDropdownMenu
-          aria-labelledby="tenantDropdown"
-        >
-          <ng-container *ngFor="let letter of alphabetKeys">
-            <div class="alphabet-header">{{ letter }}</div>
-            <div
-              class="tenant-item dropdown-item-custom"
-              [class.active]="selectedTenant?.id === tenant.id"
-              *ngFor="let tenant of groupedTenants[letter]"
-              (click)="selectTenant(tenant)"
-            >
-              <div class="d-flex align-items-center gap-3 tenant-item-content">
-                <div class="tenant-logo-small">
-                  <img
-                    class="tenant-img"
-                    [src]="
-                      'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                      tenant.OrganizationId
-                    "
-                    [alt]="tenant.Name"
-                    (error)="onImageError($event)"
-                    (load)="checkImage($event)"
-
-                  />
-                </div>
-                <div class="tenant-info">
-                  <div class="tenant-title">{{ tenant.name }}</div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="d-flex">
-    <!-- <button class="send-email-button mx-1">
-      <a class="action-btn optionMobileColor p-0" (click)="navigateToMap()">
-        <i class="fa-solid fa-plus text-light mx-1"></i>
-        <span> Add sites </span>
-      </a>
-    </button> -->
-      <!-- <button class="send-email-button mx-1">
-      <a class="action-btn optionMobileColor p-0" (click)="findAllContacts()">
-        <i class="fa-solid fa-plus text-light mx-1"></i>
-        <span> Find All Contacts </span>
-      </a>
-    </button> -->
-    <button class="send-email-button mx-1" (click)="openUpload()">
-      <i class="fa-solid fa-plus text-light mx-1"></i>
-      <span> Add sites </span>
-    </button>
-    <button class="send-email-button mx-1">
-      <a class="action-btn optionMobileColor p-0" [href]="generateSafeUrl()">
-        <i class="fa-solid fa-house text-light mx-1"></i>
-        <span> Market Survey </span>
-      </a>
-    </button>
-    <button
-      class="send-email-button mx-1"
-      [routerLink]="['/organization-mail', OrgId, CampaignId]"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-      >
-        <path
-          d="M6.16665 5.2668L13.2417 2.90846C16.4167 1.85013 18.1417 3.58346 17.0917 6.75846L14.7333 13.8335C13.15 18.5918 10.55 18.5918 8.96665 13.8335L8.26665 11.7335L6.16665 11.0335C1.40832 9.45013 1.40832 6.85846 6.16665 5.2668Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M8.42505 11.375L11.4084 8.3833"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-      <span>Inbox</span>
-    </button>
-  </div>
-</div>
 
 <div class="tab-view-container">
-  <div class="nav-tabs-container">
-    <div class="nav-tabs">
-      <!-- <a class="nav-tab"    [routerLink]="['/campaigns/ataglance', CampaignId]" routerLinkActive="active">Campaigns</a> -->
-      <a
-        class="nav-tab"
-        [routerLink]="['/dashboard', OrgId, organizationName, CampaignId]"
-        routerLinkActive="active"
-        >Properties</a
-      >
-      <!-- <a class="nav-tab" [href]="generateSafeUrl()" routerLinkActive="active">Market Survey</a> -->
-    </div>
-  </div>
   <div class="header-container">
-    <div class="search-container">
-      <svg
-        class="search-icon"
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <path
-          d="M11.5 21.75C5.85 21.75 1.25 17.15 1.25 11.5C1.25 5.85 5.85 1.25 11.5 1.25C17.15 1.25 21.75 5.85 21.75 11.5C21.75 17.15 17.15 21.75 11.5 21.75ZM11.5 2.75C6.67 2.75 2.75 6.68 2.75 11.5C2.75 16.32 6.67 20.25 11.5 20.25C16.33 20.25 20.25 16.32 20.25 11.5C20.25 6.68 16.33 2.75 11.5 2.75Z"
-          fill="#777199"
-        />
-        <path
-          d="M21.9999 22.7504C21.8099 22.7504 21.6199 22.6804 21.4699 22.5304L19.4699 20.5304C19.1799 20.2404 19.1799 19.7604 19.4699 19.4704C19.7599 19.1804 20.2399 19.1804 20.5299 19.4704L22.5299 21.4704C22.8199 21.7604 22.8199 22.2404 22.5299 22.5304C22.3799 22.6804 22.1899 22.7504 21.9999 22.7504Z"
-          fill="#777199"
-        />
-      </svg>
+    <div class="search-section">
+      <div class="search-container">
+        <svg
+          class="search-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M11.5 21.75C5.85 21.75 1.25 17.15 1.25 11.5C1.25 5.85 5.85 1.25 11.5 1.25C17.15 1.25 21.75 5.85 21.75 11.5C21.75 17.15 17.15 21.75 11.5 21.75ZM11.5 2.75C6.67 2.75 2.75 6.68 2.75 11.5C2.75 16.32 6.67 20.25 11.5 20.25C16.33 20.25 20.25 16.32 20.25 11.5C20.25 6.68 16.33 2.75 11.5 2.75Z"
+            fill="#777199"
+          />
+          <path
+            d="M21.9999 22.7504C21.8099 22.7504 21.6199 22.6804 21.4699 22.5304L19.4699 20.5304C19.1799 20.2404 19.1799 19.7604 19.4699 19.4704C19.7599 19.1804 20.2399 19.1804 20.5299 19.4704L22.5299 21.4704C22.8199 21.7604 22.8199 22.2404 22.5299 22.5304C22.3799 22.6804 22.1899 22.7504 21.9999 22.7504Z"
+            fill="#777199"
+          />
+        </svg>
 
-      <input
-        type="text"
-        placeholder="Search Properties..."
-        class="search-input"
-        [(ngModel)]="searchQuery"
-        (input)="onSearch($event)"
-      />
+        <input
+          type="text"
+          placeholder="Search Properties..."
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          (input)="onSearch($event)"
+        />
+      </div>
     </div>
     <div class="actions-container">
       <div class="stage-select-container">
         <div class="custom-select-wrapper">
           <button
-            class="custom-select"
+            class="custom-select filter-btn"
             type="button"
             id="stageDropdown"
             data-bs-toggle="dropdown"
@@ -237,7 +95,7 @@
       </div>
 
       <div class="sort-container">
-        <button class="action-btn" (click)="toggleSort()">
+        <button class="sort-btn" (click)="toggleSort()">
           <i [class]="getSelectedSortIcon()"></i>
           <span>{{ getSelectedSortText() }}</span>
         </button>
@@ -252,31 +110,6 @@
             <span>{{ option.text }}</span>
           </div>
         </div>
-      </div>
-
-      <div class="dropdown">
-        <button
-          class="action-btn dropdown-toggle"
-          type="button"
-          id="viewDropdown"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            [src]="getCurrentViewIcon()"
-            [alt]="getCurrentViewName()"
-            class="view-icon"
-          />
-          <span>{{ getCurrentViewName() }}</span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="viewDropdown">
-          <li *ngFor="let option of dropdowmOptions">
-            <a class="dropdown-item" (click)="selectOption(option)">
-              <img [src]="option.icon" [alt]="option.text" class="view-icon" />
-              <span>{{ option.text }}</span>
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
   </div>
@@ -341,24 +174,210 @@
     #mapView
   ></app-map-view>
 
-  <div class="row m-0" *ngIf="currentView == 2">
-    <div class="col-12 p-0">
-      <app-side-list-view
-        (highlightMarker)="onHighlightMarker($event)"
-        (unhighlightMarker)="onUnhighlightMarker($event)"
-      ></app-side-list-view>
+  <div class="main-inner">
+    <div
+      class="tenant-header d-flex justify-content-between align-items-center"
+    >
+      <div class="d-flex align-items-center gap-3"  >
+        <!-- <div>
+          <img
+            class="tenant-logo"
+            [src]="tenantImageUrl"
+            [alt]="tenantName"
+            (error)="onImageError($event)"
+            (load)="checkImage($event)"
+          />
+        </div> -->
+        <div class="d-flex flex-column gap-2">
+          <div
+            class="tenant-dropdown-container"
+            [class.active]="showTenantDropdown"
+            ngbDropdown
+            #tenantDropdown="ngbDropdown"
+            (openChange)="onDropdownOpenChange($event)"
+          >
+            <button
+              class="tenant-name"
+              type="button"
+              id="tenantDropdown"
+              ngbDropdownToggle
+              [attr.aria-expanded]="showTenantDropdown"
+            >
+              <span class="tenant-name-text">
+                {{ selectedTenant?.name || tenantName }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+              >
+                <path
+                  d="M16 22.4008C15.0667 22.4008 14.1334 22.0408 13.4267 21.3342L4.73336 12.6408C4.34669 12.2542 4.34669 11.6142 4.73336 11.2275C5.12003 10.8408 5.76003 10.8408 6.14669 11.2275L14.84 19.9208C15.48 20.5608 16.52 20.5608 17.16 19.9208L25.8534 11.2275C26.24 10.8408 26.88 10.8408 27.2667 11.2275C27.6534 11.6142 27.6534 12.2542 27.2667 12.6408L18.5734 21.3342C17.8667 22.0408 16.9334 22.4008 16 22.4008Z"
+                  fill="#7A8591"
+                />
+              </svg>
+            </button>
+
+            <div
+              class="tenant-dropdown-menu"
+              ngbDropdownMenu
+              aria-labelledby="tenantDropdown"
+            >
+              <ng-container *ngFor="let letter of alphabetKeys">
+                <div class="alphabet-header">{{ letter }}</div>
+                <div
+                  class="tenant-item dropdown-item-custom"
+                  [class.active]="selectedTenant?.id === tenant.id"
+                  *ngFor="let tenant of groupedTenants[letter]"
+                  (click)="selectTenant(tenant)"
+                >
+                  <div
+                    class="d-flex align-items-center gap-3 tenant-item-content"
+                  >
+                    <div class="tenant-logo-small">
+                      <img
+                        class="tenant-img"
+                        [src]="
+                          'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                          tenant.OrganizationId
+                        "
+                        [alt]="tenant.Name"
+                        (error)="onImageError($event)"
+                        (load)="checkImage($event)"
+                      />
+                    </div>
+                    <div class="tenant-info">
+                      <div class="tenant-title">{{ tenant.name }}</div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex">
+        <!-- <button class="send-email-button mx-1">
+          <a class="action-btn optionMobileColor p-0" (click)="navigateToMap()">
+            <i class="fa-solid fa-plus text-light mx-1"></i>
+            <span> Add sites </span>
+          </a>
+        </button> -->
+        <!-- <button class="send-email-button mx-1">
+          <a class="action-btn optionMobileColor p-0" (click)="findAllContacts()">
+            <i class="fa-solid fa-plus text-light mx-1"></i>
+            <span> Find All Contacts </span>
+          </a>
+        </button> -->
+        <button
+          class="send-email-button mx-1"
+          (click)="openUpload()"
+          style="margin-left: 0 !important"
+        >
+          <i class="fa-solid fa-plus text-light mx-1"></i>
+          <span> Add sites </span>
+        </button>
+        <button class="send-email-button mx-1">
+          <a
+            class="action-btn optionMobileColor p-0"
+            [href]="generateSafeUrl()"
+          >
+            <i class="fa-solid fa-house text-light mx-1"></i>
+            <span> Market Survey </span>
+          </a>
+        </button>
+        <button
+          class="send-email-button mx-1"
+          style="margin-right: 0 !important"
+          [routerLink]="['/organization-mail', OrgId, CampaignId]"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M6.16665 5.2668L13.2417 2.90846C16.4167 1.85013 18.1417 3.58346 17.0917 6.75846L14.7333 13.8335C13.15 18.5918 10.55 18.5918 8.96665 13.8335L8.26665 11.7335L6.16665 11.0335C1.40832 9.45013 1.40832 6.85846 6.16665 5.2668Z"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M8.42505 11.375L11.4084 8.3833"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Inbox</span>
+        </button>
+      </div>
     </div>
+    <div class="nav-tabs-container d-none">
+      <div class="nav-tabs">
+        <!-- <a class="nav-tab"    [routerLink]="['/campaigns/ataglance', CampaignId]" routerLinkActive="active">Campaigns</a> -->
+        <a
+          class="nav-tab"
+          [routerLink]="['/dashboard', OrgId, organizationName, CampaignId]"
+          routerLinkActive="active"
+          >Properties</a
+        >
+        <!-- <a class="nav-tab" [href]="generateSafeUrl()" routerLinkActive="active">Market Survey</a> -->
+      </div>
+    </div>
+    <div
+      class="dropdown d-flex justify-content-end"
+      style="margin-bottom: 16px"
+    >
+      <button
+        class="action-btn dropdown-toggle"
+        type="button"
+        id="viewDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        style="padding:0 !important"
+      >
+        <img
+          [src]="getCurrentViewIcon()"
+          [alt]="getCurrentViewName()"
+          class="view-icon"
+        />
+        <span>{{ getCurrentViewName() }}</span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="viewDropdown">
+        <li *ngFor="let option of dropdowmOptions">
+          <a class="dropdown-item" (click)="selectOption(option)">
+            <img [src]="option.icon" [alt]="option.text" class="view-icon" />
+            <span>{{ option.text }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="row m-0" *ngIf="currentView == 2">
+      <div class="col-12 p-0">
+        <app-side-list-view
+          (highlightMarker)="onHighlightMarker($event)"
+          (unhighlightMarker)="onUnhighlightMarker($event)"
+        ></app-side-list-view>
+      </div>
+    </div>
+    <app-card-view *ngIf="currentView == 3"></app-card-view>
+    <app-table-view
+      *ngIf="currentView == 4"
+      (viewChange)="onViewChange($event)"
+    ></app-table-view>
+    <app-social-view
+      *ngIf="currentView == 5"
+      (viewChange)="onViewChange($event)"
+    ></app-social-view>
+    <app-kanban-view *ngIf="currentView == 6"></app-kanban-view>
   </div>
-  <app-card-view *ngIf="currentView == 3"></app-card-view>
-  <app-table-view
-    *ngIf="currentView == 4"
-    (viewChange)="onViewChange($event)"
-  ></app-table-view>
-  <app-social-view
-    *ngIf="currentView == 5"
-    (viewChange)="onViewChange($event)"
-  ></app-social-view>
-  <app-kanban-view *ngIf="currentView == 6"></app-kanban-view>
 </div>
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
@@ -386,9 +405,13 @@
       </div>
       <div class="btn-hover-effect"></div>
     </button>
-    
+
     <!-- Updated Upload OM Files button with file drop functionality -->
-    <div class="add-sites-btn om-btn" (click)="openFileUpload()" [class.disabled]="isUploading">
+    <div
+      class="add-sites-btn om-btn"
+      (click)="openFileUpload()"
+      [class.disabled]="isUploading"
+    >
       <div class="btn-content" *ngIf="!showFileDropArea && !isUploading">
         <svg
           class="btn-icon"
@@ -416,13 +439,13 @@
         </svg>
         <span class="btn-text">Upload OM Files</span>
       </div>
-      
+
       <!-- Loading state -->
       <div class="btn-content" *ngIf="isUploading">
         <div class="spinner"></div>
         <span class="btn-text">Uploading...</span>
       </div>
-      
+
       <div class="btn-hover-effect"></div>
     </div>
 
@@ -437,14 +460,49 @@
         [multiple]="false"
         class="file-drop-zone"
       >
-        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+        <ng-template
+          ngx-file-drop-content-tmp
+          let-openFileSelector="openFileSelector"
+        >
           <div class="file-drop-content">
-            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              class="upload-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M17 8L12 3L7 8"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 3V15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
-            <p class="mb-0">Drop PDF files here or <button type="button" class="browse-btn" (click)="openFileSelector()">browse</button></p>
+            <p class="mb-0">
+              Drop PDF files here or
+              <button
+                type="button"
+                class="browse-btn"
+                (click)="openFileSelector()"
+              >
+                browse
+              </button>
+            </p>
             <small>Only PDF files are accepted</small>
           </div>
         </ng-template>

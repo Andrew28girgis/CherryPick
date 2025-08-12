@@ -1,5 +1,6 @@
 <div class="tenant-card">
-  <div class="d-flex align-items-center gap-3">
+  <div class="d-flex align-items-center gap-3 justify-content-between"style="width: 100%;">
+    <div class="flex-row d-flex " style="gap: 16px;">
     <img
     class="tenant-card-img"
     [src]="getImageUrl(tenant.id)"
@@ -40,7 +41,12 @@
           </a>
         </ng-template>
       </div>
+      
     </div>
+  </div>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+      <path d="M7.9248 3.27686C7.9606 3.27689 7.99119 3.29051 8.0127 3.31201L13.4463 8.74463C13.7783 9.07659 13.9667 9.525 13.9668 9.99951C13.9668 10.4783 13.7833 10.9238 13.4492 11.2515L13.4463 11.2544L8.02246 16.6772C7.9806 16.7154 7.94274 16.7251 7.9248 16.7251C7.90712 16.7251 7.89125 16.7217 7.87793 16.7163C7.86518 16.7112 7.85146 16.7025 7.83691 16.688C7.81545 16.6665 7.80184 16.6358 7.80176 16.6001C7.80176 16.5642 7.81539 16.5328 7.83691 16.5112L13.2695 11.0786C13.8648 10.4834 13.8648 9.51665 13.2695 8.92139L7.83691 3.48779C7.81541 3.46629 7.80179 3.4357 7.80176 3.3999C7.80176 3.36405 7.81539 3.33354 7.83691 3.31201C7.85844 3.29048 7.88895 3.27686 7.9248 3.27686Z" fill="#704E73" stroke="#704E73"/>
+    </svg> -->
   </div>
 </div>
 
@@ -63,7 +69,7 @@
     <hr />
     <h5 class="tenant-card-title mb-3">Campaign List</h5>
     <button
-      class="x-btn x-btn-primary w-100 mb-3"
+      class="x-btn x-btn-primary w-100 mb-3 add-campaign-btn"
       (click)="openCampaignModal()"
     >
       <svg

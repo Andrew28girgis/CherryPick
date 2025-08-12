@@ -65,7 +65,7 @@ export class LandingComponent {
   placeId!: any;
   shoppingId!: any;
   campaignId!: any;
-
+  isMapView = true;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,

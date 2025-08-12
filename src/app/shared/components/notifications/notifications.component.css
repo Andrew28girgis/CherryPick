@@ -1,7 +1,10 @@
 /* Container and Button Styles */
-.notification-container {
+ .notification-container {
   position: relative;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  z-index: 10010;
 }
 
 .notification-button {
@@ -18,10 +21,7 @@
   text-decoration: underline; 
   cursor: pointer
 }
-
-.notification-button:hover svg path {
-  fill: var(--primary-color, #007bff);
-}
+ 
 
 /* Notification Badge Styles */
 .notification-badge {
@@ -44,14 +44,14 @@
 /* Dropdown Container Styles */
 .notification-dropdown {
   position: absolute;
-  top: calc(100% + 10px);
-  right: -20px;
+  top: -58vh;
+  left: 7vh;
   width: 350px;
   background-color: var(--card-bg, #fff);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  z-index: 1001;
-  max-height: calc(100vh - 100px);
+  z-index: 2000;
+  max-height: 450px;
   overflow-y: auto;
 }
 
@@ -183,13 +183,9 @@
 
 /* Focus States for Accessibility */
 .notification-button:focus {
-  outline: 2px solid var(--focus-color, #3b82f6);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: none;
 }
 
 .notification-item:focus {
-  outline: 2px solid var(--focus-color, #3b82f6);
-  outline-offset: -2px;
-  border-radius: 8px;
+  outline: none;
 }

@@ -12,9 +12,9 @@
 }
 
 .form-control:focus {
-  border-color: #3922d2;
-  box-shadow: 0 0 0 0.2rem rgba(57, 34, 210, 0.25);
-}
+  border-color: #ac336a;
+  box-shadow: none;
+ }
 
 input::placeholder {
   color: #888888;
@@ -41,7 +41,6 @@ input::placeholder {
 }
 
 .login-container {
-  background-color: #fff;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 1rem;
@@ -49,11 +48,16 @@ input::placeholder {
   justify-content: center;
   display: flex;
   flex-direction: column;
+
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(50px);
 }
 
 .right-container {
+  background: rgba(255, 252, 255, 0.5);
+  backdrop-filter: blur(100px);
+
   display: flex !important;
-  background-color: #ebe9fb;
   padding: 40px;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
@@ -64,23 +68,15 @@ input::placeholder {
 .cursor {
   cursor: pointer;
 }
-
-.focus {
-  margin: 0;
-  width: 342px;
-  color: var(--Body-Heading-Color, #18171f);
-
-  /* Large-Headings/40/48/SemiBold */
-  font-family: Montserrat;
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 48px;
-}
+ 
 
 .worth {
-  background: linear-gradient(90deg, #30cfd0 0%, #330867 100%);
-  -webkit-background-clip: text;
+
+  background: #FF0099;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #493240, #FF0099);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #493240, #FF0099); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: inline-block;
@@ -100,36 +96,26 @@ input::placeholder {
 }
 
 .login {
-  border-radius: 16px;
-  background: #3922d2;
+   border-radius: 24px;
+  background: #ac336a;
+
+  color: #fff;
   display: flex;
   height: 48px;
   padding: 14px 24px;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border: none;
-  transition: background-color 0.3s ease;
+   transition: background-color 0.3s ease;
 }
 
 .login:hover {
-  background: #2d1ba8;
-}
-
-.login:disabled {
-  background: #cccccc;
-  cursor: not-allowed;
-}
-
-.login-text {
+  background: #9b2e5f;
   color: #fff;
-  text-align: center;
-  font-family: Montserrat, sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px;
 }
+
+ 
+ 
 
 .login-container-form {
   display: flex;
@@ -239,7 +225,7 @@ input::placeholder {
 }
 
 .ForgetPassword {
-  color: #3922d2;
+  color: #ac336a;
   text-align: right;
   font-size: 16px;
   font-weight: 500;

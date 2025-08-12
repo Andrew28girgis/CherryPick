@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { PlacesService } from './core/services/places.service';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private placeService: PlacesService
+    private placeService: PlacesService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -43,6 +45,10 @@ export class AppComponent implements OnInit {
       .subscribe((data: any) => {
         this.display = !data.hideHeader;
       });
+  }
+
+  get isAuthenticated(): boolean {
+    return this.authService.isLoggedInToday();
   }
 
   get localStorage() {
