@@ -140,6 +140,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   openAddAIKey(): void {
     this.resetModalState();
+    this.GetUserAPIAIKey();
     if (this.addAIKeyTypes) {
       this.modalService.open(this.addAIKeyTypes, {
         size: 'md',
@@ -200,6 +201,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else {
       console.warn('Toast elements not found in DOM.');
     }
+  }
+  GetUserAPIAIKey(){
+    const body = {
+      Name: 'GetUserAPIAIKey',
+      Params: {},
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.AIKey = res?.json[0]?.openAIKey || '';
+      },
+      error: (err) => {
+        this.errorMessage = err.message || 'Failed to retrieve AI Key';
+      }
+    });
   }
 
 }
