@@ -262,7 +262,7 @@
             <a class="dropdown-item" [routerLink]="['/settings']"> Settings </a>
           </li>
           <li>
-            <a class="dropdown-item" (click)="openAddAIKey()"> Add AI Key </a>
+            <a class="dropdown-item" (click)="openAddAIKey()"> ChatGPT Key </a>
           </li>
 
           <li><hr class="dropdown-divider" /></li>
@@ -297,18 +297,18 @@
 
 <ng-template #addAIKeyTypes let-modal>
   <div class="fancy-modal-header">
-    <h5 class="fancy-title">Add AI Key</h5>
+    <h5 class="fancy-title">Add ChatGPT Key</h5>
     <button type="button" class="btn-close fancy-close" (click)="modal.dismiss()"></button>
   </div>
   <div class="fancy-modal-body">
     <form>
       <div class="mb-4">
-        <label for="aiKey" class="form-label text-muted small mb-2">AI Key</label>
+        <label for="aiKey" class="form-label text-muted small mb-2">ChatGPT Key</label>
         <input type="text" 
                class="form-control fancy-input" 
                id="aiKey" 
                name="aiKey" 
-               placeholder="Enter your AI Key" 
+               placeholder="Enter your ChatGPT Key" 
                [(ngModel)]="AIKey" />
       </div>
     </form>

@@ -155,7 +155,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   SetGPTAPIKey(): void {
     if (!this.AIKey) {
-      this.errorMessage = 'Please enter an AI Key';
+      this.errorMessage = 'Please enter an ChatGPT Key';
       return;
     }
 
@@ -172,13 +172,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.saveSuccess = true;
         this.showToast(
-            'AI Key Has Been Added Successfully'
+            'ChatGPT Key Has Been Added Successfully'
           );
         this.modalService.dismissAll();
       },
       error: (err) => {
         this.isSaving = false;
-        this.errorMessage = err.message || 'Failed to save AI Key';
+        this.errorMessage = err.message || 'Failed to save ChatGPT Key';
       }
     });
   }
@@ -212,7 +212,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.AIKey = res?.json[0]?.openAIKey || '';
       },
       error: (err) => {
-        this.errorMessage = err.message || 'Failed to retrieve AI Key';
+        this.errorMessage = err.message || 'Failed to retrieve ChatGPT Key';
       }
     });
   }
