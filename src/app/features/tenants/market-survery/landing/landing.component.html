@@ -194,12 +194,6 @@
                 <button class="view-gallery" (click)="openGallery()">
                   View Gallery
                 </button>
-                <!-- <button class="enriche ms-2" (click)="open(enricheModal , 1)">
-           <i class="fa-solid fa-tag me-1"></i>  Enriche Description
-          </button>
-          <button class="enriche ms-2" (click)="open(enricheModal , 2)">
-           <i class="fa-solid fa-tag me-1"></i> Enriche Demographics
-          </button> -->
               </div>
             </div>
           </section>
@@ -392,11 +386,11 @@
       </div>
     </div> -->
 
-    <div class="main-section">
+    <!-- <div class="main-section">
       <section id="hero">
         <div class="row m-0">
           <div class="tabs">
-            <ul class="tab-headers" *ngIf="ShoppingCenter">
+            <ul class="tab-headers" *ngIf="ShoppingCenter ">
               <li
                 (click)="changeStreetView(ShoppingCenter)"
                 [innerHTML]="ShoppingCenter.CenterName | titlecase"
@@ -411,17 +405,14 @@
           </div>
         </div>
       </section>
-    </div>
+    </div> -->
 
-    <div class="main-section" *ngIf="ShoppingCenter">
+    <div class="main-section" *ngIf="ShoppingCenter?.Place.length > 0">
       <section id="hero">
         <ng-container>
           <div class="col-md-12">
             <div class="d-flex justify-content-between">
               <h2 class="main-heading">Available spaces</h2>
-              <!-- <button class="enriche ms-auto" (click)="open(enricheModal , 3)">
-                <i class="fa-solid fa-tag me-1"></i>   Enriche Availability
-              </button> -->
             </div>
             <div class="another-places p-0">
               <table class="procpect-table">
@@ -782,9 +773,7 @@
         <div class="main-section heightt">
           <div class="d-flex justify-content-between">
             <p class="main-name">Co-Tenants</p>
-            <!-- <button class="enriche ms-2" (click)="open(enricheModal , 4)">
-              <i class="fa-solid fa-tag me-1"></i> Enriche Co-Tenants
-            </button> -->
+
             <!-- <select
               class="form-control styled-select"
               (change)="filterCotent($event)"
@@ -928,6 +917,8 @@
     </div>
   </div>
 </div>
+
+
 <ng-template #mapPopup let-modal>
   <div id="mapInPopup" class="mapViewOneheight" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
