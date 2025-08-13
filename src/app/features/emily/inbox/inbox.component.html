@@ -48,82 +48,106 @@
     <button class="replay" (click)="showAllEmails()">Show All</button>
   </div>
 
-  <div class="row m-0 p-0">
-    <div class="col-lg-3 p-0 m-0">
+  <div class="row mail-main-container">
+    <div class="col-lg-3 p-0">
       <div class="card">
-        <ul style="overflow-y: auto; max-height: 100vh; padding: 0">
-          <ng-container *ngFor="let bb of BuyBoxMicroDeals">
-            <p
-              class="buybox-name"
-              (click)="toggleBB(bb)"
-              [attr.data-org-id]="bb.OrganizationId"
-              [ngClass]="{ 'highlight-open': bb.isOpen }"
-            >
-              <i
-                [class]="
-                  bb.isOpen
-                    ? 'fa-solid fa-chevron-down'
-                    : 'fa-solid fa-chevron-right'
-                "
-              ></i>
-              <img
-                class="logo"
-                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                  bb.OrganizationId
-                }}"
-                title="{{ bb.OrganizationName }}"
-              />
-              {{ bb.OrganizationName }}
-            </p>
-
-            <!-- Only show contacts if bb.isOpen is true -->
-            <ng-container *ngIf="bb.isOpen">
-              <li
-                class="contact-list"
-                *ngFor="let contact of bb.Contact"
-                (click)="getEmailsForContact(contact)"
-                [ngClass]="{
-                  'selected-contact':
-                    contact.ContactId === selectedContact?.ContactId
-                }"
-              >
-                <div class="d-flex justify-content-between w-100 ">
-                  <span class="namecontact" id="{{ contact.ContactId }}">
-                    {{ contact.Firstname }} {{ contact.Lastname }}
-                  </span>
-
-                  <button class="new-btnCompose" (click)="openCompose(contact)">
-                    Compose
-                    <i class="fa-solid fa-arrow-right"></i>
-                  </button>
+        <!-- Organization dropdown selector at the top -->
+        <div class="org-selector">
+           <div class="custom-dropdown">
+            <div class="selected-option" (click)="toggleOrgDropdown()">
+              <div class="d-flex align-items-center w-100">
+                <div
+                  *ngIf="getSelectedOrg()?.OrganizationId"
+                  class="org-logo-container me-2"
+                >
+                  <img
+                    class="org-logo"
+                    [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + getSelectedOrg()?.OrganizationId"
+                    alt=""
+                  />
                 </div>
-
-                <ng-container *ngFor="let sc of contact.ShoppingCenters">
-                  <div>
-                    <span
-                      class="shopping-center"
-                      style="font-size: 12px; color: #4d65b4; font-weight: 600"
-                      >{{ sc.CenterName }}</span
-                    >
-                    <span
-                      style="color: #4d65b4; font-weight: 600"
-                      *ngIf="getTotalEmailsCount(sc.EmailStats[0]) > 0"
-                    >
-                      {{ getTotalEmailsCount(sc.EmailStats[0]) }}
-                    </span>
+                <span>
+                  {{ getSelectedOrg()?.OrganizationName || 'Select Organization' }}
+                </span>
+                <i
+                  class="fa-solid"
+                  [ngClass]="
+                    isOrgDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'
+                  "
+                  style="margin-left: auto"
+                ></i>
+              </div>
+            </div>
+            <div class="dropdown-options" *ngIf="isOrgDropdownOpen">
+              <div
+                *ngFor="let org of BuyBoxMicroDeals"
+                class="dropdown-option"
+                [ngClass]="{ selected: org.OrganizationId === selectedOrgId }"
+                (click)="selectOrg(org.OrganizationId)"
+              >
+                <div class="d-flex align-items-center w-100">
+                  <div class="org-logo-container me-2">
+                    <!-- <img
+                      class="org-logo"
+                      [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + org.OrganizationId"
+                      alt=""
+                    /> -->
                   </div>
-                </ng-container>
-              </li>
-            </ng-container>
-          </ng-container>
-        </ul>
+                  <span>{{ org.OrganizationName }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacts list for the selected organization -->
+        <div class="contacts-container" *ngIf="selectedOrgId">
+          <div class="contacts-header">Contacts</div>
+          <ul class="contacts-list m-0 p-0">
+            <li
+              class="contact-list flex-column"
+              *ngFor="let contact of getSelectedOrgContacts()"
+              (click)="getEmailsForContact(contact)"
+              [ngClass]="{
+                'selected-contact':
+                  contact.ContactId === selectedContact?.ContactId
+              }"
+            >
+              <div class="d-flex justify-content-between w-100">
+                <span class="namecontact" id="{{ contact.ContactId }}">
+                  {{ contact.Firstname }} {{ contact.Lastname }}
+                </span>
+
+                <!-- <button class="new-btnCompose" (click)="openCompose(contact)">
+                  Compose
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button> -->
+              </div>
+              <div class="shoppings-contacts"> 
+
+              <ng-container *ngFor="let sc of contact.ShoppingCenters">
+                <div>
+                  <span
+                    class="shopping-of-contact"
+                     >{{ sc.CenterName }}</span
+                  >
+                  <!-- <span
+                    *ngIf="getTotalEmailsCount(sc.EmailStats[0]) > 0"
+                  >
+                    {{ getTotalEmailsCount(sc.EmailStats[0]) }}
+                  </span> -->
+                </div>
+              </ng-container>
+            </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div
       class="col-lg-9 p-0 mb-3"
       *ngIf="!selected"
-      style="border-left: 1px solid #ccc"
-    >
+     >
       <div
         class="card"
         style="
@@ -154,24 +178,31 @@
                       [ngStyle]="{
                         'background-color': getDirectionColor(email.Direction),
                         'border-radius': '5px',
-                        'padding': '3px 6px',
+                        padding: '3px 6px',
                         'margin-right': '5px'
                       }"
                       class="d-flex align-items-center direction-icon"
                     >
                       <i
                         (click)="openEmail(email)"
-                        [ngClass]="'fa-solid ' + getDirectionIcon(email.Direction)"
+                        [ngClass]="
+                          'fa-solid ' + getDirectionIcon(email.Direction)
+                        "
                         class="me-2"
                       ></i>
-                      <span class="direction-name" style="font-size: 12px;">{{ getDirectionLabel(email.Direction) }}</span>
+                      <span class="direction-name" style="font-size: 12px">{{
+                        getDirectionLabel(email.Direction)
+                      }}</span>
                     </div>
-                  
-                    <span class="subject subject-mob" (click)="openEmail(email)">
+
+                    <span
+                      class="subject subject-mob"
+                      (click)="openEmail(email)"
+                    >
                       {{ email.Subject }}
                     </span>
                   </strong>
-                  
+
                   <div class="d-flex align-items-center">
                     <!-- <div (click)="send(email)">
                     <i class="fa-solid fa-paper-plane text-primary"  *ngIf="email.Direction === 4"></i>
@@ -182,58 +213,60 @@
                    (click)="openSendEmailModal(email)"
                    *ngIf="email.Direction === 4"
                  ></i> -->
-                 <img
-                 style="width: 24px; height: 24px"
-                 class="logo ms-0 me-2 logo-mob"
-                 src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                   email.O[0].OrganizationId
-                 }}"
-                 title="{{ email.O[0].OrganizationName }}"
-               />
-               <p class="mb-0 organization-name" style="font-size: 13px;">{{ email.O[0].OrganizationName }}</p>
+                    <img
+                      style="width: 24px; height: 24px"
+                      class="logo ms-0 me-2 logo-mob"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        email.O[0].OrganizationId
+                      }}"
+                      title="{{ email.O[0].OrganizationName }}"
+                    />
+                    <p class="mb-0 organization-name" style="font-size: 13px">
+                      {{ email.O[0].OrganizationName }}
+                    </p>
 
-               <div>
-                 <img
-                   class="ms-2 cursor"
-                   src="../../../assets/Images/Icons/eye.png"
-                   alt="View Manager Details"
-                   [ngbPopover]="popoverContent"
-                   popoverTitle="Email Contact"
-                   triggers="click:outside"
-                   [placement]="'bottom'"
-                 />
-               </div>
+                    <div>
+                      <img
+                        class="ms-2 cursor"
+                        src="../../../assets/Images/Icons/eye.png"
+                        alt="View Manager Details"
+                        [ngbPopover]="popoverContent"
+                        popoverTitle="Email Contact"
+                        triggers="click:outside"
+                        [placement]="'bottom'"
+                      />
+                    </div>
 
-               <br />
-               <ng-template #popoverContent>
-                 <div>
-                   <ng-container
-                     *ngFor="let contact of email.O[0].MailsContacts"
-                   >
-                     <div>
-                       <p class="m-0">
-                         <b>{{ contact.RecieverFullName }}</b>
-                       </p>
-                       <ul>
-                         <ng-container *ngFor="let sc of contact.SC">
-                           <li class="ms-2">{{ sc.CenterName }}</li>
-                         </ng-container>
-                       </ul>
-                     </div>
-                   </ng-container>
-                 </div>
-               </ng-template>
-                 <div class="ms-auto">
-                    
-                  <i
-                  class="fa-solid fa-trash-can delete-icn mx-2"
-                  title="Delete Mail"
-                  (click)="DeleteMailTemplate(email)"
-                  *ngIf="email.Direction === 4"
-                  ></i>
-                </div>
-                 <p class="date mb-0" style="font-size: 12px;">{{ email.Date | date : "medium" }}</p>
-
+                    <br />
+                    <ng-template #popoverContent>
+                      <div>
+                        <ng-container
+                          *ngFor="let contact of email.O[0].MailsContacts"
+                        >
+                          <div>
+                            <p class="m-0">
+                              <b>{{ contact.RecieverFullName }}</b>
+                            </p>
+                            <ul>
+                              <ng-container *ngFor="let sc of contact.SC">
+                                <li class="ms-2">{{ sc.CenterName }}</li>
+                              </ng-container>
+                            </ul>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ng-template>
+                    <div class="ms-auto">
+                      <i
+                        class="fa-solid fa-trash-can delete-icn mx-2"
+                        title="Delete Mail"
+                        (click)="DeleteMailTemplate(email)"
+                        *ngIf="email.Direction === 4"
+                      ></i>
+                    </div>
+                    <p class="date mb-0" style="font-size: 12px">
+                      {{ email.Date | date : "medium" }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -257,7 +290,26 @@
         class="email-details-body"
         style="overflow-y: auto; min-height: 91vh"
       >
-        <div class="card-body">
+      <div class="card-body">
+          <div class="emails-header">
+            <div class="header-container">
+              <div class="left-section">
+                <div class="dropdown">
+                  <span class="dropdown-label">ALL</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="right-section">
+                <!-- <button class="refresh-button" (click)="refreshEmails()">
+                  <i class="fa-solid fa-rotate"></i>
+                </button> -->
+                <!-- <button class="compose-button" (click)="openCompose()">
+                  <i class="fa-solid fa-plus"></i>
+                  <span>Compose</span>
+                </button> -->
+              </div>
+            </div>
+          </div>
           <!-- Back button to return to email list -->
           <button class="back" (click)="goBack()">
             <i class="fa-solid fa-arrow-left"></i>
@@ -377,9 +429,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-end">
-        <button type="button" class="m-3 buttonSave" >
-          Send
-        </button>
+        <button type="button" class="m-3 buttonSave">Send</button>
       </div>
     </div>
   </div>
@@ -388,9 +438,7 @@
 <ng-template #deleteEmailModal let-modal>
   <div class="modal-body-general p-4 rounded deleteShopping">
     <h3 class="text-start mb-1 RemoveShopping">Delete Email</h3>
-    <p class="text-start Areyou">
-      Are you sure you want to delete this email?
-    </p>
+    <p class="text-start Areyou">Are you sure you want to delete this email?</p>
 
     <div class="d-flex justify-content-end mt-4">
       <button
@@ -402,7 +450,7 @@
       </button>
       <button
         type="button"
-        style="background-color: #4d65b4; border:none ;"
+        style="background-color: #4d65b4; border: none"
         class="btn btn-danger px-4 py-2 btnborder"
         (click)="deleteEmail()"
       >
@@ -411,4 +459,3 @@
     </div>
   </div>
 </ng-template>
- 

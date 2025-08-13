@@ -409,43 +409,65 @@
     <!-- Original Table View -->
     <div class="table-responsive" *ngIf="viewMode === 'table'">
       <div class="table-inner">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th class="col-name">Name</th>
-            <th class="col-emily">Emily</th>
-            <th class="col-date">Date</th>
-            <th class="col-privacy">Privacy</th>
-            <th class="col-sites">Sites</th>
-            <th class="col-submissions">Submissions</th>
-            <th class="col-sent">Sent</th>
-            <ng-container *ngFor="let stage of stages">
-              <th scope="col" class="col-stage">
-                {{ stage.stageName }}
-              </th>
-            </ng-container>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container
-            *ngFor="let campaign of filteredCampaigns; let index = index"
-          >
+        <table class="table align-middle">
+          <thead>
             <tr>
-              <td class="col-name">
-                <div class="campaign-info">
-                  <div
-                    class="campaign-name"
-                    [routerLink]="[
-                      '/dashboard',
-                      campaign.OrganizationId,
-                      campaign.OrganizationName,
-                      campaign.Id
-                    ]"
-                  >
-                    {{ campaign.CampaignName }}
-                  </div>
-    
-                  <div class="organization-info">
+              <th class="col-name">Name</th>
+              <th class="col-emily">Emily</th>
+              <!-- <th class="col-date">Date</th> -->
+              <!-- <th class="col-privacy">Privacy</th> -->
+              <th class="col-sites">Sites</th>
+              <th class="col-submissions">Submissions</th>
+              <th class="col-sent">Sent</th>
+              <ng-container *ngFor="let stage of stages">
+                <th scope="col" class="col-stage">
+                  {{ stage.stageName }}
+                </th>
+              </ng-container>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container
+              *ngFor="let campaign of filteredCampaigns; let index = index"
+            >
+              <tr>
+                <td class="col-name">
+                  <div class="campaign-info">
+                    <div
+                      class="campaign-name"
+                      [routerLink]="[
+                        '/dashboard',
+                        campaign.OrganizationId,
+                        campaign.OrganizationName,
+                        campaign.Id
+                      ]"
+                    >
+                      {{ campaign.CampaignName }} /
+                      {{ campaign.OrganizationName }}
+                    </div>
+                    <div
+                      class="date justify-content-between gap-1 w-100"
+                      style="display: flex; align-items: center"
+                    >
+                      {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
+                      <div
+                        class="campaign-privacy"
+                        [ngClass]="{
+                          'campaign-privacy-public':
+                            campaign.CampaignPrivacy == 0,
+                          'campaign-privacy-private':
+                            campaign.CampaignPrivacy == 1
+                        }"
+                      >
+                        <div class="campaign-privacy-icon"></div>
+                        <span>
+                          {{
+                            campaign.CampaignPrivacy == 0 ? "Public" : "Private"
+                          }}</span
+                        >
+                      </div>
+                    </div>
+                    <!-- <div class="organization-info">
                     <img
                       *ngIf="campaign.OrganizationId"
                       [src]="
@@ -468,134 +490,133 @@
                     >
                       {{ campaign.OrganizationName }}
                     </span>
-                  </div>
-                </div>
-              </td>
-    
-              <td class="col-emily">
-                <div
-                  class="inbox mail"
-                  [routerLink]="[
-                    '/organization-mail',
-                    campaign.OrganizationId,
-                    campaign.Id
-                  ]"
-                >
-                  <i class="fa-regular fa-envelope"></i>
-                </div>
-              </td>
-              
-              <td class="col-date">
-                {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-              </td>
-              
-              <td class="col-privacy">
-                <div
-                  class="campaign-privacy"
-                  [ngClass]="{
-                    'campaign-privacy-public': campaign.CampaignPrivacy == 0,
-                    'campaign-privacy-private': campaign.CampaignPrivacy == 1
-                  }"
-                >
-                  <div class="campaign-privacy-icon"></div>
-                  <span>
-                    {{
-                      campaign.CampaignPrivacy == 0 ? "Public" : "Private"
-                    }}</span
-                  >
-                </div>
-              </td>
-    
-              <td class="col-sites">
-                <div class="sites-info">
-                  <div>{{ campaign.Sites }}</div>
-                  <svg
-                    [routerLink]="[
-                      '/dashboard',
-                      campaign.OrganizationId,
-                      campaign.OrganizationName,
-                      campaign.Id
-                    ]"
-                    class="external-link-icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                      fill="#292D32"
-                    />
-                    <path
-                      d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                      fill="#292D32"
-                    />
-                    <path
-                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                      fill="#292D32"
-                    />
-                  </svg>
-                </div>
-              </td>
-              
-              <td class="col-submissions">
-                <div class="submissions-info">
-                  <div *ngIf="campaign.Submissions" class="submission-counts">
-                    <span class="count-new" title="New Submissions">{{
-                      getSubmissionsCountNew(campaign.Submissions)
-                    }}</span>
-                    |
-                    <span
-                      class="count-accepted"
-                      title="Accepted Submissions"
-                      >{{
-                        getSumbmissionsCountAcceppted(campaign.Submissions)
-                      }}</span
-                    >
-                    |
-                    <span
-                      class="count-rejected"
-                      title="Rejected Submissions"
-                      >{{
-                        getSumbmissionsCountRejected(campaign.Submissions)
-                      }}</span
-                    >
-    
-                    <ng-container
-                      *ngFor="
-                        let submission of sortedSubmissions(
-                          campaign.Submissions
-                        );
-                        let i = index
-                      "
-                    >
-                    </ng-container>
-                  </div>
-                  <div *ngIf="!campaign.Submissions" class="no-data">N/A</div>
-                </div>
-              </td>
-              
-              <td class="col-sent">
-                <ng-container *ngIf="campaign.MailsSent">
-                  {{ campaign.MailsSent }}</ng-container
-                >
-              </td>
-    
-              <ng-container *ngFor="let stage of stages">
-                <td class="col-stage">
-                  <div class="stage-count">
-                    {{ getKanbanCount(stage.stageName, campaign.Kanban) }}
+                  </div> -->
                   </div>
                 </td>
-              </ng-container>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
+
+                <td class="col-emily">
+                  <div
+                    class="inbox mail"
+                    [routerLink]="[
+                      '/organization-mail',
+                      campaign.OrganizationId,
+                      campaign.Id
+                    ]"
+                  >
+                    <i class="fa-regular fa-envelope"></i>
+                  </div>
+                </td>
+
+                <!-- <td class="col-date">
+                  {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
+                </td> -->
+
+                <!-- <td class="col-privacy">
+                  <div
+                    class="campaign-privacy"
+                    [ngClass]="{
+                      'campaign-privacy-public': campaign.CampaignPrivacy == 0,
+                      'campaign-privacy-private': campaign.CampaignPrivacy == 1
+                    }"
+                  >
+                    <div class="campaign-privacy-icon"></div>
+                    <span>
+                      {{
+                        campaign.CampaignPrivacy == 0 ? "Public" : "Private"
+                      }}</span
+                    >
+                  </div>
+                </td> -->
+
+                <td class="col-sites">
+                  <div class="sites-info">
+                    <div>{{ campaign.Sites }}</div>
+                    <svg
+                      [routerLink]="[
+                        '/dashboard',
+                        campaign.OrganizationId,
+                        campaign.OrganizationName,
+                        campaign.Id
+                      ]"
+                      class="external-link-icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                        fill="#292D32"
+                      />
+                      <path
+                        d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
+                        fill="#292D32"
+                      />
+                      <path
+                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                        fill="#292D32"
+                      />
+                    </svg>
+                  </div>
+                </td>
+
+                <td class="col-submissions">
+                  <div class="submissions-info">
+                    <div *ngIf="campaign.Submissions" class="submission-counts">
+                      <span class="count-new" title="New Submissions">{{
+                        getSubmissionsCountNew(campaign.Submissions)
+                      }}</span>
+                      |
+                      <span
+                        class="count-accepted"
+                        title="Accepted Submissions"
+                        >{{
+                          getSumbmissionsCountAcceppted(campaign.Submissions)
+                        }}</span
+                      >
+                      |
+                      <span
+                        class="count-rejected"
+                        title="Rejected Submissions"
+                        >{{
+                          getSumbmissionsCountRejected(campaign.Submissions)
+                        }}</span
+                      >
+
+                      <ng-container
+                        *ngFor="
+                          let submission of sortedSubmissions(
+                            campaign.Submissions
+                          );
+                          let i = index
+                        "
+                      >
+                      </ng-container>
+                    </div>
+                    <div *ngIf="!campaign.Submissions" class="no-data">N/A</div>
+                  </div>
+                </td>
+
+                <td class="col-sent">
+                  <ng-container *ngIf="campaign.MailsSent">
+                    {{ campaign.MailsSent }}</ng-container
+                  >
+                </td>
+
+                <ng-container *ngFor="let stage of stages">
+                  <td class="col-stage">
+                    <div class="stage-count">
+                      {{ getKanbanCount(stage.stageName, campaign.Kanban) }}
+                    </div>
+                  </td>
+                </ng-container>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
       </div>
     </div>
-    
   </div>
 
   <div

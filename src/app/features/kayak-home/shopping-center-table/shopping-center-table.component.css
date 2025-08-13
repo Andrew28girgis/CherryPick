@@ -164,6 +164,7 @@
 }
 
 .tenant-name {
+  white-space: pre-wrap;
   font-weight: 500;
   color: #333;
 }
@@ -759,6 +760,7 @@
   line-height: 56px; /* 127.273% */
 }
 .send-email-button {
+  white-space: nowrap;
   border: none;
   cursor: pointer;
   display: flex;
@@ -990,16 +992,15 @@
 
 .main-inner {
   /* keep your existing styles… */
-  height: 600px;              /* or consider a max-height; see note below */
-  overflow-y: auto;           /* 'auto' avoids scrollbars when not needed */
+  height: 600px;              
+  overflow-y: auto;         
   padding: 32px;
   align-items: center;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(50px);
 
-  /* ✅ the important changes */
-  width: 100%;
+   width: 100%;
   max-width: 100%;
   min-width: 0;               /* prevents content from forcing overflow */
   box-sizing: border-box;     /* padding included in the width */

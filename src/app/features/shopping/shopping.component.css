@@ -87,6 +87,7 @@
 }
  
 .add-new-btn {
+  white-space: nowrap;
   border: none;
   cursor: pointer;
   display: flex;

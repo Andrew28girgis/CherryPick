@@ -1,98 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<nav class="d-none d-sm-flex">
-  <div class="navbar-line m-0" style="background-color: #f1f1f5; padding-top: 10px;">
-    <div class="nav-right row m-0">
-      <div
-        class="nav-right-responsive col-4 justify-content-strat justify-content-sm-strat gap-0 gap-sm-2"
-      >
-<img _ngcontent-ng-c222951368="" src="../../../assets/Images/Emily Logo-1.png" class="cherry-logo" tabindex="0" ng-reflect-router-link="/summary">
-        <!-- <p class="titleResponsive m-0 ms-2 d-none d-sm-flex">
-          {{ organizationName }}
-        </p> -->
-        <div class="mx-2">
-          <a (click)="goBack()" style="cursor:pointer; text-decoration:underline; color: blue;">Back to {{organizationName}}</a>
-        </div>
-      </div>
-
-      <div
-        class="d-flex flex-row align-items-center py-2 col-4"
-        *ngIf="currentView == 1 || currentView == 2"
-      >
-        <ng-container *ngFor="let category of buyboxCategories">
-          <div class="d-flex mx-2 competitor">
-            <input
-              type="checkbox"
-              id="{{ category.id }}"
-              [(ngModel)]="category.isChecked"
-              (change)="onCheckboxChange(category)"
-              class="me-2"
-            />
-            <label class="p-0 m-0" [for]="category.id" style="cursor: pointer">
-              {{ category.name }}
-            </label>
-          </div>
-        </ng-container>
-      </div>
-
-      <div
-        class="navbar navbar-expand-lg navbar-light col-3 justify-content-end justify-content-sm-between"
-      >
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-          (click)="toggleNavbar()"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div
-          class="collapse navbar-collapse"
-          [ngClass]="{ show: navbarOpen }"
-          id="navbarNav"
-        >
-          <div
-            class="icon-option"
-            *ngFor="let option of dropdowmOptions"
-            (click)="selectOption(option)"
-            [class.selected]="
-              selectedOption === option.status || selectedOption === option
-            "
-            [ngClass]="{
-              'hide-on-mobile':
-                option.text === 'Table View' || option.text === 'Side List View'
-            }"
-          >
-            <img [src]="option.icon" [alt]="option.text" class="icon-image" />
-            <span class="icon-text">{{ option.text }}</span>
-          </div>
-
-          <button 
-          *ngIf="!loginSharedToken"
-            class="btn custom-share-btn ms-3 d-none d-sm-flex"
-            (click)="OpenShareWithContactModal(ShareWithContact)"
-          >
-            Share
-          </button>
-
-          <app-logout *ngIf="!loginSharedToken"></app-logout>
-        </div>
-      </div>
-      <div
-        class="col-12 mt-2 mt-sm-0 d-flex d-sm-none p-0 justify-content-between"
-      >
-        <p class="titleResponsive m-0 ms-2">
-          {{ organizationName }}
-        </p>
-      </div>
-    </div>
-  </div>
-</nav>
-
+ 
 <!-- <div class="d-flex justify-content-end">
   <button
     *ngIf="currentView == 3 || currentView == 4"
@@ -110,7 +18,7 @@
   </button>
 </div> -->
 
-<div class="view-container">
+<div class="view-container p-4 px-0">
   <!-- Your existing view content -->
   <div class="content-to-download" #contentToDownload id="contentToDownload">
     <!-- Social Media View -->

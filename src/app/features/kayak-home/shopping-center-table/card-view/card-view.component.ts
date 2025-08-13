@@ -21,7 +21,7 @@ import { Polygon } from 'src/app/shared/models/polygons';
 import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
- import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription } from 'rxjs';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { Email } from 'src/app/shared/models/email';
@@ -51,7 +51,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   DeletedSC: any;
   sanitizedUrl!: any;
   shareLink: any;
-   KanbanStages: any[] = [];
+  KanbanStages: any[] = [];
 
   // Improved dropdown management
   activeDropdownId: number | null = null;
@@ -69,7 +69,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   allShoppingCenters: Center[] = [];
   CampaignId!: any;
   @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
-   openedEmail!: Email;
+  openedEmail!: Email;
 
   private subscriptions: Subscription[] = [];
   private subscripe = new Subscription();
@@ -83,7 +83,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   cId!: number;
   orgName!: string;
   constructor(
-     public activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private placesService: PlacesService,
     private sanitizer: DomSanitizer,
@@ -215,35 +215,45 @@ export class CardViewComponent implements OnInit, OnDestroy {
         // Data is loaded, perform any additional initialization
       })
     );
+
+    this.subscriptions.push(
+      this.viewManagerService.stageUpdate$.subscribe(() => {
+        // Only refresh the UI without forcing a reload
+        this.cdr.detectChanges();
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-   toggleDropdown(place: any, event?: MouseEvent): void {
+  toggleDropdown(place: any, event?: MouseEvent): void {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
-     if (this.isUpdatingStage) {
+    if (this.isUpdatingStage) {
       return;
     }
 
-     this.cardsSideList.forEach((p) => {
+    this.cardsSideList.forEach((p) => {
       if (p.Id !== place.Id) {
         p.isDropdownOpen = false;
       }
     });
 
-     place.isDropdownOpen = !place.isDropdownOpen;
+    place.isDropdownOpen = !place.isDropdownOpen;
     this.activeDropdownId = place.isDropdownOpen ? place.Id : null;
 
-     this.cdr.detectChanges();
+    this.cdr.detectChanges();
   }
 
-   selectStage(
+  /**
+   * Enhanced stage selection that ensures proper filtering without full reloads
+   */
+  selectStage(
     marketSurveyId: number,
     stageId: number,
     shoppingCenter: any,
@@ -254,39 +264,55 @@ export class CardViewComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
-     this.isUpdatingStage = true;
+    // Prevent multiple simultaneous updates
+    if (this.isUpdatingStage) {
+      return;
+    }
 
-     shoppingCenter.kanbanStageId = stageId;
+    this.isUpdatingStage = true;
 
-     shoppingCenter.isDropdownOpen = false;
+    // Store the current filter state and original stage
+    const currentFilterStageId = this.selectedStageId;
+    const originalStageId =
+      shoppingCenter.kanbanStageId || shoppingCenter.kanbanTemplateStageId;
+
+    // Close dropdown
+    shoppingCenter.isDropdownOpen = false;
     this.activeDropdownId = null;
 
-     this.viewManagerService.updatePlaceKanbanStage(
+    // Update the UI immediately to show the change visually
+    shoppingCenter.kanbanStageId = stageId;
+    shoppingCenter.kanbanTemplateStageId = stageId;
+    shoppingCenter.stageName = this.getSelectedStageName(stageId);
+
+    this.viewManagerService.updatePlaceKanbanStage(
       marketSurveyId,
       stageId,
       shoppingCenter,
       this.CampaignId
     );
 
-     this.cdr.detectChanges();
+    // Force immediate UI update
+    this.cdr.detectChanges();
 
-     setTimeout(() => {
+    // Re-enable updates after a short delay
+    setTimeout(() => {
       this.isUpdatingStage = false;
-    }, 100);
+    }, 300);
   }
 
-   @HostListener('document:click', ['$event'])
+  @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
 
-     if (this.isUpdatingStage) {
+    if (this.isUpdatingStage) {
       return;
     }
 
-     if (this.activeDropdownId && target) {
+    if (this.activeDropdownId && target) {
       const clickedDropdown = target.closest('.custom-dropdown');
 
-       if (!clickedDropdown) {
+      if (!clickedDropdown) {
         this.cardsSideList.forEach((place) => {
           place.isDropdownOpen = false;
         });
@@ -305,7 +331,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     );
   }
 
- 
   getNeareastCategoryName(categoryId: number): string {
     return this.viewManagerService.getNearestCategoryName(categoryId);
   }
@@ -349,13 +374,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
- 
-
   viewOnStreet() {
     if (!this.General.modalObject) return;
 
-    const lat = parseFloat(this.General.modalObject.Latitude);
-    const lng = parseFloat(this.General.modalObject.Longitude);
+    const lat = Number.parseFloat(this.General.modalObject.Latitude);
+    const lng = Number.parseFloat(this.General.modalObject.Longitude);
 
     // Default values for heading and pitch if not provided
     const heading = this.General.modalObject.Heading || 165;
@@ -374,7 +397,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   copyLink(link: string) {
     navigator.clipboard.writeText(link);
   }
- 
 
   async deleteShCenter() {
     try {
@@ -448,7 +470,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.buyboxId = this.BuyBoxId;
   }
 
-  trackById( place: any): number {
+  trackById(place: any): number {
     return place.Id;
   }
 
@@ -554,7 +576,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       error: (err) => console.error('Error loading kanban stages:', err),
     });
   }
- 
 
   getSentMails(shopping: any): SentMails[] {
     const raw: any[] = shopping?.SentMails ?? [];
@@ -691,7 +712,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   finContactMessage(shoppingCenter: Center): void {
     console.log(`uploaded`);
-    
     (window as any).electronMessage.findContacts(
       JSON.stringify({
         shoppingCenterName: shoppingCenter.CenterName,

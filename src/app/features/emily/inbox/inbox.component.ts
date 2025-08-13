@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
   Input,
   OnInit,
   Output,
@@ -79,6 +80,8 @@ export class InboxComponent implements OnInit {
   emailContextId: number | undefined;
   selectedContextID: any;
   showAll: boolean = false; // Flag to toggle showing all emails
+  isOrgDropdownOpen = false;  // Set to true to show initially, or false to hide
+  selectedOrgId: any='';
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -653,5 +656,45 @@ export class InboxComponent implements OnInit {
     if (this.selectedEmail) {
       this.selectedEmail.Body = target.innerHTML;
     }
+  }
+
+  toggleOrgDropdown() {
+    this.isOrgDropdownOpen = !this.isOrgDropdownOpen;
+  }
+
+  selectOrg(orgId: any) {
+    this.selectedOrgId = orgId;
+    this.isOrgDropdownOpen = false;
+    this.onOrgSelected();
+  }
+
+  getSelectedOrg() {
+    return this.BuyBoxMicroDeals.find(org => org.OrganizationId === this.selectedOrgId);
+  }
+
+  // Add click outside to close the dropdown
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    // Check if the click was outside the dropdown
+    const dropdown = document.querySelector('.custom-dropdown');
+    if (dropdown && !dropdown.contains(event.target as Node) && this.isOrgDropdownOpen) {
+      this.isOrgDropdownOpen = false;
+    }
+  }
+
+  onOrgSelected() {
+    // Clear any previously selected contact
+    this.selectedContact = null;
+    
+    // You might want to reset other state here as well
+    this.selected = null; // Change from false to null since 'selected' is type 'any'
+    this.selectedEmail = null;
+  }
+
+  getSelectedOrgContacts() {
+    if (!this.selectedOrgId) return [];
+    
+    const selectedOrg = this.BuyBoxMicroDeals.find(org => org.OrganizationId === this.selectedOrgId);
+    return selectedOrg ? selectedOrg.Contact : [];
   }
 }

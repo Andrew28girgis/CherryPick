@@ -5,7 +5,6 @@ import {
   ViewChild,
   ChangeDetectorRef,
   OnDestroy,
-  viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
@@ -198,7 +197,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       })
     );
   }
-
+ 
   // Add method to sync filter state
   private syncFilterState(): void {
     // Get the current stage ID from the service
@@ -239,7 +238,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
               kanbanTemplateId: +s.kanbanTemplateId,
             }))
             .sort((a: any, b: any) => a.stageOrder - b.stageOrder);
- 
+
           this.updateStageName(this.selectedStageId);
           this.cdr.detectChanges();
         }
@@ -490,110 +489,116 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     window.location.href = `${url}?campaignId=${this.CampaignId}&campaignName=${this.organizationName}&organizationId=${this.OrgId}`;
   }
 
+  getUserBuyBoxes(): void {
+    const body: any = {
+      Name: 'GetAllActiveOrganizations',
+      Params: {},
+    };
 
- getUserBuyBoxes(): void {
-  const body: any = {
-    Name: 'GetAllActiveOrganizations',  
-    Params: {},
-  };
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        if (!data.json || !data.json.length) {
+          this.tenants = [];
+          this.filteredTenants = [];
+          this.groupTenantsByAlphabet();
+          return;
+        }
 
-  this.placesService.GenericAPI(body).subscribe({
-    next: (data: any) => {
-      if (!data.json || !data.json.length) {
+        this.tenants = data.json.map((tenant: any) => ({
+          ...tenant,
+          Name: tenant.name,
+          Id: tenant.id,
+          OrganizationId: tenant.id,
+          Campaigns:
+            tenant.Campaigns?.length && !tenant.Campaigns[0]?.Id
+              ? []
+              : tenant.Campaigns || [],
+        }));
+
+        this.filteredTenants = this.tenants;
+        this.groupTenantsByAlphabet();
+
+        this.selectedTenant =
+          this.tenants.find((t) => t.OrganizationId == this.OrgId) || null;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading tenants:', error);
         this.tenants = [];
         this.filteredTenants = [];
         this.groupTenantsByAlphabet();
-        return;
+      },
+    });
+  }
+  // groupTenantsByAlphabet(): void {
+  //    if (!this.filteredTenants || this.filteredTenants.length === 0) {
+  //     this.groupedTenants = {};
+  //     this.alphabetKeys = [];
+  //     return;
+  //   }
+
+  //   const sortedTenants = [...this.filteredTenants].sort((a, b) =>
+  //      (a.Name || a.Name || '').localeCompare(b.Name || b.Name || '')
+  //   );
+
+  //   this.groupedTenants = {};
+  //   sortedTenants.forEach((tenant) => {
+  //     const tenantName = tenant.Name || tenant.Name;
+  //     if (tenant && tenantName) {
+  //       const firstLetter = tenantName.charAt(0).toUpperCase();
+  //       if (!this.groupedTenants[firstLetter]) {
+  //         this.groupedTenants[firstLetter] = [];
+  //       }
+  //       this.groupedTenants[firstLetter].push(tenant);
+  //     }
+  //   });
+
+  //   this.alphabetKeys = Object.keys(this.groupedTenants).sort();
+
+  // }
+
+  checkImage(event: Event) {
+    const img = event.target as HTMLImageElement;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    try {
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      ).data;
+
+      let isWhite = true;
+      for (let i = 0; i < imageData.length; i += 4) {
+        const r = imageData[i];
+        const g = imageData[i + 1];
+        const b = imageData[i + 2];
+        const a = imageData[i + 3];
+        if (!(r > 240 && g > 240 && b > 240 && a > 0)) {
+          isWhite = false;
+          break;
+        }
       }
-      
-       this.tenants = data.json.map((tenant: any) => ({
-        ...tenant,
-        Name: tenant.name,  
-        Id: tenant.id,
-        OrganizationId: tenant.id,  
-        Campaigns: tenant.Campaigns?.length && !tenant.Campaigns[0]?.Id ? [] : tenant.Campaigns || []
-      }));
-      
-      this.filteredTenants = this.tenants;
-      this.groupTenantsByAlphabet();
-      
-       this.selectedTenant = this.tenants.find((t) => t.OrganizationId == this.OrgId) || null;
-      this.cdr.detectChanges();
-    },
-    error: (error) => {
-      console.error('Error loading tenants:', error);
-      this.tenants = [];
-      this.filteredTenants = [];
-      this.groupTenantsByAlphabet();
-    },
-  });
-}
-// groupTenantsByAlphabet(): void {
-//    if (!this.filteredTenants || this.filteredTenants.length === 0) {
-//     this.groupedTenants = {};
-//     this.alphabetKeys = [];
-//     return;
-//   }
 
-//   const sortedTenants = [...this.filteredTenants].sort((a, b) =>
-//      (a.Name || a.Name || '').localeCompare(b.Name || b.Name || '')
-//   );
-
-//   this.groupedTenants = {};
-//   sortedTenants.forEach((tenant) => {
-//     const tenantName = tenant.Name || tenant.Name;
-//     if (tenant && tenantName) {
-//       const firstLetter = tenantName.charAt(0).toUpperCase();
-//       if (!this.groupedTenants[firstLetter]) {
-//         this.groupedTenants[firstLetter] = [];
-//       }
-//       this.groupedTenants[firstLetter].push(tenant);
-//     }
-//   });
-
-//   this.alphabetKeys = Object.keys(this.groupedTenants).sort();
-  
- 
-// }
-
-checkImage(event: Event) {
-  const img = event.target as HTMLImageElement;
-
-   const canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  try {
-    ctx.drawImage(img, 0, 0);
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-    let isWhite = true;
-    for (let i = 0; i < imageData.length; i += 4) {
-      const r = imageData[i];
-      const g = imageData[i + 1];
-      const b = imageData[i + 2];
-      const a = imageData[i + 3];
-      if (!(r > 240 && g > 240 && b > 240 && a > 0)) {
-        isWhite = false;
-        break;
+      if (isWhite) {
+        img.src = 'assets/Images/placeholder.png';
       }
-    }
-
-    if (isWhite) {
-      img.src = 'assets/Images/placeholder.png';
-    }
-
-  } catch (err) {
-    console.warn("Canvas image data blocked due to CORS:", err);
-     if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
-      img.src = 'assets/Images/placeholder.png';
+    } catch (err) {
+      console.warn('Canvas image data blocked due to CORS:', err);
+      if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
+        img.src = 'assets/Images/placeholder.png';
+      }
     }
   }
-}
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');

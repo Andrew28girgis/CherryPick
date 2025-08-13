@@ -513,7 +513,7 @@
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(20px);
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   margin-bottom: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -547,8 +547,7 @@
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
-  position: sticky;
-  top: 0;
+   top: 0;
   z-index: 10;
 }
 
