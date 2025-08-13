@@ -73,19 +73,19 @@ export class LandingComponent {
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
-    private breadcrumbService: BreadcrumbService,
+    private breadcrumbService: BreadcrumbService
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
   }
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(params => {
+    this.activatedRoute.paramMap.subscribe((params) => {
       this.placeId = params.get('placeId');
       this.shoppingId = params.get('shoppingId');
       this.campaignId = params.get('campaignId');
     });
-    
+
     this.windowHistrony = window.history.length;
     this.initializeParams();
     this.initializeDefaults();
@@ -122,17 +122,11 @@ export class LandingComponent {
       // this.OrgId = params.orgId;
       // this.GetCustomSections();
       if (this.ShoppingCenterId != 0) {
-        this.GetBuyBoxOrganizationDetails(
-          this.ShoppingCenterId,
-          0,
-        );
+        this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
 
         this.GetPlaceDetails(0, this.ShoppingCenterId);
       } else {
-        this.GetBuyBoxOrganizationDetails(
-          this.ShoppingCenterId,
-          this.PlaceId,
-        );
+        this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, this.PlaceId);
 
         this.GetPlaceDetails(this.PlaceId, 0);
       }
@@ -241,7 +235,7 @@ export class LandingComponent {
 
   GetBuyBoxOrganizationDetails(
     Shoppingcenterid: number,
-    PlaceId: number,
+    PlaceId: number
   ): void {
     const body: any = {
       Name: 'GetBuyBoxOrganizationDetails',
@@ -805,7 +799,7 @@ export class LandingComponent {
         map: marker.getMap(),
         shouldFocus: false,
       });
-    }); 
+    });
   }
 
   private getArrowSvg(): string {
@@ -854,20 +848,20 @@ export class LandingComponent {
   //   );
   // }
 
-  viewOnStreet() {
-    let lat = this.getStreetLat();
-    let lng = this.getStreetLong();
-    let heading = this.getStreetHeading() || 165;
-    let pitch = this.getStreetPitch() || 0;
+  // viewOnStreet() {
+  //   let lat = this.getStreetLat();
+  //   let lng = this.getStreetLong();
+  //   let heading = this.getStreetHeading() || 165;
+  //   let pitch = this.getStreetPitch() || 0;
 
-    setTimeout(() => {
-      const streetViewElement = document.getElementById('street-view');
-      if (streetViewElement) {
-        this.streetMap(lat, lng, heading, pitch);
-      } else {
-      }
-    });
-  }
+  //   setTimeout(() => {
+  //     const streetViewElement = document.getElementById('street-view');
+  //     if (streetViewElement) {
+  //       this.streetMap(lat, lng, heading, pitch);
+  //     } else {
+  //     }
+  //   });
+  // }
 
   getStreetLat(): any {
     return this.ShoppingCenter
@@ -958,37 +952,120 @@ export class LandingComponent {
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
-    this.modalService.open(content, {
+    // Always use coords (no URL path here)
+    this.sanitizedUrlPopup = null;
+    this.StreetViewOnePlace = true; // turns on the *ngIf for the div
+    this.General.modalObject = modalObject; // used for heading/pitch if you have them
+
+    const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-    this.General.modalObject = modalObject;
-    if (this.General.modalObject.StreetViewURL) {
-      this.setIframeUrlPopup(this.General.modalObject.StreetViewURL);
-    } else {
-      setTimeout(() => {
-        this.viewOnStreetPopUp();
-      }, 100);
-    }
+
+    // When the modal is in the DOM and sized, create the panorama
+    this.waitForElementSize('#street-view-pop')
+      .then(() => this.viewOnStreetPopUp())
+      .catch(() => {
+        /* no-op or toast */
+      });
+
+    modalRef.result.finally(() => {
+      this.StreetViewOnePlace = false;
+    });
+  }
+
+  private waitForElementSize(
+    selector: string,
+    tries = 40,
+    interval = 50
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timer = setInterval(() => {
+        const el = document.querySelector(selector) as HTMLElement | null;
+        if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
+          clearInterval(timer);
+          resolve();
+        } else if (--tries <= 0) {
+          clearInterval(timer);
+          reject(new Error(`Element ${selector} not sized in time`));
+        }
+      }, interval);
+    });
+  }
+  viewOnStreet() {
+    // Read from ShoppingCenter first, fallback to StandAlonePlace
+    const lat = Number(
+      this.ShoppingCenter?.Latitude ?? this.StandAlonePlace?.Latitude
+    );
+    const lng = Number(
+      this.ShoppingCenter?.Longitude ?? this.StandAlonePlace?.Longitude
+    );
+
+    // Safe defaults
+    const heading = Number(this.ShoppingCenter?.Heading ?? 165);
+    const pitch = Number(this.ShoppingCenter?.Pitch ?? 0);
+
+    // Make sure the div has size before creating the panorama
+    this.waitForElementSize('#street-view')
+      .then(() => {
+        const el = document.getElementById('street-view');
+        if (!el || isNaN(lat) || isNaN(lng)) return;
+
+        const pano = new google.maps.StreetViewPanorama(el, {
+          position: { lat, lng },
+          pov: { heading, pitch },
+          zoom: 1,
+        });
+
+        // small nudge in case of CSS transitions
+        setTimeout(() => google.maps.event.trigger(pano, 'resize'), 0);
+      })
+      .catch(() => {
+        /* no-op or toast */
+      });
+  }
+  onStreetToggle() {
+    // If you previously showed an iframe, blank it so the div renders
+    this.sanitizedUrl = null;
+    // Render Street View into #street-view using the ShoppingCenter coords
+    this.viewOnStreet();
   }
 
   StreetViewOnePlace!: boolean;
 
   viewOnStreetPopUp() {
-    this.StreetViewOnePlace = true;
-    let lat = +this.General.modalObject.StreetLatitude;
-    let lng = +this.General.modalObject.StreetLongitude;
-    let heading = this.General.modalObject.Heading; // Default heading value
-    let pitch = 0;
+    // Prefer explicit Street coords if you have them; otherwise use main lat/lng
+    const lat = Number(
+      this.General.modalObject?.StreetLatitude ??
+        this.General.modalObject?.Latitude ??
+        this.ShoppingCenter?.Latitude ??
+        this.StandAlonePlace?.Latitude
+    );
+    const lng = Number(
+      this.General.modalObject?.StreetLongitude ??
+        this.General.modalObject?.Longitude ??
+        this.ShoppingCenter?.Longitude ??
+        this.StandAlonePlace?.Longitude
+    );
 
-    setTimeout(() => {
-      const streetViewElement = document.getElementById('street-view-pop');
-      if (streetViewElement) {
-        this.streetMapPopup(lat, lng, heading, pitch);
-      } else {
-      }
+    const heading = Number(
+      this.General.modalObject?.Heading ?? this.ShoppingCenter?.Heading ?? 165
+    );
+    const pitch = Number(
+      this.General.modalObject?.Pitch ?? this.ShoppingCenter?.Pitch ?? 0
+    );
+
+    const el = document.getElementById('street-view-pop');
+    if (!el || isNaN(lat) || isNaN(lng)) return;
+
+    const pano = new google.maps.StreetViewPanorama(el, {
+      position: { lat, lng },
+      pov: { heading, pitch },
+      zoom: 1,
     });
+
+    setTimeout(() => google.maps.event.trigger(pano, 'resize'), 0);
   }
 
   streetMapPopup(lat: number, lng: number, heading: number, pitch: number) {
