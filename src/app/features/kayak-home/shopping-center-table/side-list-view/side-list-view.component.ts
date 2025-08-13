@@ -468,41 +468,56 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude)
   }
 
-  openStreetViewPlace(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: "modal-basic-title",
-      size: "lg",
-      scrollable: true,
-    })
-
-    this.General.modalObject = modalObject
-
-    if (this.General.modalObject.StreetViewURL) {
-      this.setIframeUrl(this.General.modalObject.StreetViewURL)
-    } else {
-      setTimeout(() => {
-        this.viewOnStreet()
-      }, 100)
-    }
-  }
-
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url)
   }
 
-  viewOnStreet() {
-    this.StreetViewOnePlace = true
-    const lat = +this.General.modalObject.StreetLatitude
-    const lng = +this.General.modalObject.StreetLongitude
-    const heading = this.General.modalObject.Heading || 165
-    const pitch = this.General.modalObject.Pitch || 0
+  openStreetViewPlace(content: any, modalObject?: any) {
+    const modalRef = this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
 
-    setTimeout(() => {
-      const streetViewElement = document.getElementById("street-view")
-      if (streetViewElement) {
-        this.viewManagerService.initializeStreetView("street-view", lat, lng, heading, pitch)
+    // Store the modal object
+    this.General.modalObject = modalObject;
+
+    // Initialize street view after modal is opened
+    modalRef.result.then(
+      () => {
+        // Cleanup if needed
+      },
+      () => {
+        // Cleanup if needed
       }
-    })
+    );
+
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+      this.viewOnStreet();
+    }, 100);
+  }
+
+ 
+
+  viewOnStreet() {
+    if (!this.General.modalObject) return;
+
+    const lat = parseFloat(this.General.modalObject.Latitude);
+    const lng = parseFloat(this.General.modalObject.Longitude);
+
+    // Default values for heading and pitch if not provided
+    const heading = this.General.modalObject.Heading || 165;
+    const pitch = this.General.modalObject.Pitch || 0;
+
+    // Initialize street view
+    this.viewManagerService.initializeStreetView(
+      'street-view',
+      lat,
+      lng,
+      heading,
+      pitch
+    );
   }
 
   copyLink(link: string) {

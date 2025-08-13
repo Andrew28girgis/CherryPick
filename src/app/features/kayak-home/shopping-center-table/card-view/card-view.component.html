@@ -38,6 +38,7 @@
       <div class="cardResponsive">
         <a
           [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
+          (click)="$event.stopPropagation()"
         >
           <div class="main-img">
             <img
@@ -105,7 +106,7 @@
                 >
                   <button
                     class="ellipsis_icont"
-                    (click)="toggleShortcutsCard(shopping.Id)"
+                    (click)="toggleShortcutsCard(shopping.Id); $event.stopPropagation(); $event.preventDefault();"
                   >
                     <i class="fa-solid fa-ellipsis"></i>
                   </button>

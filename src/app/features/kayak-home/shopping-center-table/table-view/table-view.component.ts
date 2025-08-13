@@ -78,6 +78,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
     private shoppingCenterService: ViewManagerService,
     private placesService: PlacesService,
     private sanitizer: DomSanitizer,
+    private viewManagerService: ViewManagerService,
   ) {}
 
   ngOnInit(): void {
@@ -253,33 +254,51 @@ export class TableViewComponent implements OnInit, OnDestroy {
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: "modal-basic-title",
-      size: "lg",
+    const modalRef = this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
       scrollable: true,
-    })
+    });
 
-    this.General.modalObject = modalObject
+    // Store the modal object
+    this.General.modalObject = modalObject;
 
-    if (this.General.modalObject.StreetViewURL) {
-      this.setIframeUrl(this.General.modalObject.StreetViewURL)
-    } else {
-      setTimeout(() => {
-        this.viewOnStreet(this.General.modalObject)
-      }, 100)
-    }
+    // Initialize street view after modal is opened
+    modalRef.result.then(
+      () => {
+        // Cleanup if needed
+      },
+      () => {
+        // Cleanup if needed
+      }
+    );
+
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+      this.viewOnStreet();
+    }, 100);
   }
+
  
 
-  viewOnStreet(modalObject: any) {
-    const lat = +modalObject.StreetLatitude
-    const lng = +modalObject.StreetLongitude
-    const heading = modalObject.Heading || 165
-    const pitch = modalObject.Pitch || 0
+  viewOnStreet() {
+    if (!this.General.modalObject) return;
 
-    setTimeout(() => {
-      this.shoppingCenterService.initializeStreetView("street-view", lat, lng, heading, pitch)
-    })
+    const lat = parseFloat(this.General.modalObject.Latitude);
+    const lng = parseFloat(this.General.modalObject.Longitude);
+
+    // Default values for heading and pitch if not provided
+    const heading = this.General.modalObject.Heading || 165;
+    const pitch = this.General.modalObject.Pitch || 0;
+
+    // Initialize street view
+    this.viewManagerService.initializeStreetView(
+      'street-view',
+      lat,
+      lng,
+      heading,
+      pitch
+    );
   }
 
   setIframeUrl(url: string): void {
