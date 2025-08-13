@@ -15,8 +15,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #4d65b4;
-  background-color: #4d65b4;
+  border: 1px solid #B51F63;
+  background-color: #B51F63;
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
   color: white;
@@ -38,6 +38,7 @@
   fill: #fff;
 }
 .center-container {
+  background-color: #fff;
   width: calc(50% - 0.75rem);
   padding: 1rem;
   border: 1px solid #c6c9d3;
@@ -58,7 +59,7 @@
   color: #707791;
 }
 .nav-pills .nav-link.active {
-  background-color: #4d65b4;
+  background-color: #B51F63;
 }
 
 .contact-broker-stepper {
@@ -85,7 +86,7 @@
 }
 
 .contact-broker-stepper ul li.active-step {
-  background-color: #4d65b4;
+  background-color: #B51F63;
 }
 
 .contact-broker-step {
@@ -111,7 +112,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #4d65b4;
+  background-color: #B51F63;
   color: #fff;
   font-size: 0.9rem;
   font-weight: 600;
@@ -124,13 +125,13 @@
 }
 
 .contact-broker-step .step-header:hover .step-title {
-  color: #4d65b4;
+  color: #B51F63;
 }
 .advanced {
     font-size: 20px;
     margin: 0;
     padding: 0;
-    color: #4d65b4;
+    color: #B51F63;
     font-weight: 600;
     cursor: pointer;
   }
@@ -197,9 +198,10 @@
     align-self: stretch;
     margin-bottom: 16px;
   }
-  ::ng-deep .email-mod .modal-content {
+  ::ng-deep   .modal-content {
     border-radius: 1rem;
-  }
+    background: #F8E9EF !important;
+   }
   .shopp-container{
     display: flex;
     gap: 5px;
@@ -233,7 +235,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #4d65b4;
+      background-color: #B51F63;
       /* color: #fff; */
       font-size: 0.7rem;
       font-weight: 500; 

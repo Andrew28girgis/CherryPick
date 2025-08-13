@@ -81,7 +81,9 @@ export class InboxComponent implements OnInit {
   selectedContextID: any;
   showAll: boolean = false; // Flag to toggle showing all emails
   isOrgDropdownOpen = false;  // Set to true to show initially, or false to hide
+  isFilterDropdownOpen = false;
   selectedOrgId: any='';
+  
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -315,6 +317,15 @@ export class InboxComponent implements OnInit {
         return '#e2e3e5'; // Unknown - grey
     }
   }
+  getDirectionClass(direction: number): string {
+    switch(direction) {
+      case 1: return 'direction-inbox';
+      case 2: return 'direction-outbox';
+      case 3: return 'direction-sent';
+      case 4: return 'direction-draft';
+      default: return 'direction-inbox';
+    }
+  }
 
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
@@ -508,13 +519,25 @@ export class InboxComponent implements OnInit {
       ? false
       : true;
   }
+ 
+
   showToast(message: string) {
-    const toast = document.getElementById('customToast');
-    const toastMessage = document.getElementById('toastMessage');
-    toastMessage!.innerText = message;
-    toast!.classList.add('show');
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast colored-toast show';
+    toast.innerHTML = `
+      <div class="toast-content">
+        <i class="fa-solid fa-circle-info toast-icon"></i>
+        <span id="toastMessage">${message}</span>
+      </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
     setTimeout(() => {
-      toast!.classList.remove('show');
+      toast.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 300); // Wait for fade out animation before removing from DOM
     }, 3000);
   }
 
@@ -680,6 +703,16 @@ export class InboxComponent implements OnInit {
     if (dropdown && !dropdown.contains(event.target as Node) && this.isOrgDropdownOpen) {
       this.isOrgDropdownOpen = false;
     }
+
+    const filterDropdown = document.querySelector('.custom-filter-dropdown');
+    if (filterDropdown && !filterDropdown.contains(event.target as Node) && this.isFilterDropdownOpen) {
+      this.isFilterDropdownOpen = false;
+    }
+  }
+
+  // Stop propagation on dropdown toggle click to prevent immediate closing
+  stopPropagation(event: Event) {
+    event.stopPropagation();
   }
 
   onOrgSelected() {
@@ -696,5 +729,30 @@ export class InboxComponent implements OnInit {
     
     const selectedOrg = this.BuyBoxMicroDeals.find(org => org.OrganizationId === this.selectedOrgId);
     return selectedOrg ? selectedOrg.Contact : [];
+  }
+
+  showNoContactToast() {
+    this.showToast('Please select a contact first');
+  }
+
+  refreshEmails() {
+    // Show visual feedback for the refresh button
+    const refreshButton = document.querySelector('.refresh-button');
+    if (refreshButton) {
+      refreshButton.classList.add('refreshing');
+      setTimeout(() => {
+        refreshButton.classList.remove('refreshing');
+      }, 1000);
+    }
+
+     
+    if (this.selectedContact) {
+       this.getEmailsForContact(this.selectedContact);
+      this.spinner.hide();
+    } else  {
+      // If an organization is selected but no contact, just refresh all emails
+      this.getAllEmails();
+      this.spinner.hide();
+    }  
   }
 }

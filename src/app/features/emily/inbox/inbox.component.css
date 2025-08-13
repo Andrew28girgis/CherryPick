@@ -37,20 +37,20 @@
 
 .namecontact {
   color: var(--Body-Heading, #161017);
-   font-family: Montserrat;
+  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 30px;  
+  line-height: 30px;
 }
 .shopping-of-contact {
-  color: var(--Body-Text-Icon, #704E73);
+  color: var(--Body-Text-Icon, #704e73);
 
-   font-family: Montserrat;
+  font-family: Montserrat;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; 
+  line-height: 24px;
   letter-spacing: -0.07px;
 }
 
@@ -180,12 +180,17 @@
 }
 
 .single-mail {
-  align-items: center;
   display: flex;
-  border-bottom: 1px solid #e2e4e9;
-  padding: 17px;
+  padding: var(--Space-Space-24, 24px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--Space-Space-8, 8px);
+  align-self: stretch;
+  border-bottom: 1px solid var(--Colors-Primary-100, #f0d2e0);
 }
-
+.single-mail:hover {
+  background-color: #f0d2e0;
+}
 .selected-email {
   background: #edf0f8;
 }
@@ -307,7 +312,7 @@
   background: none;
   border: none;
   border-radius: 0;
-  min-height: 100vh;
+  border-right: 1px solid var(--Colors-Primary-100, #f0d2e0);
 }
 .buybox-name {
   margin: 20px;
@@ -543,10 +548,10 @@
 .mail-main-container {
   display: flex;
   height: 600px;
-  align-items: center;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(50px);
+  margin-top: 4vh;
 }
 
 .org-selector {
@@ -676,6 +681,64 @@
   font-weight: 500;
 }
 
+.custom-filter-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid #e0e0e0;
+  min-width: 100px;
+  justify-content: space-between;
+}
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  margin-top: 5px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 180px;
+  display: none;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.filter-option {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.filter-option:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-label {
+  color: var(--Colors-Primary-500, #b51f63);
+
+  /* Body/14/24/SemiBold */
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 171.429% */
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -693,8 +756,8 @@
   gap: 10px;
 }
 .emails-header {
-  background-color: #f9f0f4;
-  padding: 12px 16px;
+  background: none;
+  padding: var(--Space-Space-24, 24px);
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -706,17 +769,12 @@
 
 .dropdown {
   display: flex;
+  padding: var(--Space-Space-8, 8px) var(--Space-Space-16, 16px);
+  justify-content: center;
   align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 15px;
-  background-color: white;
-}
-
-.dropdown-label {
-  font-weight: 500;
-  font-size: 14px;
+  gap: var(--Space-Space-8, 8px);
+  border-radius: 32px;
+  background: var(--Colors-Pure-White, #fff);
 }
 
 .right-section {
@@ -726,22 +784,34 @@
 }
 
 .refresh-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #666;
-  height: 32px;
-  width: 32px;
-  border-radius: 50%;
   display: flex;
+  padding: var(--Space-Space-8, 8px);
   align-items: center;
+  gap: 10px;
+  border-radius: 32px;
+  border: 1px solid var(--Colors-Primary-100, #f0d2e0);
+  background: var(--Card-Section-BG, #fff);
+  cursor: pointer;
+  transition: transform 0.3s ease;
   justify-content: center;
+  border-radius: 50%;
 }
 
 .refresh-button:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
+.refresh-button.refreshing svg {
+  animation: rotate 1s linear;
+}
 
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .compose-button {
   display: flex;
   align-items: center;
@@ -757,4 +827,99 @@
 
 .compose-button:hover {
   background-color: #b32d5a;
+}
+.main-top {
+  color: #000;
+
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
+}
+.left-section {
+  height: fit-content;
+}
+
+.custom-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background-color: white;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  max-width: 350px;
+}
+
+.custom-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.colored-toast {
+  background-color: #e1a5c1;
+  color: white;
+  border-left: 5px solid #b51f63;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+}
+
+.toast-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+.direction-badge {
+  display: flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  min-width: 70px;
+  justify-content: center;
+}
+
+.direction-badge:hover {
+  transform: scale(1.05);
+}
+
+.direction-badge i {
+  margin-right: 6px;
+}
+
+.direction-label {
+  font-size: 12px;
+}
+
+/* Direction-specific styling */
+.direction-inbox {
+  background-color: #e1eff9;
+  color: #0066cc;
+}
+
+.direction-outbox {
+  background-color: #ffefdf;
+  color: #ff8c00;
+}
+
+.direction-sent {
+  background-color: #e6f4ea;
+  color: #34a853;
+}
+
+.direction-draft {
+  background-color: #f3f3f3;
+  color: #666666;
 }
