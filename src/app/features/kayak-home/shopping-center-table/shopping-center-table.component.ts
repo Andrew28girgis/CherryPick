@@ -208,7 +208,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (this.selectedStageId !== serviceStageId) {
       this.selectedStageId = serviceStageId;
       this.updateStageName(serviceStageId);
-    }
+    } 
   }
 
   private updateStageName(id: number): void {

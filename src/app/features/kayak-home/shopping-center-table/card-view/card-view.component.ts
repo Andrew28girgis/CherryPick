@@ -35,7 +35,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   General: General = new General();
   cardsSideList: Center[] = [];
   map: any;
-  BuyBoxId!: any;
+  BuyBoxId!: any; 
   orgId!: any;
   mapViewOnePlacex = false;
   buyboxCategories: BuyboxCategory[] = [];
@@ -216,12 +216,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.subscriptions.push(
-      this.viewManagerService.stageUpdate$.subscribe(() => {
-        // Only refresh the UI without forcing a reload
-        this.cdr.detectChanges();
-      })
-    );
+    
   }
 
   ngOnDestroy(): void {
@@ -264,41 +259,25 @@ export class CardViewComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
-    // Prevent multiple simultaneous updates
-    if (this.isUpdatingStage) {
-      return;
-    }
+     this.isUpdatingStage = true;
 
-    this.isUpdatingStage = true;
+     shoppingCenter.kanbanStageId = stageId;
 
-    // Store the current filter state and original stage
-    const currentFilterStageId = this.selectedStageId;
-    const originalStageId =
-      shoppingCenter.kanbanStageId || shoppingCenter.kanbanTemplateStageId;
-
-    // Close dropdown
-    shoppingCenter.isDropdownOpen = false;
+     shoppingCenter.isDropdownOpen = false;
     this.activeDropdownId = null;
 
-    // Update the UI immediately to show the change visually
-    shoppingCenter.kanbanStageId = stageId;
-    shoppingCenter.kanbanTemplateStageId = stageId;
-    shoppingCenter.stageName = this.getSelectedStageName(stageId);
-
-    this.viewManagerService.updatePlaceKanbanStage(
+     this.viewManagerService.updatePlaceKanbanStage(
       marketSurveyId,
       stageId,
       shoppingCenter,
       this.CampaignId
     );
 
-    // Force immediate UI update
-    this.cdr.detectChanges();
+     this.cdr.detectChanges();
 
-    // Re-enable updates after a short delay
-    setTimeout(() => {
+     setTimeout(() => {
       this.isUpdatingStage = false;
-    }, 300);
+    }, 100);
   }
 
   @HostListener('document:click', ['$event'])
