@@ -209,7 +209,7 @@
 }
 
 .email-details-body {
-  background-color: white;
+  background-color:none;
   display: flex;
   padding: 10px;
   flex-direction: column;
@@ -323,7 +323,7 @@
 }
 .replay {
   border-radius: 16px;
-  background: #4d65b4;
+  background: #B51F63;
   display: inline-flex;
   height: 48px;
   padding: 14px 24px;
@@ -342,6 +342,10 @@
   width: 110px;
 }
 
+.replay:hover {
+  background-color: #a31c59;
+  color: white;
+}
 .send {
   color: #28a745;
   font-size: 18px;
@@ -493,14 +497,16 @@
   color: #222121;
 }
 .delete-btn {
-  background-color: #ce0000;
+  background-color: #fff;
+  border: 1px solid#ce0000;
+  color: #ce0000;
+
 }
 .delete-btn:hover {
-  background-color: #940303 !important;
+  background-color: #f6f1f1;
+  color: #ce0000;
 }
-.replay:hover {
-  background-color: #263d88;
-}
+ 
 .send-icn {
   font-size: 22px;
   margin-top: 7px;

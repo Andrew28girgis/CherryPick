@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PlacesService } from './places.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
-import { Center } from 'src/app/shared/models/shoppingCenters';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
-import { ShareOrg } from 'src/app/shared/models/shareOrg';
+import  { PlacesService } from './places.service';
+import  { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import  { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import  { Center } from 'src/app/shared/models/shoppingCenters';
+import  { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import  { ShareOrg } from 'src/app/shared/models/shareOrg';
 
 declare const google: any;
 
@@ -441,80 +441,89 @@ export class ViewManagerService {
     return stage ? stage.stageName : 'Select Stage';
   }
 
-  /**
-   * Update place kanban stage - Fixed version
-   */
-  public updatePlaceKanbanStage(
-    marketSurveyId: number,
-    stageId: number,
-    shoppingCenter: any,
-    campaignId: number
-  ): void {
-    this.updateCenterStageInDataSource(shoppingCenter.Id, stageId);
-
-    const body = {
-      Name: 'UpdatePlaceKanbanStage',
-      Params: {
-        MarketSurveyId: marketSurveyId,
-        KanbanStageId: stageId,
-        CampaignId: campaignId,
-      },
-    };
-
-    this.placesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-        console.log('Stage updated successfully:', response);
-
-        this.stageUpdateSubject.next();
-        this.applyFilters();
-      },
-      error: (error: any) => {
-        console.error('Error updating stage:', error);
-        this.revertCenterStageInDataSource(
-          shoppingCenter.Id,
-          shoppingCenter.kanbanStageId || shoppingCenter.kanbanTemplateStageId
-        );
-      },
-    });
+/**
+ * Update place kanban stage - Fixed version
+ */ 
+ public updatePlaceKanbanStage(
+  marketSurveyId: number,
+  stageId: number,
+  shoppingCenter: any,
+  campaignId: number,
+): void
+{
+  const body: any = {
+    Name: "UpdatePlaceKanbanStage",
+    Params: {
+      stageid: stageId,
+      marketsurveyid: marketSurveyId,
+    },
   }
 
-  private updateCenterStageInDataSource(
-    centerId: number,
-    newStageId: number
-  ): void {
-    const allCenters = this._allShoppingCenters.getValue();
-    const updatedCenters = allCenters.map((center) => {
-      if (center.Id === centerId) {
-        return {
-          ...center,
-          kanbanStageId: newStageId,
-          kanbanTemplateStageId: newStageId,
-        };
-      }
-      return center;
-    });
+  // Store current filter state before making API call
+  const currentStageFilter = this.currentSelectedStageId
+  const currentSearchQuery = this.currentSearchQuery
+  const currentSortOption = this.currentSortOption
 
-    this._allShoppingCenters.next(updatedCenters);
-  }
+  this._isLoading.next(true)
 
-  private revertCenterStageInDataSource(
-    centerId: number,
-    originalStageId: number
-  ): void {
-    const allCenters = this._allShoppingCenters.getValue();
-    const revertedCenters = allCenters.map((center) => {
-      if (center.Id === centerId) {
-        return {
-          ...center,
-          kanbanStageId: originalStageId,
-          kanbanTemplateStageId: originalStageId,
-        };
-      }
-      return center;
-    });
+  this.placesService.GenericAPI(body).subscribe({
+    next: (res: any) => {
+      // Update local data after successful API call
+      shoppingCenter.kanbanStageId = stageId
+      shoppingCenter.stageName = this.getSelectedStageName(stageId)
+      shoppingCenter.kanbanTemplateStageId = stageId // Update the filter property
 
-    this._allShoppingCenters.next(revertedCenters);
-  }
+      // Update the center in the all centers list
+      const allCenters = this._allShoppingCenters.getValue()
+      const updatedAllCenters = allCenters.map((center) =>
+        center.Id === shoppingCenter.Id
+          ? {
+              ...center,
+              kanbanStageId: stageId,
+              stageName: this.getSelectedStageName(stageId),
+              kanbanTemplateStageId: stageId, // Update the filter property
+            }
+          : center,
+      )
+
+      this._allShoppingCenters.next(updatedAllCenters)
+
+      // Restore filter state and re-apply filters
+      this.currentSelectedStageId = currentStageFilter
+      this.currentSearchQuery = currentSearchQuery
+      this.currentSortOption = currentSortOption
+
+      // Re-apply filters to update the filtered list
+      this.applyFilters()
+
+      // Notify about stage update
+      this.stageUpdateSubject.next()
+    },
+    error: (err) => {
+      console.error("Error updating kanban stage:", err)
+    },
+    complete: () => {
+      this._isLoading.next(false)
+    },
+  })
+}
+
+/**
+ * Get current selected stage ID
+ */ 
+public getCurrentSelectedStageId(): number
+{
+  return this._selectedStageId.getValue()
+}
+
+/**
+ * Get current loading state
+ */ 
+public getCurrentLoadingState(): boolean
+{
+  return this._isLoading.getValue()
+}
+
 
   /**
    * Delete shopping center
@@ -656,108 +665,103 @@ export class ViewManagerService {
   /**
    * Initialize street view
    */
-  private streetViewLastRequestTime = 0;
-  private readonly STREET_VIEW_MIN_DELAY = 5000; // 1 second between requests
-  private activeStreetViews: { [key: string]: google.maps.StreetViewPanorama } =
-    {};
-  private streetViewCache: { [key: string]: any } = {};
+private streetViewLastRequestTime = 0;
+private readonly STREET_VIEW_MIN_DELAY = 5000; // 1 second between requests
+private activeStreetViews: {[key: string]: google.maps.StreetViewPanorama} = {};
+private streetViewCache: {[key: string]: any} = {};
 
-  public async initializeStreetView(
-    elementId: string,
-    lat: number,
-    lng: number,
-    heading = 165,
-    pitch = 0
-  ): Promise<any> {
-    try {
-      // Throttle requests
-      const now = Date.now();
-      const timeSinceLastRequest = now - this.streetViewLastRequestTime;
-
-      if (timeSinceLastRequest < this.STREET_VIEW_MIN_DELAY) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, this.STREET_VIEW_MIN_DELAY - timeSinceLastRequest)
-        );
-      }
-
-      this.streetViewLastRequestTime = Date.now();
-
-      // Check cache
-      const cacheKey = `${lat.toFixed(6)}_${lng.toFixed(6)}`;
-      if (this.streetViewCache[cacheKey]) {
-        return this.streetViewCache[cacheKey];
-      }
-
-      // Clean up previous instance
-      if (this.activeStreetViews[elementId]) {
-        this.activeStreetViews[elementId].unbind('pano_changed');
-        this.activeStreetViews[elementId].setVisible(false);
-        delete this.activeStreetViews[elementId];
-      }
-
-      const streetViewElement = document.getElementById(elementId);
-      if (!streetViewElement) {
-        throw new Error('Street View container element not found');
-      }
-
-      streetViewElement.innerHTML = '';
-
-      const { StreetViewService, StreetViewPanorama } =
-        (await google.maps.importLibrary('streetView')) as any;
-      const svService = new StreetViewService();
-
-      return new Promise((resolve) => {
-        svService.getPanorama(
-          {
-            location: { lat, lng },
-            radius: 50,
-            source: google.maps.StreetViewSource.OUTDOOR,
-          },
-          (data: any, status: any) => {
-            if (status === 'OK') {
-              const panorama = new StreetViewPanorama(streetViewElement, {
-                position: { lat, lng },
-                pov: { heading, pitch },
-                zoom: 1,
-                addressControl: false,
-                linksControl: false,
-                panControl: false,
-                enableCloseButton: false,
-                showRoadLabels: false,
-                disableDefaultUI: true,
-              });
-
-              this.addMarkerToStreetView(panorama, lat, lng);
-              this.activeStreetViews[elementId] = panorama;
-              this.streetViewCache[cacheKey] = panorama;
-              setTimeout(() => delete this.streetViewCache[cacheKey], 300000);
-              resolve(panorama);
-            } else {
-              streetViewElement.innerHTML = `
-              <div class="street-view-fallback">
-                <i class="fa-solid fa-street-view"></i>
-                <p>Street View is not available for this location</p>
-              </div>
-            `;
-              resolve(null);
-            }
-          }
-        );
-      });
-    } catch (error) {
-      console.error('Error initializing Street View:', error);
-      const streetViewElement = document.getElementById(elementId);
-      if (streetViewElement) {
-        streetViewElement.innerHTML = `
-          <div class="street-view-error">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <p>Error loading Street View</p>
-          </div>
-        `;
-      }
-      return null;
+public async initializeStreetView(
+  elementId: string,
+  lat: number,
+  lng: number,
+  heading = 165,
+  pitch = 0
+): Promise<any> {
+  try {
+    // Throttle requests
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.streetViewLastRequestTime;
+    
+    if (timeSinceLastRequest < this.STREET_VIEW_MIN_DELAY) {
+      await new Promise(resolve => 
+        setTimeout(resolve, this.STREET_VIEW_MIN_DELAY - timeSinceLastRequest)
+      );
     }
+    
+    this.streetViewLastRequestTime = Date.now();
+
+    // Check cache
+    const cacheKey = `${lat.toFixed(6)}_${lng.toFixed(6)}`;
+    if (this.streetViewCache[cacheKey]) {
+      return this.streetViewCache[cacheKey];
+    }
+
+    // Clean up previous instance
+    if (this.activeStreetViews[elementId]) {
+      this.activeStreetViews[elementId].unbind('pano_changed');
+      this.activeStreetViews[elementId].setVisible(false);
+      delete this.activeStreetViews[elementId];
+    }
+
+    const streetViewElement = document.getElementById(elementId);
+    if (!streetViewElement) {
+      throw new Error('Street View container element not found');
+    }
+
+    streetViewElement.innerHTML = '';
+
+    const { StreetViewService, StreetViewPanorama } = await google.maps.importLibrary('streetView') as any;
+    const svService = new StreetViewService();
+    
+    return new Promise((resolve) => {
+      svService.getPanorama({
+        location: { lat, lng },
+        radius: 50,
+        source: google.maps.StreetViewSource.OUTDOOR
+      }, (data: any, status: any) => {
+        if (status === 'OK') {
+          const panorama = new StreetViewPanorama(streetViewElement, {
+            position: { lat, lng },
+            pov: { heading, pitch },
+            zoom: 1,
+            addressControl: false,
+            linksControl: false,
+            panControl: false,
+            enableCloseButton: false,
+            showRoadLabels: false,
+            disableDefaultUI: true
+          });
+
+          this.addMarkerToStreetView(panorama, lat, lng);
+          this.activeStreetViews[elementId] = panorama;
+          this.streetViewCache[cacheKey] = panorama;
+          setTimeout(() => delete this.streetViewCache[cacheKey], 300000);
+          resolve(panorama);
+        } else {
+          streetViewElement.innerHTML = `
+            <div class="street-view-fallback">
+              <i class="fa-solid fa-street-view"></i>
+              <p>Street View is not available for this location</p>
+            </div>
+          `;
+          resolve(null);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error initializing Street View:', error);
+    const streetViewElement = document.getElementById(elementId);
+    if (streetViewElement) {
+      streetViewElement.innerHTML = `
+        <div class="street-view-error">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>Error loading Street View</p>
+        </div>
+      `;
+    }
+    return null;
   }
+}
 
   /**
    * Add marker to street view
@@ -865,6 +869,7 @@ export class ViewManagerService {
 
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
+          
           const centers = data.json;
 
           // Store all centers
@@ -891,7 +896,7 @@ export class ViewManagerService {
    */
   private loadBuyBoxCategories(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      const body: any = {
+     const body: any = {
         Name: 'GetRetailRelationCategories',
         Params: {
           CampaignId: campaignId,
@@ -1005,16 +1010,7 @@ export class ViewManagerService {
   public resetDataLoaded(): void {
     this._dataLoaded = false;
   }
-  public getCurrentSelectedStageId(): number {
-    return this._selectedStageId.getValue();
-  }
 
-  /**
-   * Get current loading state
-   */
-  public getCurrentLoadingState(): boolean {
-    return this._isLoading.getValue();
-  }
   // Add a method to reset the selected stage ID to 0 (All)
   public resetSelectedStageId(): void {
     this.currentSelectedStageId = 0;
