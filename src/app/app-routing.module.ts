@@ -14,7 +14,6 @@ import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
-import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
@@ -152,23 +151,13 @@ const routes: Routes = [
     component: SummeryComponent,
     canActivate: [TenantOnlyGuard],
   },
-  {
-    path: 'home',
-    component: HomeComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard],
-    data: { hideHeader: true },
-  },
+  
   {
     path: 'market-survey',
     component: MarketSurveyComponent,
     data: { hideHeader: true },
   },
-  {
-    path: 'home/:buyboxid/:orgId/:buyboxName',
-    component: HomeComponent,
-    canActivate: [TenantOnlyGuard],
-    data: { hideHeader: true },
-  },
+
   {
     path: 'Kanban',
     loadChildren: () =>
@@ -218,12 +207,12 @@ const routes: Routes = [
   {
     path: 'spinner',
     component: AiSpinnerComponent,
-    data: { hideHeader: true },
+    data: { hideHeader: true , hideSidebar: true},
   },
   {
     path: 'aiFailed',
     component: AiFailedComponent,
-    data: { hideHeader: true },
+    data: { hideHeader: true , hideSidebar: true },
   },
   {
     path: 'automation/:automationId',

@@ -36,9 +36,7 @@ export class NotificationService {
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
         // No conversion to boolean — keep the API's number
-        this.notifications = (response.json || []) as Notification[];
-        console.log('Fetched notifications:', this.notifications);
-
+        this.notifications = (response.json || []) as Notification[]; 
         this.sortNotificationsByDate();
         this.updateNotificationCounts();
       },
