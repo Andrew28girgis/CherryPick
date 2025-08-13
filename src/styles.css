@@ -280,33 +280,42 @@ a {
 }
 
 .custom-toast {
-  visibility: hidden;
-  min-width: 250px;
-  background-color: #4d65b4;
-  color: #fff;
-  text-align: center;
-  border-radius: 8px;
-  padding: 16px;
   position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background-color: #E1A5C1;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 9999;
-  top: 30px;
-  right: 30px;
   opacity: 0;
-  transition: opacity 0.6s, visibility 0.6s;
-  font-weight: 600;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  max-width: 350px;
+  border-left: 5px solid #B51F63;
 }
 
 .custom-toast.show {
-  visibility: visible;
   opacity: 1;
+  transform: translateY(0);
 }
 
 .toast-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
+.toast-icon {
+  margin-right: 12px;
+  font-size: 18px;
+  color: #fff;
+}
+
+#toastMessage {
+  font-weight: 500;
+  font-size: 14px;
+}
 .CherryPick__button {
   border-radius: 10px;
   background: #001f3f;
