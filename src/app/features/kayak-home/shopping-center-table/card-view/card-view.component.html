@@ -37,8 +37,7 @@
     <div class="card-window cursor">
       <div class="cardResponsive">
         <a
-          [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
-          (click)="$event.stopPropagation()"
+          
         >
           <div class="main-img">
             <img
@@ -50,6 +49,7 @@
               loading="lazy"
               alt="{{ shopping.CenterName }}"
               referrerpolicy="no-referrer"
+              [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
             />
             <div
               class="image-placeholder"
@@ -106,7 +106,7 @@
                 >
                   <button
                     class="ellipsis_icont"
-                    (click)="toggleShortcutsCard(shopping.Id); $event.stopPropagation(); $event.preventDefault();"
+                    (click)="toggleShortcutsCard(shopping.Id);"
                   >
                     <i class="fa-solid fa-ellipsis"></i>
                   </button>
@@ -270,8 +270,6 @@
                         <a
                           class="target"
                           (click)="
-                            $event.preventDefault();
-                            $event.stopPropagation();
                             requestCenterStatus(
                               shopping.Id,
                               shopping.CampaignId
