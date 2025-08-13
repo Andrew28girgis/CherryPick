@@ -1,18 +1,26 @@
 export interface PlaceCotenants {
-  ID: number
-  Name: string
-  SubCategory: SubCategory[]
+  ID: number;
+  Name: string;
+  SubCategory: SubCategory[];
 }
 
 export interface SubCategory {
-  OrganizationCategory: string
-  Branches: Branch[]
+  OrganizationCategory: string;
+  Branches: Branch[];
 }
 
 export interface Branch {
-  Id: number
-  Latitude: number
-  Longitude: number
-  OrganizationId: number
-  Distance: number
+  Id: number;
+  Latitude: number;
+  Longitude: number;
+  OrganizationId: number;
+  Distance: number;
+}
+
+export interface ShoppingCenterTenant {
+  OrganizationID: number;
+  OrganizationName: string;
+  BranchID: number;
+  ShoppingCenterId: number;
+  Distance: number;
 }
