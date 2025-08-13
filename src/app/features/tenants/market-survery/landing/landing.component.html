@@ -769,10 +769,10 @@
     </div>
 
     <div class="row m-0 p-0">
-      <div class="col-md-4" *ngIf="placeCotenants && placeCotenants.length > 0">
+      <div class="col-md-4" *ngIf="tenant && tenant.length > 0">
         <div class="main-section heightt">
           <div class="d-flex justify-content-between">
-            <p class="main-name">Co-Tenants</p>
+            <p class="main-name">Tenants</p>
 
             <!-- <select
               class="form-control styled-select"
@@ -784,12 +784,12 @@
             </select> -->
           </div>
           <ul>
-            <li *ngFor="let place of filterCotenats">
+            <li *ngFor="let place of tenant">
               <div class="d-flex align-items-center">
                 <div>
                   <img
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      place.ID
+                      place.OrganizationID
                     }}"
                     alt=""
                     class="orgbranches"
@@ -797,8 +797,8 @@
                 </div>
 
                 <div class="d-flex flex-column">
-                  <span *ngIf="place.Name" class="nearset"
-                    >{{ place.Name }}
+                  <span *ngIf="place.OrganizationName" class="nearset"
+                    >{{ place.OrganizationName }}
                   </span>
                   <!-- <span *ngIf="place.SubCategory" class="activityType">{{
                     place.SubCategory[0].OrganizationCategory | titlecase

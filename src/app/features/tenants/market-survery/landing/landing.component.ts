@@ -8,7 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPlace, OtherPlace } from 'src/app/shared/models/landingPlace';
 import { NearByType } from 'src/app/shared/models/nearBy';
 import { DomSanitizer } from '@angular/platform-browser';
-import { PlaceCotenants } from 'src/app/shared/models/PlaceCo';
+import { PlaceCotenants, ShoppingCenterTenant } from 'src/app/shared/models/PlaceCo';
 import { OrgManager } from 'src/app/shared/models/organization';
 import { BuyboxOrg } from 'src/app/shared/models/buyboxOrg';
 import { OrgBranch } from 'src/app/shared/models/branches';
@@ -66,6 +66,7 @@ export class LandingComponent {
   shoppingId!: any;
   campaignId!: any;
   isMapView = true;
+  tenant:ShoppingCenterTenant[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -196,28 +197,29 @@ export class LandingComponent {
       Name: 'GetPlaceCotenants',
       Params: {
         ShoppingCenterId: this.ShoppingCenterId,
-        PlaceID: placeId,
-        CampaignId: this.campaignId,
+        // PlaceID: placeId,
+        // CampaignId: this.campaignId,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.placeCotenants = data.json;
-        this.filterCotenats = this.placeCotenants;
+        this.tenant = data.json
+        // this.placeCotenants = data.json;
+        // this.filterCotenats = this.placeCotenants;
 
-        const uniqueCategoriesSet = new Set<string>();
-        this.placeCotenants?.forEach((co) => {
-          co.SubCategory?.forEach((c) => {
-            if (c.OrganizationCategory) {
-              uniqueCategoriesSet.add(c.OrganizationCategory);
-            }
-          });
-        });
+        // const uniqueCategoriesSet = new Set<string>();
+        // this.placeCotenants?.forEach((co) => {
+        //   co.SubCategory?.forEach((c) => {
+        //     if (c.OrganizationCategory) {
+        //       uniqueCategoriesSet.add(c.OrganizationCategory);
+        //     }
+        //   });
+        // });
 
-        this.uniqueCategories = Array.from(uniqueCategoriesSet);
-        this.uniqueCategories.sort((a, b) => a.localeCompare(b));
-        this.uniqueCategories.unshift('All');
+        // this.uniqueCategories = Array.from(uniqueCategoriesSet);
+        // this.uniqueCategories.sort((a, b) => a.localeCompare(b));
+        // this.uniqueCategories.unshift('All');
       },
     });
   }
