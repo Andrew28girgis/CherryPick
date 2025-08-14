@@ -958,13 +958,11 @@
 
 .tenant-dropdown-container :hover {
   border-radius: var(--Radius-Radius-6, 6px);
-  background: var(--Card-Section-BG, #fff);
-  transition: 0.3s ease-in-out;
+   transition: 0.3s ease-in-out;
 }
 .tenant-dropdown-container.active {
   border-radius: var(--Radius-Radius-6, 6px);
-  background: var(--Card-Section-BG, #fff);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
 .tenant-dropdown :focus {

@@ -62,8 +62,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     
     console.log('Dropdown visible state:', this.isVisible);
     
-    // If opening the dropdown, scroll to bottom
+    // If opening the dropdown
     if (this.isVisible) {
+      // Automatically mark all messages as read
+      if (this.notificationService.unreadCount > 0) {
+        this.markAllAsRead();
+      }
+      
+      // Scroll to bottom
       setTimeout(() => {
         this.scrollToBottom();
       }, 100);

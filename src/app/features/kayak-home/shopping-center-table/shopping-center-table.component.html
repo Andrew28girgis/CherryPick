@@ -222,7 +222,7 @@
               aria-labelledby="tenantDropdown"
             >
               <ng-container *ngFor="let letter of alphabetKeys">
-                <div class="alphabet-header">{{ letter }}</div>
+                <!-- <div class="alphabet-header">{{ letter }}</div> -->
                 <div
                   class="tenant-item dropdown-item-custom"
                   [class.active]="selectedTenant?.id === tenant.id"
