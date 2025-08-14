@@ -46,10 +46,8 @@
             class="message-bubble"
             *ngFor="let notification of notificationService.notifications"
             (click)="handleNotificationClick(notification)"
-            [class.read]="notification.isRead"
-            [class.unread]="!notification.isRead"
-            [class.clickable]="notification.userSubmissionId"
-          >
+             [class.clickable]="notification.userSubmissionId"
+           >
             <div class="message-content">
               <p class="message-text">
                 {{ notification.message }}

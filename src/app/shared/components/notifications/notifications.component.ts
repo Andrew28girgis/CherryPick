@@ -88,8 +88,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
   
   handleNotificationClick(notification: Notification): void {
-    this.markNotificationAsRead(notification);
-
+ 
     if (notification.userSubmissionId) {
       const route = `/uploadOM/${notification.userSubmissionId}`;
       this.router.navigate([route]);

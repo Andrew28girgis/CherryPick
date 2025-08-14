@@ -16,6 +16,7 @@
         <div class="image-section">
           <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
             <div class="intro-container wow fadeIn">
+              <div>
               <h1
                 class="mb-2 pb-0"
                 *ngIf="ShoppingCenter?.CenterName"
@@ -186,13 +187,11 @@
                   </div>
                 </div>
               </ng-container>
-
-              <div
-                class="w-100 d-flex justify-content-end"
-                *ngIf="placeImage && placeImage.length > 0"
-              >
+            </div>
+              <div 
+               class=" position-relative gallerry-btn">
                 <button class="view-gallery" (click)="openGallery()">
-                  View Gallery
+                  <i class="fa-regular fa-images me-2"></i>View Gallery
                 </button>
               </div>
             </div>

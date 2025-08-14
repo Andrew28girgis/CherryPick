@@ -10,10 +10,17 @@
   overflow-y: auto; /* Make only this container scroll */
  }
 .intro-container {
-  margin: 0 0 34px 40px;
-  position: absolute;
-  left: 0;
-  bottom: 0;
+  margin: 0;
+  padding: 0 40px 34px 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-start;
+  height: 100%;
+  z-index: 100000;
+  position: relative;
+  justify-content: space-between;
 }
 
 .map-section {
@@ -414,43 +421,11 @@ li {
 .StreetViewOneheight {
   min-height: 500px;
 }
-@media (min-width: 1024px) {
-  #hero {
-    background-attachment: fixed;
-  }
-}
-@media (max-width: 991px) {
-  #hero .animated {
-    -webkit-animation: none;
-    animation: none;
-  }
-
-  #hero .hero-img {
-    text-align: center;
-  }
-
-  #hero .hero-img img {
-    width: 50%;
-  }
-}
-@media (max-width: 768px) {
-  #hero {
-    margin-top: 20px;
-  }
-
-  #hero h1 {
-    font-size: 28px;
-    line-height: 36px;
-  }
-
-  #hero h2 {
-    font-size: 18px;
-    line-height: 24px;
-  }
-
-  #hero .hero-img img {
-    width: 70%;
-  }
+.gallerry-btn {
+  width: fit-content;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .view-toggle {
@@ -472,4 +447,31 @@ li {
   background: #fce4ec;
   border-color: #ec407a;
   color: #b51f63;
+}
+.view-gallery {
+  width: fit-content;
+  white-space: nowrap;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #001f3f;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 500;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  backdrop-filter: blur(5px);
+ }
+
+.view-gallery:hover {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.view-gallery:active {
+  transform: translateY(0);
 }
