@@ -788,10 +788,10 @@
               </option>
             </select> -->
           </div>
-          <ul class="d-flex justify-content-around"> 
-            <li *ngFor="let place of tenant" style="border-bottom: none;">
+          <div class="row tenant-row">
+            <div class="col-md-3 mb-3" *ngFor="let place of tenant">
               <div class="d-flex align-items-center">
-                <div>
+                        <div>
                   <!-- <img
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       place.OrganizationID
@@ -817,9 +817,9 @@
                 }}
                 MI</span
               > -->
-            </li>
-          </ul>
-        </div>
+           </div>
+           </div>
+         </div>
       </div>
       <div
         class="col-md-4"
