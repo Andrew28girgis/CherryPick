@@ -8,41 +8,29 @@
     >
       <div class="card-window total">
         <div class="card-window_c">
-          <!-- <a
+          <a
             [routerLink]="[
               '/landing',
               shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,
               shopping?.Id,
-              BuyBoxId 
+              shopping?.CampaignId 
             ]"
+          >
+                    <!-- <a
+            class="info-value text-dark px-1"
+            href="{{ shopping.DocsLink }}"
+            target="_blank"
           > -->
-          <ng-container *ngIf="shopping.DocsLink; else noLink">
-            <a
-              class="info-value text-dark px-1"
-              [href]="shopping.DocsLink"
-              target="_blank"
-            >
-              <div class="main-img">
-                <img
-                  class="card-photo"
-                  [src]="shopping.MainImage"
-                  alt="{{ shopping.CenterName }}"
-                  referrerpolicy="no-referrer"
-                />
-              </div>
-            </a>
-          </ng-container>
-
-          <ng-template #noLink>
             <div class="main-img">
               <img
                 class="card-photo"
                 [src]="shopping.MainImage"
                 alt="{{ shopping.CenterName }}"
                 referrerpolicy="no-referrer"
+                
               />
             </div>
-          </ng-template>
+          </a>
           <div class="content-wrap card-content">
             <div>
               <div class="fitcontent">
