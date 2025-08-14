@@ -470,11 +470,11 @@ position: fixed; */
 }
 
 .pagination-btn.active {
-  background: #4f46e5;
+  background: #B51F63;
   color: white;
 }
 .pagination-btn.active:hover {
-  background: #4f46e5;
+  background: #c84681;
   color: white;
 }
 
