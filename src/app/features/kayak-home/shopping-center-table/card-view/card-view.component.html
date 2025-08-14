@@ -525,17 +525,6 @@
               "
             >
               <span class="managed-by">Leased by</span>
-
-              <div>
-                <!-- <img
-                  class="logo"
-                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                    shopping.ShoppingCenter.ManagerOrganization[0].ID
-                  }}"
-                  [title]="shopping.ShoppingCenter.ManagerOrganization[0].Name"
-                  alt=""
-                /> -->
-              </div>
               <div class="width55">
                 {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
               </div>
@@ -550,6 +539,8 @@
                   [placement]="'top'"
                 />
               </div>
+              <br />
+
               <ng-template #popoverContent>
                 <div
                   *ngFor="
@@ -570,6 +561,20 @@
                   />
                 </div>
               </ng-template>
+            </div>
+            <div class="pt-3" *ngIf="shopping?.DocsLink">
+              <a
+                class="info-value text-dark "
+                href="{{ shopping.DocsLink }}"
+                target="_blank"
+              >
+                <img
+                  width="25"
+                  height="25"
+                  src="../../../../../assets/icons/pdf-file.png"
+                  alt=""
+                />
+              </a>
             </div>
             <ng-template #findContacts>
               <!-- <a

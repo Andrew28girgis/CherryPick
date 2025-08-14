@@ -17,6 +17,7 @@
 }
 
 .spinner {
+  color: #B51F63;
   width: 60px;
   height: 60px;
   border: 4px solid rgba(255, 255, 255, 0.2);
