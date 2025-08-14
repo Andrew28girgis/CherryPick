@@ -17,7 +17,6 @@ import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
 import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component';
-import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KanbanModule } from '../kanban/kanban.module';
 import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
 import { ContactBrokerComponent } from './shopping-center-table/contact-broker/contact-broker.component';
@@ -33,7 +32,6 @@ import { AddContactComponent } from './shopping-center-table/add-contact/add-con
 @NgModule({
   declarations: [
     ShoppingCenterTableComponent,
-    BuyboxRelatiosComponent,
     SocialViewComponent,
     TableViewComponent,
     CardViewComponent,
@@ -69,8 +67,7 @@ import { AddContactComponent } from './shopping-center-table/add-contact/add-con
 ],
   exports: [
     ShoppingCenterTableComponent,
-    BuyboxRelatiosComponent,
-    SocialViewComponent,
+     SocialViewComponent,
     TableViewComponent,
     CardViewComponent,
     SideListViewComponent,
