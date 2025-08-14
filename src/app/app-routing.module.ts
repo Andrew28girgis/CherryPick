@@ -57,12 +57,6 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuardService],
   },
-  // {
-  //   path: 'registeration',
-  //   component: RegisterationComponent,
-  //   data: { hideHeader: true },
-  // },
-
   {
     path: 'ResetPassword',
     component: ResetPasswordComponent,
