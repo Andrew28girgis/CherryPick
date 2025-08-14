@@ -35,7 +35,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   General: General = new General();
   cardsSideList: Center[] = [];
   map: any;
-  BuyBoxId!: any; 
+  BuyBoxId!: any;
   orgId!: any;
   mapViewOnePlacex = false;
   buyboxCategories: BuyboxCategory[] = [];
@@ -218,8 +218,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
         // Data is loaded, perform any additional initialization
       })
     );
-
-    
   }
 
   ngOnDestroy(): void {
@@ -262,27 +260,24 @@ export class CardViewComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
-     this.isUpdatingStage = true;
+    this.isUpdatingStage = true;
 
-     shoppingCenter.kanbanStageId = stageId;
-
-     shoppingCenter.isDropdownOpen = false;
+    shoppingCenter.isDropdownOpen = false;
     this.activeDropdownId = null;
 
-     this.viewManagerService.updatePlaceKanbanStage(
+    this.viewManagerService.updatePlaceKanbanStage(
       marketSurveyId,
       stageId,
       shoppingCenter,
       this.CampaignId
     );
 
-     this.cdr.detectChanges();
+    this.cdr.detectChanges();
 
-     setTimeout(() => {
+    setTimeout(() => {
       this.isUpdatingStage = false;
     }, 100);
   }
-
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
@@ -709,27 +704,25 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.selectedShoppingCenterId = shoppingCenterId;
     // this.addContactModal.open();
   }
-    newContact: any = {
+  newContact: any = {
     firstname: '',
     lastname: '',
     email: '',
     shoppingCenterId: '',
   };
-  openAddContactModal(content:any,shoppingCenterId: number): void {
-     
+  openAddContactModal(content: any, shoppingCenterId: number): void {
     this.newContact.shoppingCenterId = shoppingCenterId;
-      this.modalService.open(this.addContactModal, {
-        size: 'md',
-        backdrop: true,
-        backdropClass: 'fancy-modal-backdrop',
-        keyboard: true,
-        windowClass: 'fancy-modal-window',
-        centered: true,
-      });
-    
+    this.modalService.open(this.addContactModal, {
+      size: 'md',
+      backdrop: true,
+      backdropClass: 'fancy-modal-backdrop',
+      keyboard: true,
+      windowClass: 'fancy-modal-window',
+      centered: true,
+    });
   }
 
-    CreateContact(): void {
+  CreateContact(): void {
     if (
       this.newContact.firstname &&
       this.newContact.email &&

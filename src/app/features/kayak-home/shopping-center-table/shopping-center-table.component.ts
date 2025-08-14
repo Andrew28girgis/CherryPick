@@ -173,9 +173,19 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Load stages and set up stage filtering
-    this.loadStages();
-
+    this.subscriptions.add(
+      this.shoppingCenterService.kanbanStages$.subscribe((stages) => {
+        this.stages = stages.map((s: any) => ({
+          id: +s.id,
+          stageName: s.stageName,
+          stageOrder: +s.stageOrder || 0,
+          isQualified: s.isQualified || true,
+          kanbanTemplateId: +s.kanbanTemplateId || 0,
+        }));
+        this.updateStageName(this.selectedStageId);
+        this.cdr.detectChanges();
+      })
+    );
     // Subscribe to stage changes
     this.subscriptions.add(
       this.shoppingCenterService.selectedStageId$.subscribe((id) => {
@@ -220,34 +230,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadStages(): void {
-    const body = {
-      Name: 'GetKanbanTemplateStages',
-      Params: { KanbanTemplateId: 6 },
-    };
-
-    this.placesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        if (res && res.json) {
-          this.stages = res.json
-            .map((s: any) => ({
-              id: +s.id,
-              stageName: s.stageName,
-              stageOrder: +s.stageOrder,
-              isQualified: s.isQualified,
-              kanbanTemplateId: +s.kanbanTemplateId,
-            }))
-            .sort((a: any, b: any) => a.stageOrder - b.stageOrder);
-
-          this.updateStageName(this.selectedStageId);
-          this.cdr.detectChanges();
-        }
-      },
-      error: (error: Error) => {
-        console.error('Error loading kanban stages:', error);
-      },
-    });
-  }
+ 
 
   selectStagekan(stageId: number): void {
     // Prevent interference from ongoing updates
@@ -258,7 +241,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.selectedStageId = stageId;
     if (stageId === 0) {
       this.selectedStageName = 'All';
-    } else {
+    } else if (stageId === 1) {
       const stage = this.stages.find((s) => s.id === stageId);
       this.selectedStageName = stage ? stage.stageName : 'Filter';
     }
