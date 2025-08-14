@@ -992,3 +992,233 @@ img[alt="logo"] {
   background-color: #b51f63;
   color: #fff;
 }
+/* fansyyyyyyyyyyyyyyyyyyyy */
+/* Modal Styles */
+.fancy-modal-header {
+  display: flex;
+  justify-content: space-between;
+  background: #b51f63; /* fallback for old browsers */
+  /* background: -webkit-linear-gradient(
+    to right,
+    #493240,
+    #ff0099
+  ); 
+  background: linear-gradient(
+    to right,
+    #493240,
+    #ff0099
+  ); */
+  color: white;
+  border-bottom: none;
+  padding: 20px 24px;
+}
+
+.fancy-title {
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.fancy-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.fancy-close:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.fancy-modal-body {
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+}
+
+.fancy-modal-window {
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+}
+
+/* Form Styles */
+.form-control {
+  border-radius: 8px;
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-control:focus {
+  border-color: #ff0099;
+  box-shadow: 0 0 0 0.2rem rgba(255, 0, 153, 0.25);
+}
+
+label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Button Styles */
+.btn-secondary {
+  background: #6c757d;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Add Sites Button Styles */
+.add-sites-btn {
+  position: relative;
+  display: flex;
+  height: 60px;
+  padding: 0 24px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  border-radius: 12px;
+  border: none;
+  background: white;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  width: auto;
+  margin-bottom: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-sites-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.add-sites-btn:active {
+  transform: translateY(0);
+}
+
+.btn-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 2;
+}
+
+.btn-icon {
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease;
+}
+
+.add-sites-btn:hover .btn-icon {
+  transform: scale(1.1);
+}
+
+.btn-add {
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius:   24px;
+  background: var(--Colors-Primary-500, #b51f63);
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.btn-cancel {
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius:   24px;
+  background: var(--Colors-Primary-500, #8b8b8b);
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+.btn-hover-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.3)
+  );
+  transition: width 0.4s ease;
+  z-index: 1;
+}
+
+.add-sites-btn:hover .btn-hover-effect {
+  width: 100%;
+}
+
+.manual-btn {
+  border-left: 4px solid #4ecdc4;
+}
+
+.manual-btn:hover {
+  color: #4ecdc4;
+}
+
+.manual-btn .btn-icon {
+  color: #4ecdc4;
+}
+/* Update your input styles to include the Angular attributes */
+.fancy-modal-body .form-control,
+.fancy-modal-body .form-control:focus,
+.fancy-modal-body .form-control:active {
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  border: 1px solid #e0e0e0 !important;
+  transition: all 0.3s ease !important;
+  width: 100% !important;
+  margin-bottom: 16px !important;
+  background-color: white !important;
+  box-shadow: none !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+  color: #495057 !important;
+  appearance: none !important;
+  background-clip: padding-box !important;
+}
+
+.fancy-modal-body .form-control:focus {
+  border-color: #ff0099 !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 0, 153, 0.25) !important;
+  outline: none !important;
+}
+
