@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PlacesService } from './core/services/places.service';
 import { AuthService } from './core/services/auth.service';
@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   isSocialView: boolean = false;
   hideSidebar = false;
   isNotificationsOpen = false; // Add this property to your class
+  showingTransition = false;
 
   constructor(
     private router: Router,
@@ -43,6 +44,18 @@ export class AppComponent implements OnInit {
         currentRoute.data.subscribe((data) => {
           this.hideSidebar = data['hideSidebar'] === true;
         });
+      });
+
+    // Listen for route changes to handle transitions
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationStart))
+      .subscribe((event: any) => {
+        if ((event.url === '/campaigns' || event.url === '/summary') && 
+            this.router.url === '/login') {
+          // Add a brief transition state when going from login to dashboard
+          this.showingTransition = true;
+             this.showingTransition = false;
+         }
       });
   }
 

@@ -239,8 +239,8 @@ export class LoginComponent implements OnInit {
     }
     if (response.token) {
       this.authService.setToken(response.token);
+       this.navigateToHome();
       this.checkOwnerData();
-      // this.navigateToHome();
     }
   }
 

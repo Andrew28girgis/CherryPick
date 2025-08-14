@@ -1,5 +1,5 @@
-<div class="app-shell" [ngClass]="{'with-sidebar': isAuthenticated && !hideSidebar}">
-  <app-sidebar *ngIf="isAuthenticated && !hideSidebar"></app-sidebar>
+<div class="app-shell" [ngClass]="{'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition}">
+  <app-sidebar *ngIf="isAuthenticated && !hideSidebar && !showingTransition"></app-sidebar>
 
   <div class="app-container">
     <!-- <app-header style="background-color: #f1f1f5"></app-header> -->
