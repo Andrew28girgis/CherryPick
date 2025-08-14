@@ -24,8 +24,8 @@
     </ng-template>
     
     <!-- Chat Bot in Bottom Right -->
-    <div class="chatbot-container" *ngIf="isAuthenticated">
-      <app-notifications [ngClass]="{'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition}" (dropdownOpenChange)="isNotificationsOpen = $event"></app-notifications>
+    <div class="chatbot-container" [ngClass]="{'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition}" *ngIf="isAuthenticated && !hideSidebar && !showingTransition">
+      <app-notifications (dropdownOpenChange)="isNotificationsOpen = $event"></app-notifications>
     </div>
   </div>
 </div>

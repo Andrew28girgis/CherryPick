@@ -40,6 +40,7 @@
 }
 
 .loading-text {
+  color: #B51F63 !important ;
   font-size: 24px;
   font-weight: 300;
   letter-spacing: 2px;
@@ -48,6 +49,7 @@
 }
 
 .loading-subtext {
+  color: #B51F63 !important;
   font-size: 16px;
   opacity: 0.7;
   font-weight: 300;
