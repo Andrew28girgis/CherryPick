@@ -28,6 +28,7 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
 import { FilterRepliesPipe } from './shopping-center-table/social-view/social-view.component';
 import { NewContactBrokerComponent } from './shopping-center-table/contact-broker/components/new-contact-broker/new-contact-broker.component';
 import { NgxFileDropModule } from "ngx-file-drop";
+import { AddContactComponent } from './shopping-center-table/add-contact/add-contact.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { NgxFileDropModule } from "ngx-file-drop";
     PreviewEmailComponent,
     FilterRepliesPipe,
     NewContactBrokerComponent,
+    AddContactComponent,
   ],
   imports: [
     CommonModule,
