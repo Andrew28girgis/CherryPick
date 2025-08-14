@@ -25,7 +25,7 @@
     
     <!-- Chat Bot in Bottom Right -->
     <div class="chatbot-container" *ngIf="isAuthenticated">
-      <app-notifications (dropdownOpenChange)="isNotificationsOpen = $event"></app-notifications>
+      <app-notifications [ngClass]="{'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition}" (dropdownOpenChange)="isNotificationsOpen = $event"></app-notifications>
     </div>
   </div>
 </div>
