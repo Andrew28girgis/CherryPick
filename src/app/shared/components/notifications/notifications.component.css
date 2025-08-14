@@ -345,11 +345,7 @@
   border-radius: 3px;
 }
 
-/* Focus States for Accessibility */
-.chat-button:focus {
-  outline: 2px solid #B51F63;
-  outline-offset: 2px;
-}
+ 
 
 .message-bubble.clickable:focus {
   box-shadow: 0 0 0 2px #B51F63;
