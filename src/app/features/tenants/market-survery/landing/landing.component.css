@@ -1,12 +1,13 @@
 .main-container-all {
   gap: 24px;
-  height: 100vh; /* Make container take full height */
-  display: flex;
-  overflow: hidden; /* Prevent overall scrolling */
+    overflow: hidden; /* Prevent overall scrolling */
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+
 }
 .container {
-  width: 66vw !important;
   padding: 0;
+  gap: 24px;
   overflow-y: auto; /* Make only this container scroll */
  }
 .intro-container {
@@ -24,17 +25,15 @@
 }
 
 .map-section {
-  margin-top: 4%;
-  width: 34vw;
-  background: rgba(255, 255, 255, 0.5);
+  margin-top: 14%;
+   background: rgba(255, 255, 255, 0.5);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   height: fit-content;
   padding: 16px;
   border-radius: 24px;
   position: sticky;
-  top: 7%;
-  align-self: flex-start;
+   align-self: flex-start;
   margin-bottom: 20px;
 }
 
