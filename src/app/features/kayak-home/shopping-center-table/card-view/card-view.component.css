@@ -269,7 +269,10 @@ img[alt="logo"] {
   ::ng-deep .p-element .p-paginator {
     margin-bottom: 70px;
   }
+ 
 }
+ 
+
 
 @keyframes shimmer {
   0% {
@@ -978,7 +981,7 @@ img[alt="logo"] {
 
 .cards-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 24px;
   align-items: stretch;
 }
