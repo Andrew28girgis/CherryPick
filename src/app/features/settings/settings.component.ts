@@ -25,9 +25,9 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     const guid = localStorage.getItem('guid');
     if (guid) this.guid = guid;
-    this.getStageIdAndName().then(() => {
-      this.checkOwnerData();
-    });
+    // this.getStageIdAndName().then(() => {
+    //   this.checkOwnerData();
+    // });
   }
 
   private async checkOwnerData(): Promise<void> {

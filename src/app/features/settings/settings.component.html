@@ -1,8 +1,8 @@
 <div class="w-100 p-5">
   <div class="row g-4">
-    <div class="col-6" [ngClass]="{ 'col-12': !displayStages }">
+    <div class="col-12" >
       <app-link-accounts (accountUnlinked)="onAccountUnlinked($event)"></app-link-accounts>
-
+<!-- 
       @if (displayStages){
       <div class="step-title fade-up mt-4">1 - Email scanning</div>
       } @if (displayStats) {
@@ -12,16 +12,16 @@
           [realEstateMailsCount]="realEstateMailsCount"
         ></app-email-statistics>
       </div>
-      }
+      } -->
     </div>
 
-    <div class="col-6">
+    <!-- <div class="col-6">
       @if (displayStages) {
       <app-email-stages
         [emailStages]="emailStages"
         (realEstateEmailsCount)="onMailsReady($event)"
       ></app-email-stages>
       }
-    </div>
+    </div> -->
   </div>
 </div>
