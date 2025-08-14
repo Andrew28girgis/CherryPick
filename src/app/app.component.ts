@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   isMobile = false;
   isSocialView: boolean = false;
   hideSidebar = false;
+  isNotificationsOpen = false; // Add this property to your class
 
   constructor(
     private router: Router,

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
    width: 100%;
+   padding-bottom: 80px; /* Add some padding to avoid content being hidden behind the chatbot */
 }
 
 .main-content-area {
@@ -94,4 +95,11 @@
 .app-shell.no-sidebar > .app-container {
   grid-column: 1; /* Take the first (and only) column */
   width: 100%;
+}
+
+.chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1050;
 }

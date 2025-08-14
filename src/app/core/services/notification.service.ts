@@ -51,7 +51,7 @@ export class NotificationService {
   private sortNotificationsByDate(): void {
     this.notifications.sort(
       (a, b) =>
-        new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
     );
   }
 }

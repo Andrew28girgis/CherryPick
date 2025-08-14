@@ -22,5 +22,10 @@
         <router-outlet></router-outlet>
       </div>
     </ng-template>
+    
+    <!-- Chat Bot in Bottom Right -->
+    <div class="chatbot-container" *ngIf="isAuthenticated">
+      <app-notifications (dropdownOpenChange)="isNotificationsOpen = $event"></app-notifications>
+    </div>
   </div>
 </div>

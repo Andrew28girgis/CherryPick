@@ -1,66 +1,111 @@
-<div class="notification-container position-relative"
-style="z-index: 1000;">
+<div class="chat-container position-relative" style="z-index: 1000;">
   <button
     (click)="toggleDropdown()"
-    class="notification-button"
-    aria-label="Toggle notifications"
+    class="chat-button bot-icon"
+    aria-label="Chat with Cherry Bot"
   >
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
-    <path d="M12 11.5048C11.59 11.5048 11.25 11.1648 11.25 10.7548V7.4248C11.25 7.0148 11.59 6.6748 12 6.6748C12.41 6.6748 12.75 7.0148 12.75 7.4248V10.7548C12.75 11.1748 12.41 11.5048 12 11.5048Z" fill="#161017"/>
-    <path d="M12.0199 21.3351C9.43987 21.3351 6.86987 20.9251 4.41987 20.1051C3.50987 19.8051 2.81987 19.1551 2.51987 18.3351C2.21987 17.5151 2.31987 16.5751 2.80987 15.7551L4.07987 13.6351C4.35987 13.1651 4.60987 12.2851 4.60987 11.7351V9.6351C4.60987 5.5451 7.92987 2.2251 12.0199 2.2251C16.1099 2.2251 19.4299 5.5451 19.4299 9.6351V11.7351C19.4299 12.2751 19.6799 13.1651 19.9599 13.6351L21.2299 15.7551C21.6999 16.5351 21.7799 17.4651 21.4699 18.3151C21.1599 19.1651 20.4799 19.8151 19.6199 20.1051C17.1699 20.9351 14.5999 21.3351 12.0199 21.3351ZM12.0199 3.7351C8.75987 3.7351 6.10987 6.3851 6.10987 9.6451V11.7451C6.10987 12.5551 5.78987 13.7251 5.36987 14.4151L4.09987 16.5451C3.83987 16.9751 3.77987 17.4351 3.92987 17.8351C4.07987 18.2351 4.41987 18.5351 4.89987 18.6951C9.49987 20.2251 14.5599 20.2251 19.1599 18.6951C19.5899 18.5551 19.9199 18.2351 20.0699 17.8151C20.2299 17.3951 20.1799 16.9351 19.9499 16.5451L18.6799 14.4251C18.2599 13.7351 17.9399 12.5651 17.9399 11.7551V9.6551C17.9299 6.3851 15.2799 3.7351 12.0199 3.7351Z" fill="#161017"/>
-    <path d="M11.9999 23.8847C10.9299 23.8847 9.87992 23.4447 9.11992 22.6847C8.35992 21.9247 7.91992 20.8747 7.91992 19.8047H9.41992C9.41992 20.4847 9.69992 21.1447 10.1799 21.6247C10.6599 22.1047 11.3199 22.3847 11.9999 22.3847C13.4199 22.3847 14.5799 21.2247 14.5799 19.8047H16.0799C16.0799 22.0547 14.2499 23.8847 11.9999 23.8847Z" fill="#161017"/>
-  </svg>
+    <!-- Bot Icon -->
+    <img width="55"height="55" src="../../../../assets/Images/bot.png" alt="">
   </button>
 
   <!-- Unread Count Badge -->
-  <div class="notification-badge" *ngIf="notificationService.unreadCount > 0">
+  <div class="chat-badge" *ngIf="notificationService.unreadCount > 0">
     {{ notificationService.unreadCount }}
   </div>
 
-  <!-- Notifications Dropdown -->
+  <!-- Chat Dropdown with multiple visibility checks -->
   <div
-    class="notification-dropdown"
-    *ngIf="notificationService.dropdownVisible"
+    class="chat-dropdown"
+    [style.display]="isVisible ? 'flex' : 'none'"
+    [class.hidden]="!notificationService.dropdownVisible"
   >
-    <div class="notification-card">
+    <div class="chat-card">
       <!-- Header -->
-      <div class="notification-header">
-        <h2 class="notifications-title">Notifications</h2>
+      <div class="chat-header">
+        <div class="chat-header-content">
+          <!-- <div class="bot-avatar">
+            <img width="30"height="30" src="../../../../assets/Images/bot.png" alt="">
+
+          </div> -->
+          <h2 class="chat-title"> Emily</h2>
+        </div>
         <div class="unread-badge" *ngIf="notificationService.unreadCount > 0">
           {{ notificationService.unreadCount }}
         </div>
       </div>
 
-      <!-- Notifications List -->
-      <div
-        *ngIf="
-          notificationService.notifications.length > 0;
-          else noNotifications
-        "
-        class="notifications-list"
-      >
-        <div
-          class="notification-item"
-          *ngFor="let notification of notificationService.notifications"
-          (click)="handleNotificationClick(notification)"
-          [class.read]="notification.isRead"
-          [class.clickable]="notification.userSubmissionId"
-          role="button"
-          tabindex="0"
-        >
-          <p class="notification-message">
-            {{ notification.message }}
-          </p>
-          <time class="notification-date" [dateTime]="notification.createdDate">
-            {{ notification.createdDate | date : "medium" }}
-          </time>
-        </div>
+      <!-- Mark all as read button -->
+      <div class="mark-all-read-container" *ngIf="notificationService.unreadCount > 0">
+        <button class="mark-all-read" (click)="markAllAsRead()">
+          Mark all as read
+        </button>
       </div>
 
-      <!-- Empty State -->
-      <ng-template #noNotifications>
-        <div class="no-notifications">No notifications available.</div>
-      </ng-template>
+      <!-- Chat Messages -->
+      <div class="chat-messages-container">
+        <div 
+          *ngIf="notificationService.notifications.length > 0; else noMessages"
+          class="chat-messages"
+        >
+          <div
+            class="message-bubble"
+            *ngFor="let notification of notificationService.notifications"
+            (click)="handleNotificationClick(notification)"
+            [class.read]="notification.isRead"
+            [class.unread]="!notification.isRead"
+            [class.clickable]="notification.userSubmissionId"
+          >
+            <div class="message-content">
+              <p class="message-text">
+                {{ notification.message }}
+              </p>
+              <time class="message-time" [dateTime]="notification.createdDate">
+                {{ notification.createdDate | date : "shortTime" }}
+              </time>
+
+              <!-- Read Status -->
+              <div class="message-status" *ngIf="!notification.isRead">
+                <button class="mark-read-btn" (click)="markNotificationAsRead(notification); $event.stopPropagation()">
+                  Mark as read
+                </button>
+                <span class="read-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <ng-template #noMessages>
+          <div class="no-messages">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6L6 18M6 6l12 12"></path>
+            </svg>
+            <p>No messages available.</p>
+            <p class="no-messages-subtext">Check back later for updates from Cherry Bot.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Chat Input (Disabled for now) -->
+      <!-- <div class="chat-input-container">
+        <input 
+          type="text" 
+          class="chat-input" 
+          placeholder="Message is disabled for now..." 
+          disabled
+        />
+        <button class="send-button" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M7.39999 6.32003L15.89 3.49003C19.7 2.22003 21.77 4.30003 20.51 8.11003L17.68 16.6C15.78 22.31 12.66 22.31 10.76 16.6L9.91999 14.08L7.39999 13.24C1.68999 11.34 1.68999 8.23003 7.39999 6.32003Z" stroke="#B51F63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.11 13.6501L13.69 10.0601" stroke="#B51F63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div> -->
     </div>
   </div>
 </div>

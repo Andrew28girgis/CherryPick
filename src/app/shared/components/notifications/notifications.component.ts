@@ -12,19 +12,24 @@ import { Router, RouterModule } from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   private intervalId: any;
   notifications: Notification[] = [];
+  messageText: string = '';
 
   @Output() dropdownOpenChange = new EventEmitter<boolean>();
+
+  // Add this property to your component
+  public isVisible = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -48,10 +53,34 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   toggleDropdown(): void {
-    this.notificationService.dropdownVisible =
-      !this.notificationService.dropdownVisible;
+    // Toggle the dropdown visibility state
+    this.notificationService.dropdownVisible = !this.notificationService.dropdownVisible;
+    this.isVisible = this.notificationService.dropdownVisible;
+    
+    // Emit the event
     this.dropdownOpenChange.emit(this.notificationService.dropdownVisible);
+    
+    console.log('Dropdown visible state:', this.isVisible);
+    
+    // If opening the dropdown, scroll to bottom
+    if (this.isVisible) {
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 100);
+    }
   }
+
+  scrollToBottom(): void {
+    try {
+      const chatContainer = this.elementRef.nativeElement.querySelector('.chat-messages-container');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    } catch (err) {
+      console.error('Error scrolling to bottom:', err);
+    }
+  }
+  
   handleNotificationClick(notification: Notification): void {
     this.markNotificationAsRead(notification);
 
@@ -60,6 +89,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       this.router.navigate([route]);
     }
   }
+  
   markNotificationAsRead(notification: Notification): void {
     if (notification.isRead) {
       return;
@@ -77,13 +107,74 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         notification.isRead = 1;
         this.notificationService.updateNotificationCounts();
       },
+      error: (err) => {
+        console.error('Error marking notification as read:', err);
+      }
     });
   }
 
+  markAllAsRead(): void {
+    const unreadNotifications = this.notificationService.notifications.filter(n => !n.isRead);
+    
+    if (unreadNotifications.length === 0) {
+      return;
+    }
+    
+    // Create array of promises to mark all notifications as read
+    const markPromises = unreadNotifications.map(notification => {
+      return new Promise<void>((resolve) => {
+        const request = {
+          Name: 'UpdateNotification',
+          Params: {
+            NotificationId: notification.id,
+          },
+        };
+        
+        this.placesService.GenericAPI(request).subscribe({
+          next: () => {
+            notification.isRead = 1;
+            resolve();
+          },
+          error: () => {
+            resolve(); // Still resolve even on error to continue processing
+          }
+        });
+      });
+    });
+    
+    // After all notifications are processed, update counts
+    Promise.all(markPromises).then(() => {
+      this.notificationService.updateNotificationCounts();
+    });
+  }
+
+  // This would be implemented when sending is enabled
+  sendMessage(): void {
+    // Currently disabled
+    console.log('Message sending is currently disabled');
+  }
+
   @HostListener('document:click', ['$event'])
-  handleOutsideClick(event: Event): void {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
+  handleDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+    const chatButton = this.elementRef.nativeElement.querySelector('.chat-button');
+    const chatDropdown = this.elementRef.nativeElement.querySelector('.chat-dropdown');
+    
+    // Check if the click was on the chat button
+    if (chatButton && chatButton.contains(target)) {
+      // The toggleDropdown method will be called by the click binding
+      // so we don't need to do anything here
+      return;
+    }
+    
+    // If the dropdown is open and the click is outside both the button and dropdown
+    if (this.isVisible && 
+        target && 
+        chatDropdown && 
+        !chatDropdown.contains(target)) {
+      // Close the dropdown
       this.notificationService.dropdownVisible = false;
+      this.isVisible = false;
       this.dropdownOpenChange.emit(false);
     }
   }
