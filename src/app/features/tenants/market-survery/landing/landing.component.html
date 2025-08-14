@@ -501,7 +501,7 @@
 
     <div class="row m-0">
       <div class="col-md-12 p-0">
-        <div class="main-section">
+        <!-- <div class="main-section">
           <div class="d-flex justify-content-start">
             <p class="rate-location">Please Rate This Property</p>
           </div>
@@ -548,9 +548,13 @@
               name="message"
               rows="5"
               placeholder="Type your Feedback..."
-            ></textarea> 
+            ></textarea>
+
+            <button class="feedback-btn" (click)="sendFeedBack('')">
+              Send Feedback
+            </button>
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- <div class="col-md-6">
         <div class="main-section" style="height: 525px">
@@ -770,7 +774,7 @@
     </div>
 
     <div class="row m-0 p-0">
-      <div class="col-md-4" *ngIf="tenant && tenant.length > 0">
+      <div class="col-md-12 p-0" *ngIf="tenant && tenant.length > 0">
         <div class="main-section heightt">
           <div class="d-flex justify-content-between">
             <p class="main-name">Tenants</p>
@@ -784,17 +788,17 @@
               </option>
             </select> -->
           </div>
-          <ul>
-            <li *ngFor="let place of tenant">
+          <ul class="d-flex justify-content-around"> 
+            <li *ngFor="let place of tenant" style="border-bottom: none;">
               <div class="d-flex align-items-center">
                 <div>
-                  <img
+                  <!-- <img
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       place.OrganizationID
                     }}"
                     alt=""
                     class="orgbranches"
-                  />
+                  /> -->
                 </div>
 
                 <div class="d-flex flex-column">
