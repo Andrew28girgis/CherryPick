@@ -294,6 +294,23 @@
                           Center Status</a
                         >
                       </li>
+                      <!-- <app-add-contact [shoppingCenterId]="selectedShoppingCenterId" #addContactModal></app-add-contact> -->
+
+                      <li (click)="openAddContactModal(addContact,shopping.Id)">
+                        <a class="target">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M12 5V19" stroke="#707791" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M5 12H19" stroke="#707791" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                          Add Contact
+                        </a>
+                      </li>
                       <li *ngIf="shopping.Deleted == true">
                         <a
                           class="target"
@@ -873,4 +890,45 @@
       <div class="mail-body" [innerHTML]="openedEmail.Body"></div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #addContact let-modal>
+    <div class="fancy-modal-header">
+      <h5 class="fancy-title">Add New Contact</h5>
+      <button
+        type="button"
+        class="btn-close fancy-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="fancy-modal-body">
+      <form (ngSubmit)="CreateContact(); modal.close()">
+        <div>
+          <label for="firstname">First Name *</label>
+          <input type="text" class="form-control"  
+                [(ngModel)]="newContact.firstname" name="firstname" required>
+        </div>
+        <div>
+          <label for="lastname">Last Name</label>
+          <input type="text" class="form-control" 
+                [(ngModel)]="newContact.lastname" name="lastname">
+        </div>
+        <div>
+          <label for="email">Email *</label>
+          <input type="email" class="form-control" 
+                [(ngModel)]="newContact.email" name="email" required>
+        </div>
+        <div class="d-flex justify-content-end mt-4">
+          <button type="button" class="fancy-btn secondary-btn mx-2" (click)="modal.close()">Cancel</button>
+          <button type="submit" class="fancy-btn primary-btn">
+            
+              <span class="text-white" >Save Contact</span>
+              <div class="btn-hover-effect"></div>
+           
+          </button>
+        </div>
+      </form>
+    </div>
+
 </ng-template>
