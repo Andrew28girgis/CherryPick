@@ -1042,6 +1042,49 @@ img[alt="logo"] {
   border: none;
 }
 
+.fancy-btn {
+  background: #a31c59; /* fallback for old browsers */
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.fancy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fancy-btn:active {
+  transform: translateY(0);
+}
+.primary-btn {
+  background: #a31c59;
+  /* background: linear-gradient(135deg, #6e8efb, #a777e3); */
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #6d133b;
+ }
+ .secondary-btn {
+  background: white;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.secondary-btn:hover {
+  background: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
 /* Form Styles */
 .form-control {
   border-radius: 8px;
