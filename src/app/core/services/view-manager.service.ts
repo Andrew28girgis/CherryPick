@@ -90,6 +90,7 @@ export class ViewManagerService {
   private currentSearchQuery = '';
   private currentSelectedStageId = 0;
   private currentSortOption = 0;
+  private shoppingCenterInterval: any;
 
   constructor(
     private placesService: PlacesService,
@@ -131,6 +132,15 @@ export class ViewManagerService {
       .then(() => {
         this._dataLoaded = true;
         this._dataLoadedEvent.next();
+
+        // Start polling shopping centers every 30s
+        if (this.shoppingCenterInterval) {
+          clearInterval(this.shoppingCenterInterval); // clear previous if exists
+        }
+        this.shoppingCenterInterval = setInterval(() => {
+          this.loadShoppingCenters(this._lastBuyboxId!); // call every 30 sec
+        }, 30000);
+
         // If we have shopping centers, load kanban stages
         const centers = this._shoppingCenters.getValue();
         if (centers && centers.length > 0) {
