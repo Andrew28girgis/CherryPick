@@ -22,6 +22,7 @@ import   { ViewManagerService } from "src/app/core/services/view-manager.service
 import { Subscription } from "rxjs"
 import { ContactBrokerComponent } from "../contact-broker/contact-broker.component"
 import   { Email } from "src/app/shared/models/email"
+import { AddContactComponent } from "../add-contact/add-contact.component"
 
 declare const google: any
 
@@ -838,6 +839,26 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       }
     });
   }
+  openAddContactModal(shoppingCenterId: number): void {
+  const modalRef = this.modalService.open(AddContactComponent, {
+    size: 'md',
+    backdrop: true,
+    backdropClass: 'fancy-modal-backdrop',
+    keyboard: true,
+    windowClass: 'fancy-modal-window',
+    centered: true,
+  });
+
+  modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
+
+  modalRef.componentInstance.contactCreated.subscribe((response: any) => {
+    // Handle successful contact creation
+    console.log('Contact created successfully:', response);
+    // You can add any additional logic here, such as refreshing the shopping center contacts
+    this.getShoppingCenterContact(shoppingCenterId);
+  });
+}
+
 }
 
 

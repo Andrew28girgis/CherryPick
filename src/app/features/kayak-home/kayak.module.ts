@@ -17,7 +17,6 @@ import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
 import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component';
-import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KanbanModule } from '../kanban/kanban.module';
 import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
 import { ContactBrokerComponent } from './shopping-center-table/contact-broker/contact-broker.component';
@@ -28,11 +27,11 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
 import { FilterRepliesPipe } from './shopping-center-table/social-view/social-view.component';
 import { NewContactBrokerComponent } from './shopping-center-table/contact-broker/components/new-contact-broker/new-contact-broker.component';
 import { NgxFileDropModule } from "ngx-file-drop";
+import { AddContactComponent } from './shopping-center-table/add-contact/add-contact.component';
 
 @NgModule({
   declarations: [
     ShoppingCenterTableComponent,
-    BuyboxRelatiosComponent,
     SocialViewComponent,
     TableViewComponent,
     CardViewComponent,
@@ -46,6 +45,7 @@ import { NgxFileDropModule } from "ngx-file-drop";
     PreviewEmailComponent,
     FilterRepliesPipe,
     NewContactBrokerComponent,
+    AddContactComponent,
   ],
   imports: [
     CommonModule,
@@ -67,8 +67,7 @@ import { NgxFileDropModule } from "ngx-file-drop";
 ],
   exports: [
     ShoppingCenterTableComponent,
-    BuyboxRelatiosComponent,
-    SocialViewComponent,
+     SocialViewComponent,
     TableViewComponent,
     CardViewComponent,
     SideListViewComponent,

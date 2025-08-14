@@ -25,7 +25,7 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription } from 'rxjs';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { Email } from 'src/app/shared/models/email';
-
+import { AddContactComponent } from '../add-contact/add-contact.component';
 @Component({
   selector: 'app-card-view',
   templateUrl: './card-view.component.html',
@@ -700,59 +700,23 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.getShoppingCenterContact(shoppingCenter.Id);
   }
 
-  openAddContact(shoppingCenterId: number): void {
-    this.selectedShoppingCenterId = shoppingCenterId;
-    // this.addContactModal.open();
-  }
-  newContact: any = {
-    firstname: '',
-    lastname: '',
-    email: '',
-    shoppingCenterId: '',
-  };
-  openAddContactModal(content: any, shoppingCenterId: number): void {
-    this.newContact.shoppingCenterId = shoppingCenterId;
-    this.modalService.open(this.addContactModal, {
-      size: 'md',
-      backdrop: true,
-      backdropClass: 'fancy-modal-backdrop',
-      keyboard: true,
-      windowClass: 'fancy-modal-window',
-      centered: true,
-    });
-  }
+  openAddContactModal(shoppingCenterId: number): void {
+  const modalRef = this.modalService.open(AddContactComponent, {
+    size: 'md',
+    backdrop: true,
+    backdropClass: 'fancy-modal-backdrop',
+    keyboard: true,
+    windowClass: 'fancy-modal-window',
+    centered: true,
+  });
 
-  CreateContact(): void {
-    if (
-      this.newContact.firstname &&
-      this.newContact.email &&
-      this.newContact.shoppingCenterId
-    ) {
-      const params = {
-        name: 'CreateContact',
-        mainEntity: null,
-        params: {
-          FirstName: this.newContact.firstname,
-          LastName: this.newContact.lastname,
-          ShoppingCenterId: this.newContact.shoppingCenterId,
-          Email: this.newContact.email,
-        },
-        json: null,
-      };
+  modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
 
-      this.placesService.GenericAPI(params).subscribe(
-        (response: any) => {
-          if (response.error) {
-            console.error('Error from API:', response.error);
-          } else {
-            this.modalService.dismissAll();
-            // this.resetForm();
-          }
-        },
-        (error) => {
-          console.error('Error creating contact:', error);
-        }
-      );
-    }
-  }
+  modalRef.componentInstance.contactCreated.subscribe((response: any) => {
+    // Handle successful contact creation
+    console.log('Contact created successfully:', response);
+    // You can add any additional logic here, such as refreshing the shopping center contacts
+    this.getShoppingCenterContact(shoppingCenterId);
+  });
+}
 }

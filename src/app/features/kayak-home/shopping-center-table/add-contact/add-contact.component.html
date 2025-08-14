@@ -1,0 +1,55 @@
+<div class="fancy-modal-header">
+  <h5 class="fancy-title">Add New Contact</h5>
+  <button
+    type="button"
+    class="btn-close fancy-close"
+    aria-label="Close"
+    (click)="dismiss()"
+  ></button>
+</div>
+<div class="fancy-modal-body">
+  <form (ngSubmit)="CreateContact()">
+    <div>
+      <label for="firstname">First Name *</label>
+      <input 
+        type="text" 
+        class="form-control"  
+        [(ngModel)]="newContact.firstname" 
+        name="firstname" 
+        required
+      >
+    </div>
+    <div>
+      <label for="lastname">Last Name</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        [(ngModel)]="newContact.lastname" 
+        name="lastname"
+      >
+    </div>
+    <div>
+      <label for="email">Email *</label>
+      <input 
+        type="email" 
+        class="form-control" 
+        [(ngModel)]="newContact.email" 
+        name="email" 
+        required
+      >
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+      <button 
+        type="button" 
+        class="fancy-btn secondary-btn mx-2" 
+        (click)="activeModal.close()"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="fancy-btn primary-btn">
+        <span class="text-white">Save Contact</span>
+        <div class="btn-hover-effect"></div>
+      </button>
+    </div>
+  </form>
+</div>

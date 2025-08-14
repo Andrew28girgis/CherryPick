@@ -16,11 +16,24 @@
               BuyBoxId 
             ]"
           > -->
-          <a
-            class="info-value text-dark px-1"
-            href="{{ shopping.DocsLink }}"
-            target="_blank"
-          >
+          <ng-container *ngIf="shopping.DocsLink; else noLink">
+            <a
+              class="info-value text-dark px-1"
+              [href]="shopping.DocsLink"
+              target="_blank"
+            >
+              <div class="main-img">
+                <img
+                  class="card-photo"
+                  [src]="shopping.MainImage"
+                  alt="{{ shopping.CenterName }}"
+                  referrerpolicy="no-referrer"
+                />
+              </div>
+            </a>
+          </ng-container>
+
+          <ng-template #noLink>
             <div class="main-img">
               <img
                 class="card-photo"
@@ -29,7 +42,7 @@
                 referrerpolicy="no-referrer"
               />
             </div>
-          </a>
+          </ng-template>
           <div class="content-wrap card-content">
             <div>
               <div class="fitcontent">

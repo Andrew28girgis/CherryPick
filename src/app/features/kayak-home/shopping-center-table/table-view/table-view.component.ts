@@ -19,7 +19,7 @@ import   { ViewManagerService } from "src/app/core/services/view-manager.service
 import { ContactBrokerComponent } from "../contact-broker/contact-broker.component"
 import   { PlacesService } from "src/app/core/services/places.service"
 import   { DomSanitizer, SafeHtml } from "@angular/platform-browser"
-
+import { AddContactComponent } from "../add-contact/add-contact.component"
 @Component({
   selector: "app-table-view",
   templateUrl: "./table-view.component.html",
@@ -464,4 +464,24 @@ AddPlaceToMarketSurvery(campaignId: number, placeId: number): void {
     }
   });
 }
+openAddContactModal(shoppingCenterId: number): void {
+  const modalRef = this.modalService.open(AddContactComponent, {
+    size: 'md',
+    backdrop: true,
+    backdropClass: 'fancy-modal-backdrop',
+    keyboard: true,
+    windowClass: 'fancy-modal-window',
+    centered: true,
+  });
+
+  modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
+
+  modalRef.componentInstance.contactCreated.subscribe((response: any) => {
+    // Handle successful contact creation
+    console.log('Contact created successfully:', response);
+    // You can add any additional logic here, such as refreshing the shopping center contacts
+    // this.getShoppingCenterContact(shoppingCenterId);
+  });
+}
+
 }

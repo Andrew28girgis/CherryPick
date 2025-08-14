@@ -18,15 +18,14 @@
 }
 
 /* Bot Icon Styling */
-.bot-icon {
-  background-color: #B51F63;
+.bot-icon { 
   border-radius: 50%;
   width: 60px;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(181, 31, 99, 0.3);
+  box-shadow: 0 4px 12px #ff7db8;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
