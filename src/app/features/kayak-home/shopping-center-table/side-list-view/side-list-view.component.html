@@ -16,7 +16,6 @@
           >
             <div class="card-window_c">
               <a
-              [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,place.CampaignId]"
               >
                 <div class="main-img">
                   <img
@@ -27,6 +26,7 @@
                     (load)="onImageLoad(place.Id)"
                     loading="lazy"
                     alt="{{ place.CenterName }}"
+                    [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,place.CampaignId]"
                   />
                   <div
                     class="image-placeholder"
@@ -289,7 +289,7 @@
                       >
                         <thead>
                           <tr>
-                            <th scope="col">Select</th>
+                            <!-- <th scope="col">Select</th> -->
                             <th scope="col" style="min-width: 60px">
                               Size (SF)
                             </th>
@@ -307,7 +307,7 @@
                                 place.BuildingSizeSf || place.ForLeasePrice
                               "
                             >
-                              <td>
+                              <!-- <td>
                                 <input
                                   type="checkbox"
                                   [(ngModel)]="place.Checked"
@@ -319,7 +319,7 @@
                                     )
                                   "
                                 />
-                              </td>
+                              </td> -->
                               <td>{{ place.BuildingSizeSf | number }}</td>
                               <td>
                                 {{

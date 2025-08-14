@@ -377,7 +377,7 @@
                 >
                   <thead>
                     <tr>
-                      <th scope="col">Select</th>
+                      <!-- <th scope="col">Select</th> -->
                       <th scope="col" style="min-width: 60px">Size (SF)</th>
                       <th scope="col">Price</th>
                       <th scope="col">Extras</th>
@@ -391,7 +391,7 @@
                       <ng-container
                         *ngIf="place.BuildingSizeSf || place.ForLeasePrice"
                       >
-                        <td>
+                        <!-- <td>
                           <input
                             type="checkbox"
                             [(ngModel)]="place.Checked"
@@ -403,7 +403,7 @@
                               )
                             "
                           />
-                        </td>
+                        </td> -->
                         <td>{{ place.BuildingSizeSf | number }}</td>
                         <td>
                           {{
