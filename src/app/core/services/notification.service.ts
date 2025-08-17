@@ -64,8 +64,31 @@ export class NotificationService {
         !previousIds.has(notification.id) && notification.isRead === 0
     );
 
-    // Keep new messages as unread, but don't change existing messages
-    // The existing messages that were marked as read when chat opened should stay read
+    if (newNotifications.length > 0) {
+      // Mark these new notifications as read since chat is open
+      newNotifications.forEach((notification) => {
+        this.markNotificationAsRead(notification);
+      });
+    }
+  }
+
+  private markNotificationAsRead(notification: Notification): void {
+    const request = {
+      Name: 'UpdateNotification',
+      Params: {
+        NotificationId: notification.id,
+      },
+    };
+
+    this.placesService.GenericAPI(request).subscribe({
+      next: () => {
+        notification.isRead = 1;
+        this.updateNotificationCounts();
+      },
+      error: (err) => {
+        console.error('Error marking notification as read:', err);
+      },
+    });
   }
 
   setChatOpen(isOpen: boolean): void {
