@@ -1,11 +1,16 @@
-<div class="chat-container position-relative" style="z-index: 1000;">
+<div class="chat-container position-relative" style="z-index: 1000">
   <button
     (click)="toggleDropdown()"
     class="chat-button bot-icon"
     aria-label="Chat with Cherry Bot"
   >
     <!-- Bot Icon -->
-    <img width="55"height="55" src="../../../../assets/Images/bot.png" alt="">
+    <img
+      width="55"
+      height="55"
+      src="../../../../assets/Images/bot.png"
+      alt=""
+    />
   </button>
 
   <!-- Unread Count Badge -->
@@ -27,18 +32,16 @@
             <img width="30"height="30" src="../../../../assets/Images/bot.png" alt="">
 
           </div> -->
-          <h2 class="chat-title"> Emily</h2>
+          <h2 class="chat-title">Emily</h2>
         </div>
         <div class="unread-badge" *ngIf="notificationService.unreadCount > 0">
           {{ notificationService.unreadCount }}
         </div>
       </div>
 
-   
-
       <!-- Chat Messages -->
       <div class="chat-messages-container">
-        <div 
+        <div
           *ngIf="notificationService.notifications.length > 0; else noMessages"
           class="chat-messages"
         >
@@ -46,8 +49,8 @@
             class="message-bubble"
             *ngFor="let notification of notificationService.notifications"
             (click)="handleNotificationClick(notification)"
-             [class.clickable]="notification.userSubmissionId"
-           >
+            [class.clickable]="notification.userSubmissionId"
+          >
             <div class="message-content">
               <p class="message-text">
                 {{ notification.message }}
@@ -55,8 +58,6 @@
               <time class="message-time" [dateTime]="notification.createdDate">
                 {{ notification.createdDate | date : "shortTime" }}
               </time>
-
-            
             </div>
           </div>
         </div>
@@ -64,11 +65,23 @@
         <!-- Empty State -->
         <ng-template #noMessages>
           <div class="no-messages">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#999"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M18 6L6 18M6 6l12 12"></path>
             </svg>
             <p>No messages available.</p>
-            <p class="no-messages-subtext">Check back later for updates from Cherry Bot.</p>
+            <p class="no-messages-subtext">
+              Check back later for updates from Cherry Bot.
+            </p>
           </div>
         </ng-template>
       </div>

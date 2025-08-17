@@ -5,7 +5,7 @@ import {
   HostListener,
   OnDestroy,
   Output,
-  EventEmitter
+  EventEmitter,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 export class NotificationsComponent implements OnInit, OnDestroy {
   private intervalId: any;
   notifications: Notification[] = [];
-  messageText: string = '';
+  messageText = '';
 
   @Output() dropdownOpenChange = new EventEmitter<boolean>();
 
@@ -54,21 +54,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   toggleDropdown(): void {
     // Toggle the dropdown visibility state
-    this.notificationService.dropdownVisible = !this.notificationService.dropdownVisible;
+    const wasVisible = this.notificationService.dropdownVisible;
+    this.notificationService.setChatOpen(!wasVisible); // Use new method instead of direct assignment
     this.isVisible = this.notificationService.dropdownVisible;
-    
+
     // Emit the event
     this.dropdownOpenChange.emit(this.notificationService.dropdownVisible);
-    
+
     console.log('Dropdown visible state:', this.isVisible);
-    
+
     // If opening the dropdown
     if (this.isVisible) {
-      // Automatically mark all messages as read
       if (this.notificationService.unreadCount > 0) {
-        this.markAllAsRead();
+        this.markExistingAsRead();
       }
-      
+
       // Scroll to bottom
       setTimeout(() => {
         this.scrollToBottom();
@@ -78,7 +78,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   scrollToBottom(): void {
     try {
-      const chatContainer = this.elementRef.nativeElement.querySelector('.chat-messages-container');
+      const chatContainer = this.elementRef.nativeElement.querySelector(
+        '.chat-messages-container'
+      );
       if (chatContainer) {
         chatContainer.scrollTop = chatContainer.scrollHeight;
       }
@@ -86,15 +88,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       console.error('Error scrolling to bottom:', err);
     }
   }
-  
+
   handleNotificationClick(notification: Notification): void {
- 
     if (notification.userSubmissionId) {
       const route = `/uploadOM/${notification.userSubmissionId}`;
       this.router.navigate([route]);
     }
   }
-  
+
   markNotificationAsRead(notification: Notification): void {
     if (notification.isRead) {
       return;
@@ -114,19 +115,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error marking notification as read:', err);
-      }
+      },
     });
   }
 
-  markAllAsRead(): void {
-    const unreadNotifications = this.notificationService.notifications.filter(n => !n.isRead);
-    
+  markExistingAsRead(): void {
+    const unreadNotifications = this.notificationService.notifications.filter(
+      (n) => !n.isRead && this.notificationService.shouldMarkAsReadOnOpen(n.id)
+    );
+
     if (unreadNotifications.length === 0) {
       return;
     }
-    
-    // Create array of promises to mark all notifications as read
-    const markPromises = unreadNotifications.map(notification => {
+
+    // Create array of promises to mark existing notifications as read
+    const markPromises = unreadNotifications.map((notification) => {
       return new Promise<void>((resolve) => {
         const request = {
           Name: 'UpdateNotification',
@@ -134,7 +137,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
             NotificationId: notification.id,
           },
         };
-        
+
         this.placesService.GenericAPI(request).subscribe({
           next: () => {
             notification.isRead = 1;
@@ -142,11 +145,48 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           },
           error: () => {
             resolve(); // Still resolve even on error to continue processing
-          }
+          },
         });
       });
     });
-    
+
+    // After all notifications are processed, update counts
+    Promise.all(markPromises).then(() => {
+      this.notificationService.updateNotificationCounts();
+    });
+  }
+
+  markAllAsRead(): void {
+    const unreadNotifications = this.notificationService.notifications.filter(
+      (n) => !n.isRead
+    );
+
+    if (unreadNotifications.length === 0) {
+      return;
+    }
+
+    // Create array of promises to mark all notifications as read
+    const markPromises = unreadNotifications.map((notification) => {
+      return new Promise<void>((resolve) => {
+        const request = {
+          Name: 'UpdateNotification',
+          Params: {
+            NotificationId: notification.id,
+          },
+        };
+
+        this.placesService.GenericAPI(request).subscribe({
+          next: () => {
+            notification.isRead = 1;
+            resolve();
+          },
+          error: () => {
+            resolve(); // Still resolve even on error to continue processing
+          },
+        });
+      });
+    });
+
     // After all notifications are processed, update counts
     Promise.all(markPromises).then(() => {
       this.notificationService.updateNotificationCounts();
@@ -162,23 +202,27 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
-    const chatButton = this.elementRef.nativeElement.querySelector('.chat-button');
-    const chatDropdown = this.elementRef.nativeElement.querySelector('.chat-dropdown');
-    
+    const chatButton =
+      this.elementRef.nativeElement.querySelector('.chat-button');
+    const chatDropdown =
+      this.elementRef.nativeElement.querySelector('.chat-dropdown');
+
     // Check if the click was on the chat button
     if (chatButton && chatButton.contains(target)) {
       // The toggleDropdown method will be called by the click binding
       // so we don't need to do anything here
       return;
     }
-    
+
     // If the dropdown is open and the click is outside both the button and dropdown
-    if (this.isVisible && 
-        target && 
-        chatDropdown && 
-        !chatDropdown.contains(target)) {
+    if (
+      this.isVisible &&
+      target &&
+      chatDropdown &&
+      !chatDropdown.contains(target)
+    ) {
       // Close the dropdown
-      this.notificationService.dropdownVisible = false;
+      this.notificationService.setChatOpen(false); // Use new method instead of direct assignment
       this.isVisible = false;
       this.dropdownOpenChange.emit(false);
     }

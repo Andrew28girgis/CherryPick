@@ -1,81 +1,154 @@
- 
- <div class="main">
- <div class="header-container">
- 
+<div class="main">
+  <div class="header-container">
+    <div class="d-flex flex-row w-100  " style="gap: 12px;">
+    <div class="search-section">
+      <div class="search-container">
+        <div class="icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M9.58366 18.1248C4.87533 18.1248 1.04199 14.2915 1.04199 9.58317C1.04199 4.87484 4.87533 1.0415 9.58366 1.0415C14.292 1.0415 18.1253 4.87484 18.1253 9.58317C18.1253 14.2915 14.292 18.1248 9.58366 18.1248ZM9.58366 2.2915C5.55866 2.2915 2.29199 5.5665 2.29199 9.58317C2.29199 13.5998 5.55866 16.8748 9.58366 16.8748C13.6087 16.8748 16.8753 13.5998 16.8753 9.58317C16.8753 5.5665 13.6087 2.2915 9.58366 2.2915Z"
+              fill="#704E73"
+            />
+            <path
+              d="M18.3335 18.9585C18.1752 18.9585 18.0169 18.9002 17.8919 18.7752L16.2252 17.1085C15.9835 16.8669 15.9835 16.4669 16.2252 16.2252C16.4669 15.9835 16.8669 15.9835 17.1085 16.2252L18.7752 17.8919C19.0169 18.1335 19.0169 18.5335 18.7752 18.7752C18.6502 18.9002 18.4919 18.9585 18.3335 18.9585Z"
+              fill="#704E73"
+            />
+          </svg>
+        </div>
 
-  <div class="search-section">
-    <div class="search-container">
-      <div class="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M9.58366 18.1248C4.87533 18.1248 1.04199 14.2915 1.04199 9.58317C1.04199 4.87484 4.87533 1.0415 9.58366 1.0415C14.292 1.0415 18.1253 4.87484 18.1253 9.58317C18.1253 14.2915 14.292 18.1248 9.58366 18.1248ZM9.58366 2.2915C5.55866 2.2915 2.29199 5.5665 2.29199 9.58317C2.29199 13.5998 5.55866 16.8748 9.58366 16.8748C13.6087 16.8748 16.8753 13.5998 16.8753 9.58317C16.8753 5.5665 13.6087 2.2915 9.58366 2.2915Z" fill="#704E73"/>
-          <path d="M18.3335 18.9585C18.1752 18.9585 18.0169 18.9002 17.8919 18.7752L16.2252 17.1085C15.9835 16.8669 15.9835 16.4669 16.2252 16.2252C16.4669 15.9835 16.8669 15.9835 17.1085 16.2252L18.7752 17.8919C19.0169 18.1335 19.0169 18.5335 18.7752 18.7752C18.6502 18.9002 18.4919 18.9585 18.3335 18.9585Z" fill="#704E73"/>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="filterTenants()"
+        />
+      </div>
+    </div>
+
+    <div class="actions-section">
+      <button class="filter-btn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+        >
+          <path
+            d="M17.5 6.4585H2.5C2.15833 6.4585 1.875 6.17516 1.875 5.8335C1.875 5.49183 2.15833 5.2085 2.5 5.2085H17.5C17.8417 5.2085 18.125 5.49183 18.125 5.8335C18.125 6.17516 17.8417 6.4585 17.5 6.4585Z"
+            fill="#704E73"
+          />
+          <path
+            d="M15 10.625H5C4.65833 10.625 4.375 10.3417 4.375 10C4.375 9.65833 4.65833 9.375 5 9.375H15C15.3417 9.375 15.625 9.65833 15.625 10C15.625 10.3417 15.3417 10.625 15 10.625Z"
+            fill="#704E73"
+          />
+          <path
+            d="M11.6663 14.7915H8.33301C7.99134 14.7915 7.70801 14.5082 7.70801 14.1665C7.70801 13.8248 7.99134 13.5415 8.33301 13.5415H11.6663C12.008 13.5415 12.2913 13.8248 12.2913 14.1665C12.2913 14.5082 12.008 14.7915 11.6663 14.7915Z"
+            fill="#704E73"
+          />
         </svg>
-    </div>  
-    
-       <input type="text" class="search-input" placeholder="Search..." [(ngModel)]="searchQuery" (ngModelChange)="filterTenants()"/>
+        Filter
+      </button>
+
+      <div class="dropdown-container" ngbDropdown>
+        <button class="sort-btn" ngbDropdownToggle>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M8.70868 6.22498C8.55035 6.22498 8.39199 6.16667 8.26699 6.04167L5.60866 3.38333L2.95032 6.04167C2.70866 6.28333 2.30866 6.28333 2.06699 6.04167C1.82533 5.8 1.82533 5.4 2.06699 5.15834L5.16702 2.05831C5.28369 1.94164 5.44199 1.875 5.60866 1.875C5.77533 1.875 5.93368 1.94164 6.05035 2.05831L9.15033 5.15834C9.39199 5.4 9.39199 5.8 9.15033 6.04167C9.02533 6.16667 8.86702 6.22498 8.70868 6.22498Z"
+              fill="#704E73"
+            />
+            <path
+              d="M5.6084 18.125C5.26673 18.125 4.9834 17.8417 4.9834 17.5V2.5C4.9834 2.15833 5.26673 1.875 5.6084 1.875C5.95007 1.875 6.2334 2.15833 6.2334 2.5V17.5C6.2334 17.8417 5.95007 18.125 5.6084 18.125Z"
+              fill="#704E73"
+            />
+            <path
+              d="M14.3997 18.1248C14.233 18.1248 14.0747 18.0581 13.958 17.9415L10.858 14.8414C10.6163 14.5998 10.6163 14.1998 10.858 13.9581C11.0997 13.7164 11.4997 13.7164 11.7413 13.9581L14.3997 16.6164L17.058 13.9581C17.2996 13.7164 17.6997 13.7164 17.9413 13.9581C18.183 14.1998 18.183 14.5998 17.9413 14.8414L14.8413 17.9415C14.7246 18.0581 14.558 18.1248 14.3997 18.1248Z"
+              fill="#704E73"
+            />
+            <path
+              d="M14.3916 18.125C14.0499 18.125 13.7666 17.8417 13.7666 17.5V2.5C13.7666 2.15833 14.0499 1.875 14.3916 1.875C14.7333 1.875 15.0166 2.15833 15.0166 2.5V17.5C15.0166 17.8417 14.7416 18.125 14.3916 18.125Z"
+              fill="#704E73"
+            />
+          </svg>
+          Sort
+        </button>
+        <div ngbDropdownMenu class="dropdown-menu sort-menu">
+          <ng-container *ngFor="let option of sortOptions">
+            <label class="radio-label">
+              <input
+                type="radio"
+                [name]="'sort-by-' + option.value"
+                [value]="option.value"
+                [(ngModel)]="sortBy"
+                (change)="filterTenants()"
+              />
+              <span class="radio-text">{{ option.label }}</span>
+            </label>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+       <button class="add-tenant-btn" (click)="openAddTenantModal(tenantModal)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+        >
+          <path
+            d="M10.0001 18.3333C14.5834 18.3333 18.3334 14.5833 18.3334 9.99996C18.3334 5.41663 14.5834 1.66663 10.0001 1.66663C5.41675 1.66663 1.66675 5.41663 1.66675 9.99996C1.66675 14.5833 5.41675 18.3333 10.0001 18.3333Z"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M6.66675 10H13.3334"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M10 13.3333V6.66663"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>Add Tenant</span>
+      </button>
     </div>
    </div>
-
-  <div class="actions-section">
-    <button class="filter-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M17.5 6.4585H2.5C2.15833 6.4585 1.875 6.17516 1.875 5.8335C1.875 5.49183 2.15833 5.2085 2.5 5.2085H17.5C17.8417 5.2085 18.125 5.49183 18.125 5.8335C18.125 6.17516 17.8417 6.4585 17.5 6.4585Z" fill="#704E73"/>
-        <path d="M15 10.625H5C4.65833 10.625 4.375 10.3417 4.375 10C4.375 9.65833 4.65833 9.375 5 9.375H15C15.3417 9.375 15.625 9.65833 15.625 10C15.625 10.3417 15.3417 10.625 15 10.625Z" fill="#704E73"/>
-        <path d="M11.6663 14.7915H8.33301C7.99134 14.7915 7.70801 14.5082 7.70801 14.1665C7.70801 13.8248 7.99134 13.5415 8.33301 13.5415H11.6663C12.008 13.5415 12.2913 13.8248 12.2913 14.1665C12.2913 14.5082 12.008 14.7915 11.6663 14.7915Z" fill="#704E73"/>
-      </svg>
-      Filter
-    </button>
-    
-    <div class="dropdown-container" ngbDropdown>
-      <button class="sort-btn" ngbDropdownToggle>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M8.70868 6.22498C8.55035 6.22498 8.39199 6.16667 8.26699 6.04167L5.60866 3.38333L2.95032 6.04167C2.70866 6.28333 2.30866 6.28333 2.06699 6.04167C1.82533 5.8 1.82533 5.4 2.06699 5.15834L5.16702 2.05831C5.28369 1.94164 5.44199 1.875 5.60866 1.875C5.77533 1.875 5.93368 1.94164 6.05035 2.05831L9.15033 5.15834C9.39199 5.4 9.39199 5.8 9.15033 6.04167C9.02533 6.16667 8.86702 6.22498 8.70868 6.22498Z" fill="#704E73"/>
-          <path d="M5.6084 18.125C5.26673 18.125 4.9834 17.8417 4.9834 17.5V2.5C4.9834 2.15833 5.26673 1.875 5.6084 1.875C5.95007 1.875 6.2334 2.15833 6.2334 2.5V17.5C6.2334 17.8417 5.95007 18.125 5.6084 18.125Z" fill="#704E73"/>
-          <path d="M14.3997 18.1248C14.233 18.1248 14.0747 18.0581 13.958 17.9415L10.858 14.8414C10.6163 14.5998 10.6163 14.1998 10.858 13.9581C11.0997 13.7164 11.4997 13.7164 11.7413 13.9581L14.3997 16.6164L17.058 13.9581C17.2996 13.7164 17.6997 13.7164 17.9413 13.9581C18.183 14.1998 18.183 14.5998 17.9413 14.8414L14.8413 17.9415C14.7246 18.0581 14.558 18.1248 14.3997 18.1248Z" fill="#704E73"/>
-          <path d="M14.3916 18.125C14.0499 18.125 13.7666 17.8417 13.7666 17.5V2.5C13.7666 2.15833 14.0499 1.875 14.3916 1.875C14.7333 1.875 15.0166 2.15833 15.0166 2.5V17.5C15.0166 17.8417 14.7416 18.125 14.3916 18.125Z" fill="#704E73"/>
-        </svg>
-        Sort
-      </button>
-      <div ngbDropdownMenu class="dropdown-menu sort-menu">
-        <ng-container *ngFor="let option of sortOptions">
-          <label class="radio-label">
-            <input type="radio" [name]="'sort-by-' + option.value" [value]="option.value" [(ngModel)]="sortBy" (change)="filterTenants()"/>
-            <span class="radio-text">{{ option.label }}</span>
-          </label>
+  <div class="main-inner">
+    <div class="d-flex align-items-start justify-content-center">
+      <div class="row g-4 tenant-container">
+        <ng-container *ngFor="let tenant of filteredTenants">
+          <div class="col-12 col-sm-6">
+            <app-tenant-card  [tenant]="tenant"></app-tenant-card>
+          </div>
         </ng-container>
       </div>
     </div>
   </div>
 </div>
-<div class="main-inner">
-<div class="d-flex align-items-start justify-content-center">
-  <div class="row g-4 tenant-container">
-    <ng-container *ngFor="let tenant of filteredTenants">
-      <div class="col-12 col-sm-6">
-        <app-tenant-card [tenant]="tenant"></app-tenant-card>
-      </div>
-    </ng-container>
-  </div>
-</div>
-</div>
-</div>
-<button   (click)="openAddTenantModal(tenantModal)">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <path
-      d="M6 12H18M12 18V6"
-      stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-</button>
 
 <ng-template #tenantModal let-modal>
   <div class="modal-header">

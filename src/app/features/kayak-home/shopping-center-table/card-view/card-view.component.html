@@ -37,7 +37,7 @@
     <div class="card-window cursor">
       <div class="cardResponsive">
         <a>
-          <div class="main-img">
+          <div class="main-img" (click)="handleImageClick($event)">
             <img
               [src]="getImageUrl(shopping)"
               [title]="shopping.CenterName"
@@ -47,7 +47,7 @@
               loading="lazy"
               alt="{{ shopping.CenterName }}"
               referrerpolicy="no-referrer"
-              [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
+              [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
             />
             <div
               class="image-placeholder"
@@ -104,7 +104,7 @@
                 >
                   <button
                     class="ellipsis_icont"
-                    (click)="toggleShortcutsCard(shopping.Id)"
+                    (click)="activeDropdownId ? handleEllipsisClick($event) : toggleShortcutsCard(shopping.Id, $event)"
                   >
                     <i class="fa-solid fa-ellipsis"></i>
                   </button>
