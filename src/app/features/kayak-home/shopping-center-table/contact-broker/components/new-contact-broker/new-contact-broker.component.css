@@ -189,10 +189,10 @@
   background: white;
   position: relative;
   left: 15px;
-  top: 12px;
+  /* top: 1px; */
   padding-inline: 6px;
   color: #707791;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.005em;
@@ -200,6 +200,11 @@
   background: rgba(255, 255, 255, 0.4);
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  border-top: 1px solid #dee2e6;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
 }
 
 .checkbox-section-select select {
