@@ -144,20 +144,47 @@
   background: #22147e;
 }
 
-.add-tenant-btn{
-  background-color: #a31c59;
-}
-.add-tenant-btn:hover {
-  background-color: #6d133b;
+.add-tenant-btn {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Colors-Primary-500, #b51f63);
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 187.5% */
+  white-space: nowrap;
 }
 
-.add-tenant-btn-text{
-  background-color: #a31c59;
-  color: white;
-  border: none;
+.add-tenant-btn:hover,
+.add-tenant-btn:focus {
+  background: #a31c59; /* Slightly darker for hover */
+  outline: none;
 }
-.add-tenant-btn-text:hover {
-  background-color: #6d133b;
+
+.add-tenant-btn:active {
+  background: #a31c59; /* Even darker for active */
+}
+
+.add-tenant-btn span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+background: none;
+  /* Body/16/30/Medium */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 187.5% */
 }
 .cancel-tenant-btn{
   background-color: #f8f9fa;

@@ -1,4 +1,4 @@
-import {
+ import {
   Component,
   HostListener,
   OnInit,
@@ -104,6 +104,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   @ViewChild('uploadTypes') uploadTypes!: any;
   showFileDropArea = false;
   isUploading = false;
+  selectedCampaignId: number | null = null;
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
@@ -148,7 +149,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       this.tenantName = params.orgName || '';
       this.encodedName = encodeURIComponent(this.organizationName);
       this.CampaignId = params.campaignId;
-
+      this.selectedCampaignId = params.campaignId ? Number(params.campaignId) : null;
       // localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
 
@@ -207,7 +208,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       })
     );
   }
- 
+
   // Add method to sync filter state
   private syncFilterState(): void {
     // Get the current stage ID from the service
@@ -218,7 +219,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (this.selectedStageId !== serviceStageId) {
       this.selectedStageId = serviceStageId;
       this.updateStageName(serviceStageId);
-    } 
+    }
   }
 
   private updateStageName(id: number): void {
@@ -229,8 +230,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       this.selectedStageName = stage ? stage.stageName : 'Stage';
     }
   }
-
- 
 
   selectStagekan(stageId: number): void {
     // Prevent interference from ongoing updates
@@ -408,11 +407,23 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
   }
 
-  selectTenant(tenant: any): void {
+  selectTenant(tenant: any, campaign?: any): void {
     this.selectedTenant = tenant;
-    // Find the first campaign if available
-    const campaignId =
-      tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : 0;
+    // Set the selected campaign ID
+    if (campaign) {
+      this.selectedCampaignId = campaign.Id;
+    } else {
+      // If no specific campaign, use the first one
+      this.selectedCampaignId =
+        tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : null;
+    }
+    // Use the specific campaign if provided, otherwise find the first campaign
+    const campaignId = campaign
+      ? campaign.Id
+      : tenant.Campaigns?.length > 0
+      ? tenant.Campaigns[0].Id
+      : 0;
+
     // Navigate to the new tenant's dashboard
     this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
 

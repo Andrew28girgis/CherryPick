@@ -234,6 +234,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Close any open ellipsis menu first
+    if (this.selectedIdCard !== null) {
+      this.viewManagerService.setSelectedIdCard(null);
+      document.removeEventListener('click', this.outsideClickHandler);
+    }
+
     this.cardsSideList.forEach((p) => {
       if (p.Id !== place.Id) {
         p.isDropdownOpen = false;
@@ -281,15 +287,22 @@ export class CardViewComponent implements OnInit, OnDestroy {
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
-
+    
     if (this.isUpdatingStage) {
       return;
     }
 
+    // If there's an active dropdown
     if (this.activeDropdownId && target) {
       const clickedDropdown = target.closest('.custom-dropdown');
-
+      
+      // If the click is not inside a dropdown
       if (!clickedDropdown) {
+        // Stop event propagation for all outside clicks while a dropdown is open
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Close all dropdowns
         this.cardsSideList.forEach((place) => {
           place.isDropdownOpen = false;
         });
@@ -297,6 +310,79 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     }
+  }
+
+  
+  /**
+   * Handles clicks on the image area
+   * Closes both dropdown and ellipsis menu if they're open
+   */
+  handleImageClick(event: MouseEvent): void {
+    // Prevent default navigation
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Close all dropdowns
+    if (this.activeDropdownId) {
+      this.cardsSideList.forEach((place) => {
+        place.isDropdownOpen = false;
+      });
+      this.activeDropdownId = null;
+    }
+
+    // Close ellipsis menu if open
+    if (this.selectedIdCard !== null) {
+      this.viewManagerService.setSelectedIdCard(null);
+      document.removeEventListener('click', this.outsideClickHandler);
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Handles clicks on the ellipsis icon when a dropdown is open
+   * This ensures the dropdown closes when clicking on the ellipsis
+   */
+  handleEllipsisClick(event: MouseEvent): void {
+    // Prevent default actions
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Close all dropdowns
+    this.cardsSideList.forEach((place) => {
+      place.isDropdownOpen = false;
+    });
+    this.activeDropdownId = null;
+    
+    // After closing the dropdown, open the ellipsis menu
+    const target = event.currentTarget as HTMLElement;
+    const placeId = this.findPlaceIdFromElement(target);
+    if (placeId) {
+      setTimeout(() => {
+        this.toggleShortcutsCard(placeId, event);
+      }, 10);
+    }
+    
+    this.cdr.detectChanges();
+  }
+  
+  /**
+   * Helper method to find the place ID from a clicked element
+   */
+  private findPlaceIdFromElement(element: HTMLElement): number | null {
+    // Navigate up the DOM to find the closest card element
+    const cardWindow = element.closest('.card-window');
+    if (!cardWindow) return null;
+    
+    // Find the index of this card in the cardsSideList
+    const cards = Array.from(document.querySelectorAll('.card-window'));
+    const index = cards.indexOf(cardWindow);
+    
+    if (index >= 0 && index < this.cardsSideList.length) {
+      return this.cardsSideList[index].Id;
+    }
+    
+    return null;
   }
 
   async viewOnMap(lat: number, lng: number) {
@@ -701,22 +787,22 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   openAddContactModal(shoppingCenterId: number): void {
-  const modalRef = this.modalService.open(AddContactComponent, {
-    size: 'md',
-    backdrop: true,
-    backdropClass: 'fancy-modal-backdrop',
-    keyboard: true,
-    windowClass: 'fancy-modal-window',
-    centered: true,
-  });
+    const modalRef = this.modalService.open(AddContactComponent, {
+      size: 'md',
+      backdrop: true,
+      backdropClass: 'fancy-modal-backdrop',
+      keyboard: true,
+      windowClass: 'fancy-modal-window',
+      centered: true,
+    });
 
-  modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
+    modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
 
-  modalRef.componentInstance.contactCreated.subscribe((response: any) => {
-    // Handle successful contact creation
-    console.log('Contact created successfully:', response);
-    // You can add any additional logic here, such as refreshing the shopping center contacts
-    this.getShoppingCenterContact(shoppingCenterId);
-  });
-}
+    modalRef.componentInstance.contactCreated.subscribe((response: any) => {
+      // Handle successful contact creation
+      console.log('Contact created successfully:', response);
+      // You can add any additional logic here, such as refreshing the shopping center contacts
+      this.getShoppingCenterContact(shoppingCenterId);
+    });
+  }
 }

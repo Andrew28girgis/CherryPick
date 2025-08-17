@@ -250,10 +250,10 @@
 }
 /* Modal Styling */
 .fancy-modal-header {
-  background: #b51f63;  /* fallback for old browsers */
+  background: #b51f63; /* fallback for old browsers */
   /* background: linear-gradient(to right, #493240, #FF0099);  */
-  
-   color: white;
+
+  color: white;
   border-bottom: none;
   padding: 20px 24px;
 }
@@ -604,7 +604,6 @@
   gap: 12px;
 }
 
- 
 .action-btn,
 .custom-select {
   display: flex;
@@ -636,7 +635,6 @@
   flex-shrink: 0;
   color: inherit;
 }
-
 
 .dropdown-menu {
   min-width: 180px;
@@ -768,7 +766,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border-radius:   24px;
+  border-radius: 24px;
   background: var(--Colors-Primary-500, #b51f63);
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
@@ -782,12 +780,12 @@
 .send-email-button:hover,
 .send-email-button:focus {
   background: #a31c59; /* Slightly darker for hover */
-   outline: none;
+  outline: none;
 }
 
 .send-email-button:active {
   background: #a31c59; /* Even darker for active */
- }
+}
 
 .send-email-button span {
   color: var(--Button-Primary-Label, #fff);
@@ -924,7 +922,7 @@
 .tenant-title {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #c1c1c1;
   line-height: 1.4;
 }
 
@@ -956,21 +954,13 @@
   background: #a8a8a8;
 }
 
-.tenant-dropdown-container :hover {
-  border-radius: var(--Radius-Radius-6, 6px);
-   transition: 0.3s ease-in-out;
-}
-.tenant-dropdown-container.active {
-  border-radius: var(--Radius-Radius-6, 6px);
-   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
-}
-
+ 
 .tenant-dropdown :focus {
   outline: none;
   box-shadow: none;
 }
 
-.tenant-dropdown-container .tenant-dropdown-menu .tenant-item:hover {
+.tenant-dropdown-container .tenant-dropdown-menu .tenant-item:hover:not(.active) {
   background-color: #f0f0f5 !important;
   cursor: pointer;
 }
@@ -989,21 +979,21 @@
 
 .main-inner {
   /* keep your existing styles… */
-  height: 600px;              
-  overflow-y: auto;         
+  height: 600px;
+  overflow-y: auto;
   padding: 32px;
   align-items: center;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(50px);
 
-   width: 100%;
+  width: 100%;
   max-width: 100%;
-  min-width: 0;               /* prevents content from forcing overflow */
-  box-sizing: border-box;     /* padding included in the width */
+  min-width: 0; /* prevents content from forcing overflow */
+  box-sizing: border-box; /* padding included in the width */
 }
 
-.view-icon{
+.view-icon {
   width: 20px;
   height: 20px;
 }
@@ -1024,4 +1014,10 @@
 .filter-btn:hover,
 .sort-btn:hover {
   background: rgba(255, 255, 255, 0.6);
+}
+
+.tenant-subtitle {
+  font-weight: bold;
+  color: #333;
+  font-size: 18px;
 }

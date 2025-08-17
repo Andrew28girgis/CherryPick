@@ -132,21 +132,7 @@
   margin-inline: 1rem;
 }
 
-/* Add New Campaign Button */
-.add-new-campaign {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background-color: #4d65b4;
-  border: none;
-  border-radius: 1rem;
-  padding: 0.75rem 1.5rem;
-}
-
-.add-new-campaign span {
-  color: #fff;
-}
+ 
 
 /* Tenant Logo */
 .tenant-logo-card {
@@ -469,7 +455,7 @@
   cursor: pointer;
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: 14px 24px; 
   justify-content: center;
   align-items: center;
   gap: 8px;
