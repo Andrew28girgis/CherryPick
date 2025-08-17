@@ -115,7 +115,7 @@ background: rgba(255, 255, 255, 0.50);
   align-self: stretch;
   border-radius: 20px;
   border: 1px solid #e2e4e9;
-  background: #fff;
+  background:  #ffeded;
 }
 .campaign-card hr {
   margin-block: 0;
@@ -157,6 +157,14 @@ background: rgba(255, 255, 255, 0.50);
 }
 ::ng-deep .offcanvas-panel-class {
   width: 35% !important;
+ 
+  background: linear-gradient(
+    117deg,
+    rgba(255, 214, 230, 0.9) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  backdrop-filter: blur(100px);
+
 }
 
 .add-campaign-btn {
