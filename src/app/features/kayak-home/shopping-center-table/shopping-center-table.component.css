@@ -513,7 +513,7 @@
 .inbox {
   padding: 5px 8px;
   border-radius: 1rem;
-  background-color: #4d65b4;
+  background-color: #b51f63;
   text-decoration: none;
   color: #fff;
   font-size: 15px;
@@ -594,7 +594,7 @@
   line-height: 30px;
 }
 .search-container:focus-within {
-  border-color: #4d65b4;
+  border-color: #b51f63;
   box-shadow: 0 0 0 2px rgba(77, 101, 180, 0.1);
 }
 
@@ -656,13 +656,13 @@
 }
 
 .dropdown-item:hover {
-  background-color: #d3d3d3 !important;
-  color: #4d65b4 !important;
+  background-color: #f0d2e0 !important;
+  color: #b51f63 !important;
 }
 
 .dropdown-item.active {
-  background-color: rgba(77, 101, 180, 0.1);
-  color: #4d65b4;
+  background-color: #b51f63;
+  color: #fff;
 }
 
 .dropdown-item i {
@@ -703,7 +703,7 @@
 
 .sort-option.active {
   background-color: #eef2ff;
-  color: #4d65b4;
+  color: #b51f63;
 }
 
 .sort-option i {

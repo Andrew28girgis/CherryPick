@@ -555,14 +555,14 @@ img[alt="logo"] {
 .dropdown-item:focus {
   color: #16181b;
   text-decoration: none;
-  background-color: #f3f3e0;
+  background-color: #f0d2e0;
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
   color: #fff !important;
   text-decoration: none;
-  background-color: #4d65b4;
+  background-color: #f0d2e0;
 }
 
 /* Responsive adjustments */
