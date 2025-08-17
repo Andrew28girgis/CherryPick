@@ -22,6 +22,7 @@
 
 .contact-container,
 .send-as {
+  margin-top: 0.5rem;
   padding: 0.5rem;
   border: 1px solid #c6c9d3;
   border-radius: 1.5rem;
@@ -57,8 +58,8 @@
 }
 
 .send-as-switch {
-  border: 1px solid #4d65b4;
-  color: #4d65b4;
+  border: 1px solid #b51f63;
+  color: #b51f63;
   border-radius: 1rem;
   overflow: hidden;
   display: flex;
@@ -71,7 +72,7 @@
 }
 
 .send-as-active {
-  background-color: #4d65b4;
+  background-color: #b51f63;
   color: #fff;
 }
 
@@ -87,8 +88,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #4d65b4;
-  background-color: #4d65b4;
+  border: 1px solid #b51f63;
+  background-color: #b51f63;
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
 }
@@ -103,7 +104,7 @@
 }
 
 .load-another-contact {
-  color: #4d65b4;
+  color: #b51f63;
   font-weight: 600;
   text-decoration: underline;
   cursor: pointer;
@@ -195,6 +196,10 @@
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.005em;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
 }
 
 .checkbox-section-select select {
@@ -238,16 +243,16 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #4d65b4;
-  background-color: #4d65b4;
+  border: 1px solid #b51f63;
+  background-color: #b51f63;
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
 }
 
 .generate-btn button:disabled,
 .advanced-controls button:disabled {
-  border: 1px solid #94a3d2;
-  background-color: #94a3d2;
+  border: 1px solid #d294a9;
+  background-color: #d294a9;
 }
 
 .generate-btn button *,
@@ -335,7 +340,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #4d65b4;
+  border: 1px solid #b51f63;
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
 }
@@ -346,7 +351,7 @@
 }
 
 .send-btn {
-  background-color: #4d65b4;
+  background-color: #b51f63;
   color: #fff;
 }
 
@@ -358,7 +363,7 @@
 .loader {
   display: block;
   --height-of-loader: 4px;
-  --loader-color: #4d65b4;
+  --loader-color: #b51f63;
   width: 10rem;
   height: var(--height-of-loader);
   border-radius: 30px;
@@ -410,4 +415,21 @@
   .generate-email-column {
     width: 100%;
   }
+}
+.form-check-input:checked {
+  border: 1px solid #b51f63;
+  background-color: #b51f63;
+}
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(181, 31, 99, 0.25) !important;
+}
+.form-control {
+  background: rgba(255, 255, 255, 0.4) !important;
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+}
+.form-select {
+  background: rgba(255, 255, 255, 0.4) !important;
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
 }
