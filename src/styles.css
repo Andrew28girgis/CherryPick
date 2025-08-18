@@ -9,7 +9,7 @@
     rgba(255, 255, 255, 0.9) 100%
   );;      /* #240614 */
 
-  --Main-Container-BG: rgba(255, 255, 255, 0.4); /* #FFFFFF */
+  --Main-Container-BG: rgba(255, 255, 255, 0.4);  
   /* Colors Primary */
   --Colors-Primary-900: rgba(36, 6, 20, 1.00);      /* #240614 */
   --Colors-Primary-800: rgba(72, 12, 40, 1.00);     /* #480C28 */
@@ -95,7 +95,7 @@
   
   /* Pure Colors */
   --Colors-Pure-White: rgba(255, 255, 255, 1.00);   /* #FFFFFF */
-  --Colors-Card-Background: rgba(255, 255, 255, 0.50);   /* #FFFFFF */
+  --Colors-Card-Background: rgba(255, 255, 255, 0.50); 
    --Colors-Pure-Black: rgba(0, 0, 0, 1.00);         /* #000000 */
   
   /* Spacing */
