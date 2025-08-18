@@ -1,8 +1,8 @@
 .organization-grid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 24px;
-  margin: 24px 0;
+  gap:  var(--Space-S-24) ;
+  margin:  var(--Space-S-24)  0;
 }
 .contact-card.empty {
   justify-content: center;
@@ -13,7 +13,7 @@
   align-items: center;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
 }
 .logo {
   width: 24px;
@@ -22,10 +22,10 @@
 .organization-card {
   background-color: white;
   display: flex;
-  padding: 24px;
+  padding:  var(--Space-S-24) ;
   flex-direction: column;
   align-items: flex-start;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   border: 2px solid #e4e3eb;
 }
 .organization-title {
@@ -62,7 +62,7 @@
 .contact-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap:var(--Space-S-4);
 }
 
 .contact-item .label {
@@ -92,7 +92,7 @@
 
 /* Search and header styles */
 .header {
-  margin: 0 0 24px 0;
+  margin: 0 0  var(--Space-S-24)  0;
   display: flex;
   justify-content: space-between;
 }
@@ -100,7 +100,7 @@
 .search-section {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--Space-S-16) ;
 }
 
 .search-input-container {
@@ -121,10 +121,10 @@
 .search-input {
   width: 432px;
   height: 48px;
-  padding: 13px 16px 13px 48px;
-  background: #ffffff;
+  padding: 13px var(--Space-S-16)  13px  var(--Space-S-48) ;
+  background: var(--Colors-Pure-White);
   border: 1px solid #e5e7eb;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   font-size: 14px;
 }
 
@@ -142,26 +142,26 @@
   font-size: 16px;
   transition: background-color 0.2s;
   height: 48px;
-  padding: 14px 24px;
+  padding: 14px  var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 16px;
+  gap: var(--Space-S-8)  ;
+  border-radius:  var(--Radius-R-16) ;
   background: #3922d2;
 }
 .action-buttons {
   display: flex;
-  gap: 12px;
-  margin-top: 16px;
+  gap: var(--Space-S-12) ;
+  margin-top: var(--Space-S-16) ;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: var(--Space-S-8)  ;
+  padding: var(--Space-S-8)   var(--Space-S-16) ;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   color: #374151;
   font-size: 14px;
   cursor: pointer;
@@ -169,7 +169,7 @@
 }
 
 .action-btn.show {
-  background: #ffffff;
+  background: var(--Colors-Pure-White);
 }
 
 .dropdown-container {
@@ -178,11 +178,11 @@
 }
 
 .dropdown-menu {
-  padding: 24px;
+  padding:  var(--Space-S-24) ;
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius:  var(--Radius-R-16) ;
+  box-shadow: 0 var(--Space-S-4) 6px -1px rgba(0, 0, 0, 0.1);
   min-width: 280px;
 }
 
@@ -190,8 +190,8 @@
   color: #18171f;
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 16px;
-  margin-top: 24px;
+  margin-bottom: var(--Space-S-16) ;
+  margin-top:  var(--Space-S-24) ;
 }
 
 .dropdown-menu h3:first-child {
@@ -201,16 +201,16 @@
 .radio-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
 }
 
 .radio-label {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
   cursor: pointer;
   margin: 0;
-  padding: 8px 0;
+  padding: var(--Space-S-8)   0;
 }
 
 .radio-label input[type="radio"] {
@@ -245,7 +245,7 @@
   font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
 }
 
 .radio-text svg {
@@ -255,14 +255,14 @@
 /* .range-inputs {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
 }
 
 .range-inputs input {
   width: 100%;
-  padding: 12px 16px;
+  padding: var(--Space-S-12)  var(--Space-S-16) ;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   font-size: 14px;
   color: #18171f;
   background: white;
@@ -284,7 +284,7 @@
 }
 
 .sort-menu .radio-label {
-  padding: 12px 16px;
+  padding: var(--Space-S-12)  var(--Space-S-16) ;
   margin: 0 -16px;
 }
 
@@ -304,12 +304,12 @@
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  padding: 20px;
+  padding: var(--Space-S-20) ;
 }
 
 .modal-content {
   background: white;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   width: 100%;
   max-width: 500px;
   max-height: 90vh;
@@ -320,8 +320,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 24px 0 24px;
-  margin-bottom: 20px;
+  padding:  var(--Space-S-24)   var(--Space-S-24)  0  var(--Space-S-24) ;
+  margin-bottom: var(--Space-S-20) ;
 }
 
 .modal-header h2 {
@@ -336,8 +336,8 @@
   border: none;
   cursor: pointer;
   color: #64748b;
-  padding: 4px;
-  border-radius: 4px;
+  padding:var(--Space-S-4);
+  border-radius:var(--Space-S-4);
   transition: background-color 0.2s ease;
 }
 
@@ -346,16 +346,16 @@
 }
 
 .contact-form {
-  padding: 0 24px 24px 24px;
+  padding: 0  var(--Space-S-24)   var(--Space-S-24)   var(--Space-S-24) ;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--Space-S-20) ;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: var(--Space-S-8)  ;
   font-weight: 500;
   color: #374151;
 }
@@ -365,7 +365,7 @@
   width: 100%;
   padding: 10px;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   font-size: 14px;
 }
 
@@ -378,15 +378,15 @@
 
 .form-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
   justify-content: flex-end;
-  margin-top: 24px;
+  margin-top:  var(--Space-S-24) ;
 }
 
 .cancel-btn,
 .save-btn {
-  padding: 12px 20px;
-  border-radius: 8px;
+  padding: var(--Space-S-12)  var(--Space-S-20) ;
+  border-radius:  var(--Radius-R-8) ;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -421,7 +421,7 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .contact-container {
-    padding: 20px;
+    padding: var(--Space-S-20) ;
   }
 
   .contact-details {
@@ -434,13 +434,13 @@
     width: 100%;
   }
   .contact-container {
-    padding: 16px;
+    padding: var(--Space-S-16) ;
   }
 
   .header {
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
+    gap: var(--Space-S-16) ;
   }
 
   .search-section {
@@ -479,17 +479,17 @@
   }
 
   .search-section {
-    gap: 12px;
+    gap: var(--Space-S-12) ;
   }
 
   .add-new-btn {
     justify-content: center;
-    padding: 14px 20px;
+    padding: 14px var(--Space-S-20) ;
   }
 
   .contact-card {
     padding: 18px;
-    gap: 14px;
+    gap: var(--Space-S-14) ;
   }
 
   .contact-name {
@@ -507,12 +507,12 @@
 
 @media (max-width: 480px) {
   .contact-container {
-    padding: 12px;
+    padding: var(--Space-S-12) ;
   }
 
   .contact-card {
-    padding: 16px;
-    gap: 12px;
+    padding: var(--Space-S-16) ;
+    gap: var(--Space-S-12) ;
   }
 
   .contact-avatar img {
@@ -523,9 +523,9 @@
 
 .form-group select {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--Space-S-8)   var(--Space-S-12) ;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   font-size: 14px;
   background-color: white;
   cursor: pointer;
@@ -538,14 +538,14 @@
 }
 
 .form-group select option {
-  padding: 8px;
+  padding: var(--Space-S-8)  ;
   font-size: 14px;
 }
 
 .page-size-selector {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
 }
 
 .page-size-selector label {
@@ -554,9 +554,9 @@
 }
 
 .page-size-selector select {
-  padding: 4px 8px;
+  padding:var(--Space-S-4) var(--Space-S-8)  ;
   border: 1px solid #e5e7eb;
-  border-radius: 4px;
+  border-radius:var(--Space-S-4);
   background: white;
   color: #18171f;
   font-size: 14px;
@@ -573,30 +573,30 @@
 .pagination {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--Space-S-16) ;
   align-items: center;
-  margin-top: 24px;
-  padding: 16px;
+  margin-top:  var(--Space-S-24) ;
+  padding: var(--Space-S-16) ;
 }
 
 .pagination-controls {
   display: flex;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
   align-items: center;
 }
 
 .pagination-info-container {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap:  var(--Space-S-24) ;
 }
 .pagination-btn {
-  padding: 8px 12px;
+  padding: var(--Space-S-8)   var(--Space-S-12) ;
   border: 1px solid #e5e7eb;
   background: white;
   color: #18171f;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius:var(--Space-S-4);
   font-size: 14px;
   min-width: 40px;
   display: flex;
@@ -622,7 +622,7 @@
 
 .pagination-ellipsis {
   color: #777199;
-  padding: 0 4px;
+  padding: 0 var(--Space-S-4);
 }
 
 .pagination-info {
@@ -633,12 +633,12 @@
 @media (max-width: 768px) {
   .pagination {
     flex-direction: column;
-    gap: 16px;
+    gap: var(--Space-S-16) ;
   }
 
   .pagination-info-container {
     flex-direction: column;
-    gap: 12px;
+    gap: var(--Space-S-12) ;
     align-items: center;
   }
 
@@ -650,23 +650,23 @@
 
 /* Skeleton Loading Animation */
 .skeleton-org-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 24px;
+  background: var(--Colors-Pure-White);
+  border-radius:  var(--Radius-R-16) ;
+  padding:  var(--Space-S-24) ;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 24px;
+  margin-bottom:  var(--Space-S-24) ;
 }
 
 .skeleton-org-header {
   display: flex;
-  gap: 16px;
+  gap: var(--Space-S-16) ;
   align-items: center;
 }
 
 .skeleton-org-logo {
   width: 60px;
   height: 60px;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
@@ -683,9 +683,9 @@
 
 .skeleton-contact-card {
   background: #f8f8f8;
-  border-radius: 12px;
-  padding: 16px;
-  margin-top: 16px;
+  border-radius:  var(--Radius-R-12) ;
+  padding: var(--Space-S-16) ;
+  margin-top: var(--Space-S-16) ;
 }
 
 .skeleton-org-logo,

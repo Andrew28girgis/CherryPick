@@ -29,7 +29,7 @@
   color: #4e4e4e;
   align-items: center;
   display: flex;
-  gap: 4px;
+  gap:var(--Space-S-4);
 }
 
 .checkbox-section {

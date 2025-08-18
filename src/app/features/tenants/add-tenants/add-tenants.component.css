@@ -1,10 +1,10 @@
 .container {
   overflow-y: auto;
   display: flex;
-  padding: var(--Card-Section-Padding-All-Sides, 32px);
+  padding:  var(--Space-S-32) ;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--Space-Space-24, 24px);
+  gap: var(--Space-S-24);
 }
 
 .Head-Model {
@@ -37,12 +37,12 @@
 .form-select {
   box-shadow: none;
   outline: none;
-  border-radius: var(--Inputs-Border-Radius-20, 20px);
+  border-radius:   var(--Radius-R-20) ;
   border: var(--Inputs-Border-Stroke, 1px) solid
     var(--Inputs-Border-Color, #c9c6d6);
-  background: var(--Inputs-Color-BG, #fff);
+  background: var(--Colors-Pure-White );
   display: flex;
-  padding: 13px 16px;
+  padding: 13px var(--Space-S-16) ;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
@@ -55,7 +55,7 @@
 }
 
 .input-group {
-  border-radius: var(--Inputs-Border-Radius-20, 20px);
+  border-radius:   var(--Radius-R-20) ;
   overflow: hidden;
 }
 
@@ -66,19 +66,19 @@
 }
 
 .input-group-text {
-  border-radius: var(--Inputs-Border-Radius-20, 20px) 0 0
-    var(--Inputs-Border-Radius-20, 20px);
+  border-radius:   var(--Radius-R-20)  0 0
+  var(--Radius-R-20) ;
   border: var(--Inputs-Border-Stroke, 1px) solid
     var(--Inputs-Border-Color, #c9c6d6);
-  background: var(--Inputs-Color-BG, #fff);
-  padding: 13px 16px;
+  background: var(--Colors-Pure-White );
+  padding: 13px var(--Space-S-16) ;
   display: flex;
   align-items: center;
 }
 
 .input-group-text:last-child {
-  border-radius: 0 var(--Inputs-Border-Radius-20, 20px)
-    var(--Inputs-Border-Radius-20, 20px) 0;
+  border-radius: 0   var(--Radius-R-20) 
+  var(--Radius-R-20)  0;
 }
 
 textarea.form-control {
@@ -135,7 +135,7 @@ textarea.form-control {
   display: flex;
   width: 24px;
   height: 24px;
-  padding: 4px;
+  padding: var(--Space-S-4) ;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -149,27 +149,27 @@ textarea.form-control {
   min-width: 120px;
   border-radius: 10px;
   background: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
   border: 0;
-  padding: 4px 16px;
+  padding: var(--Space-S-4)  var(--Space-S-16) ;
   white-space: nowrap;
 }
 
 .p-button-left ::ng-deep .p-button {
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius: var(--Radius-R-16 );
   border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #3922d2);
-  background: var(--Button-Secondary-BG, #fff);
+  background: var(--Colors-Pure-White );
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   flex: 1 0 0;
   width: 406px;
   color: #3922d2;
@@ -178,18 +178,18 @@ textarea.form-control {
 .p-button-right ::ng-deep .p-button {
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   flex: 1 0 0;
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius: var(--Radius-R-16 );
   background: var(--Button-Primary-BG, #3922d2);
   width: 406px;
 }
 
 ::ng-deep .p-selectbutton .p-button {
-  padding: 4px 12px;
+  padding: var(--Space-S-4)  var(--Space-S-12) ;
   box-shadow: none;
   outline: none;
   color: #707791 !important;
@@ -210,7 +210,7 @@ textarea.form-control {
 
 /* Stepper Styles */
 ::ng-deep .p-stepper {
-  margin: 20px 0;
+  margin: var(--Space-S-20)  0;
 }
 
 ::ng-deep .p-stepper .p-stepper-nav {
@@ -245,8 +245,8 @@ textarea.form-control {
   height: 8px;
   background-color: #dbe0f0;
   flex: 1;
-  margin: 0 4px;
-  border-radius: 4px;
+  margin: 0 var(--Space-S-4) ;
+  border-radius:  var(--Radius-R-4) ;
   position: relative;
   z-index: 1;
   transition: background-color 0.3s ease;
@@ -261,13 +261,13 @@ textarea.form-control {
   background: #f2f3f4;
   padding: 0;
   border-radius: 10px;
-  margin-top: 20px;
+  margin-top: var(--Space-S-20) ;
 }
 
 .back-link {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   color: #707791;
   text-decoration: none;
   font-size: 14px;
@@ -289,7 +289,7 @@ textarea.form-control {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   flex: 1;
   position: relative;
   z-index: 1;
@@ -300,6 +300,6 @@ textarea.form-control {
   
 .form-content {
   background: #f8f9fb;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius:  var(--Radius-R-12) ;
+  padding:  var(--Space-S-24) ;
 }

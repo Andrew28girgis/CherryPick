@@ -1,5 +1,5 @@
 .main-container-all {
-  gap: 24px;
+  gap:  var(--Space-S-24) ;
     overflow: hidden; /* Prevent overall scrolling */
   display: grid;
   grid-template-columns: 2.5fr 1fr;
@@ -7,7 +7,7 @@
 }
 .container {
   padding: 0;
-  gap: 24px;
+  gap:  var(--Space-S-24) ;
   overflow-y: auto; /* Make only this container scroll */
  }
 .intro-container {
@@ -30,11 +30,11 @@
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   height: fit-content;
-  padding: 16px;
-  border-radius: 24px;
+  padding: var(--Space-S-16) ;
+  border-radius:  var(--Radius-R-24) ;
   position: sticky;
    align-self: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: var(--Space-S-20) ;
 }
 
 .main-heading {
@@ -65,7 +65,7 @@
 }
 #hero .btn-get-started:hover {
   background: #3498db;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 #hero .animated {
   animation: up-down 2s ease-in-out infinite alternate-reverse both;
@@ -78,7 +78,7 @@
 }
 .alert-success {
   background-color: #2ecc71;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   border: none;
   text-align: center;
 }
@@ -88,10 +88,10 @@
   margin: 0 0 5px 0;
 }
 .main-section {
-  margin: 20px 0 20px 0;
-  padding: 20px;
+  margin: var(--Space-S-20)  0 var(--Space-S-20)  0;
+  padding: var(--Space-S-20) ;
 
-  border-radius: var(--Card-Section-Radius, 20px);
+  border-radius:   var(--Radius-R-20) ;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(20px);
 }
@@ -105,9 +105,9 @@
   line-height: 25px;
 }
 .details-info {
-  padding: 10px 24px;
+  padding: 10px  var(--Space-S-24) ;
   border: 1px solid #e6e4e4;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
 }
 .info-head {
   color: #817a79;
@@ -126,7 +126,7 @@
   line-height: 32px; /* 160% */
 }
 #street-view {
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
 }
 .main-name {
   font-size: 24px;
@@ -152,8 +152,8 @@
 .high-population {
   font-size: 16px;
   font-weight: 400;
-  background: #ffeded;
-  color: #ff4c4c;
+  background: var(--Colors-Negative-100);
+  color: var(--Colors-Negative-500);
   border-radius: 10px;
   padding: 10px;
 }
@@ -195,21 +195,21 @@ li {
   font-weight: 500;
   line-height: 30px;
   text-align: center;
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   margin: 10px 0;
   background-color: #001f3f;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .gray {
   color: #817a79;
 }
 .info-border {
   border-bottom: 1px solid #e6e4e4;
-  padding: 12px 0;
+  padding: var(--Space-S-12)  0;
 }
 .selected-reaction {
   border: 2px solid #0d0c0c;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
 }
 .tabs {
   width: 100%;
@@ -222,13 +222,13 @@ li {
   border-bottom: 2px solid #ccc;
 }
 .tab-headers li {
-  padding: 10px 20px;
+  padding: 10px var(--Space-S-20) ;
   cursor: pointer;
   text-align: center;
 }
 .tab-headers li.active {
   font-weight: bold;
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid var(--Colors-Assistant-2-500);
 }
 .activityType {
   font-weight: bold;
@@ -240,7 +240,7 @@ li {
   background-attachment: fixed;
   overflow: hidden;
   position: relative;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
 }
 #intro:before {
   content: "";
@@ -259,7 +259,7 @@ li {
 }
 
 #intro h1 {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   font-size: 30px;
   font-weight: 600 !important;
   text-transform: uppercase;
@@ -278,19 +278,19 @@ li {
   font-weight: 500;
   font-size: 14px;
   letter-spacing: 5px;
-  padding: 12px 32px;
+  padding: var(--Space-S-12)  var(--Space-S-32) ;
   border-radius: 50px;
   transition: 0.5s;
   line-height: 1;
   margin: 10px;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   animation-delay: 0.8s;
   border: 2px solid #f82249;
 }
 
 #intro .about-btn:hover {
   background-color: #f82249;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .address-city {
   cursor: pointer;
@@ -305,7 +305,7 @@ li {
 .house-income {
   border: 1px solid #caced3;
   border-radius: 10px;
-  padding: 32px;
+  padding: var(--Space-S-32) ;
 }
 .contact-card {
   border: 1px solid #caced3;
@@ -345,7 +345,7 @@ li {
   cursor: pointer;
 }
 .ml8 {
-  margin-left: 8px;
+  margin-left: var(--Space-S-8) ;
 }
 .logowidth {
   width: 184px;
@@ -367,11 +367,11 @@ li {
 .RelationOrganization {
   margin-inline: 10px;
   width: 30px;
-  border: 2px solid #fff;
+  border: 2px solid var(--Colors-Pure-White);
   border-radius: 20%;
 }
 .CustomPlace {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   font-weight: bold;
   padding-inline: 5px;
 }
@@ -383,17 +383,18 @@ li {
   border: 0;
   width: 100%;
   height: 450px;
-  margin-top: 20px;
-  border-radius: 20px;
+  margin-top: var(--Space-S-20)
+  ;
+  border-radius:  var(--Radius-R-20) ;
 }
 .streetview {
   height: 72vh;
-  margin-top: 20px;
+  margin-top: var(--Space-S-20) ;
 }
 .mapView {
   height: 72vh;
-  margin-top: 20px;
-  border-radius: 20px;
+  margin-top: var(--Space-S-20) ;
+  border-radius:  var(--Radius-R-20) ;
 }
 .OrgManagerwidth {
   width: 50px;
@@ -424,28 +425,28 @@ li {
   width: fit-content;
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
+  margin-top: var(--Space-S-20) ;
 }
 
 .view-toggle {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   margin-bottom: 10px;
 }
 
 .view-toggle button {
   padding: 6px 14px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  background: #fff;
+  border-radius: var(--Space-S-8) ;
+  background: var(--Colors-Pure-White);
   cursor: pointer;
 }
 
 .view-toggle button.active {
   background: #fce4ec;
   border-color: #ec407a;
-  color: #b51f63;
+  color: var(--Colors-Primary-500);
 }
 .view-gallery {
   width: fit-content;
@@ -453,8 +454,8 @@ li {
   background-color: rgba(255, 255, 255, 0.85);
   color: #001f3f;
   border: none;
-  border-radius: 12px;
-  padding: 10px 20px;
+  border-radius:  var(--Radius-R-12) ;
+  padding: 10px var(--Space-S-20) ;
   font-weight: 500;
   font-size: 15px;
   display: flex;

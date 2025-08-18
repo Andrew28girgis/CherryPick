@@ -1,7 +1,7 @@
 .contact-card {
   border: 1px solid #ccc;      /* visible border */
   border-radius: 0.25rem;      /* same radius as .card */
-  background-color: #fff;      /* ensure white bg */
+  background-color: var(--Colors-Pure-White);      /* ensure white bg */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .contact-card:hover {
@@ -10,7 +10,7 @@
 }
 /* Organization Title */
 .organization-title {
-  color: #000;
+  color: var(--Colors-Pure-Black);
   text-align: center;
   font-size: 18px;
   font-style: normal;
@@ -20,7 +20,7 @@
 
 /* BuyBox Container */
 .buybox-container {
-  padding: 20px;
+  padding: var(--Space-S-20) ;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
@@ -47,7 +47,7 @@
   gap: 16px;
 }
 .places{
-  color: #000;
+  color: var(--Colors-Pure-Black);
 font-size: 12px;
 font-style: normal;
 font-weight: 600;
@@ -72,7 +72,7 @@ line-height: 30px;
 }
 
 .campaign-name {
-  color: #000;
+  color: var(--Colors-Pure-Black);
   text-align: center;
   font-size: 16px;
   font-style: normal;
@@ -109,12 +109,12 @@ line-height: 30px;
   border-color: #00eeff;
 }
 .subm-div{
-  padding: 32px;
+  padding: var(--Space-S-32) ;
   align-items: center;
-  gap: 24px;
+  gap:  var(--Space-S-24) ;
   align-self: stretch;
-  border-radius: 20px;
-  background:#FFF;
+  border-radius:  var(--Radius-R-20) ;
+  background:var(--Colors-Pure-White);
 }
 
 /* Responsive adjustments */
@@ -156,7 +156,7 @@ line-height: 30px;
   margin-left: -22px;
   border: 2px solid #cbcbcb;
   font-size: 22px;
-  margin-bottom: 4px;
+  margin-bottom: var(--Space-S-4) ;
 }
 .spec-icon {
   width: 40px;
@@ -184,7 +184,7 @@ line-height: 30px;
   border: none;
 }
 .custom-button-primary {
-  background-color: #007bff; 
+  background-color: var(--Colors-Assistant-2-500); 
   color: white;
   border: none;
 }
@@ -201,7 +201,7 @@ line-height: 30px;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.07px;
-  margin-bottom: 4px;
+  margin-bottom: var(--Space-S-4) ;
   margin-top: 10px;
 }
 
@@ -239,7 +239,7 @@ line-height: 30px;
   background: #f1f1f4;
 }
 .toggle-link {
-  color: #007bff;
+  color: var(--Colors-Assistant-2-500);
   cursor: pointer;
   text-decoration: underline;
 }
@@ -248,14 +248,14 @@ line-height: 30px;
   color: #0056b3;
 }
 .sharebtn {
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   border: 1px solid #4d65b4;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   display: flex;
-  padding: 5px 24px;
+  padding: 5px  var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
 }
 
 .sharebtn img {
@@ -273,11 +273,11 @@ line-height: 30px;
 }
 .uploadbtn {
   display: flex;
-  padding: 4px 20px;
+  padding: var(--Space-S-4)  var(--Space-S-20) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 16px;
+  gap: var(--Space-S-8) ;
+  border-radius:  var(--Radius-R-16) ;
   background: #4d65b4;
   width: fit-content;
   height: fit-content;
@@ -287,7 +287,7 @@ line-height: 30px;
   height: 20px;
 }
 .uploadbtn span {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-size: 16px;
   font-style: normal;
@@ -296,11 +296,11 @@ line-height: 30px;
 }
 .submitbronchure {
   display: flex;
-  padding: 4px 20px;
+  padding: var(--Space-S-4)  var(--Space-S-20) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 16px;
+  gap: var(--Space-S-8) ;
+  border-radius:  var(--Radius-R-16) ;
   width: fit-content;
   height: fit-content;
 }
@@ -309,7 +309,7 @@ line-height: 30px;
   height: 20px;
 }
 .submitbronchure span {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-size: 16px;
   font-style: normal;
@@ -321,7 +321,7 @@ line-height: 30px;
   width: 40px;
   height: 40px;
   aspect-ratio: 1/1;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   background: lightgray 50% / cover no-repeat;
 }
 .organizationName {
@@ -342,7 +342,7 @@ line-height: 30px;
   margin-left: 0;
   width: 24px;
   height: 24px;
-  border-radius: 24px;
+  border-radius:  var(--Radius-R-24) ;
   background: lightgray 50% / cover no-repeat, #d9d9d9;
 }
 .buyboxname {
@@ -371,8 +371,8 @@ line-height: 30px;
 
 .uploaded-file-container {
   padding: 5px 5px !important;
-  border-radius: 4px;
-  margin-top: 8px;
+  border-radius:  var(--Radius-R-4) ;
+  margin-top: var(--Space-S-8) ;
 }
 /* 
 .clear-button {
@@ -396,42 +396,42 @@ line-height: 30px;
   justify-content: center;
   padding: 25px 10px;
   width: 100%;
-  gap: 12px;
-  border-radius: 12px;
+  gap: var(--Space-S-12) ;
+  border-radius:  var(--Radius-R-12) ;
   border: 1px solid#28a745;
-  background: #eaf6ec;
+  background: var(--Colors-Positive-100);
 }
 .outer-frame {
   display: flex;
-  padding: 20px 12px;
+  padding: var(--Space-S-20)  var(--Space-S-12) ;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   width: 100%;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 .hidden-dropzone {
   height: 0px !important;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: var(--Space-S-20) ;
+  margin-bottom: var(--Space-S-20) ;
 }
 .filenameouterframe {
   display: flex;
-  padding: 12px;
+  padding: var(--Space-S-12) ;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   border: 1px solid #e2e4e9;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   width: 100%;
 }
 .filenameinnerframe {
   padding: 5px 5px;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   width: 100%;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
   background: #edf0f8;
 }
 .upload-container {
@@ -439,7 +439,7 @@ line-height: 30px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
 }
 .uploadspan {
   color: #707791;
@@ -457,11 +457,11 @@ line-height: 30px;
   padding: 10px 30px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   flex: 1 0 0;
   border-radius: 16px;
   background: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -470,7 +470,7 @@ line-height: 30px;
 }
 
 .submit-button:disabled {
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   opacity: 0.5;
   background: #4d65b4;
   cursor: not-allowed;
@@ -486,13 +486,13 @@ line-height: 30px;
 .submitpdfbutton {
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 16px;
+  gap: var(--Space-S-8) ;
+  border-radius:  var(--Radius-R-16) ;
   background: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -517,24 +517,24 @@ line-height: 30px;
 }
 
 .title {
-  margin-right: 4px;
+  margin-right: var(--Space-S-4) ;
 }
 .paddingsubmitpdf {
-  padding-right: 20px;
+  padding-right: var(--Space-S-20) ;
 }
 .custom-toast {
   width: fit-content;
 }
 .extractedimagespadding {
-  padding: 20px;
+  padding: var(--Space-S-20) ;
 }
 .marginleft {
-  margin-left: 20px;
+  margin-left: var(--Space-S-20) ;
 }
 .ShoppingCenterInformation {
   color: #4d65b4;
   text-align: center;
-  padding-top: 20px;
+  padding-top: var(--Space-S-20) ;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -556,20 +556,20 @@ line-height: 30px;
   line-height: 30px;
 }
 .AddAvailablebutton {
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   background: #4d65b4;
   display: flex;
   height: 32px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   border: none;
   cursor: pointer;
 }
 .btn-success{
   background: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 
 
 }
@@ -579,7 +579,7 @@ line-height: 30px;
 }
 
 .AddAvailablebuttontext {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-family: Montserrat, sans-serif;
   font-size: 16px;
@@ -589,13 +589,13 @@ line-height: 30px;
 }
 .shoppingcentercard {
   height: 100%;
-  border-radius: 20px;
-  background: #fff;
+  border-radius:  var(--Radius-R-20) ;
+  background: var(--Colors-Pure-White);
 }
 .shoppingcentersize {
   position: relative;
-  border-radius: 20px;
-  background: #fff;
+  border-radius:  var(--Radius-R-20) ;
+  background: var(--Colors-Pure-White);
   overflow: hidden;
   height: 690px;
 }
@@ -605,7 +605,7 @@ line-height: 30px;
   left: 0;
   right: 0;
   padding: 10px;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 
 .SubmitBrochure,
@@ -666,21 +666,21 @@ line-height: 30px;
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: var(--Colors-Assistant-2-500);
   border: none;
-  padding: 10px 20px;
+  padding: 10px var(--Space-S-20) ;
 }
 .SubmitBrochure {
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   align-self: stretch;
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   background: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-family: Montserrat, sans-serif;
   font-size: 16px;
@@ -701,14 +701,14 @@ line-height: 30px;
 .ManualSubmission {
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   align-self: stretch;
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   border: 1px solid #4d65b4;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   color: #4d65b4;
   text-align: center;
   font-family: Montserrat, sans-serif;
@@ -770,11 +770,11 @@ line-height: 30px;
 }
 .submitproposelsize {
   height: 690px;
-  border-radius: 20px;
-  background: #fff;
+  border-radius:  var(--Radius-R-20) ;
+  background: var(--Colors-Pure-White);
 }
 .mapDesign {
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   border-left: 1px solid #caced3;
   background: lightgray 50% / cover no-repeat;
 }
@@ -811,7 +811,7 @@ line-height: 30px;
   }
 
   .spec-icon {
-    margin-bottom: 8px;
+    margin-bottom: var(--Space-S-8) ;
   }
   .submitproposelsize{
     margin-top: 15px;

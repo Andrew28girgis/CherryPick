@@ -56,7 +56,7 @@
   max-height: 55vh;
   overflow: auto;
   border-radius: 0.5rem;
-  background: #ffffff;
+  background: var(--Colors-Pure-White);
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
 }
 
@@ -99,7 +99,7 @@
   gap: 1rem;
   position: sticky;
   top: 0;
-  background-color: #ffffff;
+  background-color: var(--Colors-Pure-White);
   z-index: 1;
 }
 
@@ -174,7 +174,7 @@
   background-color: #4d65b4;
   border-color: #4d65b4;
   padding: 0.25rem 0.5rem;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   white-space: nowrap;
 }
 /* .area-card-item .add-area-btn {
@@ -182,25 +182,25 @@
   background-color: #28A745;
   border-color: #28A745;
   padding: 0.25rem 0.5rem;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   white-space: nowrap;
 } */
 
 .area-card-item .remove-area-btn {
   font-size: small;
-  background-color: #ff4c4c;
-  border-color: #ff4c4c;
+  background-color: var(--Colors-Negative-500);
+  border-color: var(--Colors-Negative-500);
   padding: 0.25rem 0.5rem;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   white-space: nowrap;
 }
 
 .area-card-item .hide-area-btn {
   font-size: small;
-  background-color: #007BFF;
-  border-color: #007BFF;
+  background-color: var(--Colors-Assistant-2-500);
+  border-color: var(--Colors-Assistant-2-500);
   padding: 0.25rem 0.5rem;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   white-space: nowrap;
 }
 
@@ -217,7 +217,7 @@
   transform: translateX(-50%);
   align-items: center;
   display: flex;
-  background: #ffffff;
+  background: var(--Colors-Pure-White);
   padding: 0.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
@@ -289,7 +289,7 @@
 
 .cancel-campaign {
   padding: 0.5rem 0.75rem;
-  background-color: #ffffff;
+  background-color: var(--Colors-Pure-White);
   border-radius: 1rem;
   border: 1px solid #4d65b4;
   color: #4d65b4;
@@ -300,7 +300,7 @@
   background-color: #4d65b4;
   border-radius: 1rem;
   border: 1px solid #4d65b4;
-  color: #ffffff;
+  color: var(--Colors-Pure-White);
 }
 
 .launch-campaign-btn {
@@ -327,11 +327,11 @@
 }
 
 .launch-campaign-btn-icon svg path {
-  fill: #ffffff;
+  fill: var(--Colors-Pure-White);
 }
 
 .launch-campaign-title {
-  color: #ffffff;
+  color: var(--Colors-Pure-White);
 }
 
 /* .form-check-input:focus {
@@ -349,7 +349,7 @@
 }
 
 ::ng-deep .p-selectbutton .p-button {
-  padding: 4px 12px;
+  padding: var(--Space-S-4) var(--Space-S-12) ;
   box-shadow: none;
   outline: none;
   color: #707791 !important;
@@ -384,7 +384,7 @@
 
 .breadcrumb li + li:before {
   content: "›"; /* or use "/" */
-  padding: 0 8px;
+  padding: 0 var(--Space-S-8)  ;
   color: #999;
 }
 

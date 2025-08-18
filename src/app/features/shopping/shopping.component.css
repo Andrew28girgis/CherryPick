@@ -1,11 +1,11 @@
 .shopping-centers-container {
-  padding: 0 20px 20px 20px;
+  padding: 0 var(--Space-S-20)  var(--Space-S-20)  var(--Space-S-20) ;
 }
 
 .header-container {
    align-items: center;
-  gap: 12px;
-  padding-top: 24px;
+  gap: var(--Space-S-12) ;
+  padding-top:  var(--Space-S-24) ;
   padding-bottom: 21px;
 }
 
@@ -19,8 +19,8 @@
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  border-radius: var(--Input-Radius, 24px);
-  border: 1px solid var(--Input-Border, #e2dce3);
+  border-radius:   var(--Radius-R-24) ;
+  border: 1px solid var(--Colors-Neutral-100 );
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
@@ -28,13 +28,13 @@
 
 .actions-section {
   display: flex;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
   flex-shrink: 0;
 }
 .search-container {
   display: flex;
   align-items: center;
-  gap: 8px; /* creates gap between icon and input */
+  gap: var(--Space-S-8) ; /* creates gap between icon and input */
   flex: 1 0 0;
 }
 .icon {
@@ -58,7 +58,7 @@
 }
 
 .search-input::placeholder {
-  color: var(--Input-Label-Icon, #704e73);
+  color: var(--Colors-Neutral-500 );
 
   font-family: Montserrat;
   font-size: 16px;
@@ -72,11 +72,11 @@
 .sort-btn {
   display: flex;
   height: 48px;
-  padding: var(--Space-S-8, 8px) var(--Radius-R-24, 24px);
+  padding: var(--Space-S-8) var(--Space-S-24,  var(--Space-S-24) );
   align-items: center;
-  gap: var(--Space-Space-4, 4px);
+  gap: var(--Space-S-4 );
   border: none;
-  border-radius: 24px;
+  border-radius:  var(--Radius-R-24) ;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(50px);
 }
@@ -92,13 +92,13 @@
   cursor: pointer;
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: 14px  var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: var(--Radius-Radius-16, 16px);
-  background: var(--Colors-Primary-500, #b51f63);
-  color: var(--Button-Primary-Label, #fff);
+  gap: var(--Space-S-8) ;
+  border-radius: var(--Radius-R-16 );
+  background: var(--Colors-Primary-500);
+  color: var(--Colors-Pure-White );
   text-align: center;
   font-family: Montserrat;
   font-size: 16px;
@@ -118,7 +118,7 @@
  }
 
 .add-new-btn span {
-  color: var(--Button-Primary-Label, #fff);
+  color: var(--Colors-Pure-White  );
   text-align: center;
 
   /* Body/16/30/Medium */
@@ -132,9 +132,9 @@
 .main-inner {
   height: 600px;
   overflow-y:scroll;
-  padding: 32px;
+  padding: var(--Space-S-32) ;
   align-items: center;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(50px);
    width: calc(100vw - 157px);
@@ -159,7 +159,7 @@ position: fixed; */
 }
 
 .submit {
-  padding: 8px 16px;
+  padding: var(--Space-S-8)  var(--Space-S-16) ;
   background-color: #2563eb;
   color: white;
   border: none;
@@ -173,7 +173,7 @@ position: fixed; */
 }
 
 .close {
-  padding: 8px 16px;
+  padding: var(--Space-S-8)  var(--Space-S-16) ;
   background-color: #f3f4f6;
   color: #374151;
   border: 1px solid #e5e7eb;
@@ -183,7 +183,7 @@ position: fixed; */
 
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
 }
 
 .dropdown-container {
@@ -194,7 +194,7 @@ position: fixed; */
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 12px;
+  padding: var(--Space-S-8)  12px;
   background-color: transparent;
   color: #6b7280;
   border: none;
@@ -215,16 +215,16 @@ position: fixed; */
   right: 0;
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 16px;
+  padding: var(--Space-S-16) ;
   min-width: 230px;
   z-index: 1000;
-  margin-top: 4px;
+  margin-top: var(--Space-S-4) ;
 }
 
 .dropdown-menu h3 {
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--Space-S-12)  0;
   font-size: 14px;
   font-weight: 600;
   color: #374151;
@@ -237,8 +237,8 @@ position: fixed; */
 .radio-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: var(--Space-S-8) ;
+  margin-bottom: var(--Space-S-8) ;
   cursor: pointer;
   font-size: 13px;
   color: #374151;
@@ -250,15 +250,15 @@ position: fixed; */
 
 .range-inputs {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--Space-S-8) ;
+  margin-bottom: var(--Space-S-16) ;
 }
 
 .range-inputs input {
   flex: 1;
-  padding: 6px 8px;
+  padding: 6px var(--Space-S-8) ;
   border: 1px solid #d1d5db;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
   font-size: 13px;
 }
 
@@ -266,14 +266,14 @@ position: fixed; */
 .centers-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap:  var(--Space-S-24) ;
   max-width: 1600px;
   margin: 0 auto;
 }
 
 .center-card {
   background: transparent;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
@@ -285,7 +285,7 @@ position: fixed; */
 .image-container {
   width: 100%;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   height: 280px;
   position: relative;
 }
@@ -314,19 +314,19 @@ position: fixed; */
 .share-badge {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
+  gap: var(--Space-S-4) ;
+  padding: var(--Space-S-4)  var(--Space-S-8) ;
   color: white;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
   font-size: 11px;
   font-weight: 500;
   backdrop-filter: blur(4px);
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius: var(--Radius-R-16 );
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(1.5px);
   display: flex;
   width: 103px;
-  padding: 4px var(--Space-Space-16, 16px);
+  padding: var(--Space-S-4)  var(--Space-S-16 );
   justify-content: space-between;
   align-items: center;
 }
@@ -337,7 +337,7 @@ position: fixed; */
 
 .menu-btn {
   border: none;
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius: var(--Radius-R-16 );
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(1.5px);
   width: 32px;
@@ -354,7 +354,7 @@ position: fixed; */
 }
 
 .center-info {
-  padding: 12px 16px;
+  padding: var(--Space-S-12)  var(--Space-S-16) ;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -388,7 +388,7 @@ position: fixed; */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: var(--Space-S-4) ;
 }
 
 .center-id {
@@ -437,7 +437,7 @@ position: fixed; */
 .no-results,
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
+  padding: 60px var(--Space-S-20) ;
   color: #6b7280;
   grid-column: 1 / -1;
 }
@@ -447,21 +447,21 @@ position: fixed; */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   margin-top: 24px;
-  padding: 16px;
-  border-radius: 8px;
+  padding: var(--Space-S-16) ;
+  border-radius:  var(--Radius-R-8) ;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .pagination-btn {
-  padding: 8px 16px;
-  background: #fff;
+  padding: var(--Space-S-8)  var(--Space-S-16) ;
+  background: var(--Colors-Pure-White);
   border: none;
   color: #6b7280;
   font-size: 14px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
   transition: all 0.2s ease;
 }
 
@@ -470,7 +470,7 @@ position: fixed; */
 }
 
 .pagination-btn.active {
-  background: #B51F63;
+  background: var(--Colors-Primary-500);
   color: white;
 }
 .pagination-btn.active:hover {
@@ -485,11 +485,11 @@ position: fixed; */
 
 .pagination-ellipsis {
   color: #6b7280;
-  padding: 0 4px;
+  padding: 0 var(--Space-S-4) ;
 }
 
 .pagination-info {
-  margin-left: 16px;
+  margin-left: var(--Space-S-16) ;
   color: #6b7280;
   font-size: 14px;
   white-space: nowrap;
@@ -499,7 +499,7 @@ position: fixed; */
 @media (max-width: 1024px) {
   .centers-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: var(--Space-S-16) ;
   }
 }
 
@@ -518,13 +518,13 @@ position: fixed; */
   }
 
   .shopping-centers-container {
-    padding: 16px;
+    padding: var(--Space-S-16) ;
   }
 
   .header {
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
+    gap: var(--Space-S-16) ;
   }
 
   .search-section {
@@ -539,7 +539,7 @@ position: fixed; */
 
   .centers-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: var(--Space-S-16) ;
   }
 
   .center-card {
@@ -549,26 +549,26 @@ position: fixed; */
 
   .pagination {
     flex-wrap: wrap;
-    gap: 4px;
-    padding: 12px;
+    gap: var(--Space-S-4) ;
+    padding: var(--Space-S-12) ;
   }
 
   .pagination-btn {
-    padding: 6px 12px;
+    padding: 6px var(--Space-S-12) ;
     font-size: 12px;
   }
 
   .pagination-info {
     width: 100%;
     text-align: center;
-    margin-top: 8px;
+    margin-top: var(--Space-S-8) ;
     margin-left: 0;
   }
 }
 
 @media (max-width: 480px) {
   .center-info {
-    padding: 10px 12px;
+    padding: 10px var(--Space-S-12) ;
   }
 
   .dropdown-menu {
@@ -596,15 +596,15 @@ position: fixed; */
 .skeleton-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 24px;
-  padding: 24px;
+  gap:  var(--Space-S-24) ;
+  padding:  var(--Space-S-24) ;
   margin: 0 auto;
   max-width: 1400px;
 }
 
 .skeleton-card {
   background: white;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) (--Radius-R-12) ;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -624,13 +624,13 @@ position: fixed; */
 }
 
 .skeleton-content {
-  padding: 16px;
+  padding: var(--Space-S-16) ;
 }
 
 .skeleton-title {
   height: 28px;
   width: 85%;
-  margin-bottom: 8px;
+  margin-bottom: var(--Space-S-8) ;
   background: linear-gradient(
     90deg,
     rgba(240, 240, 240, 0.6) 25%,
@@ -639,13 +639,13 @@ position: fixed; */
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-address {
   height: 20px;
   width: 70%;
-  margin-bottom: 16px;
+  margin-bottom: var(--Space-S-16) ;
   background: linear-gradient(
     90deg,
     rgba(240, 240, 240, 0.5) 25%,
@@ -654,13 +654,13 @@ position: fixed; */
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-details {
   display: flex;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: var(--Space-S-12) ;
 }
 
 .skeleton-price {
@@ -674,7 +674,7 @@ position: fixed; */
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-size {
@@ -688,14 +688,14 @@ position: fixed; */
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-overlay {
   position: absolute;
   top: 0;
   right: 0;
-  padding: 12px;
+  padding: var(--Space-S-12) ;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -712,7 +712,7 @@ position: fixed; */
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
 }
 
 .skeleton-menu {
@@ -733,7 +733,7 @@ position: fixed; */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  margin-top: var(--Space-S-8) ;
 }
 
 .skeleton-price-sf {
@@ -747,7 +747,7 @@ position: fixed; */
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-unit-size {
@@ -761,5 +761,5 @@ position: fixed; */
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }

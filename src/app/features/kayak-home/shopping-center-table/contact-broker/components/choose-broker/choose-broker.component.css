@@ -42,7 +42,7 @@
 
 .contact-name {
   font-weight: 600;
-  color: #000 !important;
+  color: var(--Colors-Pure-Black) !important;
 }
 
 .send-as {
@@ -73,7 +73,7 @@
 
 .send-as-active {
   background-color: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .continue-btn {
@@ -95,7 +95,7 @@
 }
 
 .continue-btn button * {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .continue-btn button svg {

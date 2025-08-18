@@ -148,7 +148,7 @@
 
 .stage-card {
   width: 100%;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   /* border: 1px solid rgba(0, 0, 0, 0.175); */
   color: #0c0d0e;
   padding: 1rem;
@@ -189,7 +189,7 @@
   opacity: 0.3;
   background: #e2e8f0;
   border: 2px dashed #94a3b8;
-  border-radius: 12px;
+  border-radius:  var(--Radius-R-12) ;
   animation: pulse 2s var(--transition-bezier) infinite;
 }
 

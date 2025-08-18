@@ -8,7 +8,7 @@
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 8px 8px 0 0;
+  border-radius:  var(--Radius-R-8)   var(--Radius-R-8)  0 0;
 }
 
 /* Make arrows black and visible */
@@ -27,12 +27,12 @@
 }
 
 .shopping-center-card {
-  background: #fff;
-  border-radius: 8px;
+  background: var(--Colors-Pure-White);
+  border-radius:  var(--Radius-R-8) ;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: visible; /* 👈 allow carousel arrows to show */
   max-width: 400px;
-  margin: 24px auto;
+  margin:  var(--Space-S-24)  auto;
   font-family: Arial, sans-serif;
   transition: box-shadow 0.2s;
   position: relative; /* for carousel positioning */
@@ -54,27 +54,27 @@
 }
 
 .card-title {
-  margin: 0 0 8px 0;
+  margin: 0 0 var(--Space-S-8)  0;
   color: #333;
   font-size: 1.4rem;
   padding-top: 25px;
 }
 
 .card-location {
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--Space-S-12)  0;
   color: #888;
   font-size: 1rem;
 }
 
 .card-description {
-  margin-bottom: 16px;
+  margin-bottom: var(--Space-S-16) ;
   color: #555;
   font-size: 1rem;
 }
 
 .card-action {
   background: #1976d2;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   border: none;
   padding: 10px 18px;
   border-radius: 4px;
@@ -94,28 +94,28 @@ h2 {
 }
 
 .section-card {
-  background: #ffffff;
-  border-radius: 8px;
+  background: var(--Colors-Pure-White);
+  border-radius:  var(--Radius-R-8) ;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  margin: 24px auto;
+  padding: var(--Space-S-20) ;
+  margin:  var(--Space-S-24)  auto;
   max-width: 600px;
   font-family: Arial, sans-serif;
 }
 
 .section-card h3 {
   font-size: 1.2rem;
-  margin-bottom: 12px;
+  margin-bottom: var(--Space-S-12) ;
   color: #0d2e50;
 }
 
 .section-card ul {
-  padding-left: 20px;
+  padding-left: var(--Space-S-20) ;
   margin-bottom: 0;
 }
 
 .section-card li {
-  margin-bottom: 8px;
+  margin-bottom: var(--Space-S-8) ;
   font-size: 0.95rem;
   color: #333;
 }
@@ -123,11 +123,11 @@ h2 {
 .pagination-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 16px;
+  margin-top: var(--Space-S-16) ;
 }
 
 .pagination-buttons button {
-  padding: 6px 14px;
+  padding: 6px var(--Space-S-14) ;
   font-size: 0.9rem;
   border-radius: 4px;
 }

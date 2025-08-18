@@ -7,7 +7,7 @@ th {
   font-size: 16px;
 }
 .procpect-table-head th {
-  padding: 10px 8px;
+  padding: 10px var(--Space-S-8) ;
   background-color: #e4e7e9;
   font-size: 18px;
   font-weight: 500;
@@ -17,7 +17,7 @@ th {
 .Kayack__button {
   border-radius: 10px;
   background: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
 
   font-size: 1vw;
@@ -25,7 +25,7 @@ th {
   font-weight: 500;
   line-height: 30px;
   border: 0;
-  padding: 4px 10px;
+  padding: var(--Space-S-4)  10px;
   white-space: nowrap;
 }
 
@@ -39,7 +39,7 @@ table {
   background-color: #4d65b4;
   text-decoration: none;
   font-size: 13px;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   cursor: pointer;
   border: none;
   height: 35px;
@@ -47,11 +47,11 @@ table {
   white-space: nowrap;
 }
 .accept-btn {
-  background-color: #28a745;
+  background-color: var(--Colors-Positive-500);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: var(--Space-S-8)  var(--Space-S-16) ;
+  border-radius:  var(--Radius-R-4) ;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -65,8 +65,8 @@ table {
   background-color: #dc3545;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: var(--Space-S-8)  var(--Space-S-16) ;
+  border-radius:  var(--Radius-R-4) ;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -90,12 +90,12 @@ table {
   top: 10px;
   left: 10px;
   background-color: #4d65b4;
-  border: 1px solid #fff;
-  color: #fff;
+  border: 1px solid var(--Colors-Pure-White);
+  color: var(--Colors-Pure-White);
 
   font-weight: 400;
   border-radius: 10px;
-  padding: 5px 12px;
+  padding: 5px var(--Space-S-12) ;
   font-size: 13px;
 }
 
@@ -103,17 +103,17 @@ table {
   top: 10px;
   left: 10px;
   background-color: #ff0000;
-  color: #fff;
-  border: 1px solid #fff;
+  color: var(--Colors-Pure-White);
+  border: 1px solid var(--Colors-Pure-White);
   font-weight: 400;
   border-radius: 10px;
-  padding: 5px 12px;
+  padding: 5px var(--Space-S-12) ;
   font-size: 13px;
 }
 .view-act {
   padding-top: 10px;
   padding-left: 10px;
-  padding-right: 20px;
+  padding-right: var(--Space-S-20) ;
 }
 .view-act h4 {
   font-weight: 700;
@@ -133,11 +133,11 @@ table {
 }
 .accepted-card {
   display: flex;
-  padding: 20px;
+  padding: var(--Space-S-20) ;
   align-items: center;
-  gap: 16px;
-  border-radius: 20px;
-  background: #fff;
+  gap: var(--Space-S-16) ;
+  border-radius:  var(--Radius-R-20) ;
+  background: var(--Colors-Pure-White);
 }
 .accepted-text {
   color: #16181d;
@@ -162,7 +162,7 @@ table {
   align-items: center;
   gap: 10px;
   border-radius: 50%;
-  background: #28a745;
+  background: var(--Colors-Positive-500);
 }
 .icon-card-reject {
   display: flex;
@@ -171,17 +171,17 @@ table {
   align-items: center;
   gap: 10px;
   border-radius: 50%;
-  background: #ff4c4c;
+  background: var(--Colors-Negative-500);
 }
 .submissions-list {
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   background-color: white;
   margin-top: 10px;
   padding: 2rem;
 }
 
 .submission-card {
-  background: #fff;
+  background: var(--Colors-Pure-White);
   border: 1px solid #e5e5e5;
   border: none;
   border-bottom: 1px solid #e2e4e9;
@@ -191,51 +191,51 @@ table {
 /* Example badge styling */
 .badge-success {
   padding: 0.3rem 0.6rem;
-  color: #fff;
-  background-color: #28a745;
-  border-radius: 4px;
+  color: var(--Colors-Pure-White);
+  background-color: var(--Colors-Positive-500);
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .badge-danger {
   padding: 0.3rem 0.6rem;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   background-color: #dc3545;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 .badge-success {
   display: flex;
-  padding: 4px 12px;
+  padding: var(--Space-S-4)  var(--Space-S-12) ;
   justify-content: center;
   align-items: center;
-  gap: 4px;
-  border-radius: 16px;
-  background-color: #eaf6ec;
-  color: #28a745;
+  gap: var(--Space-S-4) ;
+  border-radius:  var(--Radius-R-16) ;
+  background-color: var(--Colors-Positive-100);
+  color: var(--Colors-Positive-500);
   width: 100px;
 }
 .badge-danger {
   display: flex;
-  padding: 4px 12px;
+  padding: var(--Space-S-4)  var(--Space-S-12) ;
   justify-content: center;
   align-items: center;
-  gap: 4px;
-  border-radius: 16px;
-  background-color: #ffeded;
-  color: #ff4c4c;
+  gap: var(--Space-S-4) ;
+  border-radius:  var(--Radius-R-16) ;
+  background-color: var(--Colors-Negative-100);
+  color: var(--Colors-Negative-500);
   width: 100px;
 }
 .add-note {
   display: flex;
   height: 32px;
-  padding: 14px 24px;
+  padding: 14px  var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 16px;
+  gap: var(--Space-S-8) ;
+  border-radius:  var(--Radius-R-16) ;
   border: none;
   background: #4d65b4;
   width: 120px;
-  color: #ffffff;
+  color: var(--Colors-Pure-White);
 }
 .center-name {
   color: #16181d;
@@ -284,7 +284,7 @@ table {
 .img {
   width: 100px;
   border-radius: 7px;
-  margin-bottom: 20px;
+  margin-bottom: var(--Space-S-20) ;
   height: 100px;
   object-fit: cover;
 }

@@ -7,11 +7,11 @@
 .feed-header {
   top: 0;
   z-index: 100;
-  padding: 16px 24px;
+  padding: var(--Space-S-16)   var(--Space-S-24) ;
    display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--Space-S-16) ;
 }
 
 .search-container {
@@ -34,9 +34,9 @@
 
 .search-input {
   width: 100%;
-  padding: 10px 16px 10px 40px;
+  padding: 10px var(--Space-S-16)  10px 40px;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   font-size: 14px;
   background-color: white;
   transition: border-color 0.2s ease;
@@ -56,11 +56,11 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: var(--Space-S-8)   var(--Space-S-16) ;
   background-color: transparent;
   color: #6b7280;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -77,14 +77,14 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--Space-S-32) ;
   margin: 0 auto;
 }
 
 .property-card {
-  gap: 12px;
+  gap: var(--Space-S-12) ;
   display: flex;
-   border-radius: 20px;
+   border-radius:  var(--Radius-R-20) ;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
@@ -106,7 +106,7 @@ backdrop-filter: blur(20px);
   height: 462px;
   overflow: hidden;
   cursor: pointer;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
 }
 
 .property-image {
@@ -121,23 +121,23 @@ backdrop-filter: blur(20px);
   left: 0;
   right: 0;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  padding: 40px 24px 24px;
+  padding: 40px  var(--Space-S-24)   var(--Space-S-24) ;
   color: white;
 }
 
 .property-info {
-  margin-bottom: 12px;
-  gap: 4px;
+  margin-bottom: var(--Space-S-12) ;
+  gap: var(--Space-S-4);
   display: flex;
   flex-direction: column;
 }
 .property-hr{
   opacity: 0.3;
-background: var(--Colors-Pure-White, #FFF);
+background: var(--Colors-Pure-White );
 }
 
 .property-name {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 
   /* Headings/20/28/Bold */
   font-family: Montserrat;
@@ -149,7 +149,7 @@ background: var(--Colors-Pure-White, #FFF);
 }
 
 .property-address {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 
   /* Body/16/30/Regular */
   font-family: Montserrat;
@@ -164,7 +164,7 @@ background: var(--Colors-Pure-White, #FFF);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--Space-S-8)  ;
   margin: 0;
 }
 
@@ -188,7 +188,7 @@ background: var(--Colors-Pure-White, #FFF);
 }
 
 .unit-size {
-  color: var(--Colors-Pure-White, #fff);
+  color: var(--Colors-Pure-White );
 
   /* Body/14/24/SemiBold */
   font-family: Montserrat;
@@ -202,14 +202,14 @@ background: var(--Colors-Pure-White, #FFF);
 /* Property Actions */
 .property-actions {
   display: flex;
-  gap: 20px;
+  gap: var(--Space-S-20) ;
   align-items: center;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--Space-S-4);
     color: white;
    font-size: 14px;
   cursor: pointer;
@@ -221,7 +221,7 @@ background: var(--Colors-Pure-White, #FFF);
 /* Comments Sidebar - Fixed width to match image */
 .comments-sidebar {
   width: 100%;
-  padding: 20px;
+  padding: var(--Space-S-20) ;
   background: none;
   display: flex;
   flex-direction: column;
@@ -244,8 +244,8 @@ background: var(--Colors-Pure-White, #FFF);
 
 .comment-item {
   display: flex;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--Space-S-12) ;
+  padding: var(--Space-S-16) ;
   border-bottom: 1px solid #E5E7EB;
 }
 
@@ -296,7 +296,7 @@ background: var(--Colors-Pure-White, #FFF);
 .reply-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
 }
 
 .comment-author,
@@ -314,7 +314,7 @@ background: var(--Colors-Pure-White, #FFF);
 
 .comment-text,
 .reply-text {
-  margin: 4px 0;
+  margin: var(--Space-S-4) 0;
   color: #374151;
   font-size: 14px;
   line-height: 20px;
@@ -323,15 +323,15 @@ background: var(--Colors-Pure-White, #FFF);
 .comment-actions,
 .reply-actions {
   display: flex;
-  gap: 16px;
-  margin-top: 8px;
+  gap: var(--Space-S-16) ;
+  margin-top: var(--Space-S-8)  ;
 }
 
 .comment-action,
 .reply-action {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--Space-S-4);
   background: none;
   border: none;
   padding: 0;
@@ -346,17 +346,17 @@ background: var(--Colors-Pure-White, #FFF);
 }
 
 .replies-container {
-  margin-top: 12px;
+  margin-top: var(--Space-S-12) ;
   margin-left: 44px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
 }
 
 .reply-item {
   display: flex;
-  gap: 12px;
-  padding: 8px 0;
+  gap: var(--Space-S-12) ;
+  padding: var(--Space-S-8)   0;
 }
 
 .reply-content {
@@ -374,7 +374,7 @@ background: var(--Colors-Pure-White, #FFF);
   font-weight: 500;
   line-height: 24px;
   text-decoration-line: underline;
-  margin-top: 8px;
+  margin-top: var(--Space-S-8)  ;
   cursor: pointer;
   padding: 0;
   margin-left: 44px;
@@ -387,7 +387,7 @@ background: var(--Colors-Pure-White, #FFF);
 .comments-container {
   max-height: 400px;
   overflow-y: auto;
-  padding-right: 8px;
+  padding-right: var(--Space-S-8)  ;
 }
 
 .comments-container::-webkit-scrollbar {
@@ -396,12 +396,12 @@ background: var(--Colors-Pure-White, #FFF);
 
 .comments-container::-webkit-scrollbar-track {
   background: #F3F4F6;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .comments-container::-webkit-scrollbar-thumb {
   background: #D1D5DB;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .comments-container::-webkit-scrollbar-thumb:hover {
@@ -415,7 +415,7 @@ background: var(--Colors-Pure-White, #FFF);
   color: #6366f1;
   font-size: 12px;
   cursor: pointer;
-  padding: 8px 0;
+  padding: var(--Space-S-8)   0;
   text-align: left;
   transition: color 0.2s ease;
 }
@@ -429,8 +429,8 @@ background: var(--Colors-Pure-White, #FFF);
 .add-comment-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--Space-S-12) ;
+  padding: var(--Space-S-16) ;
   border-top: 1px solid #E5E7EB;
   background: none;
 }
@@ -454,9 +454,9 @@ background: var(--Colors-Pure-White, #FFF);
   display: flex;
   align-items: center;
   background: #F3F4F6;
-  border-radius: 24px;
-  padding: 8px 16px;
-  gap: 8px;
+  border-radius:  var(--Radius-R-24) ;
+  padding: var(--Space-S-8)   var(--Space-S-16) ;
+  gap: var(--Space-S-8)  ;
 }
 
 .comment-input,
@@ -464,7 +464,7 @@ background: var(--Colors-Pure-White, #FFF);
   flex: 1;
   border: none;
   background: transparent;
-  padding: 8px 0;
+  padding: var(--Space-S-8)   0;
   font-size: 14px;
   line-height: 20px;
   color: #374151;
@@ -483,13 +483,13 @@ background: var(--Colors-Pure-White, #FFF);
 .input-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
 }
 
 .action-icon {
   background: none;
   border: none;
-  padding: 4px;
+  padding: var(--Space-S-4);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -505,7 +505,7 @@ background: var(--Colors-Pure-White, #FFF);
 .reply-submit {
   background: none;
   border: none;
-  padding: 4px;
+  padding: var(--Space-S-4);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -520,9 +520,9 @@ background: var(--Colors-Pure-White, #FFF);
 .reply-input-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  margin-top: 8px;
+  gap: var(--Space-S-12) ;
+  padding: var(--Space-S-12)  var(--Space-S-16) ;
+  margin-top: var(--Space-S-8)  ;
   /* background: #F9FAFB; */
 }
 
@@ -555,31 +555,31 @@ background: var(--Colors-Pure-White, #FFF);
 .skeleton-title {
   height: 24px;
   width: 60%;
-  margin-bottom: 8px;
+  margin-bottom: var(--Space-S-8)  ;
   background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
   background-size: 800px 104px;
   animation: shimmer 1.5s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-address {
   height: 16px;
   width: 80%;
-  margin-bottom: 8px;
+  margin-bottom: var(--Space-S-8)  ;
   background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
   background-size: 800px 104px;
   animation: shimmer 1.5s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-text {
   height: 16px;
   width: 70%;
-  margin-bottom: 8px;
+  margin-bottom: var(--Space-S-8)  ;
   background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
   background-size: 800px 104px;
   animation: shimmer 1.5s infinite linear;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .skeleton-image {
@@ -646,10 +646,10 @@ background: var(--Colors-Pure-White, #FFF);
 
 @media (max-width: 768px) {
   .feed-header {
-    padding: 12px 16px;
+    padding: var(--Space-S-12)  var(--Space-S-16) ;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: var(--Space-S-12) ;
   }
 
   .search-container {
@@ -657,8 +657,8 @@ background: var(--Colors-Pure-White, #FFF);
   }
 
   .feed-content {
-    padding: 16px;
-    gap: 24px;
+    padding: var(--Space-S-16) ;
+    gap:  var(--Space-S-24) ;
   }
 
   .property-main {
@@ -674,7 +674,7 @@ background: var(--Colors-Pure-White, #FFF);
   }
 
   .property-overlay {
-    padding: 24px 16px 16px;
+    padding:  var(--Space-S-24)  var(--Space-S-16)  var(--Space-S-16) ;
   }
 
   .property-name {
@@ -687,7 +687,7 @@ background: var(--Colors-Pure-White, #FFF);
 
   .property-actions {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--Space-S-8)  ;
   }
 
   .action-btn {
@@ -696,21 +696,21 @@ background: var(--Colors-Pure-White, #FFF);
   }
 
   .comments-sidebar {
-    padding: 16px;
+    padding: var(--Space-S-16) ;
   }
 }
 
 @media (max-width: 480px) {
   .feed-content {
-    padding: 12px;
+    padding: var(--Space-S-12) ;
   }
 
   .property-card {
-    border-radius: 12px;
+    border-radius:  var(--Radius-R-12) ;
   }
 
   .property-overlay {
-    padding: 20px 12px 12px;
+    padding: var(--Space-S-20)  var(--Space-S-12)  var(--Space-S-12) ;
   }
 
   .property-name {
@@ -718,11 +718,11 @@ background: var(--Colors-Pure-White, #FFF);
   }
 
   .comments-sidebar {
-    padding: 12px;
+    padding: var(--Space-S-12) ;
   }
 
   .comment-item {
-    padding: 8px 0;
+    padding: var(--Space-S-8)   0;
   }
 }
 

@@ -61,7 +61,7 @@
   width: 350px;
   background-color: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   z-index: 2000;
   max-height: 500px;
   overflow: hidden;
@@ -71,7 +71,7 @@
 
 /* Chat Card Styles */
 .chat-card {
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   background: white;
   display: flex;
   flex-direction: column;
@@ -84,8 +84,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
-  background-color: #B51F63;
+  padding: var(--Space-S-16) ;
+  background-color: var(--Colors-Primary-500);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   color: white;
@@ -116,11 +116,11 @@
 
 .unread-badge {
   background: white;
-  color: #B51F63;
+  color: var(--Colors-Primary-500);
   font-size: 12px;
   font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 24px;
+  padding: 2px var(--Space-S-8) ;
+  border-radius:  var(--Radius-R-24) ;
   min-width: 24px;
   text-align: center;
 }
@@ -129,8 +129,8 @@
 .chat-messages-container {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
-  background-color: #F8E9EF;
+  padding: var(--Space-S-16) ;
+  background-color: var(--Colors-Primary-50);
   display: flex;
   flex-direction: column;
   max-height: 350px;
@@ -139,7 +139,7 @@
 .chat-messages {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
 }
 
 /* Message Bubble Styles */
@@ -147,7 +147,7 @@
   max-width: 80%;
   align-self: flex-start;
   background-color: white;
-  padding: 12px 16px;
+  padding: var(--Space-S-12)  var(--Space-S-16) ;
   border-radius: 18px;
   border-top-left-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -156,7 +156,7 @@
 }
 
 .message-bubble.unread {
-  border-left-color: #B51F63;
+  border-left-color: var(--Colors-Primary-500);
 }
 
 .message-content {
@@ -178,7 +178,7 @@
 }
 
 .message-bubble.clickable {
-  background-color: #B51F63;
+  background-color: var(--Colors-Primary-500);
   cursor: pointer;
 }
 
@@ -198,10 +198,10 @@
 .message-status {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--Space-S-4) ;
   font-size: 11px;
   color: #999;
-  margin-top: 4px;
+  margin-top: var(--Space-S-4) ;
 }
 
 .message-status .read-icon {
@@ -215,7 +215,7 @@
 .message-status .mark-read-btn {
   background: none;
   border: none;
-  color: #B51F63;
+  color: var(--Colors-Primary-500);
   font-size: 11px;
   padding: 0;
   cursor: pointer;
@@ -230,7 +230,7 @@
 
 /* Empty State */
 .no-messages {
-  padding: 24px 16px;
+  padding:  var(--Space-S-24)  var(--Space-S-16) ;
   text-align: center;
   color: #999;
   font-size: 14px;
@@ -251,7 +251,7 @@
 .chat-input-container {
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: var(--Space-S-12) ;
   background-color: white;
   border-top: 1px solid #eee;
 }
@@ -259,8 +259,8 @@
 .chat-input {
   flex: 1;
   border: 1px solid #ddd;
-  border-radius: 20px;
-  padding: 8px 16px;
+  border-radius:  var(--Radius-R-20) ;
+  padding: var(--Space-S-8)  var(--Space-S-16) ;
   font-size: 14px;
   background-color: #f5f5f5;
   color: #666;
@@ -275,8 +275,8 @@
 .send-button {
   background: none;
   border: none;
-  padding: 8px;
-  margin-left: 8px;
+  padding: var(--Space-S-8) ;
+  margin-left: var(--Space-S-8) ;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -291,14 +291,14 @@
 /* Mark all as read button */
 .mark-all-read {
   align-self: flex-end;
-  margin: 8px 16px 0;
+  margin: var(--Space-S-8)  var(--Space-S-16)  0;
   background-color: transparent;
   border: none;
-  color: #B51F63;
+  color: var(--Colors-Primary-500);
   font-size: 12px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 12px;
+  padding: var(--Space-S-4)  var(--Space-S-8) ;
+  border-radius:  var(--Radius-R-12) ;
   transition: background-color 0.2s;
 }
 
@@ -309,8 +309,8 @@
 .mark-all-read-container {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 8px;
-  padding: 0 16px;
+  margin-bottom: var(--Space-S-8) ;
+  padding: 0 var(--Space-S-16) ;
 }
 
 /* Responsive Styles */
@@ -347,7 +347,7 @@
  
 
 .message-bubble.clickable:focus {
-  box-shadow: 0 0 0 2px #B51F63;
+  box-shadow: 0 0 0 2px var(--Colors-Primary-500);
   outline: none;
 }
 

@@ -35,11 +35,11 @@ code {
   width: 184px;
 }
 .termss {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   border-radius: 10px;
 }
 .margin-left {
-  margin-left: 8px;
+  margin-left: var(--Space-S-8) ;
 }
 .cherry-logo {
   max-width: 30px;

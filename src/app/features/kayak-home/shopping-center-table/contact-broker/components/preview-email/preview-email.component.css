@@ -73,13 +73,13 @@
 }
 
 .edit-btn {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   color: #4d65b4;
 }
 
 .send-btn {
   background-color: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .empty-emails {
@@ -89,7 +89,7 @@
 
 .loader {
   display: block;
-  --height-of-loader: 4px;
+  --height-of-loader: var(--Space-S-4);
   --loader-color: #4d65b4;
   width: 10rem;
   height: var(--height-of-loader);

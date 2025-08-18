@@ -17,7 +17,7 @@
 }
 
 .breadcrumb-item a {
-  color: #fff !important;
+  color: var(--Colors-Pure-White) !important;
   display: block;
   background: #4d65b4;
   text-decoration: none;
@@ -27,12 +27,12 @@
   padding: 0 10px 0 5px;
   text-align: center;
   margin-right: 23px;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .breadcrumb-item a:hover {
   background-color: #1abc9c;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .breadcrumb-item a:before,
@@ -86,12 +86,12 @@
 
 .breadcrumb-item:first-child a {
   padding-left: 15px;
-  border-radius: 4px 0 0 4px;
+  border-radius:  var(--Radius-R-4)  0 0  var(--Radius-R-4) ;
 }
 
 .breadcrumb-item:last-child a {
   padding-right: 15px;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0  var(--Radius-R-4)   var(--Radius-R-4)  0;
 }
 
 .breadcrumb-item:last-child a:after {

@@ -18,7 +18,7 @@
 .x-btn-primary {
   background-color: #3922d2;
   border-color: #3922d2;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .x-btn-primary:hover,
 .x-btn-primary:focus {
@@ -36,21 +36,21 @@
   opacity: 0.6;
 }
 .x-btn-primary:disabled span {
-  color: #ffffff;
+  color: var(--Colors-Pure-White);
 }
 .x-btn-outline {
-  background: #fff;
+  background: var(--Colors-Pure-White);
   border-color: #3922d2;
   color: #3922d2;
 }
 .x-btn-outline:hover,
 .x-btn-outline:focus {
   background: #3922d2;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .x-btn-outline:active {
   background: #2a18a6;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .x-btn-outline:disabled {
   border-color: #bcbcbc;

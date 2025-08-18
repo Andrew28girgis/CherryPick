@@ -2,11 +2,11 @@
     background-color: #a31c59;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px var(--Space-S-20) ;
     border-radius: 5px;
     cursor: pointer;
-    border-radius: 24px;
+    border-radius:  var(--Radius-R-24) ;
 }
 .get-started-btn:hover {
-    background-color: #6d133b;
+    background-color: var(--Colors-Primary-700);  
 }

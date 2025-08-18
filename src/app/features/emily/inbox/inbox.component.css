@@ -9,7 +9,7 @@
 }
 
 .selected-contact {
-  background: var(--Colors-Primary-200, #e1a5c1);
+  background: var(--Colors-Primary-200);
 }
 .dropdown-container {
   width: 100%;
@@ -18,7 +18,7 @@
 .org-dropdown {
   display: flex;
   justify-content: space-between;
-  padding: 12px 15px;
+  padding: var(--Space-S-12)  15px;
   background-color: #f8f8f8;
   border-bottom: 1px solid #eaeaea;
   cursor: pointer;
@@ -27,16 +27,16 @@
 }
 
 .contacts-header {
-  padding: 24px;
+  padding:  var(--Space-S-24) ;
   font-size: 16px;
   font-weight: 600;
   color: #333;
   background: none; /* Light pink background color */
-  border-bottom: 1px solid #f0d2e0;
+  border-bottom: 1px solid var(--Colors-Primary-100);
 }
 
 .namecontact {
-  color: var(--Body-Heading, #161017);
+   color: var(--Colors-Neutral-900 );
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
@@ -44,7 +44,7 @@
   line-height: 30px;
 }
 .shopping-of-contact {
-  color: var(--Body-Text-Icon, #704e73);
+   color: var(--Colors-Neutral-500 );
 
   font-family: Montserrat;
   font-size: 14px;
@@ -56,7 +56,7 @@
 
 .selected-email {
   border-bottom: 1px solid var(--Body-General-Body-Border, #e2e4e9);
-  background: var(--Colors-Primary-50, #edf0f8);
+  background: var(--Colors-Primary-50 );
   padding: 10px;
   margin-bottom: 5px;
 }
@@ -64,17 +64,17 @@
 .org-data {
   display: flex;
   height: 40px;
-  padding: 8px;
+  padding: var(--Space-S-8)  ;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
   align-self: stretch;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   background: linear-gradient(90deg, #4d65b4 0%, #1a4beb 100%);
   width: -webkit-fill-available;
 }
 
 .org-name {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -83,7 +83,7 @@
 }
 
 .contactsh5 {
-  color: #000;
+  color: var(--Colors-Pure-Black);
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -93,10 +93,11 @@
 
 .contact-list {
   display: flex;
-  padding: var(--Space-Space-12, 12px) var(--Space-Space-24, 24px);
+
+  padding: var(--Space-S-12) var(--Space-S-24);
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid var(--Colors-Primary-100, #f0d2e0);
+  border-bottom: 1px solid var(--Colors-Primary-100 );
   cursor: pointer;
 }
 
@@ -107,13 +108,13 @@
 .dropdownall {
   position: relative;
   display: flex;
-  padding: 8px 10px;
+  padding: var(--Space-S-8)   10px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 8px;
+  gap: var(--Space-S-8)  ;
+  border-radius:  var(--Radius-R-8) ;
   border: 1px solid #e2e4e9;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   cursor: pointer;
 }
 
@@ -134,15 +135,15 @@
 .dropdown-content {
   display: none;
   position: absolute;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   border: 1px solid #e2e4e9;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   margin-top: 5px;
   width: 200px;
   padding: 10px;
   top: 40px;
   left: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px var(--Space-S-4) 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
 
@@ -153,7 +154,7 @@
 
 /* Filter button styling */
 .filter-button {
-  padding: 8px 12px;
+  padding: var(--Space-S-8)   var(--Space-S-12) ;
   margin-bottom: 6px;
   cursor: pointer;
 }
@@ -164,8 +165,8 @@
 
 /* Active state styling */
 .filter-button.active {
-  background-color: #007bff;
-  color: #fff;
+  background-color: var(--Colors-Assistant-2-500);
+  color: var(--Colors-Pure-White);
 }
 
 .buttonandname {
@@ -181,15 +182,15 @@
 
 .single-mail {
   display: flex;
-  padding: var(--Space-Space-24, 24px);
+  padding: var(--Space-S-24);
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--Space-Space-8, 8px);
+  gap: var(--Space-S-8, var(--Space-S-8)  );
   align-self: stretch;
-  border-bottom: 1px solid var(--Colors-Primary-100, #f0d2e0);
+  border-bottom: 1px solid var(--Colors-Primary-100 );
 }
 .single-mail:hover {
-  background-color: #f0d2e0;
+  background-color: var(--Colors-Primary-100);
 }
 .selected-email {
   background: #edf0f8;
@@ -214,7 +215,7 @@
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 32px;
+  gap: var(--Space-S-32) ;
   flex: 1 0 0;
 }
 
@@ -224,7 +225,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 32px;
-  padding-bottom: 32px;
+  padding-bottom: var(--Space-S-32) ;
 }
 
 .body-details {
@@ -238,16 +239,16 @@
 }
 
 .new-btn {
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   background: #4d65b4;
   display: flex;
-  padding: 8px 16px;
+  padding: var(--Space-S-8)   var(--Space-S-16) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
   height: 40px;
   border: none;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -256,12 +257,12 @@
 
 .out-icn {
   cursor: pointer;
-  margin-left: 12px;
-  border-radius: 8px;
+  margin-left: var(--Space-S-12) ;
+  border-radius:  var(--Radius-R-8) ;
   border: 1px solid #e2e4e9;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   display: flex;
-  padding: 8px;
+  padding: var(--Space-S-8)  ;
   align-items: center;
   gap: 10px;
 }
@@ -300,7 +301,7 @@
 .card-body:hover::-webkit-scrollbar-thumb {
   background: #ccc;
   /* Customize the scrollbar thumb color */
-  border-radius: 4px;
+  border-radius:var(--Space-S-4);
   /* Make the scrollbar rounded */
 }
 
@@ -312,26 +313,26 @@
   background: none;
   border: none;
   border-radius: 0;
-  border-right: 1px solid var(--Colors-Primary-100, #f0d2e0);
+  border-right: 1px solid var(--Colors-Primary-100 );
 }
 .buybox-name {
-  margin: 20px;
+  margin: var(--Space-S-20) ;
   font-weight: 600;
   color: #22242b;
   cursor: pointer;
   font-size: 13px;
 }
 .replay {
-  border-radius: 16px;
-  background: #B51F63;
+  border-radius:  var(--Radius-R-16) ;
+  background: var(--Colors-Primary-500);
   display: inline-flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-size: 16px;
   font-style: normal;
@@ -347,12 +348,12 @@
   color: white;
 }
 .send {
-  color: #28a745;
+  color: var(--Colors-Positive-500);
   font-size: 18px;
 }
 
 .outbox {
-  color: #007bff;
+  color: var(--Colors-Assistant-2-500);
   font-size: 18px;
 }
 .inbox {
@@ -364,7 +365,7 @@
   padding: 0px 5px;
   margin-right: 5px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius:var(--Space-S-4);
   font-size: 0.9rem;
   color: #555;
   transition: all 0.2s ease;
@@ -380,7 +381,7 @@
 }
 
 .fa-reply.inbox {
-  color: #007bff;
+  color: var(--Colors-Assistant-2-500);
 }
 
 .fa-share.outbox {
@@ -391,15 +392,15 @@
 }
 
 .fa-envelope-circle-check.send {
-  color: #28a745;
+  color: var(--Colors-Positive-500);
 }
 
 .filter-button:not(.active) .fa-envelope-circle-check {
-  color: #28a745;
+  color: var(--Colors-Positive-500);
 }
 
 .filter-button:not(.active) .fa-reply {
-  color: #007bff;
+  color: var(--Colors-Assistant-2-500);
 }
 
 .filter-button:not(.active) .fa-share {
@@ -414,7 +415,7 @@
 .micro-deals {
   background-color: transparent;
   border: none;
-  color: #fff;
+  color: var(--Colors-Pure-White);
   width: 10rem;
   outline: none;
 }
@@ -459,8 +460,8 @@
   font-style: normal;
   font-weight: 500;
   background-color: transparent;
-  padding: 4px 8px;
-  border-radius: 16px;
+  padding:var(--Space-S-4) var(--Space-S-8)  ;
+  border-radius:  var(--Radius-R-16) ;
   transition: all 0.2s ease;
 }
 
@@ -471,11 +472,11 @@
 .new-btnCompose:hover {
   background-color: #4d65b4;
   color: white;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
 }
 
 .highlight-open {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   border-radius: 10px;
   padding: 7px;
   background-color: #4d65b4;
@@ -497,7 +498,7 @@
   color: #222121;
 }
 .delete-btn {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   border: 1px solid#ce0000;
   color: #ce0000;
 
@@ -554,7 +555,7 @@
 .mail-main-container {
   display: flex;
   height: 600px;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(50px);
   margin-top: 4vh;
@@ -562,12 +563,12 @@
 
 .org-selector {
   display: flex;
-  padding: var(--Space-Space-24, 24px);
+  padding: var(--Space-S-24);
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
   align-self: stretch;
-  border-bottom: 1px solid var(--Colors-Primary-100, #f0d2e0);
+  border-bottom: 1px solid var(--Colors-Primary-100 );
   cursor: pointer;
 }
 
@@ -587,12 +588,12 @@
   font-weight: 500;
   line-height: 1.5;
   color: #333;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 16px;
   border: 1px solid #e2e4e9;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   appearance: none;
   -webkit-appearance: none;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -608,9 +609,9 @@
 
 /* Styling for the options - these will apply when the dropdown is open */
 .form-select option {
-  padding: 12px 15px;
+  padding: var(--Space-S-12)  15px;
   font-size: 14px;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   color: #333;
 }
 
@@ -631,12 +632,13 @@
 .selected-option {
   display: flex;
   height: 40px;
-  padding: var(--Space-Space-8, 8px) var(--Radius-R-12, 12px);
+
+  padding: var(--Space-S-8   ) var(--Space-S-12 );
   align-items: center;
-  gap: var(--Space-Space-8, 8px);
+  gap: var(--Space-S-8 );
   align-self: stretch;
-  border-radius: var(--Radius-R-48, 48px);
-  background: var(--Input-BG, #fff);
+  border-radius: var(--Radius-R-48 );
+  background: var(--Colors-Pure-White );
 }
 
 .org-logo-container {
@@ -662,10 +664,10 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   border: 1px solid #e2e4e9;
   border-top: none;
-  border-radius: 24px;
+  border-radius:  var(--Radius-R-24) ;
   max-height: 250px;
   overflow-y: auto;
   animation: fadeIn 0.2s;
@@ -683,7 +685,7 @@
 }
 
 .dropdown-option.selected {
-  background-color: #f0d2e0;
+  background-color: var(--Colors-Primary-100);
   font-weight: 500;
 }
 
@@ -695,10 +697,10 @@
 .dropdown-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: var(--Space-S-8)  ;
+  padding: 6px var(--Space-S-12) ;
   background-color: white;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   border: 1px solid #e0e0e0;
   min-width: 100px;
   justify-content: space-between;
@@ -714,7 +716,7 @@
   z-index: 1000;
   margin-top: 5px;
   background-color: white;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 180px;
   display: none;
@@ -736,7 +738,7 @@
 }
 
 .dropdown-label {
-  color: var(--Colors-Primary-500, #b51f63);
+  color: var(--Colors-Primary-500);
 
   /* Body/14/24/SemiBold */
   font-family: Montserrat;
@@ -763,7 +765,7 @@
 }
 .emails-header {
   background: none;
-  padding: var(--Space-Space-24, 24px);
+  padding: var(--Space-S-24);
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -775,12 +777,12 @@
 
 .dropdown {
   display: flex;
-  padding: var(--Space-Space-8, 8px) var(--Space-Space-16, 16px);
+  padding: var(--Space-S-8 ) var(--Space-S-16 );
   justify-content: center;
   align-items: center;
-  gap: var(--Space-Space-8, 8px);
-  border-radius: 32px;
-  background: var(--Colors-Pure-White, #fff);
+  gap: var(--Space-S-8 );
+  border-radius:  var(--Radius-R-32) ;
+  background: var(--Colors-Pure-White );
 }
 
 .right-section {
@@ -791,12 +793,12 @@
 
 .refresh-button {
   display: flex;
-  padding: var(--Space-Space-8, 8px);
+  padding: var(--Space-S-8 );
   align-items: center;
   gap: 10px;
-  border-radius: 32px;
-  border: 1px solid var(--Colors-Primary-100, #f0d2e0);
-  background: var(--Card-Section-BG, #fff);
+  border-radius:  var(--Radius-R-32) ;
+  border: 1px solid var(--Colors-Primary-100 );
+  background: var(--Colors-Pure-White );
   cursor: pointer;
   transition: transform 0.3s ease;
   justify-content: center;
@@ -821,12 +823,12 @@
 .compose-button {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
   background-color: #cc3366;
   color: white;
   border: none;
   border-radius: 18px;
-  padding: 8px 16px;
+  padding: var(--Space-S-8)   var(--Space-S-16) ;
   font-weight: 500;
   cursor: pointer;
 }
@@ -835,7 +837,7 @@
   background-color: #b32d5a;
 }
 .main-top {
-  color: #000;
+  color: var(--Colors-Pure-Black);
 
   font-family: Montserrat;
   font-size: 16px;
@@ -851,11 +853,11 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  padding: 12px 20px;
+  padding: var(--Space-S-12)  var(--Space-S-20) ;
   background-color: white;
   color: #333;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius:  var(--Radius-R-8) ;
+  box-shadow: 0 var(--Space-S-4) 12px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   opacity: 0;
   transform: translateY(-20px);
@@ -869,9 +871,9 @@
 }
 
 .colored-toast {
-  background-color: #e1a5c1;
+  background-color: var(--Colors-Primary-200);
   color: white;
-  border-left: 5px solid #b51f63;
+  border-left: 5px solid var(--Colors-Primary-500);
 }
 
 .toast-content {
@@ -887,7 +889,7 @@
   display: flex;
   align-items: center;
   padding: 3px 10px;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
