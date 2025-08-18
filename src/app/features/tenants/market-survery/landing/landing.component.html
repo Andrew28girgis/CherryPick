@@ -751,6 +751,8 @@
               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                 OrgManager[0].id
               }}"
+              (load)="checkImage($event)"
+              (error)="onImageError($event)"
               alt=""
             />
             <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
