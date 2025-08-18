@@ -11,9 +11,7 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-logs',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './logs.component.html',
+   templateUrl: './logs.component.html',
   styleUrl: './logs.component.css',
 })
 export class SubmissionsComponent implements OnInit {

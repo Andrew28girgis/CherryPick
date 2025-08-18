@@ -1,31 +1,16 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, type Routes } from '@angular/router';
+import { RouterModule, type Routes, PreloadAllModules } from '@angular/router';
 import { LoginComponent } from './shared/components/login/login.component';
 import { ResetPasswordComponent } from './shared/components/change-password/change-password.component';
 import { ForgetPasswordComponent } from './shared/components/forget-password/forget-password.component';
 import { NewPasswordComponent } from './shared/components/new-password/new-password.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
-import { SummeryComponent } from './features/summery/summery.component';
 import { TermsComponent } from './shared/components/terms/terms.component';
 import { TenantComponent } from './features/tenants/tenant/tenant.component';
-import { AddTenantsComponent } from './features/tenants/add-tenants/add-tenants.component';
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
-import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
-import { KanbanComponent } from './features/kanban/kanban.component';
-import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
-import { TasksComponent } from './features/tasks/tasks.component';
-import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
-import { InboxComponent } from './features/emily/inbox/inbox.component';
-import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
-import { DataSourcesComponent } from './features/data-sources/data-sources.component';
-import { ContactsComponent } from './features/contacts/contacts.component';
-import { ShoppingComponent } from './features/shopping/shopping.component';
 import { AccountLinkedGuard } from './core/guards/account-linked.guard';
-import { ExtractShoppingCenterComponent } from './features/extract-shopping-center/extract-shopping-center.component';
-import { EmailInfoComponent } from './features/email-info/email-info.component';
-import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 import { AiSpinnerComponent } from './shared/components/ai-spinner/ai-spinner.component';
 import { AiFailedComponent } from './shared/components/ai-failed/ai-failed.component';
 import { AutomationComponent } from './shared/components/automation/automation.component';
@@ -81,14 +66,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuardService],
   },
-  // {
-  //   path: 'organizations',
-  //   loadChildren: () =>
-  //     import('../app/features/organizations/organizations.module').then(
-  //       (m) => m.OrganizationsModule
-  //     ),
-  //   canActivate: [AuthGuardService],
-  // },
+  {
+    path: 'organizations',
+    loadChildren: () =>
+      import('./features/organizations/organizations.module').then(
+        (m) => m.OrganizationsModule
+      ),
+    canActivate: [AuthGuardService, TenantOnlyGuard],
+  },
   {
     path: 'landing/:id/:shoppiongCenterId/:campaignId',
     component: LandingComponent,
@@ -104,27 +89,42 @@ const routes: Routes = [
   },
   {
     path: 'summary',
-    component: SummeryComponent,
+    loadChildren: () =>
+      import('./features/summery/summery.module').then(
+        (m) => m.SummeryModule
+      ),
     canActivate: [AuthGuardService],
   },
   {
     path: 'canvas',
-    component: CanvasHomeComponent,
+    loadChildren: () =>
+      import('./features/canvas/canvas.module').then(
+        (m) => m.CanvasModule
+      ),
     canActivate: [AuthGuardService],
   },
   {
     path: 'overview',
-    component: TasksComponent,
+    loadChildren: () =>
+      import('./features/tasks/tasks.module').then(
+        (m) => m.TasksModule
+      ),
     canActivate: [TenantOnlyGuard, AccountLinkedGuard],
   },
   {
     path: 'data-sources',
-    component: DataSourcesComponent,
+    loadChildren: () =>
+      import('./features/data-sources/data-sources.module').then(
+        (m) => m.DataSourcesModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {
     path: 'submissions/:campaignId',
-    component: SubmissionsComponent,
+    loadChildren: () =>
+      import('./features/Submissions/submissions.module').then(
+        (m) => m.SubmissionsModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {
@@ -137,18 +137,27 @@ const routes: Routes = [
   },
   {
     path: 'add-tenant',
-    component: AddTenantsComponent,
+    loadChildren: () =>
+      import('./features/tenants/add-tenants/add-tenants.module').then(
+        (m) => m.AddTenantsModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {
     path: 'summary/:orgId',
-    component: SummeryComponent,
+    loadChildren: () =>
+      import('./features/summery/summery.module').then(
+        (m) => m.SummeryModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   
   {
     path: 'market-survey',
-    component: MarketSurveyComponent,
+    loadChildren: () =>
+      import('./features/tenants/market-survery/market-survey.module').then(
+        (m) => m.MarketSurveyModule
+      ),
     data: { hideHeader: true },
   },
 
@@ -160,43 +169,56 @@ const routes: Routes = [
   },
   {
     path: 'Kanban/:id',
-    component: KanbanComponent,
+    loadChildren: () =>
+      import('./features/kanban/kanban.module').then((m) => m.KanbanModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'MutipleEmail/:campaignId',
-    component: NewMulipleEmailComponent,
+    loadChildren: () =>
+      import('./features/emily/emily.module').then(
+        (m) => m.EmilyModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {
     path: 'MailsList/:MailContextId/:IsSent',
-    component: MailsGenerateOrSendComponent,
+    loadChildren: () =>
+      import('./features/emily/emily.module').then(
+        (m) => m.EmilyModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {
     path: 'tenantWithPolygons',
-    component: AddTenantsComponent,
+    loadChildren: () =>
+      import('./features/tenants/add-tenants/add-tenants.module').then(
+        (m) => m.AddTenantsModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {
     path: 'organization-mail/:organizationId/:campaignId',
-    component: InboxComponent,
+    loadChildren: () =>
+      import('./features/emily/emily.module').then(
+        (m) => m.EmilyModule
+      ),
     canActivate: [AuthGuardService],
   },
   {
-    path: 'organizations',
-    component: ContactsComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard],
-  },
-  {
     path: 'shoppingcenters',
-    component: ShoppingComponent,
+    loadChildren: () =>
+      import('./features/shopping/shopping.module').then(
+        (m) => m.ShoppingModule
+      ),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'extractShopping/:id',
-    component: ExtractShoppingCenterComponent,
-    // canActivate: [AuthGuardService, TenantOnlyGuard],
+    loadChildren: () =>
+      import('./features/extract-shopping-center/extract-shopping-center.module').then(
+        (m) => m.ExtractShoppingCenterModule
+      ),
   },
   {
     path: 'spinner',
@@ -211,12 +233,12 @@ const routes: Routes = [
   {
     path: 'automation/:automationId',
     component: AutomationComponent,
-    data: { hideHeader: true, hideSidebar: true }, // Add hideSidebar: true here
+    data: { hideHeader: true, hideSidebar: true },
   },
   {
     path: 'automationCenters/:automationId',
     component: AutomationShoppingCentersComponent,
-    data: { hideHeader: true, hideSidebar: true }, // Add hideSidebar: true here
+    data: { hideHeader: true, hideSidebar: true },
   },
   {
     path: 'dashboard/:orgId/:orgName/:campaignId',
@@ -226,12 +248,14 @@ const routes: Routes = [
   },
   {
     path: 'emailInfo/:mailId',
-    component: EmailInfoComponent,
+    loadChildren: () =>
+      import('./features/email-info/email-info.module').then(
+        (m) => m.EmailInfoModule
+      ),
   },
   {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
-    // data: { hideHeader: true },
   },
   {
     path: ':guid',
@@ -255,6 +279,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',
+      preloadingStrategy: PreloadAllModules
     }),
   ],
   exports: [RouterModule],

@@ -215,7 +215,7 @@
     <div class="organization-grid">
       <div class="organization-card" *ngFor="let org of paginatedContacts">
         <div class="d-flex align-items-center">
-          <img
+          <img loading="lazy" 
             class="logo ms-2"
             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
               org.id

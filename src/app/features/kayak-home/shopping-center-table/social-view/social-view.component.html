@@ -53,7 +53,7 @@
     <!-- Main Property Content -->
     <div class="property-main">
       <div class="property-image-container" (dblclick)="handleContentDoubleClick($event, shopping)">
-        <img 
+        <img loading="lazy" 
           [src]="getImageUrl(shopping)" 
           [alt]="shopping.CenterName"
           class="property-image"
@@ -131,7 +131,7 @@
             <div class="comment-item" *ngIf="comment && comment.Comment && !comment.ParentCommentId">
               <div class="comment-user-avatar" [class.no-image]="!comment?.ProfileImage">
                 <ng-container *ngIf="comment?.ProfileImage; else commentInitial">
-                  <img [src]="comment?.ProfileImage" [alt]="comment?.Firstname">
+                  <img loading="lazy" [src]="comment?.ProfileImage" [alt]="comment?.Firstname">
                 </ng-container>
                 <ng-template #commentInitial>
                   <div class="avatar-initial">{{ comment?.Firstname?.charAt(0)?.toUpperCase() || 'U' }}</div>
@@ -159,7 +159,7 @@
                 <div class="reply-input-container" *ngIf="replyingTo[shopping.MarketSurveyId] === comment.Id">
                   <div class="user-avatar">
                     <ng-container *ngIf="currentUserImage; else userInitial">
-                      <img [src]="currentUserImage" alt="User Avatar">
+                      <img loading="lazy" [src]="currentUserImage" alt="User Avatar">
                     </ng-container>
                     <ng-template #userInitial>
                       <div class="avatar-initial">{{ currentUserName.charAt(0).toUpperCase()  }}</div>
@@ -175,10 +175,10 @@
                     >
                     <div class="input-actions">
                       <!-- <button class="action-icon">
-                        <img src="assets/Images/Icons/emoji.svg" alt="Emoji">
+                        <img loading="lazy" src="assets/Images/Icons/emoji.svg" alt="Emoji">
                       </button>
                       <button class="action-icon">
-                        <img src="assets/Images/Icons/image.svg" alt="Attach Image">
+                        <img loading="lazy" src="assets/Images/Icons/image.svg" alt="Attach Image">
                       </button> -->
                       <button class="reply-submit" (click)="addReply(shopping.MarketSurveyId, comment.Id)">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -195,7 +195,7 @@
                   <div class="reply-item" *ngFor="let reply of (showAllReplies[comment.Id] ? getReplies(shopping?.ShoppingCenter?.Comments || [], comment.Id) : (getReplies(shopping?.ShoppingCenter?.Comments || [], comment.Id) | slice:0:2)); trackBy: trackByCommentId">
                     <div class="reply-user-avatar" [class.no-image]="!reply?.ProfileImage">
                       <ng-container *ngIf="reply?.ProfileImage; else replyInitial">
-                        <img [src]="reply?.ProfileImage" [alt]="reply?.Firstname">
+                        <img loading="lazy" [src]="reply?.ProfileImage" [alt]="reply?.Firstname">
                       </ng-container>
                       <ng-template #replyInitial>
                         <div class="avatar-initial">{{ reply?.Firstname?.charAt(0)?.toUpperCase() || 'U' }}</div>
@@ -235,7 +235,7 @@
       <div class="add-comment-container">
         <div class="user-avatar" [class.no-image]="!currentUserImage">
           <ng-container *ngIf="currentUserImage; else userInitial">
-            <img [src]="currentUserImage" alt="User Avatar">
+            <img loading="lazy" [src]="currentUserImage" alt="User Avatar">
           </ng-container>
           <ng-template #userInitial>
             <div class="avatar-initial">{{ currentUserName.charAt(0).toUpperCase() || 'U' }}</div>
@@ -252,7 +252,7 @@
           <div class="input-actions">
             <!-- <button class="action-icon">
               
-              <img src="assets/Images/Icons/emoji.svg" alt="Emoji">
+              <img loading="lazy" src="assets/Images/Icons/emoji.svg" alt="Emoji">
             </button> -->
             <!-- <button class="action-icon">
 

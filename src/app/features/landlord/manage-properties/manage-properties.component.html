@@ -96,7 +96,7 @@
 
                 </label>
               </div>
-              <img [src]="displayCustomImage(image)" [alt]="image.name" class="img-fluid gpt-image" />
+              <img loading="lazy"  [src]="displayCustomImage(image)" [alt]="image.name" class="img-fluid gpt-image" />
               <div class="card-body">
                 <p class="text-center mt-2">{{ image.name }}</p>
               </div>
@@ -258,7 +258,7 @@
                 <div class="carousel-inner">
                   <div *ngFor="let imageUrl of getImagesArray(); let i = index" class="carousel-item"
                     [ngClass]="{'active': i === 0}">
-                    <img [src]="imageUrl" alt="Property Image" class="d-block w-100 rounded">
+                    <img loading="lazy"  [src]="imageUrl" alt="Property Image" class="d-block w-100 rounded">
                   </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel"
@@ -274,7 +274,7 @@
               </div>
             </div>
             <ng-template #singleImage>
-              <img
+              <img loading="lazy" 
                 [src]="getImagesArray()[0]"
                 alt="Property Image"
                 class="img-fluid rounded shadow-sm"

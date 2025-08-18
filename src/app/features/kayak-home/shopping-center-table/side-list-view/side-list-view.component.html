@@ -18,7 +18,7 @@
               <a
               >
                 <div class="main-img">
-                  <img
+                  <img loading="lazy" 
                     [src]="getImageUrl(place)"
                     [title]="place.CenterName"
                     [ngClass]="{ loading: imageLoadingStates[place.Id] }"
@@ -438,7 +438,7 @@
                     <span class="managed-by">Leased by</span>
       
                     <div>
-                      <!-- <img
+                      <!-- <img loading="lazy" 
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                           shopping.ShoppingCenter.ManagerOrganization[0].ID
@@ -451,7 +451,7 @@
                       {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
                     </div>
                     <div>
-                      <img
+                      <img loading="lazy" 
                         class="ms-2 cursor"
                         src="../../../assets/Images/Icons/eye.png"
                         alt="Organization Brokers"

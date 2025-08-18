@@ -22,7 +22,7 @@
             target="_blank"
           > -->
             <div class="main-img">
-              <img
+              <img loading="lazy" 
                 class="card-photo"
                 [src]="shopping.MainImage"
                 alt="{{ shopping.CenterName }}"
@@ -89,7 +89,7 @@
                       </p>
                       <p style="color: #000">
                         {{ item.RelationOrganizationName }}
-                        <img
+                        <img loading="lazy" 
                           class="logo ms-2"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                             item.RelationOrganizationId
@@ -157,7 +157,7 @@
                 <hr class="small-hr mt-2" />
                 <span class="managed-by">Leased by</span>
                 <p class="spec-head">
-                  <!-- <img
+                  <!-- <img loading="lazy" 
                     class="logo"
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       shopping.ShoppingCenter.ManagerOrganization[0].ID
@@ -169,7 +169,7 @@
                   /> -->
                   {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
 
-                  <!-- <img
+                  <!-- <img loading="lazy" 
                     class="ms-2 total"
                     src="../../../assets/Images/Icons/eye.png"
                     alt="View Manager Details"

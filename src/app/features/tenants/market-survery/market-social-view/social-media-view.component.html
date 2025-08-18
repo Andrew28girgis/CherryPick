@@ -67,7 +67,7 @@
                 >
                   <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
 
-                  <img
+                  <img loading="lazy" 
                     class="logo"
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       item.RelationOrganizationId
@@ -92,7 +92,7 @@
       </div>
       <div class="card-image Res tiktok-imgg">
         <div [ngClass]="{ 'image-shadow': showDetails[i] }" style="width: 100%">
-          <img
+          <img loading="lazy" 
             class="Res"
             [src]="
               shopping.MainImage && shopping.MainImage !== ''
@@ -494,7 +494,7 @@
       >
         <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
           <div class="text-center">
-            <img [src]="img" class="img-fluid p-img" alt="image" />
+            <img loading="lazy"  [src]="img" class="img-fluid p-img" alt="image" />
           </div>
         </ng-template>
       </ngb-carousel>
@@ -507,7 +507,7 @@
     <!-- Header Section -->
     <div class="modal-header tiktok-header">
       <div class="d-flex align-items-center head">
-        <img
+        <img loading="lazy" 
           [src]="
             General.modalObject.MainImage &&
             General.modalObject.MainImage !== ''

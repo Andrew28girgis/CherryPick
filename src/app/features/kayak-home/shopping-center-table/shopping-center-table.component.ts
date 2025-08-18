@@ -1,4 +1,4 @@
- import {
+import {
   Component,
   HostListener,
   OnInit,
@@ -432,6 +432,19 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       this.tenantDropdownRef.close();
     }
   }
+
+  getCurrentCampaignName(): string {
+    if (!this.selectedTenant || !this.selectedTenant.Campaigns) {
+      return 'Campaign';
+    }
+    
+    const campaign = this.selectedTenant.Campaigns.find(
+      (c: any) => c.Id === this.selectedCampaignId
+    );
+    
+    return campaign ? campaign.CampaignName : 'Campaign';
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
@@ -705,4 +718,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   //   findAllContacts() {
   //   (window as any).electronMessage.findAllContacts();
   // }
+
+ 
+
+  trackByStageId(index: number, stage: Stage): number {
+    return stage?.id || index;
+  }
+  
+ 
+
+ 
 }
