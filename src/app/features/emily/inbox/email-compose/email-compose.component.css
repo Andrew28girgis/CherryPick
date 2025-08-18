@@ -15,8 +15,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #B51F63;
-  background-color: #B51F63;
+  border: 1px solid var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-500);
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
   color: white;
@@ -24,7 +24,7 @@
 
 .generate-btn button *,
 .advanced-controls button * {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .generate-btn button svg,
@@ -35,10 +35,10 @@
 
 .generate-btn button svg path,
 .advanced-controls button svg path {
-  fill: #fff;
+  fill: var(--Colors-Pure-White);
 }
 .center-container {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   width: calc(50% - 0.75rem);
   padding: 1rem;
   border: 1px solid #c6c9d3;
@@ -59,7 +59,7 @@
   color: #707791;
 }
 .nav-pills .nav-link.active {
-  background-color: #B51F63;
+  background-color: var(--Colors-Primary-500);
 }
 
 .contact-broker-stepper {
@@ -86,7 +86,7 @@
 }
 
 .contact-broker-stepper ul li.active-step {
-  background-color: #B51F63;
+  background-color: var(--Colors-Primary-500);
 }
 
 .contact-broker-step {
@@ -112,8 +112,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #B51F63;
-  color: #fff;
+  background-color: var(--Colors-Primary-500);
+  color: var(--Colors-Pure-White);
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -125,19 +125,19 @@
 }
 
 .contact-broker-step .step-header:hover .step-title {
-  color: #B51F63;
+  color: var(--Colors-Primary-500);
 }
 .advanced {
     font-size: 20px;
     margin: 0;
     padding: 0;
-    color: #B51F63;
+    color: var(--Colors-Primary-500);
     font-weight: 600;
     cursor: pointer;
   }
   .card-email:hover {
     opacity: 0.9;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 var(--Space-S-4) 12px rgba(0, 0, 0, 0.2);
   }
   .shopping-name{
     color:  #16181D;
@@ -149,13 +149,13 @@
   .card-broker{
     min-height: 100px;
     display: flex;
-    padding:  12px  20px;
+    padding:  var(--Space-S-12)   var(--Space-S-20) ;
     align-items: flex-start;
-    gap:  12px;
+    gap:  var(--Space-S-12) ;
     flex: 1 0 0;
-    border-radius:  20px;
+    border-radius:   var(--Radius-R-20) ;
     border: 1px solid  #C6C9D3;
-    background:  #FFF;
+    background:  var(--Colors-Pure-White);
   }
   .broker-name{
     color:  #16181D;
@@ -181,7 +181,7 @@
     line-height: 30px;
   }
   .text-outlook{
-    color: #000;
+    color: var(--Colors-Pure-Black);
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -189,18 +189,18 @@
     margin-bottom: 0;
   }
   .card-email{
-    border-radius:  12px;
+    border-radius:   var(--Radius-R-12) ;
     border: 1px solid  #E2E4E9;
     display: flex;
-    padding: 16px;
+    padding: var(--Space-S-16) ;
     align-items: center;
     gap:12px;
     align-self: stretch;
-    margin-bottom: 16px;
+    margin-bottom: var(--Space-S-16) ;
   }
   ::ng-deep   .modal-content {
     border-radius: 1rem;
-    background: #F8E9EF !important;
+    background: var(--Colors-Primary-50) !important;
    }
   .shopp-container{
     display: flex;
@@ -235,8 +235,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #B51F63;
-      /* color: #fff; */
+      background-color: ;
+      /* color: var(--Colors-Pure-White); */
       font-size: 0.7rem;
       font-weight: 500; 
     }
@@ -247,7 +247,7 @@
       font-size: 16px;
       text-align: center;
       line-height: 18px;
-      margin-bottom: 20px;
+      margin-bottom: var(--Space-S-20) ;
     }
     .manager-by{
       font-size: 15px;

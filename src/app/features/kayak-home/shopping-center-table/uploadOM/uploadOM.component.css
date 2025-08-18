@@ -86,8 +86,8 @@
 /* Common Section Styles */
 .details-section {
   background: white;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius:  var(--Radius-R-12) ;
+  padding: var(--Space-S-20) ;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -100,8 +100,8 @@
 .section-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: var(--Space-S-12) ;
+  margin-bottom: var(--Space-S-20) ;
   padding-bottom: 15px;
   border-bottom: 1px solid #eee;
 }
@@ -123,16 +123,16 @@
 .tenants-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
 }
 
 .tenant-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 15px;
+  padding: var(--Space-S-12)  15px;
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   transition: background 0.2s ease;
 }
 
@@ -168,13 +168,13 @@
 .availability-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
 }
 
 .space-item {
   padding: 15px;
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   transition: background 0.2s ease;
 }
 
@@ -185,13 +185,13 @@
 .space-details {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
 }
 
 .suite-badge {
   background: #3498db;
   color: white;
-  padding: 4px 8px;
+  padding: var(--Space-S-4) var(--Space-S-8) ;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -227,9 +227,9 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 12px;
+  padding: var(--Space-S-12) ;
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) r(--Radius-R-8) ;
   transition: background 0.2s ease;
 }
 
@@ -286,7 +286,7 @@
   background: #2c3e50;
   color: white;
   padding: 15px 25px;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   opacity: 0;
   transform: translateY(20px);

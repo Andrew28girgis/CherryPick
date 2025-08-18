@@ -8,8 +8,8 @@
 .comment-card .comment-data {
   width: 100%;
   background-color: #edf0f8;
-  border-left: 1px solid #ff4c4c;
-  border-right: 1px solid #ff4c4c;
+  border-left: 1px solid var(--Colors-Negative-500);
+  border-right: 1px solid var(--Colors-Negative-500);
   border-radius: 0.5rem;
   padding: 0.75rem;
   color: #707791;
@@ -21,7 +21,7 @@
 
 .comment-card .comment-data span {
   font-weight: 600;
-  color: #000;
+  color: var(--Colors-Pure-Black);
 }
 
 .comment-card .comment-data p {

@@ -11,10 +11,10 @@
   /* keep your existing styles… */
   height: 600px;              /* or consider a max-height; see note below */
   overflow-y: auto;           /* 'auto' avoids scrollbars when not needed */
-  padding: 32px;
+  padding: var(--Space-S-32) ;
   align-items: center;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.4);
+  border-radius:  var(--Radius-R-20) ;
+  background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
 
   /* ✅ the important changes */
@@ -28,8 +28,8 @@
 .header-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-top: 24px;
+  gap: var(--Space-S-12) ;
+  padding-top:  var(--Space-S-24) ;
   padding-bottom: 21px;
 }
 
@@ -38,27 +38,26 @@
   display: flex;
   max-width: 624px;
   height: 48px;
-  padding: var(--Input-Padding-Top-button, 8px)
-    var(--Input-Padding-Right-Left, 16px);
-  justify-content: space-between;
+  padding:  var(--Space-S-8) ;
+   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  border-radius: var(--Input-Radius, 24px);
-  border: 1px solid var(--Input-Border, #e2dce3);
-  background: rgba(255, 255, 255, 0.4);
+  border-radius:   var(--Radius-R-24) ;
+  border: 1px solid var(--Colors-Neutral-100 );
+  background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
 }
 
 .actions-section {
   display: flex;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
   flex-shrink: 0;
 }
 .search-container {
   display: flex;
   align-items: center;
-  gap: 8px; /* creates gap between icon and input */
+  gap: var(--Space-S-8) ; /* creates gap between icon and input */
   flex: 1 0 0;
 }
 .icon {
@@ -82,7 +81,7 @@
 }
 
 .search-input::placeholder {
-  color: var(--Input-Label-Icon, #704e73);
+   color: var(--Colors-Neutral-500 );
 
   font-family: Montserrat;
   font-size: 16px;
@@ -96,12 +95,12 @@
 .sort-btn {
   display: flex;
   height: 48px;
-  padding: var(--Space-S-8, 8px) var(--Radius-R-24, 24px);
+  padding: var(--Space-S-8) var(--Space-S-24, 24px);
   align-items: center;
-  gap: var(--Space-Space-4, 4px);
+  gap: var(--Space-S-4  );
   border: none;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.4);
+  border-radius:  var(--Radius-R-24) ;
+  background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
 }
 
@@ -111,12 +110,12 @@
 }
 
 .dropdown-menu {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--Colors-Card-Background);
   backdrop-filter: blur(100px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 16px;
-  margin-top: 8px !important;
+  border-radius:  var(--Radius-R-20) ;
+  padding: var(--Space-S-16) ;
+  margin-top: var(--Space-S-8)  !important;
 }
 .tenant-container {
   width: 100%;
@@ -149,13 +148,13 @@
   cursor: pointer;
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: var(--Radius-Radius-16, 16px);
-  background: var(--Colors-Primary-500, #b51f63);
-  color: var(--Button-Primary-Label, #fff);
+  gap: var(--Space-S-8) ;
+  border-radius: var(--Radius-R-16 );
+  background: var(--Colors-Primary-500);
+  color: var(--Colors-Pure-White );
   text-align: center;
   font-family: Montserrat;
   font-size: 16px;
@@ -176,7 +175,7 @@
 }
 
 .add-tenant-btn span {
-  color: var(--Button-Primary-Label, #fff);
+  color: var(--Colors-Pure-White );
   text-align: center;
 background: none;
   /* Body/16/30/Medium */

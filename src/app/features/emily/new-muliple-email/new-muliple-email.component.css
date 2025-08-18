@@ -73,7 +73,7 @@
 
 select {
   border-radius: 10px;
-  padding: 8px;
+  padding: var(--Space-S-8)  ;
   border: 1px solid #ccc;
   appearance: none;
   -webkit-appearance: none;
@@ -84,7 +84,7 @@ select {
 
 select option {
   border-radius: 10px;
-  padding: 8px;
+  padding: var(--Space-S-8)  ;
 }
 
 select option:checked {
@@ -96,7 +96,7 @@ select option:checked {
   background: white;
   border-radius: 16px;
   width: 95%;
-  padding: 16px;
+  padding: var(--Space-S-16) ;
 }
 
 .Name_Emails_body {
@@ -164,16 +164,16 @@ select option:checked {
 }
 
 .checkbox-section-head {
-  padding-bottom: 8px;
+  padding-bottom: var(--Space-S-8)  ;
 }
 
 .checkbox-section-body {
-  padding-bottom: 4px;
+  padding-bottom:var(--Space-S-4);
   padding-top: 10px;
 }
 
 .checkbox-section-body-first {
-  padding-inline-start: 20px;
+  padding-inline-start: var(--Space-S-20) ;
   padding-bottom: 3px;
   padding-top: 3px;
 }
@@ -232,7 +232,7 @@ div {
 
 .Name_contact{
   font-size: 16px;
-  color: #000;
+  color: var(--Colors-Pure-Black);
   font-weight: 500px;
   line-height: 20px;
 }
@@ -273,7 +273,7 @@ tbody>tr>th:nth-child(1) {
   width: 40px;
   max-width: 100%;
   border: 1px solid gainsboro;
-  border-radius: 4px;
+  border-radius:var(--Space-S-4);
   height: auto;
   max-height: 100px;
   background: white;

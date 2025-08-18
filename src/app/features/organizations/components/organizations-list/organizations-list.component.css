@@ -7,7 +7,7 @@
   position: relative;
   overflow: hidden;
   background-color: #e2e2e2;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 /* Shimmer animation */
@@ -21,7 +21,7 @@
   background: linear-gradient(
     120deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
+    var(--Colors-Card-Background) 50%,
     transparent 100%
   );
   animation: shimmer 1.5s infinite;
@@ -46,7 +46,7 @@
 .skeleton-img {
   height: 50px;
   width: 50px;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   margin-right: 10px;
 }
 

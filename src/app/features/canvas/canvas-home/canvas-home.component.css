@@ -54,13 +54,13 @@ body {
 
 .input-area {
   padding: 15px;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   border-top: 1px solid #dee2e6;
 }
 
 .canvas-container {
   height: 100vh;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   border-left: 1px solid #dee2e6;
   position: relative;
 }
@@ -98,5 +98,5 @@ canvas {
 
 .barb {
   background-color: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }

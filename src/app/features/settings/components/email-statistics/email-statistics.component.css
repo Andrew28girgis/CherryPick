@@ -42,7 +42,7 @@
   justify-content: center;
   align-items: stretch;
   gap: 17px;
-  padding: 24px;
+  padding:  var(--Space-S-24) ;
   flex-wrap: nowrap;
   width: 100%;
   min-width: 0;
@@ -64,7 +64,7 @@
   align-items: center;
   /* min-width: 180px; */
   padding: 10px;
-  border-radius: 24px;
+  border-radius:  var(--Radius-R-24) ;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
@@ -199,7 +199,7 @@
 .diamond-title {
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: var(--Space-S-12) ;
   color: white;
 }
 
@@ -208,7 +208,7 @@
   font-size: 14px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 16px;
+  margin-bottom: var(--Space-S-16) ;
 }
 
 .stats {
@@ -267,8 +267,8 @@
     ),
     linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);
   background-blend-mode: normal, color-burn, normal;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius:  var(--Radius-R-12) ;
+  padding:  var(--Space-S-24) ;
   /* position: relative; */
   color: white;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -289,8 +289,8 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: var(--Space-S-4) var(--Space-S-8) ;
+  border-radius:  var(--Radius-R-4) ;
   transition: background-color 0.2s ease;
 }
 
@@ -299,17 +299,17 @@
 }
 
 .progress-content {
-  margin-top: 8px;
+  margin-top: var(--Space-S-8) ;
 }
 
 .progress-text {
-  margin-bottom: 20px;
+  margin-bottom: var(--Space-S-20) ;
 }
 
 .status-text {
   font-size: 12px;
   opacity: 0.8;
-  margin: 0 0 4px 0;
+  margin: 0 0 var(--Space-S-4)  0;
   font-weight: 400;
 }
 
@@ -323,7 +323,7 @@
 .progress-section {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--Space-S-16) ;
 }
 
 .progress-bar-container {
@@ -334,14 +334,14 @@
   width: 100%;
   height: 8px;
   background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
   background-color: white;
-  border-radius: 4px;
+  border-radius:  var(--Radius-R-4) ;
   transition: width 0.3s ease;
 }
 
@@ -355,7 +355,7 @@
 /* Responsive design */
 @media (max-width: 480px) {
   .progress-container {
-    padding: 20px 16px;
+    padding: var(--Space-S-20)  var(--Space-S-16) ;
   }
 
   .main-text {
@@ -372,8 +372,8 @@
 .pentagon-container {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  padding: 20px 0;
+  gap: var(--Space-S-20) ;
+  padding: var(--Space-S-20)  0;
 }
 
 .pentagon-wrapper {
@@ -426,12 +426,12 @@
 
 .go-to-emily {
   display: flex;
-  padding: 10px 20px;
+  padding: 10px var(--Space-S-20) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   margin-bottom: 15px;
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius: var(--Radius-R-16 );
   background: var(--Button-Primary-BG, #3922d2);
   border: none;
   transition: background 0.2s, box-shadow 0.2s;
@@ -451,7 +451,7 @@
 }
 
 .go-to-emily span {
-  color: var(--Button-Primary-Label, #fff);
+  color: var(--Colors-Pure-White );
   text-align: center;
   font-family: Montserrat;
   font-size: 14px;

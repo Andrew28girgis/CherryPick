@@ -9,7 +9,7 @@
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
-  background-color: #ff4c4c;
+  background-color: var(--Colors-Negative-500);
 }
 
 .submission-card .gray-dot {
@@ -30,7 +30,7 @@
 .avatar-icon {
   width: 1.75rem;
   height: 1.75rem;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   border-radius: 50%;
 }
 

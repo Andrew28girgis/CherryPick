@@ -42,16 +42,16 @@
 }
 
 .checkbox-section-head {
-  padding-bottom: 8px;
+  padding-bottom: var(--Space-S-8)  ;
 }
 
 .checkbox-section-body {
-  padding-bottom: 4px;
+  padding-bottom: var(--Space-S-4);
   padding-top: 10px;
 }
 
 .checkbox-section-body-first {
-  padding-inline-start: 20px;
+  padding-inline-start: var(--Space-S-20) ;
   padding-bottom: 3px;
   padding-top: 3px;
 }
@@ -135,7 +135,7 @@
 
 .generate-btn button *,
 .advanced-controls button * {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .generate-btn button svg,
@@ -146,7 +146,7 @@
 
 .generate-btn button svg path,
 .advanced-controls button svg path {
-  fill: #fff;
+  fill: var(--Colors-Pure-White);
 }
 
 .preview-emails-contaciner {
@@ -224,13 +224,13 @@
 }
 
 .edit-btn {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   color: #4d65b4;
 }
 
 .send-btn {
   background-color: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .empty-emails {
@@ -240,7 +240,7 @@
 
 .loader {
   display: block;
-  --height-of-loader: 4px;
+  --height-of-loader: var(--Space-S-4);
   --loader-color: #4d65b4;
   width: 10rem;
   height: var(--height-of-loader);
@@ -274,7 +274,7 @@
   padding: 1rem;
   border-radius: 1rem;
   cursor: pointer;
-  color: #000;
+  color: var(--Colors-Pure-Black);
 }
 
 @keyframes moving {

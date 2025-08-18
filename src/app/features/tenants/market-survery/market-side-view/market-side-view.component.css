@@ -40,7 +40,7 @@
     color: #565656;
   }
   .spec-head {
-    color: #000;
+    color: var(--Colors-Pure-Black);
     display: flex;
     /* justify-content: space-between; */
     align-items: center;
@@ -63,8 +63,8 @@
     background-color: #f4f4f4;
   }
   .card-content {
-    background-color: #fff;
-    border-radius: 0 0 20px 20px;
+    background-color: var(--Colors-Pure-White);
+    border-radius: 0 0  var(--Radius-R-20)   var(--Radius-R-20) ;
     min-height: 250px;
     max-height: 350px;
     cursor: auto;
@@ -91,12 +91,12 @@
   color: #707791;
   border: 1px solid #ced4da;
   transition: all 0.3s ease;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: var(--Space-S-8)  var(--Space-S-12) ;
+  border-radius:  var(--Radius-R-4) ;
 }
 
 .action-btn:first-child {
-  margin-right: 8px;
+  margin-right: var(--Space-S-8) ;
 }
 
 .action-btn:hover {

@@ -22,6 +22,7 @@
 
 .contact-container,
 .send-as {
+  margin-top: 0.5rem;
   padding: 0.5rem;
   border: 1px solid #c6c9d3;
   border-radius: 1.5rem;
@@ -41,7 +42,7 @@
 
 .contact-name {
   font-weight: 600;
-  color: #000 !important;
+  color: var(--Colors-Pure-Black) !important;
 }
 
 .send-as {
@@ -57,8 +58,8 @@
 }
 
 .send-as-switch {
-  border: 1px solid #4d65b4;
-  color: #4d65b4;
+  border: 1px solid var(--Colors-Primary-500);
+  color: var(--Colors-Primary-500);
   border-radius: 1rem;
   overflow: hidden;
   display: flex;
@@ -71,8 +72,8 @@
 }
 
 .send-as-active {
-  background-color: #4d65b4;
-  color: #fff;
+  background-color: var(--Colors-Primary-500);
+  color: var(--Colors-Pure-White);
 }
 
 .continue-btn {
@@ -87,14 +88,14 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #4d65b4;
-  background-color: #4d65b4;
+  border: 1px solid var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-500);
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
 }
 
 .continue-btn button * {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .continue-btn button svg {
@@ -103,7 +104,7 @@
 }
 
 .load-another-contact {
-  color: #4d65b4;
+  color: var(--Colors-Primary-500);
   font-weight: 600;
   text-decoration: underline;
   cursor: pointer;
@@ -159,16 +160,16 @@
 }
 
 .checkbox-section-head {
-  padding-bottom: 8px;
+  padding-bottom: var(--Space-S-8) ;
 }
 
 .checkbox-section-body {
-  padding-bottom: 4px;
+  padding-bottom: var(--Space-S-4);
   padding-top: 10px;
 }
 
 .checkbox-section-body-first {
-  padding-inline-start: 20px;
+  padding-inline-start: var(--Space-S-20) ;
   padding-bottom: 3px;
   padding-top: 3px;
 }
@@ -188,13 +189,22 @@
   background: white;
   position: relative;
   left: 15px;
-  top: 12px;
+  /* top: 1px; */
   padding-inline: 6px;
   color: #707791;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.005em;
+  z-index: 1;
+  background: var(--Main-Container-BG);
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  border-top: 1px solid #dee2e6;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
 }
 
 .checkbox-section-select select {
@@ -238,21 +248,21 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #4d65b4;
-  background-color: #4d65b4;
+  border: 1px solid var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-500);
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
 }
 
 .generate-btn button:disabled,
 .advanced-controls button:disabled {
-  border: 1px solid #94a3d2;
-  background-color: #94a3d2;
+  border: 1px solid #d294a9;
+  background-color: #d294a9;
 }
 
 .generate-btn button *,
 .advanced-controls button * {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .generate-btn button svg,
@@ -263,7 +273,7 @@
 
 .generate-btn button svg path,
 .advanced-controls button svg path {
-  fill: #fff;
+  fill: var(--Colors-Pure-White);
 }
 
 .preview-emails-contaciner {
@@ -335,19 +345,19 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #4d65b4;
+  border: 1px solid var(--Colors-Primary-500);
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;
 }
 
 .edit-btn {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   color: #4d65b4;
 }
 
 .send-btn {
-  background-color: #4d65b4;
-  color: #fff;
+  background-color: var(--Colors-Primary-500);
+  color: var(--Colors-Pure-White);
 }
 
 .empty-emails {
@@ -357,8 +367,8 @@
 
 .loader {
   display: block;
-  --height-of-loader: 4px;
-  --loader-color: #4d65b4;
+  --height-of-loader: var(--Space-S-4);
+  --loader-color: var(--Colors-Primary-500);
   width: 10rem;
   height: var(--height-of-loader);
   border-radius: 30px;
@@ -391,7 +401,7 @@
   padding: 1rem;
   border-radius: 1rem;
   cursor: pointer;
-  color: #000;
+  color: var(--Colors-Pure-Black);
 }
 
 @keyframes moving {
@@ -410,4 +420,21 @@
   .generate-email-column {
     width: 100%;
   }
+}
+.form-check-input:checked {
+  border: 1px solid var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-500);
+}
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(181, 31, 99, 0.25) !important;
+}
+.form-control {
+  background: var(--Main-Container-BG) !important;
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+}
+.form-select {
+  background: var(--Main-Container-BG) !important;
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
 }

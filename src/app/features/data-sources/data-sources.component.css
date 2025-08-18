@@ -26,9 +26,9 @@
   color: #6c757d;
 }
 .drive {
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   border: 1px solid #e2e4e9;
-  padding: 8px 12px;
+  padding: var(--Space-S-8)   var(--Space-S-12) ;
   align-items: center;
   background-color: white;
   margin-right: 10px;
@@ -43,7 +43,7 @@
 }
 /* .drive--selected .drive-name,
 .drive--selected svg path {
-  fill: #fff !important;
+  fill: var(--Colors-Pure-White) !important;
 } */
 .drive-name {
   color: #16181d;
@@ -53,7 +53,7 @@
   line-height: 24px;
 }
 .modal-title {
-  color: #000;
+  color: var(--Colors-Pure-Black);
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -82,19 +82,19 @@
   line-height: 32px;
 }
 .submit {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   background: #4d65b4;
   display: flex;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
   align-self: stretch;
   max-height: 40px;
   max-width: 130px;
@@ -107,14 +107,14 @@
 }
 .close {
   display: flex;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8)  ;
   max-height: 40px;
   max-width: 130px;
   background-color: white;
   color: #4d65b4;
   border: 1px solid #4d65b4;
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
 }

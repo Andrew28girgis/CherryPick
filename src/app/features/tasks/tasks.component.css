@@ -50,19 +50,19 @@
 
 .card-done-indicator {
   font-size: 0.85rem;
-  background-color: #ffeded;
-  color: #ff4c4c;
+  background-color: var(--Colors-Negative-100);
+  color: var(--Colors-Negative-500);
   padding: 0.125rem 0.75rem;
   border-radius: 1rem;
 }
 
 .card-done-indicator-done {
-  background-color: #eaf6ec;
+  background-color: var(--Colors-Positive-100);
   color: #28a745;
 }
 
 .card-btn * {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 .card-btn {
@@ -91,27 +91,27 @@
 } */
 
 .card-btn-unlink {
-  background-color: #ff4c4c;
-  border-color: #ff4c4c;
+  background-color: var(--Colors-Negative-500);
+  border-color: var(--Colors-Negative-500);
 }
 
 .card-btn-unlink:active {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 
 /*  */
 
 .card-btn-danger-outline * {
-  color: #ff4c4c;
+  color: var(--Colors-Negative-500);
 }
 
 .card-btn-danger-outline {
-  background-color: #fff;
-  border: 1px solid #ff4c4c;
+  background-color: var(--Colors-Pure-White);
+  border: 1px solid var(--Colors-Negative-500);
 }
 
 .card-btn-danger-outline:active {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 
 /*  */
@@ -121,12 +121,12 @@
 }
 
 .card-btn-outline {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   border: 1px solid #3922d2;
 }
 
 .card-btn-outline:active {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 
 .section-img {
@@ -145,14 +145,14 @@
   top: 1rem;
   right: 1rem;
   z-index: 1055;
-  background-color: #e6f2ff;
-  border-color: #007bff;
-  color: #004a99;
+  background-color: var(--Colors-Assistant-2-50);
+  border-color: var(--Colors-Assistant-2-500);
+  color: var(--Colors-Assistant-2-700);
 }
 
 .data-collection-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap:  var(--Space-S-24) ;
   margin-bottom: 32px;
 }

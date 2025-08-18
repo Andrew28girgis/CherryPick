@@ -9,8 +9,8 @@
   width: 100%;
   background-color: #edf0f8;
   text-align: center;
-  border-left: 1px solid #ff4c4c;
-  border-right: 1px solid #ff4c4c;
+  border-left: 1px solid var(--Colors-Negative-500);
+  border-right: 1px solid var(--Colors-Negative-500);
   border-radius: 0.5rem;
   padding: 0.75rem;
   font-weight: 600;
@@ -18,7 +18,7 @@
 
 .reaction-card .reaction {
   font-weight: 600;
-  color: #28a745;
+  color: var(--Colors-Positive-500);
 }
 
 .avatar-icon {

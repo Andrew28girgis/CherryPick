@@ -18,7 +18,7 @@
   transform: translateX(-50%);
   align-items: center;
   display: flex;
-  background: #ffffff;
+  background: var(--Colors-Pure-White);
   padding: 0.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
@@ -92,11 +92,11 @@
 }
 
 .launch-campaign-btn-icon svg path {
-  fill: #ffffff;
+  fill: var(--Colors-Pure-White);
 }
 
 .launch-campaign-title {
-  color: #ffffff;
+  color: var(--Colors-Pure-White);
 }
 
 .exit-draw-mode {
@@ -110,8 +110,8 @@
   align-items: center;
   display: flex;
   gap: 0.5rem;
-  background: #ffffff;
-  border: 1px solid #ff4c4c;
+  background: var(--Colors-Pure-White);
+  border: 1px solid var(--Colors-Negative-500);
   padding: 0.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
@@ -123,11 +123,11 @@
 }
 
 .exit-draw-mode-btn-icon svg path {
-  fill: #ff4c4c;
+  fill: var(--Colors-Negative-500);
 }
 
 .exit-draw-mode-title {
-  color: #ff4c4c;
+  color: var(--Colors-Negative-500);
 }
 
 .start-drawing-btn {
@@ -143,7 +143,7 @@
 }
 
 ::ng-deep .p-selectbutton .p-button {
-  padding: 4px 12px;
+  padding: var(--Space-S-4) var(--Space-S-12) ;
   box-shadow: none;
   outline: none;
   color: #707791 !important;
@@ -180,7 +180,7 @@
 
 .cancel-campaign {
   padding: 0.5rem 0.75rem;
-  background-color: #ffffff;
+  background-color: var(--Colors-Pure-White);
   border-radius: 1rem;
   border: 1px solid #4d65b4;
   color: #4d65b4;
@@ -191,7 +191,7 @@
   background-color: #4d65b4;
   border-radius: 1rem;
   border: 1px solid #4d65b4;
-  color: #ffffff;
+  color: var(--Colors-Pure-White);
 }
 
 .search-polygons {
@@ -225,7 +225,7 @@
 }
 
 .table-container {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   padding: 0.5rem;
   border: 1px solid #dee2e6;
   border-radius: 0.5rem;
@@ -279,7 +279,7 @@
   align-items: center;
   text-align: center;
   gap: 1rem;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   border-radius: 0.5rem;
   margin-right: 25px;
   position: absolute;

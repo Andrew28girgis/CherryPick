@@ -2,15 +2,169 @@
 @import "primeng/resources/primeng.css";
 @import "assets/styles/buttons.css";
 
-
 :root {
-  --app-color: #000000;
+  --Website-Background:    linear-gradient(
+    117deg,
+    rgba(255, 214, 230, 0.9) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );;      /* #240614 */
+
+  --Main-Container-BG: rgba(255, 255, 255, 0.4);  
+  /* Colors Primary */
+  --Colors-Primary-900: rgba(36, 6, 20, 1.00);      /* #240614 */
+  --Colors-Primary-800: rgba(72, 12, 40, 1.00);     /* #480C28 */
+  --Colors-Primary-700: rgba(109, 19, 59, 1.00);    /* #6D133B */
+  --Colors-Primary-600: rgba(145, 25, 79, 1.00);    /* #91194F */
+  --Colors-Primary-500: rgba(181, 31, 99, 1.00);    /* #B51F63 */
+  --Colors-Primary-400: rgba(196, 76, 130, 1.00);   /* #C44C82 */
+  --Colors-Primary-300: rgba(211, 121, 161, 1.00);  /* #D379A1 */
+  --Colors-Primary-200: rgba(225, 165, 193, 1.00);  /* #E1A5C1 */
+  --Colors-Primary-100: rgba(240, 210, 224, 1.00);  /* #F0D2E0 */
+  --Colors-Primary-50: rgba(248, 233, 239, 1.00);   /* #F8E9EF */
+  --Colors-diffrent: #ac336a;   /* #F8E9EF */
+  
+
+
+  /* Colors Assistant 1 */
+  --Colors-Assistant-1-900: rgba(51, 18, 6, 1.00);     /* #331206 */
+  --Colors-Assistant-1-800: rgba(102, 36, 12, 1.00);   /* #66240C */
+  --Colors-Assistant-1-700: rgba(153, 54, 19, 1.00);   /* #993613 */
+  --Colors-Assistant-1-600: rgba(204, 72, 25, 1.00);   /* #CC4819 */
+  --Colors-Assistant-1-500: rgba(255, 90, 31, 1.00);   /* #FF5A1F */
+  --Colors-Assistant-1-400: rgba(255, 123, 76, 1.00);  /* #FF7B4C */
+  --Colors-Assistant-1-300: rgba(255, 156, 121, 1.00); /* #FF9C79 */
+  --Colors-Assistant-1-200: rgba(255, 189, 165, 1.00); /* #FFBDA5 */
+  --Colors-Assistant-1-100: rgba(255, 239, 233, 1.00); /* #FFEFE9 */
+  
+  /* Colors Assistant 2 */
+  --Colors-Assistant-2-900: rgba(0, 25, 51, 1.00);      /* #001933 */
+  --Colors-Assistant-2-800: rgba(0, 49, 102, 1.00);     /* #003166 */
+  --Colors-Assistant-2-700: rgba(0, 74, 153, 1.00);     /* #004A99 */
+  --Colors-Assistant-2-600: rgba(0, 98, 204, 1.00);     /* #0062CC */
+  --Colors-Assistant-2-500: rgba(0, 123, 255, 1.00);    /* #007BFF */
+  --Colors-Assistant-2-400: rgba(51, 149, 255, 1.00);   /* #3395FF */
+  --Colors-Assistant-2-300: rgba(102, 176, 255, 1.00);  /* #66B0FF */
+  --Colors-Assistant-2-200: rgba(153, 202, 255, 1.00);  /* #99CAFF */
+  --Colors-Assistant-2-100: rgba(204, 229, 255, 1.00);  /* #CCE5FF */
+  --Colors-Assistant-2-50: rgba(230, 242, 255, 1.00);   /* #E6F2FF */
+  
+  /* Colors Positive */
+  --Colors-Positive-900: rgba(8, 33, 14, 1.00);      /* #08210E */
+  --Colors-Positive-800: rgba(16, 67, 28, 1.00);     /* #10431C */
+  --Colors-Positive-700: rgba(24, 100, 41, 1.00);    /* #186429 */
+  --Colors-Positive-600: rgba(32, 134, 55, 1.00);    /* #208637 */
+  --Colors-Positive-500: rgba(40, 167, 69, 1.00);    /* #28A745 */
+  --Colors-Positive-400: rgba(83, 185, 106, 1.00);   /* #53B96A */
+  --Colors-Positive-300: rgba(126, 202, 143, 1.00);  /* #7ECA8F */
+  --Colors-Positive-200: rgba(169, 220, 181, 1.00);  /* #A9DCB5 */
+  --Colors-Positive-100: rgba(234, 246, 236, 1.00);  /* #EAF6EC */
+  
+  /* Colors Negative */
+  --Colors-Negative-900: rgba(51, 15, 15, 1.00);     /* #330F0F */
+  --Colors-Negative-800: rgba(102, 30, 30, 1.00);    /* #661E1E */
+  --Colors-Negative-700: rgba(153, 46, 46, 1.00);    /* #992E2E */
+  --Colors-Negative-600: rgba(204, 61, 61, 1.00);    /* #CC3D3D */
+  --Colors-Negative-500: rgba(255, 76, 76, 1.00);    /* #FF4C4C */
+  --Colors-Negative-400: rgba(255, 112, 112, 1.00);  /* #FF7070 */
+  --Colors-Negative-300: rgba(255, 148, 148, 1.00);  /* #FF9494 */
+  --Colors-Negative-200: rgba(255, 183, 183, 1.00);  /* #FFB7B7 */
+  --Colors-Negative-100: rgba(255, 237, 237, 1.00);  /* #FFEDED */
+  
+  /* Colors Pending */
+  --Colors-Pending-900: rgba(51, 39, 1, 1.00);      /* #332701 */
+  --Colors-Pending-800: rgba(102, 77, 3, 1.00);     /* #664D03 */
+  --Colors-Pending-700: rgba(153, 116, 4, 1.00);    /* #997404 */
+  --Colors-Pending-600: rgba(204, 154, 6, 1.00);    /* #CC9A06 */
+  --Colors-Pending-500: rgba(255, 193, 7, 1.00);    /* #FFC107 */
+  --Colors-Pending-400: rgba(255, 205, 57, 1.00);   /* #FFCD39 */
+  --Colors-Pending-300: rgba(255, 218, 106, 1.00);  /* #FFDA6A */
+  --Colors-Pending-200: rgba(255, 230, 156, 1.00);  /* #FFE69C */
+  --Colors-Pending-100: rgba(255, 249, 230, 1.00);  /* #FFF9E6 */
+  
+  /* Colors Neutral */
+  --Colors-Neutral-900: rgba(22, 16, 23, 1.00);     /* #161017 */
+  --Colors-Neutral-800: rgba(45, 31, 46, 1.00);     /* #2D1F2E */
+  --Colors-Neutral-700: rgba(67, 47, 69, 1.00);     /* #432F45 */
+  --Colors-Neutral-600: rgba(90, 62, 92, 1.00);     /* #5A3E5C */
+  --Colors-Neutral-500: rgba(112, 78, 115, 1.00);   /* #704E73 */
+  --Colors-Neutral-400: rgba(141, 113, 143, 1.00);  /* #8D718F */
+  --Colors-Neutral-300: rgba(169, 149, 171, 1.00);  /* #A995AB */
+  --Colors-Neutral-200: rgba(198, 184, 199, 1.00);  /* #C6B8C7 */
+  --Colors-Neutral-100: rgba(226, 220, 227, 1.00);  /* #E2DCE3 */
+  --Colors-Neutral-50: rgba(241, 237, 241, 1.00);   /* #F1EDF1 */
+  
+  /* Pure Colors */
+  --Colors-Pure-White: rgba(255, 255, 255, 1.00);   /* #FFFFFF */
+  --Colors-Card-Background: rgba(255, 255, 255, 0.50); 
+   --Colors-Pure-Black: rgba(0, 0, 0, 1.00);         /* #000000 */
+  
+  /* Spacing */
+  --Space-S-4: 4px;
+  --Space-S-8: 8px;
+  --Space-S-12: 12px;
+  --Space-S-14: 14px;
+  --Space-S-16: 16px;
+  --Space-S-20: 20px;
+  --Space-S-24: 24px;
+  --Space-S-32: 32px;
+  --Space-S-40: 40px;
+  --Space-S-48: 48px;
+  
+  /* Border Radius */
+  --Radius-R-4: 4px;
+  --Radius-R-8: 8px;
+  --Radius-R-12: 12px;
+  --Radius-R-16: 16px;
+  --Radius-R-20: 20px;
+  --Radius-R-24: 24px;
+  --Radius-R-32: 32px;
+  --Radius-R-48: 48px;
+  
+  /* Component Variables */
+  --Body-Heading: var(--Colors-Neutral-900);
+  --Body-Text-Icon: var(--Colors-Neutral-500);
+  --Body-Page-BG: var(--Colors-Pure-White);
+  --Body-Section-BG: var(--Colors-Pure-White);
+  --Body-Border: var(--Colors-Primary-50);
+  --Body-Layout-Gap: var(--Space-S-24);
+  
+  /* Input Variables */
+  --Input-BG: var(--Colors-Pure-White);
+  --Input-Border: var(--Colors-Neutral-100);
+  --Input-Label-Icon: var(--Colors-Neutral-500);
+  --Input-Value: var(--Colors-Neutral-900);
+  --Input-Radius: var(--Radius-R-24);
+  --Input-Padding-Right-Left: var(--Space-S-16);
+  --Input-Padding-Top-button: var(--Space-S-8);
+  
+  /* Button Variables */
+  --Button-Padding-Top-Bottom: var(--Space-S-8);
+  --Button-Padding-Right-Left: var(--Space-S-20);
+  --Button-Radius: var(--Radius-R-24);
+  --Button-Primary-BG: var(--Colors-Primary-500);
+  --Button-Pressed-BG: var(--Colors-Primary-700);
+  --Button-Secondary-BG: var(--Colors-Pure-White);
+  --Button-Link-Text-Icon: var(--Colors-Primary-500);
+  --Button-Radio-Check-Marked: var(--Colors-Primary-500);
+  --Button-Toggle-Active-Circle: var(--Colors-Pure-White);
+  --Button-Toggle-Active-BG: var(--Colors-Primary-500);
+  --Button-Radio-Check-Border: var(--Colors-Neutral-100);
+  --Button-Radio-Check-Default-BG: var(--Colors-Pure-White);
+  --Button-Toggle-Inactive-Circle: var(--Colors-Pure-White);
+  --Button-Radio-Check-Disabled-BG: var(--Colors-Neutral-200);
+  --Button-Toggle-Inactive-BG: var(--Colors-Neutral-100);
+  --Button-Secondary-Label-Icon-Border: var(--Colors-Primary-500);
+  --Button-Pressed-Label-Icon: var(--Colors-Pure-White);
+  --Button-Primary-Label-Icon: var(--Colors-Pure-White);
+  
+  /* Legacy Variables */
+  --app-color: var(--Colors-Pure-Black);
   --app-font: "Satoshi", sans-serif;
 }
 
 body {
   font-family: var(--app-font) !important;
-  background-color: #f1f1f5;
+  background-color: var(--Body-Page-BG);
 }
 
 a {
@@ -20,9 +174,9 @@ a {
 .response-content {
   background-color: #f8fff8 !important;
   border-left: 4px solid #0077b5;
-  padding: 16px 20px !important;
+  padding: var(--Space-S-16)  var(--Space-S-20)  !important;
   margin-top: 12px !important;
-  border-radius: 8px !important;
+  border-radius:  var(--Radius-R-8)  !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -45,8 +199,8 @@ a {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 12px 8px;
-  background: #ffffff;
+  padding: 12px var(--Space-S-8)  ;
+  background: var(--Colors-Pure-White);
 }
 
 .nav-link {
@@ -58,19 +212,19 @@ a {
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  padding: 0 20px;
+  padding: 0 var(--Space-S-20) ;
 }
 
 .form-select {
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
   padding: 10px 19px;
   font-size: 13px;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
 }
 
 .feature {
   font-size: 1rem;
-  color: #000000;
+  color: var(--Colors-Pure-Black);
   text-wrap: balance;
 }
 
@@ -79,7 +233,7 @@ a {
 }
 
 .card-footer {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   padding: 0 15px 15px 15px;
 }
 
@@ -87,7 +241,7 @@ a {
   top: 10px;
   left: 10px;
   background-color: #ff0000;
-  border: 1px solid #fff;
+  border: 1px solid var(--Colors-Pure-White);
   font-weight: 400;
   border-radius: 10px;
   padding: 5px 12px;
@@ -113,9 +267,9 @@ a {
 }
 
 .info-window {
-  padding: 0px 0px 24px 0px;
+  padding: 0px 0px  var(--Space-S-24)  0px;
   gap: 0px;
-  border-radius: 20px;
+  border-radius:  var(--Radius-R-20) ;
 }
 
 .card-window {
@@ -171,7 +325,7 @@ a {
   font-size: 20px;
   white-space: nowrap;
   font-weight: 700;
-  color: #000000;
+  color: var(--Colors-Pure-Black);
   margin: 0;
   transition: color 1s ease;
 }
@@ -202,10 +356,10 @@ a {
 }
 
 .view-details-card {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   background-color: #0d0c0c;
-  gap: 8px;
-  border-radius: 16px;
+  gap: var(--Space-S-8)  ;
+  border-radius:  var(--Radius-R-16) ;
   border: none;
   margin-right: 10px;
   font-size: 15px;
@@ -255,11 +409,11 @@ a {
 }
 
 .procpect-table-body {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 
 .procpect-table-body td {
-  padding: 20px;
+  padding: var(--Space-S-20) ;
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -283,17 +437,17 @@ a {
   position: fixed;
   top: 20px;
   right: 20px;
-  padding: 12px 20px;
-  background-color: #E1A5C1;
-  color: #fff;
-  border-radius: 8px;
+  padding: 12px var(--Space-S-20) ;
+  background-color: var(--Colors-Primary-200);
+  color: var(--Colors-Pure-White);
+  border-radius:  var(--Radius-R-8) ;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   opacity: 0;
   transform: translateY(-20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
   max-width: 350px;
-  border-left: 5px solid #B51F63;
+  border-left: 5px solid var(--Colors-Primary-500);
 }
 
 .custom-toast.show {
@@ -309,7 +463,7 @@ a {
 .toast-icon {
   margin-right: 12px;
   font-size: 18px;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 #toastMessage {
@@ -326,7 +480,7 @@ a {
   font-weight: 500;
   line-height: 30px;
   border: 0;
-  padding: 4px 10px;
+  padding: var(--Space-S-4)  10px;
   white-space: nowrap;
 }
 
@@ -363,9 +517,9 @@ a {
   .info-window {
     width: 300px;
     height: 520px;
-    padding: 0px 0px 24px 0px;
+    padding: 0px 0px  var(--Space-S-24)  0px;
     gap: 0px;
-    border-radius: 20px;
+    border-radius:  var(--Radius-R-20) ;
   }
 }
 
@@ -402,12 +556,12 @@ a {
   .procpect-table-head th,
   .procpect-table-body td {
     font-size: 12px;
-    padding: 8px;
+    padding: var(--Space-S-8)  ;
   }
 
   .procpect-table-body td {
     font-size: 11px;
-    padding: 8px;
+    padding:var(--Space-S-8);
   }
 
   .procpect-table-body td img {

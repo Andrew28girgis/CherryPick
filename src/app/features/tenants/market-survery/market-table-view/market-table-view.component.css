@@ -47,8 +47,8 @@ table.procpect-table th {
   width: 30px;
   height: 30px;
   border: 1px solid #817a79;
-  border-radius: 4px;
-  background-color: #ffffff;
+  border-radius:  var(--Radius-R-4) ;
+  background-color: var(--Colors-Pure-White);
   cursor: pointer;
 }
 .icon-option {
@@ -66,13 +66,13 @@ table.procpect-table th {
 }
 .icon-option.selected {
   background-color: #001f3f;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .icon-option.selected .icon-image {
   filter: brightness(0) invert(1);
 }
 .icon-option.selected .icon-text {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .icon-image {
   width: 24px;
@@ -142,7 +142,7 @@ table.procpect-table th {
     overflow-x: scroll;
   }
   .center-name {
-    color: #fff;
+    color: var(--Colors-Pure-White);
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -212,7 +212,7 @@ table.procpect-table th {
     gap: 5px;
   }
   .Res {
-    border-radius: 20px !important;
+    border-radius:  var(--Radius-R-20)  !important;
   }
 
   .card-container {
@@ -238,9 +238,9 @@ table.procpect-table th {
     position: absolute;
     bottom: 0px;
     z-index: 2;
-    padding-inline: 16px;
+    padding-inline: var(--Space-S-16) ;
     width: 100%;
-    padding-bottom: 16px;
+    padding-bottom: var(--Space-S-16) ;
     background: rgb(0, 0, 0);
     flex-direction: column;
     background: linear-gradient(
@@ -252,7 +252,7 @@ table.procpect-table th {
 
   .header-info .center-address,
   .header-info .center-location {
-    color: #fff;
+    color: var(--Colors-Pure-White);
     font-size: 14px;
     margin: 0;
     opacity: 0.9;
@@ -265,7 +265,7 @@ table.procpect-table th {
     top: 20%;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: var(--Space-S-20) ;
     background: none;
     border: none;
     z-index: 3;
@@ -273,11 +273,11 @@ table.procpect-table th {
     justify-content: space-between;
     display: flex;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: var(--Space-S-12)  var(--Space-S-16) ;
   }
 
   .action-btn {
-    color: #fff;
+    color: var(--Colors-Pure-White);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     background: transparent;
     border: none;
@@ -285,7 +285,7 @@ table.procpect-table th {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: var(--Space-S-4) ;
   }
 
   .action-btn i {
@@ -297,7 +297,7 @@ table.procpect-table th {
   }
   .comments-section {
     position: sticky;
-    background: #fff;
+    background: var(--Colors-Pure-White);
     max-height: 50vh;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -314,7 +314,7 @@ table.procpect-table th {
     height: fit-content !important;
   }
   .share-button {
-    padding: 8px 12px;
+    padding: var(--Space-S-8)  var(--Space-S-12) ;
     margin-left: 3px;
   }
   .navbar-collapse {
@@ -387,7 +387,7 @@ table.procpect-table th {
   }
 
   .card-body {
-    padding: 12px;
+    padding: var(--Space-S-12) ;
   }
 
   .center-address {
@@ -405,11 +405,11 @@ table.procpect-table th {
 
   .action-btn {
     font-size: 0.9rem;
-    margin-bottom: 8px;
+    margin-bottom: var(--Space-S-8) ;
   }
 
   .comments-section {
-    padding: 12px;
+    padding: var(--Space-S-12) ;
   }
 
   .comment-input {
@@ -417,7 +417,7 @@ table.procpect-table th {
   }
 
   .comment-input input {
-    margin-bottom: 8px;
+    margin-bottom: var(--Space-S-8) ;
   }
 
   .post-comment-btn {
@@ -440,7 +440,7 @@ table.procpect-table th {
     height: 100vh;
   }
   .Home-icon svg {
-    margin-bottom: 4px;
+    margin-bottom: var(--Space-S-4) ;
   }
   .mtopp {
     overflow-y: scroll;
@@ -475,7 +475,7 @@ table.procpect-table th {
   .icon-image {
     width: 24px;
     height: 24px;
-    margin-bottom: 4px;
+    margin-bottom: var(--Space-S-4) ;
   }
 
   .icon-text {
@@ -484,7 +484,7 @@ table.procpect-table th {
   }
 
   .selected {
-    color: #007bff;
+    color: var(--Colors-Assistant-2-500);
   }
   .containerMobileView {
     padding-bottom: 58px;
@@ -527,7 +527,7 @@ table.procpect-table th {
   }
 
   .card-header {
-    background-color: #000;
+    background-color: var(--Colors-Pure-Black);
     flex-direction: row;
     align-items: flex-start;
   }
@@ -542,7 +542,7 @@ table.procpect-table th {
   }
 
   .card-body {
-    padding: 12px;
+    padding: var(--Space-S-12) ;
   }
 
   .center-address {
@@ -560,11 +560,11 @@ table.procpect-table th {
 
   .action-btn {
     font-size: 0.9rem;
-    margin-bottom: 8px;
+    margin-bottom: var(--Space-S-8) ;
   }
 
   .comments-section {
-    padding: 12px;
+    padding: var(--Space-S-12) ;
   }
 
   .comment-input {
@@ -572,7 +572,7 @@ table.procpect-table th {
   }
 
   .comment-input input {
-    margin-bottom: 8px;
+    margin-bottom: var(--Space-S-8) ;
   }
 
   .post-comment-btn {
@@ -666,7 +666,7 @@ table.procpect-table th {
 
   .header-info .center-address,
   .header-info .center-location {
-    color: #fff;
+    color: var(--Colors-Pure-White);
     font-size: 12px;
     margin: 0;
     opacity: 0.9;
@@ -689,11 +689,11 @@ table.procpect-table th {
     justify-content: space-between;
     display: flex;
     justify-content: space-between;
-    padding: 12px 0px;
+    padding: var(--Space-S-12)  0px;
   }
 
   .action-btn {
-    color: #fff;
+    color: var(--Colors-Pure-White);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     background: transparent;
     border: none;
@@ -701,7 +701,7 @@ table.procpect-table th {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: var(--Space-S-4) ;
   }
   .action-btn i {
     font-size: 24px;
@@ -718,10 +718,10 @@ table.procpect-table th {
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff;
+    background: var(--Colors-Pure-White);
     min-height: 75%;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    border-top-left-radius:  var(--Radius-R-20) ;
+    border-top-right-radius:  var(--Radius-R-20) ;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
@@ -800,13 +800,13 @@ table.procpect-table th {
   color: #707791;
   border: 1px solid #ced4da;
   transition: all 0.3s ease;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: var(--Space-S-8)  var(--Space-S-12) ;
+  border-radius:  var(--Radius-R-4) ;
   width: 100%;
 }
 
 .action-btn:first-child {
-  margin-right: 8px;
+  margin-right: var(--Space-S-8) ;
 }
 
 .action-btn:hover {

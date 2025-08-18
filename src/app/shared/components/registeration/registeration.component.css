@@ -4,8 +4,8 @@
 }
 
 .form-control {
-  border-radius: 20px;
-  padding: 12px 16px;
+  border-radius:  var(--Radius-R-20) ;
+  padding: var(--Space-S-12)  var(--Space-S-16) ;
   border: 1px solid #e1e5e9;
   font-size: 14px;
   width: 350px;
@@ -41,7 +41,7 @@ input::placeholder {
 }
 
 .login-container {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 1rem;
@@ -56,7 +56,7 @@ input::placeholder {
   width: 350px;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--Space-Space-24, 24px);
+  gap: var(--Space-S-24);
 }
 .login-container-form-main {
   justify-content: center;
@@ -100,14 +100,14 @@ input::placeholder {
 }
 
 .login {
-  border-radius: 16px;
+  border-radius:  var(--Radius-R-16) ;
   background: #3922d2;
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   border: none;
   transition: background-color 0.3s ease;
   width: 100%;
@@ -123,7 +123,7 @@ input::placeholder {
 }
 
 .login-text {
-  color: #fff;
+  color: var(--Colors-Pure-White);
   text-align: center;
   font-family: Montserrat, sans-serif;
   font-size: 16px;
@@ -167,7 +167,7 @@ input::placeholder {
 }
 .logos-row {
   display: flex;
-  gap: 12px;
+  gap: var(--Space-S-12) ;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -200,7 +200,7 @@ input::placeholder {
   }
 
   .login-container {
-    padding: 20px;
+    padding: var(--Space-S-20) ;
     border-radius: 1rem;
     border-bottom-left-radius: 0;
   }
@@ -259,7 +259,7 @@ input::placeholder {
 
 .testimonial-author {
   font-weight: 600;
-  color: #000;
+  color: var(--Colors-Pure-Black);
   margin: 0;
   font-size: 16px;
 }
@@ -273,7 +273,7 @@ input::placeholder {
 .client-text {
   color: #707791;
   font-size: 14px;
-  margin-bottom: 16px;
+  margin-bottom: var(--Space-S-16) ;
 }
 
 .terms-container {
@@ -283,13 +283,13 @@ input::placeholder {
 .terms-label {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   font-size: 13px;
   color: #707791;
 }
 
 .terms-label input[type="checkbox"] {
-  margin-top: 4px;
+  margin-top: var(--Space-S-4) ;
 }
 
 .terms-link {
@@ -319,16 +319,16 @@ input::placeholder {
 
 .login-account-btn {
   width: 100%;
-  margin-top: 12px;
-  border-radius: 16px;
+  margin-top: var(--Space-S-12) ;
+  border-radius:  var(--Radius-R-16) ;
   border: 1px solid #3922d2;
-  background: #fff;
+  background: var(--Colors-Pure-White);
   display: flex;
   height: 48px;
-  padding: 14px 24px;
+  padding: var(--Space-S-14)   var(--Space-S-24) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   align-self: stretch;
 }
 .login-account-btn-text {
@@ -358,10 +358,10 @@ input::placeholder {
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 16px 24px;
-  border-radius: 12px;
+  padding: var(--Space-S-16)   var(--Space-S-24) ;
+  border-radius:  var(--Radius-R-12) ;
   border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 var(--Space-S-4)  12px rgba(0, 0, 0, 0.1);
   font-family: Montserrat, sans-serif;
   font-size: 14px;
   line-height: 20px;

@@ -7,10 +7,10 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 .card-btn * {
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 .card-btn {
   text-decoration: none;
@@ -32,11 +32,11 @@
   background-color: #3922d2;
 }
 .card-btn-unlink {
-  background-color: #ff4c4c;
-  border-color: #ff4c4c;
+  background-color: var(--Colors-Negative-500);
+  border-color: var(--Colors-Negative-500);
 }
 .card-btn-unlink:active {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
 }
 .section-img {
   height: 3rem;
@@ -44,13 +44,13 @@
 }
 .skip-btn {
   display: flex;
-  padding: 10px 20px;
+  padding: 10px var(--Space-S-20) ;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--Space-S-8) ;
   margin-bottom: 15px;
-  border-radius: var(--Radius-Radius-16, 16px);
-  background: #ffffff; /* Changed to white */
+  border-radius: var(--Radius-R-16 );
+  background: var(--Colors-Pure-White); /* Changed to white */
   border: 1px solid #3922d2; /* New border */
   transition: background 0.2s, box-shadow 0.2s;
   cursor: pointer;

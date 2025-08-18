@@ -74,13 +74,13 @@
 }
 
 .skip-btn {
-  background-color: #fff;
+  background-color: var(--Colors-Pure-White);
   color: #4d65b4;
 }
 
 .continue-btn {
   background-color: #4d65b4;
-  color: #fff;
+  color: var(--Colors-Pure-White);
 }
 
 @media (max-width: 768px) {

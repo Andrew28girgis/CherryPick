@@ -1,7 +1,7 @@
 .email-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--Space-S-20) ;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8f9fa;
   min-height: 100vh;
@@ -13,18 +13,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 60px var(--Space-S-20) ;
   text-align: center;
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #e3e3e3;
-  border-top: 4px solid #007bff;
+  border:var(--Space-S-4) solid #e3e3e3;
+  border-top:var(--Space-S-4) solid var(--Colors-Assistant-2-500);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+  margin-bottom: var(--Space-S-20) ;
 }
 
 @keyframes spin {
@@ -40,8 +40,8 @@
 .error-container {
   background-color: #f8d7da;
   color: #721c24;
-  padding: 20px;
-  border-radius: 8px;
+  padding: var(--Space-S-20) ;
+  border-radius:  var(--Radius-R-8) ;
   border: 1px solid #f5c6cb;
   text-align: center;
 }
@@ -49,8 +49,8 @@
 /* Email Content */
 .email-content {
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius:  var(--Radius-R-12) ;
+  box-shadow: 0 var(--Space-S-4) 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -73,15 +73,15 @@
 .email-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: var(--Space-S-20) ;
   font-size: 14px;
   opacity: 0.9;
 }
 
 .email-meta span {
   background-color: rgba(255, 255, 255, 0.2);
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 6px var(--Space-S-12) ;
+  border-radius:  var(--Radius-R-20) ;
   backdrop-filter: blur(10px);
 }
 
@@ -142,7 +142,7 @@
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: var(--Space-S-20) ;
 }
 
 .info-item {
@@ -150,7 +150,7 @@
   flex-direction: column;
   background-color: #f8f9fa;
   padding: 15px;
-  border-radius: 8px;
+  border-radius:  var(--Radius-R-8) ;
   border: 1px solid #e9ecef;
   transition: all 0.3s ease;
 }
@@ -158,7 +158,7 @@
 .info-item:hover {
   background-color: #e9ecef;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 var(--Space-S-4) 8px rgba(0, 0, 0, 0.1);
 }
 
 .info-item label {
@@ -186,7 +186,7 @@
   }
 
   .email-header {
-    padding: 20px;
+    padding: var(--Space-S-20) ;
   }
 
   .email-subject {
@@ -201,7 +201,7 @@
   .campaign-section,
   .buybox-section,
   .additional-info {
-    padding: 20px;
+    padding: var(--Space-S-20) ;
   }
 
   .info-grid {
