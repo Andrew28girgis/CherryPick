@@ -372,7 +372,7 @@ img[alt="logo"] {
   align-items: center;
   gap: var(--Space-S-8 );
   align-self: stretch;
-  border-radius: var(--Radius-Radius-12 );
+  border-radius: var(--Radius-R-12 );
   border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
   background: var(--Colors-Pure-White );
   margin-top: 10px;

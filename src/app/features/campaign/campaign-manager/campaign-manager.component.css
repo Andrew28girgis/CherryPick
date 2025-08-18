@@ -459,7 +459,7 @@
   justify-content: center;
   align-items: center;
   gap: var(--Space-S-8)  ;
-  border-radius: var(--Radius-Radius-16 );
+  border-radius: var(--Radius-R-16 );
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White );
   text-align: center;
@@ -707,9 +707,10 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border: 2px solid #ac336a;
+
+  border: 2px solid var(--Colors-diffrent);
   border-radius: 50%;
-  color: #ac336a;
+  color:var(--Colors-diffrent);
   background: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -717,7 +718,7 @@
 }
 
 .inbox:hover {
-  background-color: #ac336a;
+  background-color:var(--Colors-diffrent);
   color: white;
   transform: scale(1.05);
 }

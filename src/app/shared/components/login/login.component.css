@@ -12,7 +12,7 @@
 }
 
 .form-control:focus {
-  border-color: #ac336a;
+  border-color:var(--Colors-diffrent);
   box-shadow: none;
  }
 
@@ -97,7 +97,7 @@ background: linear-gradient(to right, #493240, #FF0099); /* W3C, IE 10+/ Edge, F
 
 .login {
    border-radius:  var(--Radius-R-24) ;
-  background: #ac336a;
+  background:var(--Colors-diffrent);
 
   color: var(--Colors-Pure-White);
   display: flex;
@@ -225,7 +225,7 @@ background: linear-gradient(to right, #493240, #FF0099); /* W3C, IE 10+/ Edge, F
 }
 
 .ForgetPassword {
-  color: #ac336a;
+  color:var(--Colors-diffrent);
   text-align: right;
   font-size: 16px;
   font-weight: 500;

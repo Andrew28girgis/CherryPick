@@ -456,7 +456,7 @@
   align-items: center;
   gap: var(--Space-S-8 );
   align-self: stretch;
-  border-radius: var(--Radius-Radius-12 );
+  border-radius: var(--Radius-R-12 );
   border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
   background: var(--Colors-Pure-White );
   margin-top: 10px;
@@ -717,7 +717,7 @@
   list-style: none;
   margin: 0.25rem 0;
   padding: 0.25rem 0.5rem;
-  border-radius: var(--Radius-R-4));
+  border-radius: var(--Radius-R-4);
   cursor: pointer;
 }
 .mail-item:hover {
@@ -916,7 +916,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: var(--Radius-Radius-12 );
+  border-radius: var(--Radius-R-12 );
 }
 
 .main-img img.loading {

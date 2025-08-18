@@ -168,7 +168,7 @@
   align-items: center;
   gap: var(--Space-S-8);
 
-  border-radius: var(--Radius-Radius-12 );
+  border-radius: var(--Radius-R-12 );
   background: var(--Colors-Pure-White );
 }
 

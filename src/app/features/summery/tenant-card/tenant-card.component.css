@@ -7,7 +7,7 @@ padding: var(--Space-S-20);
 align-items: center;
 gap: var(--Space-S-16);
  border-radius:   var(--Radius-R-20) ;
-background: rgba(255, 255, 255, 0.50);
+background: var(--Colors-Card-Background);
  backdrop-filter: blur(100px);
 
  
