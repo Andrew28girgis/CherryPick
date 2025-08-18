@@ -556,7 +556,9 @@
   display: flex;
   height: 600px;
   border-radius:  var(--Radius-R-20) ;
-  background: rgba(255, 255, 255, 0.4);
+
+  background: var(--Main-Container-BG);
+
   backdrop-filter: blur(50px);
   margin-top: 4vh;
 }

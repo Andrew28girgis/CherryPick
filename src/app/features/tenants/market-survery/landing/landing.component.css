@@ -26,7 +26,7 @@
 
 .map-section {
   margin-top: 14%;
-   background: rgba(255, 255, 255, 0.5);
+   background: var(--Colors-Card-Background);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   height: fit-content;
@@ -92,7 +92,7 @@
   padding: var(--Space-S-20) ;
 
   border-radius:   var(--Radius-R-20) ;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--Colors-Card-Background);
   backdrop-filter: blur(20px);
 }
 .main-head {

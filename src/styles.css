@@ -3,6 +3,13 @@
 @import "assets/styles/buttons.css";
 
 :root {
+  --Website-Background:    linear-gradient(
+    117deg,
+    rgba(255, 214, 230, 0.9) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );;      /* #240614 */
+
+  --Main-Container-BG: rgba(255, 255, 255, 0.4); /* #FFFFFF */
   /* Colors Primary */
   --Colors-Primary-900: rgba(36, 6, 20, 1.00);      /* #240614 */
   --Colors-Primary-800: rgba(72, 12, 40, 1.00);     /* #480C28 */

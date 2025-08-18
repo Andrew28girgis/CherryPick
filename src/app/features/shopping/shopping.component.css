@@ -21,7 +21,7 @@
   flex-shrink: 0;
   border-radius:   var(--Radius-R-24) ;
   border: 1px solid var(--Colors-Neutral-100 );
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
 }
@@ -77,7 +77,7 @@
   gap: var(--Space-S-4 );
   border: none;
   border-radius:  var(--Radius-R-24) ;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
 }
 
@@ -135,7 +135,7 @@
   padding: var(--Space-S-32) ;
   align-items: center;
   border-radius:  var(--Radius-R-20) ;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
    width: calc(100vw - 157px);
   min-width: calc(100vw - 157px);
