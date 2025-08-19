@@ -104,6 +104,27 @@
   border-radius: 1rem;
   overflow: auto;
 }
+ 
+
+
+
+.campaign-manager-body::-webkit-scrollbar {
+   height: 10px;
+ }
+
+.campaign-manager-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.campaign-manager-body::-webkit-scrollbar-thumb {
+  background: var(--Colors-Primary-500);
+  border-radius: 10px;
+}
+
+.campaign-manager-body::-webkit-scrollbar-thumb:hover {
+  background: var(--Colors-Primary-600);
+}
+
 
 /* Search Campaign Container */
 .search-campaign-container {
@@ -501,9 +522,7 @@
   backdrop-filter: blur(20px);
   overflow-x: hidden;
   overflow-y: auto;
-  margin-bottom: 1rem;
-  box-shadow: 0 var(--Space-S-4) 20px rgba(0, 0, 0, 0.08);
-  width: fit-content;
+   width: fit-content;
 }
 
 .table {
