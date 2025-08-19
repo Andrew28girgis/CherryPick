@@ -36,6 +36,7 @@ import { NotificationsComponent } from './shared/components/notifications/notifi
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { EditorModule } from 'primeng/editor';
 
+import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,6 +48,7 @@ import { EditorModule } from 'primeng/editor';
     UploadOMComponent,
     SidebarComponent,
     LandingComponent,
+    AiChatingComponent,
   ],
   imports: [
     BrowserModule,

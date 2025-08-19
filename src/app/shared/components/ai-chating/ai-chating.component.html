@@ -1,0 +1,160 @@
+<div class="chat-container">
+  <!-- Chat Header -->
+  <div class="chat-header">
+    <h4 class="mb-0">
+      <i class="fas fa-robot me-2"></i>
+      AI Chat
+    </h4>
+  </div>
+
+  <!-- Chat Messages Area -->
+  <div class="chat-messages" #chatContainer>
+    <div
+      class="message-container"
+      *ngFor="let message of messages; trackBy: trackByMessageId"
+    >
+      <div
+        class="message"
+        [ngClass]="{
+          'user-message': message.isUser,
+          'ai-message': !message.isUser
+        }"
+      >
+        <!-- Message Content -->
+        <div class="message-content">
+          <div class="message-text" [innerHTML]="message.content"></div>
+
+          <!-- Show files if present -->
+          <div
+            class="message-files"
+            *ngIf="message.files && message.files.length > 0"
+          >
+            <div class="attached-file" *ngFor="let file of message.files">
+<!-- Update the file icon display to show PDF/Image distinction -->
+<span class="file-icon">{{ getFileIcon(file.name) }}</span>
+<span class="file-name">{{ file.name }}
+  <span class="file-type-badge" *ngIf="isPdf(file.name)">PDF</span>
+  <span class="file-type-badge" *ngIf="isImage(file.name)">Image</span>
+</span>
+            </div>
+          </div>
+
+          <!-- Upload progress indicator -->
+          <div class="upload-indicator" *ngIf="message.uploading">
+            <div
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></div>
+            <span>Sending...</span>
+          </div>
+        </div>
+
+        <!-- Message timestamp -->
+        <div class="message-time">
+          {{ message.timestamp | date : "short" }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload progress bar -->
+    <div class="upload-progress" *ngIf="isUploading && uploadProgress > 0">
+      <div class="progress">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          [style.width.%]="uploadProgress"
+        >
+          {{ uploadProgress }}%
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Preview Area (when files are selected) -->
+  <div class="selected-files" *ngIf="selectedFiles.length > 0">
+    <div class="files-header">
+      <span>Selected Files ({{ selectedFiles.length }})</span>
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-danger"
+        (click)="clearFiles()"
+      >
+        <i class="fas fa-times"></i> Clear All
+      </button>
+    </div>
+    <div class="file-list">
+      <div
+        class="selected-file"
+        *ngFor="let file of selectedFiles; let i = index"
+      >
+        <span class="file-icon">{{ getFileIcon(file.name) }}</span>
+        <span class="file-details">
+          <span class="file-name">{{ file.name }}</span>
+          <span class="file-size">{{ formatFileSize(file.size) }}</span>
+        </span>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-danger"
+          (click)="removeFile(i)"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Input Area -->
+  <div class="chat-input">
+    <div class="input-group">
+      <!-- File Upload Button -->
+      <button
+        class="btn btn-outline-secondary"
+        style="min-height: 50px;"
+        type="button"
+        (click)="fileInput.click()"
+        [disabled]="isUploading"
+      >
+        <i class="fas fa-paperclip"></i>
+      </button>
+
+      <!-- Hidden File Input -->
+      <input
+        type="file"
+        #fileInput
+        (change)="onFileSelected($event)"
+        multiple
+        style="display: none"
+      />
+
+      <!-- Message Textarea -->
+      <textarea
+        #messageTextarea
+        class="form-control auto-resize"
+        [(ngModel)]="currentMessage"
+        placeholder="Type your message here... (Shift+Enter for new line, Enter to send)"
+        rows="1"
+        (keydown)="onKeyPress($event)"
+        (input)="autoResize($event)"
+        [disabled]="isUploading"
+      ></textarea>
+
+      <!-- Send Button -->
+      <button
+        class="btn btn-primary"
+        style="min-height: 50px; margin-left: 8px;"
+        type="button"
+        (click)="sendMessage()"
+        [disabled]="
+          isUploading || (!currentMessage.trim() && selectedFiles.length === 0)
+        "
+      >
+        <i class="fas fa-paper-plane" *ngIf="!isUploading"></i>
+        <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          *ngIf="isUploading"
+        ></div>
+      </button>
+    </div>
+  </div>
+</div>
