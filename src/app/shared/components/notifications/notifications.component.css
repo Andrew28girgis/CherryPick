@@ -313,11 +313,9 @@
 
 /* Add these responsive styles */
 @media (max-width: 1200px) {
-  .sidebar-panel {
-    width: 320px !important; /* Smaller width on medium screens */
-  }
+ 
   
-  .copilot-sidebar-container {
+  .copilot-sidebar-container.open {
     width: 320px !important;
   }
 }
