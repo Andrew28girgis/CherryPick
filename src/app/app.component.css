@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
  }
 
 .main-content-area {
@@ -30,28 +31,20 @@
 }
 .app-shell {
   display: grid;
-  grid-template-columns: 96px 1fr; /* first column = sidebar, second = main content */
+  grid-template-columns: minmax(0, 1fr);
   min-height: 100vh; /* fill full height of viewport */
   z-index: 5;
-  transition: all 0.2s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.app-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr); /* Full width by default */
-  min-height: 100vh;
-}
+ 
 
 .app-shell > .app-container {
   grid-column: 1; /* Take the first (and only) column by default */
   min-width: 0; /* prevents overflow in grids */
 }
 
-/* With sidebar layout (when sidebar is shown) */
-.app-shell.with-sidebar {
-  grid-template-columns: 96px minmax(0, 1fr); /* sidebar + flexible main */
-}
-
+ 
 .app-shell.with-sidebar > .app-container {
   grid-column: 2; /* Take the second column when sidebar is visible */
 }
@@ -101,9 +94,44 @@
   width: 100%;
 }
 
+ 
+
+
+
+
+
+
+/* Updated grid system to handle copilot sidebar */
+.app-shell.with-sidebar {
+  grid-template-columns: 96px minmax(0, 1fr);
+}
+
+/* Enhanced copilot sidebar layout adjustments */
+.app-shell.with-copilot {
+  margin-right: 48px; /* Space for vertical tab */
+}
+
+.app-shell.with-copilot.copilot-expanded {
+  margin-right: 428px; /* 48px tab + 380px panel */
+}
+
+.app-shell.with-sidebar.with-copilot {
+  grid-template-columns: 96px minmax(0, 1fr);
+  margin-right: 48px;
+}
+
+.app-shell.with-sidebar.with-copilot.copilot-expanded {
+  grid-template-columns: 96px minmax(0, 1fr);
+  margin-right: 428px;
+}
+
+/* Content transition when copilot opens/closes */
+.app-container {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+/* Remove old chatbot container styles */
 .chatbot-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1050;
+  display: none;
 }

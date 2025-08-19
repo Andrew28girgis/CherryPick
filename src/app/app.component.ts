@@ -16,6 +16,8 @@ export class AppComponent implements OnInit {
   hideSidebar = false;
   isNotificationsOpen = false; // Add this property to your class
   showingTransition = false;
+  isCopilotOpen = false;
+  isCopilotFullyOpen = false;
 
   constructor(
     private router: Router,
@@ -74,5 +76,9 @@ export class AppComponent implements OnInit {
 
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
+  }
+  onCopilotStateChange(state: { isOpen: boolean, isFullyOpen: boolean }) {
+    this.isCopilotOpen = state.isOpen; 
+    this.isCopilotFullyOpen = state.isFullyOpen;
   }
 }

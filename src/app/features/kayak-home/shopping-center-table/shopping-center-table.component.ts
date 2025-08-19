@@ -724,8 +724,11 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   trackByStageId(index: number, stage: Stage): number {
     return stage?.id || index;
   }
-  
- 
 
+  electronMessageWithcampaignId() {
+    (window as any).electronMessage.startCREAutomation(this.CampaignId);
+    const url = 'https://www.google.com';
+    window.location.href = `${url}`;
+  }
  
 }
