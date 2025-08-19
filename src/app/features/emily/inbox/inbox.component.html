@@ -54,7 +54,7 @@
                   *ngIf="getSelectedOrg()?.OrganizationId"
                   class="org-logo-container me-2"
                 >
-                  <img
+                  <img loading="lazy" 
                     class="org-logo"
                     [src]="
                       'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -307,7 +307,7 @@
                     </p>
 
                     <div>
-                      <img
+                      <img loading="lazy" 
                         class="ms-2 cursor"
                         src="../../../assets/Images/Icons/eye.png"
                         alt="View Manager Details"
@@ -411,7 +411,7 @@
               )
             "
           >
-            <img [src]="'../../../assets/Images/Icons/send.png'" />
+            <img loading="lazy"  [src]="'../../../assets/Images/Icons/send.png'" />
             Reply
           </button>
           <button

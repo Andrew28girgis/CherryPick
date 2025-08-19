@@ -17,7 +17,7 @@
           (change)="onCenterChecked($event, contact.ContactId, center)"
         />
         <div class="d-flex align-items-center gap-3">
-          <img src="{{ center.MainImage }}" alt="{{ center.CenterName }}" />
+          <img loading="lazy"  src="{{ center.MainImage }}" alt="{{ center.CenterName }}" />
           <div class="d-flex flex-column align-items-start gap-2">
             <div class="center-name">
               {{ center.CenterName }}

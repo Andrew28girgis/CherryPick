@@ -3,7 +3,7 @@
     <div class="col-md-12 d-flex justify-content-between align-items-center">
       <div class="col-md-6">
         <div class="d-flex align-items-center">
-          <img
+          <img loading="lazy" 
             *ngIf="submissionsArray[0]?.OrganizationId"
             [src]="
               'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -22,7 +22,7 @@
           <div class="col-md-6 accepted-card">
             <div class="col-3">
               <div class="icon-card-accept">
-                <img
+                <img loading="lazy" 
                   class="img-icn"
                   src="../../../assets/Images/Icons/like.svg"
                 />
@@ -38,7 +38,7 @@
           <div class="col-md-6 accepted-card ms-3">
             <div class="col-3">
               <div class="icon-card-reject">
-                <img
+                <img loading="lazy" 
                   class="img-icn"
                   src="../../../assets/Images/Icons/dislike.svg"
                 />
@@ -74,7 +74,7 @@
                 <!-- Left Info: Center Name, Status, Places, Date, Add Note -->
                 <div class="left-info d-flex justify-content-between col-12">
                   <div class="me-3 col-1 building-image">
-                    <img src="{{ sc.MainImage }}" alt="Building" class="img" />
+                    <img loading="lazy"  src="{{ sc.MainImage }}" alt="Building" class="img" />
                   </div>
                   <div
                     class="mb-2 col-4"
@@ -132,7 +132,7 @@
                       (click)="openPlaces(Places, sc.Places)"
                     >
                       {{ sc.Places.length || 0 }} Places
-                      <img
+                      <img loading="lazy" 
                         class="img-icn"
                         src="../../../assets/Images/Icons/eye-place.svg"
                       />

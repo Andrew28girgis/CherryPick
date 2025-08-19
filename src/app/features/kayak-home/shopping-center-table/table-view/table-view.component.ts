@@ -332,6 +332,22 @@ export class TableViewComponent implements OnInit, OnDestroy {
     return index
   }
 
+  trackByShoppingCenterId(index: number, shoppingCenter: any): number {
+    return shoppingCenter?.Id || shoppingCenter?.id || index
+  }
+  
+  trackByPlaceId(index: number, place: any): number {
+    return place?.Id || place?.id || index
+  }
+  
+  trackByOrganizationId(index: number, org: any): number {
+    return org?.ID || org?.Id || org?.id || index
+  }
+  
+  trackBySubmissionId(index: number, submission: any): number {
+    return submission?.Id || submission?.id || index
+  }
+
   requestCenterStatus(shoppingCenterId: number, campaignId: any) {
     // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true

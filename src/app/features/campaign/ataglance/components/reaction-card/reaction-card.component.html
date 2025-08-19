@@ -2,7 +2,7 @@
   <div class="w-100 d-flex flex-column justify-content-center gap-3">
     <div class="d-flex align-items-center gap-3">
       <div *ngIf="reaction.logoURL" class="avatar-icon">
-        <img src="{{ reaction.logoURL }}" alt="{{ reaction.centerAddress }}" />
+        <img loading="lazy"  src="{{ reaction.logoURL }}" alt="{{ reaction.centerAddress }}" />
       </div>
       <div class="title">
         {{ reaction.userFirstName }} {{ reaction.userLastName }}

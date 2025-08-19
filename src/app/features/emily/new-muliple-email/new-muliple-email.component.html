@@ -9,7 +9,7 @@
 <div class="p-3 mb-2">
   <div class="row m-0">
     <div class="d-block d-sm-flex gap-2 mb-2 col-12 col-sm-6 align-items-center">
-      <img class="Org__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+      <img loading="lazy"  class="Org__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
           BuyBoxOrgID
         }}" alt="" />
       <span class="BuyBoxName">{{ BuyBoxName }}</span>
@@ -60,7 +60,7 @@
                         <div class="OganirzationsForEmail__img align-items-center d-flex">
                           <input type="checkbox" [(ngModel)]="organization.selected" class="form-check-input me-1"
                             (ngModelChange)="checkAllOrg(organization, $event)" />
-                          <img class="Oganirzations__img" [src]="
+                          <img loading="lazy"  class="Oganirzations__img" [src]="
                               'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
                               organization.Id
                             " alt="" />
@@ -341,7 +341,7 @@
           </div>
         </td>
         <!-- <td>
-          <img class="ms-2 cursor d-block img_SC" *ngFor="let contact of item.C"
+          <img loading="lazy"  class="ms-2 cursor d-block img_SC" *ngFor="let contact of item.C"
             src="../../../assets/Images/Icons/eye.png" alt="View Shopping Center" [ngbPopover]="popoverContent"
             popoverTitle="Shopping Center Info" triggers="click:outside" [placement]="'top'"
             (click)="selectedContactSC = contact" />
@@ -434,7 +434,7 @@
         <div class="d-flex justify-content-center mb-3">
           <div class="Emails_bodyTemplete">
             <div class="d-flex gap-4 align-items-center">
-              <img class="Org__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+              <img loading="lazy"  class="Org__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                   template.organizationId
                 }}" alt="" />
               <p class="m-0 Name_Emails_body">
