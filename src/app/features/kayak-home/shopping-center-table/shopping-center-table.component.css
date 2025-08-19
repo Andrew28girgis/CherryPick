@@ -354,12 +354,18 @@
 }
 
 /* Specific Button Styles */
+.cre-btn {
+  border-left: var(--Space-S-4) solid #4ecdc4;
+}
 .google-btn {
   border-left: var(--Space-S-4) solid #4285f4;
 }
 
 .google-btn:hover .btn-text {
   color: #4285f4;
+}
+.cre-btn:hover .btn-text {
+  color: #4ecdc4;
 }
 
 .om-btn {
@@ -382,6 +388,10 @@
   color: #4ecdc4;
 }
 
+.cre-icon {
+  color: #4ecdc4;
+  font-size: 25px;
+}
 .manual-btn .btn-icon {
   color: #4ecdc4;
 }
