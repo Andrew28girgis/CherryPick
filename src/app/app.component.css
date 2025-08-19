@@ -108,21 +108,21 @@
 
 /* Enhanced copilot sidebar layout adjustments */
 .app-shell.with-copilot {
-  margin-right: 48px; /* Space for vertical tab */
+  margin-right: min(48px, 5vw); /* Use viewport-relative units */
 }
 
 .app-shell.with-copilot.copilot-expanded {
-  margin-right: 428px; /* 48px tab + 380px panel */
+  margin-right: min(428px, 50vw); /* Adapt to viewport width */
 }
 
 .app-shell.with-sidebar.with-copilot {
   grid-template-columns: 96px minmax(0, 1fr);
-  margin-right: 48px;
+  margin-right: min(48px, 5vw);
 }
 
 .app-shell.with-sidebar.with-copilot.copilot-expanded {
   grid-template-columns: 96px minmax(0, 1fr);
-  margin-right: 428px;
+  margin-right: min(428px, 50vw);
 }
 
 /* Content transition when copilot opens/closes */
@@ -134,4 +134,17 @@
 /* Remove old chatbot container styles */
 .chatbot-container {
   display: none;
+}
+
+/* Add these responsive adjustments */
+@media (max-width: 1200px) {
+  .app-shell.with-copilot.copilot-expanded {
+    margin-right: 320px; /* Less margin on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell.with-copilot.copilot-expanded {
+    margin-right: 280px; /* Even less margin on small screens */
+  }
 }

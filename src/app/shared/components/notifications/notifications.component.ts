@@ -74,6 +74,8 @@ export class NotificationsComponent
     setTimeout(() => {
       this.scrollToBottom();
     }, 100);
+
+    this.checkScreenSize();
   }
 
   ngOnDestroy(): void {
@@ -331,5 +333,17 @@ export class NotificationsComponent
   }
   closeSide() {
     (window as any).electronMessage.closeCRESideBrowser()
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    // You could dynamically adjust UI based on screen size if needed
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    const width = window.innerWidth;
+    // You can add logic here if needed to further adjust the UI
+    // This will automatically work with the CSS media queries added above
   }
 }
