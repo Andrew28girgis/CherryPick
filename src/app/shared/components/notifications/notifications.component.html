@@ -1,106 +1,98 @@
-<div class="chat-container position-relative" style="z-index: 1000">
-  <button
-    (click)="toggleDropdown()"
-    class="chat-button bot-icon"
-    aria-label="Chat with Cherry Bot"
-  >
-    <!-- Bot Icon -->
-    <img
-      width="55"
-      height="55"
-      src="../../../../assets/Images/bot.png"
-      alt=""
-    />
-  </button>
-
-  <!-- Unread Count Badge -->
-  <div class="chat-badge" *ngIf="notificationService.unreadCount > 0">
-    {{ notificationService.unreadCount }}
+<!-- Redesigned as vertical sidebar similar to GitHub Copilot with chat-like messages -->
+<div class="copilot-sidebar-container" [class.open]="isOpen">
+  <!-- Vertical Tab/Button -->
+  <div class="sidebar-tab" (click)="toggleSidebar()">
+    <div class="collapse-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </div>
+    <div class="tab-icon">
+      <img
+        width="24"
+        height="24"
+        src="../../../../assets/Images/bot.png"
+        alt="Copilot"
+      />
+    </div>
+    
+    <!-- Unread Count Badge -->
+    <div class="unread-badge" *ngIf="notificationService.unreadCount > 0">
+      {{ notificationService.unreadCount }}
+    </div>
+    
+    <div class="tab-text">
+      <span>Emily</span>
+    </div>
   </div>
 
-  <!-- Chat Dropdown with multiple visibility checks -->
-  <div
-    class="chat-dropdown"
-    [style.display]="isVisible ? 'flex' : 'none'"
-    [class.hidden]="!notificationService.dropdownVisible"
-  >
-    <div class="chat-card">
-      <!-- Header -->
-      <div class="chat-header">
-        <div class="chat-header-content">
-          <!-- <div class="bot-avatar">
-            <img width="30"height="30" src="../../../../assets/Images/bot.png" alt="">
-
-          </div> -->
-          <h2 class="chat-title">Emily</h2>
-        </div>
-        <div class="unread-badge" *ngIf="notificationService.unreadCount > 0">
-          {{ notificationService.unreadCount }}
-        </div>
+  <!-- Sidebar Panel -->
+  <div class="sidebar-panel" [class.visible]="isOpen">
+    <div class="sidebar-header">
+      <div class="header-content">
+   
+        <h3 class="sidebar-title">Chat with Emily</h3>
       </div>
+      <button class="close-button" (click)="toggleSidebar()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
 
-      <!-- Chat Messages -->
-      <div class="chat-messages-container">
+    <!-- Chat Messages -->
+    <div class="chat-messages-container">
+      <div
+        *ngIf="notificationService.notifications.length > 0; else noMessages"
+        class="chat-messages"
+      >
         <div
-          *ngIf="notificationService.notifications.length > 0; else noMessages"
-          class="chat-messages"
+          class="message-bubble"
+          *ngFor="let notification of notificationService.notifications"
+          (click)="handleNotificationClick(notification)"
+          [class.clickable]="notification.userSubmissionId"
         >
-          <div
-            class="message-bubble"
-            *ngFor="let notification of notificationService.notifications"
-            (click)="handleNotificationClick(notification)"
-            [class.clickable]="notification.userSubmissionId"
-          >
-            <div class="message-content">
-              <p class="message-text">
-                {{ notification.message }}
-              </p>
-              <time class="message-time" [dateTime]="notification.createdDate">
-                {{ notification.createdDate | date : "shortTime" }}
-              </time>
-            </div>
+          <div class="message-content">
+            <p class="message-text">
+              {{ notification.message }}
+            </p>
+            <time class="message-time" [dateTime]="notification.createdDate">
+               {{ notification.createdDate |date:'shortTime' }}
+            </time>
           </div>
         </div>
-
-        <!-- Empty State -->
-        <ng-template #noMessages>
-          <div class="no-messages">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#999"
-              stroke-width="1"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6L6 18M6 6l12 12"></path>
-            </svg>
-            <p>No messages available.</p>
-            <p class="no-messages-subtext">
-              Check back later for updates from Cherry Bot.
-            </p>
-          </div>
-        </ng-template>
       </div>
 
-      <!-- Chat Input (Disabled for now) -->
-      <!-- <div class="chat-input-container">
-        <input 
-          type="text" 
-          class="chat-input" 
-          placeholder="Message is disabled for now..." 
-          disabled
-        />
-        <button class="send-button" disabled>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M7.39999 6.32003L15.89 3.49003C19.7 2.22003 21.77 4.30003 20.51 8.11003L17.68 16.6C15.78 22.31 12.66 22.31 10.76 16.6L9.91999 14.08L7.39999 13.24C1.68999 11.34 1.68999 8.23003 7.39999 6.32003Z" stroke="#B51F63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M10.11 13.6501L13.69 10.0601" stroke="#B51F63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Empty State -->
+      <ng-template #noMessages>
+        <div class="no-messages">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--Colors-Primary-500)"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1-2-2h14a2 2 0 0 1-2 2z"></path>
           </svg>
-        </button>
-      </div> -->
+          <p>No messages yet.</p>
+          <p class="no-messages-subtext">
+            Start chatting with Emily for updates and assistance.
+          </p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Mark all as read button -->
+    <div class="sidebar-footer" *ngIf="notificationService.unreadCount > 0">
+      <button class="mark-all-read-btn" (click)="markAllAsRead()">
+        Mark all as read
+      </button>
     </div>
   </div>
 </div>
