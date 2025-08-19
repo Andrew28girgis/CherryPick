@@ -78,7 +78,7 @@
                 >All</a
               >
             </li>
-            <li *ngFor="let stage of stages">
+            <li *ngFor="let stage of stages; trackBy: trackByStageId">
               <a
                 class="dropdown-item"
                 [class.active]="selectedStageId === stage.id"
@@ -132,7 +132,7 @@
           selectedOption === option.status || selectedOption === option
         "
       >
-        <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+        <img loading="lazy"  [src]="option.icon" [alt]="option.text" class="icon-image" />
         <span class="icon-text d-none d-sm-flex" *ngIf="!isMobile">{{
           option.text
         }}</span> 
@@ -174,7 +174,7 @@
     >
       <div class="d-flex align-items-center gap-3">
         <!-- <div>
-          <img
+          <img loading="lazy" 
             class="tenant-logo"
             [src]="tenantImageUrl"
             [alt]="tenantName"
@@ -198,7 +198,7 @@
               [attr.aria-expanded]="showTenantDropdown"
             >
               <span class="tenant-name-text">
-                {{ selectedTenant?.Campaigns?.[0]?.CampaignName || 'Campaign' }}
+                {{ getCurrentCampaignName() }}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +232,7 @@
                       class="d-flex align-items-center gap-3 tenant-item-content"
                     >
                       <div class="tenant-logo-small">
-                        <img
+                        <img loading="lazy" 
                           class="tenant-img"
                           [src]="
                             'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -344,7 +344,7 @@
         aria-expanded="false"
         style="padding: 0 !important"
       >
-        <img
+        <img loading="lazy" 
           [src]="getCurrentViewIcon()"
           [alt]="getCurrentViewName()"
           class="view-icon"
@@ -354,7 +354,7 @@
       <ul class="dropdown-menu" aria-labelledby="viewDropdown">
         <li *ngFor="let option of dropdowmOptions">
           <a class="dropdown-item" (click)="selectOption(option)">
-            <img [src]="option.icon" [alt]="option.text" class="view-icon" />
+            <img loading="lazy" [src]="option.icon" [alt]="option.text" class="view-icon" />
             <span>{{ option.text }}</span>
           </a>
         </li>
@@ -400,7 +400,7 @@
   <div class="modal-body fancy-modal-body">
     <button class="add-sites-btn google-btn" (click)="navigateToMap()">
       <div class="btn-content">
-        <img
+        <img loading="lazy" 
           alt="Google Maps Logo"
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png?20200329030310"
           width="30"

@@ -241,7 +241,7 @@
       >
         <ng-template ngbSlide *ngFor="let img of galleryImages; let i = index">
           <div class="text-center">
-            <img [src]="img" class="img-fluid p-img" alt="image" />
+            <img loading="lazy"  [src]="img" class="img-fluid p-img" alt="image" />
           </div>
         </ng-template>
       </ngb-carousel>

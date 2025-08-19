@@ -226,7 +226,7 @@
             <div
               class="d-flex align-items-center gap-2 d-flex flex-column tenant-header"
             >
-              <img
+              <img loading="lazy" 
                 *ngIf="campaign.OrganizationId"
                 [src]="
                   'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -468,7 +468,7 @@
                       </div>
                     </div>
                     <!-- <div class="organization-info">
-                    <img
+                    <img loading="lazy" 
                       *ngIf="campaign.OrganizationId"
                       [src]="
                         'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -623,7 +623,7 @@
     *ngIf="!isLoading && !(filteredCampaigns && filteredCampaigns.length > 0)"
     class="empty-campaigns"
   >
-    <img src="../../../assets/Images/empty-state.png" alt="Empty Campaigns" />
+    <img loading="lazy"  src="../../../assets/Images/empty-state.png" alt="Empty Campaigns" />
     <h4>Campaigns Will Appear Here!</h4>
     <p>Create, Track, and Manage Expansion Campaigns Here.</p>
   </div>

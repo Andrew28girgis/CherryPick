@@ -1129,4 +1129,49 @@ export class LandingComponent {
       ? addressParts.filter(Boolean).join(', ')
       : 'Address not available';
   }
+  onImageError(event: any) {
+    event.target.src = 'https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png';
+  }
+  checkImage(event: Event) {
+    const img = event.target as HTMLImageElement;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    try {
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      ).data;
+
+      let isWhite = true;
+      for (let i = 0; i < imageData.length; i += 4) {
+        const r = imageData[i];
+        const g = imageData[i + 1];
+        const b = imageData[i + 2];
+        const a = imageData[i + 3];
+        if (!(r > 240 && g > 240 && b > 240 && a > 0)) {
+          isWhite = false;
+          break;
+        }
+      }
+
+      if (isWhite) {
+        img.src = 'assets/Images/placeholder.png';
+      }
+    } catch (err) {
+      console.warn('Canvas image data blocked due to CORS:', err);
+      if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
+        img.src = 'https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png';
+      }
+    }
+  }
 }

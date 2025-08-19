@@ -21,7 +21,7 @@
   background: linear-gradient(
     120deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
+    var(--Colors-Card-Background) 50%,
     transparent 100%
   );
   animation: shimmer 1.5s infinite;

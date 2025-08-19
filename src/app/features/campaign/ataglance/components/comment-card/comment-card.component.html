@@ -2,7 +2,7 @@
   <div class="w-100 d-flex flex-column justify-content-center gap-3">
     <div class="d-flex align-items-center gap-3">
       <div *ngIf="comment.logoURL" class="avatar-icon">
-        <img src="{{ comment.logoURL }}" alt="{{ comment.centerAddress }}" />
+        <img loading="lazy"  loading="lazy"  src="{{ comment.logoURL }}" alt="{{ comment.centerAddress }}" />
       </div>
       <div class="title">
         {{ comment.userFirstName }} {{ comment.userLastName }}

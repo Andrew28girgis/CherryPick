@@ -1,6 +1,6 @@
 <!-- Skeleton loading template -->
 <div class="cards-row m-0 mt-2" *ngIf="isLoading">
-  <ng-container *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+  <ng-container *ngFor="let i of [1, 2, 3, 4, 5, 6]; trackBy: trackById">
     <div class="card-window cursor">
       <div class="cardResponsive skeleton-card">
         <div class="skeleton-img"></div>
@@ -38,7 +38,7 @@
       <div class="cardResponsive">
         <a>
           <div class="main-img" (click)="handleImageClick($event)">
-            <img
+            <img loading="lazy" 
               [src]="getImageUrl(shopping)"
               [title]="shopping.CenterName"
               (error)="onImageError(shopping)"
@@ -502,7 +502,7 @@
                   </p>
                   <p>
                     {{ item.RelationOrganizationName }}
-                    <!-- <img
+                    <!-- <img loading="lazy" 
                       class="logo ms-2"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         item.RelationOrganizationId
@@ -529,7 +529,7 @@
                 {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
               </div>
               <div>
-                <img
+                <img loading="lazy" 
                   class="ms-2 cursor"
                   src="../../../assets/Images/Icons/eye.png"
                   alt="Organization Brokers"
@@ -568,7 +568,7 @@
                 href="{{ shopping.DocsLink }}"
                 target="_blank"
               >
-                <img
+                <img loading="lazy" 
                   width="25"
                   height="25"
                   src="../../../../../assets/icons/pdf-file.png"

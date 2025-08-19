@@ -40,7 +40,7 @@
                         <ng-container
                           *ngFor="let branch of near.Branches | slice : 0 : 1"
                         >
-                          <img
+                          <img loading="lazy" 
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                               branch.OrganizationId
                             }}"
@@ -257,7 +257,7 @@
           <div class="d-flex align-items-center p-0" style="margin-bottom: 5px">
             <p class="m-0">Nearest {{ near.Name }}:</p>
             <ng-container *ngFor="let branch of near.Branches | slice : 0 : 1">
-              <img
+              <img loading="lazy" 
                 src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                   branch.OrganizationId
                 }}"
@@ -336,7 +336,7 @@
           <div class="d-flex align-items-center p-0" style="margin-bottom: 5px">
             <p class="m-0">Nearest {{ near.Name }}:</p>
             <ng-container *ngFor="let branch of near.Branches | slice : 0 : 1">
-              <img
+              <img loading="lazy" 
                 src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                   branch.OrganizationId
                 }}"
@@ -508,7 +508,7 @@
           <div class="d-flex justify-content-start emo-container">
             <div class="total" (click)="sendEmojFeedBack(1)">
               <div [ngClass]="place.reaction == '1' ? 'selected-reaction' : ''">
-                <img
+                <img loading="lazy" 
                   src="../../../assets/Images/Gif/love.gif"
                   alt="love"
                   width="100"
@@ -517,7 +517,7 @@
             </div>
             <div class="total" (click)="sendEmojFeedBack(2)">
               <div [ngClass]="place.reaction == '2' ? 'selected-reaction' : ''">
-                <img
+                <img loading="lazy" 
                   src="../../../assets/Images/Gif/happy.gif"
                   alt="happy"
                   width="100"
@@ -526,7 +526,7 @@
             </div>
             <div class="total" (click)="sendEmojFeedBack(3)">
               <div [ngClass]="place.reaction == '3' ? 'selected-reaction' : ''">
-                <img
+                <img loading="lazy" 
                   src="../../../assets/Images/Gif/sad.gif"
                   alt="sad"
                   width="100"
@@ -746,11 +746,13 @@
       <section id="hero">
         <div class="p-0">
           <div class="d-flex align-items-center">
-            <img
+            <img loading="lazy" 
               class="logo OrgManagerwidth"
               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                 OrgManager[0].id
               }}"
+              (load)="checkImage($event)"
+              (error)="onImageError($event)"
               alt=""
             />
             <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
@@ -792,7 +794,7 @@
             <div class="col-md-3 mb-3" *ngFor="let place of tenant">
               <div class="d-flex align-items-center">
                         <div>
-                  <!-- <img
+                  <!-- <img loading="lazy" 
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       place.OrganizationID
                     }}"
@@ -831,7 +833,7 @@
             <li *ngFor="let place of OrganizationBranches.Branches.slice(0, 5)">
               <div class="d-flex align-items-center">
                 <div>
-                  <img
+                  <img loading="lazy" 
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       OrganizationBranches.Id
                     }}"
@@ -866,7 +868,7 @@
               <ng-container *ngFor="let branch of place.RelationOrganization">
                 <div class="d-flex align-items-center">
                   <div>
-                    <img
+                    <img loading="lazy" 
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         branch.id
                       }}"
@@ -956,7 +958,7 @@
       >
         <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
           <div class="text-center">
-            <img [src]="img" class="img-fluid p-img" alt="image" />
+            <img loading="lazy"  [src]="img" class="img-fluid p-img" alt="image" />
           </div>
         </ng-template>
       </ngb-carousel>

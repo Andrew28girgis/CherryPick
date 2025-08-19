@@ -248,7 +248,7 @@
       <div [routerLink]="['/landing', 0,center?.scId,center.campaignId]">
         <div class="image-container"
         >
-          <img
+          <img loading="lazy" 
             [src]="center.mainImage || 'assets/Images/placeholder.png'"
             [alt]="center.centerName"
             class="center-image"

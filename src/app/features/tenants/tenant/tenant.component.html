@@ -8,7 +8,7 @@
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center justify-content-center">
               <div>
-                <img
+                <img loading="lazy" 
                   class="tenant-logo"
                   [src]="
                     'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -28,7 +28,7 @@
               </div>
             </div>
             <!-- <div class="sharebtn">
-              <img src="../../../../assets/Images/Icons/share.png" />
+              <img loading="lazy"  src="../../../../assets/Images/Icons/share.png" />
               <span>Share</span>
             </div> -->
           </div>
@@ -146,7 +146,7 @@
                     <div *ngIf="TenantResult.Buybox[0].NNNCharges">
                       <div>
                         <div class="spec-icon">
-                          <img
+                          <img loading="lazy" 
                             src="../../../assets/Images/SVG/charges.png"
                             alt="NNN Charges"
                           />
@@ -800,7 +800,7 @@
                           class="inner-frame d-flex flex-column align-items-center justify-content-center"
                         >
                           <div>
-                            <img
+                            <img loading="lazy" 
                               src="../../../../assets/Images/Icons/information.png"
                               alt="Upload Icon"
                             />
@@ -821,7 +821,7 @@
                           class="d-flex flex-column gap-4 align-items-center justify-content-center"
                         >
                           <div>
-                            <img
+                            <img loading="lazy" 
                               class="uploadimg"
                               src="../../../../assets/Images/Icons/UploadIcon.png"
                               alt=""
@@ -855,7 +855,7 @@
                                 class="d-flex align-items-center justify-content-center"
                               >
                                 <div class="uploadbtn cursor">
-                                  <img
+                                  <img loading="lazy" 
                                     src="../../../../assets/Images/Icons/choosefile.png"
                                   />
                                   <span>Submit Brochure</span>
@@ -874,7 +874,7 @@
                   *ngFor="let shopping of shoppingCenterInMail"
                 >
                   <div class="card shoppingcentersize">
-                    <img
+                    <img loading="lazy" 
                       class="card-img-top"
                       [src]="
                         shopping?.MainImage ||
@@ -897,7 +897,7 @@
                         <!-- Lease Prices Section -->
                         <span class="title-2"> Purchase Price: </span>
                         <div class="d-flex align-items-center gap-2 my-2">
-                          <img
+                          <img loading="lazy" 
                             src="../../../../assets/Images/purchaseprice.png"
                             alt=""
                           />
@@ -942,7 +942,7 @@
                         <div class="d-flex flex-column gap-1">
                           <span class="title-2"> Available Spaces: </span>
                           <div class="d-flex align-items-center gap-2 my-2">
-                            <img
+                            <img loading="lazy" 
                               src="../../../../assets/Images/size.png"
                               alt=""
                             />
@@ -977,7 +977,7 @@
                       </div>
 
                       <div class="d-flex align-items-center gap-2 mb-2">
-                        <img
+                        <img loading="lazy" 
                           src="../../../../assets/Images/availableunits.png"
                           alt=""
                         />
@@ -992,7 +992,7 @@
                         <span class="managedBy">Managed By</span>
                       </div>
                       <div class="d-flex align-content-center gap-2">
-                        <img
+                        <img loading="lazy" 
                           *ngIf="OrganizationContacts[0]"
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -1007,7 +1007,7 @@
                         >
                           {{ OrganizationContacts[0].name }}
                         </div>
-                        <img
+                        <img loading="lazy" 
                           class="cursor eyeimage"
                           src="../../../assets/Images/Icons/eye.png"
                           alt="View Manager Details"
@@ -1063,7 +1063,7 @@
                   *ngFor="let shopping of shoppingCenterManage"
                 >
                   <div class="card shoppingcentersize">
-                    <img
+                    <img loading="lazy" 
                       class="card-img-top"
                       [src]="
                         shopping?.MainImage ||
@@ -1086,7 +1086,7 @@
                         <!-- Lease Prices Section -->
                         <span class="title-2"> Purchase Price: </span>
                         <div class="d-flex align-items-center gap-2 my-2">
-                          <img
+                          <img loading="lazy" 
                             src="../../../../assets/Images/purchaseprice.png"
                             alt=""
                           />
@@ -1131,7 +1131,7 @@
                         <div class="d-flex flex-column gap-1">
                           <span class="title-2"> Available Spaces: </span>
                           <div class="d-flex align-items-center gap-2 my-2">
-                            <img
+                            <img loading="lazy" 
                               src="../../../../assets/Images/size.png"
                               alt=""
                             />
@@ -1166,7 +1166,7 @@
                       </div>
 
                       <div class="d-flex align-items-center gap-2 mb-2">
-                        <img
+                        <img loading="lazy" 
                           src="../../../../assets/Images/availableunits.png"
                           alt=""
                         />
@@ -1181,7 +1181,7 @@
                         <span class="managedBy">Managed By</span>
                       </div>
                       <div class="d-flex align-content-center gap-2">
-                        <img
+                        <img loading="lazy" 
                           *ngIf="OrganizationContacts[0]"
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -1196,7 +1196,7 @@
                         >
                           {{ OrganizationContacts[0].name }}
                         </div>
-                        <img
+                        <img loading="lazy" 
                           class="cursor eyeimage"
                           src="../../../assets/Images/Icons/eye.png"
                           alt="View Manager Details"
@@ -1252,7 +1252,7 @@
                   *ngFor="let shopping of shoppingCenterManageSubmitted"
                 >
                   <div class="card shoppingcentersize">
-                    <img
+                    <img loading="lazy" 
                       class="card-img-top"
                       [src]="
                         shopping?.MainImage ||
@@ -1275,7 +1275,7 @@
                         <div class="title-2">Purchase Price:</div>
 
                         <div class="d-flex align-items-center gap-2">
-                          <img
+                          <img loading="lazy" 
                             src="../../../../assets/Images/purchaseprice.png"
                             alt=""
                           />
@@ -1340,7 +1340,7 @@
                         <div class="d-flex flex-column gap-1">
                           <span class="title-2"> Available Spaces: </span>
                           <div class="d-flex align-items-center gap-2 my-2">
-                            <img
+                            <img loading="lazy" 
                               src="../../../../assets/Images/size.png"
                               alt=""
                             />
@@ -1381,7 +1381,7 @@
                         </div>
                       </div>
                       <div class="d-flex align-items-center gap-2 mb-2">
-                        <img
+                        <img loading="lazy" 
                           src="../../../../assets/Images/availableunits.png"
                           alt=""
                         />
@@ -1396,7 +1396,7 @@
                         <span class="managedBy">Managed By</span>
                       </div>
                       <div class="d-flex align-content-center gap-2">
-                        <img
+                        <img loading="lazy" 
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                             shoppingCenterManage[0].O[0].ID
@@ -1409,7 +1409,7 @@
                         >
                           {{ shoppingCenterManage[0].O[0].Name }}
                         </div>
-                        <img
+                        <img loading="lazy" 
                           class="cursor eyeimage"
                           src="../../../assets/Images/Icons/eye.png"
                           alt="View Manager Details"
@@ -1497,7 +1497,7 @@
             <label class="form-check-label" for="checkbox-{{ image.name }}">
             </label>
           </div>
-          <img
+          <img loading="lazy" 
             [src]="displayCustomImage(image)"
             [alt]="image.name"
             class="img-fluid gpt-image"
@@ -1560,7 +1560,7 @@
                 <div class="carousel-inner">
                   <div *ngFor="let imageUrl of getImagesArray(); let i = index" class="carousel-item"
                     [ngClass]="{'active': i === 0}">
-                    <img [src]="imageUrl" alt="Property Image" class="d-block w-100 rounded">
+                    <img loading="lazy"  [src]="imageUrl" alt="Property Image" class="d-block w-100 rounded">
                   </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel"
@@ -1576,7 +1576,7 @@
               </div>
             </div>
             <ng-template #singleImage>
-              <img
+              <img loading="lazy" 
                 [src]="getImagesArray()[0]"
                 alt="Property Image"
                 class="img-fluid rounded shadow-sm"

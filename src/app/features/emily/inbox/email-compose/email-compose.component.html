@@ -78,7 +78,7 @@
                     [checked]="isCenterSelected(sc.CenterName)"
                     (change)="onCenterCheckboxChange(sc.CenterName, $event)"
                   />
-                  <img src="{{ sc.MainImage }}" alt="{{ sc.CenterName }}" />
+                  <img loading="lazy"  src="{{ sc.MainImage }}" alt="{{ sc.CenterName }}" />
                 </div>
                 <div class="w-100">
                   <h6 class="center-name">

@@ -7,6 +7,7 @@ import {
   OnDestroy,
   TemplateRef,
   ViewChild,
+  ChangeDetectionStrategy, // Added OnPush import
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -26,10 +27,12 @@ import { Subscription } from 'rxjs';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { Email } from 'src/app/shared/models/email';
 import { AddContactComponent } from '../add-contact/add-contact.component';
+
 @Component({
   selector: 'app-card-view',
   templateUrl: './card-view.component.html',
   styleUrls: ['./card-view.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush, // Added OnPush strategy
 })
 export class CardViewComponent implements OnInit, OnDestroy {
   General: General = new General();
@@ -85,6 +88,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   @ViewChild('addContact') addContactModal!: TemplateRef<any>;
   selectedShoppingCenterId: any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -108,7 +112,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
           const stage = this.stages.find((s) => s.id === id);
           this.selectedStageName = stage ? stage.stageName : '';
         }
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       })
     );
 
@@ -129,13 +133,14 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscripe.add(
       this.viewManagerService.allShoppingCenters$.subscribe((centers) => {
         this.allShoppingCenters = centers;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       })
     );
 
     this.subscriptions.push(
       this.viewManagerService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
+        this.cdr.markForCheck();
       })
     );
 
@@ -179,37 +184,42 @@ export class CardViewComponent implements OnInit, OnDestroy {
         if (centers && centers.length > 0) {
           this.isLoading = false;
         }
+        this.cdr.markForCheck();
       })
     );
 
     this.subscriptions.push(
       this.viewManagerService.buyboxCategories$.subscribe((categories) => {
         this.buyboxCategories = categories;
+        this.cdr.markForCheck();
       })
     );
 
     this.subscriptions.push(
       this.viewManagerService.buyboxPlaces$.subscribe((places) => {
         this.buyboxPlaces = places;
+        this.cdr.markForCheck();
       })
     );
 
     this.subscriptions.push(
       this.viewManagerService.kanbanStages$.subscribe((stages) => {
         this.KanbanStages = stages;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       })
     );
 
     this.subscriptions.push(
       this.viewManagerService.selectedId$.subscribe((id) => {
         this.selectedId = id;
+        this.cdr.markForCheck();
       })
     );
 
     this.subscriptions.push(
       this.viewManagerService.selectedIdCard$.subscribe((id) => {
         this.selectedIdCard = id;
+        this.cdr.markForCheck();
       })
     );
 
@@ -248,8 +258,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
     place.isDropdownOpen = !place.isDropdownOpen;
     this.activeDropdownId = place.isDropdownOpen ? place.Id : null;
-
-    this.cdr.detectChanges();
   }
 
   /**
@@ -278,16 +286,16 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.CampaignId
     );
 
-    this.cdr.detectChanges();
-
     setTimeout(() => {
       this.isUpdatingStage = false;
+      this.cdr.markForCheck();
     }, 100);
   }
+
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
-    
+
     if (this.isUpdatingStage) {
       return;
     }
@@ -295,24 +303,22 @@ export class CardViewComponent implements OnInit, OnDestroy {
     // If there's an active dropdown
     if (this.activeDropdownId && target) {
       const clickedDropdown = target.closest('.custom-dropdown');
-      
+
       // If the click is not inside a dropdown
       if (!clickedDropdown) {
         // Stop event propagation for all outside clicks while a dropdown is open
         event.preventDefault();
         event.stopPropagation();
-        
+
         // Close all dropdowns
         this.cardsSideList.forEach((place) => {
           place.isDropdownOpen = false;
         });
         this.activeDropdownId = null;
-        this.cdr.detectChanges();
       }
     }
   }
 
-  
   /**
    * Handles clicks on the image area
    * Closes both dropdown and ellipsis menu if they're open
@@ -335,8 +341,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.viewManagerService.setSelectedIdCard(null);
       document.removeEventListener('click', this.outsideClickHandler);
     }
-
-    this.cdr.detectChanges();
   }
 
   /**
@@ -353,7 +357,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       place.isDropdownOpen = false;
     });
     this.activeDropdownId = null;
-    
+
     // After closing the dropdown, open the ellipsis menu
     const target = event.currentTarget as HTMLElement;
     const placeId = this.findPlaceIdFromElement(target);
@@ -362,10 +366,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.toggleShortcutsCard(placeId, event);
       }, 10);
     }
-    
-    this.cdr.detectChanges();
   }
-  
+
   /**
    * Helper method to find the place ID from a clicked element
    */
@@ -373,15 +375,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
     // Navigate up the DOM to find the closest card element
     const cardWindow = element.closest('.card-window');
     if (!cardWindow) return null;
-    
+
     // Find the index of this card in the cardsSideList
     const cards = Array.from(document.querySelectorAll('.card-window'));
     const index = cards.indexOf(cardWindow);
-    
+
     if (index >= 0 && index < this.cardsSideList.length) {
       return this.cardsSideList[index].Id;
     }
-    
+
     return null;
   }
 
@@ -533,8 +535,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.buyboxId = this.BuyBoxId;
   }
 
-  trackById(place: any): number {
-    return place.Id;
+  /**
+   * TrackBy function for *ngFor loops to improve performance
+   */
+  trackById(index: number, item: any): number {
+    return item?.Id || item?.id || index;
   }
 
   requestCenterStatus(shoppingCenterId: number, campaignId: any) {
@@ -551,13 +556,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
           this.isLoadingstatus = false;
-          this.cdr.detectChanges();
         },
         error: () => {
           const errHtml = '<p>Error loading content</p>';
           this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
           this.isLoadingstatus = false;
-          this.cdr.detectChanges();
         },
       });
   }
@@ -634,7 +637,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
           );
           this.selectedStageName = current ? current.stageName : 'Stage';
         }
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err) => console.error('Error loading kanban stages:', err),
     });
@@ -703,7 +706,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   onImageLoad(shoppingId: number): void {
     this.imageLoadingStates[shoppingId] = false;
     this.imageErrorStates[shoppingId] = false;
-    this.cdr.detectChanges();
   }
 
   onImageError(shopping: any): void {
@@ -716,7 +718,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     ) {
       shopping.MainImage = 'assets/Images/DefaultImage.png';
     }
-    this.cdr.detectChanges();
   }
 
   getImageUrl(shopping: any): string {

@@ -49,7 +49,7 @@ input::placeholder {
   display: flex;
   flex-direction: column;
 
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
 }
 

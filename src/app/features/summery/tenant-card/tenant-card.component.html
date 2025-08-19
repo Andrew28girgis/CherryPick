@@ -8,7 +8,7 @@
     style="width: 100%"
   >
     <div class="flex-row d-flex" style="gap: 16px">
-      <img
+      <img  
         class="tenant-card-img"
         [src]="getImageUrl(tenant.id)"
         crossOrigin="anonymous"
@@ -39,7 +39,7 @@
           >
             <span class="campaigns-count">{{ tenant.Campaigns.length }}</span>
             <span class="campaign-label">Campaigns</span>
-            <img src="../../../assets/Images/Icons/info.png" alt="Info Icon" />
+            <img loading="lazy"  src="../../../assets/Images/Icons/info.png" alt="Info Icon" />
           </ng-container>
           <ng-template #showSendButton>
             <a class="add-campaign" (click)="openCampaignModal(); $event.stopPropagation()">
@@ -58,7 +58,7 @@
 <ng-template #offcanvasContent let-offcanvas>
   <div class="offcanvas-header">
     <h5 class="d-flex align-items-center gap-3 m-0" ngbAutofocus>
-      <img
+      <img loading="lazy" 
         class="tenant-offcanvas-img"
         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
           tenant.id
