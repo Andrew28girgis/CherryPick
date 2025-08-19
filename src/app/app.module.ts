@@ -59,6 +59,7 @@ import { UploadOMComponent } from './features/kayak-home/shopping-center-table/u
 import { FileExplorerComponent } from './features/shopping/file-explorer/file-explorer.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
+import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -92,6 +93,7 @@ import { NotificationsComponent } from './shared/components/notifications/notifi
     UploadOMComponent,
     FileExplorerComponent,
     SidebarComponent,
+    AiChatingComponent,
   ],
   imports: [
     BrowserModule,

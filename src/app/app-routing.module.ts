@@ -31,6 +31,7 @@ import { AiFailedComponent } from './shared/components/ai-failed/ai-failed.compo
 import { AutomationComponent } from './shared/components/automation/automation.component';
 import { AutomationShoppingCentersComponent } from './shared/components/automation-shopping-centers/automation-shopping-centers.component';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
+import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 
 const routes: Routes = [
   {
@@ -149,6 +150,11 @@ const routes: Routes = [
   {
     path: 'market-survey',
     component: MarketSurveyComponent,
+    data: { hideHeader: true },
+  },
+  {
+    path: 'ai-chating',
+    component: AiChatingComponent,
     data: { hideHeader: true },
   },
 
