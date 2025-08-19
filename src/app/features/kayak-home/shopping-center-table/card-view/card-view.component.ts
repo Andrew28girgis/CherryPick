@@ -287,7 +287,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
-    
+
     if (this.isUpdatingStage) {
       return;
     }
@@ -295,13 +295,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
     // If there's an active dropdown
     if (this.activeDropdownId && target) {
       const clickedDropdown = target.closest('.custom-dropdown');
-      
+
       // If the click is not inside a dropdown
       if (!clickedDropdown) {
         // Stop event propagation for all outside clicks while a dropdown is open
         event.preventDefault();
         event.stopPropagation();
-        
+
         // Close all dropdowns
         this.cardsSideList.forEach((place) => {
           place.isDropdownOpen = false;
@@ -312,7 +312,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  
   /**
    * Handles clicks on the image area
    * Closes both dropdown and ellipsis menu if they're open
@@ -353,7 +352,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       place.isDropdownOpen = false;
     });
     this.activeDropdownId = null;
-    
+
     // After closing the dropdown, open the ellipsis menu
     const target = event.currentTarget as HTMLElement;
     const placeId = this.findPlaceIdFromElement(target);
@@ -362,10 +361,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.toggleShortcutsCard(placeId, event);
       }, 10);
     }
-    
+
     this.cdr.detectChanges();
   }
-  
+
   /**
    * Helper method to find the place ID from a clicked element
    */
@@ -373,15 +372,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
     // Navigate up the DOM to find the closest card element
     const cardWindow = element.closest('.card-window');
     if (!cardWindow) return null;
-    
+
     // Find the index of this card in the cardsSideList
     const cards = Array.from(document.querySelectorAll('.card-window'));
     const index = cards.indexOf(cardWindow);
-    
+
     if (index >= 0 && index < this.cardsSideList.length) {
       return this.cardsSideList[index].Id;
     }
-    
+
     return null;
   }
 
