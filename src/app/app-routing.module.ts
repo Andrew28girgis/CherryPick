@@ -265,7 +265,7 @@ const routes: Routes = [
     component: UploadOMComponent,
   },
   {
-    path: 'notifications',
+    path: 'chatbot',
     component: NotificationsComponent,
   },
   {
