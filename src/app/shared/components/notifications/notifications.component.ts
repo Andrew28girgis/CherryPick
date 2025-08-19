@@ -83,32 +83,22 @@ export class NotificationsComponent implements OnInit, OnDestroy, AfterViewInit,
   }
 
   toggleSidebar(): void {
-    this.isOpen = !this.isOpen
+    // Toggle the sidebar state
+    this.isOpen = !this.isOpen;
+    
+    // Emit the state change
     this.sidebarStateChange.emit({ 
       isOpen: true,  // Tab is always visible when component is shown
       isFullyOpen: this.isOpen
-    })
+    });
 
-    console.log("Sidebar state:", this.isOpen)
+    console.log("Sidebar state:", this.isOpen);
 
-    // If opening the sidebar
-    if (!this.isOpen) {
-      this.isOpen = true;
-      this.sidebarStateChange.emit({ 
-        isOpen: true,
-        isFullyOpen: true
-      });
-      
-      // After opening, scroll to bottom after a short delay for animations
+    // If opening the sidebar, scroll to bottom after a short delay for animations
+    if (this.isOpen) {
       setTimeout(() => {
         this.scrollToBottom();
       }, 300);
-    } else {
-      this.isOpen = false;
-      this.sidebarStateChange.emit({
-        isOpen: true,
-        isFullyOpen: false
-      });
     }
   }
 
