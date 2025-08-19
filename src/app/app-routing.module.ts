@@ -17,6 +17,7 @@ import { AutomationComponent } from './shared/components/automation/automation.c
 import { AutomationShoppingCentersComponent } from './shared/components/automation-shopping-centers/automation-shopping-centers.component';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
+import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 
 const routes: Routes = [
   {
@@ -262,6 +263,10 @@ const routes: Routes = [
   {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
+  },
+  {
+    path: 'notifications',
+    component: NotificationsComponent,
   },
   {
     path: ':guid',
