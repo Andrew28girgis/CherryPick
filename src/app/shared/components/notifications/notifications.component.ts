@@ -6,6 +6,9 @@ import {
     OnDestroy,
   Output,
   EventEmitter,
+  ViewChild,
+  AfterViewInit,
+  AfterViewChecked,
 } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import {   Router, RouterModule } from "@angular/router"
@@ -22,7 +25,7 @@ import { FormsModule } from "@angular/forms"
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })
-export class NotificationsComponent implements OnInit, OnDestroy {
+export class NotificationsComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   
   private intervalId: any
   notifications: Notification[] = []
@@ -30,7 +33,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   @Output() sidebarStateChange = new EventEmitter<{ isOpen: boolean, isFullyOpen: boolean }>()
   public isOpen = true
-
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -50,6 +53,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       isOpen: true, 
       isFullyOpen: this.isOpen 
     })
+
+    // When component initializes, scroll to bottom after a short delay
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -64,6 +72,16 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     })
   }
 
+  ngAfterViewInit(): void {
+    // Scroll to bottom after view is initialized
+    this.scrollToBottom();
+  }
+  
+  ngAfterViewChecked(): void {
+    // Scroll to bottom after view updates
+    this.scrollToBottom();
+  }
+
   toggleSidebar(): void {
     this.isOpen = !this.isOpen
     this.sidebarStateChange.emit({ 
@@ -74,26 +92,33 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     console.log("Sidebar state:", this.isOpen)
 
     // If opening the sidebar
-    if (this.isOpen) {
-      if (this.notificationService.unreadCount > 0) {
-        this.markExistingAsRead()
-      }
-
-      // Scroll to bottom
+    if (!this.isOpen) {
+      this.isOpen = true;
+      this.sidebarStateChange.emit({ 
+        isOpen: true,
+        isFullyOpen: true
+      });
+      
+      // After opening, scroll to bottom after a short delay for animations
       setTimeout(() => {
-        this.scrollToBottom()
-      }, 100)
+        this.scrollToBottom();
+      }, 300);
+    } else {
+      this.isOpen = false;
+      this.sidebarStateChange.emit({
+        isOpen: true,
+        isFullyOpen: false
+      });
     }
   }
 
   scrollToBottom(): void {
     try {
-      const chatContainer = this.elementRef.nativeElement.querySelector(".chat-messages-container")
-      if (chatContainer) {
-        chatContainer.scrollTop = chatContainer.scrollHeight
+      if (this.messagesContainer) {
+        this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
       }
     } catch (err) {
-      console.error("Error scrolling to bottom:", err)
+      console.error('Error scrolling to bottom:', err);
     }
   }
 
