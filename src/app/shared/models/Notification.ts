@@ -6,4 +6,6 @@ export interface Notification {
   createdDate: string;
   userSubmissionId: number;
   notificationCategoryId: any;
+  json: any;
+  campaignId: number;
 }

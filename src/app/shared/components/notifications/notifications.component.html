@@ -1,7 +1,7 @@
 <!-- Redesigned as vertical sidebar similar to GitHub Copilot with chat-like messages -->
 <div class="copilot-sidebar-container" [class.open]="isOpen">
   <!-- Vertical Tab/Button -->
-  <div class="sidebar-tab" (click)="toggleSidebar()">
+  <div class="sidebar-tab" (click)="electronSideBar?closeSide():toggleSidebar()">
     <div class="collapse-icon">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="15 18 9 12 15 6"></polyline>
@@ -30,7 +30,7 @@
    
         <h3 class="sidebar-title">Emily</h3>
       </div>
-      <button class="close-button" (click)="toggleSidebar()">
+      <button class="close-button" (click)="electronSideBar?closeSide():toggleSidebar()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -46,9 +46,10 @@
       >
         <div
           class="message-bubble"
-          *ngFor="let notification of notificationService.notifications"
+          *ngFor="let notification of notificationService.notifications;let last=last"
           (click)="handleNotificationClick(notification)"
           [class.clickable]="notification.userSubmissionId"
+
         >
           <div class="message-content">
             <p class="message-text">
@@ -58,6 +59,10 @@
                {{ notification.createdDate |date:'shortTime' }}
             </time>
           </div>
+            <div *ngIf="notification.json " class="choose">
+            <button class="btn btn-success" (click)="choose(1,notification)"> yes</button>
+            <button class="btn btn-danger"(click)="choose(0,notification)"> No</button>
+            </div>
         </div>
       </div>
 
@@ -85,4 +90,4 @@
       </ng-template>
     </div>
   </div>
-</div>
+ </div>
