@@ -1,5 +1,5 @@
-  <aside class="sidebar">
-    <!-- Top logo -->
+<header class="sidebar">
+    <!-- Brand logo -->
     <a href="/summary" class="brand" aria-label="Home">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -260,143 +260,89 @@
             />
           </svg>
         </a>
-
-        <!-- <at
-          class="nav-btn"
-          routerLink="/rout"
-          routerLinkActive="active"
-          aria-label="Reports"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="25"
-            viewBox="0 0 24 25"
-            fill="none"
-          >
-            <path
-              d="M9.98999 23.7649C9.38999 23.7649 8.81999 23.4649 8.42999 22.9349L7.23001 21.3349C7.23001 21.3449 7.18 21.3148 7.16 21.3148H6.79001C3.37001 21.3148 1.25 20.3849 1.25 15.7749V11.7749C1.25 7.56487 3.82001 6.46487 5.98001 6.27487C6.22001 6.24487 6.50001 6.23486 6.79001 6.23486H13.19C16.81 6.23486 18.73 8.15487 18.73 11.7749V15.7749C18.73 16.0649 18.72 16.3449 18.68 16.6149C18.5 18.7449 17.4 21.3148 13.19 21.3148H12.79L11.55 22.9349C11.16 23.4649 10.59 23.7649 9.98999 23.7649ZM6.79001 7.73486C6.56001 7.73486 6.34 7.74486 6.13 7.76486C3.81 7.96486 2.75 9.23487 2.75 11.7749V15.7749C2.75 19.2049 3.81001 19.8148 6.79001 19.8148H7.19C7.64 19.8148 8.14999 20.0649 8.42999 20.4249L9.63 22.0349C9.85001 22.3349 10.13 22.3349 10.35 22.0349L11.55 20.4349C11.84 20.0449 12.3 19.8148 12.79 19.8148H13.19C15.73 19.8148 17 18.7449 17.19 16.4649C17.22 16.2249 17.23 16.0049 17.23 15.7749V11.7749C17.23 8.98487 15.98 7.73486 13.19 7.73486H6.79001Z"
-              fill="#161017"
-            />
-            <path
-              d="M9.99023 15.1748C9.43023 15.1748 8.99023 14.7248 8.99023 14.1748C8.99023 13.6248 9.44023 13.1748 9.99023 13.1748C10.5402 13.1748 10.9902 13.6248 10.9902 14.1748C10.9902 14.7248 10.5502 15.1748 9.99023 15.1748Z"
-              fill="#161017"
-            />
-            <path
-              d="M13.1895 15.1748C12.6295 15.1748 12.1895 14.7248 12.1895 14.1748C12.1895 13.6248 12.6395 13.1748 13.1895 13.1748C13.7395 13.1748 14.1895 13.6248 14.1895 14.1748C14.1895 14.7248 13.7395 15.1748 13.1895 15.1748Z"
-              fill="#161017"
-            />
-            <path
-              d="M6.7998 15.1748C6.2398 15.1748 5.7998 14.7248 5.7998 14.1748C5.7998 13.6248 6.2498 13.1748 6.7998 13.1748C7.3498 13.1748 7.7998 13.6248 7.7998 14.1748C7.7998 14.7248 7.3498 15.1748 6.7998 15.1748Z"
-              fill="#161017"
-            />
-            <path
-              d="M17.9396 17.2749C17.7396 17.2749 17.5396 17.1949 17.3996 17.0449C17.2396 16.8849 17.1697 16.6549 17.1997 16.4349C17.2297 16.2249 17.2396 16.0049 17.2396 15.7749V11.7749C17.2396 8.98487 15.9897 7.73486 13.1997 7.73486H6.79963C6.56963 7.73486 6.34966 7.74486 6.13966 7.76486C5.91966 7.79486 5.68964 7.71485 5.52964 7.56485C5.36964 7.40485 5.27963 7.18487 5.29963 6.96487C5.47963 4.80487 6.58963 2.23486 10.7996 2.23486H17.1997C20.8197 2.23486 22.7396 4.15487 22.7396 7.77487V11.7749C22.7396 15.9849 20.1697 17.0849 18.0097 17.2749C17.9797 17.2749 17.9596 17.2749 17.9396 17.2749ZM6.91966 6.23486H13.1896C16.8096 6.23486 18.7297 8.15487 18.7297 11.7749V15.6449C20.4297 15.2249 21.2297 13.9749 21.2297 11.7749V7.77487C21.2297 4.98487 19.9796 3.73486 17.1896 3.73486H10.7897C8.58965 3.73486 7.34966 4.53486 6.91966 6.23486Z"
-              fill="#161017"
-            />
-          </svg>
-        </a> -->
-
-        <!-- <div
-          class="nav-btn"
-          [class.active]="isNotificationsOpen"
-          [attr.aria-expanded]="isNotificationsOpen"
-          aria-label="Notifcations"
-        >
-          <app-notifications (dropdownOpenChange)="isNotificationsOpen = $event"></app-notifications>
-        </div> -->
       </div>
     </nav>
 
-    <!-- Bottom avatar -->
-     <div class="avatar-container"           data-bs-toggle="dropdown"
-     aria-expanded="false"
->
+    <!-- Avatar/profile menu moved to right -->
+    <div class="avatar-container dropdown">
+      <a class="avatar dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img loading="lazy" src="../../../../assets/Images/avatarplaceholder.png" alt="You" />
+      </a>
       
-    <a class="avatar" aria-label="Profile">
-      <img loading="lazy"  src="../../../../assets/Images/avatarplaceholder.png" alt="You" />
-    </a>
-    
-
-    <ul
-    class="dropdown-menu dropdown-menu-end"
-    aria-labelledby="userDropdown"
-  >
-    <!-- <li>
-      <a
-        class="dropdown-item"
-        href="#"
-        (click)="switchView(); $event.preventDefault()"
-      >
-        Switch to
-        {{ currentRoute.includes("landlord") ? "campaigns" : "Landlord" }}
-      </a>
-    </li> -->
-    <li>
-      <a class="dropdown-item" [routerLink]="['/NewPassword']">
-        Change Password
-      </a>
-    </li>
-
-    <li>
-      <a class="dropdown-item" [routerLink]="['/settings']"> Settings </a>
-    </li>
-    <!-- <li>
-      <a class="dropdown-item" [routerLink]="['/ai-chating']"> AI Chatting </a>
-    </li> -->
-    <li>
-      <a class="dropdown-item" (click)="openAddAIKey()"> ChatGPT Key </a>
-    </li>
-
-    <li><hr class="dropdown-divider" /></li>
-    <li>
-      <a
-        class="dropdown-item d-flex justify-content-between"
-        href="#"
-        (click)="logout(); $event.preventDefault()"
-      >
-        Logout
-        <i
-          class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
-        ></i>
-      </a>
-    </li>
-  </ul>
-  </div>
-  </aside>
-
-
-
-
-  <ng-template #addAIKeyTypes let-modal>
-    <div class="fancy-modal-header">
-      <h5 class="fancy-title">Add ChatGPT Key</h5>
-      <button type="button" class="btn-close fancy-close" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="fancy-modal-body">
-      <form>
-        <div class="mb-4">
-          <label for="aiKey" class="form-label text-muted small mb-2">ChatGPT Key</label>
-          <input type="text" 
-                 class="form-control fancy-input" 
-                 id="aiKey" 
-                 name="aiKey" 
-                 placeholder="Enter your ChatGPT Key" 
-                 [(ngModel)]="AIKey" />
+      <div class="dropdown-menu profile-dropdown" data-bs-popper="none" aria-labelledby="profileDropdown">
+        <div class="profile-header">
+          <div class="user-info">
+            <h6 class="mb-0">User Profile</h6>
+            <small class="text-muted">Manage your account</small>
+          </div>
         </div>
-      </form>
+        
+        <div class="menu-items">
+          <a class="menu-item" [routerLink]="['/NewPassword']">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
+              <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1H8.465A4 4 0 0 1 0 8zm5.48-1A2 2 0 1 0 8 9a2 2 0 0 0-2.52-1.94z"/>
+            </svg>
+            <span>Change Password</span>
+          </a>
+          
+          <a class="menu-item" [routerLink]="['/settings']">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+              <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+              <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+            </svg>
+            <span>Settings</span>
+          </a>
+          
+          <a class="menu-item" (click)="openAddAIKey()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cpu" viewBox="0 0 16 16">
+              <path d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0zm-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3h-7zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"/>
+            </svg>
+            <span>ChatGPT Key</span>
+          </a>
+        </div>
+        
+        <div class="dropdown-divider"></div>
+        
+        <a class="menu-item logout-item" href="#" (click)="logout(); $event.preventDefault()">
+          <span>Logout</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+          </svg>
+        </a>
+      </div>
     </div>
-    <div class="fancy-modal-footer">
-      <button type="button" 
-              class="fancy-btn secondary-btn" 
-              (click)="modal.dismiss()">
-        Close
-      </button>
-      <button type="button" 
-              class="fancy-btn primary-btn" 
-              (click)="SetGPTAPIKey()">
-        <span class="btn-spinner" *ngIf="isSaving"></span>
-        Save changes
-      </button>
-    </div>
-  </ng-template>
+</header>
+
+ <ng-template #addAIKeyTypes let-modal>
+  <div class="fancy-modal-header">
+    <h5 class="fancy-title">Add ChatGPT Key</h5>
+    <button type="button" class="btn-close fancy-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="fancy-modal-body">
+    <form>
+      <div class="mb-4">
+        <label for="aiKey" class="form-label text-muted small mb-2">ChatGPT Key</label>
+        <input type="text" 
+               class="form-control fancy-input" 
+               id="aiKey" 
+               name="aiKey" 
+               placeholder="Enter your ChatGPT Key" 
+               [(ngModel)]="AIKey" />
+      </div>
+    </form>
+  </div>
+  <div class="fancy-modal-footer">
+    <button type="button" 
+            class="fancy-btn secondary-btn" 
+            (click)="modal.dismiss()">
+      Close
+    </button>
+    <button type="button" 
+            class="fancy-btn primary-btn" 
+            (click)="SetGPTAPIKey()">
+      <span class="btn-spinner" *ngIf="isSaving"></span>
+      Save changes
+    </button>
+  </div>
+</ng-template>

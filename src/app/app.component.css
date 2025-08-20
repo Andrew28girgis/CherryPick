@@ -29,24 +29,26 @@
   background-color: none;
   padding-right:  var(--Space-S-24) ;
 }
+
+/* Updated grid system for header layout */
 .app-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  min-height: 100vh; /* fill full height of viewport */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   z-index: 5;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
- 
-
 .app-shell > .app-container {
-  grid-column: 1; /* Take the first (and only) column by default */
-  min-width: 0; /* prevents overflow in grids */
+  flex: 1;
+  padding-top: 64px; /* Space for the header */
+  min-width: 0;
 }
 
- 
+/* Updated with-sidebar class (now with-header) */
 .app-shell.with-sidebar > .app-container {
-  grid-column: 2; /* Take the second column when sidebar is visible */
+  width: 100%;
+  padding:16px
 }
 
 :host {
@@ -93,13 +95,6 @@
   grid-column: 1; /* Take the first (and only) column */
   width: 100%;
 }
-
- 
-
-
-
-
-
 
 /* Updated grid system to handle copilot sidebar */
 .app-shell.with-sidebar {
