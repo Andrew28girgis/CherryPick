@@ -284,7 +284,7 @@ export class NotificationsComponent
         next: async (response: any) => {
           console.log('API response for choice 1:', response);
           if (response) {
-            await this.saveShoppingCenterData(response.json,notification);
+            await this.saveShoppingCenterData(notification.json,notification);
           } else {
             console.warn('Empty response received from API');
           }
@@ -319,7 +319,7 @@ export class NotificationsComponent
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: json,
+            model: JSON.parse(json),
             campaignId: notification.campaignId
           })
         }
