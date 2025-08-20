@@ -25,13 +25,14 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./notifications.component.css'],
 })
 export class NotificationsComponent
-  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
+  implements OnInit, OnDestroy, AfterViewInit
 {
   private intervalId: any;
+  private loadedNotifications: Set<string> = new Set(); // Use notification IDs
   notifications: Notification[] = [];
   messageText = '';
-  CampaignId:any;
-
+  CampaignId: any;
+  loaded: boolean = false;
   @Output() sidebarStateChange = new EventEmitter<{
     isOpen: boolean;
     isFullyOpen: boolean;
@@ -45,19 +46,17 @@ export class NotificationsComponent
     public notificationService: NotificationService,
     private placesService: PlacesService,
     private router: Router,
-        private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-  
-   if(this.router.url.includes('chatbot')){
-    this.electronSideBar=true
-   }
+    if (this.router.url.includes('chatbot')) {
+      this.electronSideBar = true;
+    }
 
     this.activatedRoute.params.subscribe((params: any) => {
       this.CampaignId = params.campaignId;
-
-    })
+    });
     this.notificationService.initNotifications();
 
     this.intervalId = setInterval(() => {
@@ -95,11 +94,7 @@ export class NotificationsComponent
     this.scrollToBottom();
   }
 
-  ngAfterViewChecked(): void {
-    // Scroll to bottom after view updates
-    this.scrollToBottom();
-  }
-
+ 
   toggleSidebar(): void {
     // Toggle the sidebar state
     this.isOpen = !this.isOpen;
@@ -272,14 +267,15 @@ export class NotificationsComponent
       });
     }
   }
-  choose(choice: any, notification: any): void {
+
+  choose(choice: number, notification: any): void {
     // Set loading state when the button is clicked
     this.setNotificationLoading(notification, true, choice);
-     
+
     if (choice === 1) {
       const request = {
         Name: 'DeleteJSONNotification',
-        Params: { Id: notification.id }, 
+        Params: { Id: notification.id },
       };
 
       this.placesService.GenericAPI(request).subscribe({
@@ -296,6 +292,7 @@ export class NotificationsComponent
           }
           // Clear loading state when done
           this.setNotificationLoading(notification, false);
+          this.loadedNotifications.add(notification.id);
         },
         error: (error) => {
           console.error('Error in DeleteJSONNotification API call:', error);
@@ -304,56 +301,62 @@ export class NotificationsComponent
         },
         complete: () => {
           console.log('DeleteJSONNotification request completed');
-        }
+        },
       });
     } else if (choice === 0) {
       const request = {
         Name: 'DeleteJSONNotification',
-        Params: { Id: notification.id },  
+        Params: { Id: notification.id },
       };
 
       this.placesService.GenericAPI(request).subscribe({
         next: (response: any) => {
           // Clear loading state when done
           this.setNotificationLoading(notification, false);
+          this.loadedNotifications.add(notification.id);
         },
         error: (error) => {
           console.error('Error in DeleteJSONNotification API call for choice 0:', error);
           // Clear loading state on error
           this.setNotificationLoading(notification, false);
-        }
+        },
       });
     }
   }
 
-async saveShoppingCenterData(json: any, notification: any) {
-  try {
-    // Parse the JSON string into an object
-    const parsedJson = JSON.parse(json);
+  async saveShoppingCenterData(json: any, notification: any) {
+    try {
+      // Parse the JSON string into an object
+      const parsedJson = JSON.parse(json);
 
-    // Add campaignId directly into that object
-    parsedJson.campaignId = notification.campaignId;
+      // Add campaignId directly into that object
+      parsedJson.campaignId = notification.campaignId;
 
-    const response = await fetch(
-      "https://127.0.0.1:5443/api/Enrichment/EnrichShoppingCenter",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(parsedJson), // send it as one object have campaign id
-      }
-    );
+      const response = await fetch(
+        'https://127.0.0.1:5443/api/Enrichment/EnrichShoppingCenter',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(parsedJson), // send it as one object have campaign id
+        }
+      );
 
-    console.log("rr", await response.json());
-    return response;
-  } catch (error) {
-    console.error(":x::x::x::x: Fetch error:", error);
-    return null;
+      console.log('rr', await response.json());
+      return response;
+    } catch (error) {
+      console.error(':x::x::x::x: Fetch error:', error);
+      return null;
+    }
   }
-}
+
+  isNotificationLoaded(notification: any): boolean {
+    return this.loadedNotifications.has(notification.id);
+  }
+
   closeSide() {
-    (window as any).electronMessage.closeCRESideBrowser()
+    (window as any).electronMessage.closeCRESideBrowser();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -369,32 +372,33 @@ async saveShoppingCenterData(json: any, notification: any) {
   }
 
   // Add these methods to your NotificationsComponent class
-isNotificationLoading(notification: any): boolean {
-  return !!notification.isLoading;
-}
+  isNotificationLoading(notification: any): boolean {
+    return !!notification.isLoading;
+  }
 
-// Update the setNotificationLoading method
-setNotificationLoading(notification: any, isLoading: boolean, choice?: number): void {
-  if (isLoading) {
-    // When starting to load, set properties immediately
-    notification.isLoading = true;
-    notification.loadingStartTime = Date.now();
-    if (choice !== undefined) {
-      notification.loadingChoice = choice;
-    }
-  } else {
-     const minLoadingTime = 1500; 
-    const loadingStartTime = notification.loadingStartTime || Date.now();
-    const elapsedTime = Date.now() - loadingStartTime;
-    
-    if (elapsedTime >= minLoadingTime) {
-       notification.isLoading = false;
+  // Update the setNotificationLoading method
+  setNotificationLoading(notification: any, isLoading: boolean, choice?: number): void {
+    if (isLoading) {
+      // When starting to load, set properties immediately
+      notification.isLoading = true;
+      notification.loadingStartTime = Date.now();
+      if (choice !== undefined) {
+        notification.loadingChoice = choice;
+        this.loaded = true; // Reset loaded state when starting to load
+      }
     } else {
-       const remainingTime = minLoadingTime - elapsedTime;
-      setTimeout(() => {
+      const minLoadingTime = 1500;
+      const loadingStartTime = notification.loadingStartTime || Date.now();
+      const elapsedTime = Date.now() - loadingStartTime;
+
+      if (elapsedTime >= minLoadingTime) {
         notification.isLoading = false;
-      }, remainingTime);
+      } else {
+        const remainingTime = minLoadingTime - elapsedTime;
+        setTimeout(() => {
+          notification.isLoading = false;
+        }, remainingTime);
+      }
     }
   }
-}
 }
