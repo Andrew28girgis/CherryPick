@@ -34,6 +34,14 @@ export class SidebarComponent implements OnInit {
   isDropdownOpen = false;
 
   ngOnInit(): void {
+    // Initialize with chat open
+    this.isNotificationsOpen = true;
+
+    // Subscribe to notification service to sync state
+    this.notificationService.chatOpen$.subscribe(isOpen => {
+      this.isNotificationsOpen = isOpen;
+    });
+
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -46,6 +54,16 @@ export class SidebarComponent implements OnInit {
           this.showSidebar = !data['hideSidebar'];
         });
       });
+  }
+
+  toggleEmilySidebar(): void {
+    this.isNotificationsOpen = !this.isNotificationsOpen;
+    this.notificationService.setChatOpen(this.isNotificationsOpen);
+    
+    // If the notification panel is now open, reset the counter
+    if (this.isNotificationsOpen) {
+      this.notificationService.newNotificationsCount = 0;
+    }
   }
 
   openAddAIKey(): void {

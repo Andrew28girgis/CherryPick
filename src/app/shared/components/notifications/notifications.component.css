@@ -10,59 +10,7 @@
   max-width: 100vw;
 }
 
-/* Vertical Tab/Button */
-.sidebar-tab {
-  width: 48px;
-  height: 100vh;
-  background: var(--Colors-Primary-500); /* #B51F63 */
-  border-left: 1px solid #d1d9e0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 0;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  color: var(--Colors-Pure-White);
-}
  
-
-.copilot-sidebar-container.open .sidebar-tab {
-  background: var(--Colors-Primary-500); /* #B51F63 */
-  width: 6px;
-}
-
-.copilot-sidebar-container.open .sidebar-tab .tab-text span {
-  color: white;
-}
-
- 
-
-.tab-text {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--Colors-Pure-White);
-  letter-spacing: 0.5px;
-}
-
-.unread-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--Colors-Primary-800); /* #480C28 */
-  color: white;
-  border-radius: 50%;
-  min-width: 16px;
-  height: 16px;
-  font-size: 10px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-}
 
 /* Sidebar Panel */
 .sidebar-panel {
@@ -195,7 +143,7 @@
 
 /* Add message sender avatars */
 .message-bubble::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 24px;
   height: 24px;
@@ -203,7 +151,7 @@
   background-size: cover;
   bottom: -10px;
   left: -5px;
- }
+}
 
 /* Empty State */
 .no-messages {
@@ -228,29 +176,9 @@
   margin-top: 4px !important;
 }
 
-/* Footer */
-.sidebar-footer {
-  padding: 16px;
-  border-top: 1px solid #d1d9e0;
-  background: #f6f8fa;
-}
+ 
 
-.mark-all-read-btn {
-  width: 100%;
-  background: var(--Colors-Primary-500); /* #B51F63 */
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.mark-all-read-btn:hover {
-  background: var(--Colors-Primary-800); /* #480C28 */
-}
+ 
 
 /* Custom Scrollbar */
 .chat-messages-container::-webkit-scrollbar {
@@ -284,46 +212,11 @@
   animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
-/* Add this to your existing CSS */
-
-.collapse-icon {
-  position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
-}
-
-.collapse-icon svg {
-  transform: rotate(180deg); /* Point left when sidebar is closed */
-}
-
-.copilot-sidebar-container.open .collapse-icon svg {
-  transform: rotate(0deg); /* Point left when sidebar is open */
-}
-
-.collapse-icon:hover {
-  opacity: 1;
-}
-
- .tab-icon {
-  margin-top: 24px; /* Add space above icon for the collapse button */
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+ 
+ 
 
 /* Add these responsive styles */
 @media (max-width: 1200px) {
- 
-  
   .copilot-sidebar-container.open {
     width: 320px !important;
   }
@@ -333,7 +226,7 @@
   .sidebar-panel {
     width: 280px !important; /* Even smaller width on small screens */
   }
-  
+
   .copilot-sidebar-container {
     width: 280px !important;
   }
@@ -483,7 +376,7 @@
   z-index: 11;
 }
 
-.responsive{
+.responsive {
   width: 100% !important;
 }
 

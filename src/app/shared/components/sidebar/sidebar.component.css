@@ -73,13 +73,9 @@
 
 /* Bottom avatar */
 .avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.65);
-  padding: 0;
+   border-radius: 50%;
+   border: none;
+   padding: 0;
   display: block;
 }
 
@@ -425,4 +421,77 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Add these styles for the right controls section with Emily and user avatars */
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Space between Emily and user avatars */
+}
+
+/* Emily avatar styling */
+.emily-avatar-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border-left: 1px solid #C6B8C7;
+  padding-left: 12px;
+}
+
+.emily-avatar-container:hover img {
+  transform: scale(1.05);
+}
+
+.emily-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.65);
+  padding: 0;
+  object-fit: cover;
+  transition: box-shadow 0.2s ease;
+}
+
+.emily-avatar-container:hover .emily-avatar {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Notification badge styling */
+.emily-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e53935;
+  color: white;
+  font-size: 12px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 4px;
+  font-weight: bold;
+  animation: pulseCount 1.5s infinite;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes pulseCount {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.dropdown-toggle::after{
+  display: none;
 }

@@ -8,6 +8,7 @@ import {
 import { filter } from 'rxjs/operators';
 import { PlacesService } from './core/services/places.service';
 import { AuthService } from './core/services/auth.service';
+import { NotificationService } from './core/services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private placeService: PlacesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -68,6 +70,13 @@ export class AppComponent implements OnInit {
           this.showingTransition = false;
         }
       });
+
+    // Subscribe to notification service to know if Emily sidebar is open or closed
+    this.notificationService.chatOpen$.subscribe(isOpen => {
+      this.isCopilotFullyOpen = isOpen;
+      // Only mark it as open for margin purposes if the sidebar is fully expanded
+      this.isCopilotOpen = isOpen;
+    });
   }
 
   get isAuthenticated(): boolean {

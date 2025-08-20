@@ -488,7 +488,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   onImageError(event: any) {
-    event.target.src = 'assets/Images/placeholder.png';
+    event.target.src = '../../../../assets/Images/placeholder.png';
   }
 
   navigateToMap(): void {
@@ -597,12 +597,12 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       }
 
       if (isWhite) {
-        img.src = 'assets/Images/placeholder.png';
+        img.src = '../../../../assets/Images/placeholder.png';
       }
     } catch (err) {
       console.warn('Canvas image data blocked due to CORS:', err);
       if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
-        img.src = 'assets/Images/placeholder.png';
+        img.src = '../../../../assets/Images/placeholder.png';
       }
     }
   }

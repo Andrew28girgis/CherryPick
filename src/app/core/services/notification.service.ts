@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,17 @@ export class NotificationService {
   dropdownVisible = false;
   unreadCount = 0;
   readCount = 0;
-  isChatOpen = false;
+  
+  // Default to true so Emily is opened by default
+  isChatOpen = true;
   private notificationIdsWhenOpened: Set<number> = new Set();
+  
+  // Initialize BehaviorSubject with true for default open state
+  private chatOpenSubject = new BehaviorSubject<boolean>(true);
+  public chatOpen$ = this.chatOpenSubject.asObservable();
+  
+  // Property for notification count in the badge
+  public newNotificationsCount = 0;
 
   constructor(private placesService: PlacesService, private router: Router) {}
 
@@ -49,6 +59,9 @@ export class NotificationService {
         }
 
         this.updateNotificationCounts();
+        
+        // Update the badge count for unread messages
+        this.newNotificationsCount = this.unreadCount;
       },
     });
   }
@@ -72,7 +85,7 @@ export class NotificationService {
     }
   }
 
-  private markNotificationAsRead(notification: Notification): void {
+  markNotificationAsRead(notification: Notification): void {
     const request = {
       Name: 'UpdateNotification',
       Params: {
@@ -84,6 +97,8 @@ export class NotificationService {
       next: () => {
         notification.isRead = 1;
         this.updateNotificationCounts();
+        // Update badge count when a notification is read
+        this.newNotificationsCount = this.unreadCount;
       },
       error: (err) => {
         console.error('Error marking notification as read:', err);
@@ -91,18 +106,42 @@ export class NotificationService {
     });
   }
 
+  // Make sure to call this during app initialization
+  initChatState(): void {
+    // Set the chat to open by default
+    this.setChatOpen(true);
+  }
+
   setChatOpen(isOpen: boolean): void {
     this.isChatOpen = isOpen;
     this.dropdownVisible = isOpen;
+    
+    // Update the BehaviorSubject to notify all subscribers
+    this.chatOpenSubject.next(isOpen);
 
     if (isOpen) {
       // Store IDs of notifications that exist when chat is opened
       this.notificationIdsWhenOpened = new Set(
         this.notifications.map((n) => n.id)
       );
+      
+      // Reset notification count when opening
+      this.newNotificationsCount = 0;
+      
+      // Mark all as read when chat is opened
+      this.markAllAsRead();
     } else {
       this.notificationIdsWhenOpened.clear();
     }
+  }
+  
+  // Add a method to mark all notifications as read
+  markAllAsRead(): void {
+    const unreadNotifications = this.notifications.filter(n => n.isRead === 0);
+    
+    unreadNotifications.forEach(notification => {
+      this.markNotificationAsRead(notification);
+    });
   }
 
   shouldMarkAsReadOnOpen(notificationId: number): boolean {
@@ -112,6 +151,9 @@ export class NotificationService {
   updateNotificationCounts(): void {
     this.readCount = this.notifications.filter((n) => n.isRead === 1).length;
     this.unreadCount = this.notifications.filter((n) => n.isRead === 0).length;
+    
+    // Keep the badge count synced with unread count
+    this.newNotificationsCount = this.unreadCount;
   }
 
   private sortNotificationsByDate(): void {

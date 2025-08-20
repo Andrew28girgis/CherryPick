@@ -16,6 +16,7 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
@@ -38,6 +39,7 @@ export class NotificationsComponent
     isFullyOpen: boolean;
   }>();
   public isOpen = true;
+  isNotificationsOpen = false;
 
   electronSideBar = false;
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
@@ -55,6 +57,21 @@ export class NotificationsComponent
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
 
   ngOnInit(): void {
+    // Set isOpen to true by default
+    this.isOpen = true;
+
+    // Subscribe to chat open state changes
+    this.notificationService.chatOpen$.subscribe(isOpen => {
+      this.isOpen = isOpen;
+      
+      // When opened, scroll to bottom after a short delay
+      if (this.isOpen) {
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 300);
+      }
+    });
+
     if (this.router.url.includes('chatbot')) {
       this.electronSideBar = true;
     }
@@ -119,24 +136,22 @@ export class NotificationsComponent
     this.scrollToBottom();
   }
 
- 
   toggleSidebar(): void {
-    // Toggle the sidebar state
     this.isOpen = !this.isOpen;
-
-    // Emit the state change
+  
+    // Update the notification service state
+    this.notificationService.setChatOpen(this.isOpen);
+  
+    // Emit the state change to the parent component
     this.sidebarStateChange.emit({
-      isOpen: true, // Tab is always visible when component is shown
-      isFullyOpen: this.isOpen,
+      isOpen: this.isOpen,
+      isFullyOpen: this.isOpen
     });
-
-    console.log('Sidebar state:', this.isOpen);
-
-    // If opening the sidebar, scroll to bottom after a short delay for animations
-    if (this.isOpen) {
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 300);
+  
+    // If closing, reset scroll behavior
+    if (!this.isOpen) {
+      this.showScrollButton = false;
+      this.newNotificationsCount = 0;
     }
   }
 
@@ -472,4 +487,14 @@ export class NotificationsComponent
       }
     }
   }
+  // In NotificationService, add this method:
+  setChatOpen(isOpen: boolean): void {
+    // Use a subject to communicate between components
+    this.chatOpenSubject.next(isOpen);
+  }
+  
+  // Add a BehaviorSubject to track chat open state
+  private chatOpenSubject = new BehaviorSubject<boolean>(false);
+  public chatOpen$ = this.chatOpenSubject.asObservable();
 }
+
