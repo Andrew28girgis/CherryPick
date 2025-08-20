@@ -436,7 +436,7 @@ a {
 .custom-toast {
   position: fixed;
   top: 20px;
-  right: 20px;
+  right: 190px;
   padding: 12px var(--Space-S-20) ;
   background-color: var(--Colors-Primary-200);
   color: var(--Colors-Pure-White);
