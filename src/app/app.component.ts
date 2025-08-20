@@ -1,5 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular/router';
+import {
+  Router,
+  NavigationEnd,
+  NavigationStart,
+  ActivatedRoute,
+} from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PlacesService } from './core/services/places.service';
 import { AuthService } from './core/services/auth.service';
@@ -10,7 +15,7 @@ import { AuthService } from './core/services/auth.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  isMarketSurveyRoute = false; 
+  isMarketSurveyRoute = false;
   isMobile = false;
   isSocialView: boolean = false;
   hideSidebar = false;
@@ -18,7 +23,7 @@ export class AppComponent implements OnInit {
   showingTransition = false;
   isCopilotOpen = false;
   isCopilotFullyOpen = false;
-
+  isEmilyChatBot: boolean = false; // Initialize with a default value
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -46,18 +51,22 @@ export class AppComponent implements OnInit {
         currentRoute.data.subscribe((data) => {
           this.hideSidebar = data['hideSidebar'] === true;
         });
+
+         this.isEmilyChatBot = this.router.url.includes('chatbot');
       });
 
     // Listen for route changes to handle transitions
     this.router.events
       .pipe(filter((event) => event instanceof NavigationStart))
       .subscribe((event: any) => {
-        if ((event.url === '/campaigns' || event.url === '/summary') && 
-            this.router.url === '/login') {
+        if (
+          (event.url === '/campaigns' || event.url === '/summary') &&
+          this.router.url === '/login'
+        ) {
           // Add a brief transition state when going from login to dashboard
           this.showingTransition = true;
-             this.showingTransition = false;
-         }
+          this.showingTransition = false;
+        }
       });
   }
 
@@ -77,8 +86,8 @@ export class AppComponent implements OnInit {
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
   }
-  onCopilotStateChange(state: { isOpen: boolean, isFullyOpen: boolean }) {
-    this.isCopilotOpen = state.isOpen; 
+  onCopilotStateChange(state: { isOpen: boolean; isFullyOpen: boolean }) {
+    this.isCopilotOpen = state.isOpen;
     this.isCopilotFullyOpen = state.isFullyOpen;
   }
 }

@@ -1,10 +1,11 @@
 <!-- Updated to include copilot sidebar and handle content pushing -->
 <div class="app-shell" [ngClass]="{
-  'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition, 
+  'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot, 
   'with-copilot': isCopilotOpen,
-  'copilot-expanded': isCopilotFullyOpen
+  'copilot-expanded': isCopilotFullyOpen,
+  'emily-chatbot': isEmilyChatBot
 }">
-  <app-sidebar *ngIf="isAuthenticated && !hideSidebar && !showingTransition"></app-sidebar>
+  <app-sidebar *ngIf="isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot"></app-sidebar>
 
   <div class="app-container">
     <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
@@ -23,7 +24,7 @@
   </div>
 
   <app-notifications 
-    *ngIf="isAuthenticated && !hideSidebar && !showingTransition"
+    *ngIf="isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot"
     (sidebarStateChange)="onCopilotStateChange($event)">
   </app-notifications>
 </div>

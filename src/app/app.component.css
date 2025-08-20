@@ -112,7 +112,7 @@
 
 .app-shell.with-sidebar.with-copilot.copilot-expanded {
   grid-template-columns: 96px minmax(0, 1fr);
-  margin-right: min(428px, 40vw);
+  margin-right: min(381px, 40vw);
 }
 
 /* Content transition when copilot opens/closes */
@@ -156,4 +156,16 @@
   .app-shell.with-copilot.copilot-expanded {
     margin-right: min(180px, 60vw);
   }
+}
+
+/* Add these styles for the Emily chatbot mode */
+.app-shell.emily-chatbot {
+  grid-template-columns: minmax(0, 1fr); /* Only one column for the chatbot view */
+  margin-left: 0; /* Remove any left margin */
+}
+
+.app-shell.emily-chatbot > .app-container {
+  grid-column: 1; /* Take the first column */
+  width: 100%; /* Full width */
+  margin-left: 0; /* No margin */
 }
