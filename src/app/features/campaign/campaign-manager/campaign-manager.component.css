@@ -484,7 +484,6 @@
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White );
   text-align: center;
-  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -506,7 +505,6 @@
   text-align: center;
 
   /* Body/16/30/Medium */
-  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -522,7 +520,6 @@
   backdrop-filter: blur(20px);
   overflow-x: hidden;
   overflow-y: auto;
-   width: fit-content;
 }
 
 .table {
@@ -531,7 +528,6 @@
   margin-bottom: 0;
   border-spacing: 0;
   border-radius:  var(--Radius-R-20) ;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   padding: var(--Space-S-20) ; /* Added 32px padding around the table content */
 }
 .table-inner {
@@ -539,7 +535,6 @@
   background: var(--Colors-Card-Background);
   backdrop-filter: blur(20px);
   padding: var(--Space-S-20) ;
-  width: fit-content;
 }
 
 /* Header Styles */
