@@ -2,12 +2,12 @@
 <div class="copilot-sidebar-container" [class.open]="isOpen">
   <!-- Vertical Tab/Button -->
   <div class="sidebar-tab" (click)="electronSideBar?closeSide():toggleSidebar()">
-    <div class="collapse-icon">
+    <div *ngIf="!isOpen" class="collapse-icon">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </div>
-    <div class="tab-icon">
+    <div *ngIf="!isOpen"  class="tab-icon">
       <img
         width="24"
         height="24"
@@ -17,7 +17,7 @@
     </div>
     
     <!-- Unread Count Badge -->
-    <div class="unread-badge" *ngIf="notificationService.unreadCount > 0">
+    <div  class="unread-badge" *ngIf="notificationService.unreadCount > 0 &&!isOpen">
       {{ notificationService.unreadCount }}
     </div>
  
@@ -27,8 +27,13 @@
   <div class="sidebar-panel" [class.visible]="isOpen">
     <div class="sidebar-header">
       <div class="header-content">
-   
-        <h3 class="sidebar-title">Emily</h3>
+           <img
+            width="24"
+            height="24"
+            src="../../../../assets/Images/bot.png"
+            alt="Copilot"
+          />
+         <h3 class="sidebar-title">Emily</h3>
       </div>
       <button class="close-button" (click)="electronSideBar?closeSide():toggleSidebar()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -44,13 +49,19 @@
         *ngIf="notificationService.notifications.length > 0; else noMessages"
         class="chat-messages"
       >
-        <div
+        <div 
           class="message-bubble"
           *ngFor="let notification of notificationService.notifications;let last=last"
           (click)="handleNotificationClick(notification)"
           [class.clickable]="notification.userSubmissionId"
-
+          [class.loading]="isNotificationLoading(notification)"
         >
+          <!-- Add loading spinner overlay for the entire message bubble -->
+          <div *ngIf="isNotificationLoading(notification)" class="spinner-container full-message">
+            <div class="spinner-overlay"></div>
+            <div class="spinner-central"></div>
+          </div>
+          
           <div class="message-content">
             <p class="message-text">
               {{ notification.message }}
@@ -59,10 +70,19 @@
                {{ notification.createdDate |date:'shortTime' }}
             </time>
           </div>
-            <div *ngIf="notification.json " class="choose">
-            <button class="btn btn-success" (click)="choose(1,notification)"> yes</button>
-            <button class="btn btn-danger"(click)="choose(0,notification)"> No</button>
-            </div>
+          <div *ngIf="!notification.json" class="choose">
+            <!-- Remove the spinner from here since we moved it to cover the whole message bubble -->
+            <button class="emily-btn emily-btn-success" 
+                    (click)="choose(1,notification)" 
+                    [disabled]="isNotificationLoading(notification)">
+              Yes
+            </button>
+            <button class="emily-btn emily-btn-danger" 
+                    (click)="choose(0,notification)" 
+                    [disabled]="isNotificationLoading(notification)">
+              No
+            </button>
+          </div>
         </div>
       </div>
 

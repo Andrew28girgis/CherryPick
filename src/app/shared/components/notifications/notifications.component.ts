@@ -62,7 +62,7 @@ export class NotificationsComponent
 
     this.intervalId = setInterval(() => {
       this.notificationService.fetchUserNotifications();
-    }, 10000);
+    }, 2000);
 
     // Make sure we emit initial state
     this.sidebarStateChange.emit({
@@ -273,6 +273,8 @@ export class NotificationsComponent
     }
   }
   choose(choice: any, notification: any): void {
+    // Set loading state when the button is clicked
+    this.setNotificationLoading(notification, true, choice);
      
     if (choice === 1) {
       const request = {
@@ -284,13 +286,21 @@ export class NotificationsComponent
         next: async (response: any) => {
           console.log('API response for choice 1:', response);
           if (response) {
-            await this.saveShoppingCenterData(notification.json,notification);
+            try {
+              await this.saveShoppingCenterData(notification.json, notification);
+            } catch (error) {
+              console.error('Error saving shopping center data:', error);
+            }
           } else {
             console.warn('Empty response received from API');
           }
+          // Clear loading state when done
+          this.setNotificationLoading(notification, false);
         },
         error: (error) => {
           console.error('Error in DeleteJSONNotification API call:', error);
+          // Clear loading state on error
+          this.setNotificationLoading(notification, false);
         },
         complete: () => {
           console.log('DeleteJSONNotification request completed');
@@ -304,7 +314,14 @@ export class NotificationsComponent
 
       this.placesService.GenericAPI(request).subscribe({
         next: (response: any) => {
+          // Clear loading state when done
+          this.setNotificationLoading(notification, false);
         },
+        error: (error) => {
+          console.error('Error in DeleteJSONNotification API call for choice 0:', error);
+          // Clear loading state on error
+          this.setNotificationLoading(notification, false);
+        }
       });
     }
   }
@@ -346,4 +363,34 @@ export class NotificationsComponent
     // You can add logic here if needed to further adjust the UI
     // This will automatically work with the CSS media queries added above
   }
+
+  // Add these methods to your NotificationsComponent class
+isNotificationLoading(notification: any): boolean {
+  return !!notification.isLoading;
+}
+
+// Update the setNotificationLoading method
+setNotificationLoading(notification: any, isLoading: boolean, choice?: number): void {
+  if (isLoading) {
+    // When starting to load, set properties immediately
+    notification.isLoading = true;
+    notification.loadingStartTime = Date.now();
+    if (choice !== undefined) {
+      notification.loadingChoice = choice;
+    }
+  } else {
+     const minLoadingTime = 1500; 
+    const loadingStartTime = notification.loadingStartTime || Date.now();
+    const elapsedTime = Date.now() - loadingStartTime;
+    
+    if (elapsedTime >= minLoadingTime) {
+       notification.isLoading = false;
+    } else {
+       const remainingTime = minLoadingTime - elapsedTime;
+      setTimeout(() => {
+        notification.isLoading = false;
+      }, remainingTime);
+    }
+  }
+}
 }
