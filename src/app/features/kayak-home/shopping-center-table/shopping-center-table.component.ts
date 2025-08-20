@@ -726,7 +726,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   electronMessageWithcampaignId() {
-    (window as any).electronMessage.startCREAutomation(this.CampaignId);
+    (window as any).electronMessage.startCREAutomation(this.CampaignId, localStorage.getItem('token'));
     const url = 'https://www.google.com';
     window.location.href = `${url}`;
   }
