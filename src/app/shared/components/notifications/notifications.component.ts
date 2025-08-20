@@ -326,28 +326,32 @@ export class NotificationsComponent
     }
   }
 
-  async saveShoppingCenterData(json: any,notification:any) {
-    try {
-      const response = await fetch(
-        "https://127.0.0.1:5443/api/Enrichment/EnrichShoppingCenter",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: JSON.parse(json),
-            campaignId: notification.campaignId
-          })
-        }
-      );
-      console.log("rr", await response.json());
-      return response;
-    } catch (error) {
-      console.error(":x::x::x::x: Fetch error:", error);
-      return null;
-    }
+async saveShoppingCenterData(json: any, notification: any) {
+  try {
+    // Parse the JSON string into an object
+    const parsedJson = JSON.parse(json);
+
+    // Add campaignId directly into that object
+    parsedJson.campaignId = notification.campaignId;
+
+    const response = await fetch(
+      "https://127.0.0.1:5443/api/Enrichment/EnrichShoppingCenter",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parsedJson), // send it as one object have campaign id
+      }
+    );
+
+    console.log("rr", await response.json());
+    return response;
+  } catch (error) {
+    console.error(":x::x::x::x: Fetch error:", error);
+    return null;
   }
+}
   closeSide() {
     (window as any).electronMessage.closeCRESideBrowser()
   }
