@@ -8,4 +8,5 @@ export interface Notification {
   notificationCategoryId: any;
   json: any;
   campaignId: number;
+  loaded:boolean;
 }

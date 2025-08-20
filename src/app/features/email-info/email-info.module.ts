@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EmailInfoComponent } from './email-info.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ContactsComponent } from '../contacts/contacts.component';
 
 const routes: Routes = [
   { path: '', component: EmailInfoComponent }
@@ -11,7 +12,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    EmailInfoComponent
+    EmailInfoComponent,
+    ContactsComponent
   ],
   imports: [
     CommonModule,

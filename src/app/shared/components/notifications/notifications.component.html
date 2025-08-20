@@ -70,8 +70,7 @@
                {{ notification.createdDate |date:'shortTime' }}
             </time>
           </div>
-          <div *ngIf="!notification.json" class="choose">
-            <!-- Remove the spinner from here since we moved it to cover the whole message bubble -->
+          <div *ngIf="notification.json && !isNotificationLoaded(notification)" class="choose">
             <button class="emily-btn emily-btn-success" 
                     (click)="choose(1,notification)" 
                     [disabled]="isNotificationLoading(notification)">
