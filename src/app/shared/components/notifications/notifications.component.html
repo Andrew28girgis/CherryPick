@@ -17,8 +17,8 @@
     </div>
     
     <!-- Unread Count Badge -->
-    <div  class="unread-badge" *ngIf="notificationService.unreadCount > 0 &&!isOpen">
-      {{ notificationService.unreadCount }}
+    <div  class="unread-badge" *ngIf="newNotificationsCount > 0 &&!isOpen">
+      {{ newNotificationsCount }}
     </div>
  
   </div>
@@ -44,7 +44,21 @@
     </div>
 
     <!-- Chat Messages -->
-    <div class="chat-messages-container" #messagesContainer>
+    <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
+      <div 
+        class="scroll-down-button" 
+        *ngIf="showScrollButton &&isOpen" 
+        (click)="scrollToBottomWithReset()"
+      >
+        <div class="scroll-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="new-message-count" *ngIf="newNotificationsCount > 0">
+          {{newNotificationsCount}}
+        </div>
+      </div>
       <div
         *ngIf="notificationService.notifications.length > 0; else noMessages"
         class="chat-messages"

@@ -49,6 +49,11 @@ export class NotificationsComponent
     private activatedRoute: ActivatedRoute,
   ) {}
 
+  showScrollButton = false;
+  newNotificationsCount = 0;
+  previousNotificationsLength = 0;
+  scrollThreshold = 100; // pixels from bottom to consider "at bottom"
+
   ngOnInit(): void {
     if (this.router.url.includes('chatbot')) {
       this.electronSideBar = true;
@@ -59,8 +64,28 @@ export class NotificationsComponent
     });
     this.notificationService.initNotifications();
 
+    this.previousNotificationsLength = this.notificationService.notifications.length;
+
     this.intervalId = setInterval(() => {
+      const prevLength = this.notificationService.notifications.length;
       this.notificationService.fetchUserNotifications();
+      
+      // After a small delay to ensure notifications are updated
+      setTimeout(() => {
+        const newLength = this.notificationService.notifications.length;
+        // Only increment the counter if we're not at the bottom AND there are new messages
+        if (newLength > prevLength) {
+          if (this.isAtBottom()) {
+            // If at bottom, just scroll to bottom to show new messages
+            this.scrollToBottom();
+          } else {
+            // If not at bottom, increment counter and show scroll button
+            this.newNotificationsCount += (newLength - prevLength);
+            this.showScrollButton = true;
+          }
+        }
+        this.previousNotificationsLength = newLength;
+      }, 300);
     }, 2000);
 
     // Make sure we emit initial state
@@ -118,12 +143,30 @@ export class NotificationsComponent
   scrollToBottom(): void {
     try {
       if (this.messagesContainer) {
-        this.messagesContainer.nativeElement.scrollTop =
-          this.messagesContainer.nativeElement.scrollHeight;
+        const container = this.messagesContainer.nativeElement;
+        
+        // Use smooth scrolling behavior
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: 'smooth'
+        });
+        
+        // Reset notification indicators after animation completes
+        setTimeout(() => {
+          if (this.isAtBottom()) {
+            this.showScrollButton = false;
+            this.newNotificationsCount = 0;
+          }
+        }, 300); // Timing to match scroll animation completion
       }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
+  }
+
+  scrollToBottomWithReset(): void {
+    this.scrollToBottom();
+    // No need to immediately reset counters here as it's handled in scrollToBottom
   }
 
   handleNotificationClick(notification: Notification): void {
@@ -398,6 +441,34 @@ export class NotificationsComponent
         setTimeout(() => {
           notification.isLoading = false;
         }, remainingTime);
+      }
+    }
+  }
+
+  isAtBottom(): boolean {
+    if (!this.messagesContainer) return true;
+    
+    const container = this.messagesContainer.nativeElement;
+    const scrollPosition = container.scrollTop + container.clientHeight;
+    const scrollHeight = container.scrollHeight;
+    
+    // Consider "at bottom" if within threshold (e.g., 20px from the bottom)
+    return scrollHeight - scrollPosition <= this.scrollThreshold;
+  }
+
+  @HostListener('scroll', ['$event'])
+  onScroll(event: any): void {
+    // Check if the event is coming from our messages container
+    if (this.messagesContainer && event.target === this.messagesContainer.nativeElement) {
+      // If we've scrolled to the bottom (or close to it), reset the notification count
+      if (this.isAtBottom()) {
+        this.showScrollButton = false;
+        this.newNotificationsCount = 0;
+      } else {
+        // If we're not at the bottom, show the button if there are new messages
+        if (this.newNotificationsCount > 0) {
+          this.showScrollButton = true;
+        }
       }
     }
   }
