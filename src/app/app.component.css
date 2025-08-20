@@ -112,7 +112,7 @@
 
 .app-shell.with-sidebar.with-copilot.copilot-expanded {
   grid-template-columns: 96px minmax(0, 1fr);
-  margin-right: min(380px, 40vw);
+  margin-right: min(428px, 40vw);
 }
 
 /* Content transition when copilot opens/closes */
@@ -129,7 +129,7 @@
 /* Add these responsive adjustments */
 @media (max-width: 1200px) {
   .app-shell.with-copilot.copilot-expanded {
-    margin-right: min(320px, 35vw);
+    margin-right: min(320px, 35vw) !important;
   }
 }
 
