@@ -1,5 +1,5 @@
 <!-- Redesigned as vertical sidebar similar to GitHub Copilot with chat-like messages -->
-<div class="copilot-sidebar-container" [class.open]="isOpen">
+<div class="copilot-sidebar-container" [ngClass]="{'responsive': electronSideBar}" [class.open]="isOpen">
   <!-- Vertical Tab/Button -->
   <div class="sidebar-tab" (click)="electronSideBar?closeSide():toggleSidebar()">
     <div *ngIf="!isOpen" class="collapse-icon">
@@ -24,7 +24,7 @@
   </div>
 
   <!-- Sidebar Panel -->
-  <div class="sidebar-panel" [class.visible]="isOpen">
+  <div class="sidebar-panel"  [ngClass]="{'responsive': electronSideBar}" [class.visible]="isOpen">
     <div class="sidebar-header">
       <div class="header-content">
            <img
