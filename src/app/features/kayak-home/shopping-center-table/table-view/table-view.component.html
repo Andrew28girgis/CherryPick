@@ -43,11 +43,10 @@
         <tr>
           <th>Name</th>
           <th>Address</th>
-          <th>Size Range</th>
+          <th *ngIf="hasAnySizeRange">Size Range</th>
           <th>Stage Name</th>
           <th *ngIf="placesRepresentative != false">Leased by</th>
-          <th>Unit Size & Lease Price</th>
-          <th *ngIf="shoppingCenters[0].ShoppingCenter">
+           <th *ngIf="shoppingCenters[0].ShoppingCenter">
             <ng-container
               *ngFor="
                 let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
@@ -89,7 +88,7 @@
                 {{ shoppingCenter.CenterState }}
               </div>
             </td>
-            <td>
+            <td *ngIf="shoppingCenter.sizeRange ">
               <div *ngIf="shoppingCenter.sizeRange as sr">
                 <ng-container *ngIf="sr instanceof Array; else single">
                   {{ sr[0] | number }} - {{ sr[1] | number }} SF
