@@ -65,7 +65,8 @@ export class NotificationsComponent
   ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe((parms) => {
       const view = parms.get('View');
-      if (!view) this.displayViewButton = false;
+
+      if (view && !JSON.parse(view)) this.displayViewButton = false;
     });
 
     // Set isOpen to true by default
