@@ -984,6 +984,7 @@
   align-items: flex-start;
   gap: var(--Space-S-8);
   border: none;
+  margin-bottom: 24px;
 }
 
 .nav-tab {

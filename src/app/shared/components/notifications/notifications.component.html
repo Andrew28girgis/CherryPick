@@ -44,11 +44,7 @@
       #messagesContainer
       (scroll)="onScroll($event)"
     >
-      <div
-        class="scroll-down-button"
-        *ngIf="showScrollButton && isOpen"
-        (click)="scrollToBottomWithReset()"
-    <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
+     <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
       <div 
         class="scroll-down-button" 
         *ngIf="showScrollButton &&isOpen" 
