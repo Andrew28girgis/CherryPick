@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/core/services/notification.service';
@@ -31,6 +31,7 @@ export class SidebarComponent implements OnInit {
   errorMessage: string | null = null;
   isNotificationsOpen = false;
   currentRoute = '';
+  isDropdownOpen = false;
 
   ngOnInit(): void {
     this.router.events
@@ -135,5 +136,16 @@ export class SidebarComponent implements OnInit {
       this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
     this.userViewService.switchView(newView);
     this.router.navigate([newView]);
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: any) {
+    if (!event.target.closest('.avatar-container') && this.isDropdownOpen) {
+      this.isDropdownOpen = false;
+    }
   }
 }
