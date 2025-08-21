@@ -18,7 +18,7 @@ import { AutomationShoppingCentersComponent } from './shared/components/automati
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
-import { AiUIComponent } from './shared/components/ai-ui/ai-ui.component';
+import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 
 const routes: Routes = [
   {
@@ -248,16 +248,16 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'ai-ui-HTML/:notificationId',
+    component: AiUiHTMLComponent,
+  },
+  {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
   },
   {
     path: 'chatbot',
     component: NotificationsComponent,
-  },
-  {
-    path: 'ai-ui/:notificationId',
-    component: AiUIComponent,
   },
   {
     path: ':guid',

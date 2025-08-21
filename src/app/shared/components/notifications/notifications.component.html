@@ -64,15 +64,21 @@
             </time>
           </div>
           <div *ngIf="notification.json && !isNotificationLoaded(notification)" class="choose">
-            <button class="emily-btn emily-btn-success" 
+            <button class="emily-btn" 
                     (click)="choose(1,notification)" 
                     [disabled]="isNotificationLoading(notification)">
               Yes
             </button>
-            <button class="emily-btn emily-btn-danger" 
+            <button class="emily-btn"
                     (click)="choose(0,notification)" 
                     [disabled]="isNotificationLoading(notification)">
               No
+            </button>
+                        <button
+              class="emily-btn"
+              [routerLink]="['/ai-ui-HTML', notification.id]"
+              >
+              View
             </button>
           </div>
         </div>
