@@ -70,11 +70,6 @@
   justify-content: center;
 }
 
-.close-button:hover {
-  background: #d1d9e0;
-  color: #1f2328;
-}
-
 /* Chat Messages Container */
 .chat-messages-container {
   position: relative;
@@ -450,4 +445,32 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.close-button {
+  background: var(--Colors-Primary-500);
+  border: none;
+  border-radius: 50%; /* circular button */
+  width: 25px;
+  height: 25px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  color: #fff; /* icon color */
+  transition: background 0.25s, transform 0.2s;
+}
+
+.close-button:hover {
+  background: var(--Colors-Primary-600);
+  transform: scale(1.05);
+}
+
+.close-button:active {
+  transform: scale(0.95);
+}
+
+.close-button svg {
+  pointer-events: none; /* let clicks pass through to button */
 }
