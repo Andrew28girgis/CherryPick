@@ -55,6 +55,7 @@ export interface Center {
     SentMails?: SentMails
     lastOutgoingEmail:any
     lastIncomingEmail:any
+    sizeRange:any
   }
  
   

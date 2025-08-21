@@ -372,6 +372,11 @@
                 {{ shopping.CenterState }}
               </span>
             </div>
+            <div class="building-size" *ngIf="shopping.sizeRange">
+              <small class="text-muted">
+                Size: {{ shopping.sizeRange }} SF
+              </small>
+            </div>
 
             <div>
               <div
@@ -386,7 +391,7 @@
                   <thead>
                     <tr>
                       <!-- <th scope="col">Select</th> -->
-                      <th scope="col" style="min-width: 60px">Size (SF)</th>
+                      <!-- <th scope="col" style="min-width: 60px">Size (SF)</th> -->
                       <th scope="col">Price</th>
                       <th scope="col">Extras</th>
                       <th scope="col">Type</th>
@@ -412,7 +417,7 @@
                             "
                           />
                         </td> -->
-                        <td>{{ place.BuildingSizeSf | number }}</td>
+                        <!-- <td>{{ place.BuildingSizeSf | number }}</td> -->
                         <td>
                           {{
                             place.ForLeasePrice

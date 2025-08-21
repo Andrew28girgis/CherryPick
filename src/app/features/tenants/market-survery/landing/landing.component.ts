@@ -1176,4 +1176,19 @@ export class LandingComponent {
       }
     }
   }
+  isTextTruncated(text: string): boolean {
+    const testElement = document.createElement('span');
+    testElement.style.visibility = 'hidden';
+    testElement.style.whiteSpace = 'nowrap';
+    testElement.innerHTML = text;
+    document.body.appendChild(testElement);
+    
+    const textWidth = testElement.offsetWidth;
+    const container = document.querySelector('.contact-info') as HTMLElement;
+    const containerWidth = container?.offsetWidth || 0;
+    
+    document.body.removeChild(testElement);
+    
+    return textWidth > containerWidth;
+  }
 }

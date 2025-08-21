@@ -1,5 +1,5 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div class="main-container-all  " style="overflow-y: scroll">
+<div class="main-container-all" style="overflow-y: scroll">
   <div>
     <div class="container">
       <p *ngIf="showAlert" class="alert-container">
@@ -40,7 +40,8 @@
                         <ng-container
                           *ngFor="let branch of near.Branches | slice : 0 : 1"
                         >
-                          <img loading="lazy" 
+                          <img
+                            loading="lazy"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                               branch.OrganizationId
                             }}"
@@ -759,19 +760,28 @@
             <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
               <!-- {{ OrgManager[0].firstName }}
               {{ OrgManager[0].lastName }} -->
-
             </h2>
           </div>
         </div>
         <div class="row m-0 py-2">
           <ng-container *ngFor="let Manager of OrgManager">
-            <div *ngIf="Manager.firstName || Manager.lastName" class="col-sm-12 col-md-4 contact-card">
+            <div
+              *ngIf="Manager.firstName || Manager.lastName"
+              class="col-sm-12 col-md-4 contact-card"
+            >
               <div class="contact-info">
-                <p class="manager-name">
-                  <span class="name">{{ Manager.firstName }}</span>
-                  <span class="name">{{ Manager.lastName }}</span>
+                <p class="manager-name ">
+                  <span class="name ">{{ Manager.firstName }}</span>
+ 
+                   <span class="name">{{ Manager.lastName }}</span>
                 </p>
-                <!-- <p class="email" *ngIf="Manager.email">{{ Manager.email }}</p> -->
+                <p
+                  class="email"
+                  *ngIf="Manager.email"
+                  [attr.data-email]="Manager.email"
+                >
+                {{ Manager.email }}
+                 </p>
               </div>
             </div>
           </ng-container>
@@ -797,7 +807,7 @@
           <div class="row tenant-row">
             <div class="col-md-3 mb-3" *ngFor="let place of tenant">
               <div class="d-flex align-items-center">
-                        <div>
+                <div>
                   <!-- <img loading="lazy" 
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       place.OrganizationID
@@ -823,9 +833,9 @@
                 }}
                 MI</span
               > -->
-           </div>
-           </div>
-         </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div
         class="col-md-4"
@@ -837,7 +847,8 @@
             <li *ngFor="let place of OrganizationBranches.Branches.slice(0, 5)">
               <div class="d-flex align-items-center">
                 <div>
-                  <img loading="lazy" 
+                  <img
+                    loading="lazy"
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                       OrganizationBranches.Id
                     }}"
@@ -872,7 +883,8 @@
               <ng-container *ngFor="let branch of place.RelationOrganization">
                 <div class="d-flex align-items-center">
                   <div>
-                    <img loading="lazy" 
+                    <img
+                      loading="lazy"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         branch.id
                       }}"
@@ -962,7 +974,12 @@
       >
         <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
           <div class="text-center">
-            <img loading="lazy"  [src]="img" class="img-fluid p-img" alt="image" />
+            <img
+              loading="lazy"
+              [src]="img"
+              class="img-fluid p-img"
+              alt="image"
+            />
           </div>
         </ng-template>
       </ngb-carousel>
