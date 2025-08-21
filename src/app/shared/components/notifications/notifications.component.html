@@ -38,12 +38,7 @@
       </button>
     </div>
 
-    <!-- Chat Messages -->
-    <div
-      class="chat-messages-container"
-      #messagesContainer
-      (scroll)="onScroll($event)"
-    >
+  
      <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
       <div 
         class="scroll-down-button" 
@@ -125,7 +120,7 @@
           </div>
         </div>
       </div>
-
+</div>
       <!-- Empty State -->
       <ng-template #noMessages>
         <div class="no-messages">
@@ -152,4 +147,4 @@
       </ng-template>
     </div>
   </div>
-</div>
+ 

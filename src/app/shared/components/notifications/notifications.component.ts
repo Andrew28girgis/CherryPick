@@ -29,11 +29,11 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 export class NotificationsComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-   private chatOpenSubject = new BehaviorSubject<boolean>(false);
+  private chatOpenSubject = new BehaviorSubject<boolean>(false);
   public chatOpen$ = this.chatOpenSubject.asObservable();
   private intervalId: any;
   private loadedNotifications: Set<string> = new Set(); // Use notification IDs
-   
+
   notifications: Notification[] = [];
   messageText = '';
   CampaignId: any;
@@ -54,7 +54,7 @@ export class NotificationsComponent
     private placesService: PlacesService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-     private viewManagerService: ViewManagerService ,
+    private viewManagerService: ViewManagerService
   ) {}
 
   showScrollButton = false;
@@ -67,7 +67,7 @@ export class NotificationsComponent
       const view = parms.get('View');
       if (!view) this.displayViewButton = false;
     });
-    
+
     // Set isOpen to true by default
     this.isOpen = true;
 
@@ -157,7 +157,7 @@ export class NotificationsComponent
     // Emit the state change to the parent component
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
-      isFullyOpen: this.isOpen
+      isFullyOpen: this.isOpen,
     });
 
     // If closing, reset scroll behavior
@@ -175,7 +175,7 @@ export class NotificationsComponent
         // Use smooth scrolling behavior
         container.scrollTo({
           top: container.scrollHeight,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
 
         // Reset notification indicators after animation completes
@@ -248,10 +248,9 @@ export class NotificationsComponent
                 notification.json,
                 notification
               );
-              
+
               // Trigger reload instead of calling initializeData directly
               this.viewManagerService.triggerReload();
-              
             } catch (error) {
               console.error('Error saving shopping center data:', error);
             }
@@ -262,7 +261,7 @@ export class NotificationsComponent
         error: (error) => {
           console.error('Error in DeleteJSONNotification API call:', error);
           this.setNotificationLoading(notification, false);
-        }
+        },
       });
     } else if (choice === 0) {
       const request = {
@@ -378,7 +377,10 @@ export class NotificationsComponent
   @HostListener('scroll', ['$event'])
   onScroll(event: any): void {
     // Check if the event is coming from our messages container
-    if (this.messagesContainer && event.target === this.messagesContainer.nativeElement) {
+    if (
+      this.messagesContainer &&
+      event.target === this.messagesContainer.nativeElement
+    ) {
       // If we've scrolled to the bottom (or close to it), reset the notification count
       if (this.isAtBottom()) {
         this.showScrollButton = false;
