@@ -372,11 +372,15 @@
                 {{ shopping.CenterState }}
               </span>
             </div>
-            <div class="building-size" *ngIf="shopping.sizeRange">
-              <small class="text-muted">
-                Size: {{ shopping.sizeRange }} SF
-              </small>
+            <div *ngIf="shopping.sizeRange as sr">
+              <ng-container *ngIf="sr instanceof Array; else single">
+                {{ sr[0] | number }} - {{ sr[1] | number }} SF
+              </ng-container>
+              <ng-template #single>
+                {{ sr | number }} SF
+              </ng-template>
             </div>
+            
 
             <div>
               <div
@@ -384,71 +388,7 @@
                 class="table-responsive mt-2"
                 style="max-height: 150px; overflow-y: auto"
               >
-                <table
-                  class="table table-sm table-striped mb-0 small-table"
-                  style="font-size: 0.75rem"
-                >
-                  <thead>
-                    <tr>
-                      <!-- <th scope="col">Select</th> -->
-                      <!-- <th scope="col" style="min-width: 60px">Size (SF)</th> -->
-                      <th scope="col">Price</th>
-                      <th scope="col">Extras</th>
-                      <th scope="col">Type</th>
-                      <th scope="col">S.Type</th>
-                      <th scope="col">Privacy</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let place of shopping.ShoppingCenter.Places">
-                      <ng-container
-                        *ngIf="place.BuildingSizeSf || place.ForLeasePrice"
-                      >
-                        <!-- <td>
-                          <input
-                            type="checkbox"
-                            [(ngModel)]="place.Checked"
-                            (change)="
-                              onCheckboxChange(
-                                $event,
-                                place.Id,
-                                shopping.CampaignId
-                              )
-                            "
-                          />
-                        </td> -->
-                        <!-- <td>{{ place.BuildingSizeSf | number }}</td> -->
-                        <td>
-                          {{
-                            place.ForLeasePrice
-                              ? (place.ForLeasePrice
-                                | currency : "USD" : "symbol" : "1.0-0")
-                              : "On Request"
-                          }}
-                        </td>
-                        <td>{{ place.Extras || "—" }}</td>
-                        <td>{{ place.LeaseType }}</td>
-                        <td>{{ place.SecondaryType }}</td>
-                        <td>
-                          <i
-                            *ngIf="!place.CampaignId"
-                            class="fa-solid fa-lock-open"
-                          ></i>
-
-                          <i
-                            *ngIf="place.CampaignId"
-                            class="fa-solid fa-lock"
-                            style="cursor: pointer"
-                            (click)="
-                              place.MailId && openMailPopup(place.MailId)
-                            "
-                          >
-                          </i>
-                        </td>
-                      </ng-container>
-                    </tr>
-                  </tbody>
-                </table>
+         
               </div>
 
               <!-- <div
