@@ -877,7 +877,29 @@ export class ViewManagerService {
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const centers = data.json;
-
+          centers.forEach((center: any) => {
+            if (center.ShoppingCenter && center.ShoppingCenter.Places) {
+              const sizes = center.ShoppingCenter.Places
+                .map((p: any) => p.BuildingSizeSf)
+                .filter((s: number) => s != null);
+        
+              if (sizes.length > 0) {
+                const uniqueSizes: number[] = Array.from(new Set<number>(sizes)).sort((a, b) => a - b);
+        
+                if (uniqueSizes.length === 1) {
+                  center.sizeRange = uniqueSizes[0].toString();
+                } else if (uniqueSizes.length === 2) {
+                  center.sizeRange = `${uniqueSizes[0]} & ${uniqueSizes[1]}`;
+                } else {
+                  const min = uniqueSizes[0];
+                  const max = uniqueSizes[uniqueSizes.length - 1];
+                  center.sizeRange = `${min} - ${max}`;
+                }
+              } else {
+                center.sizeRange = null;
+              }
+            }
+          });
           // Store all centers
           this._allShoppingCenters.next(centers);
 

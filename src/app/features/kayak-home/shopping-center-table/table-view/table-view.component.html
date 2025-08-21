@@ -43,6 +43,7 @@
         <tr>
           <th>Name</th>
           <th>Address</th>
+          <th>Size Range</th>
           <th>Stage Name</th>
           <th *ngIf="placesRepresentative != false">Leased by</th>
           <th>Unit Size & Lease Price</th>
@@ -86,6 +87,13 @@
                 {{ shoppingCenter.CenterAddress }},
                 {{ shoppingCenter.CenterCity | titlecase }},
                 {{ shoppingCenter.CenterState }}
+              </div>
+            </td>
+            <td>
+              <div class="building-size" *ngIf="shoppingCenter.sizeRange">
+                <small class="text-muted">
+                   {{ shoppingCenter.sizeRange }} SF
+                </small>
               </div>
             </td>
             <td>
@@ -173,7 +181,7 @@
                   <thead>
                     <tr>
                       <th scope="col">Select</th>
-                      <th scope="col" style="min-width: 60px">Size (SF)</th>
+                      <!-- <th scope="col" style="min-width: 60px">Size (SF)</th> -->
                       <th scope="col">Price</th>
                       <th scope="col">Extras</th>
                       <th scope="col">Type</th>
@@ -201,7 +209,7 @@
                             "
                           />
                         </td>
-                        <td>{{ place.BuildingSizeSf | number }}</td>
+                        <!-- <td>{{ place.BuildingSizeSf | number }}</td> -->
                         <td>
                           {{
                             place.ForLeasePrice
