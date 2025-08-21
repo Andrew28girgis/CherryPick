@@ -499,5 +499,7 @@ openAddContactModal(shoppingCenterId: number): void {
     // this.getShoppingCenterContact(shoppingCenterId);
   });
 }
-
+get hasAnySizeRange(): boolean {
+  return this.filteredCenters?.some(sc => !!sc.sizeRange);
+}
 }
