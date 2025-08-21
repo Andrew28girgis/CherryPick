@@ -45,14 +45,15 @@ export class NotificationsComponent
   isNotificationsOpen = false;
 
   electronSideBar = false;
+  displayViewButton = true;
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
     private placesService: PlacesService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private viewManagerService: ViewManagerService // Add this
+    private activatedRoute: ActivatedRoute
+     private viewManagerService: ViewManagerService // Add this
   ) {}
 
   showScrollButton = false;
@@ -61,12 +62,18 @@ export class NotificationsComponent
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
 
   ngOnInit(): void {
+    this.activatedRoute.queryParamMap.subscribe((parms) => {
+      const view = parms.get('View');
+      if (!view) this.displayViewButton = false;
+    });
     // Set isOpen to true by default
     this.isOpen = true;
 
     // Subscribe to chat open state changes
     this.notificationService.chatOpen$.subscribe((isOpen) => {
+    this.notificationService.chatOpen$.subscribe((isOpen) => {
       this.isOpen = isOpen;
+
 
       // When opened, scroll to bottom after a short delay
       if (this.isOpen) {
@@ -87,10 +94,13 @@ export class NotificationsComponent
 
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
+    this.previousNotificationsLength =
+      this.notificationService.notifications.length;
 
     this.intervalId = setInterval(() => {
       const prevLength = this.notificationService.notifications.length;
       this.notificationService.fetchUserNotifications();
+
 
       // After a small delay to ensure notifications are updated
       setTimeout(() => {
@@ -102,6 +112,7 @@ export class NotificationsComponent
             this.scrollToBottom();
           } else {
             // If not at bottom, increment counter and show scroll button
+            this.newNotificationsCount += newLength - prevLength;
             this.newNotificationsCount += newLength - prevLength;
             this.showScrollButton = true;
           }
@@ -144,14 +155,18 @@ export class NotificationsComponent
   toggleSidebar(): void {
     this.isOpen = !this.isOpen;
 
+
     // Update the notification service state
     this.notificationService.setChatOpen(this.isOpen);
+
 
     // Emit the state change to the parent component
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
+      isFullyOpen: this.isOpen,
     });
+
 
     // If closing, reset scroll behavior
     if (!this.isOpen) {
@@ -165,11 +180,14 @@ export class NotificationsComponent
       if (this.messagesContainer) {
         const container = this.messagesContainer.nativeElement;
 
+
         // Use smooth scrolling behavior
         container.scrollTo({
           top: container.scrollHeight,
           behavior: 'smooth',
+          behavior: 'smooth',
         });
+
 
         // Reset notification indicators after animation completes
         setTimeout(() => {
@@ -237,6 +255,10 @@ export class NotificationsComponent
           console.log('API response for choice 1:', response);
           if (response) {
             try {
+              await this.saveShoppingCenterData(
+                notification.json,
+                notification
+              );
               await this.saveShoppingCenterData(notification.json, notification);
               
               // Trigger reload instead of calling initializeData directly
@@ -267,6 +289,10 @@ export class NotificationsComponent
           this.loadedNotifications.add(notification.id);
         },
         error: (error) => {
+          console.error(
+            'Error in DeleteJSONNotification API call for choice 0:',
+            error
+          );
           console.error(
             'Error in DeleteJSONNotification API call for choice 0:',
             error
@@ -327,6 +353,12 @@ export class NotificationsComponent
     return !!notification.isLoading;
   }
 
+  // Update the setNotificationLoading method
+  setNotificationLoading(
+    notification: any,
+    isLoading: boolean,
+    choice?: number
+  ): void {
   setNotificationLoading(
     notification: any,
     isLoading: boolean,
@@ -359,9 +391,11 @@ export class NotificationsComponent
   isAtBottom(): boolean {
     if (!this.messagesContainer) return true;
 
+
     const container = this.messagesContainer.nativeElement;
     const scrollPosition = container.scrollTop + container.clientHeight;
     const scrollHeight = container.scrollHeight;
+
 
     // Consider "at bottom" if within threshold (e.g., 20px from the bottom)
     return scrollHeight - scrollPosition <= this.scrollThreshold;
@@ -370,6 +404,10 @@ export class NotificationsComponent
   @HostListener('scroll', ['$event'])
   onScroll(event: any): void {
     // Check if the event is coming from our messages container
+    if (
+      this.messagesContainer &&
+      event.target === this.messagesContainer.nativeElement
+    ) {
     if (
       this.messagesContainer &&
       event.target === this.messagesContainer.nativeElement
@@ -391,4 +429,8 @@ export class NotificationsComponent
     // Use a subject to communicate between components
     this.chatOpenSubject.next(isOpen);
   }
+
+  // Add a BehaviorSubject to track chat open state
+  private chatOpenSubject = new BehaviorSubject<boolean>(false);
+  public chatOpen$ = this.chatOpenSubject.asObservable();
 }

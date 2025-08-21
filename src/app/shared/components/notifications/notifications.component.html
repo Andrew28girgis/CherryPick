@@ -1,21 +1,37 @@
 <!-- Redesigned as vertical sidebar similar to GitHub Copilot with chat-like messages -->
-<div class="copilot-sidebar-container" [ngClass]="{'responsive': electronSideBar}" [class.open]="isOpen">
- 
-
+<div
+  class="copilot-sidebar-container"
+  [ngClass]="{ responsive: electronSideBar }"
+  [class.open]="isOpen"
+>
   <!-- Sidebar Panel -->
-  <div class="sidebar-panel" [ngClass]="{'responsive': electronSideBar}" [class.visible]="isOpen">
+  <div
+    class="sidebar-panel"
+    [ngClass]="{ responsive: electronSideBar }"
+    [class.visible]="isOpen"
+  >
     <div class="sidebar-header">
       <div class="header-content">
-           <img
-            width="24"
-            height="24"
-            src="../../../../assets/Images/bot.png"
-            alt="Emily"
-          />
-         <h3 class="sidebar-title">Emily</h3>
+        <img
+          width="24"
+          height="24"
+          src="../../../../assets/Images/bot.png"
+          alt="Emily"
+        />
+        <h3 class="sidebar-title">Emily</h3>
       </div>
-      <button class="close-button" (click)="electronSideBar?closeSide():toggleSidebar()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button
+        class="close-button"
+        (click)="electronSideBar ? closeSide() : toggleSidebar()"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -23,6 +39,15 @@
     </div>
 
     <!-- Chat Messages -->
+    <div
+      class="chat-messages-container"
+      #messagesContainer
+      (scroll)="onScroll($event)"
+    >
+      <div
+        class="scroll-down-button"
+        *ngIf="showScrollButton && isOpen"
+        (click)="scrollToBottomWithReset()"
     <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
       <div 
         class="scroll-down-button" 
@@ -30,49 +55,76 @@
         (click)="scrollToBottom()"
       >
         <div class="scroll-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
         <div class="new-message-count" *ngIf="newNotificationsCount > 0">
-          {{newNotificationsCount}}
+          {{ newNotificationsCount }}
         </div>
       </div>
       <div
         *ngIf="notificationService.notifications.length > 0; else noMessages"
         class="chat-messages"
       >
-        <div 
+        <div
           class="message-bubble"
-          *ngFor="let notification of notificationService.notifications;let last=last"
+          *ngFor="
+            let notification of notificationService.notifications;
+            let last = last
+          "
           (click)="handleNotificationClick(notification)"
           [class.clickable]="notification.userSubmissionId"
           [class.loading]="isNotificationLoading(notification)"
         >
           <!-- Add loading spinner overlay for the entire message bubble -->
-          <div *ngIf="isNotificationLoading(notification)" class="spinner-container full-message">
+          <div
+            *ngIf="isNotificationLoading(notification)"
+            class="spinner-container full-message"
+          >
             <div class="spinner-overlay"></div>
             <div class="spinner-central"></div>
           </div>
-          
+
           <div class="message-content">
             <p class="message-text">
               {{ notification.message }}
             </p>
             <time class="message-time" [dateTime]="notification.createdDate">
-               {{ notification.createdDate |date:'shortTime' }}
+              {{ notification.createdDate | date : "shortTime" }}
             </time>
           </div>
-          <div *ngIf="notification.json && !isNotificationLoaded(notification)" class="choose">
-            <button class="emily-btn emily-btn-success" 
-                    (click)="choose(1,notification)" 
-                    [disabled]="isNotificationLoading(notification)">
+          <div
+            *ngIf="notification.json && !isNotificationLoaded(notification)"
+            class="choose"
+          >
+            <button
+              class="emily-btn"
+              (click)="choose(1, notification)"
+              [disabled]="isNotificationLoading(notification)"
+            >
               Yes
             </button>
-            <button class="emily-btn emily-btn-danger" 
-                    (click)="choose(0,notification)" 
-                    [disabled]="isNotificationLoading(notification)">
+            <button
+              class="emily-btn"
+              (click)="choose(0, notification)"
+              [disabled]="isNotificationLoading(notification)"
+            >
               No
+            </button>
+            <button
+              *ngIf="displayViewButton"
+              class="emily-btn"
+              [routerLink]="['/ai-ui-HTML', notification.id]"
+            >
+              View
             </button>
           </div>
         </div>
@@ -92,7 +144,9 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1-2-2h14a2 2 0 0 1-2 2z"></path>
+            <path
+              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1-2-2h14a2 2 0 0 1-2 2z"
+            ></path>
           </svg>
           <p>No messages yet.</p>
           <p class="no-messages-subtext">

@@ -18,6 +18,7 @@ import { AutomationShoppingCentersComponent } from './shared/components/automati
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
+import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 
 const routes: Routes = [
   {
@@ -92,25 +93,19 @@ const routes: Routes = [
   {
     path: 'summary',
     loadChildren: () =>
-      import('./features/summery/summery.module').then(
-        (m) => m.SummeryModule
-      ),
+      import('./features/summery/summery.module').then((m) => m.SummeryModule),
     canActivate: [AuthGuardService],
   },
   {
     path: 'canvas',
     loadChildren: () =>
-      import('./features/canvas/canvas.module').then(
-        (m) => m.CanvasModule
-      ),
+      import('./features/canvas/canvas.module').then((m) => m.CanvasModule),
     canActivate: [AuthGuardService],
   },
   {
     path: 'overview',
     loadChildren: () =>
-      import('./features/tasks/tasks.module').then(
-        (m) => m.TasksModule
-      ),
+      import('./features/tasks/tasks.module').then((m) => m.TasksModule),
     canActivate: [TenantOnlyGuard, AccountLinkedGuard],
   },
   {
@@ -148,12 +143,10 @@ const routes: Routes = [
   {
     path: 'summary/:orgId',
     loadChildren: () =>
-      import('./features/summery/summery.module').then(
-        (m) => m.SummeryModule
-      ),
+      import('./features/summery/summery.module').then((m) => m.SummeryModule),
     canActivate: [TenantOnlyGuard],
   },
-  
+
   {
     path: 'market-survey',
     loadChildren: () =>
@@ -183,17 +176,13 @@ const routes: Routes = [
   {
     path: 'MutipleEmail/:campaignId',
     loadChildren: () =>
-      import('./features/emily/emily.module').then(
-        (m) => m.EmilyModule
-      ),
+      import('./features/emily/emily.module').then((m) => m.EmilyModule),
     canActivate: [TenantOnlyGuard],
   },
   {
     path: 'MailsList/:MailContextId/:IsSent',
     loadChildren: () =>
-      import('./features/emily/emily.module').then(
-        (m) => m.EmilyModule
-      ),
+      import('./features/emily/emily.module').then((m) => m.EmilyModule),
     canActivate: [TenantOnlyGuard],
   },
   {
@@ -207,9 +196,7 @@ const routes: Routes = [
   {
     path: 'organization-mail/:organizationId/:campaignId',
     loadChildren: () =>
-      import('./features/emily/emily.module').then(
-        (m) => m.EmilyModule
-      ),
+      import('./features/emily/emily.module').then((m) => m.EmilyModule),
     canActivate: [AuthGuardService],
   },
   {
@@ -223,19 +210,19 @@ const routes: Routes = [
   {
     path: 'extractShopping/:id',
     loadChildren: () =>
-      import('./features/extract-shopping-center/extract-shopping-center.module').then(
-        (m) => m.ExtractShoppingCenterModule
-      ),
+      import(
+        './features/extract-shopping-center/extract-shopping-center.module'
+      ).then((m) => m.ExtractShoppingCenterModule),
   },
   {
     path: 'spinner',
     component: AiSpinnerComponent,
-    data: { hideHeader: true , hideSidebar: true},
+    data: { hideHeader: true, hideSidebar: true },
   },
   {
     path: 'aiFailed',
     component: AiFailedComponent,
-    data: { hideHeader: true , hideSidebar: true },
+    data: { hideHeader: true, hideSidebar: true },
   },
   {
     path: 'automation/:automationId',
@@ -259,6 +246,10 @@ const routes: Routes = [
       import('./features/email-info/email-info.module').then(
         (m) => m.EmailInfoModule
       ),
+  },
+  {
+    path: 'ai-ui-HTML/:notificationId',
+    component: AiUiHTMLComponent,
   },
   {
     path: ':uploadOM/:submissionId',
@@ -290,7 +281,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',
-      preloadingStrategy: PreloadAllModules
+      preloadingStrategy: PreloadAllModules,
     }),
   ],
   exports: [RouterModule],

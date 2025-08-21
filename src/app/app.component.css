@@ -47,7 +47,7 @@
 /* Updated with-sidebar class (now with-header) */
 .app-shell.with-sidebar > .app-container {
   width: 100%;
-  padding:16px
+  padding: 16px;
 }
 
 :host {
@@ -164,7 +164,10 @@
 
 /* Add these styles for the Emily chatbot mode */
 .app-shell.emily-chatbot {
-  grid-template-columns: minmax(0, 1fr); /* Only one column for the chatbot view */
+  grid-template-columns: minmax(
+    0,
+    1fr
+  ); /* Only one column for the chatbot view */
   margin-left: 0; /* Remove any left margin */
 }
 

@@ -1,0 +1,47 @@
+<div class="ai-ui-container">
+  <!-- Loading State (Initial load and AI generation) -->
+  <div *ngIf="isLoading || isUploading" class="loading-state">
+    <div class="spinner"></div>
+    <p *ngIf="isLoading">Loading data...</p>
+    <p *ngIf="isUploading">Generating Page...</p>
+    
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading && !isUploading" class="error-state">
+    <div class="error-message">
+      <strong>Error:</strong> {{ error }}
+    </div>
+    <button class="retry-btn" (click)="retryLoad()">
+      Retry
+    </button>
+  </div>
+
+  <!-- Generated HTML Display -->
+  <div *ngIf="apiResponse && !isLoading && !isUploading && !error" class="generated-content">
+    <!-- Regenerate Button -->
+    <div class="action-header">
+      <button 
+        class="regenerate-btn" 
+        (click)="regenerateHTML()"
+        title="Generate new HTML">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.8273 3 17.35 4.1705 19.0711 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17 8L19.0711 6L21 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Regenerate
+      </button>
+    </div>
+
+    <!-- Generated HTML Content -->
+    <div class="html-display" [innerHTML]="apiResponse"></div>
+  </div>
+
+  <!-- Empty state when no response yet -->
+  <div *ngIf="!apiResponse && !isLoading && !isUploading && !error" class="empty-state">
+    <p>No generated content available</p>
+    <button class="retry-btn" (click)="retryLoad()">
+      Load Data
+    </button>
+  </div>
+</div>
