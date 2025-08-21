@@ -32,7 +32,7 @@
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(1.5px);
   color: var(--Body-Heading, #161017);
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -580,7 +580,7 @@ img[alt="logo"] {
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -794,7 +794,7 @@ img[alt="logo"] {
   background: var(--Colors-Pure-White);
   border-radius: 10px;
   box-shadow: 0 var(--Space-S-4) 20px rgba(0, 0, 0, 0.08);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+   
 }
 
 /* Subject section */
@@ -1093,7 +1093,7 @@ label {
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White);
   text-align: center;
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -1113,7 +1113,7 @@ label {
   background: var(--Colors-Primary-500, #8b8b8b);
   color: var(--Colors-Pure-White);
   text-align: center;
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;

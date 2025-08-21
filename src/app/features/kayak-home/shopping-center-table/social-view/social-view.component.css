@@ -1,7 +1,6 @@
 .social-property-feed {
   min-height: 100vh;
-  font-family:  "Segoe UI", sans-serif;
-}
+ }
 
 /* Header Styles */
 .feed-header {
@@ -141,7 +140,7 @@ background: var(--Colors-Pure-White );
   color: var(--Colors-Pure-White);
 
   /* Headings/20/28/Bold */
-  font-family: Montserrat;
+   
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
@@ -153,7 +152,7 @@ background: var(--Colors-Pure-White );
   color: var(--Colors-Pure-White);
 
   /* Body/16/30/Regular */
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -192,7 +191,7 @@ background: var(--Colors-Pure-White );
   color: var(--Colors-Pure-White );
 
   /* Body/14/24/SemiBold */
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -369,7 +368,7 @@ background: var(--Colors-Pure-White );
   border: none;
   box-shadow: none;
   color: var(--Color-Variants-Pr-L-500-D-200, #3922D2);
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 500;

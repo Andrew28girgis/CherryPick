@@ -271,8 +271,7 @@
   padding:  var(--Space-S-24) ;
   /* position: relative; */
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  width: 50%;
+   width: 50%;
   margin: 0;
   /* flex: 1; */
   align-self: center;
@@ -453,7 +452,7 @@
 .go-to-emily span {
   color: var(--Colors-Pure-White );
   text-align: center;
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 500;

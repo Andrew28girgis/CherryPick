@@ -125,8 +125,7 @@
 .json-display pre {
   margin: 0;
   color: #e2e8f0;
-  font-family: "Courier New", Courier, monospace;
-  font-size: 14px;
+   font-size: 14px;
   line-height: 1.4;
 }
 
@@ -598,7 +597,7 @@
 
 .search-input::placeholder {
   color: var(--Colors-Neutral-500);
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -748,6 +747,7 @@
 .tenant-header {
   padding: 0;
   align-items: flex-start !important;
+  padding-bottom: 24px;
 }
 
 .tenant-logo {
@@ -760,7 +760,7 @@
   color: var(--Body-Heading-Color, #18171f);
 
   /* Large-Headings/44/56/SemiBold */
-  font-family: Montserrat;
+   
   font-size: 44px;
   font-style: normal;
   font-weight: 600;
@@ -780,7 +780,7 @@
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White);
   text-align: center;
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -802,7 +802,7 @@
   text-align: center;
 
   /* Body/16/30/Medium */
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -812,8 +812,7 @@
 /* Navigation Tabs */
 .nav-tabs-container {
   padding: 0;
-  /* margin-top: 24px; */
-  margin-bottom: 24px;
+   margin-top: 16px;
 }
 
 .nav-tabs {
@@ -835,7 +834,7 @@
   background: none;
 
   color: var(--Colors-Neutral-500);
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -852,7 +851,7 @@
   border: 1px solid var(--Colors-Primary-700);
   background: var(--Colors-Primary-100);
   color: var(--Colors-Primary-500);
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -939,7 +938,7 @@
 
 .tenant-name-text {
   color: var(--Body-Heading-Color, #18171f);
-  font-family: Montserrat;
+   
   font-size: 44px;
   font-style: normal;
   font-weight: 600;

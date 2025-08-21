@@ -32,7 +32,7 @@ input::placeholder {
 
 .login-head {
   color: var(--Body-Heading-Color, #18171f);
-  font-family: Montserrat, sans-serif;
+   
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -76,7 +76,7 @@ input::placeholder {
   margin: 0;
   width: 342px;
   color: var(--Body-Heading-Color, #18171f);
-  font-family: Montserrat;
+   
   font-size: 40px;
   font-style: normal;
   font-weight: 600;
@@ -92,7 +92,7 @@ input::placeholder {
   margin: 0;
   width: 342px;
   color: var(--Body-Heading-Color, #18171f);
-  font-family: Montserrat;
+   
   font-size: 40px;
   font-style: normal;
   font-weight: 600;
@@ -125,8 +125,7 @@ input::placeholder {
 .login-text {
   color: var(--Colors-Pure-White);
   text-align: center;
-  font-family: Montserrat, sans-serif;
-  font-size: 16px;
+   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
@@ -134,7 +133,7 @@ input::placeholder {
 
 .cherry-desc {
   color: var(--Body-Text-and-Icons, #777199);
-  font-family: Montserrat, sans-serif;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -336,7 +335,7 @@ input::placeholder {
   text-align: center;
 
   /* Body/16/30/Medium */
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -362,7 +361,7 @@ input::placeholder {
   border-radius:  var(--Radius-R-12) ;
   border: none;
   box-shadow: 0 var(--Space-S-4)  12px rgba(0, 0, 0, 0.1);
-  font-family: Montserrat, sans-serif;
+   
   font-size: 14px;
   line-height: 20px;
   z-index: 1000;

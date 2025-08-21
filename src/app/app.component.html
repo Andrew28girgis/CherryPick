@@ -1,16 +1,28 @@
-<!-- Updated with header instead of sidebar -->
-<div class="app-shell" [ngClass]="{
-  'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot, 
-  'with-copilot': isCopilotOpen,
-  'copilot-expanded': isCopilotFullyOpen,
-  'emily-chatbot': isEmilyChatBot
-}">
-  <app-sidebar *ngIf="isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot"></app-sidebar>
+<!-- Updated to include copilot sidebar and handle content pushing -->
+<div
+  class="app-shell"
+  [ngClass]="{
+    'with-sidebar':
+      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot,
+    'with-copilot': isCopilotOpen,
+    'copilot-expanded': isCopilotFullyOpen,
+    'emily-chatbot': isEmilyChatBot,
+    'authenticated':isAuthenticated,
+  }"
+>
+  <app-sidebar
+    *ngIf="
+      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
+    "
+  ></app-sidebar>
 
   <div class="app-container">
     <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
       <div class="main-content-area">
-        <div class="content-container">
+        <div
+          class="content-container"
+          [ngClass]="{ 'authenticated': isAuthenticated }"
+        >
           <router-outlet></router-outlet>
         </div>
       </div>

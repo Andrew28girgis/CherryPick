@@ -3,7 +3,7 @@
   padding: 0;
   min-height: 100vh;
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+   
   display: flex;
   justify-content: center;
   align-items: center;
@@ -191,8 +191,7 @@
 
 .error-code {
   font-size: 14px;
-  font-family: "Courier New", monospace;
-  opacity: 0.6;
+   opacity: 0.6;
   margin-top: var(--Space-S-20) ;
   animation: fadeIn 1s ease-out 1.2s both;
 }

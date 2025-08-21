@@ -37,7 +37,7 @@
 
 .namecontact {
    color: var(--Colors-Neutral-900 );
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -46,7 +46,7 @@
 .shopping-of-contact {
    color: var(--Colors-Neutral-500 );
 
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -743,7 +743,7 @@
   color: var(--Colors-Primary-500);
 
   /* Body/14/24/SemiBold */
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -841,7 +841,7 @@
 .main-top {
   color: var(--Colors-Pure-Black);
 
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

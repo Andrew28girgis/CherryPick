@@ -460,7 +460,7 @@ img[alt="logo"] {
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

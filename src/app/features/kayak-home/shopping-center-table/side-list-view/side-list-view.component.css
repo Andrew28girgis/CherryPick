@@ -28,7 +28,7 @@
   gap: 5px;
   height: 30px;
   color: var(--Body-Heading, #161017);
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -544,7 +544,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -769,7 +769,7 @@
   background: var(--Colors-Pure-White);
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+   
 }
 
 /* Subject section */
