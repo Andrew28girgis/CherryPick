@@ -32,7 +32,7 @@ input::placeholder {
 
 .login-head {
   color: var(--Body-Heading-Color, #18171f);
-  font-family: Montserrat, sans-serif;
+   
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -83,7 +83,7 @@ background: linear-gradient(to right, #493240, #FF0099); /* W3C, IE 10+/ Edge, F
   margin: 0;
   width: 342px;
   color: var(--Body-Heading-Color, #18171f);
-  font-family: Montserrat;
+   
   font-size: 40px;
   font-style: normal;
   font-weight: 600;
@@ -152,7 +152,7 @@ background: linear-gradient(to right, #493240, #FF0099); /* W3C, IE 10+/ Edge, F
   text-align: center;
 
   /* Body/16/30/Medium */
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -170,7 +170,7 @@ background: linear-gradient(to right, #493240, #FF0099); /* W3C, IE 10+/ Edge, F
 
 .cherry-desc {
   color: var(--Body-Text-and-Icons, #777199);
-  font-family: Montserrat, sans-serif;
+   
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -367,7 +367,7 @@ background: linear-gradient(to right, #493240, #FF0099); /* W3C, IE 10+/ Edge, F
   border-radius:  var(--Radius-R-12) ;
   border: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: Montserrat, sans-serif;
+   
   font-size: 14px;
   line-height: 20px;
   z-index: 1000;

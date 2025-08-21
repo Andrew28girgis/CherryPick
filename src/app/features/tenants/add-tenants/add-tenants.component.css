@@ -107,7 +107,7 @@ textarea.form-control {
   color: var(--Inputs-Color-Hierarchy-1, #777199);
 
   /* Body/16/30/Regular */
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

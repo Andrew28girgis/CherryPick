@@ -83,7 +83,7 @@
 .search-input::placeholder {
    color: var(--Colors-Neutral-500 );
 
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -156,7 +156,7 @@
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White );
   text-align: center;
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -179,7 +179,7 @@
   text-align: center;
 background: none;
   /* Body/16/30/Medium */
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;

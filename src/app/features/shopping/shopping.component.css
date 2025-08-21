@@ -60,7 +60,7 @@
 .search-input::placeholder {
   color: var(--Colors-Neutral-500 );
 
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -100,7 +100,7 @@
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White );
   text-align: center;
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -122,7 +122,7 @@
   text-align: center;
 
   /* Body/16/30/Medium */
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -362,7 +362,7 @@ position: fixed; */
 
 .center-name {
   color: var(--Body-Heading-Color, #18171f);
-  font-family: Montserrat;
+   
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -374,7 +374,7 @@ position: fixed; */
   color: var(--Body-Text-and-Icons, #777199);
 
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -400,7 +400,7 @@ position: fixed; */
   color: var(--Body-Heading-Color, #18171f);
 
   /* Body/14/24/SemiBold */
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -425,7 +425,7 @@ position: fixed; */
   color: var(--Body-Heading-Color, #18171f);
 
   /* Body/14/24/SemiBold */
-  font-family: Montserrat;
+   
   font-size: 14px;
   font-style: normal;
   font-weight: 600;

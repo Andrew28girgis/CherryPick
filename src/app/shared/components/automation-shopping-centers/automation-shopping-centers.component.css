@@ -33,8 +33,7 @@
   overflow: visible; /* 👈 allow carousel arrows to show */
   max-width: 400px;
   margin:  var(--Space-S-24)  auto;
-  font-family: Arial, sans-serif;
-  transition: box-shadow 0.2s;
+   transition: box-shadow 0.2s;
   position: relative; /* for carousel positioning */
 }
 

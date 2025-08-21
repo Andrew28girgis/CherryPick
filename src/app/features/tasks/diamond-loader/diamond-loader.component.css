@@ -251,8 +251,7 @@
   padding:  var(--Space-S-24) ;
   position: relative;
   color: white;
-  font-family:  "Segoe UI", sans-serif;
-  width: 400px;
+   width: 400px;
   margin: 0;
   flex: 1;
   align-self: center;
