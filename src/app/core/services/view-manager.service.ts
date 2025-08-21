@@ -865,7 +865,7 @@ export class ViewManagerService {
   public loadShoppingCenters(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       this._isLoading.next(true);
-
+  
       const body: any = {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
@@ -873,39 +873,41 @@ export class ViewManagerService {
           ShoppingCenterStageId: 0, // Load all centers
         },
       };
-
+  
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const centers = data.json;
+  
           centers.forEach((center: any) => {
             if (center.ShoppingCenter && center.ShoppingCenter.Places) {
-              const sizes = center.ShoppingCenter.Places
-                .map((p: any) => p.BuildingSizeSf)
-                .filter((s: number) => s != null);
-        
+              const sizes: number[] = center.ShoppingCenter.Places
+                .map((p: any) => p.BuildingSizeSf as number)
+                .filter((s: number | null | undefined): s is number => s != null);
+  
               if (sizes.length > 0) {
                 const uniqueSizes: number[] = Array.from(new Set<number>(sizes)).sort((a, b) => a - b);
-        
+  
                 if (uniqueSizes.length === 1) {
-                  center.sizeRange = uniqueSizes[0].toString();
-                } else if (uniqueSizes.length === 2) {
-                  center.sizeRange = `${uniqueSizes[0]} & ${uniqueSizes[1]}`;
+                  // Only one size
+                  center.sizeRange = uniqueSizes[0];
                 } else {
+                  // More than one → store as [min, max]
                   const min = uniqueSizes[0];
                   const max = uniqueSizes[uniqueSizes.length - 1];
-                  center.sizeRange = `${min} - ${max}`;
+                  center.sizeRange = [min, max];
                 }
               } else {
                 center.sizeRange = null;
               }
             }
           });
+  
           // Store all centers
           this._allShoppingCenters.next(centers);
-
+  
           // Apply current filters
           this.applyFilters();
-
+  
           resolve();
         },
         error: (err) => {
@@ -918,6 +920,7 @@ export class ViewManagerService {
       });
     });
   }
+  
 
   /**
    * Load buybox categories

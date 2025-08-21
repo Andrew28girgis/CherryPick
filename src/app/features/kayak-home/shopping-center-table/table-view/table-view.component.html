@@ -90,11 +90,15 @@
               </div>
             </td>
             <td>
-              <div class="building-size" *ngIf="shoppingCenter.sizeRange">
-                <small class="text-muted">
-                   {{ shoppingCenter.sizeRange }} SF
-                </small>
+              <div *ngIf="shoppingCenter.sizeRange as sr">
+                <ng-container *ngIf="sr instanceof Array; else single">
+                  {{ sr[0] | number }} - {{ sr[1] | number }} SF
+                </ng-container>
+                <ng-template #single>
+                  {{ sr | number }} SF
+                </ng-template>
               </div>
+              
             </td>
             <td>
               <p class="table-text ShoppingCenterStage mb-1">
@@ -174,14 +178,14 @@
                 class="table-responsive mt-2"
                 style="max-height: 150px; overflow-y: auto"
               >
-                <table
+                <!-- <table
                   class="table table-sm table-striped mb-0 small-table"
                   style="font-size: 0.75rem"
                 >
                   <thead>
                     <tr>
                       <th scope="col">Select</th>
-                      <!-- <th scope="col" style="min-width: 60px">Size (SF)</th> -->
+                      <th scope="col" style="min-width: 60px">Size (SF)</th>
                       <th scope="col">Price</th>
                       <th scope="col">Extras</th>
                       <th scope="col">Type</th>
@@ -209,7 +213,7 @@
                             "
                           />
                         </td>
-                        <!-- <td>{{ place.BuildingSizeSf | number }}</td> -->
+                        <td>{{ place.BuildingSizeSf | number }}</td>
                         <td>
                           {{
                             place.ForLeasePrice
@@ -234,7 +238,7 @@
                       </ng-container>
                     </tr>
                   </tbody>
-                </table>
+                </table> -->
               </div>
 
               <!-- <div
