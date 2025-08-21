@@ -746,7 +746,8 @@
       <section id="hero">
         <div class="p-0">
           <div class="d-flex align-items-center">
-            <img loading="lazy" 
+            <p class="main-name">Contacts</p>
+            <!-- <img loading="lazy" 
               class="logo OrgManagerwidth"
               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                 OrgManager[0].id
@@ -754,21 +755,24 @@
               (load)="checkImage($event)"
               (error)="onImageError($event)"
               alt=""
-            />
+            /> -->
             <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
-              {{ OrgManager[0].name }}
+              <!-- {{ OrgManager[0].firstName }}
+              {{ OrgManager[0].lastName }} -->
+
             </h2>
           </div>
         </div>
         <div class="row m-0 py-2">
           <ng-container *ngFor="let Manager of OrgManager">
-            <div class="col-sm-12 col-md-4 contact-card text-center">
-              <p class="contact">
-                {{ Manager.firstname | titlecase }}
-                {{ Manager.lastname | titlecase }}
-              </p>
-              <p>{{ Manager.cellPhone }}</p>
-              <p>{{ Manager.email }}</p>
+            <div *ngIf="Manager.firstName || Manager.lastName" class="col-sm-12 col-md-4 contact-card">
+              <div class="contact-info">
+                <p class="manager-name">
+                  <span class="name">{{ Manager.firstName }}</span>
+                  <span class="name">{{ Manager.lastName }}</span>
+                </p>
+                <!-- <p class="email" *ngIf="Manager.email">{{ Manager.email }}</p> -->
+              </div>
             </div>
           </ng-container>
         </div>

@@ -267,6 +267,8 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.OrgManager = data.json;
+        console.log(this.OrgManager);
+        
       },
     });
   }

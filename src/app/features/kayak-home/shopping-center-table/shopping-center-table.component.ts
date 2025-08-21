@@ -31,13 +31,13 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   filteredCenters: any[] = [];
   filteredCampaigns?: ICampaign[];
   isMobile = false;
-  currentView = 3;
+  currentView = 4; // Change from 3 to 4
   isSocialView = false;
   isMapView = false;
   organizationName!: string;
   CampaignId!: any;
   OrgId!: any;
-  selectedOption = 5;
+  selectedOption = 4; // Change from 5 to 4
   view = false;
   StageId = 0;
   stages: Stage[] = [];
@@ -132,14 +132,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Set default view to card view (3) if current view is map view (1)
-    const savedView = localStorage.getItem('currentViewDashBord');
-    if (savedView === '1') {
-      this.currentView = 3;
-      localStorage.setItem('currentViewDashBord', '3');
-    } else {
-      this.currentView = Number(savedView || '3');
-    }
+    // Modify the view initialization logic
+    const savedView = 4;
+    // if (savedView === '1') {
+    //   this.currentView = 4; // Change from 3 to 4
+    //   localStorage.setItem('currentViewDashBord', '4');
+    // } else {
+    //   this.currentView = Number(savedView || '4'); // Change default from '3' to '4'
+    // }
 
     this.isSocialView = this.currentView === 5;
     this.isMapView = false; // Always keep map view disabled

@@ -308,10 +308,36 @@ li {
   padding: var(--Space-S-32) ;
 }
 .contact-card {
-  border: 1px solid #caced3;
-  border-radius: 10px;
-  margin: 10px;
-  padding: 10px;
+  background: var(--Colors-Card-Background);
+  border: 1px solid var(--Colors-Border);
+  border-radius: var(--Radius-R-12);
+  padding: var(--Space-S-16);
+  margin: var(--Space-S-8);
+  transition: all 0.3s ease;
+}
+.contact-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--Space-S-8);
+}
+.manager-name {
+  display: flex;
+  gap: var(--Space-S-8);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+.name {
+  color: var(--Colors-Text);
+}
+.email {
+  color: var(--Colors-Text-Secondary);
+  font-size: 14px;
+  margin: 0;
 }
 .contact {
   font-weight: bold;
