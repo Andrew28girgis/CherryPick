@@ -1,3 +1,21 @@
+<<<<<<< HEAD
+<!-- Updated to include copilot sidebar and handle content pushing -->
+<div
+  class="app-shell"
+  [ngClass]="{
+    'with-sidebar':
+      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot,
+    'with-copilot': isCopilotOpen,
+    'copilot-expanded': isCopilotFullyOpen,
+    'emily-chatbot': isEmilyChatBot
+  }"
+>
+  <app-sidebar
+    *ngIf="
+      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
+    "
+  ></app-sidebar>
+=======
 <!-- Updated with header instead of sidebar -->
 <div class="app-shell" [ngClass]="{
   'with-sidebar': isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot, 
@@ -6,6 +24,7 @@
   'emily-chatbot': isEmilyChatBot
 }">
   <app-sidebar *ngIf="isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot"></app-sidebar>
+>>>>>>> 07bd3dd7ea41db778c41f2d69fee0dff6e8766cf
 
   <div class="app-container">
     <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
@@ -23,8 +42,11 @@
     </ng-template>
   </div>
 
-  <app-notifications 
-    *ngIf="isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot"
-    (sidebarStateChange)="onCopilotStateChange($event)">
+  <app-notifications
+    *ngIf="
+      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
+    "
+    (sidebarStateChange)="onCopilotStateChange($event)"
+  >
   </app-notifications>
 </div>
