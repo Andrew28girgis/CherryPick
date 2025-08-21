@@ -308,42 +308,51 @@ li {
   padding: var(--Space-S-32) ;
 }
 .contact-card {
+  position: relative;          /* anchor for the popover */
   background: var(--Colors-Card-Background);
   border: 1px solid var(--Colors-Border);
   border-radius: var(--Radius-R-12);
   padding: var(--Space-S-16);
   margin: var(--Space-S-8);
-  transition: all 0.3s ease;
-}
-.contact-card:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
-}
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--Space-S-8);
-}
-.manager-name {
-  display: flex;
-  gap: var(--Space-S-8);
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-}
-.name {
-  color: var(--Colors-Text);
-}
-.email {
-  color: var(--Colors-Text-Secondary);
-  font-size: 14px;
-  margin: 0;
-}
-.contact {
-  font-weight: bold;
-  margin: 0;
 }
 
+.contact-card:hover {
+  transform: scale(1.03);      /* keep a subtle non-layout transform */
+  transform-origin: center;    /* you can tweak per column, see below */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  z-index: 3;
+  /* REMOVE this from your file if present: width: auto; */
+}
+
+/* Make sure row doesn’t clip the overlay */
+.row.m-0.py-2 { overflow: visible; }
+
+/* Truncated email by default (you already have this) */
+.email {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* On hover, show a floating popover with the full email without changing layout */
+.contact-card:hover .email::after {
+  content: attr(data-email);
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 100%;
+  margin-top: 6px;
+  max-width: min(420px, 80vw);
+  background: #fff;
+  border: 1px solid var(--Colors-Border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  line-height: 1.4;
+  white-space: normal;
+  word-break: break-word;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  z-index: 999;
+}
 .custom-carousel .carousel-indicators {
   position: absolute;
   bottom: -50px;
@@ -501,4 +510,7 @@ li {
 
 .view-gallery:active {
   transform: translateY(0);
+}
+.manager-name .name + .name {
+  margin-left: 6px; /* or whatever space you like */
 }
