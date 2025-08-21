@@ -17,6 +17,7 @@ import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 
 @Component({
   selector: 'app-notifications',
@@ -28,6 +29,8 @@ import { BehaviorSubject } from 'rxjs';
 export class NotificationsComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+   private chatOpenSubject = new BehaviorSubject<boolean>(false);
+  public chatOpen$ = this.chatOpenSubject.asObservable();
   private intervalId: any;
   private loadedNotifications: Set<string> = new Set(); // Use notification IDs
   notifications: Notification[] = [];
@@ -49,6 +52,7 @@ export class NotificationsComponent
     private placesService: PlacesService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private viewManagerService: ViewManagerService // Add this
   ) {}
 
   showScrollButton = false;
@@ -61,9 +65,9 @@ export class NotificationsComponent
     this.isOpen = true;
 
     // Subscribe to chat open state changes
-    this.notificationService.chatOpen$.subscribe(isOpen => {
+    this.notificationService.chatOpen$.subscribe((isOpen) => {
       this.isOpen = isOpen;
-      
+
       // When opened, scroll to bottom after a short delay
       if (this.isOpen) {
         setTimeout(() => {
@@ -81,12 +85,13 @@ export class NotificationsComponent
     });
     this.notificationService.initNotifications();
 
-    this.previousNotificationsLength = this.notificationService.notifications.length;
+    this.previousNotificationsLength =
+      this.notificationService.notifications.length;
 
     this.intervalId = setInterval(() => {
       const prevLength = this.notificationService.notifications.length;
       this.notificationService.fetchUserNotifications();
-      
+
       // After a small delay to ensure notifications are updated
       setTimeout(() => {
         const newLength = this.notificationService.notifications.length;
@@ -97,7 +102,7 @@ export class NotificationsComponent
             this.scrollToBottom();
           } else {
             // If not at bottom, increment counter and show scroll button
-            this.newNotificationsCount += (newLength - prevLength);
+            this.newNotificationsCount += newLength - prevLength;
             this.showScrollButton = true;
           }
         }
@@ -138,16 +143,16 @@ export class NotificationsComponent
 
   toggleSidebar(): void {
     this.isOpen = !this.isOpen;
-  
+
     // Update the notification service state
     this.notificationService.setChatOpen(this.isOpen);
-  
+
     // Emit the state change to the parent component
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
-      isFullyOpen: this.isOpen
+      isFullyOpen: this.isOpen,
     });
-  
+
     // If closing, reset scroll behavior
     if (!this.isOpen) {
       this.showScrollButton = false;
@@ -159,13 +164,13 @@ export class NotificationsComponent
     try {
       if (this.messagesContainer) {
         const container = this.messagesContainer.nativeElement;
-        
+
         // Use smooth scrolling behavior
         container.scrollTo({
           top: container.scrollHeight,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
-        
+
         // Reset notification indicators after animation completes
         setTimeout(() => {
           if (this.isAtBottom()) {
@@ -179,119 +184,11 @@ export class NotificationsComponent
     }
   }
 
-  scrollToBottomWithReset(): void {
-    this.scrollToBottom();
-    // No need to immediately reset counters here as it's handled in scrollToBottom
-  }
-
   handleNotificationClick(notification: Notification): void {
     if (notification.userSubmissionId) {
       const route = `/uploadOM/${notification.userSubmissionId}`;
       this.router.navigate([route]);
     }
-  }
-
-  markNotificationAsRead(notification: Notification): void {
-    if (notification.isRead) {
-      return;
-    }
-
-    const request = {
-      Name: 'UpdateNotification',
-      Params: {
-        NotificationId: notification.id,
-      },
-    };
-
-    this.placesService.GenericAPI(request).subscribe({
-      next: () => {
-        notification.isRead = 1;
-        this.notificationService.updateNotificationCounts();
-      },
-      error: (err) => {
-        console.error('Error marking notification as read:', err);
-      },
-    });
-  }
-
-  markExistingAsRead(): void {
-    const unreadNotifications = this.notificationService.notifications.filter(
-      (n) => !n.isRead && this.notificationService.shouldMarkAsReadOnOpen(n.id)
-    );
-
-    if (unreadNotifications.length === 0) {
-      return;
-    }
-
-    // Create array of promises to mark existing notifications as read
-    const markPromises = unreadNotifications.map((notification) => {
-      return new Promise<void>((resolve) => {
-        const request = {
-          Name: 'UpdateNotification',
-          Params: {
-            NotificationId: notification.id,
-          },
-        };
-
-        this.placesService.GenericAPI(request).subscribe({
-          next: () => {
-            notification.isRead = 1;
-            resolve();
-          },
-          error: () => {
-            resolve(); // Still resolve even on error to continue processing
-          },
-        });
-      });
-    });
-
-    // After all notifications are processed, update counts
-    Promise.all(markPromises).then(() => {
-      this.notificationService.updateNotificationCounts();
-    });
-  }
-
-  markAllAsRead(): void {
-    const unreadNotifications = this.notificationService.notifications.filter(
-      (n) => !n.isRead
-    );
-
-    if (unreadNotifications.length === 0) {
-      return;
-    }
-
-    // Create array of promises to mark all notifications as read
-    const markPromises = unreadNotifications.map((notification) => {
-      return new Promise<void>((resolve) => {
-        const request = {
-          Name: 'UpdateNotification',
-          Params: {
-            NotificationId: notification.id,
-          },
-        };
-
-        this.placesService.GenericAPI(request).subscribe({
-          next: () => {
-            notification.isRead = 1;
-            resolve();
-          },
-          error: () => {
-            resolve(); // Still resolve even on error to continue processing
-          },
-        });
-      });
-    });
-
-    // After all notifications are processed, update counts
-    Promise.all(markPromises).then(() => {
-      this.notificationService.updateNotificationCounts();
-    });
-  }
-
-  // This would be implemented when sending is enabled
-  sendMessage(): void {
-    // Currently disabled
-    console.log('Message sending is currently disabled');
   }
 
   @HostListener('document:click', ['$event'])
@@ -327,7 +224,6 @@ export class NotificationsComponent
   }
 
   choose(choice: number, notification: any): void {
-    // Set loading state when the button is clicked
     this.setNotificationLoading(notification, true, choice);
 
     if (choice === 1) {
@@ -342,24 +238,21 @@ export class NotificationsComponent
           if (response) {
             try {
               await this.saveShoppingCenterData(notification.json, notification);
+              
+              // Trigger reload instead of calling initializeData directly
+              this.viewManagerService.triggerReload();
+              
             } catch (error) {
               console.error('Error saving shopping center data:', error);
             }
-          } else {
-            console.warn('Empty response received from API');
           }
-          // Clear loading state when done
           this.setNotificationLoading(notification, false);
           this.loadedNotifications.add(notification.id);
         },
         error: (error) => {
           console.error('Error in DeleteJSONNotification API call:', error);
-          // Clear loading state on error
           this.setNotificationLoading(notification, false);
-        },
-        complete: () => {
-          console.log('DeleteJSONNotification request completed');
-        },
+        }
       });
     } else if (choice === 0) {
       const request = {
@@ -374,7 +267,10 @@ export class NotificationsComponent
           this.loadedNotifications.add(notification.id);
         },
         error: (error) => {
-          console.error('Error in DeleteJSONNotification API call for choice 0:', error);
+          console.error(
+            'Error in DeleteJSONNotification API call for choice 0:',
+            error
+          );
           // Clear loading state on error
           this.setNotificationLoading(notification, false);
         },
@@ -425,17 +321,17 @@ export class NotificationsComponent
 
   checkScreenSize() {
     const width = window.innerWidth;
-    // You can add logic here if needed to further adjust the UI
-    // This will automatically work with the CSS media queries added above
   }
 
-  // Add these methods to your NotificationsComponent class
   isNotificationLoading(notification: any): boolean {
     return !!notification.isLoading;
   }
 
-  // Update the setNotificationLoading method
-  setNotificationLoading(notification: any, isLoading: boolean, choice?: number): void {
+  setNotificationLoading(
+    notification: any,
+    isLoading: boolean,
+    choice?: number
+  ): void {
     if (isLoading) {
       // When starting to load, set properties immediately
       notification.isLoading = true;
@@ -462,11 +358,11 @@ export class NotificationsComponent
 
   isAtBottom(): boolean {
     if (!this.messagesContainer) return true;
-    
+
     const container = this.messagesContainer.nativeElement;
     const scrollPosition = container.scrollTop + container.clientHeight;
     const scrollHeight = container.scrollHeight;
-    
+
     // Consider "at bottom" if within threshold (e.g., 20px from the bottom)
     return scrollHeight - scrollPosition <= this.scrollThreshold;
   }
@@ -474,7 +370,10 @@ export class NotificationsComponent
   @HostListener('scroll', ['$event'])
   onScroll(event: any): void {
     // Check if the event is coming from our messages container
-    if (this.messagesContainer && event.target === this.messagesContainer.nativeElement) {
+    if (
+      this.messagesContainer &&
+      event.target === this.messagesContainer.nativeElement
+    ) {
       // If we've scrolled to the bottom (or close to it), reset the notification count
       if (this.isAtBottom()) {
         this.showScrollButton = false;
@@ -492,9 +391,4 @@ export class NotificationsComponent
     // Use a subject to communicate between components
     this.chatOpenSubject.next(isOpen);
   }
-  
-  // Add a BehaviorSubject to track chat open state
-  private chatOpenSubject = new BehaviorSubject<boolean>(false);
-  public chatOpen$ = this.chatOpenSubject.asObservable();
 }
-

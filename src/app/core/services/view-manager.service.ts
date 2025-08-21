@@ -92,6 +92,9 @@ export class ViewManagerService {
   private currentSortOption = 0;
   private shoppingCenterInterval: any;
 
+  private reloadShoppingCentersSubject = new BehaviorSubject<boolean>(false);
+  reloadShoppingCenters$ = this.reloadShoppingCentersSubject.asObservable();
+
   constructor(
     private placesService: PlacesService,
     private sanitizer: DomSanitizer
@@ -1027,5 +1030,9 @@ export class ViewManagerService {
 
     // Re-apply all filters including the new sort option
     this.applyFilters();
+  }
+
+  triggerReload() {
+    this.reloadShoppingCentersSubject.next(true);
   }
 }

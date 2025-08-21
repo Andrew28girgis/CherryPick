@@ -27,8 +27,7 @@
 }
 .content-container.authenticated {
   background-color: none;
-  padding-right: var(--Space-S-24);
-}
+ }
 
 /* Updated grid system for header layout */
 .app-shell {

@@ -6,114 +6,6 @@
 <!-- Tenant Header -->
 
 <div class="tab-view-container">
-  <div class="header-container">
-    <div class="search-section">
-      <div class="search-container">
-        <svg
-          class="search-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="M11.5 21.75C5.85 21.75 1.25 17.15 1.25 11.5C1.25 5.85 5.85 1.25 11.5 1.25C17.15 1.25 21.75 5.85 21.75 11.5C21.75 17.15 17.15 21.75 11.5 21.75ZM11.5 2.75C6.67 2.75 2.75 6.68 2.75 11.5C2.75 16.32 6.67 20.25 11.5 20.25C16.33 20.25 20.25 16.32 20.25 11.5C20.25 6.68 16.33 2.75 11.5 2.75Z"
-            fill="#777199"
-          />
-          <path
-            d="M21.9999 22.7504C21.8099 22.7504 21.6199 22.6804 21.4699 22.5304L19.4699 20.5304C19.1799 20.2404 19.1799 19.7604 19.4699 19.4704C19.7599 19.1804 20.2399 19.1804 20.5299 19.4704L22.5299 21.4704C22.8199 21.7604 22.8199 22.2404 22.5299 22.5304C22.3799 22.6804 22.1899 22.7504 21.9999 22.7504Z"
-            fill="#777199"
-          />
-        </svg>
-
-        <input
-          type="text"
-          placeholder="Search Properties..."
-          class="search-input"
-          [(ngModel)]="searchQuery"
-          (input)="onSearch($event)"
-        />
-      </div>
-    </div>
-    <div class="actions-container">
-      <div class="stage-select-container">
-        <div class="custom-select-wrapper">
-          <button
-            class="custom-select filter-btn"
-            type="button"
-            id="stageDropdown"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-            >
-              <path
-                d="M17.5 6.4585H2.5C2.15833 6.4585 1.875 6.17516 1.875 5.8335C1.875 5.49183 2.15833 5.2085 2.5 5.2085H17.5C17.8417 5.2085 18.125 5.49183 18.125 5.8335C18.125 6.17516 17.8417 6.4585 17.5 6.4585Z"
-                fill="#777199"
-              />
-              <path
-                d="M15 10.625H5C4.65833 10.625 4.375 10.3417 4.375 10C4.375 9.65833 4.65833 9.375 5 9.375H15C15.3417 9.375 15.625 9.65833 15.625 10C15.625 10.3417 15.3417 10.625 15 10.625Z"
-                fill="#777199"
-              />
-              <path
-                d="M11.6667 14.7915H8.33337C7.99171 14.7915 7.70837 14.5082 7.70837 14.1665C7.70837 13.8248 7.99171 13.5415 8.33337 13.5415H11.6667C12.0084 13.5415 12.2917 13.8248 12.2917 14.1665C12.2917 14.5082 12.0084 14.7915 11.6667 14.7915Z"
-                fill="#777199"
-              />
-            </svg>
-            {{ selectedStageId === 0 ? "Filter" : selectedStageName }}
-            <!-- <i class="fa-solid fa-chevron-down ms-2"></i> -->
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="stageDropdown">
-            <li>
-              <a
-                class="dropdown-item"
-                [class.active]="selectedStageId === 0"
-                (click)="selectStagekan(0)"
-                >All</a
-              >
-            </li>
-            <li *ngFor="let stage of stages; trackBy: trackByStageId">
-              <a
-                class="dropdown-item"
-                [class.active]="selectedStageId === stage.id"
-                [attr.aria-current]="
-                  selectedStageId === stage.id ? 'true' : null
-                "
-                (click)="selectStagekan(stage.id)"
-              >
-                {{ stage.stageName }}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="sort-container">
-        <button class="sort-btn" (click)="toggleSort()">
-          <i [class]="getSelectedSortIcon()"></i>
-          <span>{{ getSelectedSortText() }}</span>
-        </button>
-        <div class="sort-menu" *ngIf="isSortMenuOpen">
-          <div
-            *ngFor="let option of sortOptions"
-            class="sort-option"
-            [class.active]="selectedSortId === option.id"
-            (click)="selectSort(option)"
-          >
-            <i [class]="option.icon"></i>
-            <span>{{ option.text }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div
     class="mobileButtons mt-2 d-flex justify-content-between align-items-center"
     style="padding-left: 12px"
@@ -169,12 +61,14 @@
   </div>
 
   <div class="main-inner">
+
     <div
       class="tenant-header d-flex justify-content-between align-items-center"
     >
       <div class="d-flex align-items-center gap-3">
         <div>
-          <img loading="lazy" 
+          <img
+            loading="lazy"
             class="tenant-logo"
             [src]="tenantImageUrl"
             [alt]="tenantName"
@@ -232,7 +126,8 @@
                       class="d-flex align-items-center gap-3 tenant-item-content"
                     >
                       <div class="tenant-logo-small">
-                        <img loading="lazy" 
+                        <img
+                          loading="lazy"
                           class="tenant-img"
                           [src]="
                             'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -260,6 +155,154 @@
         </div>
       </div>
       <div class="d-flex">
+        <div class="header-container">
+          <div class="search-section">
+            <div class="search-container" [class.expanded]="isSearchExpanded">
+              <button class="search-icon-btn" (click)="toggleSearch()">
+                <svg
+                  class="search-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M11.5 21.75C5.85 21.75 1.25 17.15 1.25 11.5C1.25 5.85 5.85 1.25 11.5 1.25C17.15 1.25 21.75 5.85 21.75 11.5C21.75 17.15 17.15 21.75 11.5 21.75ZM11.5 2.75C6.67 2.75 2.75 6.68 2.75 11.5C2.75 16.32 6.67 20.25 11.5 20.25C16.33 20.25 20.25 16.32 20.25 11.5C20.25 6.68 16.33 2.75 11.5 2.75Z"
+                    fill="#777199"
+                  />
+                  <path
+                    d="M21.9999 22.7504C21.8099 22.7504 21.6199 22.6804 21.4699 22.5304L19.4699 20.5304C19.1799 20.2404 19.1799 19.7604 19.4699 19.4704C19.7599 19.1804 20.2399 19.1804 20.5299 19.4704L22.5299 21.4704C22.8199 21.7604 22.8199 22.2404 22.5299 22.5304C22.3799 22.6804 22.1899 22.7504 21.9999 22.7504Z"
+                    fill="#777199"
+                  />
+                </svg>
+              </button>
+              <input
+                *ngIf="isSearchExpanded"
+                type="text"
+                placeholder="Search Properties..."
+                class="search-input"
+                [(ngModel)]="searchQuery"
+                (input)="onSearch($event)"
+              />
+            </div>
+          </div>
+          <div class="actions-container">
+            <!-- Sort Button -->
+            <div class="dropdown sort-container m-0 p-0">
+              <!-- Added event parameter to toggleSort call -->
+              <button class="sort-btn" (click)="toggleSort($event)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
+                  <path
+                    d="M8.7083 5.59998L5.60828 2.5L2.5083 5.59998"
+                    stroke="#292D32"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M5.60815 17.5V2.5"
+                    stroke="#292D32"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M11.2915 14.3999L14.3915 17.4999L17.4915 14.3999"
+                    stroke="#292D32"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M14.3916 2.5V17.5"
+                    stroke="#292D32"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div
+                class="dropdown-menu sort-menu"
+                *ngIf="isSortMenuOpen"
+                (click)="$event.stopPropagation()"
+              >
+                <div
+                  *ngFor="let option of sortOptions"
+                  class="dropdown-item sort-option"
+                  [class.active]="selectedSortId === option.id"
+                  (click)="selectSort(option)"
+                >
+                  <i [class]="option.icon"></i>
+                  <span>{{ option.text }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filter Button -->
+            <div class="dropdown sort-container m-0 p-0">
+              <!-- <button class="sort-btn" type="button" (click)="toggleFilter($event)" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M17.5 6.4585H2.5C2.15833 6.4585 1.875 6.17516 1.875 5.8335C1.875 5.49183 2.15833 5.2085 2.5 5.2085H17.5C17.8417 5.2085 18.125 5.49183 18.125 5.8335C18.125 6.17516 17.8417 6.4585 17.5 6.4585Z" fill="#777199"/>
+                  <path d="M15 10.625H5C4.65833 10.625 4.375 10.3417 4.375 10C4.375 9.65833 4.65833 9.375 5 9.375H15C15.3417 9.375 15.625 9.65833 15.625 10C15.625 10.3417 15.3417 10.625 15 10.625Z" fill="#777199"/>
+                  <path d="M11.6667 14.7915H8.33337C7.99171 14.7915 7.70837 14.5082 7.70837 14.1665C7.70837 13.8248 7.99171 13.5415 8.33337 13.5415H11.6667C12.0084 13.5415 12.2917 13.8248 12.2917 14.1665C12.2917 14.5082 12.0084 14.7915 11.6667 14.7915Z" fill="#777199"/>
+                </svg>
+                <span class="ms-2">{{ selectedStageId === 0 ? "Filter" : selectedStageName }}</span>
+              </button> -->
+              <div class="dropdown-menu sort-menu" *ngIf="isFilterMenuOpen" (click)="$event.stopPropagation()">
+                <div class="dropdown-item sort-option" [class.active]="selectedStageId === 0" (click)="selectStagekan(0)">
+                  <span>All</span>
+                </div>
+                <div *ngFor="let stage of stages; trackBy: trackByStageId" 
+                     class="dropdown-item sort-option"
+                     [class.active]="selectedStageId === stage.id"
+                     [attr.aria-current]="selectedStageId === stage.id ? 'true' : null"
+                     (click)="selectStagekan(stage.id)">
+                  <span>{{ stage.stageName }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- View Button -->
+            <div class="m-0 p-0 dropdown view-container">
+              <!-- Added event parameter to toggleView call -->
+              <button class="view-btn" (click)="toggleView($event)">
+                <img
+                  [src]="getCurrentViewIcon()"
+                  [alt]="getCurrentViewName()"
+                  class="view-icon"
+                />
+              </button>
+              <!-- Added click event to prevent menu from closing when clicking inside -->
+              <div
+                class="dropdown-menu view-menu"
+                *ngIf="view"
+                (click)="$event.stopPropagation()"
+              >
+                <ul>
+                  <li
+                    *ngFor="let option of dropdowmOptions"
+                    (click)="selectOption(option)"
+                  >
+                    <img
+                      [src]="option.icon"
+                      [alt]="option.text"
+                      class="view-icon"
+                    />
+                    <span>{{ option.text }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
         <!-- <button class="send-email-button mx-1">
           <a class="action-btn optionMobileColor p-0" (click)="navigateToMap()">
             <i class="fa-solid fa-plus text-light mx-1"></i>
@@ -272,94 +315,32 @@
             <span> Find All Contacts </span>
           </a>
         </button> -->
-        <button
-          class="send-email-button mx-1"
-          (click)="openUpload()"
-          style="margin-left: 0 !important"
-        >
-          <i class="fa-solid fa-plus text-light mx-1"></i>
-          <span> Add sites </span>
-        </button>
-        <button class="send-email-button mx-1">
-          <a
-            class="action-btn optionMobileColor p-0"
-            [href]="generateSafeUrl()"
-          >
-            <i class="fa-solid fa-house text-light mx-1"></i>
-            <span> Market Survey </span>
-          </a>
-        </button>
-        <button
-          class="send-email-button mx-1"
-          style="margin-right: 0 !important"
-          [routerLink]="['/organization-mail', OrgId, CampaignId]"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-          >
-            <path
-              d="M6.16665 5.2668L13.2417 2.90846C16.4167 1.85013 18.1417 3.58346 17.0917 6.75846L14.7333 13.8335C13.15 18.5918 10.55 18.5918 8.96665 13.8335L8.26665 11.7335L6.16665 11.0335C1.40832 9.45013 1.40832 6.85846 6.16665 5.2668Z"
-              stroke="white"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M8.42505 11.375L11.4084 8.3833"
-              stroke="white"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <span>Inbox</span>
-        </button>
       </div>
     </div>
     <div class="nav-tabs-container">
       <div class="nav-tabs">
-        <a class="nav-tab"    [routerLink]="['/campaigns/ataglance', CampaignId]" routerLinkActive="active">Campaigns</a>
+        <!-- <a
+          class="nav-tab"
+          [routerLink]="['/campaigns/ataglance', CampaignId]"
+          routerLinkActive="active"
+          >Campaigns</a
+        > -->
         <a
           class="nav-tab"
           [routerLink]="['/dashboard', OrgId, organizationName, CampaignId]"
           routerLinkActive="active"
           >Properties</a
         >
-        <a class="nav-tab" [href]="generateSafeUrl()" routerLinkActive="active">Market Survey</a>
+        <a class="nav-tab" [href]="generateSafeUrl()">Market Survey</a>
+        <a
+          class="nav-tab"
+          [routerLink]="['/organization-mail', OrgId, CampaignId]"
+        >
+          <span>Inbox</span>
+        </a>
       </div>
     </div>
-    <div
-      class="dropdown d-flex justify-content-end"
-      style="margin-bottom: 16px"
-    >
-      <button
-        class="action-btn dropdown-toggle"
-        type="button"
-        id="viewDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-        style="padding: 0 !important"
-      >
-        <img loading="lazy" 
-          [src]="getCurrentViewIcon()"
-          [alt]="getCurrentViewName()"
-          class="view-icon"
-        />
-        <span>{{ getCurrentViewName() }}</span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="viewDropdown">
-        <li *ngFor="let option of dropdowmOptions">
-          <a class="dropdown-item" (click)="selectOption(option)">
-            <img loading="lazy" [src]="option.icon" [alt]="option.text" class="view-icon" />
-            <span>{{ option.text }}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+
     <div class="row m-0" *ngIf="currentView == 2">
       <div class="col-12 p-0">
         <app-side-list-view
@@ -398,7 +379,10 @@
     ></button>
   </div>
   <div class="modal-body fancy-modal-body">
-    <button class="add-sites-btn cre-btn" (click)="electronMessageWithcampaignId()">
+    <button
+      class="add-sites-btn cre-btn"
+      (click)="electronMessageWithcampaignId()"
+    >
       <div class="btn-content">
         <i class="fa-solid fa-building cre-icon btn-icon"></i>
         <span class="btn-text">By CRE</span>
@@ -408,7 +392,8 @@
 
     <button class="add-sites-btn google-btn" (click)="navigateToMap()">
       <div class="btn-content">
-        <img loading="lazy" 
+        <img
+          loading="lazy"
           alt="Google Maps Logo"
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png?20200329030310"
           width="30"
@@ -570,3 +555,7 @@
     </button> -->
   </div>
 </ng-template>
+    <!-- Floating Add Sites Button -->
+    <button class="add-btn" (click)="openUpload()">
+      <i class="fa-solid fa-plus"></i>
+    </button>

@@ -5,6 +5,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   OnDestroy,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
@@ -23,6 +24,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-shopping-center-table',
   templateUrl: './shopping-center-table.component.html',
   styleUrls: ['./shopping-center-table.component.css'],
+  encapsulation: ViewEncapsulation.None, // This allows :host-context to work
 })
 export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   @ViewChild('mapView') mapView!: MapViewComponent;
@@ -32,8 +34,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   currentView = 3;
   isSocialView = false;
   isMapView = false;
-  // BuyBoxId!: any;
-  // BuyBoxName!: string;
   organizationName!: string;
   CampaignId!: any;
   OrgId!: any;
@@ -71,7 +71,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     {
       id: 3,
       text: 'Cards View',
-      icon: '../../../assets/Images/Icons/grid-1.png',
+      icon: '../../../assets/Images/Icons/card.svg',
     },
     {
       id: 4,
@@ -105,6 +105,11 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   showFileDropArea = false;
   isUploading = false;
   selectedCampaignId: number | null = null;
+  isSearchExpanded = false; // Add this property to track the search state
+
+  // Add these properties
+  isFilterMenuOpen = false;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
@@ -143,14 +148,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.checkScreenSize();
 
     this.activatedRoute.params.subscribe((params: any) => {
-      // this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.organizationName = params.orgName;
       this.tenantName = params.orgName || '';
       this.encodedName = encodeURIComponent(this.organizationName);
       this.CampaignId = params.campaignId;
-      this.selectedCampaignId = params.campaignId ? Number(params.campaignId) : null;
-      // localStorage.setItem('BuyBoxId', this.BuyBoxId);
+      this.selectedCampaignId = params.campaignId
+        ? Number(params.campaignId)
+        : null;
       localStorage.setItem('OrgId', this.OrgId);
 
       // Set tenant image URL
@@ -207,6 +212,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
+
+    // Add subscription to reload event
+    this.subscriptions.add(
+      this.shoppingCenterService.reloadShoppingCenters$.subscribe((shouldReload) => {
+        if (shouldReload) {
+          const orgId = Number(localStorage.getItem('OrgId')) || 0;
+          this.shoppingCenterService.initializeData(this.CampaignId, orgId);
+        }
+      })
+    );
   }
 
   // Add method to sync filter state
@@ -257,9 +272,25 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.shoppingCenterService.filterCenters(this.searchQuery);
   }
 
+  toggleSearch(): void {
+    this.isSearchExpanded = !this.isSearchExpanded;
+  }
+
+  toggleView(event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.view = !this.view;
+    // Close sort menu when opening view menu
+    if (this.view) {
+      this.isSortMenuOpen = false;
+    }
+  }
+
   selectOption(option: any): void {
     this.selectedOption = option.id;
     this.currentView = option.id;
+    this.view = false; // Close the view menu after selection
     this.isSocialView = this.currentView === 5;
     this.isMapView = this.currentView === 1;
     localStorage.setItem('currentViewDashBord', this.currentView.toString());
@@ -299,24 +330,21 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.shoppingCenterService.setCurrentView(this.currentView);
   }
 
-  toggleSort(): void {
+  toggleSort(event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+    }
     this.isSortMenuOpen = !this.isSortMenuOpen;
+    // Close view menu when opening sort menu
+    if (this.isSortMenuOpen) {
+      this.view = false;
+    }
   }
 
   selectSort(sortOption: any): void {
     this.selectedSortId = sortOption.id;
     this.isSortMenuOpen = false;
     this.shoppingCenterService.setSortOption(sortOption.id);
-  }
-
-  getSelectedSortIcon(): string {
-    if (this.selectedSortId === 0) {
-      return 'fa-solid fa-sort';
-    }
-    const option = this.sortOptions.find(
-      (opt) => opt.id === this.selectedSortId
-    );
-    return option?.icon || 'fa-solid fa-sort';
   }
 
   getSelectedSortText(): string {
@@ -329,27 +357,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     return option?.text || 'Sort';
   }
 
-  // getUserBuyBoxes(): void {
-  //   const body: any = {
-  //     Name: 'GetUserBuyBoxes',
-  //     Params: {},
-  //   };
-
-  //   this.placesService.GenericAPI(body).subscribe({
-  //     next: (data: any) => {
-  //       this.tenants = data.json;
-  //       this.filteredTenants = this.tenants;
-  //       this.groupTenantsByAlphabet();
-  //       this.selectedTenant =
-  //         this.tenants.find((t) => t.Id == this.BuyBoxId) || null;
-  //       this.cdr.detectChanges();
-  //     },
-  //     error: (error) => {
-  //       console.error('Error loading tenants:', error);
-  //     },
-  //   });
-  // }
-
   GetAllActiveOrganizations(): void {
     const body: any = {
       Name: 'GetAllActiveOrganizations',
@@ -360,7 +367,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       next: (data: any) => {
         this.tenants = data.json.map((tenant: any) => ({
           ...tenant,
-          // Map the properties to match your Tenant interface
           id: tenant.id,
           name: tenant.name,
           URL: tenant.URL,
@@ -370,7 +376,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
         this.filteredTenants = this.tenants;
         this.groupTenantsByAlphabet();
-        // Find the tenant that matches the current route params
         this.selectedTenant =
           this.tenants.find(
             (t) => t.id.toString() === this.OrgId || t.name === this.tenantName
@@ -409,25 +414,20 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
   selectTenant(tenant: any, campaign?: any): void {
     this.selectedTenant = tenant;
-    // Set the selected campaign ID
     if (campaign) {
       this.selectedCampaignId = campaign.Id;
     } else {
-      // If no specific campaign, use the first one
       this.selectedCampaignId =
         tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : null;
     }
-    // Use the specific campaign if provided, otherwise find the first campaign
     const campaignId = campaign
       ? campaign.Id
       : tenant.Campaigns?.length > 0
       ? tenant.Campaigns[0].Id
       : 0;
 
-    // Navigate to the new tenant's dashboard
     this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
 
-    // Close the dropdown
     if (this.tenantDropdownRef) {
       this.tenantDropdownRef.close();
     }
@@ -437,11 +437,11 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (!this.selectedTenant || !this.selectedTenant.Campaigns) {
       return 'Campaign';
     }
-    
+
     const campaign = this.selectedTenant.Campaigns.find(
       (c: any) => c.Id === this.selectedCampaignId
     );
-    
+
     return campaign ? campaign.CampaignName : 'Campaign';
   }
 
@@ -449,10 +449,40 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
 
-    // Handle sort dropdown
-    const sortButton = document.querySelector('.sort-container');
-    if (sortButton && !sortButton.contains(target)) {
+    // Existing sort button check
+    const sortButton = document.querySelector('.sort-btn');
+    const sortMenu = document.querySelector('.sort-menu');
+    if (
+      sortButton &&
+      sortMenu &&
+      !sortButton.contains(target) &&
+      !sortMenu.contains(target)
+    ) {
       this.isSortMenuOpen = false;
+    }
+
+    // Add filter button check
+    const filterButton = document.querySelector('.filter-btn');
+    const filterMenu = document.querySelector('.filter-menu');
+    if (
+      filterButton &&
+      filterMenu &&
+      !filterButton.contains(target) &&
+      !filterMenu.contains(target)
+    ) {
+      this.isFilterMenuOpen = false;
+    }
+
+    // Existing view button check
+    const viewButton = document.querySelector('.view-btn');
+    const viewMenu = document.querySelector('.view-menu');
+    if (
+      viewButton &&
+      viewMenu &&
+      !viewButton.contains(target) &&
+      !viewMenu.contains(target)
+    ) {
+      this.view = false;
     }
 
     this.cdr.detectChanges();
@@ -482,7 +512,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     return `/market-survey?orgId=${this.OrgId}&name=${safeEncodedName}&campaignId=${this.CampaignId}`;
   }
 
-  // Add this method to handle dropdown state changes
   onDropdownOpenChange(isOpen: boolean) {
     this.showTenantDropdown = isOpen;
   }
@@ -537,32 +566,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       },
     });
   }
-  // groupTenantsByAlphabet(): void {
-  //    if (!this.filteredTenants || this.filteredTenants.length === 0) {
-  //     this.groupedTenants = {};
-  //     this.alphabetKeys = [];
-  //     return;
-  //   }
-
-  //   const sortedTenants = [...this.filteredTenants].sort((a, b) =>
-  //      (a.Name || a.Name || '').localeCompare(b.Name || b.Name || '')
-  //   );
-
-  //   this.groupedTenants = {};
-  //   sortedTenants.forEach((tenant) => {
-  //     const tenantName = tenant.Name || tenant.Name;
-  //     if (tenant && tenantName) {
-  //       const firstLetter = tenantName.charAt(0).toUpperCase();
-  //       if (!this.groupedTenants[firstLetter]) {
-  //         this.groupedTenants[firstLetter] = [];
-  //       }
-  //       this.groupedTenants[firstLetter].push(tenant);
-  //     }
-  //   });
-
-  //   this.alphabetKeys = Object.keys(this.groupedTenants).sort();
-
-  // }
 
   checkImage(event: Event) {
     const img = event.target as HTMLImageElement;
@@ -647,11 +650,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (files.length > 0) {
       const droppedFile = files[0];
 
-      // Check if it's a file (not a directory)
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-          // Validate file type
           if (
             file.type === 'application/pdf' ||
             file.name.toLowerCase().endsWith('.pdf')
@@ -686,20 +687,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         console.log('Upload successful:', response);
         this.isUploading = false;
 
-        // Close modal
         this.modalService.dismissAll();
 
-        // Check if response contains success message
         if (
           response &&
           response.Message === 'The PDF has been uploaded successfully'
         ) {
-          // Show processing toast message
           this.showToast(
             'Emily is processing with the PDF and will Notify when finished in the notifications'
           );
         } else {
-          // Fallback message if response structure is different
           this.showToast(
             'File uploaded successfully! Emily will process it and notify you when finished.'
           );
@@ -715,20 +712,26 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       },
     });
   }
-  //   findAllContacts() {
-  //   (window as any).electronMessage.findAllContacts();
-  // }
-
- 
 
   trackByStageId(index: number, stage: Stage): number {
     return stage?.id || index;
   }
 
   electronMessageWithcampaignId() {
-    (window as any).electronMessage.startCREAutomation(this.CampaignId, localStorage.getItem('token'));
+    (window as any).electronMessage.startCREAutomation(
+      this.CampaignId,
+      localStorage.getItem('token')
+    );
     const url = 'https://www.google.com';
     window.location.href = `${url}`;
   }
- 
+
+  // Add this method
+  toggleFilter(event: Event): void {
+    event.stopPropagation();
+    this.isFilterMenuOpen = !this.isFilterMenuOpen;
+    // Close other dropdowns
+    this.isSortMenuOpen = false;
+    this.view = false;
+  }
 }
