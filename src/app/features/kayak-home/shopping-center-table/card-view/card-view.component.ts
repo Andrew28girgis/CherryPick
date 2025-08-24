@@ -35,6 +35,8 @@ import { AddContactComponent } from '../add-contact/add-contact.component';
   changeDetection: ChangeDetectionStrategy.OnPush, // Added OnPush strategy
 })
 export class CardViewComponent implements OnInit, OnDestroy {
+  Array = Array; // expose global Array constructor
+
   General: General = new General();
   cardsSideList: Center[] = [];
   map: any;
