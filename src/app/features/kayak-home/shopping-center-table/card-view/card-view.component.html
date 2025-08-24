@@ -372,16 +372,16 @@
                 {{ shopping.CenterState }}
               </span>
             </div>
-            <div *ngIf="shopping.sizeRange as sr">
-              <ng-container *ngIf="sr instanceof Array; else single">
-                {{ sr[0] | number }} - {{ sr[1] | number }} SF
+            <div *ngIf="shopping.sizeRange !== null && shopping.sizeRange !== undefined">
+              <ng-container *ngIf="Array.isArray(shopping.sizeRange); else singleSize">
+                {{ shopping.sizeRange[0] | number }} - {{ shopping.sizeRange[1] | number }} SF
               </ng-container>
-              <ng-template #single>
-                {{ sr | number }} SF
+              <ng-template #singleSize>
+                {{ shopping.sizeRange | number }} SF
               </ng-template>
             </div>
             
-
+            
             <div>
               <div
                 *ngIf="shopping.ShoppingCenter?.Places?.length"
