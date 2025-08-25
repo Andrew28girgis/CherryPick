@@ -48,6 +48,11 @@ export class NotificationsComponent
   electronSideBar = false;
   displayViewButton = true;
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  @ViewChild("messageInput") messageInput!: ElementRef
+  outgoingText = ""
+  isSending = false
+  sentMessages: any[] = []
+
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -399,4 +404,66 @@ export class NotificationsComponent
     // Use a subject to communicate between components
     this.chatOpenSubject.next(isOpen);
   }
+
+
+  
+  onInputChange(event: any): void {
+    this.outgoingText = event.target.innerText || ""
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault()
+      this.sendMessage()
+    }
+  }
+
+  sendMessage() {
+    const text = this.outgoingText?.trim();
+    if (!text || this.isSending) return;
+  
+    this.isSending = true;
+  
+    // Clear input immediately for better UX
+    this.outgoingText = "";
+    if (this.messageInput) {
+      this.messageInput.nativeElement.innerText = "";
+    }
+  
+    // Add message to local array
+    this.sentMessages.push({
+      message: text,
+      createdDate: new Date().toISOString(),
+    });
+  
+    this.scrollToBottom();
+  
+    const body: any = {
+      Name: "sendmessage",
+      Params: {
+        message: text,
+      },
+    };
+  
+    this.placesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        this.isSending = false;
+      },
+      error: (err) => {
+        console.error("sendmessage failed", err);
+        this.isSending = false;
+        // Restore text on error
+        this.outgoingText = text;
+        if (this.messageInput) {
+          this.messageInput.nativeElement.innerText = text;
+        }
+        // Remove optimistic message on error
+        this.sentMessages.pop();
+      },
+    });
+  }
+  
+ 
+
+ 
 }
