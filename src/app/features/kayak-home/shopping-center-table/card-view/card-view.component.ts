@@ -57,7 +57,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
   sanitizedUrl!: any;
   shareLink: any;
   KanbanStages: any[] = [];
-
+  openOrgMenuId: number | null = null;
+  orgMenuPos: { top?: string; left?: string } = {};
+  
   // Improved dropdown management
   activeDropdownId: number | null = null;
   isUpdatingStage = false;
@@ -296,27 +298,52 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
+    const target = event.target as HTMLElement | null
 
-    if (this.isUpdatingStage) {
-      return;
+    if (this.isUpdatingStage || !target) {
+      return
     }
 
-    // If there's an active dropdown
-    if (this.activeDropdownId && target) {
-      const clickedDropdown = target.closest('.custom-dropdown');
+    // Check if any dropdown or menu is currently open
+    const hasActiveDropdown = this.activeDropdownId !== null
+    const hasActiveOrgMenu = this.openOrgMenuId !== null
+    const hasActiveEllipsisMenu = this.selectedIdCard !== null
 
-      // If the click is not inside a dropdown
-      if (!clickedDropdown) {
-        // Stop event propagation for all outside clicks while a dropdown is open
-        event.preventDefault();
-        event.stopPropagation();
+    if (hasActiveDropdown || hasActiveOrgMenu || hasActiveEllipsisMenu) {
+      const clickedDropdown = target.closest(".custom-dropdown")
+      const clickedOrgMenu = target.closest(".org-mini-menu")
+      const clickedOrgTrigger = target.closest(".org-info-trigger")
+      const clickedEllipsisMenu = target.closest(".shortcuts_iconCard")
+      const clickedEllipsisTrigger = target.closest(".ellipsis_icont")
 
-        // Close all dropdowns
-        this.cardsSideList.forEach((place) => {
-          place.isDropdownOpen = false;
-        });
-        this.activeDropdownId = null;
+      // If click is outside all menus and triggers
+      if (
+        !clickedDropdown &&
+        !clickedOrgMenu &&
+        !clickedOrgTrigger &&
+        !clickedEllipsisMenu &&
+        !clickedEllipsisTrigger
+      ) {
+        // Prevent default behavior and stop propagation for ALL outside clicks
+        event.preventDefault()
+        event.stopPropagation()
+
+        // Close all open menus
+        if (hasActiveDropdown) {
+          this.cardsSideList.forEach((place) => {
+            place.isDropdownOpen = false
+          })
+          this.activeDropdownId = null
+        }
+
+        if (hasActiveOrgMenu) {
+          this.openOrgMenuId = null
+        }
+
+        if (hasActiveEllipsisMenu) {
+          this.selectedIdCard = null
+          document.removeEventListener("click", this.outsideClickHandler)
+        }
       }
     }
   }
@@ -808,4 +835,29 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.getShoppingCenterContact(shoppingCenterId);
     });
   }
+  
+toggleOrgMenu(event: MouseEvent, id: number) {
+  event.stopPropagation();
+  event.preventDefault()
+  if (this.openOrgMenuId === id) {
+     this.openOrgMenuId = null
+    this.activeDropdownId = null
+
+  } else {
+    this.openOrgMenuId = id
+    this.activeDropdownId = id
+  }
+
+  this.openOrgMenuId = id;
+
+  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+ 
+
+  document.addEventListener('click', this.closeOrgMenu, { once: true });
+}
+
+closeOrgMenu = () => {
+  this.openOrgMenuId = null;
+  this.orgMenuPos = {};
+};
 }

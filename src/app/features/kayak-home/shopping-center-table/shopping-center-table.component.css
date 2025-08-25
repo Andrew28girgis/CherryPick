@@ -827,6 +827,7 @@
 }
 
 .sort-menu,
+.filter-menu,
 .view-menu {
   position: absolute;
   top: calc(100% + 8px);
@@ -871,7 +872,9 @@
 }
 
 .sort-btn,
-.view-btn {
+.filter-btn,
+.view-btn,
+.inbox-btn {
   position: relative;
   z-index: 1;
   background: transparent;
@@ -889,10 +892,11 @@
 }
 
 .sort-btn:hover,
-.view-btn:hover {
-  background-color: #f5f5f5;
-  border-color: #d0d0d0;
-}
+.filter-btn:hover,
+.view-btn:hover,
+.inbox-btn:hover {
+  background-color: var(--Colors-Primary-100);
+ }
 
 .view-icon {
   width: 20px;

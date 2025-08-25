@@ -70,6 +70,9 @@ export class TableViewComponent implements OnInit, OnDestroy {
   orgId!: any
   cId!:number;   
   orgName!: string
+  openOrgMenuId: number | null = null;
+  orgMenuPos: { top?: string; left?: string } = {};
+  activeDropdownId: number | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -502,4 +505,27 @@ openAddContactModal(shoppingCenterId: number): void {
 get hasAnySizeRange(): boolean {
   return this.filteredCenters?.some(sc => !!sc.sizeRange);
 }
+toggleOrgMenu(event: MouseEvent, id: number) {
+  event.stopPropagation();
+  event.preventDefault()
+  if (this.openOrgMenuId === id) {
+     this.openOrgMenuId = null
+    this.activeDropdownId = null
+
+  } else {
+    this.openOrgMenuId = id
+    this.activeDropdownId = id
+  }
+
+  this.openOrgMenuId = id;
+
+  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+ 
+
+  document.addEventListener('click', this.closeOrgMenu, { once: true });
+}
+closeOrgMenu = () => {
+  this.openOrgMenuId = null;
+  this.orgMenuPos = {};
+};
 }
