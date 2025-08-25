@@ -94,8 +94,6 @@ export class AddCampaignPopupComponent implements OnInit {
       localStorage.getItem('token'),
       this.campaignId
     );
-    const url = 'https://www.google.com';
-    window.location.href = `${url}`;
   }
 
   protected closeActiveModal(): void {
