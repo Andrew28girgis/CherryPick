@@ -16,8 +16,9 @@ export class AddCampaignPopupComponent implements OnInit {
   @Input() secondaryButtonText: string = 'Cancel';
   @Output() onSecondaryButtonClicked = new EventEmitter<boolean>();
   campaignId!: number;
-  states: Array<{ id: number; name: string }> = [];
-  selectedState: number | null = null;
+  states: Array<{ stateName: string; stateCode: string }> = [];
+  selectedState: string | null = null;
+  selectedStateName: string | null = null;
   protected campaignName: string = '';
   protected isPrivateCampaign: number = 1;
   protected visabilityOptions: any[] = [
@@ -69,7 +70,7 @@ export class AddCampaignPopupComponent implements OnInit {
         OrganizationId: this.organizationId,
         minunitsize: this.campaignMinSize,
         maxunitsize: this.campaignMaxSize,
-        selectedState:this.selectedState,
+        StateName: this.selectedStateName,
       },
     };
 
@@ -91,7 +92,7 @@ export class AddCampaignPopupComponent implements OnInit {
     (window as any).electronMessage.getLinksFromGoogle(
       this.selectedState,
       localStorage.getItem('token'),
-      this.campaignId,
+      this.campaignId
     );
     const url = 'https://www.google.com';
     window.location.href = `${url}`;
@@ -112,7 +113,7 @@ export class AddCampaignPopupComponent implements OnInit {
       Params: {},
     };
 
-    this.placesService.GenericAPI(body).subscribe((response) => {
+    this.placesService.BetaGenericAPI(body).subscribe((response) => {
       this.spinner.hide();
       if (response.json && response.json.length > 0) {
         this.states = response.json;
