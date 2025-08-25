@@ -31,13 +31,13 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   filteredCenters: any[] = [];
   filteredCampaigns?: ICampaign[];
   isMobile = false;
-  currentView = 4; // Change from 3 to 4
+  currentView = 3; // Change from 3 to 4
   isSocialView = false;
   isMapView = false;
   organizationName!: string;
   CampaignId!: any;
   OrgId!: any;
-  selectedOption = 4; // Change from 5 to 4
+  selectedOption = 3; // Change from 5 to 4
   view = false;
   StageId = 0;
   stages: Stage[] = [];
@@ -133,7 +133,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     );
 
     // Modify the view initialization logic
-    const savedView = 4;
+    const savedView = 3;
     // if (savedView === '1') {
     //   this.currentView = 4; // Change from 3 to 4
     //   localStorage.setItem('currentViewDashBord', '4');
@@ -339,12 +339,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (this.isSortMenuOpen) {
       this.view = false;
     }
+    this.isFilterMenuOpen = false;
   }
 
   selectSort(sortOption: any): void {
     this.selectedSortId = sortOption.id;
     this.isSortMenuOpen = false;
     this.shoppingCenterService.setSortOption(sortOption.id);
+    
   }
 
   getSelectedSortText(): string {

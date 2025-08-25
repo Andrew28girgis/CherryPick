@@ -16,7 +16,8 @@ export class AddCampaignPopupComponent implements OnInit {
   @Input() secondaryButtonText: string = 'Cancel';
   @Output() onSecondaryButtonClicked = new EventEmitter<boolean>();
   campaignId!: number;
-  selectedState: string = 'washington dc';
+  states: Array<{ id: number; name: string }> = [];
+  selectedState: number | null = null;
   protected campaignName: string = '';
   protected isPrivateCampaign: number = 1;
   protected visabilityOptions: any[] = [
@@ -38,6 +39,7 @@ export class AddCampaignPopupComponent implements OnInit {
     if (!this.organizationId) {
       this.displayOrganizationsList = true;
       this.getAllOrganizations();
+      this.getAllStates();
     }
   }
 
@@ -60,13 +62,14 @@ export class AddCampaignPopupComponent implements OnInit {
 
   protected createNewCampaign(): void {
     const body: any = {
-      Name: 'CreateCampaign ',
+      Name: 'CreateCampaign',
       Params: {
         CampaignName: this.campaignName,
         CampaignPrivacy: this.isPrivateCampaign,
         OrganizationId: this.organizationId,
         minunitsize: this.campaignMinSize,
         maxunitsize: this.campaignMaxSize,
+        selectedState:this.selectedState,
       },
     };
 
@@ -84,7 +87,7 @@ export class AddCampaignPopupComponent implements OnInit {
     this.electronMessageWithStateName();
   }
 
-    electronMessageWithStateName() {
+  electronMessageWithStateName() {
     (window as any).electronMessage.getLinksFromGoogle(
       this.selectedState,
       localStorage.getItem('token')
@@ -97,8 +100,24 @@ export class AddCampaignPopupComponent implements OnInit {
     this.onSecondaryButtonClicked.emit(true);
     this.activeModalService.close();
   }
-    navigateToMap(): void {
+  navigateToMap(): void {
     const url = 'https://www.google.com/maps/search/shopping+centers+malls';
     window.location.href = `${url}?campaignId=${this.campaignId}&campaignName=${this.organizationName}&organizationId=${this.organizationId}`;
+  }
+
+  private getAllStates(): void {
+    const body: any = {
+      Name: 'GetAllStates',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      this.spinner.hide();
+      if (response.json && response.json.length > 0) {
+        this.states = response.json;
+      } else {
+        this.states = [];
+      }
+    });
   }
 }

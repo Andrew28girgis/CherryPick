@@ -50,6 +50,31 @@
         </select>
       </ng-container>
     </div>
+<!-- States -->
+<div class="mb-3"
+     >
+  <label for="state-select"
+         class="form-label w-100 d-flex justify-content-start gap-2">
+    Select State *
+    <span class="text-danger name-isrequired"
+          *ngIf="stateVar.invalid && stateVar.touched">
+      required
+    </span>
+  </label>
+
+  <select
+    required
+    id="state-select"
+    class="form-select mb-3"
+    name="state"
+    [(ngModel)]="selectedState"
+    #stateVar="ngModel"
+    [ngClass]="{ 'is-invalid': stateVar.invalid && stateVar.touched }">
+    <option *ngFor="let s of states" [value]="s.id">
+      {{ s.name }}
+    </option>
+  </select>
+</div>
 
     <div class="mb-3">
       <label
