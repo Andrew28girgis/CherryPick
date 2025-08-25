@@ -10,35 +10,3 @@
 .get-started-btn:hover {
     background-color: var(--Colors-Primary-700);  
 }
-/* Style for all selects inside the popup */
-select.form-select {
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: var(--Radius-R-24, 8px);
-    padding: 10px 14px;
-    font-size: 0.95rem;
-    color: #333;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    appearance: none; /* removes default arrow */
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px 16px;
-  }
-  
-  select.form-select:focus {
-    border-color: var(--Colors-Primary-700, #a31c59);
-    box-shadow: 0 0 0 0.25rem rgba(163, 28, 89, 0.25);
-    outline: none;
-  }
-  
-  select.form-select.is-invalid {
-    border-color: #dc3545;
-  }
-  
-  label.form-label {
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #444;
-  }
-  
