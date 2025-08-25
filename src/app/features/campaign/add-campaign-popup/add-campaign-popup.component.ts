@@ -90,7 +90,7 @@ export class AddCampaignPopupComponent implements OnInit {
 
   electronMessageWithStateName() {
     (window as any).electronMessage.getLinksFromGoogle(
-      this.selectedState,
+      this.selectedStateName,
       localStorage.getItem('token'),
       this.campaignId
     );
