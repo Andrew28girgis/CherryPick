@@ -70,7 +70,7 @@ export class AddCampaignPopupComponent implements OnInit {
         OrganizationId: this.organizationId,
         minunitsize: this.campaignMinSize,
         maxunitsize: this.campaignMaxSize,
-        StateName: this.selectedStateName,
+        // StateName: this.selectedStateName,
       },
     };
 
@@ -90,7 +90,7 @@ export class AddCampaignPopupComponent implements OnInit {
 
   electronMessageWithStateName() {
     (window as any).electronMessage.getLinksFromGoogle(
-      this.selectedStateName,
+      this.selectedState,
       localStorage.getItem('token'),
       this.campaignId
     );
