@@ -16,7 +16,7 @@ export class AddCampaignPopupComponent implements OnInit {
   @Input() secondaryButtonText: string = 'Cancel';
   @Output() onSecondaryButtonClicked = new EventEmitter<boolean>();
   campaignId!: number;
-
+  selectedState: string = 'washington dc';
   protected campaignName: string = '';
   protected isPrivateCampaign: number = 1;
   protected visabilityOptions: any[] = [
@@ -81,6 +81,16 @@ export class AddCampaignPopupComponent implements OnInit {
         this.activeModalService.close();
       }
     });
+    this.electronMessageWithStateName();
+  }
+
+    electronMessageWithStateName() {
+    (window as any).electronMessage.getLinksFromGoogle(
+      this.selectedState,
+      localStorage.getItem('token')
+    );
+    const url = 'https://www.google.com';
+    window.location.href = `${url}`;
   }
 
   protected closeActiveModal(): void {
