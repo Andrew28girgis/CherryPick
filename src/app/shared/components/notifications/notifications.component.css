@@ -368,8 +368,8 @@
 
 .scroll-down-button {
   position: fixed;
-  bottom: 3vh;
-  right: 2vw;
+  bottom: 10vh;
+  right: 1vw;
   background-color: var(--Colors-Primary-500, #0078d4);
   color: white;
   width: 40px;
@@ -584,3 +584,41 @@
   opacity: .5;
   cursor: not-allowed;
 }
+
+
+
+
+/* === Overlay mode (90% width) — append to notifications.component.css === */
+.copilot-sidebar-container.overlay-mode .sidebar-panel.visible {
+  width: 90vw !important;  /* take 90% of viewport width */
+  max-width: 100vw;
+}
+
+.copilot-sidebar-container.overlay-mode {
+  z-index: 2000;           /* ensure above the app shell (app shell z-index is lower) */
+  pointer-events: auto;
+}
+
+/* Optional dimmed backdrop behind the big overlay */
+.copilot-sidebar-container.overlay-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: -1;
+}
+
+/* Small helper for the header overlay toggle button */
+.overlay-toggle-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #656d76;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.overlay-toggle-button:hover { background: #e9ecef; }
+

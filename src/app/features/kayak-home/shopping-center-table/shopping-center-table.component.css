@@ -1211,8 +1211,8 @@
   border-color: var(--Colors-Primary-500);
 }
 .logo-image {
-  width: 64px;                /* bigger logo looks better in vertical layout */
-  height: 64px;
+  width: 30px;                /* bigger logo looks better in vertical layout */
+  height: 30px;
   border-radius: 6px;
   object-fit: contain;
  }
