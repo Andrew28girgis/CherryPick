@@ -162,7 +162,7 @@ textarea.form-control {
 
 .p-button-left ::ng-deep .p-button {
   border-radius: var(--Radius-R-16 );
-  border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #3922d2);
+  border: 1px solid var(--Button-Secondary-Stroke-Color-Default, var(--Colors-Primary-500));
   background: var(--Colors-Pure-White );
   display: flex;
   height: 48px;
@@ -172,7 +172,7 @@ textarea.form-control {
   gap: var(--Space-S-8) ;
   flex: 1 0 0;
   width: 406px;
-  color: #3922d2;
+  color: var(--Colors-Primary-500);
 }
 
 .p-button-right ::ng-deep .p-button {
@@ -184,7 +184,7 @@ textarea.form-control {
   gap: var(--Space-S-8) ;
   flex: 1 0 0;
   border-radius: var(--Radius-R-16 );
-  background: var(--Button-Primary-BG, #3922d2);
+  background: var(--Button-Primary-BG, var(--Colors-Primary-500));
   width: 406px;
 }
 
@@ -200,12 +200,12 @@ textarea.form-control {
 }
 
 ::ng-deep .p-selectbutton .p-button.p-highlight {
-  background: #3922d2;
+  background: var(--Colors-Primary-500);
   color: white !important;
   font-size: 14px;
   font-style: normal;
   font-weight: 400 !important;
-  border: 1px solid #3922d2;
+  border: 1px solid var(--Colors-Primary-500);
 }
 
 /* Stepper Styles */
@@ -254,7 +254,7 @@ textarea.form-control {
 
 ::ng-deep .p-stepper .p-stepper-header.p-highlight .p-stepper-separator,
 ::ng-deep .p-stepper .p-stepper-header.p-highlight-exact .p-stepper-separator {
-  background-color: #3922d2;
+  background-color: var(--Colors-Primary-500);
 }
 
 ::ng-deep .p-stepper .p-stepper-panels {
@@ -277,11 +277,11 @@ textarea.form-control {
 }
 
 .back-link:hover {
-  color: #3922d2;
+  color: var(--Colors-Primary-500);
 }
 
 .back-link:hover svg path {
-  stroke: #3922d2;
+  stroke: var(--Colors-Primary-500);
 }
  
 

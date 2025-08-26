@@ -236,7 +236,7 @@
   background: #2f82ff; /* Base blue color from your diamond cards */
   background-image: linear-gradient(
       135deg,
-      #3922d2 0%,
+      var(--Colors-Primary-500) 0%,
       #2f82ff 50%,
       #6366f1 100%
     ),
