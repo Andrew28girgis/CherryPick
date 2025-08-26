@@ -12,7 +12,7 @@
 .normal-chip {
   white-space: nowrap;
   background-color: #d7d3f6 !important;
-  color: #3922d2 !important;
+  color: var(--Colors-Primary-500) !important;
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.5rem 0.75rem;
@@ -29,7 +29,7 @@
   width: auto;
   aspect-ratio: 1;
   background-color: var(--Colors-Pure-White);
-  border: 2px solid #3922d2;
+  border: 2px solid var(--Colors-Primary-500);
   border-radius: 50%;
 }
 .stage-message {
@@ -45,7 +45,7 @@
   opacity: 50%;
 }
 .in-progress-chip {
-  background-color: #3922d2 !important;
+  background-color: var(--Colors-Primary-500) !important;
   color: var(--Colors-Pure-White) !important;
 }
 .pending-chip {

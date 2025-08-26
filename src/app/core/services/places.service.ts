@@ -391,4 +391,13 @@ export class PlacesService {
     const url = environment.API_URL + `/BuyBox/LoginWithGuid/${guid}`;
     return this.http.post(url, {});
   }
+
+
+  public sendmessages(body: any) {
+    return this.http.post<any>(
+      `${environment.api}/BrokerWithChatGPT/EmilyChat`,
+      body
+    );
+  }
+
 }

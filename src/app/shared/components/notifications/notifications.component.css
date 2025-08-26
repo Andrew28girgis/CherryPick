@@ -711,3 +711,57 @@
 .copilot-sidebar-container.overlay-mode .sidebar-panel {
   overflow: visible; /* your base .sidebar-panel is overflow:hidden; this avoids clipping in overlay */
 }
+/* Overlay grid: LEFT = content grows, RIGHT = fixed chat */
+.overlay-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px; /* content | chat */
+  height: 100%;
+  background: #fff;
+}
+
+/* Left content column */
+.overlay-left {
+  display: grid;
+  grid-template-rows: auto 1fr; /* header + scrollable body */
+  min-width: 0;
+  border-right: 1px solid rgba(0,0,0,.06);
+  background: #fff;
+}
+
+/* Right chat column (fixed width, fixed place on the right) */
+.overlay-right {
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* header, messages, composer */
+  min-width: 0;
+  background: #fafafa;
+  border-left: 1px solid rgba(0,0,0,.06);
+}
+
+/* Scroll fixes so messages scroll and composer stays visible */
+.overlay-grid,
+.overlay-left,
+.overlay-right { min-height: 0; }
+
+.overlay-right .chat-messages-container {
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+/* Panel container must not clip children in overlay */
+.copilot-sidebar-container.overlay-mode .sidebar-panel {
+  overflow: visible;
+}
+
+/* Responsive: stack on small screens (chat remains below content) */
+@media (max-width: 900px) {
+  .overlay-grid {
+    grid-template-columns: 1fr;
+  }
+  .overlay-right {
+    border-left: none;
+    border-top: 1px solid rgba(0,0,0,.06);
+  }
+}
+

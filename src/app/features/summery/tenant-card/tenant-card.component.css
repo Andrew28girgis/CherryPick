@@ -38,7 +38,7 @@ background: var(--Colors-Card-Background);
 }
 .add-campaign {
   text-decoration: underline;
-  color: #3922d2;
+  color: var(--Colors-Primary-500);
   font-size: 0.85rem;
   cursor: pointer;
 }

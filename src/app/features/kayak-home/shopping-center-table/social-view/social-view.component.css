@@ -269,7 +269,7 @@ background: var(--Colors-Pure-White );
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #3922D2;
+  background-color: var(--Colors-Primary-500);
   color: white;
   font-weight: 600;
   font-size: 16px;
@@ -367,7 +367,7 @@ background: var(--Colors-Pure-White );
   background: none;
   border: none;
   box-shadow: none;
-  color: var(--Color-Variants-Pr-L-500-D-200, #3922D2);
+  color: var(--Color-Variants-Pr-L-500-D-200, var(--Colors-Primary-500));
    
   font-size: 14px;
   font-style: normal;
@@ -514,7 +514,7 @@ background: var(--Colors-Pure-White );
 
 .comment-submit svg,
 .reply-submit svg {
-  color: #3922D2;
+  color: var(--Colors-Primary-500);
 }
 
 .reply-input-container {
@@ -775,11 +775,11 @@ background: var(--Colors-Pure-White );
 }
 
 .action-btn.like-btn.liked {
-  color: #3922D2;
+  color: var(--Colors-Primary-500);
 }
 
 .action-btn.like-btn.liked svg path {
-  fill: #3922D2;
+  fill: var(--Colors-Primary-500);
 }
 
 .action-btn.view-btn {
