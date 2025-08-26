@@ -18,11 +18,11 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
-
+import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 // A unified item for the chat timeline
 type ChatItem = {
-  key: string;                   // unique key for trackBy
+  key: string; // unique key for trackBy
   from: 'system' | 'user';
   message: string;
   created: Date;
@@ -68,10 +68,10 @@ export class NotificationsComponent
   sentMessages: any[] = [];
   isOverlayMode = false;
   overlayHtml: SafeHtml = '';
-  private lastHtmlById = new Map<number, string>();  // id -> last html string we saw
+  private lastHtmlById = new Map<number, string>(); // id -> last html string we saw
   private currentHtmlSourceId: number | null = null;
-  private currentHtmlCache = '';             // last html string we showed
-  
+  private currentHtmlCache = ''; // last html string we showed
+
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -79,7 +79,10 @@ export class NotificationsComponent
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private viewManagerService: ViewManagerService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private cdRef: ChangeDetectorRef,
+    private ngZone: NgZone,
+  
   ) {}
 
   showScrollButton = false;
@@ -184,7 +187,7 @@ export class NotificationsComponent
 </div>
 `;
     this.setOverlayHtmlFromApi(testHtml);
-  
+
     this.activatedRoute.queryParamMap.subscribe((parms) => {
       const view = parms.get('View');
 
@@ -239,7 +242,7 @@ export class NotificationsComponent
         }
         this.previousNotificationsLength = newLength;
         this.sortNotificationsByDateAsc();
-       }, 300);
+      }, 300);
     }, 2000);
 
     // Make sure we emit initial state
@@ -553,10 +556,11 @@ export class NotificationsComponent
       createdDate: new Date().toISOString(),
     });
 
-    this.scrollToBottom();
+     this.scrollAfterRender();
+
 
     const body: any = {
-      Chat : text,
+      Chat: text,
     };
 
     this.placesService.sendmessages(body).subscribe({
@@ -579,7 +583,6 @@ export class NotificationsComponent
   }
 
   toggleOverlayMode(): void {
-    
     if (!this.isOpen) return;
     this.isOverlayMode = !this.isOverlayMode;
 
@@ -613,116 +616,129 @@ export class NotificationsComponent
     this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
   }
 
-
   /** Normalize any html payload to a comparable string */
-private htmlToString(raw: any): string {
-  if (raw == null) return '';
-  if (typeof raw === 'string') return raw;
-  try { return String(raw); } catch { return ''; }
-}
-
-/** True if notification has non-empty HTML */
-private hasHtml(n: Notification): boolean {
-  const s = this.htmlToString(n?.html).trim();
-  return s.length > 0;
-}
-
-/** Sanitize and set the overlay HTML */
-private setOverlayHtml(htmlFromApi: string): void {
-  // If you need stricter validation, do it here, then trust whitelisted HTML only
-  this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
-}
-
- private scanAndOpenOverlayForHtml(): void {
-  const list = this.notificationService?.notifications ?? [];
-  if (!Array.isArray(list) || list.length === 0) return;
-
-  // Find the newest by createdDate that has html
-  let latest: Notification | null = null;
-  for (const n of list) {
-    if (!this.hasHtml(n)) continue;
-    if (!latest) {
-      latest = n;
-    } else {
-      const a = Date.parse(latest.createdDate);
-      const b = Date.parse(n.createdDate);
-      if (b > a) latest = n;
+  private htmlToString(raw: any): string {
+    if (raw == null) return '';
+    if (typeof raw === 'string') return raw;
+    try {
+      return String(raw);
+    } catch {
+      return '';
     }
   }
-  if (!latest) return;
 
-  const htmlStr = this.htmlToString(latest.html).trim();
-  if (!htmlStr) return;
+  /** True if notification has non-empty HTML */
+  private hasHtml(n: Notification): boolean {
+    const s = this.htmlToString(n?.html).trim();
+    return s.length > 0;
+  }
 
-  const idChanged = this.currentHtmlSourceId !== latest.id;
-  const htmlChanged = this.currentHtmlCache !== htmlStr;
+  /** Sanitize and set the overlay HTML */
+  private setOverlayHtml(htmlFromApi: string): void {
+    // If you need stricter validation, do it here, then trust whitelisted HTML only
+    this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
+  }
 
-  // Only update if different id or content
-  if (idChanged || htmlChanged) {
-    this.currentHtmlSourceId = latest.id;
-    this.currentHtmlCache = htmlStr;
-    this.lastHtmlById.set(latest.id, htmlStr);
+  private scanAndOpenOverlayForHtml(): void {
+    const list = this.notificationService?.notifications ?? [];
+    if (!Array.isArray(list) || list.length === 0) return;
 
-    this.setOverlayHtmlFromApi(htmlStr);
-
-    // Ensure the chat sidebar is visible
-    if (!this.isOpen) {
-      this.isOpen = true;
-      this.notificationService.setChatOpen(true);
+    // Find the newest by createdDate that has html
+    let latest: Notification | null = null;
+    for (const n of list) {
+      if (!this.hasHtml(n)) continue;
+      if (!latest) {
+        latest = n;
+      } else {
+        const a = Date.parse(latest.createdDate);
+        const b = Date.parse(n.createdDate);
+        if (b > a) latest = n;
+      }
     }
+    if (!latest) return;
 
-    // Turn overlay on
-    if (!this.isOverlayMode) {
-      this.isOverlayMode = true;
+    const htmlStr = this.htmlToString(latest.html).trim();
+    if (!htmlStr) return;
+
+    const idChanged = this.currentHtmlSourceId !== latest.id;
+    const htmlChanged = this.currentHtmlCache !== htmlStr;
+
+    // Only update if different id or content
+    if (idChanged || htmlChanged) {
+      this.currentHtmlSourceId = latest.id;
+      this.currentHtmlCache = htmlStr;
+      this.lastHtmlById.set(latest.id, htmlStr);
+
+      this.setOverlayHtmlFromApi(htmlStr);
+
+      // Ensure the chat sidebar is visible
+      if (!this.isOpen) {
+        this.isOpen = true;
+        this.notificationService.setChatOpen(true);
+      }
+
+      // Turn overlay on
+      if (!this.isOverlayMode) {
+        this.isOverlayMode = true;
+      }
+
+      // Emit overlay state
+      this.sidebarStateChange.emit({
+        isOpen: this.isOpen,
+        isFullyOpen: this.isOpen,
+        type: 'overlay',
+        overlayActive: this.isOverlayMode,
+      });
     }
+  }
 
-    // Emit overlay state
-    this.sidebarStateChange.emit({
-      isOpen: this.isOpen,
-      isFullyOpen: this.isOpen,
-      type: 'overlay',
-      overlayActive: this.isOverlayMode,
+  get chatTimeline(): ChatItem[] {
+    let seqCounter = 0; // optional if you want a stable sequence number
+
+    const sys: ChatItem[] = (this.notificationService?.notifications ?? []).map(
+      (n) => ({
+        key: `n-${n.id}-${seqCounter++}`,
+        from: 'system',
+        message: n.message,
+        created: new Date(n.createdDate),
+        notification: n,
+      })
+    );
+
+    const user: ChatItem[] = (this.sentMessages ?? []).map((m) => ({
+      key: `u-${m.createdDate}-${seqCounter++}`,
+      from: 'user',
+      message: m.message,
+      created: new Date(m.createdDate),
+      userMsg: m,
+    }));
+
+    return [...sys, ...user].sort((a, b) => {
+      const diff = a.created.getTime() - b.created.getTime();
+      if (diff !== 0) return diff;
+
+      // stable tie-breaker: ensures deterministic order
+      return a.key.localeCompare(b.key);
     });
   }
-}
 
+  // optional but recommended: stable trackBy
+  trackByChatItem = (_: number, item: ChatItem) => item.key;
 
+  // (Optional) keep your notifications sorted alone, too:
+  private sortNotificationsByDateAsc(): void {
+    const arr = this.notificationService?.notifications;
+    if (!Array.isArray(arr)) return;
+    arr.sort(
+      (a, b) =>
+        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+    );
+  }
 
-
-// Build a merged + sorted timeline every time change detection runs.
-// If you prefer, you can cache this when data changes.
-get chatTimeline(): ChatItem[] {
-  const sys: ChatItem[] = (this.notificationService?.notifications ?? []).map(n => ({
-    key: `n-${n.id}-${n.createdDate}`,
-    from: 'system',
-    message: n.message,
-    created: new Date(n.createdDate),
-    notification: n
-  }));
-
-  const user: ChatItem[] = (this.sentMessages ?? []).map((m, idx) => ({
-    key: `u-${m.createdDate}-${idx}`,
-    from: 'user',
-    message: m.message,
-    created: new Date(m.createdDate),
-    userMsg: m
-  }));
-
-  // merge & sort by time (ascending)
-  const merged = [...sys, ...user].sort((a, b) => a.created.getTime() - b.created.getTime());
-  return merged;
-}
-
-// optional but recommended: stable trackBy
-trackByChatItem = (_: number, item: ChatItem) => item.key;
-
-// (Optional) keep your notifications sorted alone, too:
-private sortNotificationsByDateAsc(): void {
-  const arr = this.notificationService?.notifications;
-  if (!Array.isArray(arr)) return;
-  arr.sort((a, b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime());
-}
-
-// Call the sorter right after each fetch completes (where you already compare lengths)
-
-}
+  private scrollAfterRender(): void {
+    // Flush template changes
+    this.cdRef.detectChanges();
+  
+    // Let the browser lay out the new DOM, then scroll
+    requestAnimationFrame(() => this.scrollToBottom());
+  }}
