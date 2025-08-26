@@ -4,18 +4,27 @@
   [ngClass]="{ responsive: electronSideBar, 'overlay-mode': isOverlayMode }"
   [class.open]="isOpen"
 >
+  <!-- Add backdrop click handler for overlay mode -->
+  <div 
+    *ngIf="isOverlayMode" 
+    class="overlay-backdrop"
+    (click)="onOverlayBackdropClick($event)"
+  ></div>
+
   <!-- Sidebar Panel -->
   <div
     class="sidebar-panel"
     [ngClass]="{ responsive: electronSideBar }"
     [class.visible]="isOpen"
+    (click)="$event.stopPropagation()"
   >
     <!-- ========================================================= -->
     <!-- ONE GRID for both states:
          - overlay OFF: left column is hidden via CSS, chat fills width
          - overlay ON : left (content) | right (chat = 380px)        -->
     <!-- ========================================================= -->
-    <div class="overlay-grid">
+
+    <div class="overlay-grid" (click)="$event.stopPropagation()">
 
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
       <section class="overlay-left">
@@ -215,6 +224,6 @@
         </div>
       </section>
     </div>
-    <!-- /overlay-grid -->
+     <!-- /overlay-grid -->
   </div>
 </div>
