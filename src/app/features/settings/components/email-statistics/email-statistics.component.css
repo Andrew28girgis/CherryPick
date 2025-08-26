@@ -439,7 +439,7 @@
 
 .go-to-emily:hover,
 .go-to-emily:focus {
-  background: #2a18a6; /* Slightly darker for hover */
+  background: var(--Colors-Primary-600); /* Slightly darker for hover */
   box-shadow: 0 2px 8px rgba(57, 34, 210, 0.15);
   outline: none;
 }

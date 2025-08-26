@@ -695,26 +695,35 @@ export class NotificationsComponent
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0; // optional if you want a stable sequence number
 
-    const sys: ChatItem[] = (this.notificationService?.notifications ?? []).map(
-      (n) => ({
-        key: `n-${n.id}-${seqCounter++}`,
-        // <CHANGE> Check if role is 1 or true to display as user message
-        from: n.role === true || n.role === 1 ? 'user' : 'system',
-        message: n.message,
-        created: new Date(n.createdDate),
-        notification: n,
-      })
-    );
-
-    const user: ChatItem[] = (this.sentMessages ?? []).map((m) => ({
-      key: `u-${m.createdDate}-${seqCounter++}`,
-      from: 'user',
-      message: m.message,
-      created: new Date(m.createdDate),
-      userMsg: m,
+    const notificationItems: ChatItem[] = (
+      this.notificationService?.notifications ?? []
+    ).map((n) => ({
+      key: `n-${n.id}-${seqCounter++}`,
+      from: n.role === true || n.role === 1 ? 'user' : 'system',
+      message: n.message,
+      created: new Date(n.createdDate),
+      notification: n,
     }));
 
-    return [...sys, ...user].sort((a, b) => {
+    const userNotificationMessages = new Set(
+      (this.notificationService?.notifications ?? [])
+        .filter((n) => n.role === true || n.role === 1)
+        .map((n) => n.message.trim().toLowerCase())
+    );
+
+    const sentMessageItems: ChatItem[] = (this.sentMessages ?? [])
+      .filter(
+        (m) => !userNotificationMessages.has(m.message.trim().toLowerCase())
+      )
+      .map((m) => ({
+        key: `u-${m.createdDate}-${seqCounter++}`,
+        from: 'user',
+        message: m.message,
+        created: new Date(m.createdDate),
+        userMsg: m,
+      }));
+
+    return [...notificationItems, ...sentMessageItems].sort((a, b) => {
       const diff = a.created.getTime() - b.created.getTime();
       if (diff !== 0) return diff;
 
