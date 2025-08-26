@@ -1,7 +1,7 @@
 <!-- Redesigned as vertical sidebar similar to GitHub Copilot with chat-like messages -->
 <div
   class="copilot-sidebar-container"
-  [ngClass]="{ responsive: electronSideBar }"
+  [ngClass]="{ responsive: electronSideBar, 'overlay-mode': isOverlayMode }"
   [class.open]="isOpen"
 >
   <!-- Sidebar Panel -->
@@ -20,10 +20,27 @@
         />
         <h3 class="sidebar-title">Emily</h3>
       </div>
+
+      <!-- NEW: overlay toggle button (maximize/restore) -->
       <button
-        class="close-button"
-        (click)="electronSideBar ? closeSide() : toggleSidebar()"
+        class="overlay-toggle-button"
+        (click)="toggleOverlayMode()"
+        *ngIf="isOpen"
       >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <!-- use two squares to suggest “maximize” -->
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+        </svg>
+      </button>
+      <button class="close-button" (click)="closeAll()">
         <svg
           width="16"
           height="16"
@@ -38,10 +55,14 @@
       </button>
     </div>
 
-    <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
-      <div 
-        class="scroll-down-button" 
-        *ngIf="showScrollButton && isOpen" 
+    <div
+      class="chat-messages-container"
+      #messagesContainer
+      (scroll)="onScroll($event)"
+    >
+      <div
+        class="scroll-down-button"
+        *ngIf="showScrollButton && isOpen"
         (click)="scrollToBottom()"
       >
         <div class="scroll-icon">
@@ -60,7 +81,7 @@
           {{ newNotificationsCount }}
         </div>
       </div>
-      
+
       <div
         *ngIf="notificationService.notifications.length > 0; else noMessages"
         class="chat-messages"
@@ -75,7 +96,7 @@
           [class.clickable]="notification.userSubmissionId"
           [class.loading]="isNotificationLoading(notification)"
         >
-          <!-- Add loading spinner overlay for the entire message bubble -->
+          <!-- Loading overlay -->
           <div
             *ngIf="isNotificationLoading(notification)"
             class="spinner-container full-message"
@@ -119,8 +140,8 @@
             </button>
           </div>
         </div>
-        
-        <!-- After notifications list, inside .chat-messages -->
+
+        <!-- user-sent messages -->
         <div class="message-bubble user" *ngFor="let msg of sentMessages">
           <div class="message-content">
             <p class="message-text">{{ msg.message }}</p>
@@ -130,7 +151,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Empty State -->
       <ng-template #noMessages>
         <div class="no-messages">
@@ -156,11 +177,11 @@
         </div>
       </ng-template>
     </div>
-    
-    <!-- Fixed composer with proper textarea handling and Enter key support -->
+
+    <!-- Composer -->
     <div class="composer">
       <div class="input-container">
-        <div 
+        <div
           class="composer-input"
           contenteditable="true"
           #messageInput
@@ -170,19 +191,34 @@
           [class.has-text]="outgoingText"
         ></div>
       </div>
-      
+
       <button
         class="composer-send-btn"
         (click)="sendMessage()"
         [disabled]="!outgoingText.trim() || isSending"
       >
         <div *ngIf="isSending" class="spinner"></div>
-        <svg *ngIf="!isSending" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" fill="none"/>
-          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+        <svg
+          *ngIf="!isSending"
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          aria-hidden="true"
+        >
+          <path
+            d="M22 2L11 13"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+          />
+          <path
+            d="M22 2L15 22L11 13L2 9L22 2Z"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+          />
         </svg>
       </button>
     </div>
-    
   </div>
 </div>

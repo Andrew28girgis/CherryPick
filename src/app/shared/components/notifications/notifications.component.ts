@@ -38,10 +38,13 @@ export class NotificationsComponent
   messageText = '';
   CampaignId: any;
   loaded: boolean = false;
-  @Output() sidebarStateChange = new EventEmitter<{
-    isOpen: boolean;
-    isFullyOpen: boolean;
-  }>();
+@Output() sidebarStateChange = new EventEmitter<{
+  isOpen: boolean;
+  isFullyOpen: boolean;
+  type?: string;
+  overlayActive?: boolean;
+}>();
+
   public isOpen = true;
   isNotificationsOpen = false;
 
@@ -52,6 +55,7 @@ export class NotificationsComponent
   outgoingText = ""
   isSending = false
   sentMessages: any[] = []
+  isOverlayMode = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -464,6 +468,40 @@ export class NotificationsComponent
   }
   
  
+
+
+ toggleOverlayMode(): void {
+  if (!this.isOpen) return;
+  this.isOverlayMode = !this.isOverlayMode;
+
+  this.sidebarStateChange.emit({
+    isOpen: this.isOpen,
+    isFullyOpen: this.isOpen,
+    type: 'overlay',
+    overlayActive: this.isOverlayMode
+  });
+ }
+ closeAll(): void {
+  if (this.electronSideBar) {
+    this.closeSide();
+  } else {
+    this.toggleSidebar();
+  }
+
+  // also close overlay if open
+  if (this.isOverlayMode) {
+    this.isOverlayMode = false;
+ 
+    this.sidebarStateChange.emit({
+      isOpen: this.isOpen,
+      isFullyOpen: this.isOpen,
+      type: 'overlay',
+      overlayActive: false
+    });
+  }
+}
+
+
 
  
 }

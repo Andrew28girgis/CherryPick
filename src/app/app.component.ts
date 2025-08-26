@@ -25,6 +25,9 @@ export class AppComponent implements OnInit {
   isCopilotOpen = false;
   isCopilotFullyOpen = false;
   isEmilyChatBot: boolean = false; // Initialize with a default value
+    // class property:
+overlayActive = false;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -95,8 +98,17 @@ export class AppComponent implements OnInit {
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
   }
-  onCopilotStateChange(state: { isOpen: boolean; isFullyOpen: boolean }) {
-    this.isCopilotOpen = state.isOpen;
-    this.isCopilotFullyOpen = state.isFullyOpen;
+  onCopilotStateChange(evt: any) {
+    if (evt?.type === 'overlay') {
+      this.overlayActive = !!evt.overlayActive;
+      return;
+    }
+  
+    this.isCopilotOpen = evt.isOpen;
+    this.isCopilotFullyOpen = evt.isFullyOpen;
   }
+  
+
+ 
+
 }
