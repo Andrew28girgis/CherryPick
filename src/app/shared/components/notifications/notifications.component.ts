@@ -19,6 +19,8 @@ import { FormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-notifications',
   standalone: true,
@@ -38,12 +40,12 @@ export class NotificationsComponent
   messageText = '';
   CampaignId: any;
   loaded: boolean = false;
-@Output() sidebarStateChange = new EventEmitter<{
-  isOpen: boolean;
-  isFullyOpen: boolean;
-  type?: string;
-  overlayActive?: boolean;
-}>();
+  @Output() sidebarStateChange = new EventEmitter<{
+    isOpen: boolean;
+    isFullyOpen: boolean;
+    type?: string;
+    overlayActive?: boolean;
+  }>();
 
   public isOpen = true;
   isNotificationsOpen = false;
@@ -51,11 +53,12 @@ export class NotificationsComponent
   electronSideBar = false;
   displayViewButton = true;
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
-  @ViewChild("messageInput") messageInput!: ElementRef
-  outgoingText = ""
-  isSending = false
-  sentMessages: any[] = []
+  @ViewChild('messageInput') messageInput!: ElementRef;
+  outgoingText = '';
+  isSending = false;
+  sentMessages: any[] = [];
   isOverlayMode = false;
+  overlayHtml: SafeHtml = '';
 
   constructor(
     private elementRef: ElementRef,
@@ -63,7 +66,8 @@ export class NotificationsComponent
     private placesService: PlacesService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private viewManagerService: ViewManagerService
+    private viewManagerService: ViewManagerService,
+    private sanitizer: DomSanitizer
   ) {}
 
   showScrollButton = false;
@@ -72,6 +76,103 @@ export class NotificationsComponent
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
 
   ngOnInit(): void {
+    const testHtml = `<style>
+  .shopping-centers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    padding: 8px;
+  }
+  .shopping-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .shopping-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  }
+  .shopping-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
+  .shopping-card .card-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .shopping-card h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  .shopping-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+  .shopping-card .tags {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .shopping-card .tag {
+    background: #f3f3f3;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 12px;
+    color: #444;
+  }
+</style>
+
+<div class="shopping-centers">
+  <div class="shopping-card">
+    <img src="https://picsum.photos/400/200?1" alt="Mall Image">
+    <div class="card-body">
+      <h4>Sunrise Plaza</h4>
+      <p>123 Main Street, Springfield</p>
+      <div class="tags">
+        <span class="tag">Retail</span>
+        <span class="tag">Food Court</span>
+        <span class="tag">Cinema</span>
+      </div>
+    </div>
+  </div>
+  <div class="shopping-card">
+    <img src="https://picsum.photos/400/200?2" alt="Mall Image">
+    <div class="card-body">
+      <h4>Riverside Mall</h4>
+      <p>45 River Road, Riverside</p>
+      <div class="tags">
+        <span class="tag">Luxury</span>
+        <span class="tag">Parking</span>
+      </div>
+    </div>
+  </div>
+  <div class="shopping-card">
+    <img src="https://picsum.photos/400/200?3" alt="Mall Image">
+    <div class="card-body">
+      <h4>Downtown Center</h4>
+      <p>78 City Ave, Downtown</p>
+      <div class="tags">
+        <span class="tag">Electronics</span>
+        <span class="tag">Fashion</span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+    this.setOverlayHtmlFromApi(testHtml);
+  
     this.activatedRoute.queryParamMap.subscribe((parms) => {
       const view = parms.get('View');
 
@@ -409,52 +510,50 @@ export class NotificationsComponent
     this.chatOpenSubject.next(isOpen);
   }
 
-
-  
   onInputChange(event: any): void {
-    this.outgoingText = event.target.innerText || ""
+    this.outgoingText = event.target.innerText || '';
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault()
-      this.sendMessage()
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
     }
   }
 
   sendMessage() {
     const text = this.outgoingText?.trim();
     if (!text || this.isSending) return;
-  
+
     this.isSending = true;
-  
+
     // Clear input immediately for better UX
-    this.outgoingText = "";
+    this.outgoingText = '';
     if (this.messageInput) {
-      this.messageInput.nativeElement.innerText = "";
+      this.messageInput.nativeElement.innerText = '';
     }
-  
+
     // Add message to local array
     this.sentMessages.push({
       message: text,
       createdDate: new Date().toISOString(),
     });
-  
+
     this.scrollToBottom();
-  
+
     const body: any = {
-      Name: "sendmessage",
+      Name: 'sendmessage',
       Params: {
         message: text,
       },
     };
-  
+
     this.placesService.GenericAPI(body).subscribe({
       next: (response) => {
         this.isSending = false;
       },
       error: (err) => {
-        console.error("sendmessage failed", err);
+        console.error('sendmessage failed', err);
         this.isSending = false;
         // Restore text on error
         this.outgoingText = text;
@@ -466,42 +565,38 @@ export class NotificationsComponent
       },
     });
   }
-  
- 
 
+  toggleOverlayMode(): void {
+    if (!this.isOpen) return;
+    this.isOverlayMode = !this.isOverlayMode;
 
- toggleOverlayMode(): void {
-  if (!this.isOpen) return;
-  this.isOverlayMode = !this.isOverlayMode;
-
-  this.sidebarStateChange.emit({
-    isOpen: this.isOpen,
-    isFullyOpen: this.isOpen,
-    type: 'overlay',
-    overlayActive: this.isOverlayMode
-  });
- }
- closeAll(): void {
-  if (this.electronSideBar) {
-    this.closeSide();
-  } else {
-    this.toggleSidebar();
-  }
-
-  // also close overlay if open
-  if (this.isOverlayMode) {
-    this.isOverlayMode = false;
- 
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
       type: 'overlay',
-      overlayActive: false
+      overlayActive: this.isOverlayMode,
     });
   }
-}
+  closeAll(): void {
+    if (this.electronSideBar) {
+      this.closeSide();
+    } else {
+      this.toggleSidebar();
+    }
 
+    // also close overlay if open
+    if (this.isOverlayMode) {
+      this.isOverlayMode = false;
 
-
- 
+      this.sidebarStateChange.emit({
+        isOpen: this.isOpen,
+        isFullyOpen: this.isOpen,
+        type: 'overlay',
+        overlayActive: false,
+      });
+    }
+  }
+  setOverlayHtmlFromApi(htmlFromApi: string) {
+    this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
+  }
 }

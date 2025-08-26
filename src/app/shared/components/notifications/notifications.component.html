@@ -10,215 +10,450 @@
     [ngClass]="{ responsive: electronSideBar }"
     [class.visible]="isOpen"
   >
-    <div class="sidebar-header">
-      <div class="header-content">
-        <img
-          width="24"
-          height="24"
-          src="../../../../assets/Images/bot.png"
-          alt="Emily"
-        />
-        <h3 class="sidebar-title">Emily</h3>
-      </div>
+    <!-- ============================== -->
+    <!-- NORMAL MODE (no overlay grid)  -->
+    <!-- ============================== -->
+    <ng-container *ngIf="!isOverlayMode; else overlayGrid">
+      <div class="sidebar-header">
+        <div class="header-content">
+          <img
+            width="24"
+            height="24"
+            src="../../../../assets/Images/bot.png"
+            alt="Emily"
+          />
+          <h3 class="sidebar-title">Emily</h3>
+        </div>
 
-      <!-- NEW: overlay toggle button (maximize/restore) -->
-      <button
-        class="overlay-toggle-button"
-        (click)="toggleOverlayMode()"
-        *ngIf="isOpen"
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
+        <!-- overlay toggle button (maximize/restore) -->
+        <button
+          class="overlay-toggle-button"
+          (click)="toggleOverlayMode()"
+          *ngIf="isOpen"
+          aria-label="Open overlay"
         >
-          <!-- use two squares to suggest “maximize” -->
-          <rect x="3" y="3" width="7" height="7"></rect>
-          <rect x="14" y="14" width="7" height="7"></rect>
-        </svg>
-      </button>
-      <button class="close-button" (click)="closeAll()">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <div
-      class="chat-messages-container"
-      #messagesContainer
-      (scroll)="onScroll($event)"
-    >
-      <div
-        class="scroll-down-button"
-        *ngIf="showScrollButton && isOpen"
-        (click)="scrollToBottom()"
-      >
-        <div class="scroll-icon">
           <svg
-            width="20"
-            height="20"
+            width="16"
+            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
           >
-            <polyline points="6 9 12 15 18 9"></polyline>
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
           </svg>
-        </div>
-        <div class="new-message-count" *ngIf="newNotificationsCount > 0">
-          {{ newNotificationsCount }}
-        </div>
+        </button>
+        <button class="close-button" (click)="closeAll()" aria-label="Close">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <div
-        *ngIf="notificationService.notifications.length > 0; else noMessages"
-        class="chat-messages"
+        class="chat-messages-container"
+        #messagesContainer
+        (scroll)="onScroll($event)"
       >
         <div
-          class="message-bubble"
-          *ngFor="
-            let notification of notificationService.notifications;
-            let last = last
-          "
-          (click)="handleNotificationClick(notification)"
-          [class.clickable]="notification.userSubmissionId"
-          [class.loading]="isNotificationLoading(notification)"
+          class="scroll-down-button"
+          *ngIf="showScrollButton && isOpen"
+          (click)="scrollToBottom()"
         >
-          <!-- Loading overlay -->
+          <div class="scroll-icon">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="new-message-count" *ngIf="newNotificationsCount > 0">
+            {{ newNotificationsCount }}
+          </div>
+        </div>
+
+        <div
+          *ngIf="notificationService.notifications.length > 0; else noMessages"
+          class="chat-messages"
+        >
           <div
-            *ngIf="isNotificationLoading(notification)"
-            class="spinner-container full-message"
+            class="message-bubble"
+            *ngFor="
+              let notification of notificationService.notifications;
+              let last = last
+            "
+            (click)="handleNotificationClick(notification)"
+            [class.clickable]="notification.userSubmissionId"
+            [class.loading]="isNotificationLoading(notification)"
           >
-            <div class="spinner-overlay"></div>
-            <div class="spinner-central"></div>
+            <!-- Loading overlay -->
+            <div
+              *ngIf="isNotificationLoading(notification)"
+              class="spinner-container full-message"
+            >
+              <div class="spinner-overlay"></div>
+              <div class="spinner-central"></div>
+            </div>
+
+            <div class="message-content">
+              <p class="message-text">
+                {{ notification.message }}
+              </p>
+              <time class="message-time" [dateTime]="notification.createdDate">
+                {{ notification.createdDate | date : "shortTime" }}
+              </time>
+            </div>
+            <div
+              *ngIf="notification.json && !isNotificationLoaded(notification)"
+              class="choose"
+            >
+              <button
+                class="emily-btn"
+                (click)="choose(1, notification)"
+                [disabled]="isNotificationLoading(notification)"
+              >
+                Yes
+              </button>
+              <button
+                class="emily-btn"
+                (click)="choose(0, notification)"
+                [disabled]="isNotificationLoading(notification)"
+              >
+                No
+              </button>
+              <button
+                *ngIf="displayViewButton"
+                class="emily-btn"
+                [routerLink]="['/ai-ui-HTML', notification.id]"
+              >
+                View
+              </button>
+            </div>
           </div>
 
-          <div class="message-content">
-            <p class="message-text">
-              {{ notification.message }}
+          <!-- user-sent messages -->
+          <div class="message-bubble user" *ngFor="let msg of sentMessages">
+            <div class="message-content">
+              <p class="message-text">{{ msg.message }}</p>
+              <time class="message-time" [dateTime]="msg.createdDate">
+                {{ msg.createdDate | date : "shortTime" }}
+              </time>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <ng-template #noMessages>
+          <div class="no-messages">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--Colors-Primary-500)"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1-2-2h14a2 2 0 0 1-2 2z"
+              ></path>
+            </svg>
+            <p>No messages yet.</p>
+            <p class="no-messages-subtext">
+              Start chatting with Emily for updates and assistance.
             </p>
-            <time class="message-time" [dateTime]="notification.createdDate">
-              {{ notification.createdDate | date : "shortTime" }}
-            </time>
           </div>
-          <div
-            *ngIf="notification.json && !isNotificationLoaded(notification)"
-            class="choose"
-          >
-            <button
-              class="emily-btn"
-              (click)="choose(1, notification)"
-              [disabled]="isNotificationLoading(notification)"
-            >
-              Yes
-            </button>
-            <button
-              class="emily-btn"
-              (click)="choose(0, notification)"
-              [disabled]="isNotificationLoading(notification)"
-            >
-              No
-            </button>
-            <button
-              *ngIf="displayViewButton"
-              class="emily-btn"
-              [routerLink]="['/ai-ui-HTML', notification.id]"
-            >
-              View
-            </button>
-          </div>
-        </div>
-
-        <!-- user-sent messages -->
-        <div class="message-bubble user" *ngFor="let msg of sentMessages">
-          <div class="message-content">
-            <p class="message-text">{{ msg.message }}</p>
-            <time class="message-time" [dateTime]="msg.createdDate">
-              {{ msg.createdDate | date : "shortTime" }}
-            </time>
-          </div>
-        </div>
+        </ng-template>
       </div>
 
-      <!-- Empty State -->
-      <ng-template #noMessages>
-        <div class="no-messages">
+      <!-- Composer -->
+      <div class="composer">
+        <div class="input-container">
+          <div
+            class="composer-input"
+            contenteditable="true"
+            #messageInput
+            (input)="onInputChange($event)"
+            (keydown)="onKeyDown($event)"
+            [attr.data-placeholder]="outgoingText ? null : 'Type a message…'"
+            [class.has-text]="outgoingText"
+          ></div>
+        </div>
+
+        <button
+          class="composer-send-btn"
+          (click)="sendMessage()"
+          [disabled]="!outgoingText.trim() || isSending"
+        >
+          <div *ngIf="isSending" class="spinner"></div>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
+            *ngIf="!isSending"
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--Colors-Primary-500)"
-            stroke-width="1"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            width="18"
+            height="18"
+            aria-hidden="true"
           >
             <path
-              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1-2-2h14a2 2 0 0 1-2 2z"
-            ></path>
+              d="M22 2L11 13"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
+            <path
+              d="M22 2L15 22L11 13L2 9L22 2Z"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
           </svg>
-          <p>No messages yet.</p>
-          <p class="no-messages-subtext">
-            Start chatting with Emily for updates and assistance.
-          </p>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- Composer -->
-    <div class="composer">
-      <div class="input-container">
-        <div
-          class="composer-input"
-          contenteditable="true"
-          #messageInput
-          (input)="onInputChange($event)"
-          (keydown)="onKeyDown($event)"
-          [attr.data-placeholder]="outgoingText ? null : 'Type a message…'"
-          [class.has-text]="outgoingText"
-        ></div>
+        </button>
       </div>
+    </ng-container>
 
-      <button
-        class="composer-send-btn"
-        (click)="sendMessage()"
-        [disabled]="!outgoingText.trim() || isSending"
-      >
-        <div *ngIf="isSending" class="spinner"></div>
-        <svg
-          *ngIf="!isSending"
-          viewBox="0 0 24 24"
-          width="18"
-          height="18"
-          aria-hidden="true"
-        >
-          <path
-            d="M22 2L11 13"
-            stroke="currentColor"
-            stroke-width="2"
-            fill="none"
-          />
-          <path
-            d="M22 2L15 22L11 13L2 9L22 2Z"
-            stroke="currentColor"
-            stroke-width="2"
-            fill="none"
-          />
-        </svg>
-      </button>
-    </div>
+    <!-- ============================== -->
+    <!-- OVERLAY MODE (2-column grid)   -->
+    <!-- ============================== -->
+    <ng-template #overlayGrid>
+      <div class="overlay-grid">
+        <!-- LEFT: compact chat -->
+        <section class="overlay-left">
+          <div class="sidebar-header">
+            <div class="header-content">
+              <img
+                width="20"
+                height="20"
+                src="../../../../assets/Images/bot.png"
+                alt="Emily"
+              />
+              <h3 class="sidebar-title">Emily</h3>
+            </div>
+
+            <div style="display: flex; gap: 6px; align-items: center">
+              <!-- overlay toggle (restore back to normal) -->
+              <button
+                class="overlay-toggle-button"
+                (click)="toggleOverlayMode()"
+                aria-label="Close overlay"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <!-- icon still two squares -->
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+              </button>
+              <button
+                class="close-button"
+                (click)="closeAll()"
+                aria-label="Close"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="chat-messages-container"
+            #messagesContainer
+            (scroll)="onScroll($event)"
+          >
+            <div
+              class="scroll-down-button"
+              *ngIf="showScrollButton && isOpen"
+              (click)="scrollToBottom()"
+            >
+              <div class="scroll-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div class="new-message-count" *ngIf="newNotificationsCount > 0">
+                {{ newNotificationsCount }}
+              </div>
+            </div>
+
+            <div
+              *ngIf="
+                notificationService.notifications.length > 0;
+                else noMessagesOverlay
+              "
+              class="chat-messages"
+            >
+              <div
+                class="message-bubble"
+                *ngFor="
+                  let notification of notificationService.notifications;
+                  let last = last
+                "
+                (click)="handleNotificationClick(notification)"
+                [class.clickable]="notification.userSubmissionId"
+                [class.loading]="isNotificationLoading(notification)"
+              >
+                <div
+                  *ngIf="isNotificationLoading(notification)"
+                  class="spinner-container full-message"
+                >
+                  <div class="spinner-overlay"></div>
+                  <div class="spinner-central"></div>
+                </div>
+
+                <div class="message-content">
+                  <p class="message-text">
+                    {{ notification.message }}
+                  </p>
+                  <time
+                    class="message-time"
+                    [dateTime]="notification.createdDate"
+                  >
+                    {{ notification.createdDate | date : "shortTime" }}
+                  </time>
+                </div>
+                <div
+                  *ngIf="
+                    notification.json && !isNotificationLoaded(notification)
+                  "
+                  class="choose"
+                >
+                  <button
+                    class="emily-btn"
+                    (click)="choose(1, notification)"
+                    [disabled]="isNotificationLoading(notification)"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    class="emily-btn"
+                    (click)="choose(0, notification)"
+                    [disabled]="isNotificationLoading(notification)"
+                  >
+                    No
+                  </button>
+                  <button
+                    *ngIf="displayViewButton"
+                    class="emily-btn"
+                    [routerLink]="['/ai-ui-HTML', notification.id]"
+                  >
+                    View
+                  </button>
+                </div>
+              </div>
+
+              <!-- user-sent messages -->
+              <div class="message-bubble user" *ngFor="let msg of sentMessages">
+                <div class="message-content">
+                  <p class="message-text">{{ msg.message }}</p>
+                  <time class="message-time" [dateTime]="msg.createdDate">
+                    {{ msg.createdDate | date : "shortTime" }}
+                  </time>
+                </div>
+              </div>
+            </div>
+
+            <ng-template #noMessagesOverlay>
+              <div class="no-messages">
+                <p>No messages yet.</p>
+                <p class="no-messages-subtext">
+                  Start chatting with Emily for updates and assistance.
+                </p>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Composer -->
+          <div class="composer">
+            <div class="input-container">
+              <div
+                class="composer-input"
+                contenteditable="true"
+                #messageInput
+                (input)="onInputChange($event)"
+                (keydown)="onKeyDown($event)"
+                [attr.data-placeholder]="
+                  outgoingText ? null : 'Type a message…'
+                "
+                [class.has-text]="outgoingText"
+              ></div>
+            </div>
+
+            <button
+              class="composer-send-btn"
+              (click)="sendMessage()"
+              [disabled]="!outgoingText.trim() || isSending"
+            >
+              <div *ngIf="isSending" class="spinner"></div>
+              <svg
+                *ngIf="!isSending"
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                aria-hidden="true"
+              >
+                <path
+                  d="M22 2L11 13"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+                <path
+                  d="M22 2L15 22L11 13L2 9L22 2Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- RIGHT: Content column (API HTML) -->
+        <section class="overlay-right">
+          <header class="overlay-content-header">
+            <h3 class="overlay-title">Details</h3>
+            <!-- (Optional) Header actions -->
+          </header>
+          <div class="overlay-content" [innerHTML]="overlayHtml"></div>
+        </section>
+      </div>
+    </ng-template>
+    <!-- /OVERLAY MODE -->
   </div>
 </div>
