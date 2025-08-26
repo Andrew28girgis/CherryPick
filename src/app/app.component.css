@@ -132,25 +132,25 @@
 
 /* Add these responsive adjustments */
 @media (max-width: 1200px) {
-  .app-shell.with-copilot.copilot-expanded {
+  .app-shell.with-copilot.copilot-expanded.authenticated {
     margin-right: min(320px, 35vw) !important;
   }
 }
 
 @media (max-width: 992px) {
-  .app-shell.with-copilot.copilot-expanded {
+  .app-shell.with-copilot.copilot-expanded.authenticated {
     margin-right: min(280px, 30vw);
   }
 }
 
 @media (max-width: 768px) {
-  .app-shell.with-copilot.copilot-expanded {
+  .app-shell.with-copilot.copilot-expanded.authenticated {
     margin-right: min(240px, 35vw);
   }
 }
 
 @media (max-width: 576px) {
-  .app-shell.with-copilot.copilot-expanded {
+  .app-shell.with-copilot.copilot-expanded.authenticated {
     margin-right: min(200px, 40vw);
   }
 }
