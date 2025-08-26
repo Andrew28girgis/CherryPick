@@ -8,7 +8,6 @@ import {
   EventEmitter,
   ViewChild,
   AfterViewInit,
-  AfterViewChecked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -48,7 +47,7 @@ export class NotificationsComponent
   notifications: Notification[] = [];
   messageText = '';
   CampaignId: any;
-  loaded: boolean = false;
+  loaded = false;
   @Output() sidebarStateChange = new EventEmitter<{
     isOpen: boolean;
     isFullyOpen: boolean;
@@ -81,8 +80,7 @@ export class NotificationsComponent
     private viewManagerService: ViewManagerService,
     private sanitizer: DomSanitizer,
     private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone,
-  
+    private ngZone: NgZone
   ) {}
 
   showScrollButton = false;
@@ -521,6 +519,7 @@ export class NotificationsComponent
       }
     }
   }
+
   // In NotificationService, add this method:
   setChatOpen(isOpen: boolean): void {
     // Use a subject to communicate between components
@@ -556,8 +555,7 @@ export class NotificationsComponent
       createdDate: new Date().toISOString(),
     });
 
-     this.scrollAfterRender();
-
+    this.scrollAfterRender();
 
     const body: any = {
       Chat: text,
@@ -593,6 +591,7 @@ export class NotificationsComponent
       overlayActive: this.isOverlayMode,
     });
   }
+
   closeAll(): void {
     if (this.electronSideBar) {
       this.closeSide();
@@ -612,6 +611,7 @@ export class NotificationsComponent
       });
     }
   }
+
   setOverlayHtmlFromApi(htmlFromApi: string) {
     this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
   }
@@ -738,7 +738,22 @@ export class NotificationsComponent
   private scrollAfterRender(): void {
     // Flush template changes
     this.cdRef.detectChanges();
-  
+
     // Let the browser lay out the new DOM, then scroll
     requestAnimationFrame(() => this.scrollToBottom());
-  }}
+  }
+
+  onOverlayBackdropClick(event: MouseEvent): void {
+    // Only close if clicking directly on the backdrop (not on child elements)
+    if (event.target === event.currentTarget && this.isOverlayMode) {
+      this.isOverlayMode = false;
+
+      this.sidebarStateChange.emit({
+        isOpen: this.isOpen,
+        isFullyOpen: this.isOpen,
+        type: 'overlay',
+        overlayActive: false,
+      });
+    }
+  }
+}
