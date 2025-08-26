@@ -10,4 +10,5 @@ export interface Notification {
   campaignId: number;
   loaded: boolean;
   html: any;
+  role:any;
 }

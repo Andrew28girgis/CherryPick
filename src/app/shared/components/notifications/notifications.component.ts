@@ -698,7 +698,8 @@ export class NotificationsComponent
     const sys: ChatItem[] = (this.notificationService?.notifications ?? []).map(
       (n) => ({
         key: `n-${n.id}-${seqCounter++}`,
-        from: 'system',
+        // <CHANGE> Check if role is 1 or true to display as user message
+        from: n.role === true || n.role === 1 ? 'user' : 'system',
         message: n.message,
         created: new Date(n.createdDate),
         notification: n,
@@ -721,7 +722,6 @@ export class NotificationsComponent
       return a.key.localeCompare(b.key);
     });
   }
-
   // optional but recommended: stable trackBy
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 
