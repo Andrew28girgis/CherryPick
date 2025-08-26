@@ -1,4 +1,3 @@
-<!-- Updated to include copilot sidebar and handle content pushing -->
 <div
   class="app-shell"
   [ngClass]="{
@@ -35,7 +34,7 @@
     </ng-template>
   </div>
 
-  <app-notifications  
+  <app-notifications
     *ngIf="
       isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
     "
