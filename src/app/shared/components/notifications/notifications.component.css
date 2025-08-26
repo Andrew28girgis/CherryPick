@@ -474,3 +474,113 @@
 .close-button svg {
   pointer-events: none; /* let clicks pass through to button */
 }
+
+
+
+.message-bubble.user {
+  align-self: flex-end !important;
+  background: var(--Colors-Primary-500, #b51f63) !important;
+  color: white !important;
+  border-bottom-right-radius: 4px !important;
+  border-bottom-left-radius: 18px !important;
+  margin-left: 20% !important;
+}
+
+.message-bubble.user .message-text {
+  color: white !important;
+}
+
+.message-bubble.user .message-time {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+ .composer {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+  padding: 12px 16px !important;
+  border-top: 1px solid #d1d9e0 !important;
+  background: #f6f8fa !important;
+}
+
+.input-container {
+  flex: 1;
+  position: relative;
+}
+
+.composer-input {
+  width: 100% !important;
+  min-height: 38px !important;
+  max-height: 120px !important;
+  overflow-y: auto !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 18px !important;
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+  background: #fff !important;
+  outline: none !important;
+  transition: border-color .2s, box-shadow .2s !important;
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+  resize: none !important;
+}
+
+.composer-input:focus {
+  border-color: var(--Colors-Primary-500, #b51f63) !important;
+  box-shadow: 0 0 0 0.2rem rgba(181, 31, 99, 0.15) !important;
+}
+
+.composer-input:empty:before {
+  content: attr(data-placeholder);
+  color: #6c757d;
+  pointer-events: none;
+}
+
+.composer-input.has-text:before {
+  display: none;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.composer-send-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: var(--Colors-Primary-500, #b51f63);
+  color: #fff;
+  transition: transform .15s ease, background .2s ease, opacity .2s ease;
+}
+
+.composer-send-btn:hover:not(:disabled) {
+  background: var(--Colors-Primary-600, #9a1b57);
+  transform: translateY(-1px);
+}
+
+.composer-send-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.composer-send-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}

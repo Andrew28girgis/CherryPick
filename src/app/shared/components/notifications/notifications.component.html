@@ -38,11 +38,10 @@
       </button>
     </div>
 
-  
-     <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
+    <div class="chat-messages-container" #messagesContainer (scroll)="onScroll($event)">
       <div 
         class="scroll-down-button" 
-        *ngIf="showScrollButton &&isOpen" 
+        *ngIf="showScrollButton && isOpen" 
         (click)="scrollToBottom()"
       >
         <div class="scroll-icon">
@@ -61,6 +60,7 @@
           {{ newNotificationsCount }}
         </div>
       </div>
+      
       <div
         *ngIf="notificationService.notifications.length > 0; else noMessages"
         class="chat-messages"
@@ -119,8 +119,18 @@
             </button>
           </div>
         </div>
+        
+        <!-- After notifications list, inside .chat-messages -->
+        <div class="message-bubble user" *ngFor="let msg of sentMessages">
+          <div class="message-content">
+            <p class="message-text">{{ msg.message }}</p>
+            <time class="message-time" [dateTime]="msg.createdDate">
+              {{ msg.createdDate | date : "shortTime" }}
+            </time>
+          </div>
+        </div>
       </div>
-</div>
+      
       <!-- Empty State -->
       <ng-template #noMessages>
         <div class="no-messages">
@@ -146,5 +156,33 @@
         </div>
       </ng-template>
     </div>
+    
+    <!-- Fixed composer with proper textarea handling and Enter key support -->
+    <div class="composer">
+      <div class="input-container">
+        <div 
+          class="composer-input"
+          contenteditable="true"
+          #messageInput
+          (input)="onInputChange($event)"
+          (keydown)="onKeyDown($event)"
+          [attr.data-placeholder]="outgoingText ? null : 'Type a message…'"
+          [class.has-text]="outgoingText"
+        ></div>
+      </div>
+      
+      <button
+        class="composer-send-btn"
+        (click)="sendMessage()"
+        [disabled]="!outgoingText.trim() || isSending"
+      >
+        <div *ngIf="isSending" class="spinner"></div>
+        <svg *ngIf="!isSending" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+      </button>
+    </div>
+    
   </div>
- 
+</div>

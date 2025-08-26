@@ -454,7 +454,7 @@
     >
       <div class="btn-content">
         <i class="fa-solid fa-building cre-icon btn-icon"></i>
-        <span class="btn-text">By CRE</span>
+        <span class="btn-text">By CBRE</span>
       </div>
       <div class="btn-hover-effect"></div>
     </button>
@@ -628,3 +628,41 @@
 <button class="add-btn" (click)="openUpload()">
   <i class="fa-solid fa-plus"></i>
 </button>
+
+
+<ng-template #websiteModalTpl let-modal>
+  <div class="modal-header fancy-modal-header">
+    <h5 class="modal-title fancy-title">Select Website</h5>
+    <button
+      type="button"
+      class="btn-close fancy-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="modal-content website-cards-grid">
+     
+           <div 
+            *ngFor="let website of websiteCards; let i = index"
+            class="website-card"
+            (click)="onWebsiteCardClick(website)"
+          >
+            <div class="website-logo">
+              <img 
+                [src]="website.logo "
+                [alt]="website.name || 'Website'"
+                (error)="onImageError($event)"
+                class="logo-image"
+              />
+            </div>
+            <div class="website-info">
+              <h6 class="website-name">{{ website.name || 'Website ' + (i + 1) }}</h6>
+              <!-- <p class="website-url">{{ website.url || '' }}</p> -->
+            </div>
+          </div>
+      </div>
+    </div>
+    </ng-template>
+ 

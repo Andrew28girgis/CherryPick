@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   ViewEncapsulation,
+  TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
@@ -19,7 +20,8 @@ import { Tenant } from 'src/app/shared/models/tenants';
 import { NgxFileDropEntry } from 'ngx-file-drop';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-
+import { CreSite } from 'src/app/shared/models/urls';
+ 
 @Component({
   selector: 'app-shopping-center-table',
   templateUrl: './shopping-center-table.component.html',
@@ -102,6 +104,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   imageErrorStates: { [key: number]: boolean } = {}; // Track error state for each image
   @ViewChild('tenantDropdown') tenantDropdownRef!: NgbDropdown;
   @ViewChild('uploadTypes') uploadTypes!: any;
+  @ViewChild('websiteModalTpl') websitemodal!: any;
+
   showFileDropArea = false;
   isUploading = false;
   selectedCampaignId: number | null = null;
@@ -109,7 +113,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
   // Add these properties
   isFilterMenuOpen = false;
-
+  urls:any= [];
+  showWebsiteCardsModal = false;
+  websiteCards: CreSite[] = [];
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
@@ -167,6 +173,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
       }
     });
+    this.GetCREUrls();
 
     this.shoppingCenterService.setCurrentView(this.currentView);
     this.filterDropdownOptions();
@@ -720,12 +727,24 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   electronMessageWithcampaignId() {
+    
+    this.openWebsiteModal(this.websitemodal);
+    this.websiteCards = this.urls || [];
+
+  }
+  onWebsiteCardClick(website: any) {
+    this.showWebsiteCardsModal = false;
+    const url = website.url || website.URL || 'https://www.google.com';
+    window.location.href = url;
     (window as any).electronMessage.startCREAutomation(
       this.CampaignId,
       localStorage.getItem('token')
     );
-    const url = 'https://www.google.com';
-    window.location.href = `${url}`;
+  }
+
+  // <CHANGE> Add method to close website cards modal
+  closeWebsiteCardsModal() {
+    this.showWebsiteCardsModal = false;
   }
 
   // Add this method
@@ -736,4 +755,31 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.isSortMenuOpen = false;
     this.view = false;
   }
+
+
+  
+   GetCREUrls (): void {
+    const body: any = {
+      Name: 'GetCREUrls',
+      Params: {
+        CampaignId: this.CampaignId,
+      },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      this.urls = response.json;
+
+     });
+  }
+  openWebsiteModal(tpl: TemplateRef<any>) {
+    this.modalService.open(tpl, {
+      size: 'sm',
+      centered: true,
+      scrollable: true,
+      backdrop: true,               // click outside to close? set 'static' if you don't want that
+      windowClass: 'website-modal-window',
+      backdropClass: 'website-modal-backdrop'
+    });
+  }
 }
+
