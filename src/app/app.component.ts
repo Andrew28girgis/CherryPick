@@ -15,6 +15,7 @@ import { NotificationService } from './core/services/notification.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
+
 export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   isMobile = false;
@@ -25,8 +26,7 @@ export class AppComponent implements OnInit {
   isCopilotOpen = false;
   isCopilotFullyOpen = false;
   isEmilyChatBot: boolean = false; // Initialize with a default value
-    // class property:
-overlayActive = false;
+  overlayActive = false;
 
   constructor(
     private router: Router,
@@ -57,7 +57,7 @@ overlayActive = false;
           this.hideSidebar = data['hideSidebar'] === true;
         });
 
-         this.isEmilyChatBot = this.router.url.includes('chatbot');
+        this.isEmilyChatBot = this.router.url.includes('chatbot');
       });
 
     // Listen for route changes to handle transitions
@@ -75,7 +75,7 @@ overlayActive = false;
       });
 
     // Subscribe to notification service to know if Emily sidebar is open or closed
-    this.notificationService.chatOpen$.subscribe(isOpen => {
+    this.notificationService.chatOpen$.subscribe((isOpen) => {
       this.isCopilotFullyOpen = isOpen;
       // Only mark it as open for margin purposes if the sidebar is fully expanded
       this.isCopilotOpen = isOpen;
@@ -91,6 +91,7 @@ overlayActive = false;
   }
 
   @HostListener('window:resize', ['$event'])
+
   onResize() {
     this.checkScreenSize();
   }
@@ -104,9 +105,7 @@ overlayActive = false;
       this.overlayActive = !!evt.overlayActive;
       return;
     }
-  
     this.isCopilotOpen = evt.isOpen;
     this.isCopilotFullyOpen = evt.isFullyOpen;
-  } 
-
+  }
 }
