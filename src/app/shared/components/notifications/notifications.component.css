@@ -895,3 +895,23 @@
   background-color: var(--Colors-Primary-600);
   color: #fff;
 }
+
+ 
+
+
+.overlay-content::-webkit-scrollbar {
+  height: 10px;
+}
+
+.overlay-content::-webkit-scrollbar-track {
+ background: transparent;
+}
+
+.overlay-content::-webkit-scrollbar-thumb {
+ background: var(--Colors-Primary-500);
+ border-radius: 10px;
+}
+
+.overlay-content::-webkit-scrollbar-thumb:hover {
+ background: var(--Colors-Primary-600);
+}
