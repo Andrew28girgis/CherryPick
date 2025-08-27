@@ -772,6 +772,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
      });
   }
   openWebsiteModal(tpl: TemplateRef<any>) {
+    this.GetCREUrls();
     this.modalService.open(tpl, {
       size: 'sm',
       centered: true,

@@ -120,6 +120,7 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 0 0 4px 0;
+  white-space: break-spaces;
 }
 
 /* Time stamps */
@@ -132,6 +133,7 @@
 .message-content {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* Add message sender avatars */
@@ -800,19 +802,51 @@
   height: 6px;
   border-radius: 50%;
   display: inline-block;
-  background: var(--Colors-Primary-500); /* will inherit theme; adjust if needed */
+  background: var(
+    --Colors-Primary-500
+  ); /* will inherit theme; adjust if needed */
   animation: typing-bounce 1.2s infinite ease-in-out;
 }
 
-.message-bubble.typing .dot:nth-child(2) { animation-delay: 0.15s; }
-.message-bubble.typing .dot:nth-child(3) { animation-delay: 0.30s; }
-
-@keyframes typing-bounce {
-  0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
-  40% { transform: translateY(-4px); opacity: 1; }
+.message-bubble.typing .dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.message-bubble.typing .dot:nth-child(3) {
+  animation-delay: 0.3s;
 }
 
-/* optional: respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .message-bubble.typing .dot { animation: none; opacity: 0.6; }
+@keyframes typing-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.message-bubble.ai {
+  align-self: flex-start;
+  background: #eef2ff; /* soft indigo */
+  border: 1px solid #c7d2fe; /* subtle outline */
+  border-bottom-left-radius: 4px; /* keep “assistant-like” tail on left */
+  border-style: dashed; /* or dotted */
+  border-width: 2px;
+  border-radius: 1rem 1rem 1rem 0.25rem; /* different tail shape */
+}
+
+.message-bubble.ai .message-text {
+  color: #111827;
+}
+.message-bubble.ai .message-time {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* (Optional) show a different avatar marker for AI */
+.message-bubble.ai::before {
+  background-image: url("../../../../assets/Images/bot.png"); /* you already use this asset */
+  background-color: transparent;
 }

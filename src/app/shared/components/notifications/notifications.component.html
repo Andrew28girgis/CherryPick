@@ -122,13 +122,15 @@
         <!-- Single merged, time-ordered list -->
 <div *ngIf="chatTimeline.length > 0; else noMessages" class="chat-messages">
   <div
-    class="message-bubble"
-    *ngFor="let item of chatTimeline; trackBy: trackByChatItem"
-    [class.user]="item.from === 'user'"
-    [class.clickable]="item.notification?.userSubmissionId"
-    (click)="item.notification?.userSubmissionId && handleNotificationClick(item.notification!)"
-    [attr.id]="item.notification?.id ? 'msg-' + item.notification?.id : 'msg-' + item.key"
-  >
+  class="message-bubble"
+  *ngFor="let item of chatTimeline; trackBy: trackByChatItem"
+  [class.user]="item.from === 'user'"
+  [class.system]="item.from === 'system'"
+  [class.ai]="item.from === 'ai'"
+  [class.clickable]="item.notification?.userSubmissionId"
+  (click)="item.notification?.userSubmissionId && handleNotificationClick(item.notification!)"
+  [attr.id]="item.notification?.id ? 'msg-' + item.notification?.id : 'msg-' + item.key"
+>
     <!-- If you still need the loading overlay for system notifications: -->
     <div
       *ngIf="item.from === 'system' && isNotificationLoading(item.notification)"

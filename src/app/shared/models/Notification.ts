@@ -5,10 +5,10 @@ export interface Notification {
   isRead: number;
   createdDate: string;
   userSubmissionId: number;
-  notificationCategoryId: any;
-  json: any;
+   json: any;
   campaignId: number;
   loaded: boolean;
   html: any;
-  role:any;
+  notificationCategoryId:any;
+  contextExtendPrompt:any;
 }

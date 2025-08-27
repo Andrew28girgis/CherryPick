@@ -64,6 +64,19 @@
   animation: spin 2s linear infinite;
   margin-right: var(--Space-S-8);
 }
+.shopping-centers-spinner{
+  display: inline-block;
+   border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--Colors-Primary-500);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  width: 60px;
+  height: 60px;
+}
+.modal-body-spinner{
+  display: flex;
+  justify-content: center;
+}
 
 @keyframes spin {
   0% {

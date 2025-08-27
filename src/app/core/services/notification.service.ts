@@ -80,6 +80,12 @@ export class NotificationService {
     if (newNotifications.length > 0) {
       // Mark these new notifications as read since chat is open
       newNotifications.forEach((notification) => {
+        if(notification.isRead==0 && notification.contextExtendPrompt){
+          console.log('sendElectronMessageeeee',notification);
+          
+           const token = localStorage.getItem('token') || '';
+          (window as any).electronMessage.startChatAutmation(notification.contextExtendPrompt, token)
+        }
         this.markNotificationAsRead(notification);
       });
     }
@@ -140,8 +146,10 @@ export class NotificationService {
     const unreadNotifications = this.notifications.filter(n => n.isRead === 0);
     
     unreadNotifications.forEach(notification => {
+      if( !notification.contextExtendPrompt){
       this.markNotificationAsRead(notification);
-    });
+    }
+     });
   }
 
   shouldMarkAsReadOnOpen(notificationId: number): boolean {

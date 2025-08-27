@@ -20,16 +20,24 @@ import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+type ChatFrom = 'user' | 'system' | 'ai';
 
 type ChatItem = {
   key: string;
-  from: 'system' | 'user';
+  from: 'user' | 'system' | 'ai';
   message: string;
   created: Date;
   // optional raw objects if you still need them:
   notification?: Notification;
   userMsg?: { message: string; createdDate: string };
 };
+declare global {
+  interface Window {
+    electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
+  }
+}
+export {};
+
 @Component({
   selector: 'app-notifications',
   standalone: true,
@@ -44,15 +52,15 @@ export class NotificationsComponent
   public chatOpen$ = this.chatOpenSubject.asObservable();
   private intervalId: any;
   private loadedNotifications: Set<string> = new Set(); // Use notification IDs
-   private awaitingResponse = false;
+  private awaitingResponse = false;
   private preSendIds = new Set<string | number>(); // ids present before send
   private pendingSentText = ''; // optional: to match echo text
   private shownForIds = new Set<string | number>(); // avoid re-opening same overlay
   private scanTrigger$ = new BehaviorSubject<void>(undefined);
   private scanSub?: import('rxjs').Subscription;
- private typingTempId = '__typing__'; // a stable pseudo id for trackBy
-isTyping = false;
-private typingHideTimer?: any; // to auto-hide after a long delay, just in case
+  private typingTempId = '__typing__'; // a stable pseudo id for trackBy
+  isTyping = false;
+  private typingHideTimer?: any; // to auto-hide after a long delay, just in case
 
   notifications: Notification[] = [];
   messageText = '';
@@ -77,10 +85,9 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
   sentMessages: any[] = [];
   isOverlayMode = false;
   overlayHtml: SafeHtml = '';
-  private lastHtmlById = new Map<number, string>(); // id -> last html string we saw
+
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
-  private lastSentMessageNotificationBaseline = 0;
 
   constructor(
     private elementRef: ElementRef,
@@ -131,7 +138,7 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
     this.intervalId = setInterval(() => {
       const prevLength = this.notificationService.notifications.length;
       this.notificationService.fetchUserNotifications();
-      this.sortNotificationsByDateAsc();
+        this.sortNotificationsByDateAsc();
 
       setTimeout(() => {
         const newLength = this.notificationService.notifications.length;
@@ -487,6 +494,7 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
   toggleOverlayMode(): void {
     if (!this.isOpen) return;
     this.isOverlayMode = !this.isOverlayMode;
+    this.notifyElectronOverlay(this.isOverlayMode);
 
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
@@ -504,6 +512,8 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
 
     // also close overlay if open
     if (this.isOverlayMode) {
+      this.notifyElectronOverlay(false);
+
       this.isOverlayMode = false;
 
       this.sidebarStateChange.emit({
@@ -537,101 +547,105 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
 
   private scanAndOpenOverlayForHtml(): void {
     if (!this.awaitingResponse) return;
-  
+
     const list = this.notificationService?.notifications ?? [];
     if (!Array.isArray(list) || list.length === 0) return;
-  
-    const idKeyOf = (n: Notification) => (typeof n.id === 'number') ? n.id : String(n.id);
-    const isUser   = (n: Notification) => (n.role === true || n.role === 1);
+
+    const idKeyOf = (n: Notification) =>
+      typeof n.id === 'number' ? n.id : String(n.id);
+    const isUser = (n: Notification) => n.notificationCategoryId === true || n.notificationCategoryId === 1;
     const isSystem = (n: Notification) => !isUser(n);
-    const isNewSinceSend = (n: Notification) => !this.preSendIds.has(idKeyOf(n));
-    const matchesPendingText = (n: Notification) => ((n.message ?? '').trim() === this.pendingSentText.trim());
-  
+    const isNewSinceSend = (n: Notification) =>
+      !this.preSendIds.has(idKeyOf(n));
+    const matchesPendingText = (n: Notification) =>
+      (n.message ?? '').trim() === this.pendingSentText.trim();
+
     // 1) Wait for the *user echo* (new user notif matching this turn)
     let userEcho: Notification | undefined;
     for (const n of list) {
       if (isUser(n) && isNewSinceSend(n) && matchesPendingText(n)) {
-        userEcho = n; break;
+        userEcho = n;
+        break;
       }
     }
     if (!userEcho) return;
-  
+
     // 2) First new *system* notif with HTML = reply candidate
     let candidate: Notification | undefined;
     for (const n of list) {
       if (isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)) {
-        candidate = n; break;
+        candidate = n;
+        break;
       }
     }
     if (!candidate) return;
-  
+
     const candId = idKeyOf(candidate);
     if (this.shownForIds.has(candId)) return;
-  
+
     const htmlStr = this.htmlToString(candidate.html).trim();
     if (!htmlStr) return;
-  
+
     // Finish the turn
     this.shownForIds.add(candId);
     this.awaitingResponse = false;
-  
+
     // Stop typing dots (if in use)
     this.hideTyping?.();
-  
+
     // Update overlay content
     this.currentHtmlSourceId = candidate.id as any;
     this.currentHtmlCache = htmlStr;
     this.setOverlayHtmlFromApi(htmlStr);
-  
+
     // Ensure chat panel + overlay are visible
     if (!this.isOpen) {
       this.isOpen = true;
       this.notificationService.setChatOpen(true);
     }
-    if (!this.isOverlayMode) this.isOverlayMode = true;
-  
+    if (!this.isOverlayMode) {
+      this.isOverlayMode = true;
+      this.notifyElectronOverlay(true);
+    }
+
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
       type: 'overlay',
       overlayActive: this.isOverlayMode,
     });
-  
+
     // 🔑 CRUCIAL: wait for CD + stable view, THEN scroll to the exact row
     this.cdRef.detectChanges();
     this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-      this.scrollMessageIntoView(candId);         // first attempt
+      this.scrollMessageIntoView(candId); // first attempt
       // small delayed retry in case images/fonts shift layout
       setTimeout(() => this.scrollMessageIntoView(candId), 80);
       requestAnimationFrame(() => this.scrollMessageIntoView(candId));
     });
   }
-  
-  
 
   get chatTimeline(): ChatItem[] {
-    let seqCounter = 0; // optional if you want a stable sequence number
-
-    const notificationItems: ChatItem[] = (
-      this.notificationService?.notifications ?? []
-    ).map((n) => ({
-      key: `n-${n.id}-${seqCounter++}`,
-      from: n.role === true || n.role === 1 ? 'user' : 'system',
-      message: n.message,
-      created: new Date(n.createdDate),
-      notification: n,
-    }));
-
+    let seqCounter = 0;
+  
+    const notificationItems: ChatItem[] =
+      (this.notificationService?.notifications ?? []).map((n) => ({
+        key: `n-${n.id}-${seqCounter++}`,
+        from: this.mapCategoryToFrom(n.notificationCategoryId),
+        message: n.message,
+        created: new Date(n.createdDate),
+        notification: n,
+      }));
+  
+    // unchanged: “user” notifications are those with id === true | 1
     const userNotificationMessages = new Set(
       (this.notificationService?.notifications ?? [])
-        .filter((n) => n.role === true || n.role === 1)
+        .filter((n) => n.notificationCategoryId === true || Number(n.notificationCategoryId) === 1)
         .map((n) => n.message.trim().toLowerCase())
     );
-
+  
     const sentMessageItems: ChatItem[] = (this.sentMessages ?? [])
-      .filter(
-        (m) => !userNotificationMessages.has(m.message.trim().toLowerCase())
-      )
+      .filter((m) => !userNotificationMessages.has(m.message.trim().toLowerCase()))
       .map((m) => ({
         key: `u-${m.createdDate}-${seqCounter++}`,
         from: 'user',
@@ -639,12 +653,10 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
         created: new Date(m.createdDate),
         userMsg: m,
       }));
-
+  
     return [...notificationItems, ...sentMessageItems].sort((a, b) => {
       const diff = a.created.getTime() - b.created.getTime();
       if (diff !== 0) return diff;
-
-      // stable tie-breaker: ensures deterministic order
       return a.key.localeCompare(b.key);
     });
   }
@@ -674,6 +686,7 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
     // Any click directly on the backdrop should close overlay
     if (this.isOverlayMode) {
       this.isOverlayMode = false;
+      this.notifyElectronOverlay(false);
 
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
@@ -686,16 +699,16 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
   private showTyping() {
     if (this.isTyping) return;
     this.isTyping = true;
-  
+
     // safety auto-hide (e.g., after 30s) in case no reply arrives
     clearTimeout(this.typingHideTimer);
     this.typingHideTimer = setTimeout(() => this.hideTyping(), 30000);
-  
+
     // cause a render & scroll if you're at bottom
     this.cdRef.detectChanges();
     if (this.isAtBottom()) this.scrollToBottom();
   }
-  
+
   private hideTyping() {
     if (!this.isTyping) return;
     this.isTyping = false;
@@ -706,17 +719,24 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
     try {
       if (!this.messagesContainer) return;
       const container: HTMLElement = this.messagesContainer.nativeElement;
-      const id = typeof targetId === 'number' ? `msg-${targetId}` : `msg-${String(targetId)}`;
-  
+      const id =
+        typeof targetId === 'number'
+          ? `msg-${targetId}`
+          : `msg-${String(targetId)}`;
+
       // Prefer offsetTop so transforms/positioning don’t affect math
-      const el = container.querySelector<HTMLElement>(`#${CSS?.escape ? CSS.escape(id) : id}`);
+      const el = container.querySelector<HTMLElement>(
+        `#${CSS?.escape ? CSS.escape(id) : id}`
+      );
       if (!el) return;
-  
+
       // Compute desired top so the message sits slightly above the bottom
-      const targetTop = el.offsetTop - Math.max(0, container.clientHeight - el.offsetHeight - 40);
-  
+      const targetTop =
+        el.offsetTop -
+        Math.max(0, container.clientHeight - el.offsetHeight - 40);
+
       container.scrollTo({ top: targetTop, behavior: 'smooth' });
-  
+
       // If we effectively reached bottom, clear badges
       setTimeout(() => {
         if (this.isAtBottom()) {
@@ -729,6 +749,14 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
       this.scrollToBottom();
     }
   }
-  
-  
+
+  private notifyElectronOverlay(visible: boolean): void {
+    try { window.electronAPI?.chatbotOverlayVisible?.(!!visible); } catch {}
+  }
+  private mapCategoryToFrom(categoryId: unknown): ChatFrom {
+    const cat = Number(categoryId); // handles number | string | boolean
+    if (categoryId === true || cat === 1) return 'user';
+    if (cat === 3) return 'ai';
+    return 'system';
+  }
 }
