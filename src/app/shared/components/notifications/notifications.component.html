@@ -5,8 +5,8 @@
   [class.open]="isOpen"
 >
   <!-- Add backdrop click handler for overlay mode -->
-  <div 
-    *ngIf="isOverlayMode" 
+  <div
+    *ngIf="isOverlayMode"
     class="overlay-backdrop"
     (click)="onOverlayBackdropClick($event)"
   ></div>
@@ -25,30 +25,44 @@
     <!-- ========================================================= -->
 
     <div class="overlay-grid" (click)="$event.stopPropagation()">
-
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
       <section class="overlay-left">
         <header class="overlay-content-header">
-          <h3 class="overlay-title">Details</h3>
-          <button
-          class="overlay-toggle-button"
-          (click)="toggleOverlayMode()"
-          [attr.aria-label]="isOverlayMode ? 'Close overlay' : 'Open overlay'"
-          [disabled]="!isOpen"
-          title="Overlay"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
+          <div class="d-flex align-items-center justify-content-between w-100">
+            <h3 class="overlay-title">Details</h3>
+        
+            <!-- Conditional Save button -->
+            <button
+            *ngIf="selectedNotification 
+                   && (+selectedNotification.taskId === 2 || +selectedNotification.taskId === 3 ) 
+                   && selectedNotification.isEndInsertion==0"
+            class="btn btn-success"
+            (click)="saveNotification(selectedNotification)"
           >
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-          </svg>
-        </button>
+            Save
+          </button>
+          
+          </div>
+
+          <button
+            class="overlay-toggle-button"
+            (click)="toggleOverlayMode()"
+            [attr.aria-label]="isOverlayMode ? 'Close overlay' : 'Open overlay'"
+            [disabled]="!isOpen"
+            title="Overlay"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+            </svg>
+          </button>
           <!-- (Optional) header actions -->
         </header>
 
@@ -58,7 +72,6 @@
 
       <!-- RIGHT: Chat column (single instance, always rendered when panel is visible) -->
       <section class="overlay-right">
-
         <!-- Header -->
         <div class="sidebar-header">
           <div class="header-content">
@@ -71,11 +84,13 @@
             <h3 class="sidebar-title">Emily</h3>
           </div>
 
-          <div style="display:flex; gap:6px; align-items:center;">
-   
-
+          <div style="display: flex; gap: 6px; align-items: center">
             <!-- Close (closes chat panel AND ensures overlay off) -->
-            <button class="close-button" (click)="closeAll()" aria-label="Close">
+            <button
+              class="close-button"
+              (click)="closeAll()"
+              aria-label="Close"
+            >
               <svg
                 width="16"
                 height="16"
@@ -119,66 +134,91 @@
             </div>
           </div>
 
-        <!-- Single merged, time-ordered list -->
-<div *ngIf="chatTimeline.length > 0; else noMessages" class="chat-messages">
-  <div
-  class="message-bubble"
-  *ngFor="let item of chatTimeline; trackBy: trackByChatItem"
-  [class.user]="item.from === 'user'"
-  [class.system]="item.from === 'system'"
-  [class.ai]="item.from === 'ai'"
-  [class.clickable]="item.notification?.userSubmissionId"
-  (click)="item.notification?.userSubmissionId && handleNotificationClick(item.notification!)"
-  [attr.id]="item.notification?.id ? 'msg-' + item.notification?.id : 'msg-' + item.key"
->
-    <!-- If you still need the loading overlay for system notifications: -->
-    <div
-      *ngIf="item.from === 'system' && isNotificationLoading(item.notification)"
-      class="spinner-container full-message"
-    >
-      <div class="spinner-overlay"></div>
-      <div class="spinner-central"></div>
-    </div>
+          <!-- Single merged, time-ordered list -->
+          <div
+            *ngIf="chatTimeline.length > 0; else noMessages"
+            class="chat-messages"
+          >
+            <div
+              class="message-bubble"
+              *ngFor="let item of chatTimeline; trackBy: trackByChatItem"
+              [class.user]="item.from === 'user'"
+              [class.system]="item.from === 'system'"
+              [class.ai]="item.from === 'ai'"
+              [class.clickable]="item.notification?.userSubmissionId"
+              (click)="
+                item.notification?.userSubmissionId &&
+                  handleNotificationClick(item.notification!)
+              "
+              [attr.id]="
+                item.notification?.id
+                  ? 'msg-' + item.notification?.id
+                  : 'msg-' + item.key
+              "
+            >
+              <!-- If you still need the loading overlay for system notifications: -->
+              <div
+                *ngIf="
+                  item.from === 'system' &&
+                  isNotificationLoading(item.notification)
+                "
+                class="spinner-container full-message"
+              >
+                <div class="spinner-overlay"></div>
+                <div class="spinner-central"></div>
+              </div>
 
-    <div class="message-content">
-      <p class="message-text">{{ item.message }}</p>
-      <time class="message-time" [dateTime]="item.created.toISOString()">
-        {{ item.created | date: 'shortTime' }}
-      </time>
-    </div>
+              <div class="message-content">
+                <p class="message-text">{{ item.message }}</p>
+                <time
+                  class="message-time"
+                  [dateTime]="item.created.toISOString()"
+                >
+                  {{ item.created | date : "shortTime" }}
+                </time>
+              </div>
 
-    <!-- Action buttons only for system notifications with JSON (unchanged) -->
-    <div
-      *ngIf="item.from === 'system' && item.notification?.json && !isNotificationLoaded(item.notification)"
-      class="choose"
-    >
-      <button class="emily-btn"
-              (click)="choose(1, item.notification)"
-              [disabled]="isNotificationLoading(item.notification)">
-        Yes
-      </button>
-      <button class="emily-btn"
-              (click)="choose(0, item.notification)"
-              [disabled]="isNotificationLoading(item.notification)">
-        No
-      </button>
-      <button *ngIf="displayViewButton"
-              class="emily-btn"
-              [routerLink]="['/ai-ui-HTML', item.notification?.id]">
-        View
-      </button>
-    </div>
-  </div>
-</div>
-<!-- Typing indicator bubble -->
-<div *ngIf="isTyping" class="message-row system">
-  <div class="message-bubble typing">
-    <span class="dot"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-  </div>
-</div>
-
+              <!-- Action buttons only for system notifications with JSON (unchanged) -->
+              <div
+                *ngIf="
+                  item.from === 'system' &&
+                  item.notification?.json &&
+                  !isNotificationLoaded(item.notification)
+                "
+                class="choose"
+              >
+                <button
+                  class="emily-btn"
+                  (click)="choose(1, item.notification)"
+                  [disabled]="isNotificationLoading(item.notification)"
+                >
+                  Yes
+                </button>
+                <button
+                  class="emily-btn"
+                  (click)="choose(0, item.notification)"
+                  [disabled]="isNotificationLoading(item.notification)"
+                >
+                  No
+                </button>
+                <button
+                  *ngIf="displayViewButton"
+                  class="emily-btn"
+                  [routerLink]="['/ai-ui-HTML', item.notification?.id]"
+                >
+                  View
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Typing indicator bubble -->
+          <div *ngIf="isTyping" class="message-row system">
+            <div class="message-bubble typing">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+          </div>
 
           <!-- Empty state -->
           <ng-template #noMessages>
@@ -235,6 +275,6 @@
         </div>
       </section>
     </div>
-     <!-- /overlay-grid -->
+    <!-- /overlay-grid -->
   </div>
 </div>

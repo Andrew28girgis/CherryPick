@@ -88,6 +88,7 @@ export class NotificationsComponent
 
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
+  public selectedNotification: Notification | null = null;
 
   constructor(
     private elementRef: ElementRef,
@@ -551,59 +552,51 @@ export class NotificationsComponent
 
   private scanAndOpenOverlayForHtml(): void {
     if (!this.awaitingResponse) return;
-
+  
     const list = this.notificationService?.notifications ?? [];
     if (!Array.isArray(list) || list.length === 0) return;
-
+  
     const idKeyOf = (n: Notification) =>
       typeof n.id === 'number' ? n.id : String(n.id);
     const isUser = (n: Notification) =>
       n.notificationCategoryId === true || n.notificationCategoryId === 1;
     const isSystem = (n: Notification) => !isUser(n);
-    const isNewSinceSend = (n: Notification) =>
-      !this.preSendIds.has(idKeyOf(n));
+    const isNewSinceSend = (n: Notification) => !this.preSendIds.has(idKeyOf(n));
     const matchesPendingText = (n: Notification) =>
       (n.message ?? '').trim() === this.pendingSentText.trim();
-
-    // 1) Wait for the *user echo* (new user notif matching this turn)
-    let userEcho: Notification | undefined;
-    for (const n of list) {
-      if (isUser(n) && isNewSinceSend(n) && matchesPendingText(n)) {
-        userEcho = n;
-        break;
-      }
-    }
+  
+    // 1) Find user echo
+    const userEcho = list.find(
+      (n) => isUser(n) && isNewSinceSend(n) && matchesPendingText(n)
+    );
     if (!userEcho) return;
-
-    // 2) First new *system* notif with HTML = reply candidate
-    let candidate: Notification | undefined;
-    for (const n of list) {
-      if (isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)) {
-        candidate = n;
-        break;
-      }
-    }
+  
+    // 2) Find candidate system notification with HTML
+    const candidate = list.find(
+      (n) => isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)
+    );
     if (!candidate) return;
-
+  
     const candId = idKeyOf(candidate);
     if (this.shownForIds.has(candId)) return;
-
+  
     const htmlStr = this.htmlToString(candidate.html).trim();
     if (!htmlStr) return;
-
-    // Finish the turn
+  
+    // Mark shown and stop typing dots
     this.shownForIds.add(candId);
     this.awaitingResponse = false;
-
-    // Stop typing dots (if in use)
     this.hideTyping?.();
-
-    // Update overlay content
+  
+    // 🔑 Store candidate for overlay use
+    this.selectedNotification = candidate;
+  
+    // Set overlay HTML
     this.currentHtmlSourceId = candidate.id as any;
     this.currentHtmlCache = htmlStr;
     this.setOverlayHtmlFromApi(htmlStr);
-
-    // Ensure chat panel + overlay are visible
+  
+    // Ensure overlay visible
     if (!this.isOpen) {
       this.isOpen = true;
       this.notificationService.setChatOpen(true);
@@ -612,23 +605,23 @@ export class NotificationsComponent
       this.isOverlayMode = true;
       (window as any).electronMessage.maxmizeCRESideBrowser();
     }
-
+  
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
       type: 'overlay',
       overlayActive: this.isOverlayMode,
     });
-
-    // 🔑 CRUCIAL: wait for CD + stable view, THEN scroll to the exact row
+  
+    // Scroll message into view after CD stabilizes
     this.cdRef.detectChanges();
     this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-      this.scrollMessageIntoView(candId); // first attempt
-      // small delayed retry in case images/fonts shift layout
+      this.scrollMessageIntoView(candId);
       setTimeout(() => this.scrollMessageIntoView(candId), 80);
       requestAnimationFrame(() => this.scrollMessageIntoView(candId));
     });
   }
+  
 
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0;
@@ -768,4 +761,24 @@ export class NotificationsComponent
     if (cat === 3) return 'ai';
     return 'system';
   }
+
+
+
+
+  saveNotification(notification: Notification): void {
+    if (!notification?.id) return;
+  
+    this.placesService.savemessages(notification.id).subscribe({
+      next: (res) => {
+        console.log('Save successful', res);
+   
+       },
+      error: (err) => {
+        console.error('Save failed', err);
+      }
+    });
+  }
+   
+  
 }
+

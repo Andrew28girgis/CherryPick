@@ -11,4 +11,6 @@ export interface Notification {
   html: any;
   notificationCategoryId:any;
   contextExtendPrompt:any;
+  taskId:any;
+  isEndInsertion:any
 }

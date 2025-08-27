@@ -392,7 +392,6 @@ export class PlacesService {
     return this.http.post(url, {});
   }
 
-
   public sendmessages(body: any) {
     return this.http.post<any>(
       `${environment.api}/BrokerWithChatGPT/EmilyChat`,
@@ -400,4 +399,10 @@ export class PlacesService {
     );
   }
 
+  public savemessages(body: any) {
+    return this.http.post<any>(
+      `${environment.api}/GenericAPI/InsertJson/${body}`,
+      body
+    );
+  }
 }
