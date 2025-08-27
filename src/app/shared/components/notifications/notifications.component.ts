@@ -15,13 +15,13 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-// A unified item for the chat timeline
+import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
+
 type ChatItem = {
-  key: string; // unique key for trackBy
+  key: string;
   from: 'system' | 'user';
   message: string;
   created: Date;
@@ -43,6 +43,15 @@ export class NotificationsComponent
   public chatOpen$ = this.chatOpenSubject.asObservable();
   private intervalId: any;
   private loadedNotifications: Set<string> = new Set(); // Use notification IDs
+  // === TURN/SCAN STATE (id-snapshot based) ===
+  private awaitingResponse = false;
+  private preSendIds = new Set<string | number>(); // ids present before send
+  private pendingSentText = ''; // optional: to match echo text
+  private shownForIds = new Set<string | number>(); // avoid re-opening same overlay
+
+  // Debounced scan trigger (prevents racing the poll)
+  private scanTrigger$ = new BehaviorSubject<void>(undefined);
+  private scanSub?: import('rxjs').Subscription;
 
   notifications: Notification[] = [];
   messageText = '';
@@ -70,6 +79,7 @@ export class NotificationsComponent
   private lastHtmlById = new Map<number, string>(); // id -> last html string we saw
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
+  private lastSentMessageNotificationBaseline = 0;
 
   constructor(
     private elementRef: ElementRef,
@@ -89,184 +99,66 @@ export class NotificationsComponent
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
 
   ngOnInit(): void {
-    const testHtml = `<style>
-  .shopping-centers {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-    padding: 8px;
-  }
-  .shopping-card {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform .2s ease, box-shadow .2s ease;
-  }
-  .shopping-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-  }
-  .shopping-card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-  }
-  .shopping-card .card-body {
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .shopping-card h4 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-  }
-  .shopping-card p {
-    margin: 0;
-    font-size: 14px;
-    color: #666;
-  }
-  .shopping-card .tags {
-    margin-top: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .shopping-card .tag {
-    background: #f3f3f3;
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 12px;
-    color: #444;
-  }
-</style>
-
-<div class="shopping-centers">
-  <div class="shopping-card">
-    <img src="https://picsum.photos/400/200?1" alt="Mall Image">
-    <div class="card-body">
-      <h4>Sunrise Plaza</h4>
-      <p>123 Main Street, Springfield</p>
-      <div class="tags">
-        <span class="tag">Retail</span>
-        <span class="tag">Food Court</span>
-        <span class="tag">Cinema</span>
-      </div>
-    </div>
-  </div>
-  <div class="shopping-card">
-    <img src="https://picsum.photos/400/200?2" alt="Mall Image">
-    <div class="card-body">
-      <h4>Riverside Mall</h4>
-      <p>45 River Road, Riverside</p>
-      <div class="tags">
-        <span class="tag">Luxury</span>
-        <span class="tag">Parking</span>
-      </div>
-    </div>
-  </div>
-  <div class="shopping-card">
-    <img src="https://picsum.photos/400/200?3" alt="Mall Image">
-    <div class="card-body">
-      <h4>Downtown Center</h4>
-      <p>78 City Ave, Downtown</p>
-      <div class="tags">
-        <span class="tag">Electronics</span>
-        <span class="tag">Fashion</span>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-    this.setOverlayHtmlFromApi(testHtml);
-
     this.activatedRoute.queryParamMap.subscribe((parms) => {
       const view = parms.get('View');
-
       if (view && !JSON.parse(view)) this.displayViewButton = false;
     });
 
-    // Set isOpen to true by default
     this.isOpen = true;
 
-    // Subscribe to chat open state changes (remove duplicate subscription)
     this.notificationService.chatOpen$.subscribe((isOpen) => {
       this.isOpen = isOpen;
-
-      // When opened, scroll to bottom after a short delay
-      if (this.isOpen) {
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 300);
-      }
+      if (this.isOpen) setTimeout(() => this.scrollToBottom(), 300);
     });
 
-    if (this.router.url.includes('chatbot')) {
-      this.electronSideBar = true;
-    }
+    if (this.router.url.includes('chatbot')) this.electronSideBar = true;
 
     this.activatedRoute.params.subscribe((params: any) => {
       this.CampaignId = params.campaignId;
     });
-    this.notificationService.initNotifications();
 
+    this.notificationService.initNotifications();
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
 
+    // Debounced scan
+    this.scanSub = this.scanTrigger$
+      .pipe(debounceTime(120))
+      .subscribe(() => this.scanAndOpenOverlayForHtml());
+
+    // Polling
     this.intervalId = setInterval(() => {
       const prevLength = this.notificationService.notifications.length;
       this.notificationService.fetchUserNotifications();
       this.sortNotificationsByDateAsc();
 
-      // After a small delay to ensure notifications are updated
       setTimeout(() => {
         const newLength = this.notificationService.notifications.length;
-        // Only increment the counter if we're not at the bottom AND there are new messages
+
         if (newLength > prevLength) {
-          if (this.isAtBottom()) {
-            // If at bottom, just scroll to bottom to show new messages
-            this.scrollToBottom();
-          } else {
-            // If not at bottom, increment counter and show scroll button
+          if (this.isAtBottom()) this.scrollToBottom();
+          else {
             this.newNotificationsCount += newLength - prevLength;
             this.showScrollButton = true;
           }
         }
         this.previousNotificationsLength = newLength;
         this.sortNotificationsByDateAsc();
-      }, 300);
+
+        // trigger scan after updates
+        this.scanTrigger$.next();
+      }, 200);
     }, 2000);
 
-    // Make sure we emit initial state
-    this.sidebarStateChange.emit({
-      isOpen: true,
-      isFullyOpen: this.isOpen,
-    });
-
-    // When component initializes, scroll to bottom after a short delay
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 100);
-
+    this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
+    setTimeout(() => this.scrollToBottom(), 100);
     this.checkScreenSize();
   }
 
   ngOnDestroy(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-
-    // Reset state when component is destroyed
-    this.sidebarStateChange.emit({
-      isOpen: false,
-      isFullyOpen: false,
-    });
+    if (this.intervalId) clearInterval(this.intervalId);
+    this.scanSub?.unsubscribe?.();
+    this.sidebarStateChange.emit({ isOpen: false, isFullyOpen: false });
   }
 
   ngAfterViewInit(): void {
@@ -367,7 +259,6 @@ export class NotificationsComponent
 
       this.placesService.GenericAPI(request).subscribe({
         next: async (response: any) => {
-          console.log('API response for choice 1:', response);
           if (response) {
             try {
               await this.saveShoppingCenterData(
@@ -519,7 +410,6 @@ export class NotificationsComponent
       }
     }
   }
-
   // In NotificationService, add this method:
   setChatOpen(isOpen: boolean): void {
     // Use a subject to communicate between components
@@ -543,39 +433,50 @@ export class NotificationsComponent
 
     this.isSending = true;
 
-    // Clear input immediately for better UX
-    this.outgoingText = '';
-    if (this.messageInput) {
-      this.messageInput.nativeElement.innerText = '';
+    // === TURN START (ID SNAPSHOT) ===
+    this.preSendIds.clear();
+    for (const n of this.notificationService?.notifications ?? []) {
+      const idKey = typeof n.id === 'number' ? n.id : String(n.id);
+      this.preSendIds.add(idKey);
     }
+    this.pendingSentText = text;
+    this.shownForIds.clear();
+    this.awaitingResponse = true;
 
-    // Add message to local array
+    // Clear input immediately
+    this.outgoingText = '';
+    if (this.messageInput) this.messageInput.nativeElement.innerText = '';
+
+    // Optimistic local bubble
     this.sentMessages.push({
       message: text,
       createdDate: new Date().toISOString(),
     });
-
     this.scrollAfterRender();
 
-    const body: any = {
-      Chat: text,
-    };
-
+    const body: any = { Chat: text };
     this.placesService.sendmessages(body).subscribe({
-      next: (response) => {
+      next: () => {
         this.isSending = false;
-        setTimeout(() => this.scanAndOpenOverlayForHtml(), 0);
+        // kick the scanner; poll will also kick it as new notifs arrive
+        this.scanTrigger$.next();
       },
       error: (err) => {
         console.error('sendmessage failed', err);
         this.isSending = false;
-        // Restore text on error
+
+        // restore text
         this.outgoingText = text;
-        if (this.messageInput) {
-          this.messageInput.nativeElement.innerText = text;
-        }
-        // Remove optimistic message on error
+        if (this.messageInput) this.messageInput.nativeElement.innerText = text;
+
+        // remove optimistic bubble
         this.sentMessages.pop();
+
+        // cancel turn
+        this.awaitingResponse = false;
+        this.preSendIds.clear();
+        this.pendingSentText = '';
+        this.shownForIds.clear();
       },
     });
   }
@@ -591,7 +492,6 @@ export class NotificationsComponent
       overlayActive: this.isOverlayMode,
     });
   }
-
   closeAll(): void {
     if (this.electronSideBar) {
       this.closeSide();
@@ -611,7 +511,6 @@ export class NotificationsComponent
       });
     }
   }
-
   setOverlayHtmlFromApi(htmlFromApi: string) {
     this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
   }
@@ -629,67 +528,77 @@ export class NotificationsComponent
 
   /** True if notification has non-empty HTML */
   private hasHtml(n: Notification): boolean {
-    const s = this.htmlToString(n?.html).trim();
-    return s.length > 0;
-  }
-
-  /** Sanitize and set the overlay HTML */
-  private setOverlayHtml(htmlFromApi: string): void {
-    // If you need stricter validation, do it here, then trust whitelisted HTML only
-    this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
+    const htmlContent = this.htmlToString(n?.html).trim();
+    return htmlContent.length > 0 && htmlContent !== n?.message?.trim();
   }
 
   private scanAndOpenOverlayForHtml(): void {
+    if (!this.awaitingResponse) return;
+
     const list = this.notificationService?.notifications ?? [];
     if (!Array.isArray(list) || list.length === 0) return;
 
-    // Find the newest by createdDate that has html
-    let latest: Notification | null = null;
-    for (const n of list) {
-      if (!this.hasHtml(n)) continue;
-      if (!latest) {
-        latest = n;
-      } else {
-        const a = Date.parse(latest.createdDate);
-        const b = Date.parse(n.createdDate);
-        if (b > a) latest = n;
-      }
-    }
-    if (!latest) return;
+    // Helper to normalize id
+    const idKeyOf = (n: Notification) =>
+      typeof n.id === 'number' ? n.id : String(n.id);
 
-    const htmlStr = this.htmlToString(latest.html).trim();
+    // 1) Baseline = the new *user* notification created after we clicked send.
+    //    We detect "new" purely by id-not-in-snapshot (no timestamp needed).
+    const userEcho = list
+      .filter((n) => n.role === true || n.role === 1) // user
+      .filter((n) => !this.preSendIds.has(idKeyOf(n))) // new since send
+      // Optional: match the text to be extra safe if backend echoes exactly
+      .filter((n) => (n.message ?? '').trim() === this.pendingSentText.trim())
+      // If there can be multiple, take the first that appeared in the array order
+      .sort(
+        (a, b) =>
+          new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+      )[0];
+
+    if (!userEcho) {
+      // still waiting for our own user notification to show up
+      return;
+    }
+
+    // 2) Candidate = the first *system* notification with HTML that is also "new" (id not in snapshot).
+    const candidate = list
+      .filter((n) => !(n.role === true || n.role === 1)) // system
+      .filter((n) => !this.preSendIds.has(idKeyOf(n))) // new since send
+      .filter((n) => this.hasHtml(n)) // has HTML payload
+      .sort(
+        (a, b) =>
+          new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+      )[0];
+
+    if (!candidate) return;
+
+    const candId = idKeyOf(candidate);
+    if (this.shownForIds.has(candId)) return; // already handled
+
+    const htmlStr = this.htmlToString(candidate.html).trim();
     if (!htmlStr) return;
 
-    const idChanged = this.currentHtmlSourceId !== latest.id;
-    const htmlChanged = this.currentHtmlCache !== htmlStr;
+    // mark and finish the turn
+    this.shownForIds.add(candId);
+    this.awaitingResponse = false;
 
-    // Only update if different id or content
-    if (idChanged || htmlChanged) {
-      this.currentHtmlSourceId = latest.id;
-      this.currentHtmlCache = htmlStr;
-      this.lastHtmlById.set(latest.id, htmlStr);
+    this.currentHtmlSourceId = candidate.id as any;
+    this.currentHtmlCache = htmlStr;
 
-      this.setOverlayHtmlFromApi(htmlStr);
+    this.setOverlayHtmlFromApi(htmlStr);
 
-      // Ensure the chat sidebar is visible
-      if (!this.isOpen) {
-        this.isOpen = true;
-        this.notificationService.setChatOpen(true);
-      }
-
-      // Turn overlay on
-      if (!this.isOverlayMode) {
-        this.isOverlayMode = true;
-      }
-
-      // Emit overlay state
-      this.sidebarStateChange.emit({
-        isOpen: this.isOpen,
-        isFullyOpen: this.isOpen,
-        type: 'overlay',
-        overlayActive: this.isOverlayMode,
-      });
+    if (!this.isOpen) {
+      this.isOpen = true;
+      this.notificationService.setChatOpen(true);
     }
+    if (!this.isOverlayMode) this.isOverlayMode = true;
+
+    this.sidebarStateChange.emit({
+      isOpen: this.isOpen,
+      isFullyOpen: this.isOpen,
+      type: 'overlay',
+      overlayActive: this.isOverlayMode,
+    });
   }
 
   get chatTimeline(): ChatItem[] {
@@ -731,6 +640,7 @@ export class NotificationsComponent
       return a.key.localeCompare(b.key);
     });
   }
+
   // optional but recommended: stable trackBy
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 
@@ -753,8 +663,8 @@ export class NotificationsComponent
   }
 
   onOverlayBackdropClick(event: MouseEvent): void {
-    // Only close if clicking directly on the backdrop (not on child elements)
-    if (event.target === event.currentTarget && this.isOverlayMode) {
+    // Any click directly on the backdrop should close overlay
+    if (this.isOverlayMode) {
       this.isOverlayMode = false;
 
       this.sidebarStateChange.emit({
