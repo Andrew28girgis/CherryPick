@@ -681,7 +681,8 @@
   font-weight: 600;
 }
 .overlay-content {
-  overflow: auto;
+  height:90vh;
+  overflow-y: scroll;
   padding: 16px;
   word-wrap: break-word;
 }

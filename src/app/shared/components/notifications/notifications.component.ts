@@ -771,8 +771,17 @@ export class NotificationsComponent
     this.isSaving = true;
   
     this.placesService.sendmessages(notification.id).subscribe({
-      next: () => {
+      next: (res) => {
         // force consistent number
+        console.log('campaign is from electronnnnn',res);
+        
+        if(+notification.taskId==3){
+        (window as any).electronMessage.getLinksFromGoogle(
+          '',
+          localStorage.getItem('token'),
+          res
+        );
+      }
         notification.isEndInsertion = 1;  
   
         // show spinner for 1s then hide
