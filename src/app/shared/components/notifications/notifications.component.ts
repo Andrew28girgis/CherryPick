@@ -91,6 +91,7 @@ export class NotificationsComponent
   private currentHtmlCache = ''; // last html string we showed
   public selectedNotification: Notification | null = null;
   public isSaving = false; // component-level flag
+  public showSaveToast = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -783,27 +784,25 @@ export class NotificationsComponent
   
     this.isSaving = true;
   
-    this.placesService.sendmessages(notification.id).subscribe({
+    this.placesService.savemessages(notification.id).subscribe({
       next: (res) => {
-        // force consistent number
-        console.log('campaign is from electronnnnn',res);
-        
-        if(+notification.taskId==3){
-        (window as any).electronMessage.getLinksFromGoogle(
-          '',
-          localStorage.getItem('token'),
-          res
-        );
-      }
-        notification.isEndInsertion = 1;  
+        // console.log('campaign is from electronnnnn', res);
+  
+        if (+notification.taskId === 3) {
+          this.getCampaigns();
+        }
+  
+        notification.isEndInsertion = 1;
   
         // show spinner for 1s then hide
+        this.showSaveToast = true;
+        this.cdRef.detectChanges();
         setTimeout(() => {
-          this.isSaving = false;
+          this.showSaveToast = false;
           this.cdRef.detectChanges();
-        }, 1000);
+        }, 2500);
   
-        this.cdRef.detectChanges(); // ensure Angular re-renders
+        this.isSaving = false;
       },
       error: (err) => {
         console.error('Save failed', err);
@@ -812,6 +811,41 @@ export class NotificationsComponent
       }
     });
   }
+  
+  getCampaigns(): void {
+    const request = { Name: 'GetCampaignsNeedUrls', Params: {} };
+    this.placesService.GenericAPI(request).subscribe({
+      next: (response: any) => {
+        console.log('GetCampaignsNeedUrls response:', response);
+  
+        // Safely grab the first id from response.json
+        const id = response?.json?.[0]?.id;
+  // console.log(id,'idddddd');
+  
+        if (id == null) {
+          console.error('No id found in response.json');
+          return;
+        }
+  
+        try {
+          // console.log(id,'iddddddelectronnnn');
+
+          (window as any).electronMessage.getLinksFromGoogle(
+            '',
+            localStorage.getItem('token'),
+            id // <-- send only the id
+          );
+        } catch (e) {
+          console.error('electronMessage.getLinksFromGoogle failed', e);
+        }
+      },
+      error: (err) => {
+        console.error('GetCampaignsNeedUrls failed', err);
+      }
+    });
+  }
+  
+  
   
   
   get canShowSave(): boolean {
@@ -830,4 +864,5 @@ export class NotificationsComponent
     return (taskId === 2 || taskId === 3) && !isEnd;
   }
   
+ 
 }
