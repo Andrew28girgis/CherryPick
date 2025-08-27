@@ -19,6 +19,7 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 type ChatItem = {
   key: string;
@@ -43,15 +44,15 @@ export class NotificationsComponent
   public chatOpen$ = this.chatOpenSubject.asObservable();
   private intervalId: any;
   private loadedNotifications: Set<string> = new Set(); // Use notification IDs
-  // === TURN/SCAN STATE (id-snapshot based) ===
-  private awaitingResponse = false;
+   private awaitingResponse = false;
   private preSendIds = new Set<string | number>(); // ids present before send
   private pendingSentText = ''; // optional: to match echo text
   private shownForIds = new Set<string | number>(); // avoid re-opening same overlay
-
-  // Debounced scan trigger (prevents racing the poll)
   private scanTrigger$ = new BehaviorSubject<void>(undefined);
   private scanSub?: import('rxjs').Subscription;
+ private typingTempId = '__typing__'; // a stable pseudo id for trackBy
+isTyping = false;
+private typingHideTimer?: any; // to auto-hide after a long delay, just in case
 
   notifications: Notification[] = [];
   messageText = '';
@@ -453,12 +454,13 @@ export class NotificationsComponent
       createdDate: new Date().toISOString(),
     });
     this.scrollAfterRender();
+    this.showTyping();
 
     const body: any = { Chat: text };
     this.placesService.sendmessages(body).subscribe({
       next: () => {
         this.isSending = false;
-        // kick the scanner; poll will also kick it as new notifs arrive
+        this.hideTyping();
         this.scanTrigger$.next();
       },
       error: (err) => {
@@ -534,72 +536,77 @@ export class NotificationsComponent
 
   private scanAndOpenOverlayForHtml(): void {
     if (!this.awaitingResponse) return;
-
+  
     const list = this.notificationService?.notifications ?? [];
     if (!Array.isArray(list) || list.length === 0) return;
-
-    // Helper to normalize id
-    const idKeyOf = (n: Notification) =>
-      typeof n.id === 'number' ? n.id : String(n.id);
-
-    // 1) Baseline = the new *user* notification created after we clicked send.
-    //    We detect "new" purely by id-not-in-snapshot (no timestamp needed).
-    const userEcho = list
-      .filter((n) => n.role === true || n.role === 1) // user
-      .filter((n) => !this.preSendIds.has(idKeyOf(n))) // new since send
-      // Optional: match the text to be extra safe if backend echoes exactly
-      .filter((n) => (n.message ?? '').trim() === this.pendingSentText.trim())
-      // If there can be multiple, take the first that appeared in the array order
-      .sort(
-        (a, b) =>
-          new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
-      )[0];
-
-    if (!userEcho) {
-      // still waiting for our own user notification to show up
-      return;
+  
+    const idKeyOf = (n: Notification) => (typeof n.id === 'number') ? n.id : String(n.id);
+    const isUser   = (n: Notification) => (n.role === true || n.role === 1);
+    const isSystem = (n: Notification) => !isUser(n);
+    const isNewSinceSend = (n: Notification) => !this.preSendIds.has(idKeyOf(n));
+    const matchesPendingText = (n: Notification) => ((n.message ?? '').trim() === this.pendingSentText.trim());
+  
+    // 1) Wait for the *user echo* (new user notif matching this turn)
+    let userEcho: Notification | undefined;
+    for (const n of list) {
+      if (isUser(n) && isNewSinceSend(n) && matchesPendingText(n)) {
+        userEcho = n; break;
+      }
     }
-
-    // 2) Candidate = the first *system* notification with HTML that is also "new" (id not in snapshot).
-    const candidate = list
-      .filter((n) => !(n.role === true || n.role === 1)) // system
-      .filter((n) => !this.preSendIds.has(idKeyOf(n))) // new since send
-      .filter((n) => this.hasHtml(n)) // has HTML payload
-      .sort(
-        (a, b) =>
-          new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
-      )[0];
-
+    if (!userEcho) return;
+  
+    // 2) First new *system* notif with HTML = reply candidate
+    let candidate: Notification | undefined;
+    for (const n of list) {
+      if (isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)) {
+        candidate = n; break;
+      }
+    }
     if (!candidate) return;
-
+  
     const candId = idKeyOf(candidate);
-    if (this.shownForIds.has(candId)) return; // already handled
-
+    if (this.shownForIds.has(candId)) return;
+  
     const htmlStr = this.htmlToString(candidate.html).trim();
     if (!htmlStr) return;
-
-    // mark and finish the turn
+  
+    // Finish the turn
     this.shownForIds.add(candId);
     this.awaitingResponse = false;
-
+  
+    // Stop typing dots (if in use)
+    this.hideTyping?.();
+  
+    // Update overlay content
     this.currentHtmlSourceId = candidate.id as any;
     this.currentHtmlCache = htmlStr;
-
     this.setOverlayHtmlFromApi(htmlStr);
-
+  
+    // Ensure chat panel + overlay are visible
     if (!this.isOpen) {
       this.isOpen = true;
       this.notificationService.setChatOpen(true);
     }
     if (!this.isOverlayMode) this.isOverlayMode = true;
-
+  
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
       type: 'overlay',
       overlayActive: this.isOverlayMode,
     });
+  
+    // 🔑 CRUCIAL: wait for CD + stable view, THEN scroll to the exact row
+    this.cdRef.detectChanges();
+    this.ngZone.onStable.pipe(take(1)).subscribe(() => {
+      this.scrollMessageIntoView(candId);         // first attempt
+      // small delayed retry in case images/fonts shift layout
+      setTimeout(() => this.scrollMessageIntoView(candId), 80);
+      requestAnimationFrame(() => this.scrollMessageIntoView(candId));
+    });
   }
+  
+  
 
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0; // optional if you want a stable sequence number
@@ -675,4 +682,52 @@ export class NotificationsComponent
       });
     }
   }
+  private showTyping() {
+    if (this.isTyping) return;
+    this.isTyping = true;
+  
+    // safety auto-hide (e.g., after 30s) in case no reply arrives
+    clearTimeout(this.typingHideTimer);
+    this.typingHideTimer = setTimeout(() => this.hideTyping(), 30000);
+  
+    // cause a render & scroll if you're at bottom
+    this.cdRef.detectChanges();
+    if (this.isAtBottom()) this.scrollToBottom();
+  }
+  
+  private hideTyping() {
+    if (!this.isTyping) return;
+    this.isTyping = false;
+    clearTimeout(this.typingHideTimer);
+    this.cdRef.detectChanges();
+  }
+  private scrollMessageIntoView(targetId: string | number): void {
+    try {
+      if (!this.messagesContainer) return;
+      const container: HTMLElement = this.messagesContainer.nativeElement;
+      const id = typeof targetId === 'number' ? `msg-${targetId}` : `msg-${String(targetId)}`;
+  
+      // Prefer offsetTop so transforms/positioning don’t affect math
+      const el = container.querySelector<HTMLElement>(`#${CSS?.escape ? CSS.escape(id) : id}`);
+      if (!el) return;
+  
+      // Compute desired top so the message sits slightly above the bottom
+      const targetTop = el.offsetTop - Math.max(0, container.clientHeight - el.offsetHeight - 40);
+  
+      container.scrollTo({ top: targetTop, behavior: 'smooth' });
+  
+      // If we effectively reached bottom, clear badges
+      setTimeout(() => {
+        if (this.isAtBottom()) {
+          this.showScrollButton = false;
+          this.newNotificationsCount = 0;
+        }
+      }, 350);
+    } catch {
+      // fallback
+      this.scrollToBottom();
+    }
+  }
+  
+  
 }

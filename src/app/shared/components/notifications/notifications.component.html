@@ -127,6 +127,7 @@
     [class.user]="item.from === 'user'"
     [class.clickable]="item.notification?.userSubmissionId"
     (click)="item.notification?.userSubmissionId && handleNotificationClick(item.notification!)"
+    [attr.id]="item.notification?.id ? 'msg-' + item.notification?.id : 'msg-' + item.key"
   >
     <!-- If you still need the loading overlay for system notifications: -->
     <div
@@ -165,6 +166,14 @@
         View
       </button>
     </div>
+  </div>
+</div>
+<!-- Typing indicator bubble -->
+<div *ngIf="isTyping" class="message-row system">
+  <div class="message-bubble typing">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
   </div>
 </div>
 

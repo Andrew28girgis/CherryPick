@@ -779,3 +779,40 @@
     border-top: 1px solid rgba(0, 0, 0, 0.06);
   }
 }
+.message-row.system {
+  display: flex;
+  justify-content: flex-start; /* align like system messages */
+  margin: 6px 0;
+}
+
+.message-bubble.typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--Colors-Primary-100); /* match your system bubble color */
+  min-width: 52px;
+}
+
+.message-bubble.typing .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--Colors-Primary-500); /* will inherit theme; adjust if needed */
+  animation: typing-bounce 1.2s infinite ease-in-out;
+}
+
+.message-bubble.typing .dot:nth-child(2) { animation-delay: 0.15s; }
+.message-bubble.typing .dot:nth-child(3) { animation-delay: 0.30s; }
+
+@keyframes typing-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* optional: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .message-bubble.typing .dot { animation: none; opacity: 0.6; }
+}

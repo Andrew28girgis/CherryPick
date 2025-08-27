@@ -3,13 +3,12 @@
   z-index: 3; /* Above overlay */
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 24px);
-  height: calc(100dvh - 24px);
-  min-height: 0;
+  height: fit-content;
+   min-height: 0;
 }
 .main-inner {
   /* keep your existing styles… */
-  height: 600px;              /* or consider a max-height; see note below */
+  /* height: 600px;              */
   overflow-y: auto;           /* 'auto' avoids scrollbars when not needed */
   padding: var(--Space-S-32) ;
   align-items: center;
