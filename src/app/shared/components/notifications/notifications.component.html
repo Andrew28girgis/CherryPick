@@ -31,16 +31,7 @@
           <div class="d-flex align-items-center justify-content-between w-100">
             <h3 class="overlay-title">Details</h3>
         
-            <!-- Conditional Save button -->
-            <button
-            *ngIf="selectedNotification 
-                   && (+selectedNotification.taskId === 2 || +selectedNotification.taskId === 3 ) 
-                   && selectedNotification.isEndInsertion==0"
-            class="btn btn-success"
-            (click)="saveNotification(selectedNotification)"
-          >
-            Save
-          </button>
+          
           
           </div>
 
@@ -67,7 +58,20 @@
         </header>
 
         <!-- Your API HTML / test HTML -->
+         <div class="container-overlay-btn">
         <div class="overlay-content" [innerHTML]="overlayHtml"></div>
+        <div class="save-div">
+          <button
+          *ngIf="selectedNotification 
+                 && (+selectedNotification.taskId === 2 || +selectedNotification.taskId === 3 ) 
+                 && selectedNotification.isEndInsertion==0"
+          class="btn save-btn"
+          (click)="saveNotification(selectedNotification)"
+        >
+          Save
+        </button>
+        </div>
+      </div>
       </section>
 
       <!-- RIGHT: Chat column (single instance, always rendered when panel is visible) -->

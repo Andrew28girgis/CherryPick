@@ -850,3 +850,45 @@
   background-image: url("../../../../assets/Images/bot.png"); /* you already use this asset */
   background-color: transparent;
 }
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  vertical-align: -2px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+.save-btn {
+  background-color: var(--Colors-Primary-500);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.container-overlay-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.save-div {
+  justify-content: center;
+  display: flex;
+  padding: 16px;
+}
+
+.save-btn:active {
+  background-color: var(--Colors-Primary-600);
+  color: #fff;
+}

@@ -19,7 +19,8 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, finalize } from 'rxjs/operators';
+
 type ChatFrom = 'user' | 'system' | 'ai';
 
 type ChatItem = {
@@ -89,6 +90,7 @@ export class NotificationsComponent
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
   public selectedNotification: Notification | null = null;
+  public isSaving = false; // component-level flag
 
   constructor(
     private elementRef: ElementRef,
@@ -552,50 +554,51 @@ export class NotificationsComponent
 
   private scanAndOpenOverlayForHtml(): void {
     if (!this.awaitingResponse) return;
-  
+
     const list = this.notificationService?.notifications ?? [];
     if (!Array.isArray(list) || list.length === 0) return;
-  
+
     const idKeyOf = (n: Notification) =>
       typeof n.id === 'number' ? n.id : String(n.id);
     const isUser = (n: Notification) =>
       n.notificationCategoryId === true || n.notificationCategoryId === 1;
     const isSystem = (n: Notification) => !isUser(n);
-    const isNewSinceSend = (n: Notification) => !this.preSendIds.has(idKeyOf(n));
+    const isNewSinceSend = (n: Notification) =>
+      !this.preSendIds.has(idKeyOf(n));
     const matchesPendingText = (n: Notification) =>
       (n.message ?? '').trim() === this.pendingSentText.trim();
-  
+
     // 1) Find user echo
     const userEcho = list.find(
       (n) => isUser(n) && isNewSinceSend(n) && matchesPendingText(n)
     );
     if (!userEcho) return;
-  
+
     // 2) Find candidate system notification with HTML
     const candidate = list.find(
       (n) => isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)
     );
     if (!candidate) return;
-  
+
     const candId = idKeyOf(candidate);
     if (this.shownForIds.has(candId)) return;
-  
+
     const htmlStr = this.htmlToString(candidate.html).trim();
     if (!htmlStr) return;
-  
+
     // Mark shown and stop typing dots
     this.shownForIds.add(candId);
     this.awaitingResponse = false;
     this.hideTyping?.();
-  
+
     // 🔑 Store candidate for overlay use
     this.selectedNotification = candidate;
-  
+
     // Set overlay HTML
     this.currentHtmlSourceId = candidate.id as any;
     this.currentHtmlCache = htmlStr;
     this.setOverlayHtmlFromApi(htmlStr);
-  
+
     // Ensure overlay visible
     if (!this.isOpen) {
       this.isOpen = true;
@@ -605,14 +608,14 @@ export class NotificationsComponent
       this.isOverlayMode = true;
       (window as any).electronMessage.maxmizeCRESideBrowser();
     }
-  
+
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
       type: 'overlay',
       overlayActive: this.isOverlayMode,
     });
-  
+
     // Scroll message into view after CD stabilizes
     this.cdRef.detectChanges();
     this.ngZone.onStable.pipe(take(1)).subscribe(() => {
@@ -621,7 +624,6 @@ export class NotificationsComponent
       requestAnimationFrame(() => this.scrollMessageIntoView(candId));
     });
   }
-  
 
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0;
@@ -762,23 +764,48 @@ export class NotificationsComponent
     return 'system';
   }
 
-
-
-
+ 
   saveNotification(notification: Notification): void {
     if (!notification?.id) return;
   
-    this.placesService.savemessages(notification.id).subscribe({
-      next: (res) => {
-        console.log('Save successful', res);
-   
-       },
+    this.isSaving = true;
+  
+    this.placesService.sendmessages(notification.id).subscribe({
+      next: () => {
+        // force consistent number
+        notification.isEndInsertion = 1;  
+  
+        // show spinner for 1s then hide
+        setTimeout(() => {
+          this.isSaving = false;
+          this.cdRef.detectChanges();
+        }, 1000);
+  
+        this.cdRef.detectChanges(); // ensure Angular re-renders
+      },
       error: (err) => {
         console.error('Save failed', err);
+        this.isSaving = false;
+        this.cdRef.detectChanges();
       }
     });
   }
-   
+  
+  
+  get canShowSave(): boolean {
+    const n = this.selectedNotification;
+    if (!n) return false;
+  
+    // convert string -> number
+    const taskId = +n.taskId;
+  
+    // normalize isEndInsertion (could be 0/1, "0"/"1", boolean)
+    const isEnd =
+      n.isEndInsertion === true ||
+      n.isEndInsertion === 1 ||
+      n.isEndInsertion === '1';
+  
+    return (taskId === 2 || taskId === 3) && !isEnd;
+  }
   
 }
-
