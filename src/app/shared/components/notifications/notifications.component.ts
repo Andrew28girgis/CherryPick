@@ -500,13 +500,11 @@ export class NotificationsComponent
     this.isOverlayMode = !this.isOverlayMode;
     if (this.isOverlayMode == false) {
       if (this.electronSideBar) {
-
-      (window as any).electronMessage.maxmizeCRESideBrowser();
+        (window as any).electronMessage.maxmizeCRESideBrowser();
       }
     } else if (this.isOverlayMode == true) {
       if (this.electronSideBar) {
-
-      (window as any).electronMessage.minimizeCRESideBrowser();
+        (window as any).electronMessage.minimizeCRESideBrowser();
       }
     }
 
@@ -527,8 +525,7 @@ export class NotificationsComponent
     // also close overlay if open
     if (this.isOverlayMode) {
       if (this.electronSideBar) {
-
-      (window as any).electronMessage.minimizeCRESideBrowser();
+        (window as any).electronMessage.minimizeCRESideBrowser();
       }
       this.isOverlayMode = false;
 
@@ -616,8 +613,7 @@ export class NotificationsComponent
     if (!this.isOverlayMode) {
       this.isOverlayMode = true;
       if (this.electronSideBar) {
-
-      (window as any).electronMessage.maxmizeCRESideBrowser();
+        (window as any).electronMessage.maxmizeCRESideBrowser();
       }
     }
 
@@ -706,8 +702,7 @@ export class NotificationsComponent
     if (this.isOverlayMode) {
       this.isOverlayMode = false;
       if (this.electronSideBar) {
-
-      (window as any).electronMessage.minimizeCRESideBrowser();
+        (window as any).electronMessage.minimizeCRESideBrowser();
       }
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
@@ -778,22 +773,21 @@ export class NotificationsComponent
     return 'system';
   }
 
- 
   saveNotification(notification: Notification): void {
     if (!notification?.id) return;
-  
+
     this.isSaving = true;
-  
+
     this.placesService.savemessages(notification.id).subscribe({
       next: (res) => {
         // console.log('campaign is from electronnnnn', res);
-  
+
         if (+notification.taskId === 3) {
           this.getCampaigns();
         }
-  
+
         notification.isEndInsertion = 1;
-  
+
         // show spinner for 1s then hide
         this.showSaveToast = true;
         this.cdRef.detectChanges();
@@ -801,32 +795,32 @@ export class NotificationsComponent
           this.showSaveToast = false;
           this.cdRef.detectChanges();
         }, 2500);
-  
+
         this.isSaving = false;
       },
       error: (err) => {
         console.error('Save failed', err);
         this.isSaving = false;
         this.cdRef.detectChanges();
-      }
+      },
     });
   }
-  
+
   getCampaigns(): void {
     const request = { Name: 'GetCampaignsNeedUrls', Params: {} };
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
         console.log('GetCampaignsNeedUrls response:', response);
-  
+
         // Safely grab the first id from response.json
         const id = response?.json?.[0]?.id;
-  // console.log(id,'idddddd');
-  
+        // console.log(id,'idddddd');
+
         if (id == null) {
           console.error('No id found in response.json');
           return;
         }
-  
+
         try {
           // console.log(id,'iddddddelectronnnn');
 
@@ -841,28 +835,32 @@ export class NotificationsComponent
       },
       error: (err) => {
         console.error('GetCampaignsNeedUrls failed', err);
-      }
+      },
     });
   }
-  
-  
-  
-  
+
   get canShowSave(): boolean {
     const n = this.selectedNotification;
     if (!n) return false;
-  
+
     // convert string -> number
     const taskId = +n.taskId;
-  
+
     // normalize isEndInsertion (could be 0/1, "0"/"1", boolean)
     const isEnd =
       n.isEndInsertion === true ||
       n.isEndInsertion === 1 ||
       n.isEndInsertion === '1';
-  
+
     return (taskId === 2 || taskId === 3) && !isEnd;
   }
-  
- 
+
+  loadHtmlInsideNewWindow(html: string): void {
+    if (this.electronSideBar) {
+      (window as any).electronMessage.loadHtmlInsideNewWindow(html);
+    } else {
+      this.isOverlayMode = true;
+      this.overlayHtml = html;
+    }
+  }
 }

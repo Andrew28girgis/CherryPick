@@ -26,43 +26,56 @@
 
     <div class="overlay-grid" (click)="$event.stopPropagation()">
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
-      <section class="overlay-left" >
+      <section *ngIf="!electronSideBar" class="overlay-left">
         <header class="overlay-content-header">
           <div class="d-flex align-items-center justify-content-between w-100">
             <h3 class="overlay-title">Details</h3>
           </div>
-          <button class="overlay-toggle-button" (click)="toggleOverlayMode()"></button>
+          <button
+            class="overlay-toggle-button"
+            (click)="toggleOverlayMode()"
+          ></button>
         </header>
-      
+
         <!-- Wrapper: fills column height, content scrolls, button stays visible -->
         <div class="container-overlay-btn">
           <div class="overlay-content" [innerHTML]="overlayHtml"></div>
-      
-          <div class="save-div"  *ngIf="selectedNotification 
-          && (+selectedNotification.taskId === 2 || +selectedNotification.taskId === 3 ) 
-          && +selectedNotification.isEndInsertion === 0">
+
+          <div
+            class="save-div"
+            *ngIf="
+              selectedNotification &&
+              (+selectedNotification.taskId === 2 ||
+                +selectedNotification.taskId === 3) &&
+              +selectedNotification.isEndInsertion === 0
+            "
+          >
             <button
-              *ngIf="selectedNotification 
-                     && (+selectedNotification.taskId === 2 || +selectedNotification.taskId === 3 ) 
-                     && +selectedNotification.isEndInsertion === 0"
+              *ngIf="
+                selectedNotification &&
+                (+selectedNotification.taskId === 2 ||
+                  +selectedNotification.taskId === 3) &&
+                +selectedNotification.isEndInsertion === 0
+              "
               class="btn save-btn"
               (click)="saveNotification(selectedNotification)"
               [disabled]="isSaving"
             >
-              <ng-container *ngIf="!isSaving; else savingTpl">Save</ng-container>
+              <ng-container *ngIf="!isSaving; else savingTpl"
+                >Save</ng-container
+              >
             </button>
           </div>
         </div>
       </section>
-      
+
       <ng-template #savingTpl>
         <span class="btn-spinner"></span>
         <span>Saving…</span>
       </ng-template>
-      
+
       <!-- Toast (alert) -->
       <div class="save-toast" *ngIf="showSaveToast">Saved successfully</div>
-      
 
       <!-- RIGHT: Chat column (single instance, always rendered when panel is visible) -->
       <section class="overlay-right">
@@ -173,7 +186,7 @@
               </div>
 
               <!-- Action buttons only for system notifications with JSON (unchanged) -->
-              <!-- <div
+              <div
                 *ngIf="
                   item.from === 'system' &&
                   item.notification?.json &&
@@ -196,13 +209,13 @@
                   No
                 </button>
                 <button
-                  *ngIf="displayViewButton"
+                  *ngIf="item.notification?.html"
                   class="emily-btn"
-                  [routerLink]="['/ai-ui-HTML', item.notification?.id]"
+                  (click)="loadHtmlInsideNewWindow(item.notification?.html)"
                 >
                   View
                 </button>
-              </div> -->
+              </div>
             </div>
           </div>
           <!-- Typing indicator bubble -->
