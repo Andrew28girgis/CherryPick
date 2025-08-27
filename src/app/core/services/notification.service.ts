@@ -80,7 +80,7 @@ export class NotificationService {
     if (newNotifications.length > 0) {
       // Mark these new notifications as read since chat is open
       newNotifications.forEach((notification) => {
-        if(notification.isRead==0 && notification.contextExtendPrompt.trim()!==''){
+        if(notification.isRead==0 && notification.contextExtendPrompt.trim()!=='' &&notification.contextExtendPrompt.trim()!==null && notification.contextExtendPrompt.trim().toLowerCase()!=='null'){
           console.log('sendElectronMessageeeee',notification);
           
            const token = localStorage.getItem('token') || '';
