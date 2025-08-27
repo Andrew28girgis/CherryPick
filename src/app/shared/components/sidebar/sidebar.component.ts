@@ -4,8 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
-import { UserView } from '../header/header.component';
-import { filter } from 'rxjs/operators';
+ import { filter } from 'rxjs/operators';
+ type UserView = 'campaigns' | 'landlord';
 
 @Component({
   selector: 'app-sidebar',
