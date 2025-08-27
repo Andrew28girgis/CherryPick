@@ -26,8 +26,8 @@
   border-color: var(--Colors-Primary-600);
 }
 .x-btn-primary:active {
-  background-color: #1d116b;
-  border-color: #1d116b;
+  background-color:var(--Colors-Primary-700);
+  border-color:var(--Colors-Primary-700);
 }
 .x-btn-primary:disabled {
   background-color: #bcbcbc;

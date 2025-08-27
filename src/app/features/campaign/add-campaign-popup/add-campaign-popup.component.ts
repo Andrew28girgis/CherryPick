@@ -40,8 +40,8 @@ export class AddCampaignPopupComponent implements OnInit {
     if (!this.organizationId) {
       this.displayOrganizationsList = true;
       this.getAllOrganizations();
-      this.getAllStates();
     }
+    this.getAllStates();
   }
 
   private getAllOrganizations(): void {
