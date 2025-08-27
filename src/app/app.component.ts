@@ -98,6 +98,7 @@ overlayActive = false;
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
   }
+
   onCopilotStateChange(evt: any) {
     if (evt?.type === 'overlay') {
       this.overlayActive = !!evt.overlayActive;
@@ -106,9 +107,6 @@ overlayActive = false;
   
     this.isCopilotOpen = evt.isOpen;
     this.isCopilotFullyOpen = evt.isFullyOpen;
-  }
-  
-
- 
+  } 
 
 }
