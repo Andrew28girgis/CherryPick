@@ -562,7 +562,7 @@ export class NotificationsComponent
   }
 
   private scanAndOpenOverlayForHtml(): void {
-    // if (!this.awaitingResponse) return;
+    if (!this.awaitingResponse) return;
 
     const list = this.notificationService?.notifications ?? [];
     if (!Array.isArray(list) || list.length === 0) return;
@@ -578,13 +578,16 @@ export class NotificationsComponent
       (n.message ?? '').trim() === this.pendingSentText.trim();
 
     // 1) Find user echo
-  // ❌ currently forces userEcho first:
-  // const userEcho = list.find(n => isUser(n) && isNewSinceSend(n) && matchesPendingText(n));
-  // if (!userEcho) return;
+    const userEcho = list.find(
+      (n) => isUser(n) && isNewSinceSend(n) && matchesPendingText(n)
+    );
+    if (!userEcho) return;
 
-  // ✅ Instead, go directly to candidate system HTML:
-  const candidate = list.find(n => isSystem(n) && isNewSinceSend(n) && this.hasHtml(n));
-  if (!candidate) return;
+    // 2) Find candidate system notification with HTML
+    const candidate = list.find(
+      (n) => isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)
+    );
+    if (!candidate) return;
 
     const candId = idKeyOf(candidate);
     if (this.shownForIds.has(candId)) return;
