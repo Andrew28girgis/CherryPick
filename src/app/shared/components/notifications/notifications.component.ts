@@ -138,7 +138,7 @@ export class NotificationsComponent
     this.intervalId = setInterval(() => {
       const prevLength = this.notificationService.notifications.length;
       this.notificationService.fetchUserNotifications();
-        this.sortNotificationsByDateAsc();
+      this.sortNotificationsByDateAsc();
 
       setTimeout(() => {
         const newLength = this.notificationService.notifications.length;
@@ -494,7 +494,11 @@ export class NotificationsComponent
   toggleOverlayMode(): void {
     if (!this.isOpen) return;
     this.isOverlayMode = !this.isOverlayMode;
-    this.notifyElectronOverlay(this.isOverlayMode);
+    if (this.isOverlayMode == false) {
+      (window as any).electronMessage.maxmizeCRESideBrowser();
+    } else if (this.isOverlayMode == true) {
+      (window as any).electronMessage.minimizeCRESideBrowser();
+    }
 
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
@@ -512,7 +516,7 @@ export class NotificationsComponent
 
     // also close overlay if open
     if (this.isOverlayMode) {
-      this.notifyElectronOverlay(false);
+      (window as any).electronMessage.minimizeCRESideBrowser();
 
       this.isOverlayMode = false;
 
@@ -553,7 +557,8 @@ export class NotificationsComponent
 
     const idKeyOf = (n: Notification) =>
       typeof n.id === 'number' ? n.id : String(n.id);
-    const isUser = (n: Notification) => n.notificationCategoryId === true || n.notificationCategoryId === 1;
+    const isUser = (n: Notification) =>
+      n.notificationCategoryId === true || n.notificationCategoryId === 1;
     const isSystem = (n: Notification) => !isUser(n);
     const isNewSinceSend = (n: Notification) =>
       !this.preSendIds.has(idKeyOf(n));
@@ -605,7 +610,7 @@ export class NotificationsComponent
     }
     if (!this.isOverlayMode) {
       this.isOverlayMode = true;
-      this.notifyElectronOverlay(true);
+      (window as any).electronMessage.maxmizeCRESideBrowser();
     }
 
     this.sidebarStateChange.emit({
@@ -627,25 +632,32 @@ export class NotificationsComponent
 
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0;
-  
-    const notificationItems: ChatItem[] =
-      (this.notificationService?.notifications ?? []).map((n) => ({
-        key: `n-${n.id}-${seqCounter++}`,
-        from: this.mapCategoryToFrom(n.notificationCategoryId),
-        message: n.message,
-        created: new Date(n.createdDate),
-        notification: n,
-      }));
-  
+
+    const notificationItems: ChatItem[] = (
+      this.notificationService?.notifications ?? []
+    ).map((n) => ({
+      key: `n-${n.id}-${seqCounter++}`,
+      from: this.mapCategoryToFrom(n.notificationCategoryId),
+      message: n.message,
+      created: new Date(n.createdDate),
+      notification: n,
+    }));
+
     // unchanged: “user” notifications are those with id === true | 1
     const userNotificationMessages = new Set(
       (this.notificationService?.notifications ?? [])
-        .filter((n) => n.notificationCategoryId === true || Number(n.notificationCategoryId) === 1)
+        .filter(
+          (n) =>
+            n.notificationCategoryId === true ||
+            Number(n.notificationCategoryId) === 1
+        )
         .map((n) => n.message.trim().toLowerCase())
     );
-  
+
     const sentMessageItems: ChatItem[] = (this.sentMessages ?? [])
-      .filter((m) => !userNotificationMessages.has(m.message.trim().toLowerCase()))
+      .filter(
+        (m) => !userNotificationMessages.has(m.message.trim().toLowerCase())
+      )
       .map((m) => ({
         key: `u-${m.createdDate}-${seqCounter++}`,
         from: 'user',
@@ -653,7 +665,7 @@ export class NotificationsComponent
         created: new Date(m.createdDate),
         userMsg: m,
       }));
-  
+
     return [...notificationItems, ...sentMessageItems].sort((a, b) => {
       const diff = a.created.getTime() - b.created.getTime();
       if (diff !== 0) return diff;
@@ -686,7 +698,7 @@ export class NotificationsComponent
     // Any click directly on the backdrop should close overlay
     if (this.isOverlayMode) {
       this.isOverlayMode = false;
-      this.notifyElectronOverlay(false);
+      (window as any).electronMessage.minimizeCRESideBrowser();
 
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
@@ -750,9 +762,6 @@ export class NotificationsComponent
     }
   }
 
-  private notifyElectronOverlay(visible: boolean): void {
-    try { window.electronAPI?.chatbotOverlayVisible?.(!!visible); } catch {}
-  }
   private mapCategoryToFrom(categoryId: unknown): ChatFrom {
     const cat = Number(categoryId); // handles number | string | boolean
     if (categoryId === true || cat === 1) return 'user';
