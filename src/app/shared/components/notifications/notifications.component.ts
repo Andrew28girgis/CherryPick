@@ -160,6 +160,7 @@ private typingHideTimer?: any; // to auto-hide after a long delay, just in case
     if (this.intervalId) clearInterval(this.intervalId);
     this.scanSub?.unsubscribe?.();
     this.sidebarStateChange.emit({ isOpen: false, isFullyOpen: false });
+    clearTimeout(this.typingHideTimer);
   }
 
   ngAfterViewInit(): void {
