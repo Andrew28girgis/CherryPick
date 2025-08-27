@@ -683,7 +683,9 @@
 }
 .overlay-content {
   height:90vh;
+  width: 64vw;
   overflow-y: scroll;
+  overflow-x: scroll;
   padding: 16px;
   word-wrap: break-word;
 }
