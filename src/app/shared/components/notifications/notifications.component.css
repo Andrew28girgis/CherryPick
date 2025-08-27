@@ -478,6 +478,7 @@
 }
 
 .message-bubble.user {
+
   align-self: flex-end !important;
   background: var(--Colors-Primary-500, #b51f63) !important;
   color: white !important;
@@ -828,8 +829,9 @@
     opacity: 1;
   }
 }
-
+/* hide the ai message */
 .message-bubble.ai {
+  display: none;
   align-self: flex-start;
   background: #eef2ff; /* soft indigo */
   border: 1px solid #c7d2fe; /* subtle outline */
