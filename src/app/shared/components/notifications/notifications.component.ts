@@ -498,9 +498,15 @@ export class NotificationsComponent
     if (!this.isOpen) return;
     this.isOverlayMode = !this.isOverlayMode;
     if (this.isOverlayMode == false) {
+      if (this.electronSideBar) {
+
       (window as any).electronMessage.maxmizeCRESideBrowser();
+      }
     } else if (this.isOverlayMode == true) {
+      if (this.electronSideBar) {
+
       (window as any).electronMessage.minimizeCRESideBrowser();
+      }
     }
 
     this.sidebarStateChange.emit({
@@ -519,8 +525,10 @@ export class NotificationsComponent
 
     // also close overlay if open
     if (this.isOverlayMode) {
-      (window as any).electronMessage.minimizeCRESideBrowser();
+      if (this.electronSideBar) {
 
+      (window as any).electronMessage.minimizeCRESideBrowser();
+      }
       this.isOverlayMode = false;
 
       this.sidebarStateChange.emit({
@@ -606,7 +614,10 @@ export class NotificationsComponent
     }
     if (!this.isOverlayMode) {
       this.isOverlayMode = true;
+      if (this.electronSideBar) {
+
       (window as any).electronMessage.maxmizeCRESideBrowser();
+      }
     }
 
     this.sidebarStateChange.emit({
@@ -693,8 +704,10 @@ export class NotificationsComponent
     // Any click directly on the backdrop should close overlay
     if (this.isOverlayMode) {
       this.isOverlayMode = false;
-      (window as any).electronMessage.minimizeCRESideBrowser();
+      if (this.electronSideBar) {
 
+      (window as any).electronMessage.minimizeCRESideBrowser();
+      }
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
         isFullyOpen: this.isOpen,
