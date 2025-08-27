@@ -148,7 +148,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         keyboard: false,
         centered: true,
         windowClass: 'fancy-modal-window',
-        backdropClass: 'fancy-modal-backdrop'
+        backdropClass: 'fancy-modal-backdrop',
       });
     }
   }
@@ -161,7 +161,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.isSaving = true;
     this.errorMessage = null;
-    
+
     const body = {
       Name: 'SetGPTAPIKey',
       Params: { OpenAIKey: this.AIKey },
@@ -171,15 +171,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.isSaving = false;
         this.saveSuccess = true;
-        this.showToast(
-            'ChatGPT Key Has Been Added Successfully'
-          );
+        this.showToast('ChatGPT Key Has Been Added Successfully');
         this.modalService.dismissAll();
       },
       error: (err) => {
         this.isSaving = false;
         this.errorMessage = err.message || 'Failed to save ChatGPT Key';
-      }
+      },
     });
   }
 
@@ -189,7 +187,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
     this.AIKey = '';
   }
-    showToast(message: string) {
+  showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
     if (toast && toastMessage) {
@@ -202,7 +200,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       console.warn('Toast elements not found in DOM.');
     }
   }
-  GetUserAPIAIKey(){
+  GetUserAPIAIKey() {
     const body = {
       Name: 'GetUserAPIAIKey',
       Params: {},
@@ -213,8 +211,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.errorMessage = err.message || 'Failed to retrieve ChatGPT Key';
-      }
+      },
     });
   }
-
 }
