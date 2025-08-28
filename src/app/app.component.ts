@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   isCopilotFullyOpen = false;
   isEmilyChatBot: boolean = false; // Initialize with a default value
   overlayActive = false;
+  CampaignId: any;
 
   constructor(
     private router: Router,
@@ -37,6 +38,15 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+          let currentRoute = this.activatedRoute
+      while (currentRoute.firstChild) {
+        currentRoute = currentRoute.firstChild
+      }
+
+    this.CampaignId = currentRoute
+    console.log("Campaign ID from child route:", currentRoute)
+
+
     const apiMode = this.localStorage.getItem('apiMode');
     if (apiMode && JSON.parse(apiMode)) {
       this.placeService.setAppMode('api');

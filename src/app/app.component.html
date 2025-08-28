@@ -39,6 +39,7 @@
     *ngIf="
       isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
     "
+    [campaignId]="CampaignId"
     (sidebarStateChange)="onCopilotStateChange($event)"
   >
   </app-notifications>

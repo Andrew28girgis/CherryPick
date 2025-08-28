@@ -55,7 +55,7 @@ export class SummeryComponent implements OnInit {
     this.placeService.GenericAPI(body).subscribe({
       next: (data: any) => {
         if (!data.json || !data.json.length) {
-          this.openAddTenantModal(this.tenantModal);
+          // this.openAddTenantModal(this.tenantModal);
           return;
         }
         this.tenants = data.json;

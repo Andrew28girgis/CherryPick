@@ -62,6 +62,7 @@ export class NotificationsComponent
   private typingTempId = '__typing__'; // a stable pseudo id for trackBy
   isTyping = false;
   private typingHideTimer?: any; // to auto-hide after a long delay, just in case
+  private lastUserMessageId: number | null = null;
 
   notifications: Notification[] = [];
   messageText = '';
@@ -111,9 +112,11 @@ export class NotificationsComponent
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
 
   ngOnInit(): void {
+ 
     this.activatedRoute.queryParamMap.subscribe((parms) => {
       const view = parms.get('View');
       if (view && !JSON.parse(view)) this.displayViewButton = false;
+      
     });
 
     this.isOpen = true;
@@ -129,7 +132,7 @@ export class NotificationsComponent
       this.CampaignId = params.campaignId;
     });
 
-    this.notificationService.initNotifications();
+    this.notificationService.initNotifications(this.CampaignId);
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
 
@@ -141,15 +144,30 @@ export class NotificationsComponent
     // Polling
     this.intervalId = setInterval(() => {
       const prevLength = this.notificationService.notifications.length;
-      this.notificationService.fetchUserNotifications();
+      this.notificationService.fetchUserNotifications(this.CampaignId);
       this.sortNotificationsByDateAsc();
 
       setTimeout(() => {
         const newLength = this.notificationService.notifications.length;
 
         if (newLength > prevLength) {
-          if (this.isAtBottom()) this.scrollToBottom();
-          else {
+          // <CHANGE> Check if any new notification is a direct reply (ID = lastUserMessageId + 1)
+          const isDirectReply =
+            this.lastUserMessageId !== null &&
+            this.notifications.some(
+              (n) => n.id === this.lastUserMessageId! + 1
+            );
+
+          if (isDirectReply) {
+            // This is the direct reply to user's message - auto scroll
+            this.scrollToBottom();
+            this.lastUserMessageId = null; // Reset after handling reply
+            this.awaitingResponse = false;
+          } else if (this.isAtBottom()) {
+            // User is at bottom - scroll to show new notification
+            this.scrollToBottom();
+          } else {
+            // User scrolled up - show scroll button instead
             this.newNotificationsCount += newLength - prevLength;
             this.showScrollButton = true;
           }
@@ -203,19 +221,13 @@ export class NotificationsComponent
       if (this.messagesContainer) {
         const container = this.messagesContainer.nativeElement;
 
-        // Use smooth scrolling behavior
-        container.scrollTo({
-          top: container.scrollHeight,
-          behavior: 'smooth',
-        });
+        container.scrollTop = container.scrollHeight;
 
-        // Reset notification indicators after animation completes
-        setTimeout(() => {
-          if (this.isAtBottom()) {
-            this.showScrollButton = false;
-            this.newNotificationsCount = 0;
-          }
-        }, 300); // Timing to match scroll animation completion
+        // Check immediately if we're at bottom and reset indicators
+        if (this.isAtBottom()) {
+          this.showScrollButton = false;
+          this.newNotificationsCount = 0;
+        }
       }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
@@ -471,6 +483,10 @@ export class NotificationsComponent
     const body: any = { Chat: text };
     this.placesService.sendmessages(body).subscribe({
       next: () => {
+        this.lastUserMessageId = Math.max(
+          ...this.notifications.map((n) => n.id)
+        );
+        this.awaitingResponse = true;
         this.isSending = false;
         this.hideTyping();
         this.scanTrigger$.next();

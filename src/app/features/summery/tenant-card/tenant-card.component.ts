@@ -83,9 +83,12 @@ export class TenantCardComponent {
     const modalRef = this.modalService.open(AddCampaignPopupComponent, {
       centered: true,
     });
+  
     modalRef.componentInstance.organizationId = this.tenant.id;
+  
+    // 👇 inject a callback so popup can call it
+    modalRef.componentInstance.closeOffcanvasFn = () => this.closeOffcanvas();
   }
-
   protected closeOffcanvas(): void {
     this.offcanvasService.dismiss();
   }

@@ -477,20 +477,7 @@
       <div class="btn-hover-effect"></div>
     </button>
 
-    <button class="add-sites-btn google-btn" (click)="navigateToMap()">
-      <div class="btn-content">
-        <img
-          loading="lazy"
-          alt="Google Maps Logo"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png?20200329030310"
-          width="30"
-          height="30"
-          class="btn-icon"
-        />
-        <span class="btn-text">Google Maps</span>
-      </div>
-      <div class="btn-hover-effect"></div>
-    </button>
+   
 
     <!-- Updated Upload OM Files button with file drop functionality -->
     <div
@@ -595,6 +582,20 @@
       </ngx-file-drop>
       <button class="cancel-btn" (click)="cancelFileUpload()">Cancel</button>
     </div>
+    <button class="add-sites-btn google-btn" (click)="navigateToMap()">
+      <div class="btn-content">
+        <img
+          loading="lazy"
+          alt="Google Maps Logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png?20200329030310"
+          width="30"
+          height="30"
+          class="btn-icon"
+        />
+        <span class="btn-text">Google Maps</span>
+      </div>
+      <div class="btn-hover-effect"></div>
+    </button>
 
     <!-- <button class="add-sites-btn manual-btn">
       <div class="btn-content">
@@ -660,6 +661,30 @@
 
   <div class="modal-body" [ngClass]="{'modal-body-spinner': websiteCards.length<=0}">
     <!-- Show cards when array has items -->
+    <div class="website-search-row">
+      <input
+        type="text"
+        class="form-control website-search-input"
+        placeholder="Search the web (e.g., real estate)…"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="openGoogleSearchLikeCard()"
+      />
+      <button
+        type="button"
+        class="btn website-search-icon"
+        title="Search on Google "
+        (click)="openGoogleSearchLikeCard()"
+      >
+        <img alt="Google" src="https://www.google.com/favicon.ico" width="18" height="18" />
+      </button>
+      <button
+        type="button"
+        class="btn  website-search-btn"
+        (click)="openGoogleSearchLikeCard()"
+      >
+        Search
+      </button>
+    </div>
     <div
       class="modal-content website-cards-grid"
       *ngIf="websiteCards.length>0; else loadingTpl"
