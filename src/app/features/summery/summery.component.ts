@@ -122,7 +122,7 @@ export class SummeryComponent implements OnInit {
         this.newTenantName = orgName;
         this.modalService.dismissAll();
         this.resetAddTenantForm();
-        this.openCampaignModal();
+        // this.openCampaignModal();
       }
     });
   }

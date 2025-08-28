@@ -4,31 +4,33 @@
   display: flex;
   flex-direction: column;
   height: fit-content;
-   min-height: 0;
+  min-height: 0;
 }
 .main-inner {
   /* keep your existing styles… */
   /* height: 600px;              */
-  overflow-y: auto;           /* 'auto' avoids scrollbars when not needed */
-  padding: var(--Space-S-32) ;
+  height: 70vh !important;
+  overflow-y: scroll;
+
+  overflow-y: auto; /* 'auto' avoids scrollbars when not needed */
+  padding: var(--Space-S-32);
   align-items: center;
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
   background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
 
   /* ✅ the important changes */
   width: 100%;
   max-width: 100%;
-  min-width: 0;               /* prevents content from forcing overflow */
-  box-sizing: border-box;     /* padding included in the width */
+  min-width: 0; /* prevents content from forcing overflow */
+  box-sizing: border-box; /* padding included in the width */
 }
-
 
 .header-container {
   display: flex;
   align-items: center;
-  gap: var(--Space-S-12) ;
-  padding-top:  var(--Space-S-24) ;
+  gap: var(--Space-S-12);
+  padding-top: var(--Space-S-24);
   padding-bottom: 21px;
 }
 
@@ -37,12 +39,12 @@
   display: flex;
   max-width: 624px;
   height: 48px;
-  padding:  var(--Space-S-8) ;
-   justify-content: space-between;
+  padding: var(--Space-S-8);
+  justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  border-radius:   var(--Radius-R-24) ;
-  border: 1px solid var(--Colors-Neutral-100 );
+  border-radius: var(--Radius-R-24);
+  border: 1px solid var(--Colors-Neutral-100);
   background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
@@ -50,13 +52,13 @@
 
 .actions-section {
   display: flex;
-  gap: var(--Space-S-12) ;
+  gap: var(--Space-S-12);
   flex-shrink: 0;
 }
 .search-container {
   display: flex;
   align-items: center;
-  gap: var(--Space-S-8) ; /* creates gap between icon and input */
+  gap: var(--Space-S-8); /* creates gap between icon and input */
   flex: 1 0 0;
 }
 .icon {
@@ -80,9 +82,8 @@
 }
 
 .search-input::placeholder {
-   color: var(--Colors-Neutral-500 );
+  color: var(--Colors-Neutral-500);
 
-   
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -96,9 +97,9 @@
   height: 48px;
   padding: var(--Space-S-8) var(--Space-S-24, 24px);
   align-items: center;
-  gap: var(--Space-S-4  );
+  gap: var(--Space-S-4);
   border: none;
-  border-radius:  var(--Radius-R-24) ;
+  border-radius: var(--Radius-R-24);
   background: var(--Main-Container-BG);
   backdrop-filter: blur(50px);
 }
@@ -112,9 +113,9 @@
   background: var(--Colors-Card-Background);
   backdrop-filter: blur(100px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius:  var(--Radius-R-20) ;
-  padding: var(--Space-S-16) ;
-  margin-top: var(--Space-S-8)  !important;
+  border-radius: var(--Radius-R-20);
+  padding: var(--Space-S-16);
+  margin-top: var(--Space-S-8) !important;
 }
 .tenant-container {
   width: 100%;
@@ -147,15 +148,15 @@
   cursor: pointer;
   display: flex;
   height: 48px;
-  padding: var(--Space-S-14)   var(--Space-S-24) ;
+  padding: var(--Space-S-14) var(--Space-S-24);
   justify-content: center;
   align-items: center;
-  gap: var(--Space-S-8) ;
-  border-radius: var(--Radius-R-16 );
+  gap: var(--Space-S-8);
+  border-radius: var(--Radius-R-16);
   background: var(--Colors-Primary-500);
-  color: var(--Colors-Pure-White );
+  color: var(--Colors-Pure-White);
   text-align: center;
-   
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -174,17 +175,17 @@
 }
 
 .add-tenant-btn span {
-  color: var(--Colors-Pure-White );
+  color: var(--Colors-Pure-White);
   text-align: center;
-background: none;
+  background: none;
   /* Body/16/30/Medium */
-   
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 30px; /* 187.5% */
 }
-.cancel-tenant-btn{
+.cancel-tenant-btn {
   background-color: #f8f9fa;
   color: #6c757d;
   border: 1px solid #dee2e6;

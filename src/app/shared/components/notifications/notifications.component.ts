@@ -20,6 +20,7 @@ import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
 import { take, finalize } from 'rxjs/operators';
+import html2pdf from 'html2pdf.js';
 
 type ChatFrom = 'user' | 'system' | 'ai';
 
@@ -82,12 +83,16 @@ export class NotificationsComponent
   displayViewButton = true;
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
+  @ViewChild('contentToDownload') contentToDownload!: ElementRef;
   outgoingText = '';
   isSending = false;
   sentMessages: any[] = [];
   isOverlayMode = false;
   overlayHtml: SafeHtml = '';
-
+  showPdfTitleDialog = false;
+  pdfTitle = '';
+  isGeneratingPdf = false;
+  
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
   public selectedNotification: Notification | null = null;
@@ -879,4 +884,80 @@ export class NotificationsComponent
       this.overlayHtml = html;
     }
   }
+  async downloadPDF(): Promise<void> {
+    if (!this.contentToDownload) {
+      console.error('No container found for PDF export');
+      return;
+    }
+  
+    const container = this.contentToDownload.nativeElement as HTMLElement;
+  
+    // 1) Fix cross-origin images
+    const imgs = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
+    await Promise.all(
+      imgs.map(async (img) => {
+        try {
+          if (/^https?:\/\//.test(img.src) && !img.src.startsWith(window.location.origin)) {
+            img.src = await this.toDataURL(img.src);
+          }
+        } catch (err) {
+          console.warn('Could not embed image:', img.src, err);
+        }
+      })
+    );
+  
+    // 2) File name
+    const filename = `Emily-Report-${Date.now()}.pdf`;
+  
+    // 3) Options
+    const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
+    const jsPDFOpts: any = { unit: 'pt', format: 'a4', orientation: 'portrait' };
+  
+    // 4) Generate
+    await html2pdf()
+      .from(container)
+      .set({
+        filename,
+        margin: 15,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: h2cOpts,
+        jsPDF: jsPDFOpts,
+        pagebreak: { mode: ['css', 'legacy'] },
+      })
+      .save();
+  }
+  
+  // helper
+  private async toDataURL(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+  showPdfDialog(): void {
+    this.pdfTitle = `Emily-Report-${new Date().toLocaleDateString()}`;
+    this.showPdfTitleDialog = true;
+  }
+  
+  cancelPdfDialog(): void {
+    this.showPdfTitleDialog = false;
+    this.pdfTitle = '';
+  }
+  
+  confirmPdfDownload(): void {
+    if (!this.pdfTitle.trim()) return;
+    this.showPdfTitleDialog = false;
+    this.downloadPDF();
+  }
+  
 }

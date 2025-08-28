@@ -27,28 +27,82 @@
     <div class="overlay-grid" (click)="$event.stopPropagation()">
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
       <section *ngIf="!electronSideBar" class="overlay-left">
-        <header class="overlay-content-header">
-          <div class="d-flex align-items-center justify-content-between w-100">
-            <h3 class="overlay-title">Details</h3>
-          </div>
-          <button class="overlay-toggle-button" (click)="toggleOverlayMode()">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
+        <header class="overlay-content-header d-flex align-items-center justify-content-between w-100">
+          <h3 class="overlay-title mb-0">Details</h3>
+        
+          <div class="d-flex align-items-center gap-2">
+            <!-- Save PDF -->
+            <ng-container *ngIf="overlayHtml">
+              <button
+                *ngIf="!isGeneratingPdf"
+                class="btn btn-sm btn-outline-primary"
+                (click)="downloadPDF()"
+                title="Save as PDF"
+              >
+                📄 Save PDF
+              </button>
+              <div *ngIf="isGeneratingPdf" class="pdf-spinner">Generating PDF...</div>
+            </ng-container>
+        
+            <!-- Toggle Overlay -->
+            <button
+              class="overlay-toggle-button btn btn-sm btn-light"
+              (click)="toggleOverlayMode()"
+              title="Toggle overlay"
             >
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-            </svg>
-          </button>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+          </div>
         </header>
-
+        
+        <!-- PDF Title Dialog -->
+        <div
+          *ngIf="showPdfTitleDialog"
+          class="pdf-dialog-backdrop"
+          (click)="cancelPdfDialog()"
+        >
+          <div class="pdf-dialog" (click)="$event.stopPropagation()">
+            <h4 class="mb-3">Save as PDF</h4>
+        
+            <input
+              type="text"
+              [(ngModel)]="pdfTitle"
+              placeholder="Enter PDF title..."
+              class="form-control mb-3"
+              (keydown.enter)="confirmPdfDownload()"
+              (keydown.escape)="cancelPdfDialog()"
+            />
+        
+            <div class="d-flex justify-content-end gap-2">
+              <button class="btn btn-secondary" (click)="cancelPdfDialog()">Cancel</button>
+              <button
+                class="btn btn-primary"
+                (click)="confirmPdfDownload()"
+                [disabled]="!pdfTitle.trim()"
+              >
+                Save PDF
+              </button>
+            </div>
+          </div>
+        </div>
+        
         <!-- Wrapper: fills column height, content scrolls, button stays visible -->
         <div class="container-overlay-btn">
-          <div class="overlay-content" [innerHTML]="overlayHtml"></div>
+          <div
+            #contentToDownload
+            class="overlay-content"
+            [innerHTML]="overlayHtml"
+          ></div>
 
           <div
             class="save-div"
@@ -195,43 +249,39 @@
               </div>
 
               <!-- Action buttons only for system notifications with JSON (unchanged) -->
-               <div class="d-flex gap-2">
-
-              <div
-                *ngIf="
-                  item.from === 'system' &&
-                  item.notification?.json &&
-                  !isNotificationLoaded(item.notification)
-                "
-                class="choose"
-              >
-                <button
-                  class="emily-btn"
-                  (click)="choose(1, item.notification)"
-                  [disabled]="isNotificationLoading(item.notification)"
+              <div class="d-flex gap-2">
+                <div
+                  *ngIf="
+                    item.from === 'system' &&
+                    item.notification?.json &&
+                    !isNotificationLoaded(item.notification)
+                  "
+                  class="choose"
                 >
-                  Yes
-                </button>
-                <button
-                  class="emily-btn"
-                  (click)="choose(0, item.notification)"
-                  [disabled]="isNotificationLoading(item.notification)"
-                >
-                  No
-                </button>
+                  <button
+                    class="emily-btn"
+                    (click)="choose(1, item.notification)"
+                    [disabled]="isNotificationLoading(item.notification)"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    class="emily-btn"
+                    (click)="choose(0, item.notification)"
+                    [disabled]="isNotificationLoading(item.notification)"
+                  >
+                    No
+                  </button>
+                </div>
+                <div class="choose" *ngIf="item.notification?.html">
+                  <button
+                    class="emily-btn"
+                    (click)="loadHtmlInsideNewWindow(item.notification?.html)"
+                  >
+                    View
+                  </button>
+                </div>
               </div>
-              <div class="choose"*ngIf="item.notification?.html">
-
-              <button
-                 class="emily-btn"
-                (click)="loadHtmlInsideNewWindow(item.notification?.html)"
-              >
-                View
-              </button>
-            </div>
-
-            </div>
-
             </div>
           </div>
           <!-- Typing indicator bubble -->
