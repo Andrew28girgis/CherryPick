@@ -963,3 +963,44 @@
 .overlay-grid, .overlay-left, .overlay-right { min-height: 0; }
 /* You already have most of the overlay scaffolding; the important change is the
    .container-overlay-btn + .overlay-content flex/scroll and removing fixed height. */
+/* <CHANGE> Add PDF dialog styles */
+.pdf-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.pdf-dialog {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  min-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.pdf-title-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 12px 0;
+}
+
+.pdf-dialog-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.pdf-spinner {
+  font-size: 12px;
+  color: #666;
+}
