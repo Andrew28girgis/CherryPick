@@ -111,6 +111,8 @@ export class SummeryComponent implements OnInit {
     };
 
     this.placeService.GenericAPI(body).subscribe((orgResponse: any) => {
+      this.getAllActiveOrganizations();
+
       this.spinner.hide();
       const orgId = orgResponse?.json?.[0]?.id;
       const orgName = orgResponse?.json?.[0]?.name;
