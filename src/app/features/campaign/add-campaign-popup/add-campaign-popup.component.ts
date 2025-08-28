@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Tenant } from 'src/app/shared/models/tenant';
+import { Offcanvas } from 'bootstrap';
 
 @Component({
   selector: 'app-add-campaign-popup',
@@ -15,6 +17,7 @@ export class AddCampaignPopupComponent implements OnInit {
   @Input() popupTitle: string = 'Launch Your Campaign';
   @Input() secondaryButtonText: string = 'Cancel';
   @Output() onSecondaryButtonClicked = new EventEmitter<boolean>();
+  @Output() requestCloseOffcanvas = new EventEmitter<void>();
   campaignId!: number;
   states: Array<{ stateName: string; stateCode: string }> = [];
   selectedState: string | null = null;
@@ -29,19 +32,22 @@ export class AddCampaignPopupComponent implements OnInit {
   protected campaignMaxSize: number = 500;
   protected allOrganizations!: Tenant[];
   protected displayOrganizationsList: boolean = false;
+  closeOffcanvasFn!: () => void;
 
   constructor(
     private activeModalService: NgbActiveModal,
     private placesService: PlacesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private router: Router,
+    public activeModal: NgbActiveModal
   ) {}
 
   ngOnInit(): void {
+    this.getAllStates();
     if (!this.organizationId) {
       this.displayOrganizationsList = true;
       this.getAllOrganizations();
     }
-    this.getAllStates();
   }
 
   private getAllOrganizations(): void {
@@ -78,7 +84,9 @@ export class AddCampaignPopupComponent implements OnInit {
       if (response.json && response.json.length > 0 && response.json[0].id) {
         const campaignId = response.json[0].id;
         this.campaignId = campaignId;
-        this.navigateToMap();
+        // this.navigateToMap();
+        this.requestCloseOffcanvas.emit();
+        this.navigateToShoppingCenterAndOpenUpload(campaignId);
         // const url = 'https://www.google.com/maps/search/shopping+centers+malls';
         // window.location.href = `${url}?campaignId=${response.json[0].id}&campaignName=${this.campaignName}&organizationId=${this.organizationId}`;
         this.electronMessageWithStateName();
@@ -119,5 +127,29 @@ export class AddCampaignPopupComponent implements OnInit {
         this.states = [];
       }
     });
+  }
+
+  private navigateToShoppingCenterAndOpenUpload(newCampaignId: number) {
+    if (this.closeOffcanvasFn) {
+      this.closeOffcanvasFn();
+    }
+
+    const orgId = this.organizationId;
+    const orgName =
+      this.allOrganizations?.find((o) => o.id === orgId)?.name || '';
+
+    this.router.navigate(['/dashboard', orgId, orgName, newCampaignId], {
+      state: { openUpload: true },
+    });
+
+    this.activeModal.close();
+  }
+  closeOffcanvas() {
+    const offcanvasEl = document.getElementById('addCampaignOffcanvas');
+    if (offcanvasEl) {
+      const bsOffcanvas =
+        Offcanvas.getInstance(offcanvasEl) || new Offcanvas(offcanvasEl);
+      bsOffcanvas.hide();
+    }
   }
 }

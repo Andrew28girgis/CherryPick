@@ -8,8 +8,7 @@ import {
   ViewEncapsulation,
   TemplateRef,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MapViewComponent } from './map-view/map-view.component';
+ import { MapViewComponent } from './map-view/map-view.component';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
@@ -21,7 +20,8 @@ import { NgxFileDropEntry } from 'ngx-file-drop';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CreSite } from 'src/app/shared/models/urls';
- 
+import { ActivatedRoute, Router, NavigationStart, NavigationEnd, Event as NavigationEvent } from '@angular/router';
+
 @Component({
   selector: 'app-shopping-center-table',
   templateUrl: './shopping-center-table.component.html',
@@ -113,9 +113,17 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
   // Add these properties
   isFilterMenuOpen = false;
-  urls:any= [];
+  urls: any = [];
   showWebsiteCardsModal = false;
   websiteCards: CreSite[] = [];
+  searchTerm = '';
+  googleSite: CreSite = {
+    name: 'Google',
+    logo: 'https://www.google.com/favicon.ico',
+    url: 'https://www.google.com',
+    // optional: a search template if you store it
+    // searchTemplate: 'https://www.google.com/search?q={q}'
+  } as any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
@@ -127,6 +135,17 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+  // 👇 handle state on navigation
+  this.router.events.subscribe((event: NavigationEvent) => {
+    if (event instanceof NavigationEnd) {
+      const nav = this.router.getCurrentNavigation();
+      if (nav?.extras?.state?.['openUpload']) {
+        setTimeout(() => this.openUpload(), 0);
+      }
+    }
+  });
+
+    
     this.GetAllActiveOrganizations();
     this.cdr.detectChanges();
 
@@ -159,6 +178,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       this.tenantName = params.orgName || '';
       this.encodedName = encodeURIComponent(this.organizationName);
       this.CampaignId = params.campaignId;
+       
       this.selectedCampaignId = params.campaignId
         ? Number(params.campaignId)
         : null;
@@ -222,12 +242,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
     // Add subscription to reload event
     this.subscriptions.add(
-      this.shoppingCenterService.reloadShoppingCenters$.subscribe((shouldReload) => {
-        if (shouldReload) {
-          const orgId = Number(localStorage.getItem('OrgId')) || 0;
-          this.shoppingCenterService.initializeData(this.CampaignId, orgId);
+      this.shoppingCenterService.reloadShoppingCenters$.subscribe(
+        (shouldReload) => {
+          if (shouldReload) {
+            const orgId = Number(localStorage.getItem('OrgId')) || 0;
+            this.shoppingCenterService.initializeData(this.CampaignId, orgId);
+          }
         }
-      })
+      )
     );
   }
 
@@ -353,7 +375,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.selectedSortId = sortOption.id;
     this.isSortMenuOpen = false;
     this.shoppingCenterService.setSortOption(sortOption.id);
-    
   }
 
   getSelectedSortText(): string {
@@ -727,10 +748,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   electronMessageWithcampaignId() {
-    
     this.openWebsiteModal(this.websitemodal);
     this.websiteCards = this.urls || [];
-
   }
   onWebsiteCardClick(website: any) {
     this.showWebsiteCardsModal = false;
@@ -741,7 +760,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       localStorage.getItem('token')
     );
   }
-
   // <CHANGE> Add method to close website cards modal
   closeWebsiteCardsModal() {
     this.showWebsiteCardsModal = false;
@@ -756,9 +774,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.view = false;
   }
 
-
-  
-   GetCREUrls (): void {
+  GetCREUrls(): void {
     const body: any = {
       Name: 'GetCREUrls',
       Params: {
@@ -768,8 +784,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       this.urls = response.json;
-
-     });
+    });
   }
   openWebsiteModal(tpl: TemplateRef<any>) {
     this.GetCREUrls();
@@ -777,10 +792,86 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       size: 'sm',
       centered: true,
       scrollable: true,
-      backdrop: true,               // click outside to close? set 'static' if you don't want that
+      backdrop: true, // click outside to close? set 'static' if you don't want that
       windowClass: 'website-modal-window',
-      backdropClass: 'website-modal-backdrop'
+      backdropClass: 'website-modal-backdrop',
     });
   }
-}
 
+  // Build a search URL for a given site + query
+  private buildSearchUrl(site?: Partial<CreSite>, query = ''): string {
+    const q = encodeURIComponent((query || '').trim());
+    const siteUrl = (site?.url || '').trim();
+
+    // If no query, just open the site home (same as card)
+    if (!q) return siteUrl || 'https://www.google.com';
+
+    // If the site model includes a specific template like "...?q={q}"
+    const tpl = (site as any)?.searchTemplate as string | undefined;
+    if (tpl && tpl.includes('{q}')) return tpl.replace('{q}', q);
+
+    // Known defaults
+    const host = siteUrl.toLowerCase();
+
+    if (!host || host.includes('google.')) {
+      return `https://www.google.com/search?q=${q}`;
+    }
+    if (host.includes('google.com/maps')) {
+      return `https://www.google.com/maps/search/${q}`;
+    }
+    if (host.includes('bing.com')) {
+      return `https://www.bing.com/search?q=${q}`;
+    }
+
+    // Generic fallback
+    if (siteUrl) {
+      const base = siteUrl.replace(/\/$/, '');
+      // Try a common /search?q= pattern
+      return `${base}/search?q=${q}`;
+    }
+
+    // Last resort → Google
+    return `https://www.google.com/search?q=${q}`;
+  }
+
+   private openLikeCard(url: string) {
+    this.showWebsiteCardsModal = false;
+    window.location.href = url; // same as onWebsiteCardClick
+    (window as any).electronMessage.startCREAutomation(
+      this.CampaignId,
+      localStorage.getItem('token')
+    );
+  }
+
+   openSearchOnSite(
+    site: Partial<CreSite> | undefined,
+    query = '',
+    newTab = true
+  ) {
+    const url = this.buildSearchUrl(site, query);
+    if (newTab) {
+      window.open(url, '_blank', 'noopener');
+    } else {
+      window.location.href = url;
+    }
+  }
+
+   openGoogleSearch() {
+    this.openSearchOnSite(this.googleSite, this.searchTerm, true);
+  }
+
+   onWebsiteCardSearch(website: CreSite) {
+    this.openSearchOnSite(website, this.searchTerm, true);
+  }
+
+  openGoogleSearchLikeCard() {
+    const url = this.buildSearchUrl(this.googleSite, this.searchTerm);
+    this.openLikeCard(url);
+  }
+
+  // Called by “Search” on a specific site card
+  onWebsiteCardSearchLikeCard(website: CreSite) {
+    const url = this.buildSearchUrl(website, this.searchTerm);
+    this.openLikeCard(url);
+  }
+}
