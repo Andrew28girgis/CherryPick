@@ -27,10 +27,12 @@
     <div class="overlay-grid" (click)="$event.stopPropagation()">
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
       <section *ngIf="!electronSideBar" class="overlay-left">
-        <header class="overlay-content-header d-flex align-items-center justify-content-between w-100">
+        <header
+          class="overlay-content-header d-flex align-items-center justify-content-between w-100"
+        >
           <h3 class="overlay-title mb-0">Details</h3>
-        
-          <div *ngIf="isOverlayMode " class="d-flex align-items-center gap-2">
+
+          <div *ngIf="isOverlayMode" class="d-flex align-items-center gap-2">
             <!-- Title input -->
             <input
               type="text"
@@ -39,28 +41,31 @@
               class="form-control form-control-sm"
               style="width: 180px"
             />
-        
+
             <!-- Save Title -->
             <button
-              class="btn btn-sm btn-success"
+              class="btn btn-sm btn-success  title-btn"
               (click)="saveTitleInNotification()"
              >
               Save Title
             </button>
-        
+
             <!-- Save PDF -->
             <button
               *ngIf="overlayHtml && !isGeneratingPdf"
-              class="btn btn-sm btn-outline-primary"
+              class="btn btn-sm btn-outline-primary save-pdf-btn"
               (click)="downloadPDF()"
               title="Save as PDF"
+              
             >
               📄 Save PDF
             </button>
-        
+
             <!-- Spinner -->
-            <div *ngIf="isGeneratingPdf" class="pdf-spinner">Generating PDF...</div>
-        
+            <div *ngIf="isGeneratingPdf" class="pdf-spinner">
+              Generating PDF...
+            </div>
+
             <!-- Toggle Overlay -->
             <button
               class="overlay-toggle-button btn btn-sm btn-light"
@@ -81,8 +86,7 @@
             </button>
           </div>
         </header>
-        
-        
+
         <!-- PDF Title Dialog -->
         <div
           *ngIf="showPdfTitleDialog"
@@ -91,7 +95,7 @@
         >
           <div class="pdf-dialog" (click)="$event.stopPropagation()">
             <h4 class="mb-3">Save as PDF</h4>
-        
+
             <input
               type="text"
               [(ngModel)]="pdfTitle"
@@ -100,9 +104,11 @@
               (keydown.enter)="confirmPdfDownload()"
               (keydown.escape)="cancelPdfDialog()"
             />
-        
+
             <div class="d-flex justify-content-end gap-2">
-              <button class="btn btn-secondary" (click)="cancelPdfDialog()">Cancel</button>
+              <button class="btn btn-secondary" (click)="cancelPdfDialog()">
+                Cancel
+              </button>
               <button
                 class="btn btn-primary"
                 (click)="confirmPdfDownload()"
@@ -113,7 +119,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Wrapper: fills column height, content scrolls, button stays visible -->
         <div *ngIf="isOverlayMode" class="container-overlay-btn">
           <div
@@ -257,7 +263,9 @@
               </div>
 
               <div class="message-content">
-                <p class="message-text">{{ item.message }}</p>
+
+                <p class="message-text" *ngIf="item.from === 'ai'">Search Result</p>
+                <p class="message-text" *ngIf="item.from !== 'ai'">{{ item.message }}</p>
                 <time
                   class="message-time"
                   [dateTime]="item.created.toISOString()"
@@ -277,19 +285,20 @@
                   class="choose"
                 >
                   <button
+                  *ngIf="item.notification?.notificationCategoryId === 4"
                     class="emily-btn"
                     (click)="choose(1, item.notification)"
                     [disabled]="isNotificationLoading(item.notification)"
                   >
                     Yes
                   </button>
-                  <button
+                  <!-- <button
                     class="emily-btn"
                     (click)="choose(0, item.notification)"
                     [disabled]="isNotificationLoading(item.notification)"
                   >
                     No
-                  </button>
+                  </button> -->
                 </div>
                 <div class="choose" *ngIf="item.notification?.html">
                   <button
