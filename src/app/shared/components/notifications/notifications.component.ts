@@ -98,7 +98,8 @@ export class NotificationsComponent
   public selectedNotification: Notification | null = null;
   public isSaving = false; // component-level flag
   public showSaveToast = false;
-
+   pdfId: string | number = '';
+  
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -876,13 +877,15 @@ export class NotificationsComponent
     return (taskId === 2 || taskId === 3) && !isEnd;
   }
 
-  loadHtmlInsideNewWindow(html: string): void {
+  loadHtmlInsideNewWindow(notification: Notification): void {
     if (this.electronSideBar) {
-      (window as any).electronMessage.loadHtmlInsideNewWindow(html);
+      (window as any).electronMessage.loadHtmlInsideNewWindow(notification.html);
     } else {
       this.isOverlayMode = true;
-      this.overlayHtml = html;
+      this.overlayHtml = notification.html;
     }
+    console.log(notification.id,'notification.id');
+    this.selectedNotification = notification;
   }
   async downloadPDF(): Promise<void> {
     if (!this.contentToDownload) {
@@ -958,6 +961,44 @@ export class NotificationsComponent
     if (!this.pdfTitle.trim()) return;
     this.showPdfTitleDialog = false;
     this.downloadPDF();
+  }
+  
+
+
+  saveTitleInNotification(): void {
+ 
+    this.isSaving = true;
+  
+    const request = {
+      Name: 'SetTitleInNotification',
+      Params: {
+        Id: this.selectedNotification?.id,
+        Title: this.pdfTitle.trim(),
+      },
+    };
+  
+    this.placesService.GenericAPI(request).subscribe({
+      next: (res) => {
+        console.log('SetTitleInNotification response:', res);
+  
+        // Optionally update locally
+        (this.selectedNotification as any).title = this.pdfTitle.trim();
+  
+        this.showSaveToast = true;
+        this.cdRef.detectChanges();
+        setTimeout(() => {
+          this.showSaveToast = false;
+          this.cdRef.detectChanges();
+        }, 2500);
+  
+        this.isSaving = false;
+        this.pdfTitle = ''; // reset
+      },
+      error: (err) => {
+        console.error('SetTitleInNotification failed', err);
+        this.isSaving = false;
+      },
+    });
   }
   
 }

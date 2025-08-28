@@ -30,19 +30,36 @@
         <header class="overlay-content-header d-flex align-items-center justify-content-between w-100">
           <h3 class="overlay-title mb-0">Details</h3>
         
-          <div class="d-flex align-items-center gap-2">
+          <div *ngIf="isOverlayMode " class="d-flex align-items-center gap-2">
+            <!-- Title input -->
+            <input
+              type="text"
+              [(ngModel)]="pdfTitle"
+              placeholder="Enter Title"
+              class="form-control form-control-sm"
+              style="width: 180px"
+            />
+        
+            <!-- Save Title -->
+            <button
+              class="btn btn-sm btn-success"
+              (click)="saveTitleInNotification()"
+             >
+              Save Title
+            </button>
+        
             <!-- Save PDF -->
-            <ng-container *ngIf="overlayHtml">
-              <button
-                *ngIf="!isGeneratingPdf"
-                class="btn btn-sm btn-outline-primary"
-                (click)="downloadPDF()"
-                title="Save as PDF"
-              >
-                📄 Save PDF
-              </button>
-              <div *ngIf="isGeneratingPdf" class="pdf-spinner">Generating PDF...</div>
-            </ng-container>
+            <button
+              *ngIf="overlayHtml && !isGeneratingPdf"
+              class="btn btn-sm btn-outline-primary"
+              (click)="downloadPDF()"
+              title="Save as PDF"
+            >
+              📄 Save PDF
+            </button>
+        
+            <!-- Spinner -->
+            <div *ngIf="isGeneratingPdf" class="pdf-spinner">Generating PDF...</div>
         
             <!-- Toggle Overlay -->
             <button
@@ -64,6 +81,7 @@
             </button>
           </div>
         </header>
+        
         
         <!-- PDF Title Dialog -->
         <div
@@ -97,7 +115,7 @@
         </div>
         
         <!-- Wrapper: fills column height, content scrolls, button stays visible -->
-        <div class="container-overlay-btn">
+        <div *ngIf="isOverlayMode" class="container-overlay-btn">
           <div
             #contentToDownload
             class="overlay-content"
@@ -276,7 +294,7 @@
                 <div class="choose" *ngIf="item.notification?.html">
                   <button
                     class="emily-btn"
-                    (click)="loadHtmlInsideNewWindow(item.notification?.html)"
+                    (click)="loadHtmlInsideNewWindow(item.notification!)"
                   >
                     View
                   </button>
