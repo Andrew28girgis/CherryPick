@@ -285,6 +285,7 @@
                   class="choose"
                 >
                   <button
+                  *ngIf="item.notification?.notificationCategoryId === 4"
                     class="emily-btn"
                     (click)="choose(1, item.notification)"
                     [disabled]="isNotificationLoading(item.notification)"
