@@ -19,6 +19,9 @@ import { UploadOMComponent } from './features/kayak-home/shopping-center-table/u
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
+import {
+  UserPagesComponent,
+} from './features/user-pages/user-pages.component';
 
 const routes: Routes = [
   {
@@ -131,6 +134,11 @@ const routes: Routes = [
         (m) => m.CampaignModule
       ),
     canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'user-pages',
+    component: UserPagesComponent,
+    canActivate: [AuthGuardService],
   },
   {
     path: 'add-tenant',

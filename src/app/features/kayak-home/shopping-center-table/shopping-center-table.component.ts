@@ -13,7 +13,16 @@ import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { Stage } from 'src/app/shared/models/shoppingCenters';
-import { interval, startWith, Subscription, switchMap, takeUntil, takeWhile, tap, timer } from 'rxjs';
+import {
+  interval,
+  startWith,
+  Subscription,
+  switchMap,
+  takeUntil,
+  takeWhile,
+  tap,
+  timer,
+} from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Tenant } from 'src/app/shared/models/tenants';
 import { NgxFileDropEntry } from 'ngx-file-drop';
@@ -130,12 +139,12 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     // optional: a search template if you store it
     // searchTemplate: 'https://www.google.com/search?q={q}'
   } as any;
-   private urlsPollTimeoutId: any = null; // optional global timeout safeguard
-   loadingUrls = false;
+  private urlsPollTimeoutId: any = null; // optional global timeout safeguard
+  loadingUrls = false;
   private urlsPollSub: Subscription | null = null;
   private readonly URLS_POLL_MS = 2000;
   private readonly URLS_MAX_WAIT_MS = 30000; // optional safety cap
-  
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
@@ -147,10 +156,11 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.getUserpages();
+    this.activatedRoute.queryParams.subscribe((params) => {
       if (params['openUpload'] === 'true') {
         setTimeout(() => this.openUpload(), 0);
-    
+
         // 👇 remove the query param from the URL
         this.router.navigate([], {
           relativeTo: this.activatedRoute,
@@ -160,10 +170,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         });
       }
     });
-    
 
-  
-    
     this.GetAllActiveOrganizations();
     this.cdr.detectChanges();
 
@@ -794,18 +801,21 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   GetCREUrls(): void {
-    const body: any = { Name: 'GetCREUrls', Params: { CampaignId: this.CampaignId } };
-  
+    const body: any = {
+      Name: 'GetCREUrls',
+      Params: { CampaignId: this.CampaignId },
+    };
+
     this.placesService.GenericAPI(body).subscribe({
       next: (response) => {
         const list = response?.json ?? [];
         this.urls = Array.isArray(list) ? list : [];
         this.cdr.detectChanges();
-  
+
         if (this.urls.length > 0) {
-          this.stopUrlsPolling();        // we have data → stop
+          this.stopUrlsPolling(); // we have data → stop
         } else {
-          this.startUrlsPolling();       // 👈 empty → begin polling
+          this.startUrlsPolling(); // 👈 empty → begin polling
         }
       },
       error: () => {
@@ -814,14 +824,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       },
     });
   }
-  
-  
+
   private startUrlsPolling() {
     if (this.urlsPollSub) return; // already polling
     this.loadingUrls = true;
-  
-    const body: any = { Name: 'GetCREUrls', Params: { CampaignId: this.CampaignId } };
-  
+
+    const body: any = {
+      Name: 'GetCREUrls',
+      Params: { CampaignId: this.CampaignId },
+    };
+
     // Poll immediately, then every 2s, stop when urls found OR after max wait.
     this.urlsPollSub = interval(this.URLS_POLL_MS)
       .pipe(
@@ -842,7 +854,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         error: () => this.stopUrlsPolling(),
       });
   }
-  
+
   private stopUrlsPolling() {
     if (this.urlsPollSub) {
       this.urlsPollSub.unsubscribe();
@@ -851,14 +863,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.loadingUrls = false;
     this.cdr.detectChanges();
   }
-  
+
   openWebsiteModal(tpl: TemplateRef<any>) {
     if (!this.urls || this.urls.length === 0) {
       this.startUrlsPolling(); // harmless if already polling due to guard in startUrlsPolling()
     } else {
       this.loadingUrls = false;
     }
-  
+
     this.modalService.open(tpl, {
       size: 'sm',
       centered: true,
@@ -868,8 +880,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       backdropClass: 'website-modal-backdrop',
     });
   }
-  
-  
 
   // Build a search URL for a given site + query
   private buildSearchUrl(site?: Partial<CreSite>, query = ''): string {
@@ -947,4 +957,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const url = this.buildSearchUrl(website, this.searchTerm);
     this.openLikeCard(url);
   }
+
+  getUserpages(): void {
+    const body: any = {
+      Name: 'GetUserPages',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {},
+    });
+  }
+ 
 }
