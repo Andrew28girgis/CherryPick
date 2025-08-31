@@ -13,7 +13,7 @@ import { Offcanvas } from 'bootstrap';
 })
 export class AddCampaignPopupComponent implements OnInit {
   @Input() organizationId!: number;
-  @Input() organizationName!: number;
+  @Input() organizationName!: string;
   @Input() popupTitle: string = 'Launch Your Campaign';
   @Input() secondaryButtonText: string = 'Cancel';
   @Output() onSecondaryButtonClicked = new EventEmitter<boolean>();
@@ -129,21 +129,22 @@ export class AddCampaignPopupComponent implements OnInit {
     });
   }
 
-  private navigateToShoppingCenterAndOpenUpload(newCampaignId: number) {
-    if (this.closeOffcanvasFn) {
-      this.closeOffcanvasFn();
-    }
-
+  private navigateToShoppingCenterAndOpenUpload(campaignId: number) {
+    if (this.closeOffcanvasFn) this.closeOffcanvasFn();
+  
     const orgId = this.organizationId;
-    const orgName =
-      this.allOrganizations?.find((o) => o.id === orgId)?.name || '';
-
-    this.router.navigate(['/dashboard', orgId, orgName, newCampaignId], {
-      state: { openUpload: true },
-    });
-
+    const orgName = (this.organizationName || '').trim() || 'org';
+  
+    this.router.navigate(
+      ['/dashboard', orgId, encodeURIComponent(orgName), campaignId],
+      { queryParams: { openUpload: true } }
+    );
+  
     this.activeModal.close();
   }
+  
+  
+  
   closeOffcanvas() {
     const offcanvasEl = document.getElementById('addCampaignOffcanvas');
     if (offcanvasEl) {
@@ -152,4 +153,13 @@ export class AddCampaignPopupComponent implements OnInit {
       bsOffcanvas.hide();
     }
   }
+  onOrgChanged(id: any) {
+    // coerce to number because <option [value]> gives a string
+    const orgId = Number(id);
+    this.organizationId = orgId;
+  
+    const org = this.allOrganizations?.find(o => o.id === orgId);
+    this.organizationName = org?.name || '';  // <-- capture name from select
+  }
+  
 }
