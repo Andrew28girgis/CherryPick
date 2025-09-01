@@ -8,19 +8,34 @@ import {
   ViewEncapsulation,
   TemplateRef,
 } from '@angular/core';
- import { MapViewComponent } from './map-view/map-view.component';
+import { MapViewComponent } from './map-view/map-view.component';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { Stage } from 'src/app/shared/models/shoppingCenters';
-import { Subscription } from 'rxjs';
+import {
+  interval,
+  startWith,
+  Subscription,
+  switchMap,
+  takeUntil,
+  takeWhile,
+  tap,
+  timer,
+} from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Tenant } from 'src/app/shared/models/tenants';
 import { NgxFileDropEntry } from 'ngx-file-drop';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CreSite } from 'src/app/shared/models/urls';
-import { ActivatedRoute, Router, NavigationStart, NavigationEnd, Event as NavigationEvent } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  NavigationStart,
+  NavigationEnd,
+  Event as NavigationEvent,
+} from '@angular/router';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -124,6 +139,12 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     // optional: a search template if you store it
     // searchTemplate: 'https://www.google.com/search?q={q}'
   } as any;
+  private urlsPollTimeoutId: any = null; // optional global timeout safeguard
+  loadingUrls = false;
+  private urlsPollSub: Subscription | null = null;
+  private readonly URLS_POLL_MS = 2000;
+  private readonly URLS_MAX_WAIT_MS = 30000; // optional safety cap
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
@@ -135,17 +156,21 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-  // 👇 handle state on navigation
-  this.router.events.subscribe((event: NavigationEvent) => {
-    if (event instanceof NavigationEnd) {
-      const nav = this.router.getCurrentNavigation();
-      if (nav?.extras?.state?.['openUpload']) {
+    this.getUserpages();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (params['openUpload'] === 'true') {
         setTimeout(() => this.openUpload(), 0);
-      }
-    }
-  });
 
-    
+        // 👇 remove the query param from the URL
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: { openUpload: null },
+          queryParamsHandling: 'merge',
+          replaceUrl: true, // so it doesn't push a new history entry
+        });
+      }
+    });
+
     this.GetAllActiveOrganizations();
     this.cdr.detectChanges();
 
@@ -178,7 +203,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       this.tenantName = params.orgName || '';
       this.encodedName = encodeURIComponent(this.organizationName);
       this.CampaignId = params.campaignId;
-       
+
       this.selectedCampaignId = params.campaignId
         ? Number(params.campaignId)
         : null;
@@ -535,6 +560,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.shoppingCenterService.resetSelectedStageId();
     this.subscriptions.unsubscribe();
+    this.stopUrlsPolling();
   }
 
   generateSafeUrl(): string {
@@ -777,22 +803,79 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   GetCREUrls(): void {
     const body: any = {
       Name: 'GetCREUrls',
-      Params: {
-        CampaignId: this.CampaignId,
-      },
+      Params: { CampaignId: this.CampaignId },
     };
 
-    this.placesService.GenericAPI(body).subscribe((response) => {
-      this.urls = response.json;
+    this.placesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        const list = response?.json ?? [];
+        this.urls = Array.isArray(list) ? list : [];
+        this.cdr.detectChanges();
+
+        if (this.urls.length > 0) {
+          this.stopUrlsPolling(); // we have data → stop
+        } else {
+          this.startUrlsPolling(); // 👈 empty → begin polling
+        }
+      },
+      error: () => {
+        // If the first call fails, still try polling (network hiccup, backend warming up, etc.)
+        this.startUrlsPolling();
+      },
     });
   }
+
+  private startUrlsPolling() {
+    if (this.urlsPollSub) return; // already polling
+    this.loadingUrls = true;
+
+    const body: any = {
+      Name: 'GetCREUrls',
+      Params: { CampaignId: this.CampaignId },
+    };
+
+    // Poll immediately, then every 2s, stop when urls found OR after max wait.
+    this.urlsPollSub = interval(this.URLS_POLL_MS)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.placesService.GenericAPI(body)),
+        tap((response: any) => {
+          const list = response?.json ?? [];
+          this.urls = Array.isArray(list) ? list : [];
+          this.cdr.detectChanges();
+        }),
+        // keep polling while we DON'T have urls
+        takeWhile(() => (this.urls?.length ?? 0) === 0, true),
+        // optional: hard stop after max wait
+        takeUntil(timer(this.URLS_MAX_WAIT_MS))
+      )
+      .subscribe({
+        complete: () => this.stopUrlsPolling(),
+        error: () => this.stopUrlsPolling(),
+      });
+  }
+
+  private stopUrlsPolling() {
+    if (this.urlsPollSub) {
+      this.urlsPollSub.unsubscribe();
+      this.urlsPollSub = null;
+    }
+    this.loadingUrls = false;
+    this.cdr.detectChanges();
+  }
+
   openWebsiteModal(tpl: TemplateRef<any>) {
-    this.GetCREUrls();
+    if (!this.urls || this.urls.length === 0) {
+      this.startUrlsPolling(); // harmless if already polling due to guard in startUrlsPolling()
+    } else {
+      this.loadingUrls = false;
+    }
+
     this.modalService.open(tpl, {
       size: 'sm',
       centered: true,
       scrollable: true,
-      backdrop: true, // click outside to close? set 'static' if you don't want that
+      backdrop: true,
       windowClass: 'website-modal-window',
       backdropClass: 'website-modal-backdrop',
     });
@@ -834,7 +917,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     return `https://www.google.com/search?q=${q}`;
   }
 
-   private openLikeCard(url: string) {
+  private openLikeCard(url: string) {
     this.showWebsiteCardsModal = false;
     window.location.href = url; // same as onWebsiteCardClick
     (window as any).electronMessage.startCREAutomation(
@@ -843,7 +926,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     );
   }
 
-   openSearchOnSite(
+  openSearchOnSite(
     site: Partial<CreSite> | undefined,
     query = '',
     newTab = true
@@ -856,11 +939,11 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     }
   }
 
-   openGoogleSearch() {
+  openGoogleSearch() {
     this.openSearchOnSite(this.googleSite, this.searchTerm, true);
   }
 
-   onWebsiteCardSearch(website: CreSite) {
+  onWebsiteCardSearch(website: CreSite) {
     this.openSearchOnSite(website, this.searchTerm, true);
   }
 
@@ -874,4 +957,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const url = this.buildSearchUrl(website, this.searchTerm);
     this.openLikeCard(url);
   }
+
+  getUserpages(): void {
+    const body: any = {
+      Name: 'GetUserPages',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {},
+    });
+  }
+ 
 }

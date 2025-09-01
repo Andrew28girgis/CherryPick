@@ -13,6 +13,7 @@ import { UserViewService } from 'src/app/core/services/user-view.service';
   styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
+  isChatbotRoute!: boolean;
   constructor(
     public notificationService: NotificationService,
     private placesService: PlacesService,
@@ -54,6 +55,13 @@ export class SidebarComponent implements OnInit {
           this.showSidebar = !data['hideSidebar'];
         });
       });
+      this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e: NavigationEnd) => {
+        const url = e.urlAfterRedirects || e.url;
+        this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
+      });
+    
   }
 
   toggleEmilySidebar(): void {

@@ -8,9 +8,17 @@ import {
   EventEmitter,
   ViewChild,
   AfterViewInit,
+  Input,
+  SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -19,8 +27,9 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
-import { take, finalize } from 'rxjs/operators';
+import { take, finalize, filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 type ChatFrom = 'user' | 'system' | 'ai';
 
@@ -50,8 +59,6 @@ export {};
 export class NotificationsComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-  private chatOpenSubject = new BehaviorSubject<boolean>(false);
-  public chatOpen$ = this.chatOpenSubject.asObservable();
   private intervalId: any;
   private loadedNotifications: Set<string> = new Set(); // Use notification IDs
   private awaitingResponse = false;
@@ -69,11 +76,14 @@ export class NotificationsComponent
   messageText = '';
   CampaignId: any;
   loaded = false;
+  @Input() isChatbotRoute = false;
+  @Output() overlayStateChange = new EventEmitter<boolean>(); // optional, only if you want to sync shell's overlay-active
   @Output() sidebarStateChange = new EventEmitter<{
     isOpen: boolean;
     isFullyOpen: boolean;
     type?: string;
     overlayActive?: boolean;
+    isChatbotRoute?: boolean;
   }>();
 
   public isOpen = true;
@@ -84,6 +94,8 @@ export class NotificationsComponent
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
+  @ViewChild('notificationModal') notificationModal!: TemplateRef<any>;
+
   outgoingText = '';
   isSending = false;
   sentMessages: any[] = [];
@@ -92,14 +104,15 @@ export class NotificationsComponent
   showPdfTitleDialog = false;
   pdfTitle = '';
   isGeneratingPdf = false;
-  
+
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
   public selectedNotification: Notification | null = null;
   public isSaving = false; // component-level flag
   public showSaveToast = false;
-   pdfId: string | number = '';
-  
+  pdfId: string | number = '';
+  currentMessage: string = '';
+
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -109,34 +122,48 @@ export class NotificationsComponent
     private viewManagerService: ViewManagerService,
     private sanitizer: DomSanitizer,
     private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private modalService: NgbModal
   ) {}
 
   showScrollButton = false;
   newNotificationsCount = 0;
   previousNotificationsLength = 0;
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
+  private chatOpenSub?: Subscription;
 
   ngOnInit(): void {
- 
-    this.activatedRoute.queryParamMap.subscribe((parms) => {
-      const view = parms.get('View');
-      if (view && !JSON.parse(view)) this.displayViewButton = false;
-      
+    this.chatOpenSub = this.notificationService.chatOpen$.subscribe((open) => {
+      if (this.isOpen !== open) {
+        this.isOpen = open;
+
+        // keep parent/host in sync if you rely on this
+        this.sidebarStateChange.emit({
+          isOpen: this.isOpen,
+          isFullyOpen: this.isOpen,
+        });
+
+        if (open) {
+          // optional: ensure it scrolls when opened from avatar
+          setTimeout(() => this.scrollToBottom(), 0);
+        }
+      }
     });
+    this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(this.router.url);
 
-    this.isOpen = true;
+    // auto-open in route mode
+    if (this.isChatbotRoute) {
+      this.isOpen = true;
+      setTimeout(() => this.scrollToBottom(), 0);
+    }
 
-    this.notificationService.chatOpen$.subscribe((isOpen) => {
-      this.isOpen = isOpen;
-      if (this.isOpen) setTimeout(() => this.scrollToBottom(), 300);
-    });
-
-    if (this.router.url.includes('chatbot')) this.electronSideBar = true;
-
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.CampaignId = params.campaignId;
-    });
+    // keep it updated on internal navigations
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e: NavigationEnd) => {
+        const url = e.urlAfterRedirects || e.url;
+        this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
+      });
 
     this.notificationService.initNotifications(this.CampaignId);
     this.previousNotificationsLength =
@@ -444,7 +471,7 @@ export class NotificationsComponent
   // In NotificationService, add this method:
   setChatOpen(isOpen: boolean): void {
     // Use a subject to communicate between components
-    this.chatOpenSubject.next(isOpen);
+    this.notificationService.setChatOpen(this.isOpen);
   }
 
   onInputChange(event: any): void {
@@ -529,12 +556,13 @@ export class NotificationsComponent
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
     }
-
+    this.overlayStateChange.emit(this.isOverlayMode); // optional
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
       type: 'overlay',
       overlayActive: this.isOverlayMode,
+      isChatbotRoute: this.isChatbotRoute,
     });
   }
   closeAll(): void {
@@ -550,6 +578,7 @@ export class NotificationsComponent
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
       this.isOverlayMode = false;
+      this.overlayStateChange.emit(false); // optional
 
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
@@ -879,12 +908,14 @@ export class NotificationsComponent
 
   loadHtmlInsideNewWindow(notification: Notification): void {
     if (this.electronSideBar) {
-      (window as any).electronMessage.loadHtmlInsideNewWindow(notification.html);
+      (window as any).electronMessage.loadHtmlInsideNewWindow(
+        notification.html
+      );
     } else {
       this.isOverlayMode = true;
       this.overlayHtml = notification.html;
     }
-    console.log(notification.id,'notification.id');
+    console.log(notification.id, 'notification.id');
     this.selectedNotification = notification;
   }
   async downloadPDF(): Promise<void> {
@@ -892,15 +923,20 @@ export class NotificationsComponent
       console.error('No container found for PDF export');
       return;
     }
-  
+
     const container = this.contentToDownload.nativeElement as HTMLElement;
-  
+
     // 1) Fix cross-origin images
-    const imgs = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
+    const imgs = Array.from(
+      container.querySelectorAll('img')
+    ) as HTMLImageElement[];
     await Promise.all(
       imgs.map(async (img) => {
         try {
-          if (/^https?:\/\//.test(img.src) && !img.src.startsWith(window.location.origin)) {
+          if (
+            /^https?:\/\//.test(img.src) &&
+            !img.src.startsWith(window.location.origin)
+          ) {
             img.src = await this.toDataURL(img.src);
           }
         } catch (err) {
@@ -908,14 +944,18 @@ export class NotificationsComponent
         }
       })
     );
-  
+
     // 2) File name
     const filename = `Emily-Report-${Date.now()}.pdf`;
-  
+
     // 3) Options
     const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
-    const jsPDFOpts: any = { unit: 'pt', format: 'a4', orientation: 'portrait' };
-  
+    const jsPDFOpts: any = {
+      unit: 'pt',
+      format: 'a4',
+      orientation: 'portrait',
+    };
+
     // 4) Generate
     await html2pdf()
       .from(container)
@@ -929,7 +969,7 @@ export class NotificationsComponent
       })
       .save();
   }
-  
+
   // helper
   private async toDataURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -951,24 +991,21 @@ export class NotificationsComponent
     this.pdfTitle = `Emily-Report-${new Date().toLocaleDateString()}`;
     this.showPdfTitleDialog = true;
   }
-  
+
   cancelPdfDialog(): void {
     this.showPdfTitleDialog = false;
     this.pdfTitle = '';
   }
-  
+
   confirmPdfDownload(): void {
     if (!this.pdfTitle.trim()) return;
     this.showPdfTitleDialog = false;
     this.downloadPDF();
   }
-  
-
 
   saveTitleInNotification(): void {
- 
     this.isSaving = true;
-  
+
     const request = {
       Name: 'SetTitleInNotification',
       Params: {
@@ -976,21 +1013,21 @@ export class NotificationsComponent
         Title: this.pdfTitle.trim(),
       },
     };
-  
+
     this.placesService.GenericAPI(request).subscribe({
       next: (res) => {
         console.log('SetTitleInNotification response:', res);
-  
+
         // Optionally update locally
         (this.selectedNotification as any).title = this.pdfTitle.trim();
-  
+
         this.showSaveToast = true;
         this.cdRef.detectChanges();
         setTimeout(() => {
           this.showSaveToast = false;
           this.cdRef.detectChanges();
         }, 2500);
-  
+
         this.isSaving = false;
         this.pdfTitle = ''; // reset
       },
@@ -1000,5 +1037,24 @@ export class NotificationsComponent
       },
     });
   }
-  
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isChatbotRoute']?.currentValue === true) {
+      // open the panel and start in non-overlay mode (chat = 100%)
+      this.isOpen = true;
+      // don't force overlay here; overlay should be toggled by your existing button/action
+    }
+  }
+  showprompt(message: any) {
+    this.currentMessage = message;
+
+    const modalRef = this.modalService.open(this.notificationModal, {
+      size: 'md',
+      centered: true,
+    });
+  }
+
+  sendPromptMessage(message: any) {
+    const body: any = { Chat: message };
+    this.placesService.sendmessages(body).subscribe({});
+  }
 }

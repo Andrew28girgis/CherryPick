@@ -31,50 +31,54 @@
           </span>
         </label>
         <select
-          required
-          id="user-buybox"
-          class="form-select mb-3"
-          aria-label="Buybox select"
-          name="userBuybox"
-          [(ngModel)]="organizationId"
-          #organizationIdVar="ngModel"
-          [ngClass]="{
-            'is-invalid': organizationIdVar.invalid && organizationIdVar.touched
-          }"
-        >
-          <ng-container *ngFor="let organization of allOrganizations">
-            <option [value]="organization.id">
-              {{ organization.name }}
-            </option>
-          </ng-container>
-        </select>
+        required
+        id="user-buybox"
+        class="form-select mb-3"
+        name="userBuybox"
+        [(ngModel)]="organizationId"
+        (ngModelChange)="onOrgChanged($event)"  
+        #organizationIdVar="ngModel"
+        [ngClass]="{
+          'is-invalid': organizationIdVar.invalid && organizationIdVar.touched
+        }"
+      >
+        <ng-container *ngFor="let organization of allOrganizations">
+          <option [value]="organization.id">{{ organization.name }}</option>
+        </ng-container>
+      </select>
+      
       </ng-container>
     </div>
-<!-- States -->
- <div class="mb-3" >
-  <label for="state-select" class="form-label w-100 d-flex justify-content-start gap-2">
-    Select State *
-    <span class="text-danger name-isrequired" *ngIf="stateVar.invalid && stateVar.touched">
-      required
-    </span>
-  </label>
+    <!-- States -->
+    <div class="mb-3">
+      <label
+        for="state-select"
+        class="form-label w-100 d-flex justify-content-start gap-2"
+      >
+        Select State *
+        <span
+          class="text-danger name-isrequired"
+          *ngIf="stateVar.invalid && stateVar.touched"
+        >
+          required
+        </span>
+      </label>
 
-  <select
-    required
-    id="state-select"
-    class="form-select mb-3"
-    name="state"
-    [(ngModel)]="selectedState"   
-    #stateVar="ngModel"
-    [ngClass]="{ 'is-invalid': stateVar.invalid && stateVar.touched }">
-
-    <!-- value = stateCode, shown text = stateName -->
-    <option *ngFor="let s of states" [value]="s.stateCode">
-      {{ s.stateName }}
-    </option>
-  </select>
-</div>
-
+      <select
+        required
+        id="state-select"
+        class="form-select mb-3"
+        name="state"
+        [(ngModel)]="selectedState"
+        #stateVar="ngModel"
+        [ngClass]="{ 'is-invalid': stateVar.invalid && stateVar.touched }"
+      >
+        <!-- value = stateCode, shown text = stateName -->
+        <option *ngFor="let s of states" [value]="s.stateCode">
+          {{ s.stateName }}
+        </option>
+      </select>
+    </div>
 
     <div class="mb-3">
       <label

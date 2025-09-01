@@ -1,10 +1,11 @@
- import { Component, OnInit, ViewChild } from '@angular/core';
+ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { HttpClient } from '@angular/common/http';
 import { NgbModal,NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component'; // Adjust path as needed
  import { ShoppingCenter } from 'src/app/shared/models/shopping';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shopping',
@@ -47,12 +48,14 @@ export class ShoppingComponent implements OnInit {
   ];
 
   isLoading: boolean = true;
+  openMenuId: number | null = null;
 
   constructor(
     private placesService: PlacesService,
     private http: HttpClient,
     private spinner: NgxSpinnerService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -216,9 +219,7 @@ export class ShoppingComponent implements OnInit {
     this.showSortDropdown = false;
   }
 
-  onDocumentClick(): void {
-    this.closeDropdowns();
-  }
+  
 
   toggleShareStatus(center: ShoppingCenter): void {
     center.isShared = !center.isShared;
@@ -311,5 +312,37 @@ export class ShoppingComponent implements OnInit {
         toast.classList.remove('show');
       }, 3000);
     }
+  }
+  
+  toggleMenu(scId: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === scId ? null : scId;
+  }
+
+  closeMenu() {
+    this.openMenuId = null;
+  }
+
+  // Close on any outside click (document-level)
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(_event: MouseEvent) {
+    if (this.openMenuId !== null) {
+      this.closeMenu();
+    }
+  }
+  onDocumentsClick(): void {
+    this.closeDropdowns();
+  }
+
+  onEnriche(center: any) {
+    window.location.href = `https://www.google.com/search?q=${center.centerName}+${center.centerAddress}`;
+ 
+    console.log('Enriche shopping center', center);
+  }
+
+  onUploadFiles(center: any) {
+    // Open your file explorer or whatever you already have:
+    this.openFileExplorer(); // you already have this method
+    console.log('Upload m files', center);
   }
 }

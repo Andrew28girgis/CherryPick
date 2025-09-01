@@ -1022,3 +1022,48 @@
   background: var(--Colors-Primary-500);
   color: white;
 }
+
+
+
+
+/* On /emily-chatbot: chat takes full screen when open */
+.copilot-sidebar-container.chatbot-route .sidebar-panel.visible {
+  width: 100vw !important;
+  max-width: 100vw !important;
+}
+
+/* On /emily-chatbot WITH overlay: split the inside grid to 50/50 */
+.copilot-sidebar-container.chatbot-route.overlay-mode .overlay-grid {
+  grid-template-columns: 1fr 1fr !important;   /* 50% | 50% */
+}
+.copilot-sidebar-container.chatbot-route .overlay-grid {
+  grid-template-columns: 1fr !important;   /* 50% | 50% */
+}
+
+.copilot-sidebar-container.chatbot-route.overlay-mode .overlay-left,
+.copilot-sidebar-container.chatbot-route.overlay-mode .overlay-right {
+  min-width: 0; /* allow scrolling inside each column */
+}
+.close-route{
+  display: none;
+}
+
+
+
+.copilot-sidebar-container.chatbot-route{
+  top: 64px !important;
+  height: calc(100vh - 64px) !important;
+}
+
+/* If you have an overlay/backdrop, offset it too so it doesn't cover the header */
+.app-shell.chatbot-route.with-sidebar
+  .copilot-sidebar-container .overlay-backdrop {
+  top: 64px !important;
+  height: calc(100vh - 64px) !important;
+}
+
+/* Keep the 50/50 overlay grid within the reduced height */
+.app-shell.chatbot-route.with-sidebar
+  .copilot-sidebar-container.overlay-mode .overlay-grid {
+  height: calc(100vh - 64px) !important;
+}

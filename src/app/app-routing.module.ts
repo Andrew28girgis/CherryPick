@@ -19,6 +19,8 @@ import { UploadOMComponent } from './features/kayak-home/shopping-center-table/u
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
+import { UserPagesComponent } from './features/user-pages/user-pages.component';
+import { ContactsComponent } from './features/contacts/contacts.component';
 
 const routes: Routes = [
   {
@@ -131,6 +133,11 @@ const routes: Routes = [
         (m) => m.CampaignModule
       ),
     canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'user-pages',
+    component: UserPagesComponent,
+    canActivate: [AuthGuardService],
   },
   {
     path: 'add-tenant',
@@ -248,9 +255,14 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'contacts',
+    component: ContactsComponent,
+  },
+  {
     path: 'ai-ui-HTML/:notificationId',
     component: AiUiHTMLComponent,
   },
+ 
   {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
@@ -259,6 +271,8 @@ const routes: Routes = [
     path: 'chatbot',
     component: NotificationsComponent,
   },
+  { path: 'emily-chatsbot', component: NotificationsComponent },
+
   {
     path: ':guid',
     component: TenantComponent,
