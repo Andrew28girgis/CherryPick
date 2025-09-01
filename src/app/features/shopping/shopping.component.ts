@@ -6,11 +6,24 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component'; // Adjust path as needed
  import { ShoppingCenter } from 'src/app/shared/models/shopping';
 import { Router } from '@angular/router';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
   styleUrls: ['./shopping.component.css'],
+  animations: [
+    // smooth crossfade + slight slide
+    trigger('fadeSwitch', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(8px)' }),
+        animate('220ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('180ms ease-in', style({ opacity: 0, transform: 'translateY(-6px)' }))
+      ])
+    ])
+  ]
 })
 export class ShoppingComponent implements OnInit {
   @ViewChild('fileExplorer') fileExplorer!: FileExplorerComponent;
@@ -49,6 +62,7 @@ export class ShoppingComponent implements OnInit {
 
   isLoading: boolean = true;
   openMenuId: number | null = null;
+  viewMode: 'table' | 'grid' = 'table'; // default
 
   constructor(
     private placesService: PlacesService,
@@ -340,5 +354,15 @@ export class ShoppingComponent implements OnInit {
     console.log('Enriche shopping center', center);
   }
 
+  setView(mode: 'grid' | 'table') {
+    this.viewMode = mode;
+  }
+  
+  onRowNavigate(center: any, event?: MouseEvent) {
+    // avoid navigating when the 3-dots menu gets clicked
+    if (event) event.stopPropagation();
+    // same route you already use in the card view
+    this.router.navigate(['/landing', 0, center?.scId, center.campaignId]);
+  }
   
 }
