@@ -5,22 +5,19 @@ import { FormsModule } from '@angular/forms';
 import { EmailInfoComponent } from './email-info.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ContactsComponent } from '../contacts/contacts.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
-const routes: Routes = [
-  { path: '', component: EmailInfoComponent }
-];
+const routes: Routes = [{ path: '', component: EmailInfoComponent }];
 
 @NgModule({
-  declarations: [
-    EmailInfoComponent,
-    ContactsComponent
-  ],
+  declarations: [EmailInfoComponent, ContactsComponent],
   imports: [
     CommonModule,
     FormsModule,
     NgxSpinnerModule,
-    RouterModule.forChild(routes)
+    NgbDropdownModule,  
+    RouterModule.forChild(routes),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class EmailInfoModule { }
+export class EmailInfoModule {}
