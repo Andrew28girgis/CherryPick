@@ -243,7 +243,11 @@
           >
             <div
               class="message-bubble"
-              *ngFor="let item of chatTimeline; trackBy: trackByChatItem"
+              *ngFor="
+                let item of chatTimeline;
+                trackBy: trackByChatItem;
+                let i = index
+              "
               [class.user]="item.from === 'user'"
               [class.system]="item.from === 'system'"
               [class.ai]="item.from === 'ai'"
@@ -273,15 +277,55 @@
               <div class="message-content">
                 <p
                   class="message-text"
-                  *ngIf="item.from === 'ai' && item.notification?.html"
+                  *ngIf="isAutomationLoading(item, i); else staticAutomation"
+                >
+                  I am searching the web now for your request.
+
+                  <span class="loading-dots">
+                    <span></span><span></span><span></span>
+                  </span>
+                </p>
+
+                <!-- After new message arrives: just static text -->
+                <ng-template #staticAutomation>
+                  <p
+                    class="message-text"
+                    *ngIf="item.message?.includes('I am searching the web now for your request')"
+                    >
+                    I am searching the web now for your request
+                  </p>
+                </ng-template>
+                <p
+                  class="message-text"
+                  *ngIf="
+                    item.from === 'ai' &&
+                    item.notification?.html &&
+                    !item.message?.includes('I am searching the web now for your request')
+                   "
                 >
                   Search Result
                 </p>
-                <div *ngIf="item.from === 'ai' && item.notification?.html">
-                  <p class="message-text">Not Found Results </p>
-                  <button class="choose emily-btn" (click)="showprompt(item.notification?.contextExtendPrompt)">Try Again</button>
+                <div
+                  *ngIf="
+                    item.from === 'ai' &&
+                    !item.notification?.html &&!item.message?.includes('I am searching the web now for your request')
+                  "
+                >
+                  <p class="message-text">Not Found Results</p>
+                  <button
+                    class="choose emily-btn"
+                    (click)="showprompt(item.notification?.contextExtendPrompt)"
+                  >
+                    Try Again
+                  </button>
                 </div>
-                <p class="message-text" *ngIf="item.from !== 'ai'">
+                <p
+                  class="message-text"
+                  *ngIf="
+                    item.from !== 'ai' 
+                    &&!item.message?.includes('I am searching the web now for your request')
+                  "
+                >
                   {{ item.message }}
                 </p>
                 <time
@@ -387,16 +431,25 @@
   </div>
 </div>
 
-
 <ng-template #notificationModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Notification</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
   <div class="modal-body">
     <p>{{ currentMessage }}</p>
   </div>
   <div class="modal-footer">
-    <button class="choose emily-btn" (click)="sendPromptMessage(currentMessage);modal.close()">Try Again</button>
+    <button
+      class="choose emily-btn"
+      (click)="sendPromptMessage(currentMessage); modal.close()"
+    >
+      Try Again
+    </button>
   </div>
 </ng-template>

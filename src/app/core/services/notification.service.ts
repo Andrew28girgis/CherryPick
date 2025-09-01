@@ -49,8 +49,7 @@ export class NotificationService  {
   }
 
   fetchUserNotifications(campaignId:any): void {
-    console.log('fdjkjfgmvnfmdjdgvn',this.CampaignId);
- 
+  
     const request = {
       Name: 'GetUserNotifications',
       Params: { ContactId: this.contactId, CampaignID:campaignId?campaignId:null },
@@ -91,8 +90,8 @@ export class NotificationService  {
       newNotifications.forEach((notification) => {
         if (
           notification.isRead == 0 &&
+          notification.contextExtendPrompt &&
           notification.contextExtendPrompt.trim() !== '' &&
-          notification.contextExtendPrompt.trim() !== null &&
           notification.contextExtendPrompt.trim().toLowerCase() !== 'null'
         ) {
           console.log('sendElectronMessageeeee', notification);

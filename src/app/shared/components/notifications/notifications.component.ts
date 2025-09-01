@@ -112,6 +112,7 @@ export class NotificationsComponent
   public showSaveToast = false;
   pdfId: string | number = '';
   currentMessage: string = '';
+  private wasAtBottomBeforeUpdate = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -176,41 +177,34 @@ export class NotificationsComponent
 
     // Polling
     this.intervalId = setInterval(() => {
-      const prevLength = this.notificationService.notifications.length;
-      this.notificationService.fetchUserNotifications(this.CampaignId);
-      this.sortNotificationsByDateAsc();
+// remember position BEFORE updating list
+this.wasAtBottomBeforeUpdate = this.isAtBottom();
 
-      setTimeout(() => {
-        const newLength = this.notificationService.notifications.length;
+const prevLength = this.notificationService.notifications.length;
+this.notificationService.fetchUserNotifications(this.CampaignId);
+this.sortNotificationsByDateAsc();
 
-        if (newLength > prevLength) {
-          // <CHANGE> Check if any new notification is a direct reply (ID = lastUserMessageId + 1)
-          const isDirectReply =
-            this.lastUserMessageId !== null &&
-            this.notifications.some(
-              (n) => n.id === this.lastUserMessageId! + 1
-            );
+setTimeout(() => {
+  const newLength = this.notificationService.notifications.length;
 
-          if (isDirectReply) {
-            // This is the direct reply to user's message - auto scroll
-            this.scrollToBottom();
-            this.lastUserMessageId = null; // Reset after handling reply
-            this.awaitingResponse = false;
-          } else if (this.isAtBottom()) {
-            // User is at bottom - scroll to show new notification
-            this.scrollToBottom();
-          } else {
-            // User scrolled up - show scroll button instead
-            this.newNotificationsCount += newLength - prevLength;
-            this.showScrollButton = true;
-          }
-        }
-        this.previousNotificationsLength = newLength;
-        this.sortNotificationsByDateAsc();
+  if (newLength > prevLength) {
+    // only auto-scroll if user was at bottom BEFORE new message
+    if (this.wasAtBottomBeforeUpdate) {
+      this.ngZone.onStable.pipe(take(1)).subscribe(() => {
+        this.scrollToBottom();
+      });
+    } else {
+      this.newNotificationsCount += newLength - prevLength;
+      this.showScrollButton = true;
+    }
+  }
 
-        // trigger scan after updates
-        this.scanTrigger$.next();
-      }, 200);
+  this.previousNotificationsLength = newLength;
+  this.sortNotificationsByDateAsc();
+
+  this.scanTrigger$.next();
+}, 200);
+
     }, 2000);
 
     this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
@@ -448,7 +442,35 @@ export class NotificationsComponent
 
     return scrollHeight - scrollPosition <= this.scrollThreshold;
   }
-
+  isAtTop(): boolean {
+    if (!this.messagesContainer) return false;
+    const container = this.messagesContainer.nativeElement;
+    return container.scrollTop === 0;
+  }
+  private handleNewMessage(newMessage: Notification): void {
+    const atBottom = this.isAtBottom();
+    const atTop = this.isAtTop();
+  
+    // Case 1: If it's a reply to my last sent message → always scroll
+    // if (this.lastUserMessageId && newMessage.replyToId === this.lastUserMessageId) {
+    //   this.scrollToBottom();
+    //   this.lastUserMessageId = null; // reset
+    //   return;
+    // }
+  
+    // Case 2: If user is at bottom OR at top → scroll to bottom
+    if (atBottom || atTop) {
+      this.scrollToBottom();
+      return;
+    }
+  
+    // Case 3: User is in the middle → show "scroll down" button
+    this.newNotificationsCount++;
+    this.showScrollButton = true;
+  }
+  
+  
+  
   @HostListener('scroll', ['$event'])
   onScroll(event: any): void {
     // Check if the event is coming from our messages container
@@ -1057,4 +1079,15 @@ export class NotificationsComponent
     const body: any = { Chat: message };
     this.placesService.sendmessages(body).subscribe({});
   }
+  isAutomationLoading(item: ChatItem, index: number): boolean {
+    // ✅ Match with .includes instead of strict equality
+    if (!item.message || !item.message.includes('I am searching the web now for your request')) {
+      return false;
+    }
+  
+    // If there is a next message after this one, stop animation
+    const nextItem = this.chatTimeline[index + 1];
+    return !nextItem;
+  }
+  
 }
