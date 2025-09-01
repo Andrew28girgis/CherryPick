@@ -363,7 +363,7 @@ setTimeout(() => {
 
       // Add campaignId directly into that object
       parsedJson.campaignId = notification.campaignId;
-
+      parsedJson.AutomationJson=json;
       const response = await fetch(
         'https://127.0.0.1:5443/api/Enrichment/EnrichShoppingCenter',
         {
