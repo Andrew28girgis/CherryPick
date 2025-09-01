@@ -9,7 +9,7 @@
 .main-inner {
   /* keep your existing styles… */
   /* height: 600px;              */
-  height: 70vh !important;
+  height: 500px !important;
   overflow-y: scroll;
 
   overflow-y: auto; /* 'auto' avoids scrollbars when not needed */

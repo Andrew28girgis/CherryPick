@@ -113,6 +113,12 @@ export class NotificationsComponent
   pdfId: string | number = '';
   currentMessage: string = '';
   private wasAtBottomBeforeUpdate = false;
+// ADD — sticky bottom + observers
+private mo?: MutationObserver;
+private ro?: ResizeObserver;
+private wasSticky = true; // were we at/near bottom before content changed?
+
+private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
 
   constructor(
     private elementRef: ElementRef,
@@ -178,36 +184,31 @@ export class NotificationsComponent
       .subscribe(() => this.scanAndOpenOverlayForHtml());
 
     // Polling
-    this.intervalId = setInterval(() => {
-// remember position BEFORE updating list
-this.wasAtBottomBeforeUpdate = this.isAtBottom();
+ this.intervalId = setInterval(() => {
+  // remember position BEFORE updating list (drives sticky behavior)
+  this.wasSticky = this.isAtBottom(); // REPLACE wasAtBottomBeforeUpdate usage
 
-const prevLength = this.notificationService.notifications.length;
-this.notificationService.fetchUserNotifications(this.CampaignId);
-this.sortNotificationsByDateAsc();
+  const prevLength = this.notificationService.notifications.length;
 
-setTimeout(() => {
-  const newLength = this.notificationService.notifications.length;
-
-  if (newLength > prevLength) {
-    // only auto-scroll if user was at bottom BEFORE new message
-    if (this.wasAtBottomBeforeUpdate) {
-      this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-        this.scrollToBottom();
-      });
-    } else {
-      this.newNotificationsCount += newLength - prevLength;
-      this.showScrollButton = true;
-    }
-  }
-
-  this.previousNotificationsLength = newLength;
+  this.notificationService.fetchUserNotifications(this.CampaignId);
   this.sortNotificationsByDateAsc();
 
-  this.scanTrigger$.next();
-}, 200);
+  setTimeout(() => {
+    const newLength = this.notificationService.notifications.length;
+    const diff = newLength - prevLength;
 
-    }, 2000);
+    if (diff > 0) {
+      // If user was sticky, observers will auto-pin; if not, show badge
+      this.onNewMessagesArrived(diff);
+    }
+
+    this.previousNotificationsLength = newLength;
+    this.sortNotificationsByDateAsc();
+
+    this.scanTrigger$.next();
+  }, 200);
+}, 2000);
+
 
     this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
     setTimeout(() => this.scrollToBottom(), 100);
@@ -219,12 +220,13 @@ setTimeout(() => {
     this.scanSub?.unsubscribe?.();
     this.sidebarStateChange.emit({ isOpen: false, isFullyOpen: false });
     clearTimeout(this.typingHideTimer);
+    // ADD inside ngOnDestroy()
+this.mo?.disconnect();
+this.ro?.disconnect();
+
   }
 
-  ngAfterViewInit(): void {
-    // Scroll to bottom after view is initialized
-    this.scrollToBottom();
-  }
+  
 
   toggleSidebar(): void {
     this.isOpen = !this.isOpen;
@@ -434,16 +436,7 @@ setTimeout(() => {
       }
     }
   }
-
-  isAtBottom(): boolean {
-    if (!this.messagesContainer) return true;
-
-    const container = this.messagesContainer.nativeElement;
-    const scrollPosition = container.scrollTop + container.clientHeight;
-    const scrollHeight = container.scrollHeight;
-
-    return scrollHeight - scrollPosition <= this.scrollThreshold;
-  }
+ 
   isAtTop(): boolean {
     if (!this.messagesContainer) return false;
     const container = this.messagesContainer.nativeElement;
@@ -473,25 +466,18 @@ setTimeout(() => {
   
   
   
-  @HostListener('scroll', ['$event'])
-  onScroll(event: any): void {
-    // Check if the event is coming from our messages container
-    if (
-      this.messagesContainer &&
-      event.target === this.messagesContainer.nativeElement
-    ) {
-      // If we've scrolled to the bottom (or close to it), reset the notification count
-      if (this.isAtBottom()) {
-        this.showScrollButton = false;
-        this.newNotificationsCount = 0;
-      } else {
-        // If we're not at the bottom, show the button if there are new messages
-        if (this.newNotificationsCount > 0) {
-          this.showScrollButton = true;
-        }
-      }
+   onScroll(): void {
+    // user moved; refresh sticky state
+    this.wasSticky = this.isAtBottom();
+  
+    if (this.wasSticky) {
+      this.showScrollButton = false;
+      this.newNotificationsCount = 0;
+    } else if (this.newNotificationsCount > 0) {
+      this.showScrollButton = true;
     }
   }
+  
   // In NotificationService, add this method:
   setChatOpen(isOpen: boolean): void {
     // Use a subject to communicate between components
@@ -797,7 +783,7 @@ setTimeout(() => {
 
     // cause a render & scroll if you're at bottom
     this.cdRef.detectChanges();
-    if (this.isAtBottom()) this.scrollToBottom();
+    if (this.isAtBottom()) this.scrollToBottomNow();
   }
 
   private hideTyping() {
@@ -1082,8 +1068,7 @@ setTimeout(() => {
     this.placesService.sendmessages(body).subscribe({});
   }
   isAutomationLoading(item: ChatItem, index: number): boolean {
-    // ✅ Match with .includes instead of strict equality
-    if (!item.message || !item.message.includes('I am searching the web now for your request')) {
+     if (!item.message || !item.message.includes('I am searching the web now for your request')) {
       return false;
     }
   
@@ -1092,4 +1077,85 @@ setTimeout(() => {
     return !nextItem;
   }
   
+
+  private get containerEl(): HTMLElement | null {
+    return this.messagesContainer?.nativeElement ?? null;
+  }
+  
+  // Optional: strict bottom check (rarely needed)
+  private isAtBottomStrict(): boolean {
+    const el = this.containerEl;
+    if (!el) return true;
+    return el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+  }
+  
+  // REPLACE your current isAtBottom() with this version:
+  isAtBottom(): boolean {
+    const el = this.containerEl;
+    if (!el) return true;
+    const distance = el.scrollHeight - (el.scrollTop + el.clientHeight);
+    return distance <= this.BOTTOM_STICKY_THRESHOLD;
+  }
+  
+  // ADD — immediate/smooth scroll helpers
+  private scrollToBottomNow(): void {
+    const el = this.containerEl;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+    this.showScrollButton = false;
+    this.newNotificationsCount = 0;
+  }
+  
+  // private scrollToBottomSmooth(): void {
+  //   const el = this.containerEl;
+  //   if (!el) return;
+  //   el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+  //   setTimeout(() => {
+  //     if (this.isAtBottom()) {
+  //       this.showScrollButton = false;
+  //       this.newNotificationsCount = 0;
+  //     }
+  //   }, 350);
+  // }
+  ngAfterViewInit(): void {
+    // initial scroll once UI is ready
+    this.scrollToBottomNow();
+  
+    const el = this.containerEl;
+    if (!el) return;
+  
+    // track stickiness at startup
+    this.wasSticky = this.isAtBottom();
+  
+    // Observe DOM mutations (new messages appended)
+    this.mo = new MutationObserver(() => this.onContentMutated());
+    this.mo.observe(el, { childList: true, subtree: true });
+  
+    // Observe size changes (images, fonts, etc.)
+    this.ro = new ResizeObserver(() => this.onContentMutated());
+    this.ro.observe(el);
+  }
+  // ADD — called when DOM/size changes happen
+private onContentMutated(): void {
+  // If user was sticky before the change, keep them pinned to bottom
+  if (this.wasSticky) {
+    this.cdRef.detectChanges();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => this.scrollToBottomNow());
+    });
+  }
+  // recompute for the next cycle
+  this.wasSticky = this.isAtBottom();
+}
+// ADD — handle "new X messages" badge only when not sticky
+private onNewMessagesArrived(count: number): void {
+  if (count <= 0) return;
+  if (this.wasSticky) {
+    // do nothing; Mutation/Resize observers will keep you at bottom
+    return;
+  }
+  this.newNotificationsCount += count;
+  this.showScrollButton = true;
+}
+
 }
