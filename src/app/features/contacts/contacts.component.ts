@@ -5,6 +5,7 @@ import {
   Contact,
   OrganizationWithContacts,
 } from 'src/app/shared/models/contacts';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-contacts',
@@ -14,16 +15,16 @@ import {
 export class ContactsComponent implements OnInit {
   // Add Math property
   Math = Math;
-  
+
   searchTerm: string = '';
   showAddForm: boolean = false;
   organizations: any[] = [];
-  
+
   // Pagination properties
   currentPage: number = 1;
   pageSize: number = 10;
   totalItems: number = 0;
-  
+
   // Store both full and filtered lists
   contacts: Contact[] = [];
   filteredContacts: OrganizationWithContacts[] = [];
@@ -60,8 +61,7 @@ export class ContactsComponent implements OnInit {
     { value: 'status', label: 'Status' },
   ];
   // Tracks which organizations are expanded
-expandedOrgs: { [orgId: number]: boolean } = {};
-
+  expandedOrgs: { [orgId: number]: boolean } = {};
 
   constructor(private http: HttpClient, private PlacesService: PlacesService) {
     this.loadContacts();
@@ -70,44 +70,29 @@ expandedOrgs: { [orgId: number]: boolean } = {};
 
   private loadContacts() {
     this.isLoading = true;
-    const params = {
-      Name: 'GetAllcontacts',
-      Params: {},
-    };
+    const params = { Name: 'GetAllcontacts', Params: {} };
 
     this.PlacesService.GenericAPI(params).subscribe(
       (data: any) => {
-        console.log('API Response:', data);
-        if (data && data.json) {
+        if (data?.json) {
           this.contacts = data.json;
         }
-        this.applyFiltersAndSort();
         this.isLoading = false;
+        this.applyFiltersAndSort(); // 👈 only works if orgs already loaded
       },
-      (error) => {
-        console.error('Error loading contacts:', error);
-        this.isLoading = false;
-      }
+      () => (this.isLoading = false)
     );
   }
 
   private loadOrganizations() {
-    const params = {
-      Name: 'RetrieveOrganizations',
-      Params: {},
-    };
+    const params = { Name: 'RetrieveOrganizations', Params: {} };
 
-    this.PlacesService.GenericAPI(params).subscribe(
-      (data: any) => {
-        console.log('Organizations Response:', data);
-        if (data && data.json) {
-          this.organizations = data.json;
-        }
-      },
-      (error) => {
-        console.error('Error loading organizations:', error);
+    this.PlacesService.GenericAPI(params).subscribe((data: any) => {
+      if (data?.json) {
+        this.organizations = data.json;
       }
-    );
+      this.applyFiltersAndSort(); // 👈 ensures filter runs once orgs exist
+    });
   }
 
   ngOnInit(): void {
@@ -115,9 +100,8 @@ expandedOrgs: { [orgId: number]: boolean } = {};
   }
 
   toggleExpand(orgId: number): void {
-  this.expandedOrgs[orgId] = !this.expandedOrgs[orgId];
-}
-
+    this.expandedOrgs[orgId] = !this.expandedOrgs[orgId];
+  }
 
   onSearch(): void {
     this.applyFiltersAndSort();
@@ -186,15 +170,15 @@ expandedOrgs: { [orgId: number]: boolean } = {};
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
     const maxPages = 5; // Show maximum 5 page numbers
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxPages / 2));
     let endPage = startPage + maxPages - 1;
-    
+
     if (endPage > totalPages) {
       endPage = totalPages;
       startPage = Math.max(1, endPage - maxPages + 1);
     }
-    
+
     return Array.from(
       { length: endPage - startPage + 1 },
       (_, i) => startPage + i
@@ -285,5 +269,4 @@ expandedOrgs: { [orgId: number]: boolean } = {};
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
   }
-
 }
