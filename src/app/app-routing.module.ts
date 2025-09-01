@@ -19,9 +19,7 @@ import { UploadOMComponent } from './features/kayak-home/shopping-center-table/u
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
-import {
-  UserPagesComponent,
-} from './features/user-pages/user-pages.component';
+import { UserPagesComponent } from './features/user-pages/user-pages.component';
 
 const routes: Routes = [
   {
@@ -267,6 +265,8 @@ const routes: Routes = [
     path: 'chatbot',
     component: NotificationsComponent,
   },
+  { path: 'emily-chatsbot', component: NotificationsComponent },
+
   {
     path: ':guid',
     component: TenantComponent,

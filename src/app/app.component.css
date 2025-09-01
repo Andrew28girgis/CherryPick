@@ -113,7 +113,7 @@
   margin-right: min(48px, 5vw);
 }
 
-.app-shell.with-sidebar.with-copilot.copilot-expanded.authenticated {
+.app-shell.with-sidebar.with-copilot.copilot-expanded.authenticated:not(.chatbot-route) {
   grid-template-columns: 96px minmax(0, 1fr);
   margin-right: min(381px, 40vw);
 }
@@ -174,4 +174,46 @@
   grid-column: 1; /* Take the first column */
   width: 100%; /* Full width */
   margin-left: 0; /* No margin */
+}
+
+/* Added styles for chatbot route full-width mode */
+.app-shell.chatbot-route {
+  grid-template-columns: minmax(0, 1fr);
+  margin-left: 0;
+}
+
+.app-shell.chatbot-route > .app-container {
+  grid-column: 1;
+  width: 100%;
+  margin-left: 0;
+}
+
+/* When on chatbot route and overlay is active, split 50/50 */
+.app-shell.chatbot-route.overlay-active > .app-container {
+  width: 50%;
+}
+
+.app-shell.chatbot-route.overlay-active {
+  margin-right: 50%;
+}
+
+/* Override Emily chatbot styles when on chatbot route */
+.app-shell.chatbot-route.emily-chatbot {
+  grid-template-columns: minmax(0, 1fr);
+  margin-left: 0;
+}
+
+.app-shell.chatbot-route.emily-chatbot > .app-container {
+  grid-column: 1;
+  width: 100%;
+  margin-left: 0;
+}
+
+/* Ensure Emily takes full width on chatbot route when no overlay */
+.app-shell.chatbot-route:not(.overlay-active) {
+  margin-right: 0;
+}
+
+.app-shell.chatbot-route:not(.overlay-active) > .app-container {
+  width: 100%;
 }

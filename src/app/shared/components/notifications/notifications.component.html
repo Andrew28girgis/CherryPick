@@ -1,7 +1,12 @@
 <!-- Copilot-style sidebar container (chat can open/close with isOpen) -->
 <div
   class="copilot-sidebar-container"
-  [ngClass]="{ responsive: electronSideBar, 'overlay-mode': isOverlayMode }"
+  [ngClass]="{
+    responsive: electronSideBar,
+    'overlay-mode': isOverlayMode,
+    'chatbot-route': isChatbotRoute,
+    'chatbot-overlay': isChatbotRoute && isOverlayMode
+  }"
   [class.open]="isOpen"
 >
   <!-- Add backdrop click handler for overlay mode -->
@@ -26,7 +31,10 @@
 
     <div class="overlay-grid" (click)="$event.stopPropagation()">
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
-      <section *ngIf="!electronSideBar" class="overlay-left">
+      <section
+        *ngIf="!electronSideBar && (isOverlayMode || !isChatbotRoute)"
+        class="overlay-left"
+      >
         <header
           class="overlay-content-header d-flex align-items-center justify-content-between w-100"
         >
@@ -44,9 +52,9 @@
 
             <!-- Save Title -->
             <button
-              class="btn btn-sm btn-success  title-btn"
+              class="btn btn-sm btn-success title-btn"
               (click)="saveTitleInNotification()"
-             >
+            >
               Save Title
             </button>
 
@@ -56,7 +64,6 @@
               class="btn btn-sm btn-outline-primary save-pdf-btn"
               (click)="downloadPDF()"
               title="Save as PDF"
-              
             >
               📄 Save PDF
             </button>
@@ -182,6 +189,7 @@
             <!-- Close (closes chat panel AND ensures overlay off) -->
             <button
               class="close-button"
+              [ngClass]="{'close-route': isChatbotRoute}"
               (click)="closeAll()"
               aria-label="Close"
             >
@@ -263,9 +271,12 @@
               </div>
 
               <div class="message-content">
-
-                <p class="message-text" *ngIf="item.from === 'ai'">Search Result</p>
-                <p class="message-text" *ngIf="item.from !== 'ai'">{{ item.message }}</p>
+                <p class="message-text" *ngIf="item.from === 'ai'">
+                  Search Result
+                </p>
+                <p class="message-text" *ngIf="item.from !== 'ai'">
+                  {{ item.message }}
+                </p>
                 <time
                   class="message-time"
                   [dateTime]="item.created.toISOString()"
@@ -285,7 +296,7 @@
                   class="choose"
                 >
                   <button
-                  *ngIf="item.notification?.notificationCategoryId === 4"
+                    *ngIf="item.notification?.notificationCategoryId === 4"
                     class="emily-btn"
                     (click)="choose(1, item.notification)"
                     [disabled]="isNotificationLoading(item.notification)"

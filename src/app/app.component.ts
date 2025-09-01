@@ -15,7 +15,6 @@ import { NotificationService } from './core/services/notification.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-
 export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   isMobile = false;
@@ -28,6 +27,7 @@ export class AppComponent implements OnInit {
   isEmilyChatBot: boolean = false; // Initialize with a default value
   overlayActive = false;
   CampaignId: any;
+  isChatbotRoute = false;
 
   constructor(
     private router: Router,
@@ -38,14 +38,31 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-          let currentRoute = this.activatedRoute
-      while (currentRoute.firstChild) {
-        currentRoute = currentRoute.firstChild
-      }
+    this.router.events
+      .pipe(
+        filter(
+          (event): event is NavigationEnd => event instanceof NavigationEnd
+        )
+      )
+      .subscribe((e: NavigationEnd) => {
+        const url = e.urlAfterRedirects || e.url;
 
-    this.CampaignId = currentRoute
-    console.log("Campaign ID from child route:", currentRoute)
+        // ✅ special layout only for /emily-chatbot
+        const onEmilyChatRoute =
+          url === '/emily-chatsbot' || url.startsWith('/emily-chatsbot/');
 
+        this.isChatbotRoute = onEmilyChatRoute; // this drives the full-width CSS
+ 
+        // NOTE: we do NOT set these for '/chatbot', so it behaves as before.
+      });
+
+    let currentRoute = this.activatedRoute;
+    while (currentRoute.firstChild) {
+      currentRoute = currentRoute.firstChild;
+    }
+
+    this.CampaignId = currentRoute;
+    console.log('Campaign ID from child route:', currentRoute);
 
     const apiMode = this.localStorage.getItem('apiMode');
     if (apiMode && JSON.parse(apiMode)) {
@@ -101,7 +118,6 @@ export class AppComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-
   onResize() {
     this.checkScreenSize();
   }
