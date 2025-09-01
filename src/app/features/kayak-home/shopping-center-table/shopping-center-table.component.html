@@ -467,31 +467,32 @@
   </div>
   <div class="modal-body fancy-modal-body">
     <button
-    class="add-sites-btn cre-btn"
-    (click)="electronMessageWithcampaignId()"
-    [disabled]="loadingUrls || (urls?.length ?? 0) === 0"
-  >
-    <div class="btn-content">
-      <i class="fa-solid fa-building cre-icon btn-icon"></i>
-  
-      <!-- Loaded state -->
-      <ng-container *ngIf="(urls?.length ?? 0) > 0 && !loadingUrls; else searchingTpl">
-        <span class="btn-text">CRE Websites</span>
-      </ng-container>
-    </div>
-  
-    <div class="btn-hover-effect"></div>
-  </button>
-  
-  <ng-template #searchingTpl>
-    <span class="btn-text typing-wrap">
-      Searching
-      <span class="typing-dots">
-        <span></span><span></span><span></span>
+      class="add-sites-btn cre-btn"
+      (click)="electronMessageWithcampaignId()"
+      [disabled]="loadingUrls || (urls?.length ?? 0) === 0"
+    >
+      <div class="btn-content">
+        <i class="fa-solid fa-building cre-icon btn-icon"></i>
+
+        <!-- Loaded state -->
+        <ng-container
+          *ngIf="(urls?.length ?? 0) > 0 && !loadingUrls; else searchingTpl"
+        >
+          <span class="btn-text">CRE Websites</span>
+        </ng-container>
+      </div>
+
+      <div class="btn-hover-effect"></div>
+    </button>
+
+    <ng-template #searchingTpl>
+      <span class="btn-text typing-wrap">
+        Searching
+        <span class="typing-dots">
+          <span></span><span></span><span></span>
+        </span>
       </span>
-    </span>
-  </ng-template>
-  
+    </ng-template>
 
     <!-- Updated Upload OM Files button with file drop functionality -->
     <div
