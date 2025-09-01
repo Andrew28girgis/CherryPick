@@ -20,6 +20,7 @@ import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.co
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { UserPagesComponent } from './features/user-pages/user-pages.component';
+import { ContactsComponent } from './features/contacts/contacts.component';
 
 const routes: Routes = [
   {
@@ -254,9 +255,14 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'contacts',
+    component: ContactsComponent,
+  },
+  {
     path: 'ai-ui-HTML/:notificationId',
     component: AiUiHTMLComponent,
   },
+ 
   {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
