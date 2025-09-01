@@ -10,9 +10,15 @@ import {
   AfterViewInit,
   Input,
   SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -23,7 +29,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
 import { take, finalize, filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
- 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 type ChatFrom = 'user' | 'system' | 'ai';
 
 type ChatItem = {
@@ -52,7 +59,7 @@ export {};
 export class NotificationsComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-   private intervalId: any;
+  private intervalId: any;
   private loadedNotifications: Set<string> = new Set(); // Use notification IDs
   private awaitingResponse = false;
   private preSendIds = new Set<string | number>(); // ids present before send
@@ -87,6 +94,8 @@ export class NotificationsComponent
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
+  @ViewChild('notificationModal') notificationModal!: TemplateRef<any>;
+
   outgoingText = '';
   isSending = false;
   sentMessages: any[] = [];
@@ -96,14 +105,13 @@ export class NotificationsComponent
   pdfTitle = '';
   isGeneratingPdf = false;
 
-  
-
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
   public selectedNotification: Notification | null = null;
   public isSaving = false; // component-level flag
   public showSaveToast = false;
   pdfId: string | number = '';
+  currentMessage: string = '';
 
   constructor(
     private elementRef: ElementRef,
@@ -114,7 +122,8 @@ export class NotificationsComponent
     private viewManagerService: ViewManagerService,
     private sanitizer: DomSanitizer,
     private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private modalService: NgbModal
   ) {}
 
   showScrollButton = false;
@@ -124,16 +133,16 @@ export class NotificationsComponent
   private chatOpenSub?: Subscription;
 
   ngOnInit(): void {
-    this.chatOpenSub = this.notificationService.chatOpen$.subscribe(open => {
+    this.chatOpenSub = this.notificationService.chatOpen$.subscribe((open) => {
       if (this.isOpen !== open) {
         this.isOpen = open;
-  
+
         // keep parent/host in sync if you rely on this
         this.sidebarStateChange.emit({
           isOpen: this.isOpen,
           isFullyOpen: this.isOpen,
         });
-  
+
         if (open) {
           // optional: ensure it scrolls when opened from avatar
           setTimeout(() => this.scrollToBottom(), 0);
@@ -147,15 +156,14 @@ export class NotificationsComponent
       this.isOpen = true;
       setTimeout(() => this.scrollToBottom(), 0);
     }
-  
+
     // keep it updated on internal navigations
     this.router.events
-    .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-    .subscribe((e: NavigationEnd) => {
-      const url = e.urlAfterRedirects || e.url;
-      this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
-    });
-  
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e: NavigationEnd) => {
+        const url = e.urlAfterRedirects || e.url;
+        this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
+      });
 
     this.notificationService.initNotifications(this.CampaignId);
     this.previousNotificationsLength =
@@ -537,7 +545,6 @@ export class NotificationsComponent
   }
 
   toggleOverlayMode(): void {
-    
     if (!this.isOpen) return;
     this.isOverlayMode = !this.isOverlayMode;
     if (this.isOverlayMode == false) {
@@ -1036,5 +1043,18 @@ export class NotificationsComponent
       this.isOpen = true;
       // don't force overlay here; overlay should be toggled by your existing button/action
     }
+  }
+  showprompt(message: any) {
+    this.currentMessage = message;
+
+    const modalRef = this.modalService.open(this.notificationModal, {
+      size: 'md',
+      centered: true,
+    });
+  }
+
+  sendPromptMessage(message: any) {
+    const body: any = { Chat: message };
+    this.placesService.sendmessages(body).subscribe({});
   }
 }

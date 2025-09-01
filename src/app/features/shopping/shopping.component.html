@@ -1,4 +1,4 @@
-<div class="shopping-centers-container" (click)="onDocumentClick()">
+<div class="shopping-centers-container" (click)="onDocumentsClick()">
   <!-- Header Section -->
   <div class="header-container d-flex flex-row justify-content-between">
     <div
@@ -211,178 +211,201 @@
 
   <!-- Loading State -->
   <div class="main-inner">
-
-  <div class="loading-state" *ngIf="isLoading">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <p>Loading shopping centers...</p>
-  </div>
-
-  <!-- Skeleton Loading State -->
-  <div class="skeleton-grid" *ngIf="isLoading">
-    <div class="skeleton-card" *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9]">
-      <div class="skeleton-image">
-        <div class="skeleton-overlay">
-          <div class="skeleton-badge"></div>
-          <div class="skeleton-menu"></div>
-        </div>
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <div class="skeleton-content">
-        <div class="skeleton-title"></div>
-        <div class="skeleton-address"></div>
-        <div class="skeleton-details">
-          <div class="skeleton-price"></div>
-          <div class="skeleton-price-line">
-            <div class="skeleton-price-sf"></div>
-            <div class="skeleton-unit-size"></div>
+      <p>Loading shopping centers...</p>
+    </div>
+
+    <!-- Skeleton Loading State -->
+    <div class="skeleton-grid" *ngIf="isLoading">
+      <div class="skeleton-card" *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9]">
+        <div class="skeleton-image">
+          <div class="skeleton-overlay">
+            <div class="skeleton-badge"></div>
+            <div class="skeleton-menu"></div>
+          </div>
+        </div>
+        <div class="skeleton-content">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-address"></div>
+          <div class="skeleton-details">
+            <div class="skeleton-price"></div>
+            <div class="skeleton-price-line">
+              <div class="skeleton-price-sf"></div>
+              <div class="skeleton-unit-size"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Shopping Centers Grid -->
-  <div class="centers-grid" *ngIf="!isLoading">
-    <div class="center-card" *ngFor="let center of filteredCenters">
-      <div [routerLink]="['/landing', 0,center?.scId,center.campaignId]">
-        <div class="image-container"
+    <!-- Shopping Centers Grid -->
+    <div class="centers-grid" *ngIf="!isLoading">
+      <div class="center-card" *ngFor="let center of filteredCenters">
+        <div
+          class="card-click-area"
+          [class.click-disabled]="openMenuId === center.scId"
+          [routerLink]="['/landing', 0, center?.scId, center.campaignId]"
         >
-          <img loading="lazy" 
-            [src]="center.mainImage || 'assets/Images/placeholder.png'"
-            [alt]="center.centerName"
-            class="center-image"
-            (error)="center.mainImage = 'assets/Images/placeholder.png'"
-          />
-          <div class="card-overlay">
-            <!-- Only show shared badge if center is shared -->
-            <div class="share-badge" *ngIf="center.isShared">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              Shared
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <circle cx="12" cy="12" r="1"></circle>
-              </svg>
-            </div>
-            <!-- <button class="menu-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <div class="image-container">
+            <img
+              loading="lazy"
+              [src]="center.mainImage || 'assets/Images/placeholder.png'"
+              [alt]="center.centerName"
+              class="center-image"
+              (error)="center.mainImage = 'assets/Images/placeholder.png'"
+            />
+            <div class="card-overlay">
+              <!-- Only show shared badge if center is shared -->
+              <div class="share-badge" *ngIf="center.isShared">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Shared
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="1"></circle>
+                </svg>
+              </div>
+              <div class="menu-wrapper" (click)="$event.stopPropagation()">
+                <button class="menu-btn"
+                        (click)="toggleMenu(center.scId, $event)">
+                  <!-- your 3-dots SVG -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z" fill="#18171F" stroke="#18171F"/>
                     <path d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z" fill="#18171F"/>
                     <path d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z" fill="#18171F"/>
-                  </svg>            
-            </button> -->
+                  </svg>                    </button>
+      
+                <!-- DROPDOWN -->
+                <div class="menu-dropdown"
+                     *ngIf="openMenuId === center.scId">
+                  <button class="menu-item"
+                          (click)="onEnriche(center); closeMenu()">
+                    Enriche Data
+                  </button>
+                  <button class="menu-item"
+                          (click)="onUploadFiles(center); closeMenu()">
+                    Upload OM Files
+                  </button>
+                </div>
+              </div>
+             <div class="click-shield"
+          *ngIf="openMenuId === center.scId"
+          (click)="closeMenu()">
+     </div>
+            </div>
           </div>
-        </div>
 
-        <div class="center-info">
-          <h3 class="center-name">{{ center.centerName }}</h3>
-          <p class="center-address">{{ center.centerAddress }}</p>
-          <div class="center-details">
-            <span
-              class="purchase-price"
-              *ngIf="center.forSalePrice && center.forSalePrice > 0"
-              >Purchase Price</span
-            >
-          </div>
-          <div class="price-line" *ngIf="center.buildingSizeSf">
-            <span
-              *ngIf="center.forSalePrice && center.forSalePrice > 0"
-              class="price-per-sf"
-              >1.2% SF-1.568 SF</span
-            >
-            <span *ngIf="center.buildingSizeSf" class="unit-size">
-              {{ center.buildingSizeSf }} SF</span
-            >
+          <div class="center-info">
+            <h3 class="center-name">{{ center.centerName }}</h3>
+            <p class="center-address">{{ center.centerAddress }}</p>
+            <div class="center-details">
+              <span
+                class="purchase-price"
+                *ngIf="center.forSalePrice && center.forSalePrice > 0"
+                >Purchase Price</span
+              >
+            </div>
+            <div class="price-line" *ngIf="center.buildingSizeSf">
+              <span
+                *ngIf="center.forSalePrice && center.forSalePrice > 0"
+                class="price-per-sf"
+                >1.2% SF-1.568 SF</span
+              >
+              <span *ngIf="center.buildingSizeSf" class="unit-size">
+                {{ center.buildingSizeSf }} SF</span
+              >
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalItems > itemsPerPage">
+      <button
+        class="pagination-btn"
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(currentPage - 1)"
+      >
+        Previous
+      </button>
+
+      <button
+        class="pagination-btn"
+        [class.active]="currentPage === 1"
+        (click)="onPageChange(1)"
+        *ngIf="shouldShowLeftDots()"
+      >
+        1
+      </button>
+
+      <span class="pagination-ellipsis" *ngIf="shouldShowLeftDots()">...</span>
+
+      <button
+        *ngFor="let page of visiblePages"
+        class="pagination-btn"
+        [class.active]="currentPage === page"
+        (click)="onPageChange(page)"
+      >
+        {{ page }}
+      </button>
+
+      <span class="pagination-ellipsis" *ngIf="shouldShowRightDots()">...</span>
+
+      <button
+        class="pagination-btn"
+        [class.active]="currentPage === totalPages"
+        (click)="onPageChange(totalPages)"
+        *ngIf="shouldShowRightDots()"
+      >
+        {{ totalPages }}
+      </button>
+
+      <button
+        class="pagination-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="onPageChange(currentPage + 1)"
+      >
+        Next
+      </button>
+
+      <span class="pagination-info">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
+        {{ Math.min(currentPage * itemsPerPage, totalItems) }} of
+        {{ totalItems }} items
+      </span>
+    </div>
+
+    <!-- No Results Message -->
+    <div
+      class="no-results"
+      *ngIf="!isLoading && filteredCenters.length === 0 && centers.length > 0"
+    >
+      <p>No shopping centers match your search criteria.</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="no-results" *ngIf="!isLoading && centers.length === 0">
+      <p>No shopping centers available.</p>
+    </div>
   </div>
-
-  <!-- Pagination -->
-  <div class="pagination" *ngIf="totalItems > itemsPerPage">
-    <button
-      class="pagination-btn"
-      [disabled]="currentPage === 1"
-      (click)="onPageChange(currentPage - 1)"
-    >
-      Previous
-    </button>
-
-    <button
-      class="pagination-btn"
-      [class.active]="currentPage === 1"
-      (click)="onPageChange(1)"
-      *ngIf="shouldShowLeftDots()"
-    >
-      1
-    </button>
-
-    <span class="pagination-ellipsis" *ngIf="shouldShowLeftDots()">...</span>
-
-    <button
-      *ngFor="let page of visiblePages"
-      class="pagination-btn"
-      [class.active]="currentPage === page"
-      (click)="onPageChange(page)"
-    >
-      {{ page }}
-    </button>
-
-    <span class="pagination-ellipsis" *ngIf="shouldShowRightDots()">...</span>
-
-    <button
-      class="pagination-btn"
-      [class.active]="currentPage === totalPages"
-      (click)="onPageChange(totalPages)"
-      *ngIf="shouldShowRightDots()"
-    >
-      {{ totalPages }}
-    </button>
-
-    <button
-      class="pagination-btn"
-      [disabled]="currentPage === totalPages"
-      (click)="onPageChange(currentPage + 1)"
-    >
-      Next
-    </button>
-
-    <span class="pagination-info">
-      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
-      {{ Math.min(currentPage * itemsPerPage, totalItems) }} of
-      {{ totalItems }} items
-    </span>
-  </div>
-
-  <!-- No Results Message -->
-  <div
-    class="no-results"
-    *ngIf="!isLoading && filteredCenters.length === 0 && centers.length > 0"
-  >
-    <p>No shopping centers match your search criteria.</p>
-  </div>
-
-  <!-- Empty State -->
-  <div class="no-results" *ngIf="!isLoading && centers.length === 0">
-    <p>No shopping centers available.</p>
-  </div>
-</div>
 </div>
 <!-- File Explorer Component - Simplified integration -->
 <app-file-explorer

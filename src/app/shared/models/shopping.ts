@@ -9,4 +9,5 @@ export interface ShoppingCenter {
   lastForSalePrice?: number;
   forLeasePrice?: number;
   isShared?: boolean;
+  isDropdownOpen?: boolean;
 }

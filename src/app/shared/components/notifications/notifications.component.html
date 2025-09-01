@@ -189,7 +189,7 @@
             <!-- Close (closes chat panel AND ensures overlay off) -->
             <button
               class="close-button"
-              [ngClass]="{'close-route': isChatbotRoute}"
+              [ngClass]="{ 'close-route': isChatbotRoute }"
               (click)="closeAll()"
               aria-label="Close"
             >
@@ -271,9 +271,16 @@
               </div>
 
               <div class="message-content">
-                <p class="message-text" *ngIf="item.from === 'ai'">
+                <p
+                  class="message-text"
+                  *ngIf="item.from === 'ai' && item.notification?.html"
+                >
                   Search Result
                 </p>
+                <div *ngIf="item.from === 'ai' && item.notification?.html">
+                  <p class="message-text">Not Found Results </p>
+                  <button class="choose emily-btn" (click)="showprompt(item.notification?.contextExtendPrompt)">Try Again</button>
+                </div>
                 <p class="message-text" *ngIf="item.from !== 'ai'">
                   {{ item.message }}
                 </p>
@@ -379,3 +386,17 @@
     <!-- /overlay-grid -->
   </div>
 </div>
+
+
+<ng-template #notificationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Notification</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>{{ currentMessage }}</p>
+  </div>
+  <div class="modal-footer">
+    <button class="choose emily-btn" (click)="sendPromptMessage(currentMessage);modal.close()">Try Again</button>
+  </div>
+</ng-template>
