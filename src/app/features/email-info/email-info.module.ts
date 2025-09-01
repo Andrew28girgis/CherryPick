@@ -6,8 +6,7 @@ import { EmailInfoComponent } from './email-info.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ContactsComponent } from '../contacts/contacts.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+ 
 const routes: Routes = [{ path: '', component: EmailInfoComponent }];
 
 @NgModule({
@@ -18,8 +17,7 @@ const routes: Routes = [{ path: '', component: EmailInfoComponent }];
     NgxSpinnerModule,
     NgbDropdownModule,  
     RouterModule.forChild(routes),
-    BrowserAnimationsModule,
-  ],
+   ],
   exports: [RouterModule],
 })
 export class EmailInfoModule {}
