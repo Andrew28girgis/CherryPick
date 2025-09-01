@@ -134,6 +134,8 @@ export class NotificationsComponent
   private chatOpenSub?: Subscription;
 
   ngOnInit(): void {
+    if (this.router.url.includes('chatbot')) this.electronSideBar = true;
+
     this.chatOpenSub = this.notificationService.chatOpen$.subscribe((open) => {
       if (this.isOpen !== open) {
         this.isOpen = open;
