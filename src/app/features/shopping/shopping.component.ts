@@ -340,9 +340,5 @@ export class ShoppingComponent implements OnInit {
     console.log('Enriche shopping center', center);
   }
 
-  onUploadFiles(center: any) {
-    // Open your file explorer or whatever you already have:
-    this.openFileExplorer(); // you already have this method
-    console.log('Upload m files', center);
-  }
+  
 }
