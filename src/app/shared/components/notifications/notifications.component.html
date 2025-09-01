@@ -212,7 +212,8 @@
         <div
           class="chat-messages-container"
           #messagesContainer
-          (scroll)="onScroll()"        >
+          (scroll)="onScroll()"
+        >
           <div
             class="scroll-down-button"
             *ngIf="showScrollButton && isOpen"
@@ -289,8 +290,12 @@
                 <ng-template #staticAutomation>
                   <p
                     class="message-text"
-                    *ngIf="item.message?.includes('I am searching the web now for your request')"
-                    >
+                    *ngIf="
+                      item.message?.includes(
+                        'I am searching the web now for your request'
+                      )
+                    "
+                  >
                     I am searching the web now for your request
                   </p>
                 </ng-template>
@@ -299,15 +304,20 @@
                   *ngIf="
                     item.from === 'ai' &&
                     item.notification?.html &&
-                    !item.message?.includes('I am searching the web now for your request')
-                   "
+                    !item.message?.includes(
+                      'I am searching the web now for your request'
+                    )
+                  "
                 >
                   Search Result
                 </p>
                 <div
                   *ngIf="
                     item.from === 'ai' &&
-                    !item.notification?.html &&!item.message?.includes('I am searching the web now for your request')
+                    !item.notification?.html &&
+                    !item.message?.includes(
+                      'I am searching the web now for your request'
+                    )
                   "
                 >
                   <p class="message-text">Not Found Results</p>
@@ -321,8 +331,10 @@
                 <p
                   class="message-text"
                   *ngIf="
-                    item.from !== 'ai' 
-                    &&!item.message?.includes('I am searching the web now for your request')
+                    item.from !== 'ai' &&
+                    !item.message?.includes(
+                      'I am searching the web now for your request'
+                    )
                   "
                 >
                   {{ item.message }}
@@ -341,7 +353,9 @@
                   *ngIf="
                     item.from === 'system' &&
                     item.notification?.json &&
-                    !isNotificationLoaded(item.notification)
+                    !isNotificationLoaded(item.notification) &&
+                    item.notification?.html
+                    ||item.notification?.notificationCategoryId === 4
                   "
                   class="choose"
                 >
