@@ -41,6 +41,7 @@
   line-height: 32px;
 }
 .tenant-card {
+  width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
