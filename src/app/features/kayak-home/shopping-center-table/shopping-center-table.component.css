@@ -1164,8 +1164,7 @@
 
 .main-inner {
   position: relative; /* Add this */
-  height: 600px;
-  overflow-y: auto;
+  
   padding: var(--Space-S-32);
   align-items: center;
   border-radius: var(--Radius-R-20);
