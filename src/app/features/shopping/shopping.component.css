@@ -859,11 +859,11 @@
   border-collapse: separate;
   border-spacing: 0;
   min-width: 920px;
+  overflow: scroll;
 }
 
 .centers-table thead th {
-  position: sticky;
-  top: 0;
+   top: 0;
   background: var(--Main-Container-BG);
   text-align: left;
   padding: 12px 16px;
