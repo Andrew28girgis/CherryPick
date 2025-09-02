@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
@@ -62,7 +62,11 @@ export class ContactsComponent implements OnInit {
   ];
   // Tracks which organizations are expanded
   expandedOrgs: { [orgId: number]: boolean } = {};
+  isSearchExpanded = false;
+  role: 'broker' | 'tenant' = 'broker';
 
+
+  
   constructor(private http: HttpClient, private PlacesService: PlacesService) {
     this.loadContacts();
     this.loadOrganizations();
@@ -109,15 +113,16 @@ export class ContactsComponent implements OnInit {
 
   applyFiltersAndSort(): void {
     let orgs = [...this.organizations];
-
+  
+    // 🔎 Search filter
     if (this.searchTerm) {
       const searchLower = this.searchTerm.toLowerCase();
       orgs = orgs.filter((org) =>
         (org.name || '').toLowerCase().includes(searchLower)
       );
     }
-
-    // Sort organizations
+  
+    // 🔀 Sort
     orgs.sort((a, b) => {
       switch (this.sortBy) {
         case 'alphabetical':
@@ -130,16 +135,24 @@ export class ContactsComponent implements OnInit {
           return 0;
       }
     });
-
-    // Group contacts under each organization
+  
+    // 🟢 Role filter (Tenant vs Broker)
+    if (this.role === 'tenant') {
+      orgs = orgs.filter(org => org.stakeholderId === 2);
+    } else {
+      orgs = orgs.filter(org => org.stakeholderId !== 2);
+    }
+  
+    // 👥 Group contacts under each org
     this.filteredContacts = orgs.map((org) => ({
       ...org,
       contacts: this.contacts.filter((c) => c.organizationId === org.id),
     }));
+  
     this.totalItems = this.filteredContacts.length;
     this.updatePage(1);
   }
-
+  
   updatePage(page: number): void {
     this.currentPage = page;
     const startIndex = (page - 1) * this.pageSize;
@@ -269,4 +282,36 @@ export class ContactsComponent implements OnInit {
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
   }
+ 
+// add method
+toggleSearch(input: HTMLInputElement): void {
+  this.isSearchExpanded = !this.isSearchExpanded;
+  if (this.isSearchExpanded) {
+    setTimeout(() => input.focus(), 0); // give DOM time to expand
+  }
+
 }
+setRole(val: 'broker' | 'tenant') {
+  this.role = val;
+  this.applyFiltersAndSort();   // 🔥 refresh list after toggle
+}
+
+@ViewChild('contactsRow') contactsRow!: ElementRef<HTMLDivElement>;
+
+scrollContacts(dir: 'left' | 'right') {
+  const container = this.contactsRow.nativeElement;
+  const delta = container.clientWidth * (dir === 'left' ? -0.9 : 0.9);
+  container.scrollBy({ left: delta, behavior: 'smooth' });
+}
+
+onStripWheel(event: WheelEvent, el: HTMLElement) {
+  // convert vertical wheel to horizontal scrolling
+  if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+    event.preventDefault();
+    el.scrollBy({ left: event.deltaY, behavior: 'smooth' });
+  }
+}
+
+
+}
+

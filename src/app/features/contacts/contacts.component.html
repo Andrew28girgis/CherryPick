@@ -1,6 +1,6 @@
 <div class="contact-container">
   <!-- Header Section -->
-  <div class="header">
+  <!-- <div class="header">
     <div class="search-section">
       <div class="search-input-container">
         <svg
@@ -45,7 +45,7 @@
     </div>
 
     <div class="action-buttons">
-      <!-- <div class="dropdown-container" ngbDropdown>
+      <div class="dropdown-container" ngbDropdown>
           <button class="action-btn" ngbDropdownToggle>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -83,7 +83,7 @@
               <input type="text" placeholder="To" [(ngModel)]="sizeTo" (input)="onFilterChange()">
             </div>
           </div>
-        </div> -->
+        </div>
 
       <div class="dropdown-container" ngbDropdown>
         <button class="action-btn" ngbDropdownToggle>
@@ -181,7 +181,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- Skeleton Loading State -->
   <div class="skeleton-container" *ngIf="isLoading">
@@ -211,11 +211,190 @@
 
   <!-- Real Content -->
   <div class="contacts-container" *ngIf="!isLoading">
+    <!-- Header Section -->
+    <div class="header-container d-flex justify-content-between w-100">
+      <div class="switch-tenant">
+<!-- Role Toggle -->
+<div class="role-toggle" role="tablist" aria-label="Select role">
+  <button
+    class="role-option"
+    [class.active]="role === 'broker'"
+    role="tab"
+    [attr.aria-selected]="role === 'broker'"
+    (click)="setRole('broker')"
+  >
+    Broker
+  </button>
+
+  <button
+    class="role-option"
+    [class.active]="role === 'tenant'"
+    role="tab"
+    [attr.aria-selected]="role === 'tenant'"
+    (click)="setRole('tenant')"
+  >
+    Tenant
+  </button>
+</div>
+      </div>
+      <div class="search-con d-flex ">
+
+      <div class="search-section">
+        <div class="search-container" [class.expanded]="isSearchExpanded">
+          <button
+            class="search-icon-btn"
+            type="button"
+            (click)="toggleSearch(searchInput)"
+            aria-label="Toggle search"
+          >
+            <svg
+              class="search-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M9.583 17.5c4.372 0 7.917-3.544 7.917-7.917S13.955 1.667 9.583 1.667 1.667 5.21 1.667 9.583 5.21 17.5 9.583 17.5Z"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M18.333 18.333 16.667 16.667"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+          <input
+          #searchInput
+
+            type="text"
+            class="search-input"
+            placeholder="Search Organizations..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+          />
+        </div>
+      </div>
+
+      <div class="actions-container">
+        <div class="dropdown-container"
+        ngbDropdown
+        [container]="'body'"
+        placement="bottom-end">          <button class="sort-btn" ngbDropdownToggle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="21"
+              viewBox="0 0 20 21"
+              fill="none"
+            >
+              <path
+                d="M8.70879 6.09998L5.60876 3L2.50879 6.09998"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5.6084 18V3"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.292 14.8999L14.392 17.9999L17.492 14.8999"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M14.3926 3V18"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+          <div ngbDropdownMenu class="dropdown-menu sort-menu">
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="sort"
+                value="alphabetical"
+                [(ngModel)]="sortBy"
+                (change)="onSortChange()"
+              />
+              <span class="radio-text">Alphabetical</span>
+            </label>
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="sort"
+                value="newest"
+                [(ngModel)]="sortBy"
+                (change)="onSortChange()"
+              />
+              <span class="radio-text">Newest to Oldest</span>
+            </label>
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="sort"
+                value="oldest"
+                [(ngModel)]="sortBy"
+                (change)="onSortChange()"
+              />
+              <span class="radio-text">Oldest to Newest</span>
+            </label>
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="sort"
+                value="status"
+                [(ngModel)]="sortBy"
+                (change)="onSortChange()"
+              />
+              <span class="radio-text">Status</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <button class="add-new-btn" (click)="onAddNew()">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+       </button>
+    </div>
+
+    </div>
+
     <!-- Contact Grid -->
     <div class="organization-grid">
+      
       <div class="organization-card" *ngFor="let org of paginatedContacts">
-        <div class="d-flex align-items-center">
-          <img loading="lazy" 
+        <div class=" tenant-card">
+          <img
+            loading="lazy"
             class="logo ms-2"
             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
               org.id
@@ -227,49 +406,47 @@
           <h2 class="organization-title mb-0">{{ org.name }}</h2>
         </div>
         <!-- Contacts Grid -->
-        <div class="row w-100" *ngIf="org.contacts.length > 0">
-          <div
-            class="col-md-4"
-            *ngFor="
-              let contact of expandedOrgs[org.id]
-                ? org.contacts
-                : org.contacts.slice(0, 3)
-            "
-          >
-            <div class="contact-info p-3 h-100">
-              <h3 class="contact-name">
-                {{ contact.firstname }} {{ contact.lastname }}
-              </h3>
+          <!-- <div class="contacts-header">
+    <div class="contacts-title">Contacts</div>
+    <div class="contacts-chevrons">
+      <button class="contacts-chevron" type="button"
+              (click)="scrollContacts(contactsRow, 'left')" aria-label="Previous">
+        ‹
+      </button>
+      <button class="contacts-chevron" type="button"
+              (click)="scrollContacts(contactsRow, 'right')" aria-label="Next">
+        ›
+      </button>
+    </div>
+    </div> -->
+ <div class="row w-100"
+     #contactsRow
+     (wheel)="onStripWheel($event, contactsRow)"
+     *ngIf="org.contacts.length > 0">
 
-              <div class="contact-title" *ngIf="contact.jobTitle">
-                {{ contact.jobTitle }}
-              </div>
+  <div class="col-md-4" *ngFor="let contact of org.contacts">
+    <div class="contact-info p-3 h-100">
+      <h3 class="contact-name d-flex flex-row">
+        {{ contact.firstName + ' ' + contact.lastName }}
+      </h3>
 
-              <div class="contact-details">
-                <div class="contact-item" *ngIf="contact.email">
-                  <span class="label"
-                    >Email: <span class="value">{{ contact.email }}</span></span
-                  >
+      <div class="contact-title" *ngIf="contact.jobTitle">
+        {{ contact.jobTitle }}
+      </div>
 
-                  <div class="contact-item" *ngIf="contact.cellPhone">
-                    <span class="label"
-                      >Cell Phone:
-                      <span class="value">{{ contact.cellPhone }}</span></span
-                    >
-                  </div>
-                </div>
-              </div>
-
-            </div>
+      <div class="contact-details">
+        <div class="contact-item" *ngIf="contact.email">
+          <span class="label">Email: <span class="value">{{ contact.email }}</span></span>
+          <div class="contact-item" *ngIf="contact.cellPhone">
+            <span class="label">Cell Phone: <span class="value">{{ contact.cellPhone }}</span></span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <!-- Show See More / See Less -->
-        <div class="text-end w-100" *ngIf="org.contacts.length > 3">
-          <button class="btn btn-link px-0" style="color: black; font-weight: 600;" (click)="toggleExpand(org.id)">
-            {{ expandedOrgs[org.id] ? "See Less" : "See More" }}
-          </button>
-        </div>
+
 
         <!-- No contacts fallback -->
         <div class="w-100" *ngIf="org.contacts.length === 0">

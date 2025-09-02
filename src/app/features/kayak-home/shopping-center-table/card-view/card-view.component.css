@@ -1222,7 +1222,7 @@ label {
   left: 6vw !important;
   top: unset !important;
   max-height: 30vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .org-mini-item .name {
@@ -1243,4 +1243,8 @@ label {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+}
+
+.imgggg.click-disabled {
+  pointer-events: none;
 }

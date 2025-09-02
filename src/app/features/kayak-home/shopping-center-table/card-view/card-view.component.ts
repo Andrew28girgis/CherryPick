@@ -836,26 +836,28 @@ export class CardViewComponent implements OnInit, OnDestroy {
     });
   }
   
-toggleOrgMenu(event: MouseEvent, id: number) {
-  event.stopPropagation();
-  event.preventDefault()
-  if (this.openOrgMenuId === id) {
-     this.openOrgMenuId = null
-    this.activeDropdownId = null
-
-  } else {
-    this.openOrgMenuId = id
-    this.activeDropdownId = id
+  toggleOrgMenu(id: number) {
+    if (this.openOrgMenuId === id) {
+      this.closeOrgMenu();
+    } else {
+      this.openOrgMenuId = id;
+      this.activeDropdownId = id;
+  
+      setTimeout(() => {
+        document.addEventListener('click', this.handleOutsideClick, true);
+      });
+    }
   }
-
-  this.openOrgMenuId = id;
-
-  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
- 
-
-  document.addEventListener('click', this.closeOrgMenu, { once: true });
-}
-
+  
+  handleOutsideClick = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const clickedInside = target.closest('.org-info-trigger');
+  
+    if (!clickedInside) {
+      this.closeOrgMenu();
+      document.removeEventListener('click', this.handleOutsideClick, true);
+    }
+  };
 closeOrgMenu = () => {
   this.openOrgMenuId = null;
   this.orgMenuPos = {};
