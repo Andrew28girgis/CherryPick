@@ -128,17 +128,8 @@
   line-height: 30px; /* 187.5% */
 }
 
-.main-inner {
-  height: 500px;
-  overflow-y: scroll;
-  padding: var(--Space-S-32);
-  align-items: center;
-  border-radius: var(--Radius-R-20);
-  background: var(--Main-Container-BG);
-  backdrop-filter: blur(50px);
-
-  /* z-index: -1;
-position: fixed; */
+.main-inner {  
+  border-radius: var(--Radius-R-20);  
 }
 /* Modal Styles */
 .modal-header {
