@@ -514,7 +514,7 @@
               </p>
             </td> -->
             <!-- *ngIf="placesRepresentative" -->
-            <td>
+            <!-- <td>
               <ng-container
                 *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization"
               >
@@ -522,7 +522,7 @@
                   <div
                     class="d-flex align-items-center justify-content-between table-div"
                   >
-                    <!-- <img loading="lazy" 
+                    <img loading="lazy" 
                       class="logo"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID
@@ -532,7 +532,7 @@
                           .Name
                       "
                       alt=""
-                    /> -->
+                    />
                     <div class="table-text">
                       {{
                         shoppingCenter.ShoppingCenter.ManagerOrganization[0]
@@ -540,7 +540,7 @@
                       }}
                     </div>
 
-                    <!-- trigger -->
+                    trigger
                     <div
                       class="org-info-trigger"
                       (click)="toggleOrgMenu($event, shoppingCenter.Id)"
@@ -597,7 +597,7 @@
                   </div>
                 </div>
               </ng-container>
-            </td>
+            </td> -->
             <td
               class="table-text"
               *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
