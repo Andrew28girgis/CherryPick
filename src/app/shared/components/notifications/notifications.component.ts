@@ -1157,5 +1157,12 @@ private onNewMessagesArrived(count: number): void {
   this.newNotificationsCount += count;
   this.showScrollButton = true;
 }
+isCompilingReport(item: ChatItem, index: number): boolean {
+  if (!item.message || !item.message.includes('Compiling them into a nice report.')) {
+    return false;
+  }
+  const nextItem = this.chatTimeline[index + 1];
+  return !nextItem;
+}
 
 }
