@@ -451,12 +451,12 @@
 
             <td class="ManagerOrg">{{ shoppingCenter.ManagerORG }}</td>
             <td class="last-update">{{ shoppingCenter.LastUpdateDate |date}}</td>
-            <td class="score"  ><span *ngIf="shoppingCenter.Score">{{ shoppingCenter.Score +'%'}}</span> 
-            <button 
+            <td class="score"  ><span *ngIf="shoppingCenter.Score">{{ shoppingCenter.Score +'%'}} <button 
               class="icon-btn" 
               (click)="openInfoPopup(shoppingCenter, infoModal)">
               <i class="fa-solid fa-circle-info"></i>
-            </button>
+            </button></span> 
+           
              </td>
             <td class="type">{{ shoppingCenter.CenterType }}</td>
             <td class="category">{{ shoppingCenter.Category }}</td>
