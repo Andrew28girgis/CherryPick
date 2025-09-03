@@ -1064,6 +1064,10 @@ tr.click-disabled td:last-child * {
 .filter-check span {
   color: #1f2937;
 }
+.link-details{
+  color: blue;
+  text-decoration: underline;
+}
 
 /* Responsive Design */
 @media (max-width: 480px) {
