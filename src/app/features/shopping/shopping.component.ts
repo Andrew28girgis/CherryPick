@@ -1,25 +1,24 @@
- import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { HttpClient } from '@angular/common/http';
-import { NgbModal,NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component'; // Adjust path as needed
- import { ShoppingCenter } from 'src/app/shared/models/shopping';
+import { ShoppingCenter } from 'src/app/shared/models/shopping';
 import { Router } from '@angular/router';
- 
+
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
   styleUrls: ['./shopping.component.css'],
-   
 })
 export class ShoppingComponent implements OnInit {
   @ViewChild('fileExplorer') fileExplorer!: FileExplorerComponent;
 
   Math = Math;
   contactID: any = localStorage.getItem('contactId');
-  
-   private modalRef?: NgbModalRef;
+
+  private modalRef?: NgbModalRef;
   searchTerm: string = '';
   centers: ShoppingCenter[] = [];
   filteredCenters: ShoppingCenter[] = [];
@@ -45,7 +44,7 @@ export class ShoppingComponent implements OnInit {
     { value: 'price-low', label: 'Price Low to High' },
     { value: 'price-high', label: 'Price High to Low' },
     { value: 'size-small', label: 'Size Small to Large' },
-    { value: 'size-large', label: 'Size Large to Small' }
+    { value: 'size-large', label: 'Size Large to Small' },
   ];
 
   isLoading: boolean = true;
@@ -68,8 +67,8 @@ export class ShoppingComponent implements OnInit {
 
   loadShoppingCenters(): void {
     const params = {
-      Name: "GetShoppingCenters",
-      Params: {}
+      Name: 'GetShoppingCenters',
+      Params: {},
     };
 
     this.placesService.GenericAPI(params).subscribe(
@@ -79,7 +78,7 @@ export class ShoppingComponent implements OnInit {
             ...center,
             id: center.id || index + 1,
             isShared: center.isShared || center.shared || false,
-            mainImage: this.processImageUrl(center.mainImage)
+            mainImage: this.processImageUrl(center.mainImage),
           }));
           this.applyFiltersAndSort();
           this.isLoading = false;
@@ -122,14 +121,15 @@ export class ShoppingComponent implements OnInit {
 
     if (this.searchTerm && this.searchTerm.trim()) {
       const searchLower = this.searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(center => 
-        (center.centerName?.toLowerCase().includes(searchLower) ||
-        center.centerAddress?.toLowerCase().includes(searchLower))
+      filtered = filtered.filter(
+        (center) =>
+          center.centerName?.toLowerCase().includes(searchLower) ||
+          center.centerAddress?.toLowerCase().includes(searchLower)
       );
     }
 
     if (this.shareFilter !== 'all') {
-      filtered = filtered.filter(center => {
+      filtered = filtered.filter((center) => {
         if (this.shareFilter === 'shared') {
           return center.isShared === true;
         } else if (this.shareFilter === 'not-shared') {
@@ -140,7 +140,7 @@ export class ShoppingComponent implements OnInit {
     }
 
     if (this.priceFrom || this.priceTo) {
-      filtered = filtered.filter(center => {
+      filtered = filtered.filter((center) => {
         const price = center.forSalePrice || center.forLeasePrice || 0;
         if (price === 0) return false;
         const fromPrice = this.priceFrom ? parseFloat(this.priceFrom) : 0;
@@ -150,7 +150,7 @@ export class ShoppingComponent implements OnInit {
     }
 
     if (this.sizeFrom || this.sizeTo) {
-      filtered = filtered.filter(center => {
+      filtered = filtered.filter((center) => {
         if (!center.buildingSizeSf) return false;
         const size = center.buildingSizeSf;
         const fromSize = this.sizeFrom ? parseFloat(this.sizeFrom) : 0;
@@ -188,11 +188,14 @@ export class ShoppingComponent implements OnInit {
     if (this.currentPage > this.totalPages) {
       this.currentPage = 1;
     }
-    
+
     this.updateVisiblePages();
-    
+
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.filteredCenters = filtered.slice(startIndex, startIndex + this.itemsPerPage);
+    this.filteredCenters = filtered.slice(
+      startIndex,
+      startIndex + this.itemsPerPage
+    );
   }
 
   onFilter(event: Event): void {
@@ -221,8 +224,6 @@ export class ShoppingComponent implements OnInit {
     this.showSortDropdown = false;
   }
 
-  
-
   toggleShareStatus(center: ShoppingCenter): void {
     center.isShared = !center.isShared;
   }
@@ -246,10 +247,10 @@ export class ShoppingComponent implements OnInit {
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
     const visiblePages: number[] = [];
-    
+
     let startPage = Math.max(currentPage - 2, 1);
     let endPage = Math.min(startPage + 4, totalPages);
-    
+
     if (endPage - startPage < 4) {
       startPage = Math.max(endPage - 4, 1);
     }
@@ -296,7 +297,7 @@ export class ShoppingComponent implements OnInit {
       error: (err) => {
         this.spinner.hide();
         this.showToast('Failed to add shopping center. Please try again.');
-      }
+      },
     });
   }
 
@@ -315,7 +316,7 @@ export class ShoppingComponent implements OnInit {
       }, 3000);
     }
   }
-  
+
   toggleMenu(scId: number, event: MouseEvent) {
     event.stopPropagation();
     this.openMenuId = this.openMenuId === scId ? null : scId;
@@ -338,19 +339,18 @@ export class ShoppingComponent implements OnInit {
 
   onEnriche(center: any) {
     window.location.href = `https://www.google.com/search?q=${center.centerName}+${center.centerAddress}`;
- 
+
     console.log('Enriche shopping center', center);
   }
 
   setView(mode: 'grid' | 'table') {
     this.viewMode = mode;
   }
-  
+
   onRowNavigate(center: any, event?: MouseEvent) {
     // avoid navigating when the 3-dots menu gets clicked
     if (event) event.stopPropagation();
     // same route you already use in the card view
     this.router.navigate(['/landing', 0, center?.scId, center.campaignId]);
   }
-  
 }
