@@ -1065,9 +1065,26 @@ tr.click-disabled td:last-child * {
   color: #1f2937;
 }
 .link-details{
-  color: blue;
+  color: #a31c59;
   text-decoration: underline;
 }
+.icon-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  background:transparent;
+  padding:4px;
+  cursor:pointer;
+  color: inherit;       /* lets icon follow text color */
+  font: inherit;
+}
+.icon-btn:focus {
+  outline: 1px solid Highlight;
+  outline-offset: 2px;
+  border-radius:4px;
+}
+
 
 /* Responsive Design */
 @media (max-width: 480px) {
