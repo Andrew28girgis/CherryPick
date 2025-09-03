@@ -1248,3 +1248,75 @@ label {
 .imgggg.click-disabled {
   pointer-events: none;
 }
+
+
+.table-responsive {
+  max-height: 600px;
+  overflow-y: auto;
+  padding: var(--Space-S-16);
+  border-radius: var(--Radius-R-20);
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
+}
+
+.table-div{
+  width: 50%;
+}
+/* Make rows look like floating cards */
+table {
+  width: 100%;
+  border-spacing: 0 12px; /* gap between rows */
+  font-size: 0.95rem;
+  border-radius: var(--Radius-R-20);
+  background: var(--Colors-Card-Background);
+  backdrop-filter: blur(20px);
+}
+
+/* Table head */
+table thead th {
+  text-align: left;
+  padding: 14px var(--Space-S-20);
+  font-weight: 600;
+  color: #2f2a3a;
+  background: transparent;
+  white-space: nowrap;
+  border: none;
+}
+
+/* Table body cells */
+table tbody td {
+  background: none;
+  padding: var(--Space-S-16) var(--Space-S-20);
+  vertical-align: middle;
+   /* white-space: nowrap; */
+
+}
+
+table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Optional: smooth transition */
+table tbody td {
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+/* Base style so all share the same curve */
+.green, .yellow, .red {
+  position: relative;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-left-width: 6px;          /* a bit thicker for emphasis */
+  border-left-style: solid;
+  border-radius: 10px;    /* curves into the content */
+ }
+
+/* Individual colors */
+.green {
+  border-left-color: #27ae60;
+}
+.yellow {
+  border-left-color: #f39c12;
+}
+.red {
+  border-left-color: #e74c3c;
+}

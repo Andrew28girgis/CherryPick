@@ -172,6 +172,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+
     this.getUserpages();
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params['openUpload'] === 'true') {
@@ -280,8 +281,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
-
-    // Add subscription to reload event
+     // Add subscription to reload event
+      
+ 
     this.subscriptions.add(
       this.shoppingCenterService.reloadShoppingCenters$.subscribe(
         (shouldReload) => {
@@ -292,6 +294,12 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         }
       )
     );
+    setInterval(() => {
+       
+      this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
+
+  }, 30000);
+
   }
 
   // Add method to sync filter state
