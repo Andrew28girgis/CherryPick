@@ -484,89 +484,6 @@
   white-space: nowrap;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .centers-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--Space-S-16);
-  }
-}
-
-@media (max-width: 768px) {
-  .search-input-container {
-    max-width: 100%;
-  }
-
-  .add-new-actions {
-    width: 100%;
-  }
-
-  .add-new-btn {
-    flex: 1;
-    justify-content: center;
-  }
-
-  .shopping-centers-container {
-    padding: var(--Space-S-16);
-  }
-
-  .header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--Space-S-16);
-  }
-
-  .search-section {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .action-buttons {
-    justify-content: center;
-  }
-
-  .centers-grid {
-    grid-template-columns: 1fr;
-    gap: var(--Space-S-16);
-  }
-
-  .center-card {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .pagination {
-    flex-wrap: wrap;
-    gap: var(--Space-S-4);
-    padding: var(--Space-S-12);
-  }
-
-  .pagination-btn {
-    padding: 6px var(--Space-S-12);
-    font-size: 12px;
-  }
-
-  .pagination-info {
-    width: 100%;
-    text-align: center;
-    margin-top: var(--Space-S-8);
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .center-info {
-    padding: 10px var(--Space-S-12);
-  }
-
-  .dropdown-menu {
-    left: 0;
-    right: 0;
-    min-width: auto;
-  }
-}
-
 .loading-state {
   display: none;
 }
@@ -984,6 +901,9 @@ tr.click-disabled td:last-child * {
   font-weight: 500;
   line-height: 24px;
 }
+.clear-filterr {
+  font-size: 16px;
+}
 .filters-header .filters-title:last-child {
   color: #a31c59;
   font-weight: 600;
@@ -1102,7 +1022,6 @@ tr.click-disabled td:last-child * {
 .btn-base {
   display: flex;
   flex: 1 0 0;
-  height: 48px;
   padding: 12px 24px;
   justify-content: center;
   align-items: center;
@@ -1145,3 +1064,120 @@ tr.click-disabled td:last-child * {
 .filter-check span {
   color: #1f2937;
 }
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .center-info {
+    padding: 10px var(--Space-S-12);
+  }
+
+  .dropdown-menu {
+    left: 0;
+    right: 0;
+    min-width: auto;
+  }
+}
+@media (max-width: 768px) {
+  .search-input-container {
+    max-width: 100%;
+  }
+
+  .add-new-actions {
+    width: 100%;
+  }
+
+  .add-new-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .shopping-centers-container {
+    padding: var(--Space-S-16);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--Space-S-16);
+  }
+
+  .search-section {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-buttons {
+    justify-content: center;
+  }
+
+  .centers-grid {
+    grid-template-columns: 1fr;
+    gap: var(--Space-S-16);
+  }
+
+  .center-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: var(--Space-S-4);
+    padding: var(--Space-S-12);
+  }
+
+  .pagination-btn {
+    padding: 6px var(--Space-S-12);
+    font-size: 12px;
+  }
+
+  .pagination-info {
+    width: 100%;
+    text-align: center;
+    margin-top: var(--Space-S-8);
+    margin-left: 0;
+  }
+.btn-base{
+    padding: 10px 14px;
+    font-size: 13px;
+}
+  .clear-filterr {
+    font-size: 15px;
+  }
+  .filter-checkinput[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  .filter-input {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+@media (min-width: 768px) {
+.btn-base{
+    padding: 12px 24px;
+    font-size: 14px;
+}
+  .clear-filterr {
+    font-size: 16px;
+  }
+  .filter-checkinput[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+  }
+  .filter-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+@media (max-width: 1024px) {
+  .centers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--Space-S-16);
+  }
+}
+
+
+
+
