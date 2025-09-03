@@ -5,6 +5,7 @@ export interface Center {
     CenterAddress: string
     CenterCity: string
     CenterState: string
+    Category:string
     AnchorGLA_SF?: number
     CenterCounty: string
     CenterRBA_GLA?: number
@@ -22,7 +23,9 @@ export interface Center {
     YearRenovated?: number
     NumberOfStores?: number
     SignageImage: string
+    Score:any
     MainImage: string
+    ManagerORG:any
     ZipCode?: string
     PlaceKey?: string
     StreetViewURL: string
@@ -55,6 +58,7 @@ export interface Center {
     SentMails?: SentMails
     lastOutgoingEmail:any
     lastIncomingEmail:any
+    LastUpdateDate?: string
     sizeRange:any
   }
  

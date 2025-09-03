@@ -394,6 +394,9 @@
                 </svg>
               </button>
             </div>
+            <button class="add-btn" (click)="openUpload()">
+              <i class="fa-solid fa-plus"></i>
+            </button>
           </div>
         </div>
         <!-- <button class="send-email-button mx-1">
@@ -427,7 +430,45 @@
         <a class="nav-tab" [href]="generateSafeUrl()">Market Survey</a>
       </div>
     </div>
-
+    <div class="stats-grid stats-grid-3">
+      <div class="stat-card">
+        <div class="stat-label">Date Created</div>
+        <div class="stat-content"><span class="stat-value">Aug 20, 2025</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Initial State Selection</div>
+        <div class="stat-content"><span class="stat-value">------</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Inriching</div>
+        <div class="stat-content"><span class="stat-value">50</span></div>
+      </div>
+    </div>
+    
+    <div class="stats-grid stats-grid-5">
+      <div class="stat-card">
+        <div class="stat-label">Scoring</div>
+        <div class="stat-content scoring">
+          <span class="score-low">17</span> ·
+          <span class="score-mid">15</span> ·
+          <span class="score-high">50</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Reaching Out</div>
+        <div class="stat-content"><span class="stat-value">120</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Short Listed</div>
+        <div class="stat-content"><span class="stat-value">34</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Shared With Tenant</div>
+        <div class="stat-content"><span class="stat-value">3</span></div>
+      </div>
+ 
+    </div>
+    
     <div class="row m-0" *ngIf="currentView == 2">
       <div class="col-12 p-0">
         <app-side-list-view
@@ -658,10 +699,7 @@
     </button> -->
   </div>
 </ng-template>
-<!-- Floating Add Sites Button -->
-<button class="add-btn" (click)="openUpload()">
-  <i class="fa-solid fa-plus"></i>
-</button>
+ 
 
 <ng-template #websiteModalTpl let-modal>
   <div class="modal-header fancy-modal-header">

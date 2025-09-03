@@ -1,4 +1,4 @@
-<div class="py-2">
+<div>
   <!-- Skeleton loading for table -->
   <div *ngIf="isLoading">
     <table class="procpect-table">
@@ -39,27 +39,35 @@
       shoppingCenters &&
       shoppingCenters.length > 0
     "
+    style="overflow-x: auto"
   >
     <table class=" ">
       <thead class=" ">
         <tr>
           <th>Name</th>
           <th>Address</th>
+          <th>type</th>
+          <th>category</th>
+          <th>last update date</th>
+          <th>matching score</th>
+          <th >Manager Organization</th>
+
           <th *ngIf="hasAnySizeRange">Size Range</th>
-          <th>Stage Name</th>
-          <th *ngIf="placesRepresentative != false">Leased by</th>
+          <th *ngIf="hasAnyStages">Stage Name</th>
+          <!-- *ngIf="placesRepresentative" -->
           <th *ngIf="shoppingCenters[0].ShoppingCenter">
-            <ng-container
-              *ngFor="
-                let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
-                let i = index;
-                trackBy: trackByIndex
-              "
-            >
-              {{ getNeareastCategoryName(item.CategoryId) }}
+            <ng-container *ngIf="shoppingCenters[0]?.ShoppingCenter">
+              <th
+                *ngFor="
+                  let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
+                  trackBy: trackByIndex
+                "
+              >
+                {{ getNeareastCategoryName(item.CategoryId) }}
+              </th>
             </ng-container>
           </th>
-          <th>Actions</th>
+          <!-- <th>Actions</th> -->
         </tr>
       </thead>
       <tbody class=" ">
@@ -70,7 +78,7 @@
           "
         >
           <tr>
-            <td>
+            <td *ngIf="shoppingCenter.CenterName">
               <div class="d-flex justify-content-between">
                 <span
                   class="table-text"
@@ -85,7 +93,13 @@
                 </div>
               </div>
             </td>
-            <td>
+            <td
+              *ngIf="
+                shoppingCenter.CenterAddress ||
+                shoppingCenter.CenterCity ||
+                shoppingCenter.CenterState
+              "
+            >
               <div
                 class="table-text cursor"
                 (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
@@ -95,20 +109,66 @@
                 {{ shoppingCenter.CenterState }}
               </div>
             </td>
-            <td>
-              <div *ngIf="shoppingCenter.sizeRange as sr">
+            <td class="type" >{{shoppingCenter.CenterType}}</td>
+            <td class="category" >{{shoppingCenter.Category}}</td>
+            <td class="last-update" >{{shoppingCenter.LastUpdateDate}}</td>
+            <td class="score" >{{shoppingCenter.Score}}</td>
+            <td class="ManagerOrg" >{{shoppingCenter.ManagerORG}}</td>
+             <td *ngIf="shoppingCenter.sizeRange as sr">
+              <div>
                 <ng-container *ngIf="sr; instanceof: Array; else: single">
                   {{ sr[0] | number }} - {{ sr[1] | number }} SF
                 </ng-container>
                 <ng-template #single> {{ sr | number }} SF </ng-template>
               </div>
             </td>
-            <td>
-              <p class="table-text ShoppingCenterStage mb-1">
+            <td *ngIf="shoppingCenter.stageName">
+              <div #dropdownRef class="custom-dropdown">
+                <div
+                  class="selected-option"
+                  (click)="toggleDropdown(shoppingCenter, $event)"
+                >
+                  {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
+                      fill="#161017"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="dropdown-options"
+                  [class.show]="shoppingCenter.isDropdownOpen"
+                >
+                  <div
+                    *ngFor="let stage of KanbanStages"
+                    class="dropdown-item"
+                    [class.active]="stage.id === shoppingCenter.kanbanStageId"
+                    (click)="
+                      selectStage(
+                        shoppingCenter.MarketSurveyId,
+                        stage.id,
+                        shoppingCenter,
+                        $event
+                      )
+                    "
+                  >
+                    {{ stage.stageName }}
+                  </div>
+                </div>
+              </div>
+              <!-- <p class="table-text ShoppingCenterStage mb-1">
                 {{ shoppingCenter.stageName }}
-              </p>
+              </p> -->
             </td>
-            <td *ngIf="placesRepresentative != false">
+            <!-- *ngIf="placesRepresentative" -->
+            <td >
               <ng-container
                 *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization"
               >
@@ -168,7 +228,7 @@
                       *ngFor="
                         let org of shoppingCenter.ShoppingCenter
                           .ManagerOrganization;
-                         let i = index
+                        let i = index
                       "
                       class="org-mini-item"
                     >
@@ -192,7 +252,10 @@
                 </div>
               </ng-container>
             </td>
-            <td class="table-text">
+            <td
+              class="table-text"
+              *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
+            >
               <!-- <P class="mb-0" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></P> -->
               <div
                 *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
@@ -470,18 +533,19 @@
                               )
                             "
                           >
-                            <svg
-                              class="emily"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g id="Street View">
-                                <path id="Vector" fill="#707791" />
-                              </g>
-                            </svg>
+                          <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            d="M12.875 10.4795C13.4656 10.6906 13.9543 10.9406 14.3145 11.2207C14.7916 11.5918 15 11.9774 15 12.375C15 12.7171 14.8475 13.0452 14.5088 13.3652C14.1632 13.6916 13.6427 13.989 12.9736 14.2383C11.637 14.7362 9.82503 15 8 15C6.17497 15 4.36301 14.7362 3.02637 14.2383C2.35725 13.989 1.83682 13.6916 1.49121 13.3652C1.15247 13.0452 1 12.7171 1 12.375C1 11.9774 1.20837 11.5918 1.68555 11.2207C2.0457 10.9406 2.53444 10.6906 3.125 10.4795V10.752C2.65623 10.925 2.25971 11.1182 1.95801 11.3262C1.77158 11.4547 1.60411 11.5983 1.47949 11.7598C1.3564 11.9192 1.25 12.1291 1.25 12.375C1.25 12.6094 1.34695 12.8109 1.46191 12.9668C1.57781 13.1239 1.73351 13.2641 1.90625 13.3887C2.25197 13.6379 2.73008 13.8684 3.30371 14.0654C4.45653 14.4614 6.07492 14.75 8 14.75C9.92508 14.75 11.5435 14.4614 12.6963 14.0654C13.2699 13.8684 13.748 13.6379 14.0938 13.3887C14.2665 13.2641 14.4222 13.1239 14.5381 12.9668C14.653 12.8109 14.75 12.6094 14.75 12.375C14.75 12.1291 14.6436 11.9192 14.5205 11.7598C14.3959 11.5983 14.2284 11.4547 14.042 11.3262C13.7403 11.1182 13.3438 10.925 12.875 10.752V10.4795ZM8 5C6.68138 5 5.625 6.05638 5.625 7.375V9.79297L5.90137 9.93164L6.875 10.418V12.875H9.125V10.418L10.0986 9.93164L10.375 9.79297V7.375C10.375 6.05638 9.31862 5 8 5ZM8 1.25C7.02562 1.25 6.25 2.02562 6.25 3C6.25 3.97438 7.02562 4.75 8 4.75C8.97438 4.75 9.75 3.97438 9.75 3C9.75 2.02562 8.97438 1.25 8 1.25ZM6.625 10.582L6.34863 10.4434L5.375 9.95605V7.375C5.375 6.47551 5.83943 5.66741 6.54199 5.19141L7.04883 4.84766L6.61133 4.41992C6.23466 4.05112 6 3.54923 6 3C6 1.90163 6.90163 1 8 1C9.09837 1 10 1.90163 10 3C10 3.54923 9.76534 4.05112 9.38867 4.41992L8.95117 4.84766L9.45801 5.19141C10.1606 5.66741 10.625 6.47551 10.625 7.375V9.95605L9.65137 10.4434L9.375 10.582V13.125H6.625V10.582Z"
+                            fill="#161017"
+                            stroke="#161017"
+                          />
+                        </svg>
                             Street View
                           </a>
                         </li>
