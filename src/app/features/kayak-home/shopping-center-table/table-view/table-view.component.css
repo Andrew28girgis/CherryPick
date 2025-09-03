@@ -627,6 +627,7 @@ table tbody td {
   padding: var(--Space-S-16) var(--Space-S-20);
   vertical-align: middle;
   border: none;
+  white-space: nowrap;
 }
 
 table tbody tr:hover td {
@@ -694,6 +695,7 @@ table tbody td {
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 171.429% */
+  white-space: nowrap;
 }
 
 .selected-option:hover {
