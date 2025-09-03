@@ -79,7 +79,9 @@ export class TableViewComponent implements OnInit, OnDestroy {
   public showStageColumn = false;
   isUpdatingStage = false;
   @ViewChildren('dropdownRef') dropdowns!: QueryList<ElementRef>;
-
+  infoData: any = null;
+  isLoadingInfo = false;
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -608,4 +610,37 @@ private closeAllDropdowns(): void {
    this.shoppingCenters.forEach((sc: any) => sc.isDropdownOpen = false);
   this.activeDropdownId = null;
 }
+ 
+
+openInfoPopup(shopping: any, content: TemplateRef<any>): void {
+  this.isLoadingInfo = true;
+  this.infoData = null;
+
+  const body = {
+    Name: 'GetScoreRationale',
+    Params: { MSSCId: shopping.MarketSurveyId },
+  };
+
+  this.placesService.GenericAPI(body).subscribe({
+    next: (res: any) => {
+      this.infoData = res.json[0].scoreRationale || null;
+      this.isLoadingInfo = false;
+      this.modalService.open(content, {
+        size: 'md',
+        backdrop: true,
+        centered: true,
+      });
+    },
+    error: (err) => {
+      console.error('Error fetching info:', err);
+      this.isLoadingInfo = false;
+      this.modalService.open(content, {
+        size: 'md',
+        backdrop: true,
+        centered: true,
+      });
+    },
+  });
+}
+
 }

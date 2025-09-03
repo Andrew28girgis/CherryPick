@@ -1312,11 +1312,16 @@ table tbody td {
 
 /* Individual colors */
 .green {
-  border-left-color: #27ae60;
+  border-left-color: #6DE1D2;
 }
 .yellow {
-  border-left-color: #f39c12;
+  border-left-color: #FFD63A;
 }
 .red {
-  border-left-color: #e74c3c;
+  border-left-color: #F75A5A;
+}
+.spilit{
+  justify-content: center;
+    display: flex;
+    color: var(--Colors-Assistant-1-500)
 }

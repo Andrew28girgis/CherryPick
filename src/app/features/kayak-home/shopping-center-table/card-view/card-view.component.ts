@@ -154,43 +154,32 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.viewManagerService.filteredCenters$.subscribe((centers) => {
         this.ngZone.run(() => {
-          this.cardsSideList = centers;
-        });
-
-        this.cardsSideList.forEach((center: any) => {
-          center.lastOutgoingEmail = null;
-          center.lastIncomingEmail = null;
-          // Initialize dropdown state if not exists
-          if (center.isDropdownOpen === undefined) {
-            center.isDropdownOpen = false;
-          }
-
-          if (center.SentMails && Array.isArray(center.SentMails)) {
-            const outgoing = center.SentMails.filter(
-              (mail: any) => mail.Direction == 2
-            ).sort(
-              (a: any, b: any) =>
-                new Date(b.Date).getTime() - new Date(a.Date).getTime()
+          this.cardsSideList = [...centers].sort((a: any, b: any) => {
+            const aTime = this.parseDate(a.LastUpdateDate);
+            const bTime = this.parseDate(b.LastUpdateDate);
+    
+            console.log(
+              `Sorting: ${a.CenterName} -> ${a.LastUpdateDate} => ${aTime}, 
+                         ${b.CenterName} -> ${b.LastUpdateDate} => ${bTime}`
             );
-
-            const incoming = center.SentMails.filter(
-              (mail: any) => mail.Direction == 1
-            ).sort(
-              (a: any, b: any) =>
-                new Date(b.Date).getTime() - new Date(a.Date).getTime()
-            );
-
-            center.lastOutgoingEmail = outgoing.length > 0 ? outgoing[0] : null;
-            center.lastIncomingEmail = incoming.length > 0 ? incoming[0] : null;
-          }
+    
+            return bTime - aTime; // newest first
+          });
+    
+          console.log('Final sorted list:', this.cardsSideList.map(c => ({
+            name: c.CenterName,
+            rawDate: c.LastUpdateDate,
+            parsed: this.parseDate(c.LastUpdateDate),
+          })));
         });
-
+    
         if (centers && centers.length > 0) {
           this.isLoading = false;
         }
         this.cdr.markForCheck();
       })
     );
+    
 
     this.subscriptions.push(
       this.viewManagerService.buyboxCategories$.subscribe((categories) => {
@@ -862,4 +851,29 @@ closeOrgMenu = () => {
   this.openOrgMenuId = null;
   this.orgMenuPos = {};
 };
+private parseDate(dateValue: any): number {
+  if (!dateValue) return 0;
+
+  if (dateValue instanceof Date) {
+    return dateValue.getTime();
+  }
+
+  if (typeof dateValue === 'string') {
+    const normalized = dateValue.replace(' ', 'T');
+    const parsed = Date.parse(normalized);
+    if (isNaN(parsed)) {
+      console.warn('Invalid date string:', dateValue);
+      return 0;
+    }
+    return parsed;
+  }
+
+  if (typeof dateValue === 'number') {
+    return dateValue;
+  }
+
+  console.warn('Unexpected date type:', dateValue);
+  return 0;
+}
+
 }
