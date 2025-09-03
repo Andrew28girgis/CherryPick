@@ -751,13 +751,36 @@ table tbody td {
 
 /* Individual colors */
 .green {
-  border-left-color: #27ae60;
+  border-left-color: #6DE1D2;
 }
 .yellow {
-  border-left-color: #f39c12;
+  border-left-color: #FFD63A;
 }
 .red {
-  border-left-color: #e74c3c;
+  border-left-color: #F75A5A;
 }
 
  
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  font-size: 18px;
+  color: var(--Colors-Primary-500);
+}
+.icon-btn:hover {
+  color: var(--Colors-Primary-600);
+}
+.rationale-text {
+  white-space: pre-line;  /* keeps line breaks if your string has them */
+  font-size: 15px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.score{
+  /* flex-direction: row;
+  display: flex;
+  align-items: center; */
+}
