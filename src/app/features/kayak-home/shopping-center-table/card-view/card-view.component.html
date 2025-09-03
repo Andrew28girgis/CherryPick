@@ -34,7 +34,7 @@
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
   <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
-    <div class="card-window cursor">
+    <div class="card-window cursor" *ngIf="shopping.LastUpdateDate">
       <div class="cardResponsive">
         <a>
           <div class="main-img" (click)="handleImageClick($event)">
@@ -688,6 +688,695 @@
       </div>
     </div>
   </ng-container>
+</div>
+<div
+ 
+>
+<table   class=" ">
+  <thead class=" ">
+    <tr>
+      <th>Name</th>
+      <th>Organization</th>
+      <th>Date</th>
+      <th>Score</th>
+      <th>Type</th>
+      <th>Category</th>
+
+      <th  >Size Range</th>
+      <!-- <th *ngIf="hasAnyStages">Stage Name</th> -->
+      <!-- *ngIf="placesRepresentative" -->
+      <!-- <th > -->
+        <!-- <ng-container >
+          <th
+            *ngFor="
+              let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
+             "
+          >
+            {{ getNeareastCategoryName(item.CategoryId) }}
+          </th>
+        </ng-container> -->
+      <!-- </th> -->
+      <!-- <th>Actions</th> -->
+    </tr>
+  </thead>
+  <tbody class=" ">
+    <ng-container
+      *ngFor="
+        let shopping of cardsSideList;
+        trackBy: trackById
+      "
+    >
+    
+      <tr *ngIf=" !shopping.LastUpdateDate">
+        <td>
+          <div   [ngClass]="{'green': shopping.Score>50,'yellow': shopping.Score<50,'red':!shopping.Score}"  class="d-flex flex-column">
+            <div class="d-flex flex-row justify-content-between">
+              <span
+                class="table-text"
+                [innerHTML]="shopping.CenterName | titlecase"
+              ></span>
+              <div class="relativee" style="position: relative">
+                <button
+                  class="ellipsis_icont"
+                  (click)="toggleShortcutsCard(shopping.Id)"
+                >
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+                <div
+                  class="shortcuts_iconCard"
+                  *ngIf="selectedIdCard === shopping.Id"
+                >
+                  <ul>
+                    <li
+                      (click)="toggleShortcuts(shopping.Id, 'close')"
+                    >
+                      <a
+                        class="target"
+                        [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shoppingCenter.CampaignId]"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                            fill="#707791"
+                          />
+                        </svg>
+                        View Details
+                      </a>
+                    </li>
+                    <!-- <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
+                <a
+                 class="target"
+                  href="https://www.google.com/search?q=leasing manager for+{{
+                    shoppingCenter.CenterName
+                  }}+{{ shoppingCenter.CenterAddress }}+{{ shoppingCenter.CenterCity }}+{{
+                    shoppingCenter.CenterState
+                  }}+{{
+                    shoppingCenter.ZipCode}}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{ shoppingCenter.CenterAddress }},{{shoppingCenter.CenterCity }},{{ shoppingCenter.CenterState }},{{ shoppingCenter.ZipCode }}&orgId={{orgId}}&orgName={{orgName}}&campaignId={{cId}}"
+                  target="_blank"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21.12 9.88h-7.19v2.46h4.11c-.18 1.17-.73 2.06-1.62 2.68-.91.63-2.09 1.02-3.51 1.02-2.69 0-4.88-2.18-4.88-4.88s2.19-4.88 4.88-4.88c1.31 0 2.45.49 3.33 1.29l2.28-2.28C16.95 3.17 14.91 2.25 12.61 2.25c-5.69 0-10.25 4.56-10.25 10.25s4.56 10.25 10.25 10.25c5.43 0 9.71-4.2 9.71-10.05 0-.73-.08-1.25-.2-1.82z"
+                    />
+                  </svg>
+                  Google Search
+                </a>
+              </li> -->
+                    <li>
+                      <a
+                        class="target"
+                        (click)="openContactModal(shopping)"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                            fill="#707791"
+                          />
+                        </svg>
+                        Contact Broker
+                      </a>
+                    </li>
+                    <li
+                      (click)="toggleShortcuts(shopping.Id, 'close')"
+                    >
+                      <a
+                        class="target"
+                        (click)="
+                          openMapViewPlace(MapViewPlace, shopping)
+                        "
+                      >
+                        <i class="fa-solid fa-map-location-dot emily"></i>
+                        View Location
+                      </a>
+                    </li>
+                    <li
+                      (click)="toggleShortcuts(shopping.Id, 'close')"
+                    >
+                      <a
+                        class="target"
+                        (click)="
+                          openStreetViewPlace(
+                            StreetViewPlace,
+                            shopping
+                          )
+                        "
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            d="M12.875 10.4795C13.4656 10.6906 13.9543 10.9406 14.3145 11.2207C14.7916 11.5918 15 11.9774 15 12.375C15 12.7171 14.8475 13.0452 14.5088 13.3652C14.1632 13.6916 13.6427 13.989 12.9736 14.2383C11.637 14.7362 9.82503 15 8 15C6.17497 15 4.36301 14.7362 3.02637 14.2383C2.35725 13.989 1.83682 13.6916 1.49121 13.3652C1.15247 13.0452 1 12.7171 1 12.375C1 11.9774 1.20837 11.5918 1.68555 11.2207C2.0457 10.9406 2.53444 10.6906 3.125 10.4795V10.752C2.65623 10.925 2.25971 11.1182 1.95801 11.3262C1.77158 11.4547 1.60411 11.5983 1.47949 11.7598C1.3564 11.9192 1.25 12.1291 1.25 12.375C1.25 12.6094 1.34695 12.8109 1.46191 12.9668C1.57781 13.1239 1.73351 13.2641 1.90625 13.3887C2.25197 13.6379 2.73008 13.8684 3.30371 14.0654C4.45653 14.4614 6.07492 14.75 8 14.75C9.92508 14.75 11.5435 14.4614 12.6963 14.0654C13.2699 13.8684 13.748 13.6379 14.0938 13.3887C14.2665 13.2641 14.4222 13.1239 14.5381 12.9668C14.653 12.8109 14.75 12.6094 14.75 12.375C14.75 12.1291 14.6436 11.9192 14.5205 11.7598C14.3959 11.5983 14.2284 11.4547 14.042 11.3262C13.7403 11.1182 13.3438 10.925 12.875 10.752V10.4795ZM8 5C6.68138 5 5.625 6.05638 5.625 7.375V9.79297L5.90137 9.93164L6.875 10.418V12.875H9.125V10.418L10.0986 9.93164L10.375 9.79297V7.375C10.375 6.05638 9.31862 5 8 5ZM8 1.25C7.02562 1.25 6.25 2.02562 6.25 3C6.25 3.97438 7.02562 4.75 8 4.75C8.97438 4.75 9.75 3.97438 9.75 3C9.75 2.02562 8.97438 1.25 8 1.25ZM6.625 10.582L6.34863 10.4434L5.375 9.95605V7.375C5.375 6.47551 5.83943 5.66741 6.54199 5.19141L7.04883 4.84766L6.61133 4.41992C6.23466 4.05112 6 3.54923 6 3C6 1.90163 6.90163 1 8 1C9.09837 1 10 1.90163 10 3C10 3.54923 9.76534 4.05112 9.38867 4.41992L8.95117 4.84766L9.45801 5.19141C10.1606 5.66741 10.625 6.47551 10.625 7.375V9.95605L9.65137 10.4434L9.375 10.582V13.125H6.625V10.582Z"
+                            fill="#161017"
+                            stroke="#161017"
+                          />
+                        </svg>
+                        Street View
+                      </a>
+                    </li>
+                    <li
+                      (click)="toggleShortcuts(shopping.Id, 'close')"
+                    >
+                      <a
+                        *ngIf="
+                          checkSubmission(
+                            shopping?.ShoppingCenter?.UserSubmmision
+                          )
+                        "
+                        class="target"
+                        (click)="
+                          openModalSubmission(
+                            shopping?.ShoppingCenter
+                              ?.UserSubmmision || [],
+                            submission
+                          )
+                        "
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-file-icon lucide-file"
+                        >
+                          <path
+                            style="fill: none"
+                            d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+                          />
+                          <path
+                            style="fill: none"
+                            d="M14 2v4a2 2 0 0 0 2 2h4"
+                          />
+                        </svg>
+                        View Submissions
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        class="target"
+                        (click)="
+                          $event.preventDefault();
+                          $event.stopPropagation();
+                          requestCenterStatus(
+                            shopping.Id,
+                            shopping.CampaignId
+                          )
+                        "
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-circle-check-big-icon lucide-circle-check-big"
+                        >
+                          <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+                          <path d="m9 11 3 3L22 4" />
+                        </svg>
+                        Center Status</a
+                      >
+                    </li>
+                    <li (click)="openAddContactModal(shopping.Id)">
+                      <a class="target">
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12 5V19"
+                            stroke="#707791"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M5 12H19"
+                            stroke="#707791"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                        Add Contact
+                      </a>
+                    </li>
+                    <!-- <li *ngIf="shoppingCenter.Deleted != true" class="cursor">
+                  <a
+                    class="target"
+                    (click)="
+                      openDeleteShoppingCenterModal(
+                        deleteSingleShoppingCenterModal,
+                        shopping
+                      );
+                      toggleShortcuts(shopping.Id, 'close')
+                    "
+                  >
+                    <i class="fa-regular fa-trash-can emily"></i>
+                    Remove Shopping
+                  </a>
+                </li> -->
+                    <!-- <li *ngIf="shoppingCenter.Deleted == true">
+                      <a
+                        class="target"
+                        (click)="
+                          RestoreShoppingCenter(
+                            shoppingCenter.MarketSurveyId,
+                            shoppingCenter.Deleted
+                          );
+                          toggleShortcuts(shoppingCenter.Id, 'close')
+                        "
+                      >
+                        <i class="fa-solid fa-trash-arrow-up emily"></i>
+                        Restore
+                      </a>
+                    </li> -->
+                  </ul>
+                  <i class="fa-solid fa-caret-right"></i>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="
+                shopping.CenterAddress ||
+                shopping.CenterCity ||
+                shopping.CenterState
+              "
+            >
+              <div
+                class="table-text cursor addresss"
+                (click)="openMapViewPlace(MapViewPlace, shopping)"
+              >
+                {{ shopping.CenterAddress }}
+                <span *ngIf="shopping.CenterCity">,</span>
+
+                {{ shopping.CenterCity | titlecase }}
+                <span *ngIf="shopping.CenterState">,</span>
+
+                {{ shopping.CenterState }}
+              </div>
+            </div>
+            <div #dropdownRef class="custom-dropdown">
+              <div
+                class="selected-option"
+                (click)="toggleDropdown(shopping, $event)"
+              >
+                {{ getSelectedStageName(shopping.kanbanStageId) }}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                >
+                  <path
+                    d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
+                    fill="#161017"
+                  />
+                </svg>
+              </div>
+              <div
+                class="dropdown-options"
+                [class.show]="shopping.isDropdownOpen"
+              >
+                <div
+                  *ngFor="let stage of KanbanStages"
+                  class="dropdown-item"
+                  [class.active]="stage.id === shopping.kanbanStageId"
+                  (click)="
+                    selectStage(
+                      shopping.MarketSurveyId,
+                      stage.id,
+                      shopping,
+                      $event
+                    )
+                  "
+                >
+                  {{ stage.stageName }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <span
+                class="badge badge-danger mx-2 h-auto"
+                *ngIf="shopping.Deleted == true"
+                >Deleted</span
+              >
+            </div>
+          </div>
+        </td>
+
+        <td class="ManagerOrg">{{ shopping.ManagerORG }}</td>
+        <td class="last-update">{{ shopping.LastUpdateDate |date}}</td>
+        <td class="score"  ><span *ngIf="shopping.Score">{{ shopping.Score +'%'}}</span> </td>
+        <td class="type">{{ shopping.CenterType }}</td>
+        <td class="category">{{ shopping.Category }}</td>
+        <td *ngIf="shopping.sizeRange as sr">
+          <div>
+            <ng-container *ngIf="sr; instanceof: Array; else: single">
+              {{ sr[0] | number }} - {{ sr[1] | number }} SF
+            </ng-container>
+            <ng-template #single> {{ sr | number }} SF </ng-template>
+          </div>
+        </td>
+        <!-- <td *ngIf="shoppingCenter.stageName">
+          <div #dropdownRef class="custom-dropdown">
+            <div
+              class="selected-option"
+              (click)="toggleDropdown(shoppingCenter, $event)"
+            >
+              {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+              >
+                <path
+                  d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
+                  fill="#161017"
+                />
+              </svg>
+            </div>
+            <div
+              class="dropdown-options"
+              [class.show]="shoppingCenter.isDropdownOpen"
+            >
+              <div
+                *ngFor="let stage of KanbanStages"
+                class="dropdown-item"
+                [class.active]="stage.id === shoppingCenter.kanbanStageId"
+                (click)="
+                  selectStage(
+                    shoppingCenter.MarketSurveyId,
+                    stage.id,
+                    shoppingCenter,
+                    $event
+                  )
+                "
+              >
+                {{ stage.stageName }}
+              </div>
+            </div>
+          </div>
+          <p class="table-text ShoppingCenterStage mb-1">
+            {{ shoppingCenter.stageName }}
+          </p>
+        </td> -->
+        <!-- *ngIf="placesRepresentative" -->
+        <td>
+          <ng-container
+            *ngIf="shopping.ShoppingCenter?.ManagerOrganization"
+          >
+            <div>
+              <div
+                class="d-flex align-items-center justify-content-between table-div"
+              >
+                <!-- <img loading="lazy" 
+                  class="logo"
+                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                    shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID
+                  }}"
+                  [title]="
+                    shoppingCenter.ShoppingCenter.ManagerOrganization[0]
+                      .Name
+                  "
+                  alt=""
+                /> -->
+                <div class="table-text">
+                  {{
+                    shopping.ShoppingCenter.ManagerOrganization[0]
+                      .Name
+                  }}
+                </div>
+
+                <!-- trigger -->
+                <!-- <div
+                  class="org-info-trigger"
+                  (click)="toggleOrgMenu($event, shoppingCenter.Id)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M11.9999 16.3299C9.60992 16.3299 7.66992 14.3899 7.66992 11.9999C7.66992 9.60992 9.60992 7.66992 11.9999 7.66992C14.3899 7.66992 16.3299 9.60992 16.3299 11.9999C16.3299 14.3899 14.3899 16.3299 11.9999 16.3299ZM11.9999 9.16992C10.4399 9.16992 9.16992 10.4399 9.16992 11.9999C9.16992 13.5599 10.4399 14.8299 11.9999 14.8299C13.5599 14.8299 14.8299 13.5599 14.8299 11.9999C14.8299 10.4399 13.5599 9.16992 11.9999 9.16992Z"
+                      fill="#292D32"
+                    />
+                    <path
+                      d="M12.0001 21.02C8.24008 21.02 4.69008 18.82 2.25008 15C1.19008 13.35 1.19008 10.66 2.25008 8.99998C4.70008 5.17998 8.25008 2.97998 12.0001 2.97998C15.7501 2.97998 19.3001 5.17998 21.7401 8.99998C22.8001 10.65 22.8001 13.34 21.7401 15C19.3001 18.82 15.7501 21.02 12.0001 21.02ZM12.0001 4.47998C8.77008 4.47998 5.68008 6.41998 3.52008 9.80998C2.77008 10.98 2.77008 13.02 3.52008 14.19C5.68008 17.58 8.77008 19.52 12.0001 19.52C15.2301 19.52 18.3201 17.58 20.4801 14.19C21.2301 13.02 21.2301 10.98 20.4801 9.80998C18.3201 6.41998 15.2301 4.47998 12.0001 4.47998Z"
+                      fill="#292D32"
+                    />
+                  </svg>
+                </div> -->
+              </div>
+
+              <div
+                class="org-mini-menu"
+                *ngIf="openOrgMenuId === shoppingCenter.Id"
+                [ngStyle]="orgMenuPos"
+                (click)="$event.stopPropagation()"
+              >
+                <div
+                  *ngFor="
+                    let org of shopping.ShoppingCenter
+                      .ManagerOrganization;
+                    let i = index
+                  "
+                  class="org-mini-item"
+                >
+                  <p class="name">
+                    {{ org.Firstname | titlecase }}
+                    {{ org.LastName | titlecase }}
+                  </p>
+                  <p class="small">{{ org.CellPhone }}</p>
+                  <p class="small">{{ org.Email }}</p>
+                  <div
+                    class="divider"
+                    *ngIf="
+                      i <
+                      shopping.ShoppingCenter.ManagerOrganization
+                        .length -
+                        1
+                    "
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </td>
+        <td
+          class="table-text"
+          *ngIf="shopping.ShoppingCenter?.Places?.length"
+        >
+          <!-- <P class="mb-0" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></P> -->
+          <div
+            *ngIf="shopping.ShoppingCenter?.Places?.length"
+            class="table-responsive mt-2"
+            style="max-height: 150px; overflow-y: auto"
+          >
+            <!-- <table
+              class="table table-sm table-striped mb-0 small-table"
+              style="font-size: 0.75rem"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Select</th>
+                  <th scope="col" style="min-width: 60px">Size (SF)</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Extras</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">S.Type</th>
+                  <th scope="col">Privacy</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let place of shoppingCenter.ShoppingCenter.Places; trackBy: trackByPlaceId"
+                >
+                  <ng-container
+                    *ngIf="place.BuildingSizeSf || place.ForLeasePrice"
+                  >
+                    <td>
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="place.Checked"
+                        (change)="
+                          onCheckboxChange(
+                            $event,
+                            place.Id,
+                            shoppingCenter.CampaignId
+                          )
+                        "
+                      />
+                    </td>
+                    <td>{{ place.BuildingSizeSf | number }}</td>
+                    <td>
+                      {{
+                        place.ForLeasePrice
+                          ? (place.ForLeasePrice
+                            | currency : "USD" : "symbol" : "1.0-0")
+                          : "On Request"
+                      }}
+                    </td>
+                    <td>{{ place.Extras || "—" }}</td>
+                    <td>{{ place.LeaseType }}</td>
+                    <td>{{ place.SecondaryType }}</td>
+                    <td>
+                      <i
+                        *ngIf="!place.CampaignId"
+                        class="fa-solid fa-lock-open"
+                      ></i>
+                      <i
+                        *ngIf="place.CampaignId"
+                        class="fa-solid fa-lock"
+                      ></i>
+                    </td>
+                  </ng-container>
+                </tr>
+              </tbody>
+            </table> -->
+          </div>
+
+          <!-- <div
+            *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
+            class="table-responsive mt-2"
+            style="max-height: 150px; overflow-y: auto"
+          >
+            <p class="mb-0 pt-1"><b>Notes</b></p>
+            <table
+              class="table table-sm table-striped mb-0 small-table"
+              style="font-size: 0.75rem"
+            >
+              <tbody>
+                <tr
+                  *ngFor="let place of shoppingCenter.ShoppingCenter.Places; trackBy: trackByPlaceId"
+                >
+                  <td>{{ place.Notes || "—" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div> -->
+        </td>
+
+        <!-- <td *ngIf="shoppingCenters[0].ShoppingCenter">
+          <ng-container
+            *ngIf="
+              shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
+              else emptyTd
+            "
+          >
+            <ng-container
+              *ngFor="
+                let item of shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
+                let i = index;
+                trackBy: trackByIndex
+              "
+            >
+              <div class="d-flex align-items-center justify-content-center">
+                <img loading="lazy" 
+                  class="logo"
+                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                    item.RelationOrganizationId
+                  }}"
+                  [title]="item.RelationOrganizationName"
+                  alt=""
+                />
+                <span>{{ item.RelationOrganizationName }}</span>
+                <div
+                  class="d-flex align-items-center justify-content-center"
+                >
+                  <span class="ms-2 table-text"> </span>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </td> -->
+        <ng-template #emptyTd> </ng-template>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
 </div>
 
 <ng-template #MapViewPlace let-modal>

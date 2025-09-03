@@ -105,14 +105,14 @@ export class ViewManagerService {
    * This should be called once when the main component loads
    */
   public initializeData(campaignId: number, orgId: number): void {
-    if (
-      this._dataLoaded &&
-      this._lastBuyboxId === campaignId &&
-      this._lastOrgId === orgId
-    ) {
-      this._dataLoadedEvent.next();
-      return;
-    }
+    // if (
+    //   this._dataLoaded &&
+    //   this._lastBuyboxId === campaignId &&
+    //   this._lastOrgId === orgId
+    // ) {
+    //   this._dataLoadedEvent.next();
+    //   return;
+    // }
 
     this._lastBuyboxId = campaignId;
     this._lastOrgId = orgId;

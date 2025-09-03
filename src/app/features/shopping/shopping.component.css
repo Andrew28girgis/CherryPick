@@ -697,7 +697,18 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   padding: 6px;
 }
+.menu-table{
+    position: absolute;
+  top: -30px; /* below the 3-dots button */
+  right: 30px;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
 
+}
 .menu-item {
   display: block;
   width: 100%;
@@ -727,7 +738,7 @@
   align-items: center;
 }
 
-/* icon button */
+/* existing styles (keep yours) */
 .icon-btn {
   border: none;
   cursor: pointer;
@@ -740,6 +751,7 @@
   justify-content: center;
   transition: transform 120ms ease, background 160ms ease, box-shadow 160ms ease;
   color: #18171f;
+  outline: none;
 }
 
 .icon-btn:hover {
@@ -754,9 +766,23 @@
 .icon-btn.active {
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
+.icon-btn:focus {
+  outline: none;        
+  box-shadow: none;     
+}
+
+.icon-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.18), 0 0 0 1px rgba(41,98,255,0.2);
+  border-radius: var(--Radius-R-16);
+}
+
+.icon-btn:focus:not(:focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
 /* optional: keep header actions aligned */
 .add-new-actions {
   display: flex;
@@ -776,7 +802,8 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 920px;
+  min-width: 1220px;
+  min-height: 1100px;
   overflow: scroll;
 }
 
@@ -1080,7 +1107,7 @@ tr.click-disabled td:last-child * {
   font: inherit;
 }
 .icon-btn:focus {
-  outline: 1px solid Highlight;
+  outline: 2px solid Highlight;
   outline-offset: 2px;
   border-radius:4px;
 }
