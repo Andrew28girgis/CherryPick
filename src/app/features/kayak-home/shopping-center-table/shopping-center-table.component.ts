@@ -36,6 +36,10 @@ import {
   NavigationEnd,
   Event as NavigationEvent,
 } from '@angular/router';
+type Stat =
+  | { key: 'owner'; label: string; name: string; avatarUrl: string }
+  | { key: 'scoring'; label: string; values: number[] }  // e.g., [17,15,50]
+  | { key: 'text'; label: string; value: string | number };
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -111,6 +115,18 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     { id: 3, text: 'Default', icon: 'fa-solid fa-ban' },
     { id: 1, text: 'Name (A-Z)', icon: 'fa-solid fa-sort-alpha-down' },
     { id: 2, text: 'Name (Z-A)', icon: 'fa-solid fa-sort-alpha-up' },
+  ];
+  stats: Stat[] = [
+    { key: 'owner',  label: 'Owner', name: 'Hassan Magdy', avatarUrl: 'https://i.pravatar.cc/64?img=12' },
+    { key: 'text',   label: 'State', value: 'Texas' },
+    { key: 'text',   label: 'City', value: 'Austin' },
+    { key: 'text',   label: 'Date Created', value: 'Aug 20, 2025' },
+    { key: 'text',   label: 'Initial State Selection', value: '-------' },
+    { key: 'text',   label: 'Inriching', value: 50 },
+    { key: 'scoring',label: 'Scoring', values: [17, 15, 50] },
+    { key: 'text',   label: 'Reaching Out', value: 120 },
+    { key: 'text',   label: 'Short Listed', value: 34 },
+    { key: 'text',   label: 'Shared With Tenant', value: 3 },
   ];
 
   selectedSortId = 0;
@@ -968,5 +984,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       next: (data: any) => {},
     });
   }
- 
+  scoringColorClass(i: number): string {
+    return ['score-low', 'score-mid', 'score-high'][i] || 'score-low';
+  }
+
 }

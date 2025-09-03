@@ -8,6 +8,9 @@ import {
     OnDestroy,
   HostListener,
   ViewChild,
+  ElementRef,
+  ViewChildren,
+  QueryList,
 } from "@angular/core"
 import   { ActivatedRoute } from "@angular/router"
 import   { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap"
@@ -73,6 +76,9 @@ export class TableViewComponent implements OnInit, OnDestroy {
   openOrgMenuId: number | null = null;
   orgMenuPos: { top?: string; left?: string } = {};
   activeDropdownId: number | null = null;
+  public showStageColumn = false;
+  isUpdatingStage = false;
+  @ViewChildren('dropdownRef') dropdowns!: QueryList<ElementRef>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -82,6 +88,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
     private placesService: PlacesService,
     private sanitizer: DomSanitizer,
     private viewManagerService: ViewManagerService,
+    private eRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -167,6 +174,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges()
       }),
     )
+ 
   }
 
   ngOnDestroy(): void {
@@ -528,4 +536,76 @@ closeOrgMenu = () => {
   this.openOrgMenuId = null;
   this.orgMenuPos = {};
 };
+
+ 
+get hasAnyStages(): boolean {
+  return this.filteredCenters?.some(sc => !!sc.stageName);
+}
+selectStage(
+  marketSurveyId: number,
+  stageId: number,
+  shoppingCenter: any,
+  event?: MouseEvent
+): void {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  this.isUpdatingStage = true;
+
+  shoppingCenter.isDropdownOpen = false;
+  this.activeDropdownId = null;
+
+  this.viewManagerService.updatePlaceKanbanStage(
+    marketSurveyId,
+    stageId,
+    shoppingCenter,
+    this.CampaignId
+  );
+
+  setTimeout(() => {
+    this.isUpdatingStage = false;
+    this.cdr.markForCheck();
+  }, 100);
+}
+toggleDropdown(place: any, event?: MouseEvent): void {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  if (this.isUpdatingStage) {
+    return;
+  }
+
+ 
+
+  place.isDropdownOpen = !place.isDropdownOpen;
+  this.activeDropdownId = place.isDropdownOpen ? place.Id : null;
+}
+
+getSelectedStageName(stageId: number): string {
+  return this.viewManagerService.getSelectedStageName(stageId);
+}
+@HostListener('document:click', ['$event'])
+handleClickOutside(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+
+  let clickedInsideAny = false;
+  this.dropdowns.forEach(dropdown => {
+    if (dropdown.nativeElement.contains(target)) {
+      clickedInsideAny = true;
+    }
+  });
+
+  if (!clickedInsideAny) {
+    this.closeAllDropdowns();
+  }
+}
+
+private closeAllDropdowns(): void {
+   this.shoppingCenters.forEach((sc: any) => sc.isDropdownOpen = false);
+  this.activeDropdownId = null;
+}
 }

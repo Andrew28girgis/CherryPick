@@ -673,3 +673,61 @@ table tbody td {
   display: inline-flex;
   align-items: center;
 }
+.custom-dropdown {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.selected-option {
+  display: flex;
+  padding: var(--Space-S-4) var(--Space-S-16);
+  align-items: center;
+  gap: var(--Space-S-4);
+
+  border-radius: var(--Radius-R-16);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+  color: var(--Body-Heading, #161017);
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 171.429% */
+}
+
+.selected-option:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.dropdown-options {
+   width: 100%;
+  max-height: 200px;
+  overflow-y: hidden;
+  background-color: var(--Colors-Pure-White);
+  border: 1px solid #ced4da;
+  border-radius: var(--Radius-R-4);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  display: none;
+}
+
+.dropdown-options.show {
+  display: block;
+  width: fit-content;
+}
+
+.dropdown-item {
+  padding: var(--Space-S-8) var(--Space-S-12);
+  transition: all 0.2s;
+}
+
+.dropdown-item:hover:not(.active) {
+  background-color: #f1f3f5;
+}
+
+.dropdown-item.active {
+  background-color: var(--Colors-Primary-500);
+  font-weight: 500;
+}
