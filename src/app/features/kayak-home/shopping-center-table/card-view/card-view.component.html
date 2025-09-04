@@ -1101,11 +1101,11 @@
           <td class="ManagerOrg">{{ shopping.ManagerORG }}</td>
           <td class="last-update">{{ shopping.LastUpdateDate | date }}</td>
           <td class="score">
-            <span class="d-flex align-items-center" *ngIf="shoppingCenter.Score"
-              >{{ shoppingCenter.Score + "%" }}
+            <span class="d-flex align-items-center" *ngIf="shopping.Score"
+              >{{ shopping.Score + "%" }}
               <button
                 class="icon-btn"
-                (click)="openInfoPopup(shoppingCenter, infoModal)"
+                (click)="openInfoPopup(shopping, infoModal)"
               >
                 <i class="fa-solid fa-circle-info"></i></button
             ></span>
