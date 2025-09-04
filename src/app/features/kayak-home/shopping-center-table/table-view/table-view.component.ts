@@ -642,5 +642,6 @@ openInfoPopup(shopping: any, content: TemplateRef<any>): void {
     },
   });
 }
+ 
 
 }

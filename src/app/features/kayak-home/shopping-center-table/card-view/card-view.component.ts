@@ -92,6 +92,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   @ViewChild('addContact') addContactModal!: TemplateRef<any>;
   selectedShoppingCenterId: any;
+  infoData: any = null;
+  isLoadingInfo = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -875,5 +877,34 @@ private parseDate(dateValue: any): number {
   console.warn('Unexpected date type:', dateValue);
   return 0;
 }
+openInfoPopup(shopping: any, content: TemplateRef<any>): void {
+  this.isLoadingInfo = true;
+  this.infoData = null;
 
+  const body = {
+    Name: 'GetScoreRationale',
+    Params: { MSSCId: shopping.MarketSurveyId },
+  };
+
+  this.placesService.GenericAPI(body).subscribe({
+    next: (res: any) => {
+      this.infoData = res.json[0].scoreRationale || null;
+      this.isLoadingInfo = false;
+      this.modalService.open(content, {
+        size: 'md',
+        backdrop: true,
+        centered: true,
+      });
+    },
+    error: (err) => {
+      console.error('Error fetching info:', err);
+      this.isLoadingInfo = false;
+      this.modalService.open(content, {
+        size: 'md',
+        backdrop: true,
+        centered: true,
+      });
+    },
+  });
+}
 }

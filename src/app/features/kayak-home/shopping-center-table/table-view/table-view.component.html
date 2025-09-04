@@ -985,15 +985,20 @@
     <h5 class="modal-title">Score Info</h5>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
+
   <div class="modal-body">
     <div *ngIf="isLoadingInfo">Loading...</div>
+
     <div *ngIf="!isLoadingInfo">
-      <p *ngIf="infoData; else noData" class="rationale-text">
-        {{ infoData }}
-      </p>
+      <div *ngIf="infoData; else noData" 
+           class="rationale-text" 
+           [innerHTML]="infoData">
+      </div>
+
       <ng-template #noData>
         <p>No rationale found.</p>
       </ng-template>
     </div>
   </div>
 </ng-template>
+
