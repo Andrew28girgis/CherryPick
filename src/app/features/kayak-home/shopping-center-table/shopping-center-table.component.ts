@@ -523,7 +523,13 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
     return campaign ? campaign.CampaignName : 'Campaign';
   }
-
+  get dropdownItemCount(): number {
+    return (this.tenants || []).reduce(
+      (sum, t) => sum + (t.Campaigns?.length ?? 0),
+      0
+    );
+  }
+  
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;

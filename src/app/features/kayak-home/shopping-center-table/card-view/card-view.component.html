@@ -34,7 +34,7 @@
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
   <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
-    <div class="card-window cursor" *ngIf="shopping.LastUpdateDate">
+    <div class="card-window cursor" *ngIf="shopping.Score">
       <div class="cardResponsive">
         <a>
           <div class="main-img" (click)="handleImageClick($event)">
@@ -722,7 +722,7 @@
     </thead>
     <tbody class=" ">
       <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
-        <tr *ngIf="!shopping.LastUpdateDate">
+        <tr *ngIf="!shopping.Score">
           <td>
             <div
               [ngClass]="{
