@@ -1,6 +1,6 @@
 <!-- Skeleton loading template -->
 <div class="cards-row m-0 mt-2" *ngIf="isLoading">
-  <ng-container *ngFor="let i of [1, 2, 3, 4, 5, 6]; trackBy: trackById">
+  <ng-container *ngFor="let i of [1, 2, 3, 4, 5, 6]">
     <div class="card-window cursor">
       <div class="cardResponsive skeleton-card">
         <div class="skeleton-img"></div>
@@ -33,14 +33,14 @@
 
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
-  <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
+  <ng-container *ngFor="let shopping of cardsSideList">
     <div class="card-window cursor" *ngIf="shopping.Score">
       <div class="cardResponsive">
         <a>
           <div
             class="main-img"
             (click)="handleImageClick($event)"
-            [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
+            [routerLink]="(activeDropdownId || selectedIdCard === shopping?.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
           >
             <!-- <img
               loading="lazy"
@@ -130,7 +130,7 @@
                   </button>
                   <div
                     class="shortcuts_iconCard"
-                    *ngIf="selectedIdCard === shopping.Id"
+                    *ngIf="selectedIdCard === shopping?.Id"
                   >
                     <ul>
                       <!-- <li (click)="toggleShortcuts(shopping.Id, 'close')">
@@ -495,7 +495,7 @@
             <div class="d-flex justify-content-between">
               <a
                 class="textdecoration"
-                [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,shopping.CampaignId]"
+                [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping?.Id,shopping.CampaignId]"
               >
                 <div class="content-title cursor" style="white-space: pre-line">
                   {{ shopping.CenterName }}
@@ -732,7 +732,7 @@
       </tr>
     </thead>
     <tbody class=" ">
-      <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
+      <ng-container *ngFor="let shopping of cardsSideList">
         <tr *ngIf="!shopping.Score">
           <td>
             <div
