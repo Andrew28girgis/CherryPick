@@ -205,6 +205,8 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.tenant = data.json
+        console.log('TT',this.tenant);
+
         // this.placeCotenants = data.json;
         // this.filterCotenats = this.placeCotenants;
 

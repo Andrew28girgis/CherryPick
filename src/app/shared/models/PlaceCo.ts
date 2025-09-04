@@ -23,4 +23,5 @@ export interface ShoppingCenterTenant {
   BranchID: number;
   ShoppingCenterId: number;
   Distance: number;
+  LogoURL: string;
 }
