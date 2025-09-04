@@ -1,6 +1,6 @@
 <!-- Skeleton loading template -->
 <div class="cards-row m-0 mt-2" *ngIf="isLoading">
-  <ng-container *ngFor="let i of [1, 2, 3, 4, 5, 6]; trackBy: trackById">
+  <ng-container *ngFor="let i of [1, 2, 3, 4, 5, 6]">
     <div class="card-window cursor">
       <div class="cardResponsive skeleton-card">
         <div class="skeleton-img"></div>
@@ -33,14 +33,14 @@
 
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
-  <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
+  <ng-container *ngFor="let shopping of cardsSideList">
     <div class="card-window cursor" *ngIf="shopping.Score">
       <div class="cardResponsive">
         <a>
           <div
             class="main-img"
             (click)="handleImageClick($event)"
-            [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
+            [routerLink]="(activeDropdownId || selectedIdCard === shopping?.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
           >
             <!-- <img
               loading="lazy"
@@ -66,9 +66,26 @@
             </div> -->
             <!--  White div with Score -->
             <div class="score-placeholder">
-              <div class="score-text">
+              <div
+                class="score-text"
+                (click)="
+                  $event.preventDefault();
+                  $event.stopPropagation();
+                  openInfoPopup(shopping, infoModal)
+                "
+              >
                 {{ shopping.Score | number : "1.0-0" }}%
               </div>
+              <button
+                (click)="
+                  $event.preventDefault();
+                  $event.stopPropagation();
+                  openInfoPopup(shopping, infoModal)
+                "
+                class="icon-btn"
+              >
+                <i class="fa-solid fa-circle-info"></i>
+              </button>
             </div>
 
             <!-- Overlayed stage chip on image -->
@@ -130,7 +147,7 @@
                   </button>
                   <div
                     class="shortcuts_iconCard"
-                    *ngIf="selectedIdCard === shopping.Id"
+                    *ngIf="selectedIdCard === shopping?.Id"
                   >
                     <ul>
                       <!-- <li (click)="toggleShortcuts(shopping.Id, 'close')">
@@ -495,7 +512,7 @@
             <div class="d-flex justify-content-between">
               <a
                 class="textdecoration"
-                [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,shopping.CampaignId]"
+                [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping?.Id,shopping.CampaignId]"
               >
                 <div class="content-title cursor" style="white-space: pre-line">
                   {{ shopping.CenterName }}
@@ -732,7 +749,7 @@
       </tr>
     </thead>
     <tbody class=" ">
-      <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
+      <ng-container *ngFor="let shopping of cardsSideList">
         <tr *ngIf="!shopping.Score">
           <td>
             <div
@@ -1166,13 +1183,13 @@
           </p>
         </td> -->
           <!-- *ngIf="placesRepresentative" -->
-          <td>
+          <!-- <td>
             <ng-container *ngIf="shopping.ShoppingCenter?.ManagerOrganization">
               <div>
                 <div
                   class="d-flex align-items-center justify-content-between table-div"
                 >
-                  <!-- <img loading="lazy" 
+                  <img loading="lazy" 
                   class="logo"
                   src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                     shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID
@@ -1182,13 +1199,13 @@
                       .Name
                   "
                   alt=""
-                /> -->
+                />
                   <div class="table-text">
                     {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
                   </div>
 
-                  <!-- trigger -->
-                  <!-- <div
+                  trigger
+                  <div
                   class="org-info-trigger"
                   (click)="toggleOrgMenu($event, shoppingCenter.Id)"
                 >
@@ -1208,7 +1225,7 @@
                       fill="#292D32"
                     />
                   </svg>
-                </div> -->
+                </div>
                 </div>
 
                 <div
@@ -1241,100 +1258,7 @@
                 </div>
               </div>
             </ng-container>
-          </td>
-          <td
-            class="table-text"
-            *ngIf="shopping.ShoppingCenter?.Places?.length"
-          >
-            <!-- <P class="mb-0" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></P> -->
-            <div
-              *ngIf="shopping.ShoppingCenter?.Places?.length"
-              class="table-responsive mt-2"
-              style="max-height: 150px; overflow-y: auto"
-            >
-              <!-- <table
-              class="table table-sm table-striped mb-0 small-table"
-              style="font-size: 0.75rem"
-            >
-              <thead>
-                <tr>
-                  <th scope="col">Select</th>
-                  <th scope="col" style="min-width: 60px">Size (SF)</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Extras</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">S.Type</th>
-                  <th scope="col">Privacy</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  *ngFor="let place of shoppingCenter.ShoppingCenter.Places; trackBy: trackByPlaceId"
-                >
-                  <ng-container
-                    *ngIf="place.BuildingSizeSf || place.ForLeasePrice"
-                  >
-                    <td>
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="place.Checked"
-                        (change)="
-                          onCheckboxChange(
-                            $event,
-                            place.Id,
-                            shoppingCenter.CampaignId
-                          )
-                        "
-                      />
-                    </td>
-                    <td>{{ place.BuildingSizeSf | number }}</td>
-                    <td>
-                      {{
-                        place.ForLeasePrice
-                          ? (place.ForLeasePrice
-                            | currency : "USD" : "symbol" : "1.0-0")
-                          : "On Request"
-                      }}
-                    </td>
-                    <td>{{ place.Extras || "—" }}</td>
-                    <td>{{ place.LeaseType }}</td>
-                    <td>{{ place.SecondaryType }}</td>
-                    <td>
-                      <i
-                        *ngIf="!place.CampaignId"
-                        class="fa-solid fa-lock-open"
-                      ></i>
-                      <i
-                        *ngIf="place.CampaignId"
-                        class="fa-solid fa-lock"
-                      ></i>
-                    </td>
-                  </ng-container>
-                </tr>
-              </tbody>
-            </table> -->
-            </div>
-
-            <!-- <div
-            *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
-            class="table-responsive mt-2"
-            style="max-height: 150px; overflow-y: auto"
-          >
-            <p class="mb-0 pt-1"><b>Notes</b></p>
-            <table
-              class="table table-sm table-striped mb-0 small-table"
-              style="font-size: 0.75rem"
-            >
-              <tbody>
-                <tr
-                  *ngFor="let place of shoppingCenter.ShoppingCenter.Places; trackBy: trackByPlaceId"
-                >
-                  <td>{{ place.Notes || "—" }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div> -->
-          </td>
+          </td> -->
 
           <!-- <td *ngIf="shoppingCenters[0].ShoppingCenter">
           <ng-container
@@ -1633,17 +1557,23 @@
 <ng-template #infoModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Score Info</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
 
   <div class="modal-body">
     <div *ngIf="isLoadingInfo">Loading...</div>
 
     <div *ngIf="!isLoadingInfo">
-      <div *ngIf="infoData; else noData" 
-           class="rationale-text" 
-           [innerHTML]="infoData">
-      </div>
+      <div
+        *ngIf="infoData; else noData"
+        class="rationale-text"
+        [innerHTML]="infoData"
+      ></div>
 
       <ng-template #noData>
         <p>No rationale found.</p>
@@ -1651,4 +1581,3 @@
     </div>
   </div>
 </ng-template>
-
