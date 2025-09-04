@@ -37,7 +37,11 @@
     <div class="card-window cursor" *ngIf="shopping.Score">
       <div class="cardResponsive">
         <a>
-          <div class="main-img" (click)="handleImageClick($event)"   [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]">
+          <div
+            class="main-img"
+            (click)="handleImageClick($event)"
+            [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
+          >
             <!-- <img
               loading="lazy"
               [src]="getImageUrl(shopping)"
@@ -759,7 +763,7 @@
                       <li (click)="toggleShortcuts(shopping.Id, 'close')">
                         <a
                           class="target"
-                          [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shoppingCenter.CampaignId]"
+                          [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
                         >
                           <svg
                             width="24"
@@ -1097,7 +1101,14 @@
           <td class="ManagerOrg">{{ shopping.ManagerORG }}</td>
           <td class="last-update">{{ shopping.LastUpdateDate | date }}</td>
           <td class="score">
-            <span *ngIf="shopping.Score">{{ shopping.Score + "%" }}</span>
+            <span class="d-flex align-items-center" *ngIf="shopping.Score"
+              >{{ shopping.Score + "%" }}
+              <button
+                class="icon-btn"
+                (click)="openInfoPopup(shopping, infoModal)"
+              >
+                <i class="fa-solid fa-circle-info"></i></button
+            ></span>
           </td>
           <td class="type">{{ shopping.CenterType }}</td>
           <td class="category">{{ shopping.Category }}</td>
@@ -1619,3 +1630,25 @@
     </div>
   </div>
 </ng-template>
+<ng-template #infoModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Score Info</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <div *ngIf="isLoadingInfo">Loading...</div>
+
+    <div *ngIf="!isLoadingInfo">
+      <div *ngIf="infoData; else noData" 
+           class="rationale-text" 
+           [innerHTML]="infoData">
+      </div>
+
+      <ng-template #noData>
+        <p>No rationale found.</p>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>
+
