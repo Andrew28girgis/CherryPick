@@ -37,8 +37,8 @@
     <div class="card-window cursor" *ngIf="shopping.Score">
       <div class="cardResponsive">
         <a>
-          <div class="main-img" (click)="handleImageClick($event)">
-            <img
+          <div class="main-img" (click)="handleImageClick($event)"   [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]">
+            <!-- <img
               loading="lazy"
               [src]="getImageUrl(shopping)"
               [title]="shopping.CenterName"
@@ -59,7 +59,14 @@
               *ngIf="imageLoadingStates[shopping.Id]"
             >
               <div class="loading-spinner"></div>
+            </div> -->
+            <!--  White div with Score -->
+            <div class="score-placeholder">
+              <div class="score-text">
+                {{ shopping.Score | number : "1.0-0" }}%
+              </div>
             </div>
+
             <!-- Overlayed stage chip on image -->
             <div class="img-overlay" *ngIf="shopping.stageName">
               <div class="custom-dropdown">
@@ -687,8 +694,8 @@
   <span>Emily is working on</span>
   scoring these Sites
   <span class="dot-circle-spinner">
-    <span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span> <span></span
+    ><span></span><span></span><span></span>
   </span>
 </h3>
 

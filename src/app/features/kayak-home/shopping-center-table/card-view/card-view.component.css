@@ -1320,6 +1320,17 @@ table tbody td {
 .red {
   border-left-color: #F75A5A;
 }
+/* .greenb {
+  background: #6DE1D2;
+}
+.yellowb {
+  background: #FFD63A;
+}
+.redb {
+  background: #F75A5A;
+} */
+
+
 .split-heading {
   display: flex;
   align-items: center;
@@ -1374,3 +1385,29 @@ table tbody td {
 .dot-circle-spinner span:nth-child(6) { animation-delay: 0.75s; }
 .dot-circle-spinner span:nth-child(7) { animation-delay: 0.9s; }
 .dot-circle-spinner span:nth-child(8) { animation-delay: 1.05s; }
+/* full cover white surface */
+.score-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: var(--Radius-R-12); /* same as .main-img */
+  box-shadow: inset 0 0 0 1px #e2e4e9; /* subtle border */
+}
+
+/* main score style */
+.score-text {
+  font-size: 2rem;          /* big and bold */
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(
+    90deg,
+    var(--Colors-Primary-600),
+    var(--Colors-Primary-400),
+    var(--Colors-Primary-200)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
