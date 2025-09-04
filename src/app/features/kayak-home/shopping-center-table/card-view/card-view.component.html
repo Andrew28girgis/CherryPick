@@ -66,9 +66,26 @@
             </div> -->
             <!--  White div with Score -->
             <div class="score-placeholder">
-              <div class="score-text">
+              <div
+                class="score-text"
+                (click)="
+                  $event.preventDefault();
+                  $event.stopPropagation();
+                  openInfoPopup(shopping, infoModal)
+                "
+              >
                 {{ shopping.Score | number : "1.0-0" }}%
               </div>
+              <button
+                (click)="
+                  $event.preventDefault();
+                  $event.stopPropagation();
+                  openInfoPopup(shopping, infoModal)
+                "
+                class="icon-btn"
+              >
+                <i class="fa-solid fa-circle-info"></i>
+              </button>
             </div>
 
             <!-- Overlayed stage chip on image -->
@@ -1242,7 +1259,7 @@
               </div>
             </ng-container>
           </td> -->
-   
+
           <!-- <td *ngIf="shoppingCenters[0].ShoppingCenter">
           <ng-container
             *ngIf="
@@ -1540,17 +1557,23 @@
 <ng-template #infoModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Score Info</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
 
   <div class="modal-body">
     <div *ngIf="isLoadingInfo">Loading...</div>
 
     <div *ngIf="!isLoadingInfo">
-      <div *ngIf="infoData; else noData" 
-           class="rationale-text" 
-           [innerHTML]="infoData">
-      </div>
+      <div
+        *ngIf="infoData; else noData"
+        class="rationale-text"
+        [innerHTML]="infoData"
+      ></div>
 
       <ng-template #noData>
         <p>No rationale found.</p>
@@ -1558,4 +1581,3 @@
     </div>
   </div>
 </ng-template>
-
