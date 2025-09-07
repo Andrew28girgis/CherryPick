@@ -21,6 +21,7 @@ import { NotificationsComponent } from './shared/components/notifications/notifi
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { UserPagesComponent } from './features/user-pages/user-pages.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
+import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
 
 const routes: Routes = [
   {
@@ -79,9 +80,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-  {
+  // {
+  //   path: 'landing/:id/:shoppiongCenterId/:campaignId',
+  //   component: LandingComponent,
+  //   data: { hideHeader: true },
+  // },
+    {
     path: 'landing/:id/:shoppiongCenterId/:campaignId',
-    component: LandingComponent,
+    component: Landing2Component,
     data: { hideHeader: true },
   },
   {
@@ -98,12 +104,7 @@ const routes: Routes = [
       import('./features/summery/summery.module').then((m) => m.SummeryModule),
     canActivate: [AuthGuardService],
   },
-  {
-    path: 'canvas',
-    loadChildren: () =>
-      import('./features/canvas/canvas.module').then((m) => m.CanvasModule),
-    canActivate: [AuthGuardService],
-  },
+
   {
     path: 'overview',
     loadChildren: () =>

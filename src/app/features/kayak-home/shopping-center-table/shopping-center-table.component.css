@@ -814,7 +814,7 @@
 }
 
 .dropdown-item:hover {
-  background-color: var(--Colors-Primary-100) !important;
+  background-color: var(--Colors-Primary-light) !important;
   color: var(--Colors-Primary-500) !important;
 }
 
@@ -902,7 +902,7 @@
 .filter-btn:hover,
 .view-btn:hover,
 .inbox-btn:hover {
-  background-color: var(--Colors-Primary-100);
+  background-color: var(--Colors-Primary-light);
 }
 
 .view-icon {
@@ -966,12 +966,12 @@
 
 .send-email-button:hover,
 .send-email-button:focus {
-  background: #a31c59; /* Slightly darker for hover */
+  background:var(--Colors-Primary-hover); /* Slightly darker for hover */
   outline: none;
 }
 
 .send-email-button:active {
-  background: #a31c59; /* Even darker for active */
+  background:var(--Colors-Primary-hover); /* Even darker for active */
 }
 
 .send-email-button span {
@@ -1022,7 +1022,7 @@
   gap: var(--Space-S-8);
   border-radius: var(--Radius-R-8);
   border: 1px solid var(--Colors-Primary-700);
-  background: var(--Colors-Primary-100);
+  background: var(--Colors-Primary-light);
   color: var(--Colors-Primary-500);
   font-size: 16px;
   font-style: normal;
@@ -1366,7 +1366,7 @@
   border-radius: 24px;
 }
 .website-search-icon:hover {
-  background-color: var(--Colors-Primary-100);
+  background-color: var(--Colors-Primary-light);
   border: 1px solid var(--Colors-Primary-500);
 }
 

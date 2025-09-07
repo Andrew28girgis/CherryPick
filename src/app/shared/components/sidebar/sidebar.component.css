@@ -1,35 +1,33 @@
-/* Change from vertical sidebar to horizontal header */
 .sidebar {
-  width: 100%;
-  height: 64px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 36px;
+  padding: 10px 30px;
   justify-content: space-between;
   z-index: 100;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 1px 2px;
 }
 
-/* Brand logo adjustments */
 .brand {
-  width: 40px;
-  height: 40px;
-  margin: 0;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  color: var(--Colors-Pure-White);
   text-decoration: none;
-  user-select: none;
-  background: radial-gradient(circle at 30% 30%, #ff478c, #e240ff);
-  box-shadow: 0 6px 16px rgba(226, 64, 255, 0.25);
+  margin: 0;
+  place-items: center;
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--app-color);
 }
 
-/* Adjust navigation group to horizontal */
+.nav-btn {
+  padding: 0px 22px;
+  font-size: 14px;
+  color: #14303a;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
 .nav-group {
-  display: flex;
-  padding: 8px 24px;
+  display: flex; 
   align-items: center;
   gap: var(--Space-S-32, 32px);
   border-radius: 30px;
@@ -37,7 +35,7 @@
   backdrop-filter: blur(200px);
   flex-direction: row;
   justify-content: center;
- }
+}
 
 .nav {
   display: flex;
@@ -47,32 +45,6 @@
   margin-top: 0; /* Remove top margin */
   position: relative;
   overflow: visible;
-}
-
-/* Keep button styling but adjust for horizontal layout */
-.nav-btn {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border-radius: 50%;
-  background: none;
-  border: 1px solid transparent;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  outline: none;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
-  position: relative;
-}
-
-/* Active state for horizontal nav */
-.nav-btn.active {
-  min-width: 40px;
-  border-radius: var(--Radius-R-20);
-  border: 1px solid var(--Colors-Primary-700);
-  background: var(--Colors-Primary-200);
 }
 
 /* Bottom avatar */
@@ -88,37 +60,6 @@
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-}
-
-.nav-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-btn::after {
-  content: attr(aria-label);
-  position: absolute;
-  right: -22%;
-  bottom: -90%;
-  transform: translateY(-50%);
-  background: #fff;
-  color: #000;
-  font-size: 0.75rem;
-  padding: var(--Space-S-4) var(--Space-S-8);
-  border-radius: 22px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  margin-left: var(--Space-S-8);
-  z-index: 5000;
-}
-
-.nav-btn:hover::after {
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
 }
 
 /* Avatar container styles */
@@ -251,7 +192,7 @@
 }
 
 .fancy-btn {
-  background: #a31c59; /* fallback for old browsers */
+  background:var(--Colors-Primary-hover); /* fallback for old browsers */
   padding: 10px var(--Space-S-20);
   border-radius: var(--Radius-R-8);
   border: none;
@@ -275,7 +216,7 @@
 }
 
 .primary-btn {
-  background: #a31c59;
+  background:var(--Colors-Primary-hover);
   /* background: linear-gradient(135deg, #6e8efb, #a777e3); */
   color: white;
 }

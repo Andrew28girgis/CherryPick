@@ -164,12 +164,12 @@
 
 .add-tenant-btn:hover,
 .add-tenant-btn:focus {
-  background: #a31c59; /* Slightly darker for hover */
+  background:var(--Colors-Primary-hover); /* Slightly darker for hover */
   outline: none;
 }
 
 .add-tenant-btn:active {
-  background: #a31c59; /* Even darker for active */
+  background:var(--Colors-Primary-hover); /* Even darker for active */
 }
 
 .add-tenant-btn span {

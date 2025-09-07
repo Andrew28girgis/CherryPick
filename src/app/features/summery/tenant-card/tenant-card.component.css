@@ -143,7 +143,7 @@ background: var(--Colors-Card-Background);
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
-  background-color: #a31c59;
+  background-color:var(--Colors-Primary-hover);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +168,7 @@ background: var(--Colors-Card-Background);
 }
 
 .add-campaign-btn {
-   background-color: #a31c59;
+   background-color:var(--Colors-Primary-hover);
    border-radius:  var(--Radius-R-24) ;
    border: none;
 }

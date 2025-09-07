@@ -45,16 +45,15 @@
 }
 
 .app-shell.with-sidebar > .app-container {
-  width: 100%;
-  padding: 16px;
+   padding:  5px 40px;
 }
 
 :host {
   display: block;
   position: relative;
   min-height: 100vh;
-  background: url("../assets/Images/background.png") top center / 100% auto
-    no-repeat;
+  /* background: url("../assets/Images/background.png") top center / 100% auto
+    no-repeat; */
   z-index: 0;
 }
 :host::before {
@@ -64,7 +63,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--Website-Background);
+  /* background: var(--Website-Background); */
   backdrop-filter: blur(100px);
   z-index: -1;
   pointer-events: none;

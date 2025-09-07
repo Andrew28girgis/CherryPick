@@ -382,7 +382,7 @@
   .loading-spinner {
     width: 32px;
     height: 32px;
-    border: 3px solid var(--Colors-Primary-100);
+    border: 3px solid var(--Colors-Primary-light);
     border-top: 3px solid var(--Colors-Primary-500);
     border-radius: 50%;
     animation: spin 1s linear infinite;

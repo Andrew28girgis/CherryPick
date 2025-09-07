@@ -30,16 +30,16 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   protected campaignMaxSize: number = 100;
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
-  @Input() set viewMode(value: 'table' | 'card') {
+  @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
       localStorage.setItem('campaignViewMode', value);
     }
   }
-  get viewMode(): 'table' | 'card' {
+  get viewMode(): 'card' | 'table' {
     return this._viewMode;
   }
-  private _viewMode: 'table' | 'card' = 'table';
+  private _viewMode: 'card' | 'table' = 'card';
 
   userBuyBoxes: { id: number; name: string }[] = [];
   selectedBuyBoxId = 0;
@@ -377,4 +377,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       },
     });
   }
+  stageClass(name: string): string {
+    const n = (name || '').toLowerCase();
+    if (n.includes('accept') || n.includes('approved') || n.includes('success')) return 'is-accepted';
+    if (n.includes('reject') || n.includes('decline') || n.includes('failed')) return 'is-rejected';
+    if (n.includes('new') || n.includes('pending') || n.includes('open')) return 'is-new';
+    return 'is-neutral';
+  }
+  
 }

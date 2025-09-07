@@ -48,7 +48,7 @@
   align-items: center;
   gap: var(--Space-S-20);
   padding-right: 32px;
-  border-right: 1px solid var(--Colors-Primary-100, #f0d2e0);
+  border-right: 1px solid var(--Colors-Primary-light, #f0d2e0);
 }
 .contact-info {
   display: flex;
@@ -747,7 +747,7 @@
 }
 
 .sort-btn:hover {
-  background-color: var(--Colors-Primary-100);
+  background-color: var(--Colors-Primary-light);
 }
 
 .search-con {
@@ -805,7 +805,7 @@
 .role-option.active {
   background: #e9b6c8; /* light pink fill from screenshot */
   border-color: #6d133b; /* dark plum border (your --Primary-700) */
-  color: #a31c59; /* primary text (dark pink) */
+  color:var(--Colors-Primary-hover); /* primary text (dark pink) */
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
 }
 
