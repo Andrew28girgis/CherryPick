@@ -98,12 +98,7 @@ const routes: Routes = [
       import('./features/summery/summery.module').then((m) => m.SummeryModule),
     canActivate: [AuthGuardService],
   },
-  {
-    path: 'canvas',
-    loadChildren: () =>
-      import('./features/canvas/canvas.module').then((m) => m.CanvasModule),
-    canActivate: [AuthGuardService],
-  },
+
   {
     path: 'overview',
     loadChildren: () =>
