@@ -186,11 +186,11 @@
 
 /* Public Campaign Styles */
 .campaign-privacy-public {
-  background-color: var(--Colors-Positive-100);
+  background-color: #f0f9f2;
 }
 
 .campaign-privacy-public .campaign-privacy-icon {
-  background-color: var(--Colors-Positive-600);
+  background-color:  #f0f9f2;
 }
 
 .campaign-privacy-public span {
@@ -800,11 +800,10 @@
 /* Dashboard Cards Styles */
 .dashboard-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 2fr));
+  gap: 50px 25px;
   width: 100%;
-  padding: 8px;
-  padding-top: 15px;
+  padding: 40px 0;
 }
 
 .dashboard-card {
@@ -818,7 +817,6 @@
   flex-direction: column;
   gap: 20px;
 }
- 
 
 .card-header {
   display: flex;
@@ -880,7 +878,6 @@
   border-radius: 50%;
   background-color: currentColor;
 }
-   
 
 .card-metrics {
   display: grid;
@@ -918,39 +915,37 @@
   align-items: center;
   justify-content: center;
 
-  min-width: 42px;      /* smaller block */
-  padding: 4px 6px;     /* tighter padding */
+  min-width: 42px; /* smaller block */
+  padding: 4px 6px; /* tighter padding */
   border-radius: 6px;
-  background: #102E50;  /* navy */
+  background: #102e50; /* navy */
   color: #fff;
   line-height: 1.1;
-  box-shadow: 0 1px 4px rgba(0,0,0,.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* smaller fonts */
 .date-flag__day {
-  font-size: 16px;
+  font-size: 30px;
   font-weight: 700;
 }
 
 .date-flag__mon {
-  font-size: 10px;
+  font-size: 16px;
   font-weight: 500;
   text-transform: uppercase;
-  opacity: .9;
+  opacity: 0.9;
   margin-top: 1px;
 }
 
 /* positioning (same as before) */
 .card-badge {
   position: absolute;
-  top: 0;
+  top: -15px;
   left: 12px;
   transform: translateY(-40%);
   z-index: 2;
 }
-
-
 
 .metric-value {
   font-size: 24px;
@@ -964,7 +959,7 @@
 }
 
 .metric-label {
-  font-size: 12px;
+  font-size: 15px;
   color: #6b7280;
   font-weight: 500;
   text-transform: uppercase;
@@ -976,7 +971,7 @@
   color: #cfb579;
   transition: all 0.2s ease;
 }
- 
+
 .submissions-breakdown {
   font-size: 18px;
   gap: 4px;
@@ -1011,8 +1006,8 @@
   color: #ffffff;
   transform: translateY(-1px);
 }
-.show-details{
-  background-color: #102E50;
+.show-details {
+  background-color: #102e50;
 }
 .show-details:hover {
   background-color: #0d2540;
@@ -1020,24 +1015,25 @@
   transform: translateY(-1px);
 }
 
-
- 
 /* grid: give each chip a real cell width to live in */
 .stages-chips {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); /* was max-content */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(170px, 1fr)
+  ); /* was max-content */
   gap: 8px;
-   border-top: 1px solid rgba(207, 181, 121, 0.1);
+  border-top: 1px solid rgba(207, 181, 121, 0.1);
 }
 
 /* pill */
 .stage-chip {
-  display: flex;                 /* not inline-flex */
+  display: flex; /* not inline-flex */
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  width: 100%;                   /* fill the grid cell */
-  box-sizing: border-box;        /* include padding in width */
+  width: 100%; /* fill the grid cell */
+  box-sizing: border-box; /* include padding in width */
   padding: 6px 10px;
   border-radius: 999px;
   border: 1px solid rgba(207, 181, 121, 0.18);
@@ -1048,7 +1044,7 @@
 /* label can shrink and ellipsize; this prevents pushing the count out */
 .stage-chip__label {
   flex: 1 1 auto;
-  min-width: 0;                  /* important for ellipsis in flex items */
+  min-width: 0; /* important for ellipsis in flex items */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1056,7 +1052,7 @@
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: .3px;
+  letter-spacing: 0.3px;
   color: #6b7280;
 }
 
@@ -1067,17 +1063,31 @@
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(0,0,0,.04);
+  background: rgba(0, 0, 0, 0.04);
 }
 /* color hints by semantic class (you can swap colors to match your theme) */
-.stage-chip.is-new      { background: #f5f0e4; }
-.stage-chip.is-accepted { background: #f0f9f2; }
-.stage-chip.is-rejected { background: #fdecef; }
-.stage-chip.is-neutral  { background: #f5f0e4; }
+.stage-chip.is-new {
+  background: #f5f0e4;
+}
+.stage-chip.is-accepted {
+  background: #f0f9f2;
+}
+.stage-chip.is-rejected {
+  background: #fdecef;
+}
+.stage-chip.is-neutral {
+  background: #f5f0e4;
+}
 
-.stage-chip.is-new      .stage-chip__count { background: rgba(0,0,0,.04); }
-.stage-chip.is-accepted .stage-chip__count { background: rgba(0,0,0,.04); }
-.stage-chip.is-rejected .stage-chip__count { background: rgba(0,0,0,.04); }
+.stage-chip.is-new .stage-chip__count {
+  background: rgba(0, 0, 0, 0.04);
+}
+.stage-chip.is-accepted .stage-chip__count {
+  background: rgba(0, 0, 0, 0.04);
+}
+.stage-chip.is-rejected .stage-chip__count {
+  background: rgba(0, 0, 0, 0.04);
+}
 
 /* optional: tighter on phones */
 @media (max-width: 767px) {
@@ -1085,7 +1095,6 @@
     grid-template-columns: repeat(2, minmax(150px, 1fr));
   }
 }
-
 
 /* Mobile Responsive Updates for Dashboard Cards */
 @media (max-width: 767px) {
