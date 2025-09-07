@@ -2,7 +2,7 @@
     <div class="view-controls">
         <h2 class="title">User Pages</h2>
         <div class="view-toggle">
-          <button 
+          <!-- <button 
             [class.active]="currentView === 'table'"
             (click)="switchView('table')"
             class="toggle-btn">
@@ -10,7 +10,7 @@
               <path d="M3 3h18v4H3V3zm0 6h18v4H3V9zm0 6h18v4H3v-4z"/>
             </svg>
             Table
-          </button>
+          </button> -->
           <button 
             [class.active]="currentView === 'cards'"
             (click)="switchView('cards')"
@@ -20,7 +20,7 @@
             </svg>
             Cards
           </button>
-          <button 
+          <!-- <button 
             [class.active]="currentView === 'timeline'"
             (click)="switchView('timeline')"
             class="toggle-btn">
@@ -28,7 +28,7 @@
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
             Timeline
-          </button>
+          </button> -->
           <button 
             [class.active]="currentView === 'list'"
             (click)="switchView('list')"
@@ -42,10 +42,10 @@
       </div>
  
     <!-- Loading State  -->
-   <div *ngIf="loading" class="loading-container">
+   <!-- <div *ngIf="loading" class="loading-container">
      <div class="loading-spinner"></div>
      <p>Loading user pages...</p>
-   </div>
+   </div> -->
  
     <!-- Error State  -->
    <div *ngIf="error && !loading" class="error-container">
@@ -55,7 +55,7 @@
    </div>
  
      <!-- Table View  -->
-   <div *ngIf="!loading && !error && currentView === 'table'" class="table-view">
+   <!-- <div *ngIf="!loading && !error && currentView === 'table'" class="table-view">
      <div class="table-container">
        <table class="user-pages-table">
          <thead>
@@ -72,7 +72,7 @@
          </tbody>
        </table>
      </div>
-   </div>
+   </div> -->
  
     <!-- Cards View  -->
    <div *ngIf="!loading && !error && currentView === 'cards'" class="cards-view">
@@ -94,7 +94,7 @@
    </div>
  
     <!-- Timeline View  -->
-   <div *ngIf="!loading && !error && currentView === 'timeline'" class="timeline-view">
+   <!-- <div *ngIf="!loading && !error && currentView === 'timeline'" class="timeline-view">
      <div class="timeline-container">
        <div *ngFor="let page of userPages let i = index" class="timeline-item">
          <div class="timeline-marker"></div>
@@ -107,7 +107,7 @@
          </div>
        </div>
      </div>
-   </div>
+   </div> -->
  
     <!-- List View  -->
    <div *ngIf="!loading && !error && currentView === 'list'" class="list-view">

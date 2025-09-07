@@ -1342,7 +1342,7 @@
 }
 
 .modal-body::-webkit-scrollbar-thumb:hover {
-  background: var(--Colors-Primary-600);
+  background: var(--Colors-Primary-hover);
 }
 .website-search-row {
   display: flex;
@@ -1383,7 +1383,7 @@
   border-radius: 24px;
 }
 .website-search-btn:hover {
-  background-color: var(--Colors-Primary-600);
+  background-color: var(--Colors-Primary-hover);
   color: #fff;
 }
 

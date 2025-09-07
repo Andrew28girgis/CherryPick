@@ -7,7 +7,8 @@ interface UserPage {
   date: string
 }
 
-type ViewMode = "table" | "cards" | "timeline" | "list"
+// type ViewMode = "table" | "cards" | "timeline" | "list"
+type ViewMode =  "cards" |   "list"
 
 @Component({
   selector: "app-user-pages",
@@ -20,7 +21,7 @@ export class UserPagesComponent implements OnInit {
   userPages: UserPage[] = []
   loading = false
   error: string | null = null
-  currentView: ViewMode = "table"
+  currentView: ViewMode = "cards"
 
   constructor(private placeService: PlacesService) {} // Replace with your actual service type
 
@@ -35,11 +36,9 @@ export class UserPagesComponent implements OnInit {
   }
 
   loadFakeData(): void {
-    this.loading = true
-
+ 
     // Simulate API delay
-    setTimeout(() => {
-      this.userPages = [
+       this.userPages = [
         { pageName: "Home Page", date: "2024-01-15T10:30:00Z" },
         { pageName: "About Us", date: "2024-01-14T14:22:00Z" },
         { pageName: "Contact Form", date: "2024-01-13T09:15:00Z" },
@@ -50,8 +49,7 @@ export class UserPagesComponent implements OnInit {
         { pageName: "Terms of Service", date: "2024-01-08T15:10:00Z" },
       ]
       this.loading = false
-    }, 1000)
-  }
+   }
 
   getUserPages(): void {
     this.loading = true

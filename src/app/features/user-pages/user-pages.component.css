@@ -211,8 +211,8 @@
   }
   
   .action-btn:hover {
-    background: var(--Colors-Primary-600);
-    border-color: var(--Colors-Primary-600);
+    background: var(--Colors-Primary-hover);
+    border-color: var(--Colors-Primary-hover);
   }
   
   .action-btn.secondary {
@@ -408,7 +408,7 @@
   }
   
   .retry-btn:hover {
-    background: var(--Colors-Primary-600);
+    background: var(--Colors-Primary-hover);
   }
   
   @keyframes fadeIn {

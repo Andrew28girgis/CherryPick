@@ -201,29 +201,51 @@
         *ngFor="let campaign of filteredCampaigns; let index = index"
       >
         <div class="dashboard-card">
-          <div class="card-badge date-flag" [attr.aria-label]="campaign.CreatedDate | date:'MMMM d, y'">
-            <span class="date-flag__day">{{ campaign.CreatedDate | date:'d' }}</span>
-            <span class="date-flag__mon">{{ campaign.CreatedDate | date:'MMM' }}</span>
+          <div
+            class="card-badge date-flag"
+            [attr.aria-label]="campaign.CreatedDate | date : 'MMMM d, y'"
+          >
+            <span class="date-flag__day">{{
+              campaign.CreatedDate | date : "d"
+            }}</span>
+            <span class="date-flag__mon">{{
+              campaign.CreatedDate | date : "MMM"
+            }}</span>
           </div>
-        
+
           <div class="card-header">
             <div class="campaign-title-section">
-              <h3
-                class="campaign-title"
-                [ngClass]="{'title-hover': campaign.Sites}"
-                [routerLink]="[
-                  '/dashboard',
-                  campaign.OrganizationId,
-                  campaign.OrganizationName,
-                  campaign.Id
-                ]"
+              <a
+                class="title-with-logo"
+                [ngClass]="{ 'title-hover': campaign.Sites }"
+                [routerLink]="
+                  campaign.Sites
+                    ? ['/dashboard', campaign.OrganizationId, campaign.OrganizationName, campaign.Id]
+                    : null
+                "
               >
-                {{ campaign.CampaignName }}/{{ campaign.OrganizationName }}
-              </h3>
-              <!-- <div class="campaign-date">
-                {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-              </div> -->
+                <!-- Logo or placeholder -->
+                <ng-container *ngIf="0; else logoPlaceholder">
+                  <!-- <img
+                    [src]="campaign.OrganizationLogo"
+                    alt="{{ campaign.OrganizationName }} logo"
+                    class="org-logo"
+                  /> -->
+                </ng-container>
+                <ng-template #logoPlaceholder>
+                  <div class="org-logo placeholder">
+                    {{ getInitials(campaign.CampaignName) }}
+                  </div>
+                </ng-template>
+            
+                <!-- Text block -->
+                <div class="title-text">
+                  <div class="campaign-title">{{ campaign.CampaignName }}</div>
+                  <div class="organization-name">{{ campaign.OrganizationName }}</div>
+                </div>
+              </a>
             </div>
+            
             <div
               class="privacy-badge"
               [ngClass]="{
@@ -318,7 +340,7 @@
               <span>Emily</span>
             </div>
             <div
-            *ngIf="campaign.Sites"
+              *ngIf="campaign.Sites"
               class="email-action show-details"
               [routerLink]="[
                 '/dashboard',

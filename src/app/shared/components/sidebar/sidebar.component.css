@@ -292,7 +292,7 @@
   background: linear-gradient(
     to right,
     var(--Colors-Primary-500),
-    var(--Colors-Primary-600)
+    var(--Colors-Primary-hover)
   );
   color: white;
 }
@@ -322,7 +322,7 @@
 
 .menu-item:hover {
   background-color: #f5f7fa;
-  color: var(--Colors-Primary-600);
+  color: var(--Colors-Primary-hover);
 }
 
 .menu-item svg {
@@ -331,7 +331,7 @@
 }
 
 .menu-item:hover svg {
-  color: var(--Colors-Primary-600);
+  color: var(--Colors-Primary-hover);
 }
 
 .dropdown-divider {

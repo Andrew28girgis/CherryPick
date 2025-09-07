@@ -1404,7 +1404,7 @@ table tbody td {
   letter-spacing: -0.5px;
   background: linear-gradient(
     90deg,
-    var(--Colors-Primary-600),
+    var(--Colors-Primary-hover),
     var(--Colors-Primary-400),
     var(--Colors-Primary-200)
   );
@@ -1420,5 +1420,5 @@ table tbody td {
   color: var(--Colors-Primary-500);
 }
 .icon-btn:hover {
-  color: var(--Colors-Primary-600);
+  color: var(--Colors-Primary-hover);
 }

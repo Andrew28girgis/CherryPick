@@ -22,8 +22,8 @@
 }
 .x-btn-primary:hover,
 .x-btn-primary:focus {
-  background-color: var(--Colors-Primary-600);
-  border-color: var(--Colors-Primary-600);
+  background-color: var(--Colors-Primary-hover);
+  border-color: var(--Colors-Primary-hover);
 }
 .x-btn-primary:active {
   background-color:var(--Colors-Primary-700);
@@ -49,7 +49,7 @@
   color: var(--Colors-Pure-White);
 }
 .x-btn-outline:active {
-  background: var(--Colors-Primary-600);
+  background: var(--Colors-Primary-hover);
   color: var(--Colors-Pure-White);
 }
 .x-btn-outline:disabled {

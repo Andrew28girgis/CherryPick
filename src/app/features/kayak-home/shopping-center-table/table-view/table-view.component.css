@@ -770,7 +770,7 @@ table tbody td {
   color: var(--Colors-Primary-500);
 }
 .icon-btn:hover {
-  color: var(--Colors-Primary-600);
+  color: var(--Colors-Primary-hover);
 }
 .rationale-text {
   white-space: pre-line;  /* keeps line breaks if your string has them */

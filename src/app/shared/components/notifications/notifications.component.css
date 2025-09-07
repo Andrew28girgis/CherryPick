@@ -186,7 +186,7 @@
 }
 
 .chat-messages-container::-webkit-scrollbar-thumb:hover {
-  background: var(--Colors-Primary-600);
+  background: var(--Colors-Primary-hover);
 }
 
 /* Animation for smooth opening */
@@ -465,7 +465,7 @@
 }
 
 .close-button:hover {
-  background: var(--Colors-Primary-600);
+  background: var(--Colors-Primary-hover);
   transform: scale(1.05);
 }
 
@@ -573,7 +573,7 @@
 }
 
 .composer-send-btn:hover:not(:disabled) {
-  background: var(--Colors-Primary-600, #9a1b57);
+  background: var(--Colors-Primary-hover, #9a1b57);
   transform: translateY(-1px);
 }
 
@@ -843,7 +843,7 @@
 }
  
 .save-btn:active {
-  background-color: var(--Colors-Primary-600);
+  background-color: var(--Colors-Primary-hover);
   color: #fff;
 }
 
@@ -864,7 +864,7 @@
 }
 
 .overlay-content::-webkit-scrollbar-thumb:hover {
- background: var(--Colors-Primary-600);
+ background: var(--Colors-Primary-hover);
 }
 
 
@@ -925,7 +925,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-.save-btn:active { background-color: var(--Colors-Primary-600); }
+.save-btn:active { background-color: var(--Colors-Primary-hover); }
 
 /* Spinner used inside button */
 .btn-spinner {
@@ -1009,7 +1009,7 @@
   background: var(--Colors-Primary-500); border: none
 }
 .title-btn:hover{
-  background: var(--Colors-Primary-600);
+  background: var(--Colors-Primary-hover);
   color: white;
 }
 
@@ -1077,7 +1077,7 @@
   width: 5px;
   height: 5px;
   margin: 0 1px;
-  background-color: var(--Colors-Primary-600);
+  background-color: var(--Colors-Primary-hover);
   border-radius: 50%;
   display: inline-block;
   animation: bounce 1.4s infinite;

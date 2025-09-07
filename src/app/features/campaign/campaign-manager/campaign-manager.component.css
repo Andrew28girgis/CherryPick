@@ -119,7 +119,7 @@
 }
 
 .campaign-manager-body::-webkit-scrollbar-thumb:hover {
-  background: var(--Colors-Primary-600);
+  background: var(--Colors-Primary-hover);
 }
 
 /* Search Campaign Container */
@@ -809,7 +809,7 @@
 .dashboard-card {
   background: #ffffff;
   border-radius: 16px;
-  padding: 24px;
+  padding: 30px 24px 24px 24px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(207, 181, 121, 0.1);
   transition: all 0.3s ease;
@@ -829,18 +829,7 @@
   flex: 1;
   min-width: 0;
 }
-
-.campaign-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0 0 8px 0;
-  cursor: pointer;
-  text-decoration: none;
-  line-height: 1.4;
-  word-break: break-word;
-  cursor: auto;
-}
+ 
 
 .title-hover:hover {
   color: #cfb579;
@@ -1135,4 +1124,54 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
+}.title-with-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.org-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0,0,0,0.1);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+  background-color: #102E50;
+  flex-shrink: 0; /* keep logo fixed size */
+}
+
+.title-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.3;
+}
+
+.campaign-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.organization-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Hover state on the whole block */
+.title-hover:hover .campaign-title,
+.title-hover:hover .organization-name {
+  color: #cfb579; /* your highlight color */
+  text-decoration: underline;
+  cursor: pointer;
 }

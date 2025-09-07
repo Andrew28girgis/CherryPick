@@ -803,15 +803,15 @@
 }
 
 .role-option.active {
-  background: #e9b6c8; /* light pink fill from screenshot */
-  border-color: #6d133b; /* dark plum border (your --Primary-700) */
+  background: var(--Colors-Primary-light); /* light pink fill from screenshot */
+  border-color: var(--Colors-Primary-500); /* dark plum border (your --Primary-700) */
   color:var(--Colors-Primary-hover); /* primary text (dark pink) */
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
 }
 
 .role-option:hover:not(.active) {
   background: rgba(109, 19, 59, 0.06); /* faint plum hover */
-  color: #6d133b;
+  color:var(--Colors-Primary-hover); /* primary text (dark pink) */
 }
 
 .role-option:focus-visible {
@@ -1120,3 +1120,4 @@
   width: max-content;
   min-width: 220px; /* tweak if you want tighter cards */
 }
+
