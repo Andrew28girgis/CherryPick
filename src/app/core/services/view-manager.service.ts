@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Subject,
+  defer,
+  from,
+  Subscription,
+  timer,
+} from 'rxjs';
+import { map, delayWhen, repeatWhen, takeUntil } from 'rxjs/operators';
 import { PlacesService } from './places.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -94,6 +102,8 @@ export class ViewManagerService {
 
   private reloadShoppingCentersSubject = new BehaviorSubject<boolean>(false);
   reloadShoppingCenters$ = this.reloadShoppingCentersSubject.asObservable();
+  private shoppingCentersPollingSub?: Subscription;
+  private stopPolling$ = new Subject<void>();
 
   constructor(
     private placesService: PlacesService,
@@ -136,15 +146,11 @@ export class ViewManagerService {
         this._dataLoaded = true;
         this._dataLoadedEvent.next();
 
-        // Start polling shopping centers every 30s
-        if (this.shoppingCenterInterval) {
-          clearInterval(this.shoppingCenterInterval); // clear previous if exists
+        // Start polling (waits 20s after each finished request)
+        if (this._lastBuyboxId != null) {
+          this.startShoppingCentersPolling(this._lastBuyboxId);
         }
-        this.shoppingCenterInterval = setInterval(() => {
-          this.loadShoppingCenters(this._lastBuyboxId!); // call every 30 sec
-        }, 30000);
 
-        // If we have shopping centers, load kanban stages
         const centers = this._shoppingCenters.getValue();
         if (centers && centers.length > 0) {
           this.loadKanbanStages(centers[0].kanbanId);
@@ -862,6 +868,32 @@ export class ViewManagerService {
   /**
    * Load shopping centers
    */
+  private startShoppingCentersPolling(campaignId: number): void {
+    // stop any previous polling
+    this.stopShoppingCentersPolling();
+
+    this.shoppingCentersPollingSub = defer(() =>
+      from(this.loadShoppingCenters(campaignId))
+    )
+      .pipe(
+        // after each successful completion, wait 20s, then resubscribe
+        repeatWhen((completed$) =>
+          completed$.pipe(delayWhen(() => timer(20000)))
+        ),
+        // allow external stop
+        takeUntil(this.stopPolling$)
+      )
+      .subscribe({
+        error: (err) => console.error('Polling error:', err),
+      });
+  }
+
+  private stopShoppingCentersPolling(): void {
+    this.stopPolling$.next();
+    this.shoppingCentersPollingSub?.unsubscribe();
+    this.shoppingCentersPollingSub = undefined;
+  }
+
   public loadShoppingCenters(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       this._isLoading.next(true);
