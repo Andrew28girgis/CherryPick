@@ -841,10 +841,12 @@
   text-decoration: none;
   line-height: 1.4;
   word-break: break-word;
+  cursor: auto;
 }
 
-.campaign-title:hover {
+.title-hover:hover {
   color: #cfb579;
+  cursor: pointer;
 }
 
 .campaign-date {
