@@ -92,37 +92,34 @@
 
   <!-- Skeleton loading for Card View -->
   <div class="campaign-manager-body" *ngIf="isLoading && viewMode === 'card'">
-    <div class="campaign-cards-container">
+    <div class="dashboard-cards-container">
       <div
-        class="campaign-card skeleton-card"
+        class="dashboard-card skeleton-card"
         *ngFor="let i of skeletonCardArray"
       >
-        <div class="campaign-card-header">
+        <div class="card-header">
           <div class="skeleton-title"></div>
           <div class="skeleton-privacy"></div>
         </div>
-        <div class="tenant-section">
-          <div class="d-flex align-items-center gap-2">
-            <div class="skeleton-logo"></div>
-            <div class="skeleton-tenant-name"></div>
-          </div>
-          <div class="skeleton-date"></div>
+        <div class="card-organization">
+          <div class="skeleton-logo"></div>
+          <div class="skeleton-tenant-name"></div>
         </div>
-        <div class="campaign-stats">
-          <div class="stat-item">
-            <div class="skeleton-stat-label"></div>
+        <div class="card-metrics">
+          <div class="metric-item">
             <div class="skeleton-stat-value"></div>
+            <div class="skeleton-stat-label"></div>
           </div>
-          <div class="stat-item">
-            <div class="skeleton-stat-label"></div>
+          <div class="metric-item">
             <div class="skeleton-stat-value"></div>
+            <div class="skeleton-stat-label"></div>
           </div>
-          <div class="stat-item">
-            <div class="skeleton-stat-label"></div>
+          <div class="metric-item">
             <div class="skeleton-stat-value"></div>
+            <div class="skeleton-stat-label"></div>
           </div>
         </div>
-        <div class="campaign-actions">
+        <div class="card-actions">
           <div class="skeleton-button"></div>
           <div class="skeleton-button"></div>
         </div>
@@ -198,206 +195,172 @@
     "
     class="campaign-manager-body"
   >
-    <div class="campaign-cards-container" *ngIf="viewMode === 'card'">
+    <!-- Updated card view to dashboard cards layout -->
+    <div class="dashboard-cards-container" *ngIf="viewMode === 'card'">
       <ng-container
         *ngFor="let campaign of filteredCampaigns; let index = index"
       >
-        <div class="campaign-card">
-          <div class="date-privacy d-flex justify-content-between">
-            <div class="tenant-section-card">
-              <div class="date-created-card">
-                {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-              </div>
-            </div>
-            <div
-              class="campaign-privacy"
-              [ngClass]="{
-                'campaign-privacy-public': campaign.CampaignPrivacy == 0,
-                'campaign-privacy-private': campaign.CampaignPrivacy == 1
-              }"
-            >
-              <div class="campaign-privacy-icon"></div>
-              <span class="campaign-privacy-text">
-                {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
-              </span>
-            </div>
+        <div class="dashboard-card">
+          <div class="card-badge date-flag" [attr.aria-label]="campaign.CreatedDate | date:'MMMM d, y'">
+            <span class="date-flag__day">{{ campaign.CreatedDate | date:'d' }}</span>
+            <span class="date-flag__mon">{{ campaign.CreatedDate | date:'MMM' }}</span>
           </div>
-          <div class="campaign-card-header">
-            <div
-              class="d-flex align-items-center gap-2 d-flex flex-column tenant-header"
-            >
-              <img loading="lazy" 
-                *ngIf="campaign.OrganizationId"
-                [src]="
-                  'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                  campaign.OrganizationId
-                "
-                [alt]="campaign.OrganizationName"
-                class="tenant-logo-card"
-                (error)="onImageError($event)"
-              />
+        
+          <div class="card-header">
+            <div class="campaign-title-section">
               <h3
-                style="cursor: pointer"
+                class="campaign-title"
                 [routerLink]="[
                   '/dashboard',
                   campaign.OrganizationId,
                   campaign.OrganizationName,
                   campaign.Id
                 ]"
-                class="campaign-name"
               >
-                {{ campaign.CampaignName }}
+                {{ campaign.CampaignName }}/{{ campaign.OrganizationName }}
               </h3>
+              <!-- <div class="campaign-date">
+                {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
+              </div> -->
             </div>
-          </div>
-
-          <div class="campaign-stats">
-            <div class="stat-item">
-              <div class="stat-label">Sites</div>
-              <div class="stat-value">
-                <div
-                  class="d-flex align-items-center justify-content-center gap-2"
-                >
-                  <div>{{ campaign.Sites }}</div>
-                  <svg
-                    [routerLink]="[
-                      '/dashboard',
-                      campaign.OrganizationId,
-                      campaign.OrganizationName,
-                      campaign.Id
-                    ]"
-                    style="cursor: pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                      fill="#292D32"
-                    />
-                    <path
-                      d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                      fill="#292D32"
-                    />
-                    <path
-                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                      fill="#292D32"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-label">Submissions</div>
-              <div
-                class="d-flex align-items-center justify-content-center gap-3"
-              >
-                <!-- [routerLink]="['/submissions', campaign.Id]" -->
-                <div *ngIf="campaign.Submissions" style="cursor: pointer">
-                  <span style="color: orange" title="New Submissions">{{
-                    getSubmissionsCountNew(campaign.Submissions)
-                  }}</span>
-                  |
-                  <span
-                    style="color: rgb(0, 207, 35)"
-                    title="Accepted Submissions"
-                    >{{
-                      getSumbmissionsCountAcceppted(campaign.Submissions)
-                    }}</span
-                  >
-                  |
-                  <span
-                    style="color: rgb(207, 0, 0)"
-                    title="Rejected Submissions"
-                    >{{
-                      getSumbmissionsCountRejected(campaign.Submissions)
-                    }}</span
-                  >
-
-                  <ng-container
-                    *ngFor="
-                      let submission of sortedSubmissions(campaign.Submissions);
-                      let i = index
-                    "
-                  >
-                  </ng-container>
-                </div>
-                <div *ngIf="!campaign.Submissions">N/A</div>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-label">Mails Sent</div>
-              <div class="stat-value" *ngIf="campaign.MailsSent">
-                {{ campaign.MailsSent }}
-              </div>
-            </div>
-          </div>
-          <!-- <a
-            class="inbox text-center"
-            [routerLink]="['./ataglance', campaign.Id]"
-            >At a Glance</a
-          > -->
-          <div class="campaign-actions">
-            <div class="inbox mail d-flex justify-content-between">
-              <i class="fa-regular fa-envelope"></i>
-              <a
-                [routerLink]="[
-                  '/organization-mail',
-                  campaign.OrganizationId,
-                  campaign.Id
-                ]"
-                >Emily</a
-              >
-            </div>
-
-            <button
-              class="expand-btn"
-              (click)="toggleExpand(campaign)"
-              *ngIf="campaign.Kanban"
+            <div
+              class="privacy-badge"
+              [ngClass]="{
+                'privacy-public': campaign.CampaignPrivacy == 0,
+                'privacy-private': campaign.CampaignPrivacy == 1
+              }"
             >
-              {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
+              <div class="privacy-icon"></div>
+              <span>{{
+                campaign.CampaignPrivacy == 0 ? "Public" : "Private"
+              }}</span>
+            </div>
+          </div>
+
+          <div class="card-metrics">
+            <div
+              class="metric-item"
+              [ngClass]="{ link: campaign.Sites }"
+              [routerLink]="[
+                '/dashboard',
+                campaign.OrganizationId,
+                campaign.OrganizationName,
+                campaign.Id
+              ]"
+            >
+              <div class="metric-value">
+                <span>{{ campaign.Sites }}</span>
+                <svg
+                  *ngIf="campaign.Sites"
+                  class="external-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <div class="metric-label">Sites</div>
+            </div>
+
+            <div class="metric-item">
+              <div
+                class="metric-value submissions-breakdown"
+                *ngIf="campaign.Submissions"
+              >
+                <span *ngIf="campaign.Submissions" class="count-new">{{
+                  getSubmissionsCountNew(campaign.Submissions)
+                }}</span>
+
+                <span class="separator">|</span>
+                <span class="count-accepted">{{
+                  getSumbmissionsCountAcceppted(campaign.Submissions)
+                }}</span>
+                <span class="separator">|</span>
+                <span class="count-rejected">{{
+                  getSumbmissionsCountRejected(campaign.Submissions)
+                }}</span>
+              </div>
+              <div class="metric-value" *ngIf="!campaign.Submissions">0</div>
+              <div class="metric-label">Submissions</div>
+            </div>
+
+            <div class="metric-item">
+              <div class="metric-value">{{ campaign.MailsSent || "0" }}</div>
+              <div class="metric-label">Mails Sent</div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <div
+              class="email-action"
+              [routerLink]="[
+                '/organization-mail',
+                campaign.OrganizationId,
+                campaign.Id
+              ]"
+            >
+              <i class="fa-regular fa-envelope"></i>
+              <span>Emily</span>
+            </div>
+            <div
+            *ngIf="campaign.Sites"
+              class="email-action show-details"
+              [routerLink]="[
+                '/dashboard',
+                campaign.OrganizationId,
+                campaign.OrganizationName,
+                campaign.Id
+              ]"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                [style.transform]="
-                  campaign.expanded ? 'rotate(180deg)' : 'rotate(0)'
-                "
               >
-                <polyline points="6 9 12 15 18 9"></polyline>
+                <path
+                  d="M15.5799 11.9999C15.5799 13.9799 13.9799 15.5799 11.9999 15.5799C10.0199 15.5799 8.41992 13.9799 8.41992 11.9999C8.41992 10.0199 10.0199 8.41992 11.9999 8.41992C13.9799 8.41992 15.5799 10.0199 15.5799 11.9999Z"
+                  stroke="#fff"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M11.9998 20.2702C15.5298 20.2702 18.8198 18.1902 21.1098 14.5902C22.0098 13.1802 22.0098 10.8102 21.1098 9.40021C18.8198 5.80021 15.5298 3.72021 11.9998 3.72021C8.46984 3.72021 5.17984 5.80021 2.88984 9.40021C1.98984 10.8102 1.98984 13.1802 2.88984 14.5902C5.17984 18.1902 8.46984 20.2702 11.9998 20.2702Z"
+                  stroke="#fff"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
-            </button>
+              <span>Show Details</span>
+            </div>
           </div>
 
-          <div class="campaign-stages" [class.expanded]="campaign.expanded">
-            <div class="stages-grid">
-              <ng-container *ngFor="let kanbanStage of campaign.Kanban">
-                <div class="stage-item">
-                  <div class="stage-name">{{ kanbanStage.stageName }}</div>
-                  <div class="stage-value">
-                    {{
-                      kanbanStage.MarketSurveyShoppingCenters[0].Id
-                        ? kanbanStage.MarketSurveyShoppingCenters.length
-                        : 0
-                    }}
-                  </div>
-                  <!-- <a
-                    class="hyber-link"
-                    *ngIf="
-                      kanbanStage.stageName.toLowerCase() ==
-                      'Precontact'.toLowerCase()
-                    "
-                    (click)="goToEmily(c, index, true)"
-                    >Launch Campaign</a
-                  > -->
+          <!-- Card stages: tiny chips row -->
+          <div class="card-stages always-visible">
+            <div class="stages-chips">
+              <ng-container *ngFor="let stage of stages">
+                <div class="stage-chip" [ngClass]="stageClass(stage.stageName)">
+                  <span class="stage-chip__label">{{ stage.stageName }}</span>
+                  <span class="stage-chip__count">
+                    {{ getKanbanCount(stage.stageName, campaign.Kanban) }}
+                  </span>
                 </div>
               </ng-container>
             </div>
@@ -414,8 +377,6 @@
             <tr>
               <th class="col-name">Campaign Name</th>
               <th class="col-emily">Emily</th>
-              <!-- <th class="col-date">Date</th> -->
-              <!-- <th class="col-privacy">Privacy</th> -->
               <th class="col-sites">Sites</th>
               <th class="col-submissions">Submissions</th>
               <th class="col-sent">Sent</th>
@@ -463,34 +424,10 @@
                         <span>
                           {{
                             campaign.CampaignPrivacy == 0 ? "Public" : "Private"
-                          }}</span
-                        >
+                          }}
+                        </span>
                       </div>
                     </div>
-                    <!-- <div class="organization-info">
-                    <img loading="lazy" 
-                      *ngIf="campaign.OrganizationId"
-                      [src]="
-                        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                        campaign.OrganizationId
-                      "
-                      [alt]="campaign.OrganizationName"
-                      class="tenant-logo"
-                      (error)="onImageError($event)"
-                      (load)="checkImage($event)"
-                    />
-                    <span
-                      class="tenant-name"
-                      [routerLink]="[
-                        '/dashboard',
-                        campaign.OrganizationId,
-                        campaign.OrganizationName,
-                        campaign.Id
-                      ]"
-                    >
-                      {{ campaign.OrganizationName }}
-                    </span>
-                  </div> -->
                   </div>
                 </td>
 
@@ -506,27 +443,6 @@
                     <i class="fa-regular fa-envelope"></i>
                   </div>
                 </td>
-
-                <!-- <td class="col-date">
-                  {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-                </td> -->
-
-                <!-- <td class="col-privacy">
-                  <div
-                    class="campaign-privacy"
-                    [ngClass]="{
-                      'campaign-privacy-public': campaign.CampaignPrivacy == 0,
-                      'campaign-privacy-private': campaign.CampaignPrivacy == 1
-                    }"
-                  >
-                    <div class="campaign-privacy-icon"></div>
-                    <span>
-                      {{
-                        campaign.CampaignPrivacy == 0 ? "Public" : "Private"
-                      }}</span
-                    >
-                  </div>
-                </td> -->
 
                 <td class="col-sites">
                   <div class="sites-info">
@@ -547,15 +463,15 @@
                     >
                       <path
                         d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                        fill="#292D32"
+                        fill="currentColor"
                       />
                       <path
                         d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                        fill="#292D32"
+                        fill="currentColor"
                       />
                       <path
                         d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                        fill="#292D32"
+                        fill="currentColor"
                       />
                     </svg>
                   </div>
@@ -564,35 +480,17 @@
                 <td class="col-submissions">
                   <div class="submissions-info">
                     <div *ngIf="campaign.Submissions" class="submission-counts">
-                      <span class="count-new" title="New Submissions">{{
+                      <span class="count-new">{{
                         getSubmissionsCountNew(campaign.Submissions)
                       }}</span>
-                      |
-                      <span
-                        class="count-accepted"
-                        title="Accepted Submissions"
-                        >{{
-                          getSumbmissionsCountAcceppted(campaign.Submissions)
-                        }}</span
-                      >
-                      |
-                      <span
-                        class="count-rejected"
-                        title="Rejected Submissions"
-                        >{{
-                          getSumbmissionsCountRejected(campaign.Submissions)
-                        }}</span
-                      >
-
-                      <ng-container
-                        *ngFor="
-                          let submission of sortedSubmissions(
-                            campaign.Submissions
-                          );
-                          let i = index
-                        "
-                      >
-                      </ng-container>
+                      <span class="separator">|</span>
+                      <span class="count-accepted">{{
+                        getSumbmissionsCountAcceppted(campaign.Submissions)
+                      }}</span>
+                      <span class="separator">|</span>
+                      <span class="count-rejected">{{
+                        getSumbmissionsCountRejected(campaign.Submissions)
+                      }}</span>
                     </div>
                     <div *ngIf="!campaign.Submissions" class="no-data">N/A</div>
                   </div>
@@ -623,7 +521,11 @@
     *ngIf="!isLoading && !(filteredCampaigns && filteredCampaigns.length > 0)"
     class="empty-campaigns"
   >
-    <img loading="lazy"  src="../../../assets/Images/empty-state.png" alt="Empty Campaigns" />
+    <img
+      loading="lazy"
+      src="../../../assets/Images/empty-state.png"
+      alt="Empty Campaigns"
+    />
     <h4>Campaigns Will Appear Here!</h4>
     <p>Create, Track, and Manage Expansion Campaigns Here.</p>
   </div>
