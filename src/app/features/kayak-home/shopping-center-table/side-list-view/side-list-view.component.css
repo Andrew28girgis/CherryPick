@@ -649,7 +649,7 @@
 .dropdown-item:focus {
   color: #16181b;
   text-decoration: none;
-  background-color: var(--Colors-Primary-100);
+  background-color: var(--Colors-Primary-light);
 }
 
 .dropdown-item.active,

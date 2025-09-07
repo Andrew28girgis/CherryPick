@@ -474,9 +474,8 @@
 .add-new-campaign {
   border: none;
   cursor: pointer;
-  display: flex;
-  height: 48px;
-  padding: var(--Space-S-14)   var(--Space-S-24) ; 
+  display: flex; 
+  padding: 7px 15px; 
   justify-content: center;
   align-items: center;
   gap: var(--Space-S-8)  ;
@@ -484,7 +483,7 @@
   background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White );
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 30px; /* 187.5% */
@@ -492,12 +491,12 @@
 
 .add-new-campaign:hover,
 .add-new-campaign:focus {
-  background: #a31c59; /* Slightly darker for hover */
+  background:var(--Colors-Primary-hover); /* Slightly darker for hover */
   outline: none;
 }
 
 .add-new-campaign:active {
-  background: #a31c59; /* Even darker for active */
+  background:var(--Colors-Primary-hover); /* Even darker for active */
 }
 
 .add-new-campaign span {

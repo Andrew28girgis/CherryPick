@@ -1,5 +1,5 @@
 .get-started-btn{
-    background-color: #a31c59;
+    background-color:var(--Colors-Primary-hover);
     color: white;
     border: none;
     padding: 10px var(--Space-S-20) ;

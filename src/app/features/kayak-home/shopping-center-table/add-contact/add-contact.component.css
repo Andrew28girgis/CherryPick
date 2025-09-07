@@ -32,7 +32,7 @@
 }
 
 .fancy-btn {
-  background: #a31c59; /* fallback for old browsers */
+  background:var(--Colors-Primary-hover); /* fallback for old browsers */
   padding: 10px var(--Space-S-20) ;
   border-radius:  var(--Radius-R-8) ;
   border: none;
@@ -56,7 +56,7 @@
 }
 
 .primary-btn {
-  background: #a31c59;
+  background:var(--Colors-Primary-hover);
   color: white;
 }
 

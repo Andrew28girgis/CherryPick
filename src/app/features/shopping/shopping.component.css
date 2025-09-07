@@ -108,12 +108,12 @@
 
 .add-new-btn:hover,
 .add-new-btn:focus {
-  background: #a31c59; /* Slightly darker for hover */
+  background:var(--Colors-Primary-hover); /* Slightly darker for hover */
   outline: none;
 }
 
 .add-new-btn:active {
-  background: #a31c59; /* Even darker for active */
+  background:var(--Colors-Primary-hover); /* Even darker for active */
 }
 
 .add-new-btn span {
@@ -932,7 +932,7 @@ tr.click-disabled td:last-child * {
   font-size: 16px;
 }
 .filters-header .filters-title:last-child {
-  color: #a31c59;
+  color:var(--Colors-Primary-hover);
   font-weight: 600;
   cursor: pointer;
 }
@@ -987,7 +987,7 @@ tr.click-disabled td:last-child * {
 }
 
 .filter-check input[type="checkbox"]:active {
-  border-color: #a31c59;
+  border-color:var(--Colors-Primary-hover);
   background: #fef0f5;
 }
 
@@ -1001,8 +1001,8 @@ tr.click-disabled td:last-child * {
   border-color: #c84681;
 }
 .filter-check input[type="checkbox"]:checked:active {
-  background: #a31c59;
-  border-color: #a31c59;
+  background:var(--Colors-Primary-hover);
+  border-color:var(--Colors-Primary-hover);
 }
 .filter-check input[type="checkbox"]:checked::after {
   content: "✓";
@@ -1086,13 +1086,13 @@ tr.click-disabled td:last-child * {
   background: #c84681;
 }
 .btn-filter:active {
-  background: #a31c59;
+  background:var(--Colors-Primary-hover);
 }
 .filter-check span {
   color: #1f2937;
 }
 .link-details{
-  color: #a31c59;
+  color:var(--Colors-Primary-hover);
   text-decoration: underline;
 }
 .icon-btn{

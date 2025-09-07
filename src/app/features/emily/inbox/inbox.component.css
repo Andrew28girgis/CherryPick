@@ -32,7 +32,7 @@
   font-weight: 600;
   color: #333;
   background: none; /* Light pink background color */
-  border-bottom: 1px solid var(--Colors-Primary-100);
+  border-bottom: 1px solid var(--Colors-Primary-light);
 }
 
 .namecontact {
@@ -97,7 +97,7 @@
   padding: var(--Space-S-12) var(--Space-S-24);
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid var(--Colors-Primary-100 );
+  border-bottom: 1px solid var(--Colors-Primary-light );
   cursor: pointer;
 }
 
@@ -187,10 +187,10 @@
   align-items: flex-start;
   gap: var(--Space-S-8, var(--Space-S-8)  );
   align-self: stretch;
-  border-bottom: 1px solid var(--Colors-Primary-100 );
+  border-bottom: 1px solid var(--Colors-Primary-light );
 }
 .single-mail:hover {
-  background-color: var(--Colors-Primary-100);
+  background-color: var(--Colors-Primary-light);
 }
 .selected-email {
   background: #edf0f8;
@@ -313,7 +313,7 @@
   background: none;
   border: none;
   border-radius: 0;
-  border-right: 1px solid var(--Colors-Primary-100 );
+  border-right: 1px solid var(--Colors-Primary-light );
 }
 .buybox-name {
   margin: var(--Space-S-20) ;
@@ -344,7 +344,7 @@
 }
 
 .replay:hover {
-  background-color: #a31c59;
+  background-color:var(--Colors-Primary-hover);
   color: white;
 }
 .send {
@@ -570,7 +570,7 @@
   align-items: flex-start;
   gap: 10px;
   align-self: stretch;
-  border-bottom: 1px solid var(--Colors-Primary-100 );
+  border-bottom: 1px solid var(--Colors-Primary-light );
   cursor: pointer;
 }
 
@@ -687,7 +687,7 @@
 }
 
 .dropdown-option.selected {
-  background-color: var(--Colors-Primary-100);
+  background-color: var(--Colors-Primary-light);
   font-weight: 500;
 }
 
@@ -799,7 +799,7 @@
   align-items: center;
   gap: 10px;
   border-radius:  var(--Radius-R-32) ;
-  border: 1px solid var(--Colors-Primary-100 );
+  border: 1px solid var(--Colors-Primary-light );
   background: var(--Colors-Pure-White );
   cursor: pointer;
   transition: transform 0.3s ease;
