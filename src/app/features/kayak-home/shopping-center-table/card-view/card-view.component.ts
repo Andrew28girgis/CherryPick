@@ -907,4 +907,9 @@ openInfoPopup(shopping: any, content: TemplateRef<any>): void {
     },
   });
 }
+// Example: inside your component class
+get hasUnscoredCenters(): boolean {
+  return this.cardsSideList?.some(sc => !sc.Score) ?? false;
+}
+
 }
