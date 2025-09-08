@@ -55,13 +55,8 @@
   <div class="right-controls">
     <!-- User avatar/profile menu -->
     <div *ngIf="!isChatbotRoute" class="avatar-container dropdown">
-      <a
-        class="avatar dropdown-toggle"
-        id="profileDropdown"
-        role="button"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
+       <a class="avatar" role="button" (click)="toggleDropdown()">
+
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -86,11 +81,7 @@
         </svg>
       </a>
 
-      <div
-        class="dropdown-menu profile-dropdown"
-        data-bs-popper="none"
-        aria-labelledby="profileDropdown"
-      >
+      <div class="dropdown-menu profile-dropdown" *ngIf="isDropdownOpen">
         <div class="profile-header">
           <div class="user-info">
             <h6 class="mb-0">User Profile</h6>
