@@ -1,8 +1,7 @@
-<div class="shopping-centers-container" (click)="onDocumentsClick()">
+<div (click)="onDocumentsClick()">
   <!-- Header Section -->
   <div class="title-div">
-
-    <h2 class="title">Shopping Centers</h2>
+    <h2 class="title">Sites Vault</h2>
   </div>
   <div class="header-container d-flex flex-row justify-content-between">
     <div
@@ -678,10 +677,7 @@
                       </svg>
                     </button>
 
-                    <div
-                      class=" menu-table"
-                      *ngIf="openMenuId === center.scId"
-                    >
+                    <div class="menu-table" *ngIf="openMenuId === center.scId">
                       <button
                         class="menu-item"
                         (click)="onEnriche(center); closeMenu()"
