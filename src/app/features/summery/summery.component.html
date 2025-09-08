@@ -73,16 +73,13 @@
  
    </div>
   <div class="main-inner">
-    <div class="d-flex align-items-start justify-content-center">
-      <div class="row g-4 tenant-container">
+ 
+       <div class="cards-grid">
         <ng-container *ngFor="let tenant of filteredTenants">
-          <div class="col-12 col-sm-6 p-0">
-            <app-tenant-card  [tenant]="tenant"></app-tenant-card>
-          </div>
-        </ng-container>
+             <app-tenant-card  [tenant]="tenant"></app-tenant-card>
+         </ng-container>
       </div>
-    </div>
-  </div>
+   </div>
  
 
 <ng-template #tenantModal let-modal>
