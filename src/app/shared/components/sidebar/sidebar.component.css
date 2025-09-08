@@ -130,9 +130,8 @@
 }
 
 .avatar:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
+  scale: 1.15;
+ }
 
 /* Avatar container styles */
 .avatar-container {
@@ -147,6 +146,19 @@
   transform-origin: top right;
   margin-top: 10px;
 }
+.avatar-container .dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 10px;
+  display: none; /* default hidden */
+}
+
+/* When Angular *ngIf shows it, force visible */
+.avatar-container .dropdown-menu.profile-dropdown {
+  display: block !important;
+}
+
 
 @keyframes dropdown-fade {
   from {
