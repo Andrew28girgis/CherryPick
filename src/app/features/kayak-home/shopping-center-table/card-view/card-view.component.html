@@ -563,13 +563,10 @@
           <div
             class="leased-by"
             *ngIf="shopping?.ShoppingCenter?.ManagerOrganization?.length"
-            (click)="toggleOrgMenu(shopping.Id)"
+            (click)="toggleOrgMenu(shopping.Id,$event);$event.stopPropagation()" 
           >
             {{ shopping?.ShoppingCenter?.ManagerOrganization?.[0]?.Name || '—' }}
-
-            <!-- trigger -->
-            <div class="org-info-trigger">
-              <svg
+<svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -585,9 +582,10 @@
                   fill="#292D32"
                 />
               </svg>
-            </div>
-
-            <div
+            <!-- trigger -->
+            <div class="org-info-trigger">
+              
+              <div
               class="org-mini-menu"
               *ngIf="openOrgMenuId === shopping.Id"
               [ngStyle]="orgMenuPos"
@@ -614,6 +612,9 @@
                 ></div>
               </div>
             </div>
+            </div>
+
+            
           </div>
         </div>
 

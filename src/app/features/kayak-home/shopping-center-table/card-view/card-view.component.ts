@@ -827,32 +827,39 @@ export class CardViewComponent implements OnInit, OnDestroy {
     });
   }
   
-  toggleOrgMenu(id: number) {
-    if (this.openOrgMenuId === id) {
-      this.closeOrgMenu();
-    } else {
-      this.openOrgMenuId = id;
-      this.activeDropdownId = id;
-  
-      setTimeout(() => {
-        document.addEventListener('click', this.handleOutsideClick, true);
-      });
-    }
+toggleOrgMenu(id: number, event: MouseEvent) {
+  event.stopPropagation(); // prevents bubbling to document
+
+  if (this.openOrgMenuId === id) {
+    this.closeOrgMenu();
+  } else {
+    this.openOrgMenuId = id;
+    this.activeDropdownId = id;
+
+    // only attach listener once per open
+    setTimeout(() => {
+      document.addEventListener('click', this.handleOutsideClick, true);
+    });
   }
-  
-  handleOutsideClick = (event: MouseEvent) => {
-    const target = event.target as HTMLElement;
-    const clickedInside = target.closest('.org-info-trigger');
-  
-    if (!clickedInside) {
-      this.closeOrgMenu();
-      document.removeEventListener('click', this.handleOutsideClick, true);
-    }
-  };
-closeOrgMenu = () => {
+}
+
+closeOrgMenu() {
   this.openOrgMenuId = null;
-  this.orgMenuPos = {};
+  this.activeDropdownId = null;
+  document.removeEventListener('click', this.handleOutsideClick, true);
+}
+
+// make sure to bind 'this' when declaring the handler
+handleOutsideClick = (event: Event) => {
+  const target = event.target as HTMLElement;
+  if (!target.closest('.org-info-trigger')) {
+    this.closeOrgMenu();
+  }
 };
+
+  
+ 
+ 
 private parseDate(dateValue: any): number {
   if (!dateValue) return 0;
 
