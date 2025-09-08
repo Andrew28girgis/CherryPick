@@ -1175,3 +1175,15 @@
   text-decoration: underline;
   cursor: pointer;
 }
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color:var(--app-color);
+  
+  margin: 30px 20px;
+}
+.title-div{
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}

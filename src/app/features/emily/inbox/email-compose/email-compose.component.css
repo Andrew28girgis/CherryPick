@@ -181,7 +181,7 @@
     line-height: 30px;
   }
   .text-outlook{
-    color: var(--Colors-Pure-Black);
+    color: var(--app-color);
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

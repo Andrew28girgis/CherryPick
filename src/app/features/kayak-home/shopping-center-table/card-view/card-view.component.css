@@ -209,7 +209,7 @@ img[alt="logo"] {
   color: #7a8591;
 }
 .card-address:hover {
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
 }
 
 .managed-by {
@@ -598,7 +598,7 @@ img[alt="logo"] {
 }
 
 .dropdown-item.active {
-  color: var(--Colors-Pure-Black) !important;
+  color: var(--app-color) !important;
 }
 .stage-select-container {
   display: flex;
@@ -1355,7 +1355,7 @@ table tbody td {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-500);
   border-radius: 50%;
   animation: spin 1.2s linear infinite;
 }
@@ -1405,8 +1405,8 @@ table tbody td {
   background: linear-gradient(
     90deg,
     var(--Colors-Primary-hover),
-    var(--Colors-Primary-400),
-    var(--Colors-Primary-200)
+    var(--Colors-Primary-500),
+    var(--Colors-Primary-500)
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

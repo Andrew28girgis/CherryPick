@@ -72,7 +72,7 @@
 }
 
 .ataglance-section-header .title {
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
   font-weight: 600;
 }
 

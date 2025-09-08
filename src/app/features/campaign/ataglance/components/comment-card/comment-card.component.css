@@ -21,7 +21,7 @@
 
 .comment-card .comment-data span {
   font-weight: 600;
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
 }
 
 .comment-card .comment-data p {

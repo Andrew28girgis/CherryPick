@@ -8,5 +8,5 @@
     border-radius:  var(--Radius-R-24) ;
 }
 .get-started-btn:hover {
-    background-color: var(--Colors-Primary-700);  
+    background-color: var(--Colors-Primary-500);  
 }

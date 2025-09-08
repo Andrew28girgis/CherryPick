@@ -274,7 +274,7 @@
   padding: 1rem;
   border-radius: 1rem;
   cursor: pointer;
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
 }
 
 @keyframes moving {

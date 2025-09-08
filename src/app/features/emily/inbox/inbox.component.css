@@ -9,7 +9,7 @@
 }
 
 .selected-contact {
-  background: var(--Colors-Primary-200);
+  background: var(--Colors-Primary-500);
 }
 .dropdown-container {
   width: 100%;
@@ -83,7 +83,7 @@
 }
 
 .contactsh5 {
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -839,7 +839,7 @@
   background-color: #b32d5a;
 }
 .main-top {
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
 
    
   font-size: 16px;
@@ -873,7 +873,7 @@
 }
 
 .colored-toast {
-  background-color: var(--Colors-Primary-200);
+  background-color: var(--Colors-Primary-500);
   color: white;
   border-left: 5px solid var(--Colors-Primary-500);
 }

@@ -26,8 +26,8 @@
   border-color: var(--Colors-Primary-hover);
 }
 .x-btn-primary:active {
-  background-color:var(--Colors-Primary-700);
-  border-color:var(--Colors-Primary-700);
+  background-color:var(--Colors-Primary-500);
+  border-color:var(--Colors-Primary-500);
 }
 .x-btn-primary:disabled {
   background-color: #bcbcbc;

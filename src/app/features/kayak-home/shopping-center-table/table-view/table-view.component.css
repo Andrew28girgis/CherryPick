@@ -468,7 +468,7 @@ img[alt="logo"] {
 }
 
 .dropdown-item.active {
-  color: var(--Colors-Pure-Black) !important;
+  color: var(--app-color) !important;
 }
 .stage-select-container {
   display: flex;

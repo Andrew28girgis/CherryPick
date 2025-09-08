@@ -142,7 +142,7 @@ dl dd {
   white-space: nowrap;
   font-weight: 700;
   /* color: #081c3e; */
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
   margin: 0;
   transition: color 0.3s;
   cursor: pointer;

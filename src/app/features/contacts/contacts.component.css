@@ -605,7 +605,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--Colors-Primary-700, #6d133b);
+  border: 1px solid var(--Colors-Primary-500, #6d133b);
   border-radius: 22px;
   background: transparent;
 }
@@ -739,7 +739,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 22px;
-  border: 1px solid var(--Colors-Primary-700, #6d133b);
+  border: 1px solid var(--Colors-Primary-500, #6d133b);
   display: flex;
   padding: var(--Space-S-12);
   align-items: center;
@@ -771,7 +771,7 @@
 }
 
 .add-new-btn:hover {
-  background-color: var(--Colors-Primary-700);
+  background-color: var(--Colors-Primary-500);
 }
 .sort-btn::after {
   display: none;
@@ -1121,3 +1121,17 @@
   min-width: 220px; /* tweak if you want tighter cards */
 }
 
+
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color:var(--app-color);
+  
+  margin: 30px 20px;
+}
+.title-div{
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}

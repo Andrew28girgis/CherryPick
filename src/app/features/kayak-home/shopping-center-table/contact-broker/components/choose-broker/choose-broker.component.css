@@ -42,7 +42,7 @@
 
 .contact-name {
   font-weight: 600;
-  color: var(--Colors-Pure-Black) !important;
+  color: var(--app-color) !important;
 }
 
 .send-as {

@@ -181,7 +181,7 @@ input::placeholder {
 
 .testimonial-author {
   font-weight: 600;
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
   margin: 0;
   font-size: 16px;
 }
