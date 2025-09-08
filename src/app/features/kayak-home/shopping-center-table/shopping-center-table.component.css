@@ -1160,12 +1160,9 @@
 }
 
 .main-inner {
-  position: relative; /* Add this */
-
+  position: relative;  
   padding: var(--Space-S-32);
-  align-items: center;
-  border-radius: var(--Radius-R-20);
-  background: var(--Main-Container-BG);
+  align-items: center; 
   backdrop-filter: blur(50px);
   width: 100%;
   max-width: 100%;

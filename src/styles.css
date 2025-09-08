@@ -196,15 +196,12 @@ a {
 .content-title {
   font-size: 20px;
   white-space: nowrap;
-  font-weight: 700;
-  color: var(--app-color);
+  font-weight: 700; 
   margin: 0;
-  transition: color 1s ease;
+  transition: color 0.2s ease;
 }
 
-.content-title:hover {
-  color: gray;
-}
+ 
 
 .spec {
   padding-right: 10px;
