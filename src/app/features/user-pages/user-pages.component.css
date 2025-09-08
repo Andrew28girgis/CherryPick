@@ -28,6 +28,14 @@
     width: 100%;
   }
   
+  .title::after {
+    content: "";
+    display: block;
+    width: 70%; /* adjust line length */
+    height: 2px; /* line thickness */
+    background-color: var(--Colors-Primary-500); /* line color */
+    margin-top: 6px; /* space between text and line */
+  }
   .view-toggle {
     display: flex;
     gap: var(--Space-S-4);
