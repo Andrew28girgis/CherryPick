@@ -1229,3 +1229,16 @@ tr.click-disabled td:last-child * {
 
 
 
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color:var(--app-color);
+  
+  margin: 30px 0  ;
+}
+.title-div{
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}

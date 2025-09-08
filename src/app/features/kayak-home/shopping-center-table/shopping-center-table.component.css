@@ -337,7 +337,7 @@
 }
 
 .add-btn:hover {
-  background-color: var(--Colors-Primary-700);
+  background-color: var(--Colors-Primary-500);
 }
 
 /* Mobile adjustments */
@@ -671,7 +671,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--Colors-Primary-700, #6d133b);
+  border: 1px solid var(--Colors-Primary-500, #6d133b);
   border-radius: 22px;
   background: transparent;
 }
@@ -874,7 +874,7 @@
 
 .sort-option.active,
 .view-menu ul li.active {
-  background-color: #eef2ff;
+  background-color: var(--Colors-Primary-light);
   color: var(--Colors-Primary-500);
 }
 
@@ -890,7 +890,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 22px;
-  border: 1px solid var(--Colors-Primary-700, #6d133b);
+  border: 1px solid var(--Colors-Primary-500, #6d133b);
 
   display: flex;
   padding: var(--Space-S-12);
@@ -1021,7 +1021,7 @@
   align-items: center;
   gap: var(--Space-S-8);
   border-radius: var(--Radius-R-8);
-  border: 1px solid var(--Colors-Primary-700);
+  border: 1px solid var(--Colors-Primary-500);
   background: var(--Colors-Primary-light);
   color: var(--Colors-Primary-500);
   font-size: 16px;
@@ -1356,7 +1356,7 @@
   border-radius: 24px;
 }
 .website-search-input:focus {
-  box-shadow: 0 0 0 2px var(--Colors-Primary-200);
+  box-shadow: 0 0 0 2px var(--Colors-Primary-500);
   border: 1px solid var(--Colors-Primary-500);
 }
 

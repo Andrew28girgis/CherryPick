@@ -320,7 +320,7 @@ html {
 }
 
 .primary-btn:hover {
-  background-color: var(--Colors-Primary-700);
+  background-color: var(--Colors-Primary-500);
 }
 
 .secondary-btn {

@@ -1,25 +1,31 @@
 /* Updated all colors to use the provided CSS variables from styles.css */
 .user-pages-container {
     padding: var(--Space-S-24);
-    background: var(--Main-Container-BG);
+    /* background: var(--Main-Container-BG); */
     color: var(--Colors-Neutral-900);
     border-radius: var(--Radius-R-16);
   }
 
   .view-controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     margin-bottom: var(--Space-S-24);
     padding-bottom: var(--Space-S-16);
     border-bottom: 1px solid var(--Colors-Primary-50);
   }
-  
+ 
   .title {
     font-size: 24px;
     font-weight: 600;
-    color: var(--Colors-Neutral-900);
-    margin: 0;
+    color:var(--app-color);
+    
+    margin: 6px 0;
+  }
+  .title-div{
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
   }
   
   .view-toggle {
@@ -155,12 +161,13 @@
     padding: var(--Space-S-20);
     transition: all 0.2s ease;
     cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   }
   
   .page-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(181, 31, 99, 0.15);
-    border-color: var(--Colors-Primary-300);
+    border-color: var(--Colors-Primary-500);
   }
   
   .card-header {
@@ -195,6 +202,7 @@
   
   .card-actions {
     display: flex;
+    justify-content: space-between;
     gap: var(--Space-S-8);
   }
   
@@ -242,7 +250,7 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--Colors-Primary-200);
+    background: var(--Colors-Primary-500);
   }
   
   .timeline-item {
@@ -259,7 +267,7 @@
     background: var(--Colors-Primary-500);
     border: 3px solid var(--Colors-Pure-White);
     border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--Colors-Primary-200);
+    box-shadow: 0 0 0 3px var(--Colors-Primary-500);
   }
   
   .timeline-content {
@@ -271,7 +279,7 @@
   }
   
   .timeline-content:hover {
-    border-color: var(--Colors-Primary-300);
+    border-color: var(--Colors-Primary-500);
     box-shadow: 0 2px 8px rgba(181, 31, 99, 0.1);
   }
   

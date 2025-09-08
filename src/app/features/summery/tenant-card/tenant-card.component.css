@@ -10,7 +10,7 @@ gap: var(--Space-S-16);
 background: var(--Colors-Card-Background);
  backdrop-filter: blur(100px);
 
- 
+ box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 .tenant-card-img {
   width: 6.5rem;

@@ -14,7 +14,7 @@
   padding: var(--Space-S-32);
   align-items: center;
   border-radius: var(--Radius-R-20);
-  background: var(--Main-Container-BG);
+  /* background: var(--Main-Container-BG); */
   backdrop-filter: blur(50px);
 
   /* ✅ the important changes */
@@ -191,4 +191,18 @@
 .cancel-tenant-btn:hover {
   background-color: #e2e6ea;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color:var(--app-color);
+  
+  margin: 30px 20px;
+}
+.title-div{
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
 }

@@ -42,7 +42,7 @@
 
 .contact-name {
   font-weight: 600;
-  color: var(--Colors-Pure-Black) !important;
+  color: var(--app-color) !important;
 }
 
 .send-as {
@@ -401,7 +401,7 @@
   padding: 1rem;
   border-radius: 1rem;
   cursor: pointer;
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
 }
 
 @keyframes moving {

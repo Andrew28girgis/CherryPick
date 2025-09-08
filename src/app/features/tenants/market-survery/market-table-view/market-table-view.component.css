@@ -527,7 +527,7 @@ table.procpect-table th {
   }
 
   .card-header {
-    background-color: var(--Colors-Pure-Black);
+    background-color: var(--app-color);
     flex-direction: row;
     align-items: flex-start;
   }

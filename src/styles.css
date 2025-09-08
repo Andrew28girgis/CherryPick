@@ -3,7 +3,7 @@
 @import "assets/styles/buttons.css";
 
 :root {
-  --app-color: var(--Colors-Pure-Black);
+  --app-color:#14303a;
   --app-font: "Poppins", sans-serif;
   --Colors-Primary-500: #cfb579;
   --Colors-Primary-hover:#baa36d;
@@ -11,7 +11,7 @@
   --Colors-diffrent: #fffdf6;
   --Colors-Card-Background: rgba(255, 255, 255, 0.5);
   --Colors-Pure-White: rgba(255, 255, 255, 1);
-  /* --Main-Container-BG: #fffdf6; */
+  --Main-Container-BG: rgba(255, 255, 255, 0.4);
 
   --Space-S-4: 4px;
   --Space-S-8: 8px;
@@ -96,7 +96,7 @@ a {
 
 .feature {
   font-size: 1rem;
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
   text-wrap: balance;
 }
 
@@ -197,7 +197,7 @@ a {
   font-size: 20px;
   white-space: nowrap;
   font-weight: 700;
-  color: var(--Colors-Pure-Black);
+  color: var(--app-color);
   margin: 0;
   transition: color 1s ease;
 }
@@ -310,7 +310,7 @@ a {
   top: 20px;
   right: 190px;
   padding: 12px var(--Space-S-20);
-  background-color: var(--Colors-Primary-200);
+  background-color: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White);
   border-radius: var(--Radius-R-8);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
