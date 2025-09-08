@@ -38,6 +38,8 @@ import { EditorModule } from 'primeng/editor';
 
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
+import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,9 +51,9 @@ import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.com
     UploadOMComponent,
     SidebarComponent,
     LandingComponent,
-    
     AiChatingComponent,
-    AiUiHTMLComponent
+    AiUiHTMLComponent,
+    Landing2Component,
   ],
   imports: [
     BrowserModule,
@@ -79,7 +81,7 @@ import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.com
     SelectButtonModule,
     EditorModule,
     NotificationsComponent,
-  ],
+    ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {

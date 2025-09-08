@@ -80,16 +80,16 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-  // {
-  //   path: 'landing/:id/:shoppiongCenterId/:campaignId',
-  //   component: LandingComponent,
-  //   data: { hideHeader: true },
-  // },
-    {
+  {
     path: 'landing/:id/:shoppiongCenterId/:campaignId',
-    component: Landing2Component,
+    component: LandingComponent,
     data: { hideHeader: true },
   },
+  //   {
+  //   path: 'landing/:id/:shoppiongCenterId/:campaignId',
+  //   component: Landing2Component,
+  //   data: { hideHeader: true },
+  // },
   {
     path: 'landlord',
     loadChildren: () =>

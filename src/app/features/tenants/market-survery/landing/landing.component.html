@@ -1,18 +1,44 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div class="main-container-all" style="overflow-y: scroll">
+<div class="main-container-all">
   <div>
-    <div class="container">
-      <p *ngIf="showAlert" class="alert-container">
-        <ngb-alert [dismissible]="false" class="alert-success">
-          <strong>Thank</strong> you for letting us know.
-        </ngb-alert>
-      </p>
-      <i
-        *ngIf="windowHistrony !== 1"
-        class="fa-solid fa-arrow-left goback"
-        (click)="goBack()"
-      ></i>
-      <div class="image-map-container">
+    <p *ngIf="showAlert" class="alert-container">
+      <ngb-alert [dismissible]="false" class="alert-success">
+        <strong>Thank</strong> you for letting us know.
+      </ngb-alert>
+    </p>
+    <i
+      *ngIf="windowHistrony !== 1"
+      class="fa-solid fa-arrow-left goback mb-1"
+      (click)="goBack()"
+    ></i>
+    <!-- <div class="card demographics-card">
+        
+          <div class="card-content">
+            <div class="demo-stats">
+              <div class="demo-row">
+                <h1
+                  class="mb-2 pb-0"
+                  *ngIf="ShoppingCenter?.CenterName"
+                  [innerHTML]="ShoppingCenter.CenterName | titlecase"
+                ></h1>
+                <p
+                  class="mb-2 pb-0 address-city"
+                  (click)="
+                    openMapViewPlace(
+                      mapPopup,
+                      ShoppingCenter ? ShoppingCenter : StandAlonePlace
+                    )
+                  "
+                >
+                  {{ getAddress() }}
+                </p>
+                </div>
+            
+              
+            </div>
+          </div>
+        </div>    -->
+    <!-- <div class="image-map-container">
         <div class="image-section">
           <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
             <div class="intro-container wow fadeIn">
@@ -51,12 +77,12 @@
                           />
                           <p>{{ branch.RelationOrganization[0].Name }}</p>
 
-                          <!-- <span class="mx-2" style="color: #fff; font-weight: bold">
+                          <span class="mx-2" style="color: #fff; font-weight: bold">
                     {{
                       branch.RelationOrganization[0].Distance.toFixed(2) +
                         " Miles "
                     }}
-                  </span> -->
+                  </span>
                           <p class="m-0 ps-2">
                             <b>{{ near.Name }}</b>
                           </p>
@@ -204,214 +230,7 @@
             </div>
           </section>
         </div>
-      </div>
-    </div>
-    <div class="main-section" *ngIf="StandAlonePlace && StandAlonePlace.Notes">
-      <section id="hero">
-        <div class="row m-0">
-          <div class="col-md-12">
-            <h2 class="main-heading">Notes</h2>
-            <p class="rating-part StandAlonePlace">
-              {{ StandAlonePlace.Notes }}
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- <div class="col-md-5 col-sm-12 p-0">
-      <div class="row details-info" *ngIf="!ShoppingCenter">
-        <div class="col-sm-12 p-0">
-          <div class="d-flex flex-row align-items-center">
-            <p class="info-head"></p>
-            <p
-              class="info-value content-address"
-              (click)="openMapViewPlace(mapPopup, StandAlonePlace)"
-            >
-              {{ StandAlonePlace?.Address }},
-              {{ StandAlonePlace?.City | titlecase }},
-              {{ StandAlonePlace?.State }}
-            </p>
-          </div>
-        </div>
-
-        <p *ngIf="StandAlonePlace?.Suite" class="info-value p-0">
-          Suite: {{ StandAlonePlace?.Suite }}
-        </p>
-
-        <p *ngIf="StandAlonePlace?.BuildingSizeSf" class="info-value p-0">
-          Unit Size: {{ StandAlonePlace?.BuildingSizeSf | number }} SF
-        </p>
-        <p class="info-value p-0">
-          <b>Lease Price: </b> <br />
-          {{
-            StandAlonePlace?.ForLeasePrice
-              ? getLeasePriceStandAlone(StandAlonePlace)
-              : "On Request"
-          }}
-          <span *ngIf="StandAlonePlace?.ForLeasePrice"
-            ><p>${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</p></span
-          >
-        </p>
-
-        <ng-container *ngFor="let near of NearByType">
-          <div class="d-flex align-items-center p-0" style="margin-bottom: 5px">
-            <p class="m-0">Nearest {{ near.Name }}:</p>
-            <ng-container *ngFor="let branch of near.Branches | slice : 0 : 1">
-              <img loading="lazy" 
-                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                  branch.OrganizationId
-                }}"
-                alt=""
-                title="{{ branch.RelationOrganization[0].Name }}"
-                style="height: 30px; margin-inline: 10px; width: 30px"
-              />
-
-              <span class="ms-2 font-weight-bold">
-                {{ branch.RelationOrganization[0].Distance.toFixed(2) }}
-              </span>
-            </ng-container>
-          </div>
-        </ng-container>
-         <div class="col-md-12 col-sm-12 p-0" *ngIf="StandAlonePlace?.DocsLink">
-          <div
-            class="d-flex flex-row align-items-center"
-            style="padding: 12px 0"
-          >
-            <a
-              class="info-value gray"
-              href="{{ StandAlonePlace?.DocsLink }}"
-              target="_blank"
-              >Property Docs</a
-            >
-          </div>
-        </div>
-        <div class="col-md-12 col-sm-12 p-0" *ngIf="StandAlonePlace?.SitePlan">
-          <div class="d-flex flex-row align-items-center">
-            <a
-              class="info-value gray"
-              href="{{ StandAlonePlace?.SitePlan }}"
-              target="_blank"
-              >View Site Plan</a
-            >
-          </div>
-        </div>
-      </div> 
-      <div class="row details-info" *ngIf="ShoppingCenter">
-        <div class="p-0 info-border" *ngIf="OrgManager && OrgManager[0]">
-          <div>
-            <p
-              class="m-0 procpect-name"
-              style="font-size: 20px"
-              *ngIf="OrgManager && OrgManager[0]"
-            >
-              {{ OrgManager[0].name }}
-            </p>
-          </div>
-          <div class="d-flex flex-column">
-            <ng-container *ngFor="let Manager of OrgManager">
-              <p class="m-0">
-                {{ Manager.firstname | titlecase }}
-                {{ Manager.lastname | titlecase }}
-              </p>
-            </ng-container>
-          </div>
-        </div>
-        <div class="col-sm-12 p-0" *ngIf="ShoppingCenter.CenterAddress">
-          <div class="d-flex flex-row align-items-center">
-            <p class="info-head"></p>
-            <p
-              class="info-value content-address"
-              (click)="openMapViewPlace(mapPopup, ShoppingCenter)"
-            >
-              {{ ShoppingCenter.CenterAddress }},
-              {{ ShoppingCenter.CenterCity | titlecase }},
-              {{ ShoppingCenter.CenterState }}
-            </p>
-          </div>
-        </div>
-
-        <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p>
-
-        <ng-container *ngFor="let near of NearByType">
-          <div class="d-flex align-items-center p-0" style="margin-bottom: 5px">
-            <p class="m-0">Nearest {{ near.Name }}:</p>
-            <ng-container *ngFor="let branch of near.Branches | slice : 0 : 1">
-              <img loading="lazy" 
-                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                  branch.OrganizationId
-                }}"
-                alt=""
-                title="{{ branch.RelationOrganization[0].Name }}"
-                style="height: 30px; margin-inline: 10px; width: 30px"
-              />
-
-              <span class="ms-2 font-weight-bold">
-                {{ branch.RelationOrganization[0].Distance.toFixed(2) + " MI" }}
-              </span>
-            </ng-container>
-          </div>
-        </ng-container>
-
-        <div
-          class="col-md-12 col-sm-12 p-0"
-          *ngIf="CustomPlace.OtherPlaces && CustomPlace.OtherPlaces.length > 0"
-        >
-          <div>
-            <p>
-              Available Units:
-              <span style="color: #000; font-weight: bold">{{
-                CustomPlace.OtherPlaces.length
-              }}</span>
-            </p>
-          </div>
-        </div>
-         <div class="col-md-12 col-sm-12 p-0" *ngIf="ShoppingCenter?.DocsLink">
-          <div
-            class="d-flex flex-row align-items-center"
-            style="padding: 12px 0"
-          >
-            <a
-              class="info-value gray"
-              href="{{ ShoppingCenter.DocsLink }}"
-              target="_blank"
-              >Property Docs</a
-            >
-          </div>
-        </div>
-        <div class="col-md-12 col-sm-12 p-0" *ngIf="ShoppingCenter?.SitePlan">
-          <div class="d-flex flex-row align-items-center">
-            <a
-              class="info-value gray"
-              href="{{ ShoppingCenter.SitePlan }}"
-              target="_blank"
-              >View Site Plan</a
-            >
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <div class="main-section">
-      <section id="hero">
-        <div class="row m-0">
-          <div class="tabs">
-            <ul class="tab-headers" *ngIf="ShoppingCenter ">
-              <li
-                (click)="changeStreetView(ShoppingCenter)"
-                [innerHTML]="ShoppingCenter.CenterName | titlecase"
-              ></li>
-              <li
-                *ngFor="let place of CustomPlace.OtherPlaces; let i = index"
-                (click)="changeStreetView(place)"
-              >
-                Unit {{ i + 1 }} ( {{ place.Suite }} )
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </div> -->
+      </div> -->
 
     <div class="main-section" *ngIf="ShoppingCenter?.Place.length > 0">
       <section id="hero">
@@ -499,311 +318,67 @@
         </ng-container>
       </section>
     </div>
-
-    <div class="row m-0">
-      <div class="col-md-12 p-0">
-        <!-- <div class="main-section">
-          <div class="d-flex justify-content-start">
-            <p class="rate-location">Please Rate This Property</p>
-          </div>
-          <div class="d-flex justify-content-start emo-container">
-            <div class="total" (click)="sendEmojFeedBack(1)">
-              <div [ngClass]="place.reaction == '1' ? 'selected-reaction' : ''">
-                <img loading="lazy" 
-                  src="../../../assets/Images/Gif/love.gif"
-                  alt="love"
-                  width="100"
-                />
-              </div>
-            </div>
-            <div class="total" (click)="sendEmojFeedBack(2)">
-              <div [ngClass]="place.reaction == '2' ? 'selected-reaction' : ''">
-                <img loading="lazy" 
-                  src="../../../assets/Images/Gif/happy.gif"
-                  alt="happy"
-                  width="100"
-                />
-              </div>
-            </div>
-            <div class="total" (click)="sendEmojFeedBack(3)">
-              <div [ngClass]="place.reaction == '3' ? 'selected-reaction' : ''">
-                <img loading="lazy" 
-                  src="../../../assets/Images/Gif/sad.gif"
-                  alt="sad"
-                  width="100"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-start mt-2">
-            <p class="rate-location">If not match please tell us why ?</p>
-          </div>
-          <p class="if-loc">
-            If this location does not meet your needs, please let us know why.
-            We appreciate your feedback on this location.
-          </p>
-          <div class="form-group">
-            <textarea
-              [(ngModel)]="place.feedBack"
-              class="form-control"
-              name="message"
-              rows="5"
-              placeholder="Type your Feedback..."
-            ></textarea>
-
-            <button class="feedback-btn" (click)="sendFeedBack('')">
-              Send Feedback
-            </button>
-          </div>
-        </div> -->
+    <div>
+      <div class="demo-row ">
+        <h1
+          class="mb-2 pb-0"
+          *ngIf="ShoppingCenter?.CenterName"
+          [innerHTML]="ShoppingCenter.CenterName | titlecase"
+        ></h1>
+        <p
+          class="mb-2 pb-0 address-city"
+          (click)="
+            openMapViewPlace(
+              mapPopup,
+              ShoppingCenter ? ShoppingCenter : StandAlonePlace
+            )
+          "
+        >
+          {{ getAddress() }}
+        </p>
       </div>
-      <!-- <div class="col-md-6">
-        <div class="main-section" style="height: 525px">
-          <div class="d-flex justify-content-start">
-            <p class="rate-location">Demographics Density Rate</p>
-          </div>
-
-          <div>
-            <div
-              *ngIf="ShoppingCenter"
-              class="d-flex"
-              [ngClass]="{
-                'justify-content-start':
-                  ShoppingCenter.PopulationDensity < 1000,
-                'justify-content-center':
-                  ShoppingCenter.PopulationDensity >= 1000 &&
-                  ShoppingCenter.PopulationDensity <= 10000,
-                'justify-content-end': ShoppingCenter.PopulationDensity > 10000
-              }"
-              style="width: 91%"
-            >
-              <p
-                *ngIf="ShoppingCenter.PopulationDensity < 1000"
-                class="low-population"
+      <div
+        class=" "
+        *ngIf="OrgManager && OrgManager[0] && placesRepresentative != false"
+      >
+        <section id="hero">
+          <div class="row m-0 py-2 gap-3">
+            <ng-container *ngFor="let Manager of OrgManager">
+              <div
+                *ngIf="Manager.firstName || Manager.lastName"
+                class="col-sm-12 col-md-6 col-lg-4 mb-3 p-0"
               >
-                Low Population Density
-              </p>
-              <p
-                *ngIf="
-                  ShoppingCenter.PopulationDensity >= 1000 &&
-                  ShoppingCenter.PopulationDensity <= 10000
-                "
-                class="medium-population"
-              >
-                Medium Population Density
-              </p>
-              <p
-                *ngIf="ShoppingCenter.PopulationDensity > 10000"
-                class="high-population"
-              >
-                High Population Density
-              </p>
-            </div>
-
-            <div
-              *ngIf="!ShoppingCenter"
-              class="d-flex"
-              [ngClass]="{
-                'justify-content-start':
-                  StandAlonePlace && StandAlonePlace.PopulationDensity < 1000,
-                'justify-content-center':
-                  StandAlonePlace?.PopulationDensity >= 1000 &&
-                  StandAlonePlace?.PopulationDensity <= 10000,
-                'justify-content-end':
-                  StandAlonePlace && StandAlonePlace.PopulationDensity > 10000
-              }"
-            >
-              <p
-                *ngIf="
-                  StandAlonePlace && StandAlonePlace.PopulationDensity < 1000
-                "
-                class="low-population"
-              >
-                Low Population Density
-              </p>
-              <p
-                class="medium-population"
-                *ngIf="
-                  StandAlonePlace &&
-                  StandAlonePlace.PopulationDensity >= 1000 &&
-                  StandAlonePlace.PopulationDensity <= 10000
-                "
-              >
-                Medium Population Density
-              </p>
-              <p
-                class="high-population"
-                *ngIf="
-                  StandAlonePlace && StandAlonePlace.PopulationDensity > 10000
-                "
-              >
-                High Population Density
-              </p>
-            </div>
-            <svg
-              width="webkit-fill-available"
-              height="25"
-              viewBox="0 0 538 25"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 12.5C0 5.87258 5.37258 0.5 12 0.5H526C532.627 0.5 538 5.87258 538 12.5C538 19.1274 532.627 24.5 526 24.5H12C5.37258 24.5 0 19.1274 0 12.5Z"
-                fill="url(#paint0_linear_4248_9066)"
-              />
-              <defs>
-                <linearGradient
-                  id="paint0_linear_4248_9066"
-                  x1="0"
-                  y1="12.5"
-                  x2="538"
-                  y2="12.5"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stop-color="#28A745" />
-                  <stop offset="0.496278" stop-color="#FFC107" />
-                  <stop offset="1" stop-color="#FF4C4C" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <ng-container *ngIf="ShoppingCenter">
-              <div class="row mt-3">
-                <div>
-                  <div class="d-flex justify-content-start">
-                    <p class="rate-location">Demographics Statistics</p>
+                <div class="user-card gap-2" style="overflow: hidden;">
+                  <div class="org-logo placeholder">
+                    {{ getInitials(Manager.firstName,Manager.lastName) }}
                   </div>
-                  <div class="house-income">
-                    <div
-                      class="d-flex justify-content-between"
-                      style="border-bottom: 1px solid #caced3"
+
+                  <div class="user-info">
+                    <h3 class="user-name m-0">
+                      <span class="name">{{ Manager.firstName+' '+Manager.lastName }}</span>
+                     </h3>
+
+                    <p
+                      class="user-email email-link"
+                      *ngIf="Manager.email"
+                      [attr.data-email]="Manager.email"
                     >
-                      <p
-                        class="info-value"
-                        *ngIf="ShoppingCenter && ShoppingCenter.HouseholdIncome"
-                      >
-                        Household Income
-                      </p>
-                      <p>
-                        <b>${{ ShoppingCenter.HouseholdIncome | number }}</b>
-                      </p>
-                    </div>
-                    <div class="d-flex justify-content-between mt-2"
-                    style="border-bottom: 1px solid #caced3">
-                      <p
-                        class="info-value"
-                        *ngIf="ShoppingCenter && ShoppingCenter.Employees"
-                      >
-                        Employees
-                      </p>
-                      <p>
-                        <b>{{ ShoppingCenter.Employees | number }}</b>
-                      </p>
-                    </div> 
+                      <i class="fa-regular fa-envelope"></i>
+                         {{ Manager.email }}
+                     </p>
                   </div>
                 </div>
               </div>
             </ng-container>
           </div>
-
-          <ng-container *ngIf="!ShoppingCenter">
-            <div class="row mt-3">
-              <div class="house-income">
-                <div
-                  class="d-flex justify-content-between"
-                  style="border-bottom: 1px solid #caced3"
-                >
-                  <p
-                    class="info-value"
-                    *ngIf="StandAlonePlace && StandAlonePlace.HouseholdIncome"
-                  >
-                    Household Income
-                  </p>
-                  <p>
-                    <b>${{ StandAlonePlace?.HouseholdIncome | number }}</b>
-                  </p>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                  <p
-                    class="info-value"
-                    *ngIf="StandAlonePlace && StandAlonePlace.Employees"
-                  >
-                    Employees
-                  </p>
-                  <p>
-                    <b>{{ StandAlonePlace?.Employees | number }}</b>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-      </div> -->
-    </div>
-
-    <div
-      class="main-section"
-      *ngIf="OrgManager && OrgManager[0] && placesRepresentative != false"
-    >
-      <section id="hero">
-        <div class="p-0">
-          <div class="d-flex align-items-center">
-            <p class="main-name">Contacts</p>
-            <!-- <img loading="lazy" 
-              class="logo OrgManagerwidth"
-              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                OrgManager[0].id
-              }}"
-              (load)="checkImage($event)"
-              (error)="onImageError($event)"
-              alt=""
-            /> -->
-            <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
-              <!-- {{ OrgManager[0].firstName }}
-              {{ OrgManager[0].lastName }} -->
-            </h2>
-          </div>
-        </div>
-        <div class="row m-0 py-2">
-          <ng-container *ngFor="let Manager of OrgManager">
-            <div
-              *ngIf="Manager.firstName || Manager.lastName"
-              class="col-sm-12 col-md-4 contact-card"
-            >
-              <div class="contact-info">
-                <p class="manager-name ">
-                  <span class="name ">{{ Manager.firstName }}</span>
- 
-                   <span class="name">{{ Manager.lastName }}</span>
-                </p>
-                <p
-                  class="email"
-                  *ngIf="Manager.email"
-                  [attr.data-email]="Manager.email"
-                >
-                {{ Manager.email }}
-                 </p>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
 
     <div class="row m-0 p-0">
       <div class="col-md-12 p-0" *ngIf="tenant && tenant.length > 0">
-        <div class="main-section heightt">
-          <div class="d-flex justify-content-between">
-            <p class="main-name">Tenants</p>
-
-            <!-- <select
-              class="form-control styled-select"
-              (change)="filterCotent($event)"
-            >
-              <option *ngFor="let cat of uniqueCategories" [value]="cat">
-                {{ cat }}
-              </option>
-            </select> -->
-          </div>
+        <div class="main-section user-card">
+        
           <div class="row tenant-row">
             <div class="col-md-3 mb-3" *ngFor="let place of tenant">
               <div class="d-flex align-items-center">
@@ -818,10 +393,12 @@
                   <!-- 
                     src="{{place.LogoURL}}"
                      -->
-                  <img loading="lazy" 
-                    src="{{place.LogoURL}}"
+                  <img
+                    loading="lazy"
+                    src="{{ place.LogoURL }}"
                     alt=""
-                    class="orgbranches"/>
+                    class="orgbranches"
+                  />
                 </div>
 
                 <div class="d-flex flex-column">
@@ -993,3 +570,5 @@
     </div>
   </div>
 </ng-template>
+
+<app-landing2></app-landing2>
