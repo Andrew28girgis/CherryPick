@@ -27,8 +27,8 @@
 .search-section {
   padding: var(--Space-S-8);
   border-radius: var(--Radius-R-24);
-  min-width: 400px;
-  border: 1px solid #ccc;
+  min-width: 400px; 
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   background-color: #fff;
 }
 

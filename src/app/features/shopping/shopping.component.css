@@ -11,19 +11,12 @@
 
 .search-section {
   flex: 1;
-  display: flex;
-  max-width: 624px;
-  height: 48px;
+  max-width: 400px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   padding: var(--Input-Padding-Top-button, 8px)
     var(--Input-Padding-Right-Left, 16px);
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
   border-radius: var(--Radius-R-24);
-  border: 1px solid var(--Colors-Neutral-100);
-  background: var(--Main-Container-BG);
-  backdrop-filter: blur(50px);
-  -webkit-backdrop-filter: blur(50px);
+  background: #fff;
 }
 
 .actions-section {
@@ -108,12 +101,12 @@
 
 .add-new-btn:hover,
 .add-new-btn:focus {
-  background:var(--Colors-Primary-hover); /* Slightly darker for hover */
+  background: var(--Colors-Primary-hover); /* Slightly darker for hover */
   outline: none;
 }
 
 .add-new-btn:active {
-  background:var(--Colors-Primary-hover); /* Even darker for active */
+  background: var(--Colors-Primary-hover); /* Even darker for active */
 }
 
 .add-new-btn span {
@@ -697,8 +690,8 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   padding: 6px;
 }
-.menu-table{
-    position: absolute;
+.menu-table {
+  position: absolute;
   top: -30px; /* below the 3-dots button */
   right: 30px;
   min-width: 220px;
@@ -707,7 +700,6 @@
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   padding: 6px;
-
 }
 .menu-item {
   display: block;
@@ -769,13 +761,14 @@
 }
 
 .icon-btn:focus {
-  outline: none;        
-  box-shadow: none;     
+  outline: none;
+  box-shadow: none;
 }
 
 .icon-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.18), 0 0 0 1px rgba(41,98,255,0.2);
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.18),
+    0 0 0 1px rgba(41, 98, 255, 0.2);
   border-radius: var(--Radius-R-16);
 }
 
@@ -932,7 +925,7 @@ tr.click-disabled td:last-child * {
   font-size: 16px;
 }
 .filters-header .filters-title:last-child {
-  color:var(--Colors-Primary-hover);
+  color: var(--Colors-Primary-hover);
   font-weight: 600;
   cursor: pointer;
 }
@@ -987,7 +980,7 @@ tr.click-disabled td:last-child * {
 }
 
 .filter-check input[type="checkbox"]:active {
-  border-color:var(--Colors-Primary-hover);
+  border-color: var(--Colors-Primary-hover);
   background: #fef0f5;
 }
 
@@ -1001,8 +994,8 @@ tr.click-disabled td:last-child * {
   border-color: var(--Colors-Primary-500);
 }
 .filter-check input[type="checkbox"]:checked:active {
-  background:var(--Colors-Primary-hover);
-  border-color:var(--Colors-Primary-hover);
+  background: var(--Colors-Primary-hover);
+  border-color: var(--Colors-Primary-hover);
 }
 .filter-check input[type="checkbox"]:checked::after {
   content: "✓";
@@ -1086,32 +1079,31 @@ tr.click-disabled td:last-child * {
   background: var(--Colors-Primary-hover);
 }
 .btn-filter:active {
-  background:var(--Colors-Primary-hover);
+  background: var(--Colors-Primary-hover);
 }
 .filter-check span {
   color: #1f2937;
 }
-.link-details{
-  color:var(--Colors-Primary-hover);
+.link-details {
+  color: var(--Colors-Primary-hover);
   text-decoration: underline;
 }
-.icon-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border:0;
-  background:transparent;
-  padding:4px;
-  cursor:pointer;
-  color: inherit;       /* lets icon follow text color */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+  color: inherit; /* lets icon follow text color */
   font: inherit;
 }
 .icon-btn:focus {
   outline: 2px solid Highlight;
   outline-offset: 2px;
-  border-radius:4px;
+  border-radius: 4px;
 }
-
 
 /* Responsive Design */
 @media (max-width: 480px) {
@@ -1186,10 +1178,10 @@ tr.click-disabled td:last-child * {
     margin-top: var(--Space-S-8);
     margin-left: 0;
   }
-.btn-base{
+  .btn-base {
     padding: 10px 14px;
     font-size: 13px;
-}
+  }
   .clear-filterr {
     font-size: 15px;
   }
@@ -1203,10 +1195,10 @@ tr.click-disabled td:last-child * {
   }
 }
 @media (min-width: 768px) {
-.btn-base{
+  .btn-base {
     padding: 12px 24px;
     font-size: 14px;
-}
+  }
   .clear-filterr {
     font-size: 16px;
   }
@@ -1229,10 +1221,10 @@ tr.click-disabled td:last-child * {
 .title {
   font-size: 27px;
   font-weight: 600;
-  color:var(--app-color);
+  color: var(--app-color);
   margin: 30px 0;
 }
-.title-div{
+.title-div {
   display: flex;
   justify-content: flex-start;
   width: 100%;
