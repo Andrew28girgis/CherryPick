@@ -1,15 +1,14 @@
 .main-container-all {
-  gap:  var(--Space-S-24) ;
-    overflow: hidden; /* Prevent overall scrolling */
+  gap: var(--Space-S-24);
+  overflow: hidden; /* Prevent overall scrolling */
   display: grid;
-  grid-template-columns: 2.5fr 1fr;
-
+  /* grid-template-columns: 2.5fr 1fr; */
 }
 .container {
   padding: 0;
-  gap:  var(--Space-S-24) ;
+  gap: var(--Space-S-24);
   overflow-y: auto; /* Make only this container scroll */
- }
+}
 .intro-container {
   margin: 0;
   padding: 0 40px 34px 40px;
@@ -25,16 +24,14 @@
 }
 
 .map-section {
-  margin-top: 14%;
-   background: var(--Colors-Card-Background);
+  background: var(--Colors-Card-Background);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   height: fit-content;
-  padding: var(--Space-S-16) ;
-  border-radius:  var(--Radius-R-24) ;
+  border-radius: var(--Radius-R-24);
   position: sticky;
-   align-self: flex-start;
-  margin-bottom: var(--Space-S-20) ;
+  align-self: flex-start;
+  margin-bottom: var(--Space-S-20);
 }
 
 .main-heading {
@@ -88,10 +85,10 @@
   margin: 0 0 5px 0;
 }
 .main-section {
-  margin: var(--Space-S-20)  0 var(--Space-S-20)  0;
-  padding: var(--Space-S-20) ;
+  margin: var(--Space-S-20) 0 var(--Space-S-20) 0;
+  padding: var(--Space-S-20);
 
-  border-radius:   var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
   background: var(--Colors-Card-Background);
   backdrop-filter: blur(20px);
 }
@@ -105,9 +102,9 @@
   line-height: 25px;
 }
 .details-info {
-  padding: 10px  var(--Space-S-24) ;
+  padding: 10px var(--Space-S-24);
   border: 1px solid #e6e4e4;
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
 }
 .info-head {
   color: #817a79;
@@ -126,7 +123,7 @@
   line-height: 32px; /* 160% */
 }
 #street-view {
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
 }
 .main-name {
   font-size: 24px;
@@ -195,7 +192,7 @@ li {
   font-weight: 500;
   line-height: 30px;
   text-align: center;
-  border-radius:  var(--Radius-R-16) ;
+  border-radius: var(--Radius-R-16);
   margin: 10px 0;
   background-color: #001f3f;
   color: var(--Colors-Pure-White);
@@ -205,11 +202,11 @@ li {
 }
 .info-border {
   border-bottom: 1px solid #e6e4e4;
-  padding: var(--Space-S-12)  0;
+  padding: var(--Space-S-12) 0;
 }
 .selected-reaction {
   border: 2px solid #0d0c0c;
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
 }
 .tabs {
   width: 100%;
@@ -222,7 +219,7 @@ li {
   border-bottom: 2px solid #ccc;
 }
 .tab-headers li {
-  padding: 10px var(--Space-S-20) ;
+  padding: 10px var(--Space-S-20);
   cursor: pointer;
   text-align: center;
 }
@@ -240,7 +237,7 @@ li {
   background-attachment: fixed;
   overflow: hidden;
   position: relative;
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
 }
 #intro:before {
   content: "";
@@ -278,7 +275,7 @@ li {
   font-weight: 500;
   font-size: 14px;
   letter-spacing: 5px;
-  padding: var(--Space-S-12)  var(--Space-S-32) ;
+  padding: var(--Space-S-12) var(--Space-S-32);
   border-radius: 50px;
   transition: 0.5s;
   line-height: 1;
@@ -305,10 +302,10 @@ li {
 .house-income {
   border: 1px solid #caced3;
   border-radius: 10px;
-  padding: var(--Space-S-32) ;
+  padding: var(--Space-S-32);
 }
 .contact-card {
-  position: relative;          /* anchor for the popover */
+  position: relative; /* anchor for the popover */
   background: var(--Colors-Card-Background);
   border: 1px solid var(--Colors-Border);
   border-radius: var(--Radius-R-12);
@@ -317,15 +314,17 @@ li {
 }
 
 .contact-card:hover {
-  transform: scale(1.03);      /* keep a subtle non-layout transform */
-  transform-origin: center;    /* you can tweak per column, see below */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transform: scale(1.03); /* keep a subtle non-layout transform */
+  transform-origin: center; /* you can tweak per column, see below */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   z-index: 3;
   /* REMOVE this from your file if present: width: auto; */
 }
 
 /* Make sure row doesn’t clip the overlay */
-.row.m-0.py-2 { overflow: visible; }
+.row.m-0.py-2 {
+  overflow: visible;
+}
 
 /* Truncated email by default (you already have this) */
 .email {
@@ -350,7 +349,7 @@ li {
   line-height: 1.4;
   white-space: normal;
   word-break: break-word;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   z-index: 999;
 }
 .custom-carousel .carousel-indicators {
@@ -380,7 +379,7 @@ li {
   cursor: pointer;
 }
 .ml8 {
-  margin-left: var(--Space-S-8) ;
+  margin-left: var(--Space-S-8);
 }
 .logowidth {
   width: 184px;
@@ -394,7 +393,6 @@ li {
 .goback {
   font-size: 24px;
   cursor: pointer;
-  padding: 15px 10px;
 }
 .mbottom {
   margin-bottom: 5px;
@@ -418,18 +416,17 @@ li {
   border: 0;
   width: 100%;
   height: 450px;
-  margin-top: var(--Space-S-20)
-  ;
-  border-radius:  var(--Radius-R-20) ;
+  margin-top: var(--Space-S-20);
+  border-radius: var(--Radius-R-20);
 }
 .streetview {
   height: 72vh;
-  margin-top: var(--Space-S-20) ;
+  margin-top: var(--Space-S-20);
 }
 .mapView {
   height: 72vh;
-  margin-top: var(--Space-S-20) ;
-  border-radius:  var(--Radius-R-20) ;
+  margin-top: var(--Space-S-20);
+  border-radius: var(--Radius-R-20);
 }
 .OrgManagerwidth {
   width: 50px;
@@ -461,27 +458,27 @@ li {
   width: fit-content;
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--Space-S-20) ;
+  margin-top: var(--Space-S-20);
 }
 
 .view-toggle {
   display: flex;
   justify-content: center;
-  gap: var(--Space-S-8) ;
+  gap: var(--Space-S-8);
   margin-bottom: 10px;
 }
 
 .view-toggle button {
   padding: 6px 14px;
   border: 1px solid #ccc;
-  border-radius: var(--Space-S-8) ;
+  border-radius: var(--Space-S-8);
   background: var(--Colors-Pure-White);
   cursor: pointer;
 }
 
 .view-toggle button.active {
-  background: #fce4ec;
-  border-color: #ec407a;
+  background: var(--Colors-Primary-light);
+  border-color: var(--Colors-Primary-500);
   color: var(--Colors-Primary-500);
 }
 .view-gallery {
@@ -490,8 +487,8 @@ li {
   background-color: rgba(255, 255, 255, 0.85);
   color: #001f3f;
   border: none;
-  border-radius:  var(--Radius-R-12) ;
-  padding: 10px var(--Space-S-20) ;
+  border-radius: var(--Radius-R-12);
+  padding: 10px var(--Space-S-20);
   font-weight: 500;
   font-size: 15px;
   display: flex;
@@ -500,7 +497,7 @@ li {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 10;
   backdrop-filter: blur(5px);
- }
+}
 
 .view-gallery:hover {
   background-color: rgba(255, 255, 255, 0.95);
@@ -513,4 +510,171 @@ li {
 }
 .manager-name .name + .name {
   margin-left: 6px; /* or whatever space you like */
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin: 0;
+    }
+
+    .header-icon {
+      font-size: 1.5rem;
+    }
+  }
+
+  .card-content {
+    color: #4a5568;
+  }
+}
+
+.demo-row {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+ 
+
+.user-card {
+    display: flex;
+    flex-direction: row;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e1e5e9; 
+    align-items: center;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f8f9fa;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+}
+
+.avatar-initials {
+  font-size: 24px;
+  text-transform: uppercase;
+}
+
+.user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.user-name {
+  text-align: start;
+  font-size: 18px;  
+}
+
+.user-name .name {
+  margin-right: 4px;
+  font-weight: 600;
+  color: var(--app-color);
+  margin: 0 0 8px 0;
+}
+
+.user-email {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.email-icon {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.email-link {
+  color: var(--Colors-Primary-500);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.email-link:hover {
+  color: var(--Colors-Primary-500);
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-card {
+    margin-bottom: 16px;
+  }
+
+  .user-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatar-initials {
+    font-size: 20px;
+  }
+
+  .user-name {
+    font-size: 16px;
+  }
+}
+.org-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+  background-color: #102e50;
+  flex-shrink: 0; /* keep logo fixed size */
 }
