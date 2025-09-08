@@ -101,7 +101,7 @@ input::placeholder {
 
 .login {
   border-radius: var(--Radius-R-24);
-  background: var(--Colors-diffrent);
+  background: var(--Colors-Primary-500);
   color: var(--Colors-Pure-White);
   display: flex;
   height: 48px;
@@ -113,7 +113,7 @@ input::placeholder {
 }
 
 .login:hover {
-  background: #9b2e5f;
+  background: var(--Colors-Primary-hover);
   color: var(--Colors-Pure-White);
 }
 

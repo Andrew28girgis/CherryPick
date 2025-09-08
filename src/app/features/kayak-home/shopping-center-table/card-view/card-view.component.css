@@ -938,7 +938,7 @@ img[alt="logo"] {
   border-radius: var(--Radius-Radius-16, 16px);
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(1.5px);
-
+color: var(--app-color) !important;
   border: none;
 }
 .street-view,

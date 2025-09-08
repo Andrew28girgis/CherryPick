@@ -176,11 +176,11 @@
 }
 
 .add-campaign-btn {
-  background-color: var(--Colors-Primary-hover);
+  background-color: var(--Colors-Primary-500);
   border-radius: var(--Radius-R-24);
   border: none;
 }
 .add-campaign-btn:hover {
-  background-color: #9b2e5f;
+  background-color: var(--Colors-Primary-hover);
   color: var(--Colors-Pure-White);
 }
