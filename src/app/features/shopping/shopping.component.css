@@ -916,7 +916,6 @@ tr.click-disabled td:last-child * {
 }
 .filters-title {
   color: #0c0d0e;
-  font-family: Montserrat, sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -942,7 +941,6 @@ tr.click-disabled td:last-child * {
 }
 .filter-block-title {
   color: #0c0d0e;
-  font-family: Montserrat, sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 30px;

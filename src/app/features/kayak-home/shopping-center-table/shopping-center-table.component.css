@@ -926,8 +926,7 @@
 /* Tenant Header Styles */
 .tenant-header {
   padding: 0;
-  align-items: flex-start !important;
-  padding-bottom: 24px;
+  align-items: center; 
 }
 
 .tenant-logo {
@@ -937,8 +936,8 @@
 }
 
 .tenant-name span {
-  color: var(--Body-Heading-Color, #18171f);
-  font-size: 44px;
+  color: var(--app-color);
+  font-size: 32px;
   font-style: normal;
   font-weight: 600;
   line-height: 56px; /* 127.273% */
@@ -1171,15 +1170,7 @@
 }
 
 .main-inner {
-  position: relative;
-  align-items: center;
-  padding: 30px 0;
-  border-radius: var(--Radius-R-20);
-  backdrop-filter: blur(50px);
-  width: 100%;
-  max-width: 100%;
-  min-width: 0; /* prevents content from forcing overflow */
-  box-sizing: border-box; /* padding included in the width */
+  padding: 10px 0;
 }
 
 .tenant-subtitle {
