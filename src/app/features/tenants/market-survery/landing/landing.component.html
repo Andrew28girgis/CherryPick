@@ -348,13 +348,13 @@
                 *ngIf="Manager.firstName || Manager.lastName"
                 class="col-sm-12 col-md-6 col-lg-4 mb-3 p-0"
               >
-                <div class="user-card gap-2">
+                <div class="user-card gap-2" style="overflow: hidden;">
                   <div class="org-logo placeholder">
                     {{ getInitials(Manager.firstName,Manager.lastName) }}
                   </div>
 
                   <div class="user-info">
-                    <h3 class="user-name">
+                    <h3 class="user-name m-0">
                       <span class="name">{{ Manager.firstName+' '+Manager.lastName }}</span>
                      </h3>
 
