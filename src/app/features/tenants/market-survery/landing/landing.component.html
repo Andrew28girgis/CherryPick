@@ -318,15 +318,15 @@
         </ng-container>
       </section>
     </div>
-    <div>
-      <div class="demo-row ">
+    <div class="d-flex justify-content-between gap-4 flex-column py-2">
+      <div>
         <h1
-          class="mb-2 pb-0"
+          class="pb-0 m-0"
           *ngIf="ShoppingCenter?.CenterName"
           [innerHTML]="ShoppingCenter.CenterName | titlecase"
         ></h1>
         <p
-          class="mb-2 pb-0 address-city"
+          class="my-2 pb-0 address-city"
           (click)="
             openMapViewPlace(
               mapPopup,
@@ -336,17 +336,46 @@
         >
           {{ getAddress() }}
         </p>
+         <div class=" contact-container">
+            <ng-container *ngFor="let Manager of OrgManager">
+              <div
+                *ngIf="Manager.firstName || Manager.lastName"
+                class=" "
+              >
+                <div class="user-card gap-2" style="overflow: hidden;">
+                  <div class="org-logo placeholder">
+                    {{ getInitials(Manager.firstName,Manager.lastName) }}
+                  </div>
+
+                  <div class="user-info">
+                    <h3 class="user-name m-0">
+                      <span class="name">{{ Manager.firstName+' '+Manager.lastName }}</span>
+                     </h3>
+
+                    <p
+                      class="user-email email-link"
+                      *ngIf="Manager.email"
+                      [attr.data-email]="Manager.email"
+                    >
+                      <i class="fa-regular fa-envelope"></i>
+                         {{ Manager.email }}
+                     </p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
       </div>
-      <div
+      <!-- <div
         class=" "
         *ngIf="OrgManager && OrgManager[0] && placesRepresentative != false"
       >
         <section id="hero">
-          <div class="row m-0 py-2 gap-3">
+          <div class=" contact-container">
             <ng-container *ngFor="let Manager of OrgManager">
               <div
                 *ngIf="Manager.firstName || Manager.lastName"
-                class="col-sm-12 col-md-6 col-lg-4 mb-3 p-0"
+                class=" "
               >
                 <div class="user-card gap-2" style="overflow: hidden;">
                   <div class="org-logo placeholder">
@@ -372,7 +401,7 @@
             </ng-container>
           </div>
         </section>
-      </div>
+      </div> -->
     </div>
 
     <div class="row m-0 p-0">
