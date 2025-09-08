@@ -49,7 +49,7 @@ export class ShoppingComponent implements OnInit {
 
   isLoading: boolean = true;
   openMenuId: number | null = null;
-  viewMode: 'table' | 'grid' = 'table'; // default
+  viewMode: 'grid' | 'table' = 'grid'; // default
 
   constructor(
     private placesService: PlacesService,

@@ -463,7 +463,7 @@
   color: white;
 }
 .pagination-btn.active:hover {
-  background: #c84681;
+  background: var(--Colors-Primary-500);
   color: white;
 }
 
@@ -982,8 +982,8 @@ tr.click-disabled td:last-child * {
   position: relative;
 }
 .filter-check input[type="checkbox"]:hover {
-  border-color: #c84681;
-  box-shadow: 0 0 0 3px rgba(200, 70, 129, 0.2);
+  border-color: var(--Colors-Primary-500);
+  box-shadow: 0 0 0 3px var(--Colors-Primary-500);
 }
 
 .filter-check input[type="checkbox"]:active {
@@ -997,8 +997,8 @@ tr.click-disabled td:last-child * {
 }
 
 .filter-check input[type="checkbox"]:checked:hover {
-  background: #c84681;
-  border-color: #c84681;
+  background: var(--Colors-Primary-500);
+  border-color: var(--Colors-Primary-500);
 }
 .filter-check input[type="checkbox"]:checked:active {
   background:var(--Colors-Primary-hover);
@@ -1066,11 +1066,11 @@ tr.click-disabled td:last-child * {
 .btn-cancel {
   background: #fff;
   color: #0c0d0e;
-  border: 1px solid #c84681;
+  border: 1px solid var(--Colors-Primary-500);
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
 }
 .btn-cancel:hover {
-  background: #f5f7fb;
+  background: var(--Colors-Primary-light);
 }
 .btn-cancel:active {
   background: #eef2f8;
@@ -1083,7 +1083,7 @@ tr.click-disabled td:last-child * {
   box-shadow: 0 4px 10px rgba(0, 31, 63, 0.18);
 }
 .btn-filter:hover {
-  background: #c84681;
+  background: var(--Colors-Primary-hover);
 }
 .btn-filter:active {
   background:var(--Colors-Primary-hover);

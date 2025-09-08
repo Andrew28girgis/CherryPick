@@ -400,6 +400,9 @@ a {
   background: var(--Colors-Primary-500);
   white-space: nowrap;
 }
+.g-button:hover {
+  background-color: var(--Colors-Primary-hover);
+}
 @media (max-width: 991px) {
   .info-window {
     width: 300px;

@@ -771,7 +771,7 @@
 }
 
 .add-new-btn:hover {
-  background-color: var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-hover);
 }
 .sort-btn::after {
   display: none;
