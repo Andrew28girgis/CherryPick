@@ -7,8 +7,36 @@
   z-index: 100;
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 1px 2px;
+  
+  /* Fixed positioning with smooth animations */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
+/* Scrolled state - when user scrolls down */
+.sidebar.scrolled {
+  padding: 8px 30px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+  backdrop-filter: blur(20px);
+  transform: translateY(0);
+}
+
+/* Hide navbar when scrolling down, show when scrolling up */
+.sidebar.hidden {
+  transform: translateY(-100%);
+}
+
+.sidebar.visible {
+  transform: translateY(0);
+}
+
+/* Smooth scale animation for brand on scroll */
 .brand {
   text-decoration: none;
   margin: 0;
@@ -16,16 +44,47 @@
   font-size: 25px;
   font-weight: 700;
   color: var(--app-color);
+  transition: all 0.3s ease;
 }
 
+.sidebar.scrolled .brand {
+  font-size: 22px;
+  transform: scale(0.95);
+}
+
+/* Nav buttons with hover and scroll animations */
 .nav-btn {
   padding: 0px 22px;
   font-size: 14px;
   color: #14303a;
   text-transform: capitalize;
   font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.nav-btn:hover::before {
+  left: 100%;
+}
+
+.nav-btn:hover {
+  color: var(--Colors-Primary-hover, #6e8efb);
+  transform: translateY(-1px);
+}
+
+/* Nav group with glassmorphism effect */
 .nav-group {
   display: flex; 
   align-items: center;
@@ -35,24 +94,31 @@
   backdrop-filter: blur(200px);
   flex-direction: row;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.sidebar.scrolled .nav-group {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
 }
 
 .nav {
   display: flex;
-  flex-direction: row; /* Changed from column to row */
+  flex-direction: row;
   align-items: center;
-  gap: 24px; /* Adjust spacing between nav items */
-  margin-top: 0; /* Remove top margin */
+  gap: 24px;
+  margin-top: 0;
   position: relative;
   overflow: visible;
 }
 
-/* Bottom avatar */
+/* Avatar animations */
 .avatar {
   border-radius: 50%;
   border: none;
   padding: 0;
   display: block;
+  transition: all 0.3s ease;
 }
 
 .avatar img {
@@ -60,15 +126,15 @@
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Avatar container styles */
-.avatar-container {
-  position: relative;
-  display: inline-block;
-}
-
-/* Avatar container styles - updated to handle Copilot sidebar */
 .avatar-container {
   position: relative;
   display: inline-block;
@@ -102,12 +168,36 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .sidebar {
+    padding: 8px 15px;
+  }
+  
+  .sidebar.scrolled {
+    padding: 6px 15px;
+  }
+  
+  .brand {
+    font-size: 20px;
+  }
+  
+  .sidebar.scrolled .brand {
+    font-size: 18px;
+  }
+  
   .dropdown-menuu {
     min-width: 200px;
   }
 }
 
 @media (max-width: 576px) {
+  .sidebar {
+    padding: 8px 10px;
+  }
+  
+  .nav-group {
+    gap: 16px;
+  }
+  
   .dropdown-menuu {
     min-width: 180px;
     right: -10px;
@@ -128,9 +218,18 @@
   }
 }
 
+/* Page content offset to prevent overlap */
+body {
+  padding-top: 70px; /* Adjust based on your navbar height */
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Fancy Modal Styles */
 .fancy-modal-header {
-  /* background: linear-gradient(to right, #493240, #FF0099); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: var(--Colors-Primary-500);
   color: white;
   border-bottom: none;
@@ -192,7 +291,7 @@
 }
 
 .fancy-btn {
-  background:var(--Colors-Primary-hover); /* fallback for old browsers */
+  background:var(--Colors-Primary-hover);
   padding: 10px var(--Space-S-20);
   border-radius: var(--Radius-R-8);
   border: none;
@@ -217,7 +316,6 @@
 
 .primary-btn {
   background:var(--Colors-Primary-hover);
-  /* background: linear-gradient(135deg, #6e8efb, #a777e3); */
   color: white;
 }
 
@@ -264,6 +362,7 @@
   border: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
+
 .profile-dropdown {
   width: 280px;
   padding: 0;
@@ -276,12 +375,11 @@
   position: absolute !important;
   right: 0 !important;
   left: auto !important;
-  top: 100% !important; /* Add this to ensure it's always below the avatar */
-  transform: none !important; /* Add this to prevent unexpected transforms */
-  will-change: opacity; /* Add this to optimize the animation */
+  top: 100% !important;
+  transform: none !important;
+  will-change: opacity;
 }
 
-/* Use data-bs-popper="none" to override Bootstrap's positioning */
 [data-bs-popper="none"] {
   position: absolute !important;
   transform: none !important;
@@ -323,15 +421,18 @@
 .menu-item:hover {
   background-color: #f5f7fa;
   color: var(--Colors-Primary-hover);
+  transform: translateX(4px);
 }
 
 .menu-item svg {
   margin-right: 12px;
   color: #64748b;
+  transition: all 0.2s ease;
 }
 
 .menu-item:hover svg {
   color: var(--Colors-Primary-hover);
+  transform: scale(1.1);
 }
 
 .dropdown-divider {
@@ -360,32 +461,32 @@
 @keyframes dropdown-appear {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Add these styles for the right controls section with Emily and user avatars */
+/* Right controls section with Emily and user avatars */
 .right-controls {
   display: flex;
   align-items: center;
-  gap: 12px; /* Space between Emily and user avatars */
+  gap: 12px;
 }
 
-/* Emily avatar styling */
+/* Emily avatar styling with enhanced animations */
 .emily-avatar-container {
   position: relative;
   display: inline-block;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
   border-left: 1px solid #c6b8c7;
   padding-left: 12px;
 }
 
-.emily-avatar-container:hover img {
+.emily-avatar-container:hover {
   transform: scale(1.05);
 }
 
@@ -397,19 +498,20 @@
   background: rgba(255, 255, 255, 0.65);
   padding: 0;
   object-fit: cover;
-  transition: box-shadow 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .emily-avatar-container:hover .emily-avatar {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-color: var(--Colors-Primary-hover, #6e8efb);
 }
 
-/* Notification badge styling */
+/* Enhanced notification badge styling */
 .emily-badge {
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: #e53935;
+  background: linear-gradient(45deg, #e53935, #ff6b6b);
   color: white;
   font-size: 12px;
   min-width: 18px;
@@ -420,21 +522,33 @@
   align-items: center;
   padding: 0 4px;
   font-weight: bold;
-  animation: pulseCount 1.5s infinite;
+  animation: pulseCount 2s infinite;
   z-index: 2;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 6px rgba(229, 57, 53, 0.4);
+  border: 2px solid white;
 }
 
 @keyframes pulseCount {
-  0% {
+  0%, 100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.15);
+    transform: scale(1.2);
   }
-  100% {
-    transform: scale(1);
+}
+
+/* Floating animation for Emily avatar */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
   }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.emily-avatar-container {
+  animation: float 3s ease-in-out infinite;
 }
 
 .dropdown-toggle::after {
