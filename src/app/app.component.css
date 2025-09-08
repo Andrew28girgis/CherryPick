@@ -45,7 +45,8 @@
 }
 
 .app-shell.with-sidebar > .app-container {
-   padding:  50px 40px;
+   padding: 0 40px 50px 40px;
+
 }
 
 :host {
