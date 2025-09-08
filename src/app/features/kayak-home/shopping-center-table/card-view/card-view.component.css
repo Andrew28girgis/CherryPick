@@ -206,11 +206,8 @@ img[alt="logo"] {
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-  color: #7a8591;
-}
-.card-address:hover {
-  color: var(--app-color);
-}
+ }
+ 
 
 .managed-by {
   font-size: 14px;
@@ -229,6 +226,8 @@ img[alt="logo"] {
 
 .cardResponsive {
   background: #fff;
+  color: var(--app-color) ;
+  cursor: pointer;
   min-height: 100%;
   border-radius: var(--Radius-R-20);
   width: 100%;
@@ -238,6 +237,7 @@ img[alt="logo"] {
   border: 1px solid var(--Colors-Primary-light);
 }
 .cardResponsive:hover {
+  color: var(--Colors-Primary-500);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
@@ -917,6 +917,24 @@ img[alt="logo"] {
   width: 100%;
   justify-content: flex-end;
 }
+.stats {
+  gap: var(--Space-S-12);
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 16px;
+  border-top: 1px solid #e2e4e9;
+}
+.stats .leased-by,
+.street-view,
+.map-view,
+.pdf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
 .image-overlay {
   gap: var(--Space-S-12);
   position: absolute;

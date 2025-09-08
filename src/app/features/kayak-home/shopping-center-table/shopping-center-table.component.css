@@ -1172,6 +1172,9 @@
 }
 
 .main-inner {
+  position: relative;  
+  padding: var(--Space-S-32);
+  align-items: center; 
   position: relative; /* Add this */
 
   padding: 30px 0;
