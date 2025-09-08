@@ -7,45 +7,28 @@
   min-height: 0;
 }
 .main-inner {
-  /* keep your existing styles… */
-  /* height: 600px;              */
-
-  overflow-y: auto; /* 'auto' avoids scrollbars when not needed */
-  padding: var(--Space-S-32);
+  overflow-y: auto; 
   align-items: center;
   border-radius: var(--Radius-R-20);
-  /* background: var(--Main-Container-BG); */
   backdrop-filter: blur(50px);
-
-  /* ✅ the important changes */
   width: 100%;
   max-width: 100%;
   min-width: 0; /* prevents content from forcing overflow */
   box-sizing: border-box; /* padding included in the width */
+  padding: var(--Space-S-32) 0;
+  gap: var(--Space-S-8);
 }
 
 .header-container {
   display: flex;
   align-items: center;
-  gap: var(--Space-S-12);
-  padding-top: var(--Space-S-24);
-  padding-bottom: 21px;
 }
 
 .search-section {
-  flex: 1;
-  display: flex;
-  max-width: 624px;
-  height: 48px;
   padding: var(--Space-S-8);
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
   border-radius: var(--Radius-R-24);
-  border: 1px solid var(--Colors-Neutral-100);
-  background: var(--Main-Container-BG);
-  backdrop-filter: blur(50px);
-  -webkit-backdrop-filter: blur(50px);
+  min-width: 400px;
+  border: 1px solid #ccc;
 }
 
 .actions-section {
@@ -164,12 +147,12 @@
 
 .add-tenant-btn:hover,
 .add-tenant-btn:focus {
-  background:var(--Colors-Primary-hover); /* Slightly darker for hover */
+  background: var(--Colors-Primary-hover); /* Slightly darker for hover */
   outline: none;
 }
 
 .add-tenant-btn:active {
-  background:var(--Colors-Primary-hover); /* Even darker for active */
+  background: var(--Colors-Primary-hover); /* Even darker for active */
 }
 
 .add-tenant-btn span {
@@ -193,15 +176,13 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-
 .title {
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 600;
   color:var(--app-color);
-  
-  margin: 30px 20px;
+  margin: 30px 0;
 }
-.title-div{
+.title-div {
   display: flex;
   justify-content: flex-start;
   width: 100%;

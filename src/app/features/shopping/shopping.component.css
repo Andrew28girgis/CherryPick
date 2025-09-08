@@ -1226,16 +1226,11 @@ tr.click-disabled td:last-child * {
   }
 }
 
-
-
-
-
 .title {
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 600;
   color:var(--app-color);
-  
-  margin: 30px 0  ;
+  margin: 30px 0;
 }
 .title-div{
   display: flex;

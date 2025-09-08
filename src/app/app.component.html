@@ -2,7 +2,11 @@
   class="app-shell"
   [ngClass]="{
     'with-sidebar':
-    (isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot) ||isChatbotRoute,
+      (isAuthenticated &&
+        !hideSidebar &&
+        !showingTransition &&
+        !isEmilyChatBot) ||
+      isChatbotRoute,
     'with-copilot': isCopilotOpen,
     'copilot-expanded': isCopilotFullyOpen,
     'emily-chatbot': isEmilyChatBot,
@@ -13,7 +17,11 @@
 >
   <app-sidebar
     *ngIf="
-      (isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot) ||isChatbotRoute
+      (isAuthenticated &&
+        !hideSidebar &&
+        !showingTransition &&
+        !isEmilyChatBot) ||
+      isChatbotRoute
     "
   ></app-sidebar>
 
@@ -38,7 +46,7 @@
 
   <app-notifications
     *ngIf="
-      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot 
+      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
     "
     [campaignId]="CampaignId"
     [isChatbotRoute]="isChatbotRoute"

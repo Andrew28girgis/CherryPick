@@ -3,10 +3,10 @@
 @import "assets/styles/buttons.css";
 
 :root {
-  --app-color:#14303a;
+  --app-color: #14303a;
   --app-font: "Poppins", sans-serif;
   --Colors-Primary-500: #cfb579;
-  --Colors-Primary-hover:#baa36d;
+  --Colors-Primary-hover: #baa36d;
   --Colors-Primary-light: #f5f0e4;
   --Colors-diffrent: #fffdf6;
   --Colors-Card-Background: rgba(255, 255, 255, 0.5);
@@ -384,6 +384,21 @@ a {
   border: 1px solid #001f3f;
   cursor: pointer;
   border-radius: 6px;
+}
+
+.g-button {
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  height: 48px;
+  padding: var(--Space-S-14) var(--Space-S-24);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Space-S-8);
+  border-radius: var(--Radius-R-16);
+  background: var(--Colors-Primary-500);
+  white-space: nowrap;
 }
 @media (max-width: 991px) {
   .info-window {

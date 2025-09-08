@@ -3,14 +3,14 @@ hr {
 }
 .tenant-card {
   display: flex;
-padding: var(--Space-S-20);
-align-items: center;
-gap: var(--Space-S-16);
- border-radius:   var(--Radius-R-20) ;
-background: var(--Colors-Card-Background);
- backdrop-filter: blur(100px);
+  padding: var(--Space-S-20);
+  align-items: center;
+  gap: var(--Space-S-16);
+  border-radius: var(--Radius-R-20);
+  background: var(--Colors-Card-Background);
+  backdrop-filter: blur(100px);
 
- box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 .tenant-card-img {
   width: 6.5rem;
@@ -93,7 +93,7 @@ background: var(--Colors-Card-Background);
   background-color: var(--Colors-Positive-100);
 }
 .campaign-privacy-public .campaign-privacy-icon {
-  background-color:var(--Colors-Positive-600);
+  background-color: var(--Colors-Positive-600);
 }
 .campaign-privacy-public span {
   color: var(--Colors-Positive-600);
@@ -111,11 +111,11 @@ background: var(--Colors-Card-Background);
   display: flex;
   padding: 18px 18px;
   flex-direction: column;
-  gap: var(--Space-S-16) ;
+  gap: var(--Space-S-16);
   align-self: stretch;
   border-radius: 20px;
   border: 1px solid #e2e4e9;
-  background:  var(--Colors-Negative-100);
+  background: var(--Colors-Negative-100);
 }
 .campaign-card hr {
   margin-block: 0;
@@ -143,7 +143,7 @@ background: var(--Colors-Card-Background);
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
-  background-color:var(--Colors-Primary-hover);
+  background-color: var(--Colors-Primary-hover);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,20 +157,14 @@ background: var(--Colors-Card-Background);
 }
 ::ng-deep .offcanvas-panel-class {
   width: 35% !important;
- 
-  background: linear-gradient(
-    117deg,
-    rgba(255, 214, 230, 0.9) 0%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
-  backdrop-filter: blur(100px);
 
+  backdrop-filter: blur(100px);
 }
 
 .add-campaign-btn {
-   background-color:var(--Colors-Primary-hover);
-   border-radius:  var(--Radius-R-24) ;
-   border: none;
+  background-color: var(--Colors-Primary-hover);
+  border-radius: var(--Radius-R-24);
+  border: none;
 }
 .add-campaign-btn:hover {
   background-color: #9b2e5f;
