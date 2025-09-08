@@ -886,14 +886,30 @@
   border-radius: 12px;
   border: 1px solid rgba(207, 181, 121, 0.1);
 }
+.link {
+  display: inline-block;                 /* smoother transforms */
+  border: 1px solid transparent;         /* lets border-color animate */
+  cursor: pointer;
 
-.link:hover {
+  /* smoother, snappy timing */
+  transition:
+    transform 180ms cubic-bezier(.22,.61,.36,1),
+    box-shadow 220ms cubic-bezier(.22,.61,.36,1),
+    border-color 220ms linear;
+}
+
+.link:hover,
+.link:focus-visible {
   transform: translateY(-4px);
   box-shadow: 0 8px 32px rgba(207, 181, 121, 0.15);
   border-color: rgba(207, 181, 121, 0.2);
-  cursor: pointer;
-  transition: ease-in-out sec;
 }
+
+/* motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .link { transition: none; }
+}
+
 /* let the badge sit outside the card edge */
 .dashboard-card {
   position: relative;
