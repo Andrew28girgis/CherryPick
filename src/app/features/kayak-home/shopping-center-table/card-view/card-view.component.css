@@ -206,8 +206,7 @@ img[alt="logo"] {
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
- }
- 
+}
 
 .managed-by {
   font-size: 14px;
@@ -226,7 +225,7 @@ img[alt="logo"] {
 
 .cardResponsive {
   background: #fff;
-  color: var(--app-color) ;
+  color: var(--app-color);
   cursor: pointer;
   min-height: 100%;
   border-radius: var(--Radius-R-20);
@@ -929,10 +928,8 @@ img[alt="logo"] {
 .street-view,
 .map-view,
 .pdf {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+   gap: 4px;
+  color: var(--app-color) !important;
 }
 
 .image-overlay {
@@ -956,7 +953,7 @@ img[alt="logo"] {
   border-radius: var(--Radius-Radius-16, 16px);
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(1.5px);
-color: var(--app-color) !important;
+  color: var(--app-color) !important;
   border: none;
 }
 .street-view,
@@ -1236,7 +1233,7 @@ label {
 }
 
 .org-mini-menu {
-  position: fixed;
+  position: absolute;
   min-width: 180px;
   background: #fff;
   border: 1px solid #e6e8ee;
@@ -1245,9 +1242,6 @@ label {
   z-index: 1000;
   padding: 8px;
   font-size: 13px;
-  bottom: 5vh !important;
-  left: 6vw !important;
-  top: unset !important;
   max-height: 30vh;
   overflow-y: auto;
 }
