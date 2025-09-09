@@ -1,11 +1,7 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import {
-  Router,
-  NavigationEnd,
-  NavigationStart,
-  ActivatedRoute,
-} from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { PlacesService } from './core/services/places.service';
 import { AuthService } from './core/services/auth.service';
 import { NotificationService } from './core/services/notification.service';
@@ -15,17 +11,17 @@ import { NotificationService } from './core/services/notification.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
-  isMarketSurveyRoute = false; 
+export class AppComponent implements OnInit, OnDestroy {
   hideSidebar = false;
-  isNotificationsOpen = false; // Add this property to your class
-  showingTransition = false;
+
+  // Chatbot / copilot UI state
+  isChatbotRoute = false;
+  isEmilyChatBot = false; // kept for template compatibility
   isCopilotOpen = false;
   isCopilotFullyOpen = false;
-  isEmilyChatBot: boolean = false; // Initialize with a default value
   overlayActive = false;
-  CampaignId: any;
-  isChatbotRoute = false;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -35,88 +31,71 @@ export class AppComponent implements OnInit {
     private notificationService: NotificationService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // App mode from localStorage
+    try {
+      const apiMode = localStorage.getItem('apiMode');
+      if (apiMode && JSON.parse(apiMode)) {
+        this.placeService.setAppMode('api');
+      }
+    } catch {
+      // ignore malformed localStorage values
+    }
+
+    // Single router subscription to drive all route-based UI state
     this.router.events
       .pipe(
-        filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd
-        )
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        takeUntil(this.destroy$)
       )
-      .subscribe((e: NavigationEnd) => {
+      .subscribe((e) => {
         const url = e.urlAfterRedirects || e.url;
 
-        // ✅ special layout only for /emily-chatbot
-        const onEmilyChatRoute =
-          url === '/emily-chatsbot' || url.startsWith('/emily-chatsbot/');
+        // Special layout only for Emily chatbot route(s)
+        // (accept both 'emily-chatsbot' and 'emily-chatbot' just in case)
+        this.isChatbotRoute =
+          url === '/emily-chatsbot' ||
+          url.startsWith('/emily-chatsbot/') ||
+          url === '/emily-chatbot' ||
+          url.startsWith('/emily-chatbot/');
 
-        this.isChatbotRoute = onEmilyChatRoute; // this drives the full-width CSS
+        // Preserve previous behavior for any template checks
+        this.isEmilyChatBot = url.includes('chatbot');
 
-        // NOTE: we do NOT set these for '/chatbot', so it behaves as before.
+        // Read deepest child route's data for per-page flags
+        const deepest = this.getDeepestRoute(this.activatedRoute);
+        this.hideSidebar = deepest.snapshot.data?.['hideSidebar'] === true;
       });
 
-    let currentRoute = this.activatedRoute;
-    while (currentRoute.firstChild) {
-      currentRoute = currentRoute.firstChild;
-    }
-
-    this.CampaignId = currentRoute; 
-
-    const apiMode = this.localStorage.getItem('apiMode');
-    if (apiMode && JSON.parse(apiMode)) {
-      this.placeService.setAppMode('api');
-    }
- 
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        let currentRoute = this.activatedRoute;
-        while (currentRoute.firstChild) {
-          currentRoute = currentRoute.firstChild;
-        }
-
-        currentRoute.data.subscribe((data) => {
-          this.hideSidebar = data['hideSidebar'] === true;
-        });
-
-        this.isEmilyChatBot = this.router.url.includes('chatbot');
+    // Copilot open/close state
+    this.notificationService.chatOpen$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isOpen) => {
+        this.isCopilotOpen = isOpen;
+        this.isCopilotFullyOpen = isOpen;
       });
+  }
 
-    // Listen for route changes to handle transitions
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationStart))
-      .subscribe((event: any) => {
-        if (
-          (event.url === '/campaigns' || event.url === '/summary') &&
-          this.router.url === '/login'
-        ) {
-          // Add a brief transition state when going from login to dashboard
-          this.showingTransition = true;
-          this.showingTransition = false;
-        }
-      });
-
-    // Subscribe to notification service to know if Emily sidebar is open or closed
-    this.notificationService.chatOpen$.subscribe((isOpen) => {
-      this.isCopilotFullyOpen = isOpen;
-      // Only mark it as open for margin purposes if the sidebar is fully expanded
-      this.isCopilotOpen = isOpen;
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   get isAuthenticated(): boolean {
     return this.authService.isLoggedInToday();
   }
 
-  get localStorage() {
-    return localStorage;
-  }
-
-  onCopilotStateChange(evt: any) {
+  onCopilotStateChange(evt: any): void {
     if (evt?.type === 'overlay') {
       this.overlayActive = !!evt.overlayActive;
       return;
     }
-    this.isCopilotOpen = evt.isOpen;
-    this.isCopilotFullyOpen = evt.isFullyOpen;
+    this.isCopilotOpen = !!evt?.isOpen;
+    this.isCopilotFullyOpen = !!evt?.isFullyOpen;
+  }
+
+  private getDeepestRoute(route: ActivatedRoute): ActivatedRoute {
+    while (route.firstChild) route = route.firstChild;
+    return route;
   }
 }

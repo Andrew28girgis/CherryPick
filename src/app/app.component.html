@@ -1,37 +1,24 @@
 <div
   class="app-shell"
   [ngClass]="{
-    'with-sidebar':
-      (isAuthenticated &&
-        !hideSidebar &&
-        !showingTransition &&
-        !isEmilyChatBot) ||
-      isChatbotRoute,
+    'with-sidebar': isAuthenticated && !hideSidebar && !isChatbotRoute,
     'with-copilot': isCopilotOpen,
     'copilot-expanded': isCopilotFullyOpen,
-    'emily-chatbot': isEmilyChatBot,
+    'emily-chatbot': isChatbotRoute,
     'chatbot-route': isChatbotRoute,
     authenticated: isAuthenticated,
     'overlay-active': overlayActive
   }"
 >
+
   <app-sidebar
-    *ngIf="
-      (isAuthenticated &&
-        !hideSidebar &&
-        !showingTransition &&
-        !isEmilyChatBot) ||
-      isChatbotRoute
-    "
+    *ngIf="isAuthenticated && !hideSidebar && !isChatbotRoute"
   ></app-sidebar>
 
   <div class="app-container">
-    <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
+    <ng-container *ngIf="!isChatbotRoute; else fullWidthContent">
       <div class="main-content-area">
-        <div
-          class="content-container"
-          [ngClass]="{ authenticated: isAuthenticated }"
-        >
+        <div class="content-container" [ngClass]="{ authenticated: isAuthenticated }">
           <router-outlet></router-outlet>
         </div>
       </div>
@@ -45,10 +32,7 @@
   </div>
 
   <app-notifications
-    *ngIf="
-      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
-    "
-    [campaignId]="CampaignId"
+    *ngIf="isAuthenticated && !hideSidebar && !isChatbotRoute"
     [isChatbotRoute]="isChatbotRoute"
     (overlayStateChange)="overlayActive = $event"
     (sidebarStateChange)="onCopilotStateChange($event)"
