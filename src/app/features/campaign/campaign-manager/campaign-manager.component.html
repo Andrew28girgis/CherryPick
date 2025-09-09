@@ -230,11 +230,17 @@
                 "
               >
                 <!-- Logo or placeholder -->
-                 <img
-                    [src]="campaign.logoUrl"
-                    alt="{{ campaign.OrganizationName }} logo"
+                <ng-container *ngIf="campaign.logoUrl ; else logoPlaceholder">
+                  <img
+                    [src]="campaign.logoUrl" 
                     class="org-logo"
                   />
+                </ng-container>
+                <ng-template #logoPlaceholder>
+                  <div class="org-logo placeholder">
+                    {{ getInitials(campaign.CampaignName) }}
+                  </div>
+                </ng-template>
             
                 <!-- Text block -->
                 <div class="title-text">

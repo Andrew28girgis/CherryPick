@@ -1375,6 +1375,15 @@ table tbody td {
 .red {
   border-left-color: #f75a5a;
 }
+.green-circle {
+  background: #4d8100;
+}
+.yellow-circle {
+  background: #f0cc6b;
+}
+.red-circle {
+  background: #cca086;
+}
 /* .greenb {
   background: #6DE1D2;
 }

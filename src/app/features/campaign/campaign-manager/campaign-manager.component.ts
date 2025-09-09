@@ -389,11 +389,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (n.includes('new') || n.includes('pending') || n.includes('open')) return 'is-new';
     return 'is-neutral';
   }
-  // getInitials(name: string): string {
-  //   if (!name) return '';
-  //   const words = name.trim().split(' ');
-  //   if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
-  //   return (words[0][0] + words[1][0]).toUpperCase();
-  // }
+  getInitials(name: string): string {
+    if (!name) return '';
+    const words = name.trim().split(' ');
+    if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
   
 }
