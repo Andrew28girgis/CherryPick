@@ -59,7 +59,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   KanbanStages: any[] = [];
   openOrgMenuId: number | null = null;
   orgMenuPos: { top?: string; left?: string } = {};
-  
+
   // Improved dropdown management
   activeDropdownId: number | null = null;
   isUpdatingStage = false;
@@ -159,29 +159,31 @@ export class CardViewComponent implements OnInit, OnDestroy {
           this.cardsSideList = [...centers].sort((a: any, b: any) => {
             const aTime = this.parseDate(a.LastUpdateDate);
             const bTime = this.parseDate(b.LastUpdateDate);
-    
+
             console.log(
               `Sorting: ${a.CenterName} -> ${a.LastUpdateDate} => ${aTime}, 
                          ${b.CenterName} -> ${b.LastUpdateDate} => ${bTime}`
             );
-    
+
             return bTime - aTime; // newest first
           });
-    
-          console.log('Final sorted list:', this.cardsSideList.map(c => ({
-            name: c.CenterName,
-            rawDate: c.LastUpdateDate,
-            parsed: this.parseDate(c.LastUpdateDate),
-          })));
+
+          console.log(
+            'Final sorted list:',
+            this.cardsSideList.map((c) => ({
+              name: c.CenterName,
+              rawDate: c.LastUpdateDate,
+              parsed: this.parseDate(c.LastUpdateDate),
+            }))
+          );
         });
-    
+
         if (centers && centers.length > 0) {
           this.isLoading = false;
         }
         this.cdr.markForCheck();
       })
     );
-    
 
     this.subscriptions.push(
       this.viewManagerService.buyboxCategories$.subscribe((categories) => {
@@ -289,23 +291,23 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null
+    const target = event.target as HTMLElement | null;
 
     if (this.isUpdatingStage || !target) {
-      return
+      return;
     }
 
     // Check if any dropdown or menu is currently open
-    const hasActiveDropdown = this.activeDropdownId !== null
-    const hasActiveOrgMenu = this.openOrgMenuId !== null
-    const hasActiveEllipsisMenu = this.selectedIdCard !== null
+    const hasActiveDropdown = this.activeDropdownId !== null;
+    const hasActiveOrgMenu = this.openOrgMenuId !== null;
+    const hasActiveEllipsisMenu = this.selectedIdCard !== null;
 
     if (hasActiveDropdown || hasActiveOrgMenu || hasActiveEllipsisMenu) {
-      const clickedDropdown = target.closest(".custom-dropdown")
-      const clickedOrgMenu = target.closest(".org-mini-menu")
-      const clickedOrgTrigger = target.closest(".org-info-trigger")
-      const clickedEllipsisMenu = target.closest(".shortcuts_iconCard")
-      const clickedEllipsisTrigger = target.closest(".ellipsis_icont")
+      const clickedDropdown = target.closest('.custom-dropdown');
+      const clickedOrgMenu = target.closest('.org-mini-menu');
+      const clickedOrgTrigger = target.closest('.org-info-trigger');
+      const clickedEllipsisMenu = target.closest('.shortcuts_iconCard');
+      const clickedEllipsisTrigger = target.closest('.ellipsis_icont');
 
       // If click is outside all menus and triggers
       if (
@@ -316,24 +318,24 @@ export class CardViewComponent implements OnInit, OnDestroy {
         !clickedEllipsisTrigger
       ) {
         // Prevent default behavior and stop propagation for ALL outside clicks
-        event.preventDefault()
-        event.stopPropagation()
+        event.preventDefault();
+        event.stopPropagation();
 
         // Close all open menus
         if (hasActiveDropdown) {
           this.cardsSideList.forEach((place) => {
-            place.isDropdownOpen = false
-          })
-          this.activeDropdownId = null
+            place.isDropdownOpen = false;
+          });
+          this.activeDropdownId = null;
         }
 
         if (hasActiveOrgMenu) {
-          this.openOrgMenuId = null
+          this.openOrgMenuId = null;
         }
 
         if (hasActiveEllipsisMenu) {
-          this.selectedIdCard = null
-          document.removeEventListener("click", this.outsideClickHandler)
+          this.selectedIdCard = null;
+          document.removeEventListener('click', this.outsideClickHandler);
         }
       }
     }
@@ -740,8 +742,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }
   }
 
- 
-
   getShoppingCenterContact(centerId: any): void {
     const body: any = {
       Name: 'GetShoppingCenterContact',
@@ -824,97 +824,93 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.getShoppingCenterContact(shoppingCenterId);
     });
   }
-  
-toggleOrgMenu(id: number, event: MouseEvent) {
-  event.stopPropagation(); // prevents bubbling to document
 
-  if (this.openOrgMenuId === id) {
-    this.closeOrgMenu();
-  } else {
-    this.openOrgMenuId = id;
-    this.activeDropdownId = id;
+  toggleOrgMenu(id: number, event: MouseEvent) {
+    event.stopPropagation(); // prevents bubbling to document
 
-    // only attach listener once per open
-    setTimeout(() => {
-      document.addEventListener('click', this.handleOutsideClick, true);
-    });
-  }
-}
+    if (this.openOrgMenuId === id) {
+      this.closeOrgMenu();
+    } else {
+      this.openOrgMenuId = id;
+      this.activeDropdownId = id;
 
-closeOrgMenu() {
-  this.openOrgMenuId = null;
-  this.activeDropdownId = null;
-  document.removeEventListener('click', this.handleOutsideClick, true);
-}
-
-// make sure to bind 'this' when declaring the handler
-handleOutsideClick = (event: Event) => {
-  const target = event.target as HTMLElement;
-  if (!target.closest('.org-info-trigger')) {
-    this.closeOrgMenu();
-  }
-};
-
-  
- 
- 
-private parseDate(dateValue: any): number {
-  if (!dateValue) return 0;
-
-  if (dateValue instanceof Date) {
-    return dateValue.getTime();
-  }
-
-  if (typeof dateValue === 'string') {
-    const normalized = dateValue.replace(' ', 'T');
-    const parsed = Date.parse(normalized);
-    if (isNaN(parsed)) {
-      console.warn('Invalid date string:', dateValue);
-      return 0;
+      // only attach listener once per open
+      setTimeout(() => {
+        document.addEventListener('click', this.handleOutsideClick, true);
+      });
     }
-    return parsed;
   }
 
-  if (typeof dateValue === 'number') {
-    return dateValue;
+  closeOrgMenu() {
+    this.openOrgMenuId = null;
+    this.activeDropdownId = null;
+    document.removeEventListener('click', this.handleOutsideClick, true);
   }
 
-  console.warn('Unexpected date type:', dateValue);
-  return 0;
-}
-openInfoPopup(shopping: any, content: TemplateRef<any>): void {
-  this.isLoadingInfo = true;
-  this.infoData = null;
-
-  const body = {
-    Name: 'GetScoreRationale',
-    Params: { MSSCId: shopping.MarketSurveyId },
+  // make sure to bind 'this' when declaring the handler
+  handleOutsideClick = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.org-info-trigger')) {
+      this.closeOrgMenu();
+    }
   };
 
-  this.placesService.GenericAPI(body).subscribe({
-    next: (res: any) => {
-      this.infoData = res.json[0].scoreRationale || null;
-      this.isLoadingInfo = false;
-      this.modalService.open(content, {
-        size: 'md',
-        backdrop: true,
-        centered: true,
-      });
-    },
-    error: (err) => {
-      console.error('Error fetching info:', err);
-      this.isLoadingInfo = false;
-      this.modalService.open(content, {
-        size: 'md',
-        backdrop: true,
-        centered: true,
-      });
-    },
-  });
-}
-// Example: inside your component class
-get hasUnscoredCenters(): boolean {
-  return this.cardsSideList?.some(sc => !sc.Score) ?? false;
-}
+  private parseDate(dateValue: any): number {
+    if (!dateValue) return 0;
 
+    if (dateValue instanceof Date) {
+      return dateValue.getTime();
+    }
+
+    if (typeof dateValue === 'string') {
+      const normalized = dateValue.replace(' ', 'T');
+      const parsed = Date.parse(normalized);
+      if (isNaN(parsed)) {
+        console.warn('Invalid date string:', dateValue);
+        return 0;
+      }
+      return parsed;
+    }
+
+    if (typeof dateValue === 'number') {
+      return dateValue;
+    }
+
+    console.warn('Unexpected date type:', dateValue);
+    return 0;
+  }
+  openInfoPopup(shopping: any, content: TemplateRef<any>): void {
+    this.isLoadingInfo = true;
+    this.infoData = null;
+
+    const body = {
+      Name: 'GetScoreRationale',
+      Params: { MSSCId: shopping.MarketSurveyId },
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.infoData = res.json[0].scoreRationale || null;
+        this.isLoadingInfo = false;
+        this.modalService.open(content, {
+          size: 'md',
+          backdrop: true,
+          centered: true,
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching info:', err);
+        this.isLoadingInfo = false;
+        this.modalService.open(content, {
+          size: 'md',
+          backdrop: true,
+          centered: true,
+        });
+      },
+    });
+  }
+  // Example: inside your component class
+  get hasUnscoredCenters(): boolean {
+    return this.cardsSideList?.some((sc) => !sc.MainImage) ?? false;
+  }
 }
