@@ -16,9 +16,7 @@ import { NotificationService } from './core/services/notification.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  isMarketSurveyRoute = false;
-  isMobile = false;
-  isSocialView: boolean = false;
+  isMarketSurveyRoute = false; 
   hideSidebar = false;
   isNotificationsOpen = false; // Add this property to your class
   showingTransition = false;
@@ -52,7 +50,7 @@ export class AppComponent implements OnInit {
           url === '/emily-chatsbot' || url.startsWith('/emily-chatsbot/');
 
         this.isChatbotRoute = onEmilyChatRoute; // this drives the full-width CSS
- 
+
         // NOTE: we do NOT set these for '/chatbot', so it behaves as before.
       });
 
@@ -61,17 +59,13 @@ export class AppComponent implements OnInit {
       currentRoute = currentRoute.firstChild;
     }
 
-    this.CampaignId = currentRoute;
-    console.log('Campaign ID from child route:', currentRoute);
+    this.CampaignId = currentRoute; 
 
     const apiMode = this.localStorage.getItem('apiMode');
     if (apiMode && JSON.parse(apiMode)) {
       this.placeService.setAppMode('api');
     }
-    this.checkScreenSize();
-    this.isSocialView =
-      this.localStorage.getItem('currentViewDashBord') === '5';
-
+ 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -115,15 +109,6 @@ export class AppComponent implements OnInit {
 
   get localStorage() {
     return localStorage;
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth <= 767;
   }
 
   onCopilotStateChange(evt: any) {

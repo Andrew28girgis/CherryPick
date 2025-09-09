@@ -45,8 +45,7 @@
 }
 
 .app-shell.with-sidebar > .app-container {
-   padding: 0 40px 50px 40px;
-
+  padding: 0 40px 50px 40px;
 }
 
 :host {
@@ -113,7 +112,9 @@
   margin-right: min(48px, 5vw);
 }
 
-.app-shell.with-sidebar.with-copilot.copilot-expanded.authenticated:not(.chatbot-route) {
+.app-shell.with-sidebar.with-copilot.copilot-expanded.authenticated:not(
+    .chatbot-route
+  ) {
   grid-template-columns: 96px minmax(0, 1fr);
   margin-right: min(381px, 40vw);
 }
