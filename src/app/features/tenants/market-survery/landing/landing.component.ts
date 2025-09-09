@@ -8,7 +8,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPlace, OtherPlace } from 'src/app/shared/models/landingPlace';
 import { NearByType } from 'src/app/shared/models/nearBy';
 import { DomSanitizer } from '@angular/platform-browser';
-import { PlaceCotenants, ShoppingCenterTenant } from 'src/app/shared/models/PlaceCo';
+import {
+  PlaceCotenants,
+  ShoppingCenterTenant,
+} from 'src/app/shared/models/PlaceCo';
 import { OrgManager } from 'src/app/shared/models/organization';
 import { BuyboxOrg } from 'src/app/shared/models/buyboxOrg';
 import { OrgBranch } from 'src/app/shared/models/branches';
@@ -66,7 +69,12 @@ export class LandingComponent {
   shoppingId!: any;
   campaignId!: any;
   isMapView = true;
-  tenant:ShoppingCenterTenant[] = [];
+  tenant: ShoppingCenterTenant[] = [];
+  tenantGroups = {
+    veryShort: [] as ShoppingCenterTenant[],
+    walking: [] as ShoppingCenterTenant[],
+    longer: [] as ShoppingCenterTenant[],
+  };
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -197,31 +205,28 @@ export class LandingComponent {
       Name: 'GetPlaceCotenants',
       Params: {
         ShoppingCenterId: this.ShoppingCenterId,
-        // PlaceID: placeId,
-        // CampaignId: this.campaignId,
       },
     };
-
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.tenant = data.json
-        console.log('TT',this.tenant);
-
-        // this.placeCotenants = data.json;
-        // this.filterCotenats = this.placeCotenants;
-
-        // const uniqueCategoriesSet = new Set<string>();
-        // this.placeCotenants?.forEach((co) => {
-        //   co.SubCategory?.forEach((c) => {
-        //     if (c.OrganizationCategory) {
-        //       uniqueCategoriesSet.add(c.OrganizationCategory);
-        //     }
-        //   });
-        // });
-
-        // this.uniqueCategories = Array.from(uniqueCategoriesSet);
-        // this.uniqueCategories.sort((a, b) => a.localeCompare(b));
-        // this.uniqueCategories.unshift('All');
+        const tenants: ShoppingCenterTenant[] = data.json || [];
+  
+        this.tenantGroups = {
+          veryShort: tenants
+            .filter((t) => t.Distance >= 100 && t.Distance < 400)
+            .sort((a, b) => a.Distance - b.Distance),
+  
+          walking: tenants
+            .filter((t) => t.Distance >= 400 && t.Distance < 800)
+            .sort((a, b) => a.Distance - b.Distance),
+  
+          longer: tenants
+            .filter((t) => t.Distance >= 800 && t.Distance <= 1200)
+            .sort((a, b) => a.Distance - b.Distance),
+        };
+  
+        console.log('Grouped tenants:', this.tenantGroups);
       },
     });
   }
@@ -270,7 +275,6 @@ export class LandingComponent {
       next: (data) => {
         this.OrgManager = data.json;
         console.log(this.OrgManager);
-        
       },
     });
   }
@@ -1134,7 +1138,8 @@ export class LandingComponent {
       : 'Address not available';
   }
   onImageError(event: any) {
-    event.target.src = 'https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png';
+    event.target.src =
+      'https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png';
   }
   checkImage(event: Event) {
     const img = event.target as HTMLImageElement;
@@ -1174,7 +1179,8 @@ export class LandingComponent {
     } catch (err) {
       console.warn('Canvas image data blocked due to CORS:', err);
       if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
-        img.src = 'https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png';
+        img.src =
+          'https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png';
       }
     }
   }
@@ -1184,21 +1190,30 @@ export class LandingComponent {
     testElement.style.whiteSpace = 'nowrap';
     testElement.innerHTML = text;
     document.body.appendChild(testElement);
-    
+
     const textWidth = testElement.offsetWidth;
     const container = document.querySelector('.contact-info') as HTMLElement;
     const containerWidth = container?.offsetWidth || 0;
-    
+
     document.body.removeChild(testElement);
-    
+
     return textWidth > containerWidth;
   }
-    getInitials(firstName: string,secondName:string): string {
-      const name=firstName+' '+secondName;
+  getInitials(firstName: string, secondName: string): string {
+    const name = firstName + ' ' + secondName;
     if (!name) return '';
     const words = name.trim().split(' ');
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
+  }
+  getInitial(name: string): string {
+     if (!name) return '';
+    const words = name.trim().split(' ');
+    if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+  get hasContacts(): boolean {
+    return this.OrgManager?.some(sc => !sc) ?? false;
   }
   
 }

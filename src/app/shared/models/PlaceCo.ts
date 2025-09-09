@@ -24,4 +24,6 @@ export interface ShoppingCenterTenant {
   ShoppingCenterId: number;
   Distance: number;
   LogoURL: string;
+  Category:any;
 }
+
