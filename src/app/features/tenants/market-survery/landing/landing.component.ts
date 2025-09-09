@@ -71,6 +71,7 @@ export class LandingComponent {
   isMapView = true;
   tenant: ShoppingCenterTenant[] = [];
   tenantGroups = {
+    onSite: [] as ShoppingCenterTenant[],
     veryShort: [] as ShoppingCenterTenant[],
     walking: [] as ShoppingCenterTenant[],
     longer: [] as ShoppingCenterTenant[],
@@ -207,25 +208,28 @@ export class LandingComponent {
         ShoppingCenterId: this.ShoppingCenterId,
       },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         const tenants: ShoppingCenterTenant[] = data.json || [];
-  
+
         this.tenantGroups = {
+          onSite: tenants
+            .filter((t) => t.Distance >= 0 && t.Distance < 100)
+            .sort((a, b) => a.Distance - b.Distance),
           veryShort: tenants
             .filter((t) => t.Distance >= 100 && t.Distance < 400)
             .sort((a, b) => a.Distance - b.Distance),
-  
+
           walking: tenants
             .filter((t) => t.Distance >= 400 && t.Distance < 800)
             .sort((a, b) => a.Distance - b.Distance),
-  
+
           longer: tenants
             .filter((t) => t.Distance >= 800 && t.Distance <= 1200)
             .sort((a, b) => a.Distance - b.Distance),
         };
-  
+
         console.log('Grouped tenants:', this.tenantGroups);
       },
     });
@@ -1207,13 +1211,12 @@ export class LandingComponent {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   getInitial(name: string): string {
-     if (!name) return '';
+    if (!name) return '';
     const words = name.trim().split(' ');
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   get hasContacts(): boolean {
-    return this.OrgManager?.some(sc => !sc) ?? false;
+    return this.OrgManager?.some((sc) => !sc) ?? false;
   }
-  
 }
