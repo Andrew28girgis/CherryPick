@@ -3,6 +3,7 @@ export interface Tenant {
   name: string;
   URL?: string;
   LinkedIn?: string;
+  logoUrl ?: string;
   Campaigns: Campaign[];
 }
 

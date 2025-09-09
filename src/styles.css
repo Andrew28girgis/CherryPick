@@ -398,6 +398,22 @@ a {
 .g-button:hover {
   background-color: var(--Colors-Primary-hover);
 }
+.org-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0,0,0,0.1);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+  background-color: #102E50;
+  flex-shrink: 0; /* keep logo fixed size */
+}
 @media (max-width: 991px) {
   .info-window {
     width: 300px;
