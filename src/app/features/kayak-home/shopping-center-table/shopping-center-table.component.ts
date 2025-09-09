@@ -7,6 +7,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
   TemplateRef,
+  ElementRef,
 } from '@angular/core';
 import { MapViewComponent } from './map-view/map-view.component';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -136,6 +137,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   @ViewChild('tenantDropdown') tenantDropdownRef!: NgbDropdown;
   @ViewChild('uploadTypes') uploadTypes!: any;
   @ViewChild('websiteModalTpl') websitemodal!: any;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   showFileDropArea = false;
   isUploading = false;
@@ -352,7 +354,14 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
   toggleSearch(): void {
     this.isSearchExpanded = !this.isSearchExpanded;
+  
+    if (this.isSearchExpanded) {
+      setTimeout(() => {
+        this.searchInput?.nativeElement.focus({ preventScroll: true });
+      }, 300); // wait for *ngIf render + CSS transition
+    }
   }
+  
 
   toggleView(event?: MouseEvent): void {
     if (event) {

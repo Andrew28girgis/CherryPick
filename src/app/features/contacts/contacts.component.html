@@ -281,8 +281,7 @@
           <div
             class="row w-100"
             #contactsRow
-            (wheel)="onStripWheel($event, contactsRow)"
-            *ngIf="org.contacts.length > 0"
+             *ngIf="org.contacts.length > 0"
           >
             <div class="col-md-4" *ngFor="let contact of org.contacts">
               <div

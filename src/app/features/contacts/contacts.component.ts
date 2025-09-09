@@ -291,14 +291,34 @@ export class ContactsComponent implements OnInit {
     event.target.src = 'assets/Images/placeholder.png';
   }
  
-// add method
-toggleSearch(input: HTMLInputElement): void {
-  this.isSearchExpanded = !this.isSearchExpanded;
-  if (this.isSearchExpanded) {
-    setTimeout(() => input.focus(), 0); // give DOM time to expand
+  toggleSearch(input: HTMLInputElement): void {
+    this.isSearchExpanded = !this.isSearchExpanded;
+  
+    if (this.isSearchExpanded) {
+      const container = input.closest('.search-container') as HTMLElement | null;
+  
+      const focusNow = () => {
+        input.focus({ preventScroll: true });
+        // optional: input.select();
+      };
+  
+      // ensure we only focus once
+      let done = false;
+      const once = () => { if (done) return; done = true; focusNow(); };
+  
+      // 1) after the transition finishes (most reliable)
+      if (container) container.addEventListener('transitionend', once, { once: true });
+  
+      // 2) next-two-frames fallback (in case no transition fires)
+      requestAnimationFrame(() => requestAnimationFrame(once));
+  
+      // 3) final timeout fallback (iOS/Safari quirks)
+      setTimeout(once, 300);
+    } else {
+      input.blur(); // collapse → hide keyboard on mobile
+    }
   }
-
-}
+  
 setRole(val: 'broker' | 'tenant') {
   this.role = val;
   this.applyFiltersAndSort();   // 🔥 refresh list after toggle
@@ -312,13 +332,7 @@ scrollContacts(dir: 'left' | 'right') {
   container.scrollBy({ left: delta, behavior: 'smooth' });
 }
 
-onStripWheel(event: WheelEvent, el: HTMLElement) {
-  // convert vertical wheel to horizontal scrolling
-  if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-    event.preventDefault();
-    el.scrollBy({ left: event.deltaY, behavior: 'smooth' });
-  }
-}
+ 
 
 getInitials(name: string): string {
   if (!name) return '';

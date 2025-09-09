@@ -668,7 +668,8 @@
   display: flex;
   align-items: center;
   width: 44px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width .3s, background-color .3s, border-color .3s;
+  will-change: width;
   position: relative;
   overflow: hidden;
   border: 1px solid var(--Colors-Primary-500, #6d133b);
