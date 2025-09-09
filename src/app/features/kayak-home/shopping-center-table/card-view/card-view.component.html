@@ -56,7 +56,8 @@
           [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
         />
         <div
-          *ngIf="shopping.Score"
+        (click)="openInfoPopup(shopping, infoModal);$event.stopPropagation()"
+        *ngIf="shopping.Score"
           class="card-badge"
           [ngClass]="{
             'green-circle': shopping.Score > 50,
@@ -1560,8 +1561,8 @@
   </div>
 </ng-template>
 <ng-template #infoModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Score Info</h5>
+  <div class="modal-header score-header">
+    <h5 class="modal-title score-pill">{{ score }}%</h5>
     <button
       type="button"
       class="btn-close"
@@ -1570,8 +1571,10 @@
     ></button>
   </div>
 
-  <div class="modal-body">
-    <div *ngIf="isLoadingInfo">Loading...</div>
+  <div class="modal-body score-body">
+    <div *ngIf="isLoadingInfo" class="loading">Loading...</div>
+
+    <p class="conclusion-text">{{ conclusion }}</p>
 
     <div *ngIf="!isLoadingInfo">
       <div

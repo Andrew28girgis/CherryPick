@@ -1304,6 +1304,7 @@ height: 40px;
   font-size: 14px;
 }
 
+
 .table-responsive {
   max-height: 600px;
   overflow-y: auto;
@@ -1378,12 +1379,26 @@ table tbody td {
 .green-circle {
   background: #4d8100;
 }
+
 .yellow-circle {
   background: #f7bd21;
 }
+
 .red-circle {
   background: #cca086;
 }
+.green-circle:hover {
+  background: #3f6800;
+}
+
+.yellow-circle:hover {
+  background: #d6bb6e;
+}
+
+.red-circle:hover {
+  background: #b96d42;
+}
+
 /* .greenb {
   background: #6DE1D2;
 }
@@ -1520,4 +1535,97 @@ table tbody td {
 }
 .MangerORG{
   font-size: 14px;
+}
+
+.modal-title{
+  color: var(--Colors-Primary-500);
+}/* Header with score badge */
+.score-header {
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.score-pill {
+  background: var(--Colors-Primary-500); /* red by default */
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin: 0;
+}
+
+/* You can color-code dynamically if score >= 70 green, 40-70 orange, <40 red */
+.score-pill.good {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+.score-pill.medium {
+  background: linear-gradient(135deg, #facc15, #eab308);
+}
+.score-pill.bad {
+  background: var(--Colors-Primary-500);
+}
+
+/* Body */
+.score-body {
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 0 0 12px 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Narrative conclusion */
+.conclusion-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #374151;
+  margin-bottom: 20px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--Colors-Primary-500); /* red accent for rejection */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Rationale table (from infoData innerHTML) */
+.rationale-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.rationale-text th,
+.rationale-text td {
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.rationale-text thead {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #111827;
+}
+
+.rationale-text tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.rationale-text td:last-child {
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  padding: 20px;
 }

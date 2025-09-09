@@ -93,6 +93,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   @ViewChild('addContact') addContactModal!: TemplateRef<any>;
   selectedShoppingCenterId: any;
   infoData: any = null;
+  conclusion:any
+   score:any
   isLoadingInfo = false;
 
   constructor(
@@ -891,6 +893,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.infoData = res.json[0].scoreRationale || null;
+        this.score = res.json[0].score || null;
+        this.conclusion = res.json[0].conclusion || null;
+
         this.isLoadingInfo = false;
         this.modalService.open(content, {
           size: 'md',
