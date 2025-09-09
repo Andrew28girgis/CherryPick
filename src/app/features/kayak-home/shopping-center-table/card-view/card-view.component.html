@@ -57,6 +57,7 @@
         />
         <div
            class="card-badge"
+            [ngClass]="{'green-circle': shopping.Score>50,'yellow-circle': shopping.Score<50,'red-circle':!shopping.Score}" 
           [attr.aria-label]="shopping.Score"
         >
           <span>{{ shopping.Score }} %</span>
