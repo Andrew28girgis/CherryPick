@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { Subscription } from 'rxjs';
 import { AddCampaignPopupComponent } from '../add-campaign-popup/add-campaign-popup.component';
+import { RefreshService } from 'src/app/core/services/refresh.service';
 
 @Component({
   selector: 'app-campaign-manager',
@@ -66,7 +67,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
+    private refreshService:RefreshService,
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +79,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       ]);
       this.loadData();
     }
+     this.refreshService.refreshOrganizations$.subscribe(() => {
+      this.getAllCampaigns();
+    });
   }
 
   ngOnDestroy(): void {
@@ -385,7 +390,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     return 'is-neutral';
   }
   getInitials(name: string): string {
-    if (!name) return '?';
+    if (!name) return '';
     const words = name.trim().split(' ');
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();

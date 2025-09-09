@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Tenant } from 'src/app/shared/models/tenant';
 import { AddCampaignPopupComponent } from '../campaign/add-campaign-popup/add-campaign-popup.component';
 import { Subscription } from 'rxjs';
+import { RefreshService } from 'src/app/core/services/refresh.service';
 
 @Component({
   selector: 'app-summery',
@@ -39,11 +40,17 @@ export class SummeryComponent implements OnInit {
     public router: Router,
     private placeService: PlacesService,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private refreshService: RefreshService
+
   ) {}
 
   ngOnInit(): void {
     this.getAllActiveOrganizations();
+    this.refreshService.refreshOrganizations$.subscribe(() => {
+      this.getAllActiveOrganizations();
+    });
+  
   }
 
   private getAllActiveOrganizations(): void {

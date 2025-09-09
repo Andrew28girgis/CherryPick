@@ -54,7 +54,7 @@ input::placeholder {
 }
 
 .right-container {
-  background: rgba(255, 252, 255, 0.5);
+  background: #FAF3E0;
   backdrop-filter: blur(100px);
   display: flex !important;
   padding: 40px;
@@ -68,12 +68,20 @@ input::placeholder {
   cursor: pointer;
 }
 
-.worth {
-  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
-  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);  -webkit-background-clip: text;
+.worth {  
+  background: linear-gradient(
+    135deg,               /* diagonal: top-left → bottom-right */
+    #f5f0e4 0%,           /* light beige shine */
+    #cfb579 20%,          /* strong gold */
+    #baa36d 45%,          /* darker gold */
+    #cfb579 65%,          /* gold highlight again */
+    #14303a 100%          /* navy only at far end */
+  );
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
-  display: inline-block;
+  background-clip: text; /* for Firefox */
+  font-weight: bold;
+   display: inline-block;
   margin: 0;
   width: 342px;
   color: var(--Body-Heading-Color, #18171f);

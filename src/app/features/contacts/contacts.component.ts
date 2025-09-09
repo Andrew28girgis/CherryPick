@@ -53,8 +53,9 @@ export class ContactsComponent implements OnInit {
   sizeTo: string = '';
 
   // Sort properties
-  sortBy: string = 'newest';
+  sortBy: string = 'contacts';
   sortOptions = [
+    { value: 'contacts', label: 'Most Contacts' },  
     { value: 'alphabetical', label: 'Alphabetical' },
     { value: 'newest', label: 'Newest to Oldest' },
     { value: 'oldest', label: 'Oldest to Newest' },
@@ -116,42 +117,49 @@ export class ContactsComponent implements OnInit {
   
     // 🔎 Search filter
     if (this.searchTerm) {
-      const searchLower = this.searchTerm.toLowerCase();
-      orgs = orgs.filter((org) =>
-        (org.name || '').toLowerCase().includes(searchLower)
-      );
+      const q = this.searchTerm.toLowerCase();
+      orgs = orgs.filter(org => (org.name || '').toLowerCase().includes(q));
     }
   
-    // 🔀 Sort
-    orgs.sort((a, b) => {
-      switch (this.sortBy) {
-        case 'alphabetical':
-          return (a.name || '').localeCompare(b.name || '');
-        case 'newest':
-          return (b.id || 0) - (a.id || 0);
-        case 'oldest':
-          return (a.id || 0) - (b.id || 0);
-        default:
-          return 0;
-      }
-    });
-  
-    // 🟢 Role filter (Tenant vs Broker)
+    // 🟢 Role filter
     if (this.role === 'tenant') {
       orgs = orgs.filter(org => org.stakeholderId === 2);
     } else {
       orgs = orgs.filter(org => org.stakeholderId !== 2);
     }
   
-    // 👥 Group contacts under each org
-    this.filteredContacts = orgs.map((org) => ({
+    // 👥 Attach contacts to each org
+    const grouped = orgs.map(org => ({
       ...org,
-      contacts: this.contacts.filter((c) => c.organizationId === org.id),
+      contacts: this.contacts.filter(c => c.organizationId === org.id),
     }));
   
+    // 🔀 Sort (including "most contacts")
+    if (this.sortBy === 'contacts') {
+      grouped.sort(
+        (a, b) => (b.contacts?.length || 0) - (a.contacts?.length || 0)
+      );
+    } else {
+      grouped.sort((a, b) => {
+        switch (this.sortBy) {
+          case 'alphabetical':
+            return (a.name || '').localeCompare(b.name || '');
+          case 'newest':
+            return (b.id || 0) - (a.id || 0);
+          case 'oldest':
+            return (a.id || 0) - (b.id || 0);
+          case 'status':
+          default:
+            return 0;
+        }
+      });
+    }
+  
+    this.filteredContacts = grouped;
     this.totalItems = this.filteredContacts.length;
     this.updatePage(1);
   }
+  
   
   updatePage(page: number): void {
     this.currentPage = page;
@@ -313,7 +321,7 @@ onStripWheel(event: WheelEvent, el: HTMLElement) {
 }
 
 getInitials(name: string): string {
-  if (!name) return '?';
+  if (!name) return '';
   const words = name.trim().split(' ');
   if (words.length === 1) return words[0][0].toUpperCase();
   return (words[0][0] + words[1][0]).toUpperCase();

@@ -32,6 +32,7 @@
   position: sticky;
   align-self: flex-start;
   margin-bottom: var(--Space-S-20);
+  padding: 15px;
 }
 
 .main-heading {
