@@ -925,7 +925,7 @@ img[alt="logo"] {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  padding: 16px;
+  padding: 5px 10px;
   border-top: 1px solid #e2e4e9;
 }
 .stats .leased-by,
@@ -1379,7 +1379,7 @@ table tbody td {
   background: #4d8100;
 }
 .yellow-circle {
-  background: #f0cc6b;
+  background: #f7bd21;
 }
 .red-circle {
   background: #cca086;
@@ -1517,4 +1517,7 @@ table tbody td {
 }
 .icon-btn:hover {
   color: var(--Colors-Primary-hover);
+}
+.MangerORG{
+  font-size: 14px;
 }
