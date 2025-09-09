@@ -39,64 +39,114 @@
           </div>
         </div>    -->
     <div class="image-map-container">
-        <div class="image-section">
-          <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
-            <div class="intro-container wow fadeIn">
-              <div>
-                <h1
-                  class="mb-2 pb-0"
-                  *ngIf="ShoppingCenter?.CenterName"
-                  [innerHTML]="ShoppingCenter.CenterName | titlecase"
-                ></h1>
-                <p
-                  class="mb-2 pb-0 address-city"
-                  (click)="
-                    openMapViewPlace(
-                      mapPopup,
-                      ShoppingCenter ? ShoppingCenter : StandAlonePlace
-                    )
-                  "
-                >
-                  {{ getAddress() }}
-                </p>
-                <ng-container *ngIf="ShoppingCenter">
-                  <div class="d-flex">
-                    <ng-container *ngFor="let near of NearByType">
-                      <div class="d-flex align-items-center p-0 mbottom">
-                        <ng-container
-                          *ngFor="let branch of near.Branches | slice : 0 : 1"
+      <div class="image-section">
+        <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
+          <div class="intro-container wow fadeIn">
+            <div>
+              <h1
+                class="mb-2 pb-0"
+                *ngIf="ShoppingCenter?.CenterName"
+                [innerHTML]="ShoppingCenter.CenterName | titlecase"
+              ></h1>
+              <p
+                class="mb-2 pb-0 address-city"
+                (click)="
+                  openMapViewPlace(
+                    mapPopup,
+                    ShoppingCenter ? ShoppingCenter : StandAlonePlace
+                  )
+                "
+              >
+                {{ getAddress() }}
+              </p>
+              <ng-container *ngIf="ShoppingCenter">
+                <div class="d-flex">
+                  <ng-container *ngFor="let near of NearByType">
+                    <div class="d-flex align-items-center p-0 mbottom">
+                      <ng-container
+                        *ngFor="let branch of near.Branches | slice : 0 : 1"
+                      >
+                        <img
+                          loading="lazy"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            branch.OrganizationId
+                          }}"
+                          alt=""
+                          title="{{ branch.RelationOrganization[0].Name }}"
+                          class="RelationOrganization"
+                        />
+                        <p>{{ branch.RelationOrganization[0].Name }}</p>
+
+                        <span
+                          class="mx-2"
+                          style="color: #fff; font-weight: bold"
                         >
-                          <img
-                            loading="lazy"
-                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                              branch.OrganizationId
-                            }}"
-                            alt=""
-                            title="{{ branch.RelationOrganization[0].Name }}"
-                            class="RelationOrganization"
-                          />
-                          <p>{{ branch.RelationOrganization[0].Name }}</p>
+                          {{
+                            branch.RelationOrganization[0].Distance.toFixed(2) +
+                              " Miles "
+                          }}
+                        </span>
+                        <p class="m-0 ps-2">
+                          <b>{{ near.Name }}</b>
+                        </p>
+                      </ng-container>
+                    </div>
+                  </ng-container>
 
-                          <span class="mx-2" style="color: #fff; font-weight: bold">
-                    {{
-                      branch.RelationOrganization[0].Distance.toFixed(2) +
-                        " Miles "
-                    }}
-                  </span>
-                          <p class="m-0 ps-2">
-                            <b>{{ near.Name }}</b>
-                          </p>
-                        </ng-container>
-                      </div>
-                    </ng-container>
-
-                    <div
-                      class="d-flex mx-2"
-                      *ngIf="
-                        CustomPlace.OtherPlaces &&
-                        CustomPlace.OtherPlaces.length > 0
-                      "
+                  <div
+                    class="d-flex mx-2"
+                    *ngIf="
+                      CustomPlace.OtherPlaces &&
+                      CustomPlace.OtherPlaces.length > 0
+                    "
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
+                      <path
+                        d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M19.8499 18.75H17.3699C16.9599 18.75 16.6199 18.41 16.6199 18C16.6199 17.59 16.9599 17.25 17.3699 17.25H19.8499C20.8699 17.25 21.2499 16.87 21.2499 15.85V4.15002C21.2499 3.13002 20.8699 2.75 19.8499 2.75H15.5499C14.5299 2.75 14.1499 3.13002 14.1499 4.15002V6C14.1499 6.41 13.8099 6.75 13.3999 6.75C12.9899 6.75 12.6499 6.41 12.6499 6V4.15002C12.6499 2.31002 13.7099 1.25 15.5499 1.25H19.8499C21.6899 1.25 22.7499 2.31002 22.7499 4.15002V15.85C22.7499 17.69 21.6899 18.75 19.8499 18.75Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                        fill="white"
+                      />
+                    </svg>
+
+                    <p class="m-0 px-2">
+                      <span class="CustomPlace">{{
+                        CustomPlace.OtherPlaces.length
+                      }}</span>
+
+                      Available Units
+                    </p>
+                  </div>
+                </div>
+                <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p>
+
+                <div class="d-flex">
+                  <div class="pe-2" *ngIf="ShoppingCenter?.DocsLink">
+                    <div>
                       <svg
                         width="24"
                         height="24"
@@ -105,120 +155,70 @@
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                          d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
                           fill="white"
                         />
                         <path
-                          d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                          d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
                           fill="white"
                         />
                         <path
-                          d="M19.8499 18.75H17.3699C16.9599 18.75 16.6199 18.41 16.6199 18C16.6199 17.59 16.9599 17.25 17.3699 17.25H19.8499C20.8699 17.25 21.2499 16.87 21.2499 15.85V4.15002C21.2499 3.13002 20.8699 2.75 19.8499 2.75H15.5499C14.5299 2.75 14.1499 3.13002 14.1499 4.15002V6C14.1499 6.41 13.8099 6.75 13.3999 6.75C12.9899 6.75 12.6499 6.41 12.6499 6V4.15002C12.6499 2.31002 13.7099 1.25 15.5499 1.25H19.8499C21.6899 1.25 22.7499 2.31002 22.7499 4.15002V15.85C22.7499 17.69 21.6899 18.75 19.8499 18.75Z"
+                          d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
                           fill="white"
                         />
                         <path
-                          d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
-                          fill="white"
-                        />
-                        <path
-                          d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
-                          fill="white"
-                        />
-                        <path
-                          d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                          d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
                           fill="white"
                         />
                       </svg>
 
-                      <p class="m-0 px-2">
-                        <span class="CustomPlace">{{
-                          CustomPlace.OtherPlaces.length
-                        }}</span>
-
-                        Available Units
-                      </p>
+                      <a
+                        class="info-value text-light px-1"
+                        href="{{ ShoppingCenter.DocsLink }}"
+                        target="_blank"
+                        >Property Docs</a
+                      >
                     </div>
                   </div>
-                  <p
-                    class="info-value p-0"
-                    [innerHTML]="getMinMaxUnitSize()"
-                  ></p>
+                  <div class="pe-2" *ngIf="ShoppingCenter?.SitePlan">
+                    <div>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9 17.75C8.9 17.75 8.81 17.73 8.71 17.69C8.43 17.58 8.25 17.3 8.25 17V11C8.25 10.59 8.59 10.25 9 10.25C9.41 10.25 9.75 10.59 9.75 11V15.19L10.47 14.47C10.76 14.18 11.24 14.18 11.53 14.47C11.82 14.76 11.82 15.24 11.53 15.53L9.53 17.53C9.39 17.67 9.19 17.75 9 17.75Z"
+                          fill="white"
+                        />
+                        <path
+                          d="M9 17.75C8.81 17.75 8.62 17.68 8.47 17.53L6.47 15.53C6.18 15.24 6.18 14.76 6.47 14.47C6.76 14.18 7.24 14.18 7.53 14.47L9.53 16.47C9.82 16.76 9.82 17.24 9.53 17.53C9.38 17.68 9.19 17.75 9 17.75Z"
+                          fill="white"
+                        />
+                        <path
+                          d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                          fill="white"
+                        />
+                        <path
+                          d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
+                          fill="white"
+                        />
+                      </svg>
 
-                  <div class="d-flex">
-                    <div class="pe-2" *ngIf="ShoppingCenter?.DocsLink">
-                      <div>
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                            fill="white"
-                          />
-                          <path
-                            d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
-                            fill="white"
-                          />
-                          <path
-                            d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
-                            fill="white"
-                          />
-                          <path
-                            d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
-                            fill="white"
-                          />
-                        </svg>
-
-                        <a
-                          class="info-value text-light px-1"
-                          href="{{ ShoppingCenter.DocsLink }}"
-                          target="_blank"
-                          >Property Docs</a
-                        >
-                      </div>
-                    </div>
-                    <div class="pe-2" *ngIf="ShoppingCenter?.SitePlan">
-                      <div>
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M9 17.75C8.9 17.75 8.81 17.73 8.71 17.69C8.43 17.58 8.25 17.3 8.25 17V11C8.25 10.59 8.59 10.25 9 10.25C9.41 10.25 9.75 10.59 9.75 11V15.19L10.47 14.47C10.76 14.18 11.24 14.18 11.53 14.47C11.82 14.76 11.82 15.24 11.53 15.53L9.53 17.53C9.39 17.67 9.19 17.75 9 17.75Z"
-                            fill="white"
-                          />
-                          <path
-                            d="M9 17.75C8.81 17.75 8.62 17.68 8.47 17.53L6.47 15.53C6.18 15.24 6.18 14.76 6.47 14.47C6.76 14.18 7.24 14.18 7.53 14.47L9.53 16.47C9.82 16.76 9.82 17.24 9.53 17.53C9.38 17.68 9.19 17.75 9 17.75Z"
-                            fill="white"
-                          />
-                          <path
-                            d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                            fill="white"
-                          />
-                          <path
-                            d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
-                            fill="white"
-                          />
-                        </svg>
-
-                        <a
-                          class="info-value text-light px-1"
-                          href="{{ ShoppingCenter.SitePlan }}"
-                          target="_blank"
-                          >View Site Plan</a
-                        >
-                      </div>
+                      <a
+                        class="info-value text-light px-1"
+                        href="{{ ShoppingCenter.SitePlan }}"
+                        target="_blank"
+                        >View Site Plan</a
+                      >
                     </div>
                   </div>
-                </ng-container>
-              </div>
-              <!-- <div class="position-relative gallerry-btn">
+                </div>
+              </ng-container>
+            </div>
+            <!-- <div class="position-relative gallerry-btn">
                 <button
                   *ngIf="placeImage && placeImage.length > 0"
                   class="view-gallery"
@@ -227,10 +227,10 @@
                   <i class="fa-regular fa-images me-2"></i>View Gallery
                 </button>
               </div> -->
-            </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
+    </div>
 
     <div class="main-section" *ngIf="ShoppingCenter?.Place.length > 0">
       <section id="hero">
@@ -318,39 +318,40 @@
         </ng-container>
       </section>
     </div>
-    <div class="d-flex justify-content-between gap-4 flex-column py-2" style="background-color: #fff; border-radius: 10px; padding: 15px;">
+    <div
+      *ngIf="hasContacts"
+      class="d-flex justify-content-between gap-4 flex-column py-2"
+      style="background-color: #fff; border-radius: 10px; padding: 15px"
+    >
       <div>
-         
-       
-         <div class=" contact-container">
-            <ng-container *ngFor="let Manager of OrgManager">
-              <div
-                *ngIf="Manager.firstName || Manager.lastName"
-                class=" "
-              >
-                <div class="user-card gap-2" style="overflow: hidden;">
-                  <div class="org-logo placeholder">
-                    {{ getInitials(Manager.firstName,Manager.lastName) }}
-                  </div>
+        <div class="contact-container">
+          <ng-container *ngFor="let Manager of OrgManager">
+            <div *ngIf="Manager.firstName || Manager.lastName" class=" ">
+              <div class="user-card gap-2" style="overflow: hidden">
+                <div class="org-logo placeholder">
+                  {{ getInitials(Manager.firstName, Manager.lastName) }}
+                </div>
 
-                  <div class="user-info">
-                    <h3 class="user-name m-0">
-                      <span class="name">{{ Manager.firstName+' '+Manager.lastName }}</span>
-                     </h3>
+                <div class="user-info">
+                  <h3 class="user-name m-0">
+                    <span class="name">{{
+                      Manager.firstName + " " + Manager.lastName
+                    }}</span>
+                  </h3>
 
-                    <p
-                      class="user-email email-link"
-                      *ngIf="Manager.email"
-                      [attr.data-email]="Manager.email"
-                    >
-                      <i class="fa-regular fa-envelope"></i>
-                         {{ Manager.email }}
-                     </p>
-                  </div>
+                  <p
+                    class="user-email email-link"
+                    *ngIf="Manager.email"
+                    [attr.data-email]="Manager.email"
+                  >
+                    <i class="fa-regular fa-envelope"></i>
+                    {{ Manager.email }}
+                  </p>
                 </div>
               </div>
-            </ng-container>
-          </div>
+            </div>
+          </ng-container>
+        </div>
       </div>
       <!-- <div
         class=" "
@@ -390,52 +391,104 @@
       </div> -->
     </div>
 
-    <div class="row m-0 p-0">
-      <div class="col-md-12 p-0" *ngIf="tenant && tenant.length > 0">
-        <div class="main-section user-card">
-        
-          <div class="row tenant-row">
-            <div class="col-md-3 mb-3" *ngFor="let place of tenant">
-              <div class="d-flex align-items-center">
-                <div>
-                  <!-- <img loading="lazy" 
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      place.OrganizationID
-                    }}"
-                    alt=""
-                    class="orgbranches"
-                  /> -->
-                  <!-- 
-                    src="{{place.LogoURL}}"
-                     -->
-                  <img
-                    loading="lazy"
-                    src="{{ place.LogoURL }}"
-                    alt=""
-                    class="orgbranches"
-                  />
+    <div class="row py-2">
+      <!-- very short -->
+      <div class="col-md-4" *ngIf="tenantGroups.veryShort.length">
+        <div class="tenant-category-card">
+          <h5>Very short walk (100–400 m)</h5>
+          <div *ngIf="tenantGroups.veryShort.length; else noVeryShort">
+            <div
+              *ngFor="let t of tenantGroups.veryShort"
+              class="tenant-item d-flex flex-row"
+            >
+              <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+                <img [src]="t.LogoURL" class="branche-logo" />
+              </ng-container>
+              <ng-template #logoPlaceholder>
+                <div class="branche-logo placeholder">
+                  {{ getInitial(t.OrganizationName) }}
                 </div>
+              </ng-template>
+              <div class="tenant-text">
+                <span class="tenant-name">{{ t.OrganizationName }}</span>
 
-                <div class="d-flex flex-column">
-                  <span *ngIf="place.OrganizationName" class="nearset"
-                    >{{ place.OrganizationName }}
-                  </span>
-                  <!-- <span *ngIf="place.SubCategory" class="activityType">{{
-                    place.SubCategory[0].OrganizationCategory | titlecase
-                  }}</span> -->
-                </div>
+                <span *ngIf="t.Category" class="tenant-cat">
+                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
+                </span>
               </div>
-
-              <!-- <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
-                >{{
-                  place.SubCategory[0].Branches[0].Distance.toFixed(2)
-                }}
-                MI</span
-              > -->
+              <small>{{ t.Distance | number : "1.0-0" }} m</small>
             </div>
           </div>
+          <ng-template #noVeryShort
+            ><p>No tenants in this range</p></ng-template
+          >
         </div>
       </div>
+
+      <!-- walking -->
+      <div class="col-md-4" *ngIf="tenantGroups.walking.length">
+        <div class="tenant-category-card">
+          <h5>Walking distance (400–800 m)</h5>
+          <div *ngIf="tenantGroups.walking.length; else noWalking">
+            <div
+              *ngFor="let t of tenantGroups.walking"
+              class="tenant-item d-flex flex-row"
+            >
+              <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+                <img [src]="t.LogoURL" class="branche-logo" />
+              </ng-container>
+              <ng-template #logoPlaceholder>
+                <div class="branche-logo placeholder">
+                  {{ getInitial(t.OrganizationName) }}
+                </div>
+              </ng-template>
+              <div class="tenant-text">
+                <span class="tenant-name">{{ t.OrganizationName }}</span>
+
+                <span *ngIf="t.Category" class="tenant-cat">
+                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
+                </span>
+              </div>
+              <small>{{ t.Distance | number : "1.0-0" }} m</small>
+            </div>
+          </div>
+          <ng-template #noWalking><p>No tenants in this range</p></ng-template>
+        </div>
+      </div>
+
+      <!-- longer -->
+      <div class="col-md-4" *ngIf="tenantGroups.longer.length">
+        <div class="tenant-category-card">
+          <h5>Longer but acceptable (800–1200 m)</h5>
+          <div *ngIf="tenantGroups.longer.length; else noLonger">
+            <div
+              *ngFor="let t of tenantGroups.longer"
+              class="tenant-item d-flex flex-row"
+            >
+              <!-- <img *ngIf="t.LogoURL" [src]="t.LogoURL" class="orgbranches" alt="" /> -->
+              <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+                <img [src]="t.LogoURL" class="branche-logo" />
+              </ng-container>
+              <ng-template #logoPlaceholder>
+                <div class="branche-logo placeholder">
+                  {{ getInitial(t.OrganizationName) }}
+                </div>
+              </ng-template>
+              <div class="tenant-text">
+                <span class="tenant-name">{{ t.OrganizationName }}</span>
+
+                <span *ngIf="t.Category" class="tenant-cat">
+                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
+                </span>
+              </div>
+              <small>{{ t.Distance | number : "1.0-0" }} m</small>
+            </div>
+          </div>
+          <ng-template #noLonger><p>No tenants in this range</p></ng-template>
+        </div>
+      </div>
+    </div>
+    <div class="row m-0 p-0">
       <div
         class="col-md-4"
         *ngIf="OrganizationBranches && OrganizationBranches.Branches.length > 0"
