@@ -393,7 +393,38 @@
 
     <div class="row py-2">
       <!-- very short -->
-      <div class="col-md-4" *ngIf="tenantGroups.veryShort.length">
+      <div class="col-md-6" *ngIf="tenantGroups.onSite.length">
+        <div class="tenant-category-card">
+          <h5>Onsite</h5>
+          <div *ngIf="tenantGroups.onSite.length; else noVeryShort">
+            <div
+              *ngFor="let t of tenantGroups.onSite"
+              class="tenant-item d-flex flex-row"
+            >
+              <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+                <img [src]="t.LogoURL" class="branche-logo" />
+              </ng-container>
+              <ng-template #logoPlaceholder>
+                <div class="branche-logo placeholder">
+                  {{ getInitial(t.OrganizationName) }}
+                </div>
+              </ng-template>
+              <div class="tenant-text">
+                <span class="tenant-name">{{ t.OrganizationName }}</span>
+
+                <!-- <span *ngIf="t.Category" class="tenant-cat">
+                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
+                </span> -->
+              </div>
+              <small>{{ t.Category }}</small>
+            </div>
+          </div>
+          <ng-template #noVeryShort
+            ><p>No tenants in this range</p></ng-template
+          >
+        </div>
+      </div>
+      <div class="col-md-6" *ngIf="tenantGroups.veryShort.length">
         <div class="tenant-category-card">
           <h5>Very short walk (100–400 m)</h5>
           <div *ngIf="tenantGroups.veryShort.length; else noVeryShort">
@@ -412,11 +443,11 @@
               <div class="tenant-text">
                 <span class="tenant-name">{{ t.OrganizationName }}</span>
 
-                <span *ngIf="t.Category" class="tenant-cat">
+                <!-- <span *ngIf="t.Category" class="tenant-cat">
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
-                </span>
+                </span> -->
               </div>
-              <small>{{ t.Distance | number : "1.0-0" }} m</small>
+              <small>{{ t.Category }}</small>
             </div>
           </div>
           <ng-template #noVeryShort
@@ -426,7 +457,7 @@
       </div>
 
       <!-- walking -->
-      <div class="col-md-4" *ngIf="tenantGroups.walking.length">
+      <div class="col-md-6 mt-2" *ngIf="tenantGroups.walking.length">
         <div class="tenant-category-card">
           <h5>Walking distance (400–800 m)</h5>
           <div *ngIf="tenantGroups.walking.length; else noWalking">
@@ -445,11 +476,11 @@
               <div class="tenant-text">
                 <span class="tenant-name">{{ t.OrganizationName }}</span>
 
-                <span *ngIf="t.Category" class="tenant-cat">
+                <!-- <span *ngIf="t.Category" class="tenant-cat">
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
-                </span>
+                </span> -->
               </div>
-              <small>{{ t.Distance | number : "1.0-0" }} m</small>
+              <small>{{ t.Category }}</small>
             </div>
           </div>
           <ng-template #noWalking><p>No tenants in this range</p></ng-template>
@@ -457,7 +488,7 @@
       </div>
 
       <!-- longer -->
-      <div class="col-md-4" *ngIf="tenantGroups.longer.length">
+      <div class="col-md-6 mt-2" *ngIf="tenantGroups.longer.length">
         <div class="tenant-category-card">
           <h5>Longer but acceptable (800–1200 m)</h5>
           <div *ngIf="tenantGroups.longer.length; else noLonger">
@@ -477,11 +508,11 @@
               <div class="tenant-text">
                 <span class="tenant-name">{{ t.OrganizationName }}</span>
 
-                <span *ngIf="t.Category" class="tenant-cat">
+                <!-- <span *ngIf="t.Category" class="tenant-cat">
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
-                </span>
+                </span> -->
               </div>
-              <small>{{ t.Distance | number : "1.0-0" }} m</small>
+              <small>{{ t.Category }}</small>
             </div>
           </div>
           <ng-template #noLonger><p>No tenants in this range</p></ng-template>
