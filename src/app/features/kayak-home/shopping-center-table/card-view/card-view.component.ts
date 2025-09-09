@@ -740,9 +740,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  getImageUrl(shopping: any): string {
-    return shopping.MainImage || 'assets/Images/DefaultImage.png';
-  }
+ 
 
   getShoppingCenterContact(centerId: any): void {
     const body: any = {
