@@ -320,23 +320,8 @@
     </div>
     <div class="d-flex justify-content-between gap-4 flex-column py-2" style="background-color: #fff; border-radius: 10px; padding: 15px;">
       <div>
-        <h1
-        style="font-weight: 600;"
-          class="pb-0 m-0"
-          *ngIf="ShoppingCenter?.CenterName"
-          [innerHTML]="ShoppingCenter.CenterName | titlecase"
-        ></h1>
-        <p
-          class="my-2 pb-0 address-city"
-          (click)="
-            openMapViewPlace(
-              mapPopup,
-              ShoppingCenter ? ShoppingCenter : StandAlonePlace
-            )
-          "
-        >
-          {{ getAddress() }}
-        </p>
+         
+       
          <div class=" contact-container">
             <ng-container *ngFor="let Manager of OrgManager">
               <div
