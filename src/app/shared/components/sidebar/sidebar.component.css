@@ -63,7 +63,9 @@
   position: relative;
   overflow: hidden;
 }
-
+.nav-btn.active {
+  color: var(--Colors-Primary-hover);
+}
 .nav-btn::before {
   content: '';
   position: absolute;
@@ -80,7 +82,7 @@
 }
 
 .nav-btn:hover {
-  color: var(--Colors-Primary-hover, #6e8efb);
+  color: var(--Colors-Primary-hover);
   transform: translateY(-1px);
 }
 
