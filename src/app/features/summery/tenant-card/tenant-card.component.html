@@ -16,14 +16,14 @@
   </div>
 
   <div class="card-header">
-    <ng-container *ngIf="0; else logoPlaceholder">
-      <!-- <img  
-    class="tenant-card-img"
-    [src]="getImageUrl(tenant.id)"
+    <ng-container *ngIf="tenant.logoUrl; else logoPlaceholder">
+      <img  
+    class="org-logo"
+    [src]="tenant.logoUrl"
     crossOrigin="anonymous"
     (load)="checkImage($event)"
     (error)="onImageError($event)"
-  /> -->
+  />
     </ng-container>
     <ng-template #logoPlaceholder>
       <div class="org-logo placeholder">

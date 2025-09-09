@@ -25,6 +25,7 @@ export interface Center {
     SignageImage: string
     Score:any
     MainImage: string
+    ManagerORGLogoURL:string
     ManagerORG:any
     ZipCode?: string
     PlaceKey?: string
