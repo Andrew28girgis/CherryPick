@@ -34,7 +34,7 @@
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
   <ng-container *ngFor="let shopping of cardsSideList">
-    <div class="cardResponsive" *ngIf="shopping.Score">
+    <div class="cardResponsive" *ngIf="shopping.MainImage">
       <div
         class="main-img"
         (click)="handleImageClick($event)"
@@ -55,7 +55,8 @@
           class="imgggg"
           [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
         />
-        <div
+        <div 
+        *ngIf="shopping.Score"
            class="card-badge"
             [ngClass]="{'green-circle': shopping.Score>50,'yellow-circle': shopping.Score<50,'red-circle':!shopping.Score}" 
           [attr.aria-label]="shopping.Score"
@@ -719,7 +720,7 @@
     </thead>
     <tbody class=" ">
       <ng-container *ngFor="let shopping of cardsSideList">
-        <tr *ngIf="!shopping.Score">
+        <tr *ngIf="!shopping.MainImage">
           <td>
             <div
               [ngClass]="{
