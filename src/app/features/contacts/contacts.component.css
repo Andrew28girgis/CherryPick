@@ -6,7 +6,7 @@
   /* single column by default (gives contacts strip max width). 
         To switch to multi-column cards, uncomment the next line: */
   /* grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); */
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   /* grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); */
 
   gap: var(--Space-S-24);
