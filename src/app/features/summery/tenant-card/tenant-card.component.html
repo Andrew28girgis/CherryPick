@@ -1,8 +1,5 @@
-<div
-  class="page-card"
-
->
-<!--   [routerLink]="
+<div class="page-card">
+  <!--   [routerLink]="
     tenant.Campaigns && tenant.Campaigns.length > 0
       ? ['/dashboard', tenant.id, tenant.name, tenant.Campaigns[0].Id]
       : null
@@ -17,13 +14,13 @@
 
   <div class="card-header">
     <ng-container *ngIf="tenant.logoUrl; else logoPlaceholder">
-      <img  
-    class="org-logo"
-    [src]="tenant.logoUrl"
-    crossOrigin="anonymous"
-    (load)="checkImage($event)"
-    (error)="onImageError($event)"
-  />
+      <img
+        class="org-logo"
+        [src]="tenant.logoUrl"
+        crossOrigin="anonymous"
+        (load)="checkImage($event)"
+        (error)="onImageError($event)"
+      />
     </ng-container>
     <ng-template #logoPlaceholder>
       <div class="org-logo placeholder">
@@ -33,19 +30,17 @@
     <h3 class="card-title">{{ tenant.name }}</h3>
   </div>
   <div class="card-content">
-    <div
-      class="card-actions"
-     >
+    <div class="card-actions">
       <button
-         class="action-btn secondary"
+        class="action-btn secondary"
         (click)="openCampaignModal(); $event.stopPropagation()"
       >
         Add Campaign
       </button>
       <button
-         class="action-btn"
-         (click)="openOffcanvas(offcanvasContent); $event.stopPropagation()"
-         *ngIf="tenant.Campaigns && tenant.Campaigns.length > 0"
+        class="action-btn"
+        (click)="openOffcanvas(offcanvasContent); $event.stopPropagation()"
+        *ngIf="tenant.Campaigns && tenant.Campaigns.length > 0"
       >
         View
       </button>
@@ -94,9 +89,12 @@
       <span>Add Campaign</span>
     </button>
     <ng-container *ngFor="let campaign of tenant.Campaigns; let last = last">
-      <div             [routerLink]="['/dashboard', tenant.id, tenant.name, campaign.Id]"
-      (click)="closeOffcanvas(); $event.stopPropagation()"
-class="campaign-card" [ngClass]="{ 'mb-3': !last }">
+      <div
+        [routerLink]="['/dashboard', tenant.id, tenant.name, campaign.Id]"
+        (click)="closeOffcanvas(); $event.stopPropagation()"
+        class="campaign-card"
+        [ngClass]="{ 'mb-3': !last }"
+      >
         <div class="d-flex flex-column justify-content-center gap-1">
           <div
             class="campaign-privacy"
@@ -110,9 +108,7 @@ class="campaign-card" [ngClass]="{ 'mb-3': !last }">
               {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
             </span>
           </div>
-          <a
-            class="campaign-name"
-          >
+          <a class="campaign-name">
             {{ campaign.CampaignName }}
           </a>
           <div class="campaign-creation-date">
