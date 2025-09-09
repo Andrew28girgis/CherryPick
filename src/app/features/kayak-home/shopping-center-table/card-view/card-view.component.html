@@ -56,8 +56,7 @@
           [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
         />
         <div
-          *ngIf="shopping.Score > 0 && shopping.MainImage"
-          class="card-badge"
+           class="card-badge"
           [attr.aria-label]="shopping.Score"
         >
           <span>{{ shopping.Score }} %</span>
