@@ -16,15 +16,6 @@
   overflow-y: auto;
 }
 
-.termsofservice {
-  text-decoration: underline;
-  color: var(--Colors-Primary-500);
-}
-
-.termsofservice:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
 .content-container.authenticated {
   background-color: none;
 }
@@ -46,51 +37,6 @@
 
 .app-shell.with-sidebar > .app-container {
   padding: 0 40px 50px 40px;
-}
-
-:host {
-  display: block;
-  position: relative;
-  min-height: 100vh;
-  /* background: url("../assets/Images/background.png") top center / 100% auto
-    no-repeat; */
-  z-index: 0;
-}
-:host::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* background: var(--Website-Background); */
-  backdrop-filter: blur(100px);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Add to app.component.css */
-.app-shell.no-sidebar {
-  margin-left: 0;
-  width: 100%;
-}
-
-.no-sidebar .app-container {
-  margin-left: 0;
-  width: 100%;
-}
-
-/* Update the no-sidebar class */
-.app-shell.no-sidebar {
-  grid-template-columns: minmax(
-    0,
-    1fr
-  ); /* Only one full-width column when no sidebar */
-}
-
-.app-shell.no-sidebar > .app-container {
-  grid-column: 1; /* Take the first (and only) column */
-  width: 100%;
 }
 
 /* Updated grid system to handle copilot sidebar */
@@ -125,12 +71,6 @@
   width: 100%;
 }
 
-/* Remove old chatbot container styles */
-.chatbot-container {
-  display: none;
-}
-
-/* Add these responsive adjustments */
 @media (max-width: 1200px) {
   .app-shell.with-copilot.copilot-expanded.authenticated {
     margin-right: min(320px, 35vw) !important;
@@ -189,16 +129,6 @@
   margin-left: 0;
 }
 
-/* When on chatbot route and overlay is active, split 50/50 */
-.app-shell.chatbot-route.overlay-active > .app-container {
-  width: 50%;
-}
-
-.app-shell.chatbot-route.overlay-active {
-  margin-right: 50%;
-}
-
-/* Override Emily chatbot styles when on chatbot route */
 .app-shell.chatbot-route.emily-chatbot {
   grid-template-columns: minmax(0, 1fr);
   margin-left: 0;

@@ -1,30 +1,9 @@
 <div
   class="app-shell"
-  [ngClass]="{
-    'with-sidebar':
-      (isAuthenticated &&
-        !hideSidebar &&
-        !showingTransition &&
-        !isEmilyChatBot) ||
-      isChatbotRoute,
-    'with-copilot': isCopilotOpen,
-    'copilot-expanded': isCopilotFullyOpen,
-    'emily-chatbot': isEmilyChatBot,
-    'chatbot-route': isChatbotRoute,
-    authenticated: isAuthenticated,
-    'overlay-active': overlayActive
-  }"
+  [ngClass]="appShellClasses"
 >
-  <app-sidebar
-    *ngIf="
-      (isAuthenticated &&
-        !hideSidebar &&
-        !showingTransition &&
-        !isEmilyChatBot) ||
-      isChatbotRoute
-    "
-  ></app-sidebar>
-
+  <app-sidebar *ngIf="shouldShowSidebar"></app-sidebar>
+  
   <div class="app-container">
     <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
       <div class="main-content-area">
@@ -45,13 +24,10 @@
   </div>
 
   <app-notifications
-    *ngIf="
-      isAuthenticated && !hideSidebar && !showingTransition && !isEmilyChatBot
-    "
-    [campaignId]="CampaignId"
+    *ngIf="shouldShowNotifications"
+    [campaignId]="campaignId"
     [isChatbotRoute]="isChatbotRoute"
-    (overlayStateChange)="overlayActive = $event"
+    (overlayStateChange)="onOverlayStateChange($event)"
     (sidebarStateChange)="onCopilotStateChange($event)"
-  >
-  </app-notifications>
+  ></app-notifications>
 </div>
