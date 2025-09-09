@@ -30,6 +30,7 @@ import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
 import { take, finalize, filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RefreshService } from 'src/app/core/services/refresh.service';
 
 type ChatFrom = 'user' | 'system' | 'ai';
 
@@ -130,7 +131,8 @@ private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
     private sanitizer: DomSanitizer,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private refreshService: RefreshService,
   ) {}
 
   showScrollButton = false;
@@ -856,6 +858,7 @@ this.ro?.disconnect();
           this.showSaveToast = false;
           this.cdRef.detectChanges();
         }, 2500);
+        this.refreshService.triggerRefreshOrganizations();
 
         this.isSaving = false;
       },

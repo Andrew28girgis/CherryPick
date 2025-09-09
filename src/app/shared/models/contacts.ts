@@ -5,6 +5,7 @@ export interface OrganizationWithContacts {
   stakeholderId:any;
 }
 export interface Contact {
+flipped: boolean;
   accountGoogleLinked: string;
   accountMicrosoftLinked: string;
   address: string;
