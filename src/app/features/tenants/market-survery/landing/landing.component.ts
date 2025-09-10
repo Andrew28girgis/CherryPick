@@ -76,6 +76,90 @@ export class LandingComponent {
     walking: [] as ShoppingCenterTenant[],
     longer: [] as ShoppingCenterTenant[],
   };
+  categoryIcons: { [key: string]: string } = {
+    // Transport
+    bus: '🚌',
+    bus_stop: '🚏',
+    stop_position: '🚏',
+    stop_area: '🚏',
+    train: '🚆',
+    railway: '🚆',
+    light_rail: '🚊',
+    bicycle: '🚲',
+    cycleway: '🚴',
+    car: '🚗',
+    car_repair: '🔧',
+    car_parts: '⚙️',
+    car_wash: '🚿',
+    parking_space: '🅿️',
+    fuel: '⛽',
+  
+    // Food & Drink
+    fast_food: '🍔',
+    restaurant: '🍽️',
+    cafe: '☕',
+    bar: '🍺',
+    nightclub: '🎶',
+    biergarten: '🍻',
+    bakery: '🥐',
+    food: '🍴', // generic fallback for food if needed
+  
+    // Retail & Shopping
+    retail: '🛍️',
+    convenience: '🏪',
+    clothes: '👕',
+    department_store: '🏬',
+    craft: '🎨',
+    florist: '🌸',
+    furniture: '🛋️',
+    music: '🎵',
+  
+    // Services & Facilities
+    bank: '🏦',
+    money_lender: '💰',
+    clinic: '🏥',
+    pharmacy: '💊',
+    beauty: '💄',
+    hairdresser: '💇‍♀️',
+    laundry: '🧺',
+    funeral_directors: '⚰️',
+    social_facility: '🤝',
+    community_centre: '🏢',
+    events_venue: '🎉',
+    ballroom: '💃',
+    theatre: '🎭',
+    cinema: '🎬',
+    studio: '🎙️',
+    office: '🏢',
+    service: '🛠️',
+    industrial: '🏭',
+    printer: '🖨️',
+    printing: '🖨️',
+  
+    // Living & Places
+    apartments: '🏢',
+    residential: '🏠',
+    detached: '🏡',
+    terrace: '🏘️',
+    place_of_worship: '⛪',
+    allotments: '🌱',
+    common: '🏞️',
+  
+    // Education
+    school: '🏫',
+    university: '🎓',
+  
+    // Misc
+    alcohol: '🍷',
+    erotic: '🔞',
+    hackerspace: '💻',
+    yes: '✔️',
+  
+    // Fallback
+    unknown: '🏷️'
+  };
+  
+  
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1219,4 +1303,12 @@ export class LandingComponent {
   get hasContacts(): boolean {
     return this.OrgManager?.some((sc) => !sc) ?? false;
   }
+  
+  getCategoryIcon(category: string): string {
+    if (!category) return this.categoryIcons['unknown'];
+  
+    const key = category.toLowerCase();
+    return this.categoryIcons[key] || this.categoryIcons['unknown'];
+  }
+  
 }

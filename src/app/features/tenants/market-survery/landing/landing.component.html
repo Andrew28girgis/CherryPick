@@ -318,8 +318,9 @@
         </ng-container>
       </section>
     </div>
+    <!--       *ngIf="hasContacts"
+ -->
     <div
-      *ngIf="hasContacts"
       class="d-flex justify-content-between gap-4 flex-column py-2"
       style="background-color: #fff; border-radius: 10px; padding: 15px"
     >
@@ -402,7 +403,11 @@
               class="tenant-item d-flex flex-row"
             >
               <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
-                <img [src]="t.LogoURL" class="branche-logo" />
+                <img
+                  [src]="t.LogoURL"
+                  class="branche-logo"
+                  (error)="t.LogoURL = null"
+                />
               </ng-container>
               <ng-template #logoPlaceholder>
                 <div class="branche-logo placeholder">
@@ -416,7 +421,17 @@
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
                 </span> -->
               </div>
-              <small>{{ t.Category }}</small>
+              <small
+                *ngIf="
+                  t.Category &&
+                  t.Category.toLowerCase().trim() !== 'unknown' &&
+                  t.Category.toLowerCase().trim() !== 'unkown'
+                "
+                class="tenant-cat"
+              >
+                {{ getCategoryIcon(t.Category) }}
+                {{ t.Category.replace("_", " ") }}
+              </small>
             </div>
           </div>
           <ng-template #noVeryShort
@@ -447,7 +462,17 @@
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
                 </span> -->
               </div>
-              <small>{{ t.Category }}</small>
+              <small
+              *ngIf="
+                t.Category &&
+                t.Category.toLowerCase().trim() !== 'unknown' &&
+                t.Category.toLowerCase().trim() !== 'unkown'
+              "
+              class="tenant-cat"
+            >
+              {{ getCategoryIcon(t.Category) }}
+              {{ t.Category.replace("_", " ") }}
+            </small>
             </div>
           </div>
           <ng-template #noVeryShort
@@ -480,7 +505,17 @@
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
                 </span> -->
               </div>
-              <small>{{ t.Category }}</small>
+              <small
+              *ngIf="
+                t.Category &&
+                t.Category.toLowerCase().trim() !== 'unknown' &&
+                t.Category.toLowerCase().trim() !== 'unkown'
+              "
+              class="tenant-cat"
+            >
+              {{ getCategoryIcon(t.Category) }}
+              {{ t.Category.replace("_", " ") }}
+            </small>
             </div>
           </div>
           <ng-template #noWalking><p>No tenants in this range</p></ng-template>
@@ -512,7 +547,17 @@
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
                 </span> -->
               </div>
-              <small>{{ t.Category }}</small>
+              <small
+                *ngIf="
+                  t.Category &&
+                  t.Category.toLowerCase().trim() !== 'unknown' &&
+                  t.Category.toLowerCase().trim() !== 'unkown'
+                "
+                class="tenant-cat"
+              >
+                {{ getCategoryIcon(t.Category) }}
+                {{ t.Category.replace("_", " ") }}
+              </small>
             </div>
           </div>
           <ng-template #noLonger><p>No tenants in this range</p></ng-template>

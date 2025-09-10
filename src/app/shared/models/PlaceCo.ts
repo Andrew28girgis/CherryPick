@@ -23,7 +23,6 @@ export interface ShoppingCenterTenant {
   BranchID: number;
   ShoppingCenterId: number;
   Distance: number;
-  LogoURL: string;
-  Category:any;
+  LogoURL: string | null;
+  Category: any;
 }
-

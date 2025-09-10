@@ -36,7 +36,7 @@
 }
 
 .app-shell.with-sidebar > .app-container {
-  padding: 0 40px 50px 40px;
+  padding: 10px 40px 50px 40px;
 }
 
 /* Updated grid system to handle copilot sidebar */
