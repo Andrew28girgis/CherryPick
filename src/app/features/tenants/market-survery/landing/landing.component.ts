@@ -108,8 +108,8 @@ export class LandingComponent {
     retail: '🛍️',
     convenience: '🏪',
     clothes: '👕',
-    department_store: '🏬',
-    craft: '🎨',
+     store: '🏬',
+     craft: '🎨',
     florist: '🌸',
     furniture: '🛋️',
     music: '🎵',
@@ -1311,7 +1311,22 @@ export class LandingComponent {
     if (!category) return this.categoryIcons['unknown'];
   
     const key = category.toLowerCase();
-    return this.categoryIcons[key] || this.categoryIcons['unknown'];
+  
+    // Try exact match first
+    if (this.categoryIcons[key]) {
+      return this.categoryIcons[key];
+    }
+  
+    // If not exact, try substring match
+    for (const iconKey in this.categoryIcons) {
+      if (key.includes(iconKey)) {
+        return this.categoryIcons[iconKey];
+      }
+    }
+  
+    // Fallback
+    return this.categoryIcons['unknown'];
   }
+  
   
 }

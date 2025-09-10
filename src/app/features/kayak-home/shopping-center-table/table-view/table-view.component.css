@@ -1,15 +1,4 @@
-.notes-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.striped-notes .note-item {
-  font-size: 0.75rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-.striped-notes .note-item:nth-child(even) {
-  background-color: #f2f2f2;
-}
+ 
 .small-table {
   font-size: 0.75rem;
 }
@@ -197,11 +186,7 @@
 .h700 {
   height: 700px;
 }
-
-.mtopp {
-  overflow-y: scroll;
-  height: 86vh;
-}
+ 
 
 .procpect-table-body td {
   padding-block: 5px;
@@ -229,10 +214,7 @@
 .option:hover {
   background-color: #f0f0f0;
 }
-
-.option-icon img {
-  margin-right: 10px;
-}
+ 
 
 img[alt="logo"] {
   margin-right: var(--Space-S-20);
@@ -259,59 +241,8 @@ img[alt="logo"] {
   font-size: 16px;
   color: #ff8028;
   font-weight: 500;
-}
-
-::ng-deep .popover-body {
-  padding: 5px !important;
-}
-
-::ng-deep .popover-arrow::after {
-  border-top: none !important;
-  border-top-color: transparent !important;
-}
-
-::ng-deep .popover-arrow::before {
-  border-top: none !important;
-}
-.search-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-stage {
-  margin-bottom: var(--Space-S-20);
-  align-items: center;
-}
-.search-input {
-  border: 1px solid #ccc;
-  margin: 0 var(--Space-S-20) 0 0;
-  border-radius: 6px;
-  outline: none;
-  width: 363px;
-  height: 40px;
-  padding: 0.75rem 3rem;
-}
-.search-campaign-icon {
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: 0;
-  margin-inline: 1rem;
-  top: 13px;
-}
-.search-input:focus {
-  border: 1px solid #ccc;
-  box-shadow: none;
-}
-.search-button {
-  position: absolute;
-  left: 10px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #888;
-}
+}  
+   
 @media (max-width: 768px) {
   .shortcuts_iconCard {
     right: 5vw !important;
@@ -364,19 +295,7 @@ img[alt="logo"] {
     background-position: 800px 0;
   }
 }
-
-.submission-button {
-  display: flex;
-  padding: var(--Space-S-8) var(--Space-S-12);
-  justify-content: center;
-  align-items: center;
-  gap: var(--Space-S-8);
-  align-self: stretch;
-  border-radius: var(--Radius-R-12);
-  border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
-  background: var(--Colors-Pure-White);
-  margin-top: 10px;
-}
+ 
 
 .submission-details {
   margin-bottom: var(--Space-S-20);
@@ -469,14 +388,7 @@ img[alt="logo"] {
 
 .dropdown-item.active {
   color: var(--app-color) !important;
-}
-.stage-select-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-}
-
+} 
 .stage-select-label {
   font-size: 14px;
   font-weight: 500;
@@ -515,27 +427,8 @@ img[alt="logo"] {
   border-color: #6366f1;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
-
-.select-arrow {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: #6b7280;
-  font-size: 12px;
-}
-
-.dropdown-menu {
-  max-height: 300px;
-  overflow-y: auto;
-  width: 100%;
-  padding: 0.5rem 0;
-  margin: 0.125rem 0 0;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 0.25rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
+ 
+ 
 
 .dropdown-item {
   display: block;
@@ -564,33 +457,8 @@ img[alt="logo"] {
   text-decoration: none;
   background-color: var(--Colors-Primary-light);
 }
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .stage-select-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    width: 100%;
-  }
-
-  .custom-select-wrapper {
-    width: 100%;
-    min-width: unset;
-  }
-}
-
-/* If you're not using Font Awesome, you can use this CSS arrow instead */
-.select-arrow:not(.fa-chevron-down)::after {
-  content: "";
-  display: inline-block;
-  width: 0.5em;
-  height: 0.5em;
-  border-right: 2px solid #6b7280;
-  border-bottom: 2px solid #6b7280;
-  transform: rotate(45deg);
-}
-
+ 
+ 
 .table-responsive {
   max-height: 600px;
   overflow-y: auto;
@@ -778,9 +646,4 @@ table tbody td {
   color: #333;
   line-height: 1.5;
 }
-
-.score{
-  /* flex-direction: row;
-  display: flex;
-  align-items: center; */
-}
+ 
