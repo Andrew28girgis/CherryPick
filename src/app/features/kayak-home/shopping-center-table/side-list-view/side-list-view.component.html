@@ -22,8 +22,7 @@
             >
               <img
                 *ngIf="place.MainImage; else score"
-                (error)="place.MainImage=null"
-                loading="lazy"
+                 loading="lazy"
                 [src]="place.MainImage"
                 [title]="place.CenterName"
                 [ngClass]="{ loading: imageLoadingStates[place.Id] }"
