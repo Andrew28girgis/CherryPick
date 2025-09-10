@@ -93,7 +93,7 @@ export class LandingComponent {
     car_wash: '🚿',
     parking_space: '🅿️',
     fuel: '⛽',
-  
+
     // Food & Drink
     fast_food: '🍔',
     restaurant: '🍽️',
@@ -103,7 +103,7 @@ export class LandingComponent {
     biergarten: '🍻',
     bakery: '🥐',
     food: '🍴', // generic fallback for food if needed
-  
+
     // Retail & Shopping
     retail: '🛍️',
     convenience: '🏪',
@@ -113,7 +113,7 @@ export class LandingComponent {
     florist: '🌸',
     furniture: '🛋️',
     music: '🎵',
-  
+
     // Services & Facilities
     bank: '🏦',
     money_lender: '💰',
@@ -135,7 +135,7 @@ export class LandingComponent {
     industrial: '🏭',
     printer: '🖨️',
     printing: '🖨️',
-  
+
     // Living & Places
     apartments: '🏢',
     residential: '🏠',
@@ -144,22 +144,21 @@ export class LandingComponent {
     place_of_worship: '⛪',
     allotments: '🌱',
     common: '🏞️',
-  
+
     // Education
     school: '🏫',
     university: '🎓',
-  
+
     // Misc
     alcohol: '🍷',
     erotic: '🔞',
     hackerspace: '💻',
     yes: '✔️',
-  
+
     // Fallback
-    unknown: '🏷️'
+    unknown: '🏷️',
   };
-  
-  
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1301,17 +1300,18 @@ export class LandingComponent {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   get hasContacts(): boolean {
-    return this.OrgManager?.some(sc => 
-      (sc?.firstName?.trim() || sc?.lastName?.trim() || sc?.email?.trim())
-    ) ?? false;
+    return (
+      this.OrgManager?.some(
+        (sc) =>
+          sc?.firstName?.trim() || sc?.lastName?.trim() || sc?.email?.trim()
+      ) ?? false
+    );
   }
-  
-  
+
   getCategoryIcon(category: string): string {
     if (!category) return this.categoryIcons['unknown'];
-  
+
     const key = category.toLowerCase();
     return this.categoryIcons[key] || this.categoryIcons['unknown'];
   }
-  
 }

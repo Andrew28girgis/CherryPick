@@ -111,14 +111,7 @@ const routes: Routes = [
       import('./features/tasks/tasks.module').then((m) => m.TasksModule),
     canActivate: [TenantOnlyGuard, AccountLinkedGuard],
   },
-  {
-    path: 'data-sources',
-    loadChildren: () =>
-      import('./features/data-sources/data-sources.module').then(
-        (m) => m.DataSourcesModule
-      ),
-    canActivate: [TenantOnlyGuard],
-  },
+
   {
     path: 'submissions/:campaignId',
     loadChildren: () =>
