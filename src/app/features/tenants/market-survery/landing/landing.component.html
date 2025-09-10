@@ -318,9 +318,8 @@
         </ng-container>
       </section>
     </div>
-    <!--       *ngIf="hasContacts"
- -->
     <div
+      *ngIf="hasContacts"
       class="d-flex justify-content-between gap-4 flex-column py-2"
       style="background-color: #fff; border-radius: 10px; padding: 15px"
     >
@@ -392,7 +391,7 @@
       </div> -->
     </div>
 
-    <div class="row py-2">
+    <div class="row py-4">
       <!-- very short -->
       <div class="col-md-6" *ngIf="tenantGroups.onSite.length">
         <div class="tenant-category-card">
