@@ -1301,8 +1301,11 @@ export class LandingComponent {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   get hasContacts(): boolean {
-    return this.OrgManager?.some((sc) => !sc) ?? false;
+    return this.OrgManager?.some(sc => 
+      (sc?.firstName?.trim() || sc?.lastName?.trim() || sc?.email?.trim())
+    ) ?? false;
   }
+  
   
   getCategoryIcon(category: string): string {
     if (!category) return this.categoryIcons['unknown'];
