@@ -24,7 +24,7 @@ const routes: Routes = [
     MarketMapViewComponent,
     MarketCardViewComponent
   ],
-  imports: [
+  imports: [     
     CommonModule,
     FormsModule,
     NgxSpinnerModule,
