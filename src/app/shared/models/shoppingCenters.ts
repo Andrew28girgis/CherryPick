@@ -24,7 +24,7 @@ export interface Center {
     NumberOfStores?: number
     SignageImage: string
     Score:any
-    MainImage: string
+    MainImage: string|null
     ManagerORGLogoURL:string
     ManagerORG:any
     ZipCode?: string

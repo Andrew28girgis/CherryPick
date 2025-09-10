@@ -852,7 +852,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   // make sure to bind 'this' when declaring the handler
   handleOutsideClick = (event: Event) => {
     const target = event.target as HTMLElement;
-    if (!target.closest('.org-info-trigger')) {
+    if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
       this.closeOrgMenu();
     }
   };

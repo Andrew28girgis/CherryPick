@@ -44,6 +44,7 @@
           *ngIf="shopping.MainImage; else score"
           loading="lazy"
           [src]="shopping.MainImage"
+          (error)="shopping.MainImage=null"
           [title]="shopping.CenterName"
           [ngClass]="{ loading: imageLoadingStates[shopping.Id] }"
           loading="lazy"
