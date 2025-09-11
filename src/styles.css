@@ -64,48 +64,13 @@ a {
   margin: 0 10px;
   text-transform: uppercase;
 }
-
-.navbar-line {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 12px var(--Space-S-8);
-  background: var(--Colors-Pure-White);
-}
-
-.nav-link {
-  color: #2d3436;
-  font-size: 15px;
-  line-height: 23px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  padding: 0 var(--Space-S-20);
-}
-
+ 
 .form-select {
   border-radius: var(--Radius-R-20);
   padding: 10px 19px;
   font-size: 13px;
   border-radius: var(--Radius-R-20);
-}
-
-.feature {
-  font-size: 1rem;
-  color: var(--app-color);
-  text-wrap: balance;
-}
-
-.card-head {
-  padding: 15px;
-}
-
-.card-footer {
-  background-color: var(--Colors-Pure-White);
-  padding: 0 15px 15px 15px;
-}
+}  
 
 .badge {
   top: 10px;
@@ -151,13 +116,6 @@ a {
   position: relative;
 }
 
-.card-window .main-img img {
-  width: 100%;
-  height: 250px;
-  border-radius: 18px 18px 0 0;
-  object-fit: cover;
-}
-
 .close-btn {
   position: absolute;
   top: 6px;
@@ -197,9 +155,7 @@ a {
   font-weight: 700; 
   margin: 0;
   transition: color 0.2s ease;
-}
-
- 
+} 
 
 .spec {
   padding-right: 10px;
@@ -213,25 +169,7 @@ a {
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-}
-
-.buttons-wrap {
-  display: flex;
-  justify-content: space-between;
-  margin-top: auto;
-  height: 40px;
-}
-
-.view-details-card {
-  color: var(--Colors-Pure-White);
-  background-color: #0d0c0c;
-  gap: var(--Space-S-8);
-  border-radius: var(--Radius-R-16);
-  border: none;
-  margin-right: 10px;
-  font-size: 15px;
-  padding: 7px 15px;
-}
+} 
 
 .address-content {
   font-size: 15px;
@@ -337,19 +275,6 @@ a {
   font-weight: 500;
   font-size: 14px;
 }
-.CherryPick__button {
-  border-radius: 10px;
-  background: #001f3f;
-  color: #fff;
-  text-align: center;
-  font-size: 1vw;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px;
-  border: 0;
-  padding: var(--Space-S-4) 10px;
-  white-space: nowrap;
-}
 
 .content-address {
   font-size: 15px;
@@ -398,22 +323,7 @@ a {
 .g-button:hover {
   background-color: var(--Colors-Primary-hover);
 }
-.org-logo {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid rgba(0,0,0,0.1);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 16px;
-  color: #fff;
-  background-color: #102E50;
-  flex-shrink: 0; /* keep logo fixed size */
-}
 @media (max-width: 991px) {
   .info-window {
     width: 300px;
