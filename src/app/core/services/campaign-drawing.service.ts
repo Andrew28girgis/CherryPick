@@ -44,7 +44,6 @@ export class CampaignDrawingService {
     // this.map.addListener('mousemove', (e: google.maps.MapMouseEvent) => {
     //   if (e.latLng) {
     //     const { lat, lng } = e.latLng.toJSON();
-    //     console.log(`Hovered at ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
     //   }
     // });
 

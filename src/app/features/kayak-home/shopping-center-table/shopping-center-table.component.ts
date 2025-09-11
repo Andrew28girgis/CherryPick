@@ -762,11 +762,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   fileOver(event: any): void {
-    console.log('File over drop zone');
   }
 
   fileLeave(event: any): void {
-    console.log('File left drop zone');
   }
 
   uploadFile(file: File): void {
@@ -779,7 +777,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const apiUrl = `${environment.api}/BrokerWithChatGPT/UploadOM/${this.CampaignId}`;
     this.http.post(apiUrl, formData).subscribe({
       next: (response: any) => {
-        console.log('Upload successful:', response);
         this.isUploading = false;
 
         this.modalService.dismissAll();

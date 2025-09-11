@@ -39,14 +39,10 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.spinner.hide();
-      console.log(`from initzzz`);
-      
     this.checkMailGenerated();
   }
 
   ngAfterViewInit(): void {
-    console.log(`testing`);
-    console.log(this.emails);
     
     const interval = setInterval(() => {
       if (this.emails && this.emails.length > 0) {
@@ -133,7 +129,6 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
   sendEmail(email: IEmailContent): void {
     // Only proceed if direction is equal to 4
     if (email.Direction !== 4) {
-      console.log('Email not sent - direction is not 4:', email.MailId);
       return;
     }
 
@@ -168,7 +163,6 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
     const eligibleEmails = this.emails.filter((email) => email.Direction === 4);
     // If no eligible emails, return early
     if (eligibleEmails.length === 0) {
-      console.log('No eligible emails to send (direction = 4)');
       return;
     }
 

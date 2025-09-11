@@ -381,7 +381,6 @@ this.ro?.disconnect();
         }
       );
 
-      console.log('rr', await response.json());
       return response;
     } catch (error) {
       console.error(':x::x::x::x: Fetch error:', error);
@@ -843,7 +842,6 @@ this.ro?.disconnect();
 
     this.placesService.savemessages(notification.id).subscribe({
       next: (res) => {
-        // console.log('campaign is from electronnnnn', res);
 
         if (+notification.taskId === 3) {
           this.getCampaigns();
@@ -874,11 +872,8 @@ this.ro?.disconnect();
     const request = { Name: 'GetCampaignsNeedUrls', Params: {} };
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
-        console.log('GetCampaignsNeedUrls response:', response);
 
-        // Safely grab the first id from response.json
         const id = response?.json?.[0]?.id;
-        // console.log(id,'idddddd');
 
         if (id == null) {
           console.error('No id found in response.json');
@@ -886,7 +881,6 @@ this.ro?.disconnect();
         }
 
         try {
-          // console.log(id,'iddddddelectronnnn');
 
           (window as any).electronMessage.getLinksFromGoogle(
             '',
@@ -928,7 +922,6 @@ this.ro?.disconnect();
       this.isOverlayMode = true;
       this.overlayHtml = notification.html;
     }
-    console.log(notification.id, 'notification.id');
     this.selectedNotification = notification;
   }
   async downloadPDF(): Promise<void> {
@@ -1029,9 +1022,6 @@ this.ro?.disconnect();
 
     this.placesService.GenericAPI(request).subscribe({
       next: (res) => {
-        console.log('SetTitleInNotification response:', res);
-
-        // Optionally update locally
         (this.selectedNotification as any).title = this.pdfTitle.trim();
 
         this.showSaveToast = true;

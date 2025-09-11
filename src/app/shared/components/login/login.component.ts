@@ -210,10 +210,7 @@ export class LoginComponent implements OnInit {
         if (response) {
           const userToken = response.encodedAccessToken;
           const refreshToken = response.encodedRefreshToken;
-          console.log('User Token:', userToken);
-          console.log('Refresh Token:', refreshToken);
           const decodedUserToken = this.decodeService.decodeToString(userToken);
-          console.log('Decoded User Token:', decodedUserToken);
           this.dropboxService.setToken(decodedUserToken);
           this.dropboxService.setRefreshToken(refreshToken);
         } else {
@@ -287,15 +284,12 @@ export class LoginComponent implements OnInit {
 
     this.placesService.GenericAPIHtml(body).subscribe({
       next: (data: any) => {
-        console.log(`from login component`);
-
         this.placesService.setAppMode('api');
         localStorage.setItem('apiMode', JSON.stringify(true));
       },
       error: (error: any) => {
         this.placesService.setAppMode('dropbox');
         localStorage.setItem('apiMode', JSON.stringify(false));
-        console.log('Error fetching user buy boxes:', error);
       },
     });
   }

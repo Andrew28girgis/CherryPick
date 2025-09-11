@@ -27,13 +27,11 @@ export class DropboxService {
 
   setToken(token: string): void {
     this.tokenSubject.next(token);
-    console.log('token set in dropbox service', token);
     this.token = token;
   }
 
   setRefreshToken(token: string): void {
      this.tokenSubject.next(token);
-    console.log('refresh token dropbox service', token);
     this.RefreshToken = token; 
   }
 
@@ -58,9 +56,6 @@ export class DropboxService {
 
   downloadFile(path: string): Observable<string> {
     const downloadUrl = 'https://content.dropboxapi.com/2/files/download';
-    console.log('tokenSubject',this.tokenSubject);
-    console.log('token',this.token);
-    console.log('RefreshToken',this.RefreshToken);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

@@ -334,7 +334,6 @@ export class EmailComposeComponent implements OnInit {
           this.CheckMailGenerated();
       } else {
       if (response.isGenerated) {
-        console.log('Email generated successfully:', response.isGenerated);
         this.getGeneratedEmail(this.mailContextId);
         this.spinner.hide();
         // this.getGeneratedEmail(this.mailContextId);

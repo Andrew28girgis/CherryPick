@@ -79,11 +79,9 @@ export class ResetPasswordComponent implements OnInit {
       Token: this.ResetPassword.Token,
     };
 
-    console.log('Sending payload:', payload);
 
     this.placesService.ResetPassword(payload).subscribe({
       next: (res: any) => {
-        console.log('Reset password response:', res);
 
         if (res.message === 'Password has been reset successfully.') {
           this.successMessage = 'Password has been reset successfully!';

@@ -265,7 +265,6 @@ export class GenerateEmailComponent implements OnInit {
         promptText: prompt?.PromptText || 'No prompt text available',
       }));
 
-      console.log('promptsData', this.prompts);
 
       // Select the first prompt as default, if available
       if (this.prompts.length > 0) {
@@ -643,7 +642,6 @@ export class GenerateEmailComponent implements OnInit {
     };
     this.placeService.GenericAPI(body).subscribe((res) => {
       const CEmail = res.json[0].virtualEmail;
-      console.log('CEmail', CEmail);
       this.CCEmail = CEmail;
     });
   }
@@ -651,7 +649,6 @@ export class GenerateEmailComponent implements OnInit {
   sendEmail(email: IEmailContent): void {
     // Only proceed if direction is equal to 4
     if (email.Direction !== 4) {
-      console.log('Email not sent - direction is not 4:', email.MailId);
       return;
     }
 
@@ -686,7 +683,6 @@ export class GenerateEmailComponent implements OnInit {
     const eligibleEmails = this.emails.filter((email) => email.Direction === 4);
     // If no eligible emails, return early
     if (eligibleEmails.length === 0) {
-      console.log('No eligible emails to send (direction = 4)');
       return;
     }
 

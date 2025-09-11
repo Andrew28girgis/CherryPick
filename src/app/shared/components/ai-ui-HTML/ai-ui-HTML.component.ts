@@ -193,7 +193,6 @@ Return exactly one code block containing the HTML with an embedded <style> block
   }
 
   private handleApiResponse(response: any): void {
-    console.log('AI API Response:', response);
     this.apiResponse =
       response?.response || response?.message || JSON.stringify(response);
   }

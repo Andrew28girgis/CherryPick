@@ -40,7 +40,6 @@ export class ExtractShoppingCenterComponent implements OnInit {
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingData = res.json;
-        console.log('Shopping Data:', this.shoppingData);
         // Initialize maps and other UI elements here
       },
     });

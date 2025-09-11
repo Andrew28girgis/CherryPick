@@ -94,8 +94,6 @@ export class NotificationService  {
           notification.contextExtendPrompt.trim() !== '' &&
           notification.contextExtendPrompt.trim().toLowerCase() !== 'null'
         ) {
-          console.log('sendElectronMessageeeee', notification);
-
           const token = localStorage.getItem('token') || '';
           (window as any).electronMessage.startChatAutmation(
             notification.contextExtendPrompt,

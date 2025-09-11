@@ -276,7 +276,6 @@ export class InboxComponent implements OnInit {
 
   openmodel(modal: any, body: any, contactId: any, contextId: any) {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
-    console.log('cc', contactId);
     this.selectedContactID = contactId;
     this.selectedContextID = contextId;
   }

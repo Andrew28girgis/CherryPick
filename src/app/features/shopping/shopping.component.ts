@@ -339,8 +339,6 @@ export class ShoppingComponent implements OnInit {
 
   onEnriche(center: any) {
     window.location.href = `https://www.google.com/search?q=${center.centerName}+${center.centerAddress}`;
-
-    console.log('Enriche shopping center', center);
   }
 
   setView(mode: 'grid' | 'table') {

@@ -53,7 +53,6 @@ export class ViewManagerService {
     map(([id, stages]) => {
       if (id === 0) return 'All';
       const s = stages.find((s) => s.id === id);
-      console.log('kkkkkkkkkkkkk', s?.stageName);
       return s?.stageName ?? 'Stage';
     })
   );
@@ -925,23 +924,13 @@ export class ViewManagerService {
 
                 if (uniqueSizes.length === 1) {
                   center.sizeRange = uniqueSizes[0];
-                  console.log(
-                    'Single size set:',
-                    center.sizeRange,
-                    'for center:',
-                    center.ShoppingCenter?.Name
-                  );
+         
                 } else {
                   // More than one → store as [min, max]
                   const min = uniqueSizes[0];
                   const max = uniqueSizes[uniqueSizes.length - 1];
                   center.sizeRange = [min, max];
-                  console.log(
-                    'Range set:',
-                    center.sizeRange,
-                    'for center:',
-                    center.ShoppingCenter?.Name
-                  );
+ 
                 }
               } else {
                 center.sizeRange = null;

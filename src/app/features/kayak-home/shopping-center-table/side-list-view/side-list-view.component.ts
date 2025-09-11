@@ -795,9 +795,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     if (checkbox.checked) {
       this.AddPlaceToMarketSurvery(campaignId, placeId);
     } else {
-      console.log(
-        `Unchecked place with ID ${placeId} from shopping center ${campaignId}`
-      );
       this.AddPlaceToMarketSurvery(campaignId, placeId);
     }
   }
@@ -814,7 +811,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     };
     this.placesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log('API response data:', data);
       },
     });
   }
@@ -843,7 +839,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   }
 
   finContactMessage(shoppingCenter: Center): void {
-    console.log(`uploaded`);
     (window as any).electronMessage.findContacts(
       JSON.stringify({
         shoppingCenterName: shoppingCenter.CenterName,
@@ -865,7 +860,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     };
     this.placesService.GenericAPI(body).subscribe((data) => {
       if (data.json && data.json.length) {
-        console.log('API response data:', data);
         const newContacts = data.json.map((c: any) => ({
           ID: c.id,
           Name: c.name,
@@ -874,7 +868,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           Email: c.email,
           ContactId: c.contactId,
         }));
-        console.log('after refactor', newContacts);
 
         const center = this.cardsSideList.find((sc) => sc.Id == centerId);
 
@@ -895,7 +888,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           center.ShoppingCenter.ManagerOrganization = [...newContacts];
         }
 
-        console.log('center after update ', center);
       } else {
         setTimeout(() => {
           this.getShoppingCenterContact(centerId);
@@ -916,8 +908,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
 
     modalRef.componentInstance.contactCreated.subscribe((response: any) => {
-      // Handle successful contact creation
-      console.log('Contact created successfully:', response);
       // You can add any additional logic here, such as refreshing the shopping center contacts
       this.getShoppingCenterContact(shoppingCenterId);
     });

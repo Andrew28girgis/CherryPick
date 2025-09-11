@@ -46,7 +46,6 @@ export class KanbanViewComponent implements OnInit {
       // Get kanban stages using the first kanban ID from the first shopping center
       if (shoppingCenters && shoppingCenters.length > 0) {
         this.kanbanId = shoppingCenters[0].kanbanId;
-        console.log(this.kanbanId);
         
       }
     } catch (error) {

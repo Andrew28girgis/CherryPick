@@ -156,7 +156,6 @@ export class GenericMapService {
   //     const bounds = new google.maps.LatLngBounds();
   //     features.forEach((f) => {
   //       featureId = f.getId();
-  //       console.log(featureId);
 
   //       f.getGeometry()?.forEachLatLng((latlng) => bounds.extend(latlng));
   //     });
@@ -171,10 +170,8 @@ export class GenericMapService {
   // }
 
   removeFeatureById(map: google.maps.Map, id: string | number): void {
-    console.log(id);
 
     const feature = map.data.getFeatureById(id);
-    console.log(feature);
 
     if (feature) {
       const type = feature.getGeometry()?.getType();

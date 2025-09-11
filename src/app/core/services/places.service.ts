@@ -78,7 +78,6 @@ export class PlacesService {
           map((fileContent: string) => {
             try {
               const convertedBytes = JSON.parse(fileContent);
-              console.log('Converted Bytes:', convertedBytes);
 
               // Check if we got a meaningful result (not empty)
               if (convertedBytes && Object.keys(convertedBytes).length > 0) {
@@ -143,12 +142,10 @@ export class PlacesService {
           map((fileContent: string) => {
             try {
               const convertedBytes = JSON.parse(fileContent);
-              console.log('Converted Bytes:', convertedBytes);
-
+ 
               // Check if we got a meaningful result (not empty)
               if (convertedBytes && Object.keys(convertedBytes).length > 0) {
-                console.log(`returning convertedBytes`);
-
+ 
                 return convertedBytes;
               } else {
                 // If empty result, continue polling
@@ -227,7 +224,6 @@ export class PlacesService {
           map((fileContent: string) => {
             try {
               const convertedBytes = JSON.parse(fileContent);
-              console.log('Converted Bytes:', convertedBytes);
 
               if (convertedBytes && Object.keys(convertedBytes).length > 0) {
                 return convertedBytes;

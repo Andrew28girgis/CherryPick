@@ -131,7 +131,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
-          console.log(this.filteredCampaigns);
         } else {
           this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];

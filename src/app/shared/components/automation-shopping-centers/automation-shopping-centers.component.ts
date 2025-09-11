@@ -43,7 +43,6 @@ export class AutomationShoppingCentersComponent implements OnInit {
         try {
           const rawJson = data.json[0].automationJsonResponse;
           this.automationData = JSON.parse(rawJson); // ✅ Convert string to object
-          console.log('Parsed Automation Data:', this.automationData);
         } catch (error) {
           console.error('Failed to parse automationJsonResponse:', error);
         }
@@ -54,7 +53,6 @@ export class AutomationShoppingCentersComponent implements OnInit {
   performClose() {
     if ((window as any).chrome?.webview?.postMessage) {
       (window as any).chrome.webview.postMessage('close-automation-window');
-      console.log('Close message sent to webview');
     } else {
       console.warn('chrome.webview is not available on this platform');
     }
