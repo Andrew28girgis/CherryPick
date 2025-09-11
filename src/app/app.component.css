@@ -20,7 +20,6 @@
   background-color: none;
 }
 
-/* Updated grid system for header layout */
 .app-shell {
   display: flex;
   flex-direction: column;
@@ -31,7 +30,7 @@
 
 .app-shell > .app-container {
   flex: 1;
-  padding-top: 64px; /* Space for the header */
+  padding-top: 64px;
   min-width: 0;
 }
 
@@ -39,18 +38,18 @@
   padding: 10px 40px 50px 40px;
 }
 
-/* Updated grid system to handle copilot sidebar */
+
 .app-shell.with-sidebar {
   grid-template-columns: 96px minmax(0, 1fr);
 }
 
-/* Enhanced copilot sidebar layout adjustments */
+
 .app-shell.with-copilot.authenticated {
-  margin-right: min(48px, 5vw); /* Use viewport-relative units */
+  margin-right: min(48px, 5vw); 
 }
 
 .app-shell.with-copilot.copilot-expanded.authenticated {
-  margin-right: min(380px, 40vw); /* Adapt to viewport width */
+  margin-right: min(380px, 40vw); 
 }
 
 .app-shell.with-sidebar.with-copilot.authenticated {
@@ -65,7 +64,6 @@
   margin-right: min(381px, 40vw);
 }
 
-/* Content transition when copilot opens/closes */
 .app-container {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
@@ -95,29 +93,27 @@
   }
 }
 
-/* Very small screens */
 @media (max-width: 480px) {
   .app-shell.with-copilot.copilot-expanded {
     margin-right: min(180px, 60vw);
   }
 }
 
-/* Add these styles for the Emily chatbot mode */
 .app-shell.emily-chatbot {
   grid-template-columns: minmax(
     0,
     1fr
-  ); /* Only one column for the chatbot view */
-  margin-left: 0; /* Remove any left margin */
+  );
+  margin-left: 0; 
 }
 
 .app-shell.emily-chatbot > .app-container {
-  grid-column: 1; /* Take the first column */
-  width: 100%; /* Full width */
-  margin-left: 0; /* No margin */
+  grid-column: 1;
+  width: 100%; 
+  margin-left: 0;
 }
 
-/* Added styles for chatbot route full-width mode */
+
 .app-shell.chatbot-route {
   grid-template-columns: minmax(0, 1fr);
   margin-left: 0;
@@ -140,7 +136,6 @@
   margin-left: 0;
 }
 
-/* Ensure Emily takes full width on chatbot route when no overlay */
 .app-shell.chatbot-route:not(.overlay-active) {
   margin-right: 0;
 }
