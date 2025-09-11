@@ -256,7 +256,6 @@ export class ContactsComponent implements OnInit {
 
       this.PlacesService.GenericAPI(params).subscribe(
         (response: any) => {
-          console.log('Contact created:', response);
           if (response.error) {
             console.error('Error from API:', response.error);
           } else {

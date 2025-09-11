@@ -1,10 +1,7 @@
 /// <reference types="google.maps" />
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IMapShape } from 'src/app/shared/models/imap-shape';
-import { IProperty } from 'src/app/shared/models/iproperty';
-import { GenericMapService } from './generic-map.service';
 import { IMapBounds } from 'src/app/shared/interfaces/imap-bounds';
 declare const google: any;
 

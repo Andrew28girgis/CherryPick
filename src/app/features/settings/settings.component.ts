@@ -57,7 +57,6 @@ export class SettingsComponent implements OnInit {
       this.emailStages = await firstValueFrom(
         this.settingsService.getStageIdAndName()
       );
-      console.log(this.emailStages);
     } catch (error) {
       console.error('Error while getting email stages:', error);
     }

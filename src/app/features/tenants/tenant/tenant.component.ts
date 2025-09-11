@@ -175,18 +175,15 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
-      console.log('encryptedContactId', encryptedContactId);
 
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        console.log('encryptedContactId', encryptedContactId);
 
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
-        console.log('Parsed contact ID:', this.contactID);
       }
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
@@ -194,7 +191,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
       if (encryptedContactId) {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
-          console.log('Decrypted contact ID:', this.contactIDs);
           if (this.contactIDs) {
             this.GetContactDataUsingContactIds();
           } else {
@@ -231,7 +227,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.ContactData = res.json;
-        // console.log('IfZeroContactData:', this.IfZeroContactData);
       },
     });
   }
@@ -261,15 +256,12 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         if (res.json) {
           this.shoppingCenterInMail = res.json;
-          console.log('shoppingCenterInMail', this.shoppingCenterInMail);
           this.shoppingCentersIds =
             this.shoppingCenterInMail
               .map((center: any) => center.Id)
               .join(',') + ',';
-          console.log('shoppingCentersIds', this.shoppingCentersIds);
         } else {
           this.shoppingCentersIds = '';
-          console.log('No shopping centers found in the email.');
         }
       },
     });
@@ -374,10 +366,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         if (res?.json?.[0]) {
           this.MatchCampaignsFromSubmission = res.json[0];
-          console.log(
-            'MatchCampaignsFromSubmission',
-            this.MatchCampaignsFromSubmission
-          );
           this.selectedPlaces = {};
           this.MatchCampaignsFromSubmission!.BB.forEach((buyBox) => {
             buyBox.C.forEach((campaign) => {
@@ -411,7 +399,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
     Promise.all(approvalPromises)
       .then((responses) => {
-        console.log('All approvals successful', responses);
         this.spinner.hide();
         this.MatchCampaignsFromSubmission = null;
         this.showToast('Campaigns and Places Approved Successfully');
@@ -541,7 +528,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.selectedCampaign = res.json[0]?.id;
-        console.log('Selected Campaign:', this.selectedCampaign);
 
         this.selectedbuyBox = res.json[0]?.buyBoxId;
         this.GetBuyBoxInfo();
@@ -569,7 +555,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
             this.shoppingCenterManage
               .map((center: any) => center.Id)
               .join(',') + ',';
-          console.log('shoppingCentersIds', this.shoppingCentersIds);
         }
       },
     });
@@ -591,7 +576,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.shoppingCentersIds += this.shoppingCenterManageSubmitted
             .map((center: any) => center.Id)
             .join(',');
-          console.log('shoppingCentersIds', this.shoppingCentersIds);
         }
       },
     });
@@ -789,7 +773,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
   //   this.PlacesService.GenericAPI(body).subscribe({
   //     next: (res: any) => {
   //       this.CampaignData = res.json[0];
-  //       console.log('CampaignData', this.CampaignData);
   //       this.spinner.hide();
   //     },
   //   });
@@ -863,9 +846,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.uploadRequest = this.httpClient.request(req).subscribe({
             next: (event: any) => {
               if (this.isClearing) {
-                console.log(
-                  'Modal data is being cleared, aborting image processing.'
-                );
                 return;
               }
 
@@ -875,7 +855,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
                 );
                 if (this.uploadProgress === 100) {
                   this.isUploading = false;
-                  console.log('Upload completed successfully');
                 }
               } else if (event instanceof HttpResponse) {
                 // Handle the response as plain text
@@ -894,7 +873,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
                     // If the response isn't what we expect
                     this.showToast('Unexpected response from server');
                   }
-                  console.log('Upload response:', event); // Log success
                 }
               }
             },
@@ -904,8 +882,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
                 this.isUploading = false;
                 this.isConverting = false;
                 this.spinner.hide();
-                // Log error details
-                console.log('Upload failed with error:', error); // Log error details
                 // Show a failure message
                 this.showToast('Failed to upload or convert PDF file!');
               }
@@ -1213,8 +1189,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
     // // Default the selectedOption to 'isManager' initially
     // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
-    // console.log('Is Manager:', this.isManager);
-    // console.log('Only Update:', this.onlyUpdate);
 
     const interval = setInterval(() => {
       if (
@@ -1240,7 +1214,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
   /////////////////////
   openShoppingModal(id: number) {
     this.ShoppingID = id;
-    console.log('this.ShoppingID', this.ShoppingID);
     this.modalService.open(this.openShopping, { size: 'lg', centered: true });
     this.GetShoppingCenterDetailsById();
   }

@@ -216,7 +216,6 @@ export class SocialMediaViewComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
-        console.log('UpdatePlaceKanbanStage API call was successful');
         
       },
     });

@@ -472,7 +472,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
   if (checkbox.checked) {
     this.AddPlaceToMarketSurvery(campaignId, placeId);
   } else {
-    console.log(`Unchecked place with ID ${placeId} from shopping center ${campaignId}`);
     this.AddPlaceToMarketSurvery(campaignId, placeId);
   }
 }
@@ -489,7 +488,6 @@ AddPlaceToMarketSurvery(campaignId: number, placeId: number): void {
   };
   this.placesService.GenericAPI(body).subscribe({
     next: (data) => {
-      console.log("API response data:", data);
     }
   });
 }
@@ -506,8 +504,6 @@ openAddContactModal(shoppingCenterId: number): void {
   modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
 
   modalRef.componentInstance.contactCreated.subscribe((response: any) => {
-    // Handle successful contact creation
-    console.log('Contact created successfully:', response);
     // You can add any additional logic here, such as refreshing the shopping center contacts
     // this.getShoppingCenterContact(shoppingCenterId);
   });

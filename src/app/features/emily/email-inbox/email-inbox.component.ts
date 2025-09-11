@@ -102,9 +102,6 @@ export class EmailInboxComponent implements OnInit {
     this.contactId = localStorage.getItem('contactId');
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
-    console.log('selectedContactContactId', this.selectedContactContactId);
-    console.log('selectedContactContextId', this.selectedContactContextId);
-
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
       this.buyBoxIdGenerate = params.get('buyBoxId');
@@ -499,7 +496,6 @@ export class EmailInboxComponent implements OnInit {
 
     return this.PlacesService.GenericAPI(body).pipe(
       tap(() => {
-        console.log('Mail context receivers added');
       })
     );
   }
@@ -519,10 +515,6 @@ export class EmailInboxComponent implements OnInit {
   //     const data = await firstValueFrom(this.PlacesService.GenericAPI(body));
   //     if (data.json) {
   //       this.returnGetMailContextGenerated = data.json;
-  //       console.log(
-  //         'Generated emails fetched:',
-  //         this.returnGetMailContextGenerated
-  //       );
   //     }
   //   } catch (error) {
   //     console.error('Error fetching generated emails:', error);
@@ -612,7 +604,6 @@ export class EmailInboxComponent implements OnInit {
           this.isEmailGenerated = true;
           this.dataLoaded = true;
           this.spinner.hide();
-          console.log('Email generated successfully', mail);
         }
       },
       error: (error) => {

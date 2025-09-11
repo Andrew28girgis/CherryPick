@@ -59,7 +59,6 @@ export class TodoCardComponent {
   sendEmail(email: ICampaignEmailContent): void {
     // Only proceed if direction is equal to 4
     if (email.direction !== 4) {
-      console.log('Email not sent - direction is not 4:', email.id);
       return;
     }
 
@@ -87,7 +86,6 @@ export class TodoCardComponent {
     );
     // If no eligible emails, return early
     if (eligibleEmails.length === 0) {
-      console.log('No eligible emails to send (direction = 4)');
       return;
     }
 

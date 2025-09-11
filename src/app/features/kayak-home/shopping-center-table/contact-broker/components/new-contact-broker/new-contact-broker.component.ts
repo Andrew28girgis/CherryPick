@@ -224,7 +224,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         promptText: prompt?.PromptText || 'No prompt text available',
       }));
 
-      console.log('promptsData', this.prompts);
 
       // Select the first prompt as default, if available
       if (this.prompts.length > 0) {
@@ -370,7 +369,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
       this.chooseBrokerObject,
       this.managedByBrokerArray
     );
-    console.log('ManagerOrgDTO:', this.ManagerOrgDTO);
     // debugger
     const requests = this.ManagerOrgDTO.map(async (managerOrg) => {
       const body: GenerateContextDTO = {
@@ -555,7 +553,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
     };
     this.placeService.GenericAPI(body).subscribe((res) => {
       const CEmail = res.json[0].virtualEmail;
-      console.log('CEmail', CEmail);
       this.CCEmail = CEmail;
       this.GetPrompts().then(() => {
         this.spinner.hide();
@@ -566,7 +563,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
   sendEmail(email: IEmailContent): void {
     // Only proceed if direction is equal to 4
     if (email.Direction !== 4) {
-      console.log('Email not sent - direction is not 4:', email.MailId);
       return;
     }
 
@@ -640,7 +636,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
   }
 
   onSignatureChange(event: any): void {
-    console.log(event.target.value);
     this.spinner.show();
 
     const body: any = {
