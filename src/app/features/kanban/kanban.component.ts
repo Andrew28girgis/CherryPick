@@ -13,7 +13,7 @@ import {
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { sharedColors } from '../../shared/others/shared-colors';
+import { sharedColors } from '../../shared/models/shared-colors';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
