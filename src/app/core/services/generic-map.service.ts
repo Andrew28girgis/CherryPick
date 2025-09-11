@@ -1,7 +1,6 @@
 /// <reference types="google.maps" />
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
 import { IMapBounds } from 'src/app/shared/interfaces/imap-bounds';
-import { IMapCity } from 'src/app/shared/interfaces/imap-city';
 import { IMapState } from 'src/app/shared/interfaces/imap-state';
 
 declare const google: any;

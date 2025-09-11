@@ -1,8 +1,7 @@
 // src/app/services/dropbox.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, from, Observable, switchMap, tap, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { BehaviorSubject, catchError, from, Observable, switchMap, throwError } from 'rxjs';
 
 export interface UploadArgs {
   path: string; // e.g. "/File Requests/Homework/andrew.json"

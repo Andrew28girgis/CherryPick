@@ -2,8 +2,7 @@
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import {  Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Campaign } from 'src/app/shared/models/tenants';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
