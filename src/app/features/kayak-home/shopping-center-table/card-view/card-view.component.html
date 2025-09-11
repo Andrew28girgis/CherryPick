@@ -34,14 +34,15 @@
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
   <ng-container *ngFor="let shopping of cardsSideList">
-    <div class="cardResponsive" *ngIf="shopping.MainImage">
+    <div class="cardResponsive" *ngIf="shopping.MainImage || shopping.scoreImage">
       <div
         class="main-img"
         (click)="handleImageClick($event)"
         [routerLink]="(activeDropdownId || selectedIdCard === shopping?.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
       >
         <img
-          *ngIf="shopping.MainImage; else score"
+          *ngIf="(shopping.MainImage &&!shopping.scoreImage) ; else score"
+          (error)="shopping.scoreImage=true"
           loading="lazy"
           [src]="shopping.MainImage"
            [title]="shopping.CenterName"
@@ -57,7 +58,7 @@
         />
         <div
         (click)="openInfoPopup(shopping, infoModal);$event.stopPropagation()"
-        *ngIf="shopping.Score"
+        *ngIf="shopping.Score &&!shopping.scoreImage"
           class="card-badge"
           [ngClass]="{
             'green-circle': shopping.Score > 50,
