@@ -7,9 +7,6 @@
   z-index: 100;
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 1px 2px;
-  
-  /* Fixed positioning with smooth animations */
-  /* position: fixed; */
   top: 0;
   left: 0;
   right: 0;
@@ -18,7 +15,6 @@
   backdrop-filter: blur(10px);
 }
 
-/* Scrolled state - when user scrolls down */
 .sidebar.scrolled {
   padding: 8px 30px;
   background-color: rgba(255, 255, 255, 0.95);
@@ -26,8 +22,6 @@
   backdrop-filter: blur(20px);
   transform: translateY(0);
 }
-
-/* Hide navbar when scrolling down, show when scrolling up */
 .sidebar.hidden {
   transform: translateY(-100%);
 }
@@ -36,7 +30,6 @@
   transform: translateY(0);
 }
 
-/* Smooth scale animation for brand on scroll */
 .brand {
   text-decoration: none;
   margin: 0;
@@ -52,7 +45,6 @@
   transform: scale(0.95);
 }
 
-/* Nav buttons with hover and scroll animations */
 .nav-btn {
   padding: 0px 22px;
   font-size: 14px;
@@ -86,7 +78,6 @@
   transform: translateY(-1px);
 }
 
-/* Nav group with glassmorphism effect */
 .nav-group {
   display: flex; 
   align-items: center;
@@ -113,8 +104,6 @@
   position: relative;
   overflow: visible;
 }
-
-/* Avatar animations */
 .avatar {
   border-radius: 50%;
   border: none;
@@ -135,13 +124,11 @@
   scale: 1.15;
  }
 
-/* Avatar container styles */
 .avatar-container {
   position: relative;
   display: inline-block;
 }
 
-/* Update dropdown menu positioning */
 .avatar-container .dropdown-menu {
   position: absolute;
   right: 0;
@@ -153,10 +140,9 @@
   right: 0;
   top: 100%;
   margin-top: 10px;
-  display: none; /* default hidden */
+  display: none; 
 }
 
-/* When Angular *ngIf shows it, force visible */
 .avatar-container .dropdown-menu.profile-dropdown {
   display: block !important;
 }
@@ -180,7 +166,6 @@
   border: none;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .sidebar {
     padding: 8px 15px;
@@ -223,34 +208,12 @@
   }
 }
 
-/* For very small devices */
 @media (max-width: 360px) {
   .dropdown-menuu {
     min-width: 160px;
     max-width: 90vw;
     right: -5px;
   }
-}
-
-/* Page content offset to prevent overlap */
-body {
-  padding-top: 70px; /* Adjust based on your navbar height */
-}
-
-/* Smooth scroll behavior */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Fancy Modal Styles */
-.fancy-modal-header {
-  background: var(--Colors-Primary-500);
-  color: white;
-  border-bottom: none;
-  padding: var(--Space-S-20) var(--Space-S-24);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .fancy-title {
@@ -363,19 +326,7 @@ html {
   to {
     transform: rotate(360deg);
   }
-}
-
-.fancy-modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
-
-.fancy-modal-window {
-  border-radius: var(--Radius-R-12);
-  overflow: hidden;
-  border: none;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
+} 
 
 .profile-dropdown {
   width: 280px;
@@ -392,12 +343,7 @@ html {
   top: 100% !important;
   transform: none !important;
   will-change: opacity;
-}
-
-[data-bs-popper="none"] {
-  position: absolute !important;
-  transform: none !important;
-}
+} 
 
 .profile-header {
   padding: 16px;
@@ -447,14 +393,7 @@ html {
 .menu-item:hover svg {
   color: var(--Colors-Primary-hover);
   transform: scale(1.1);
-}
-
-.dropdown-divider {
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.06);
-  margin: 8px;
-  border: none;
-}
+} 
 
 .logout-item {
   color: #e53e3e;
@@ -483,14 +422,6 @@ html {
   }
 }
 
-/* Right controls section with Emily and user avatars */
-.right-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Emily avatar styling with enhanced animations */
 .emily-avatar-container {
   position: relative;
   display: inline-block;
@@ -520,38 +451,6 @@ html {
   border-color: var(--Colors-Primary-hover, #6e8efb);
 }
 
-/* Enhanced notification badge styling */
-.emily-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: linear-gradient(45deg, #e53935, #ff6b6b);
-  color: white;
-  font-size: 12px;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 4px;
-  font-weight: bold;
-  animation: pulseCount 2s infinite;
-  z-index: 2;
-  box-shadow: 0 3px 6px rgba(229, 57, 53, 0.4);
-  border: 2px solid white;
-}
-
-@keyframes pulseCount {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-}
-
-/* Floating animation for Emily avatar */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
@@ -563,8 +462,4 @@ html {
 
 .emily-avatar-container {
   animation: float 3s ease-in-out infinite;
-}
-
-.dropdown-toggle::after {
-  display: none;
 }

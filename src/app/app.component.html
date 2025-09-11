@@ -1,9 +1,5 @@
-<div
-  class="app-shell"
-  [ngClass]="appShellClasses"
->
+<div class="app-shell" [ngClass]="appShellClasses">
   <app-sidebar *ngIf="shouldShowSidebar"></app-sidebar>
-  
   <div class="app-container">
     <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
       <div class="main-content-area">
