@@ -1,0 +1,358 @@
+<div class="h-100 d-flex flex-column">
+  <!-- State and City Filter -->
+  <div class="ng-container-fluid p-3">
+    <div class="row">
+      <!-- Unified State / City / Neighborhood input -->
+      <div class="col-3">
+
+        <div #searchContainer class="unified-search-container">
+          <input
+            id="unifiedSearch"
+            class="form-control"
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="State, City & Neighborhood"
+            (input)="onSearchInputEvent($event)"
+            (focus)="showSuggestions = searchResults.length > 0"
+            autocomplete="off"
+          />
+
+          <!-- suggestions panel -->
+          <div
+            class="suggestions-panel card mt-1"
+            *ngIf="showSuggestions && searchResults && searchResults.length"
+          >
+            <ul class="list-group list-group-flush suggestion-list">
+              <li
+                *ngFor="let item of searchResults; trackBy: trackBySearchItem"
+                class="list-group-item d-flex align-items-center suggestion-item"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(item)"
+                  (change)="toggleItem(item)"
+                  [id]="'chk-' + (item.type + '-' + (item.id ?? item.name))"
+                />
+                <label
+                  class="mb-0 ms-2 suggestion-label flex-grow-1"
+                  [for]="'chk-' + (item.type + '-' + (item.id ?? item.name))"
+                  (click)="$event.preventDefault(); toggleItem(item)"
+                >
+                  {{ itemDisplay(item) }}
+                </label>
+                <small class="text-muted text-capitalize ms-2">{{
+                  item.type
+                }}</small>
+              </li>
+            </ul>
+            <div
+              class="p-2 small text-muted"
+              *ngIf="searchResults.length === 0"
+            >
+              No results
+            </div>
+          </div>
+          <!-- selected items shown as chips / rows under the input -->
+<div class="selected-list mt-2" *ngIf="selectedItems && selectedItems.length">
+  <div class="selected-item d-flex align-items-center mb-1"
+       *ngFor="let s of selectedItems; let i = index; trackBy: trackBySelected">
+    <!-- label visible to user -->
+    <span class="me-2">{{ itemDisplay(s) }}</span>
+
+    <!-- optional small text showing the type -->
+    <small class="text-muted text-capitalize me-2">{{ s.type }}</small>
+
+    <!-- remove button -->
+    <button type="button"
+            class="btn btn-sm btn-outline-secondary"
+            title="Remove"
+            (click)="removeSelected(s)">
+      ×
+    </button>
+
+    <!-- optional hidden input so selections are posted in forms (value = id or name) -->
+    <input type="hidden" [name]="'selected[' + i + ']'" [value]="s.id ?? s.name"/>
+  </div>
+</div>
+
+        </div>
+
+        <!-- selected items shown as chips -->
+        <div
+          class="selected-chips mt-2"
+          *ngIf="selectedItems && selectedItems.length"
+        >
+          <span
+            class="badge selected-chip me-1"
+            *ngFor="let s of selectedItems; trackBy: trackBySelected"
+          >
+            {{ itemDisplay(s) }}
+            <button
+              type="button"
+              class="btn-close btn-close-white btn-sm ms-2"
+              aria-label="Remove"
+              (click)="removeSelected(s)"
+            ></button>
+          </span>
+        </div>
+      </div>
+
+      <!-- State dropdown -->
+      <!-- <div class="col-4">
+        <label for="stateSelect" class="form-label">State</label>
+        <p-dropdown
+          id="stateSelect"
+          [options]="states"
+          [(ngModel)]="selectedState"
+          placeholder="Select a state"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="onStateSelected($event.value)"
+          styleClass="w-100"
+        ></p-dropdown>
+      </div> -->
+
+      <!-- City multi-select -->
+      <!-- <div class="col-4">
+        <label for="citySelect" class="form-label">City</label>
+        <p-multiSelect
+          id="citySelect"
+          [options]="cities"
+          [(ngModel)]="selectedCities"
+          (onChange)="viewNeighborhoods($event.value)"
+          defaultLabel="Select cities"
+          optionLabel="label"
+          optionValue="value"
+          display="chip"
+          [disabled]="!selectedState || cities.length === 0"
+          styleClass="w-100"
+        >
+        </p-multiSelect>
+      </div> -->
+
+      <!-- Neighborhoods -->
+      <!-- <div class="col-4">
+        <label for="neighborhoodSelect" class="form-label">Neighborhood</label>
+
+        <p-multiSelect
+          id="neighborhoodSelect"
+          [(ngModel)]="selectedNeighborhoodIds"
+          [options]="neighOptions"
+          (onChange)="onNeighborhoodsChange($event.value)"
+          placeholder="{{
+            neighOptions.length
+              ? neighOptions.length + ' neighborhoods'
+              : 'No neighborhoods'
+          }}"
+          [disabled]="neighOptions.length === 0"
+          display="chip"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-100"
+        >
+        </p-multiSelect>
+      </div> -->
+      <div class="col-9">
+        <div class="map-wrapper">
+          <div #mapContainer class="map-container w-100"></div>
+
+          <div class="map-controls-container">
+            <div
+              class="map-control"
+              [ngClass]="{ 'active-map-control': selectedDrawingModeId == 1 }"
+              (click)="startDrawing(1, 'move')"
+            >
+              <div class="map-control-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M14.0402 22.75H9.2502C7.6302 22.75 6.1602 22.12 5.1002 20.96C4.0402 19.81 3.5302 18.29 3.6702 16.68C4.0102 12.58 7.6302 9.25 11.7502 9.25C15.5402 9.25 19.1202 12.29 19.7502 16.02C20.0502 17.8 19.6102 19.48 18.5302 20.76C17.4302 22.04 15.8402 22.75 14.0402 22.75ZM11.7402 10.75C8.3902 10.75 5.4402 13.47 5.1602 16.81C5.0602 18 5.4302 19.11 6.2002 19.95C6.9702 20.79 8.0502 21.25 9.2402 21.25H14.0302C15.3802 21.25 16.5702 20.73 17.3602 19.8C18.1502 18.87 18.4702 17.61 18.2502 16.27C17.7502 13.23 14.8302 10.75 11.7402 10.75Z"
+                  />
+                  <path
+                    d="M10.4702 8.25C8.68022 8.25 7.22021 6.79 7.22021 5C7.22021 3.21 8.68022 1.75 10.4702 1.75C12.2602 1.75 13.7202 3.21 13.7202 5C13.7202 6.79 12.2702 8.25 10.4702 8.25ZM10.4702 3.25C9.51022 3.25 8.72022 4.04 8.72022 5C8.72022 5.96 9.51022 6.75 10.4702 6.75C11.4302 6.75 12.2202 5.96 12.2202 5C12.2202 4.04 11.4402 3.25 10.4702 3.25Z"
+                  />
+                  <path
+                    d="M17.2998 9.44995C15.7798 9.44995 14.5498 8.21995 14.5498 6.69995C14.5498 5.17995 15.7798 3.94995 17.2998 3.94995C18.8198 3.94995 20.0498 5.17995 20.0498 6.69995C20.0498 8.21995 18.8198 9.44995 17.2998 9.44995ZM17.2998 5.44995C16.6098 5.44995 16.0498 6.00995 16.0498 6.69995C16.0498 7.38995 16.6098 7.94995 17.2998 7.94995C17.9898 7.94995 18.5498 7.38995 18.5498 6.69995C18.5498 6.00995 17.9898 5.44995 17.2998 5.44995Z"
+                  />
+                  <path
+                    d="M21 13.45C19.76 13.45 18.75 12.44 18.75 11.2C18.75 9.95995 19.76 8.94995 21 8.94995C22.24 8.94995 23.25 9.95995 23.25 11.2C23.25 12.44 22.24 13.45 21 13.45ZM21 10.45C20.59 10.45 20.25 10.79 20.25 11.2C20.25 11.61 20.59 11.95 21 11.95C21.41 11.95 21.75 11.61 21.75 11.2C21.75 10.79 21.41 10.45 21 10.45Z"
+                  />
+                  <path
+                    d="M3.97021 11.45C2.45021 11.45 1.22021 10.22 1.22021 8.69995C1.22021 7.17995 2.45021 5.94995 3.97021 5.94995C5.49021 5.94995 6.72021 7.17995 6.72021 8.69995C6.72021 10.22 5.49021 11.45 3.97021 11.45ZM3.97021 7.44995C3.28021 7.44995 2.72021 8.00995 2.72021 8.69995C2.72021 9.38995 3.28021 9.94995 3.97021 9.94995C4.66021 9.94995 5.22021 9.38995 5.22021 8.69995C5.22021 8.00995 4.66021 7.44995 3.97021 7.44995Z"
+                  />
+                </svg>
+              </div>
+              <span class="map-control-title">Move</span>
+            </div>
+            <div
+              class="map-control"
+              [ngClass]="{ 'active-map-control': selectedDrawingModeId == 2 }"
+              (click)="startDrawing(2, 'circle')"
+            >
+              <div class="map-control-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M16.3702 22.77C16.3602 22.77 16.3602 22.77 16.3502 22.77C15.3402 22.76 14.5002 22.14 14.2002 21.17L12.3502 15.22C12.1002 14.4 12.3102 13.52 12.9202 12.93C13.5202 12.34 14.3902 12.12 15.1902 12.37L21.1502 14.22C22.1102 14.52 22.7402 15.36 22.7502 16.37C22.7602 17.37 22.1502 18.22 21.1902 18.54L19.5602 19.09C19.3302 19.17 19.1502 19.34 19.0802 19.57L18.5202 21.21C18.2102 22.16 17.3702 22.77 16.3702 22.77ZM14.5102 13.77C14.2402 13.77 14.0602 13.92 13.9802 13.99C13.7702 14.2 13.7002 14.49 13.7902 14.78L15.6402 20.73C15.8002 21.24 16.2402 21.26 16.3802 21.27C16.5202 21.27 16.9502 21.23 17.1102 20.74L17.6702 19.1C17.8902 18.43 18.4302 17.9 19.1002 17.67L20.7302 17.12C21.2302 16.96 21.2602 16.52 21.2602 16.39C21.2602 16.26 21.2202 15.82 20.7202 15.66L14.7602 13.81C14.6602 13.78 14.5802 13.77 14.5102 13.77Z"
+                  />
+                  <path
+                    d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 12.41 22.41 12.75 22 12.75C21.59 12.75 21.25 12.41 21.25 12C21.25 6.9 17.1 2.75 12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C12.41 21.25 12.75 21.59 12.75 22C12.75 22.41 12.41 22.75 12 22.75Z"
+                  />
+                </svg>
+              </div>
+              <span class="map-control-title">Draw Circle</span>
+            </div>
+            <div
+              class="map-control"
+              [ngClass]="{ 'active-map-control': selectedDrawingModeId == 3 }"
+              (click)="startDrawing(3, 'polygon')"
+            >
+              <div class="map-control-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M10.4299 18.37C10.2799 18.37 10.1399 18.33 10.0099 18.24C9.79991 18.1 9.67991 17.87 9.67991 17.62C9.67991 17.47 9.66991 17.31 9.64991 17.15C9.55991 16.44 9.23991 15.82 8.69991 15.28C8.15991 14.74 7.48991 14.4 6.76991 14.31C6.64991 14.3 6.47991 14.29 6.31991 14.3C6.05991 14.32 5.81991 14.21 5.66991 14C5.51991 13.8 5.47991 13.53 5.55991 13.29C5.70991 12.88 5.92991 12.51 6.18991 12.21L7.72991 10.27C10.3799 6.96 15.7499 2.98 19.6799 1.4C20.5099 1.08 21.3999 1.27 22.0099 1.87C22.6399 2.5 22.8299 3.4 22.4999 4.22C20.9199 8.16 16.9499 13.52 13.6399 16.17L11.6699 17.75C11.2999 18.02 10.9999 18.19 10.6999 18.31C10.6199 18.35 10.5199 18.37 10.4299 18.37ZM7.53991 12.94C8.37991 13.16 9.12991 13.6 9.75991 14.23C10.3899 14.85 10.8099 15.57 11.0199 16.37L12.7099 15.01C15.8499 12.5 19.6199 7.41 21.1099 3.67C21.2599 3.3 21.0499 3.04 20.9499 2.95C20.8799 2.88 20.6199 2.66 20.2199 2.81C16.4999 4.31 11.4099 8.08 8.88991 11.22L7.53991 12.94Z"
+                  />
+                  <path
+                    d="M4.07987 22.75C3.32987 22.75 2.60987 22.45 2.06987 21.91C1.44987 21.29 1.14987 20.43 1.24987 19.55L1.51987 17.09C1.77987 14.65 3.77987 12.84 6.25987 12.79C6.44987 12.78 6.69987 12.79 6.92987 12.81C8.01987 12.95 8.98987 13.44 9.76987 14.22C10.5399 14.99 10.9999 15.91 11.1399 16.94C11.1699 17.16 11.1899 17.4 11.1899 17.61C11.1899 18.93 10.6799 20.16 9.75987 21.09C8.98987 21.85 7.99987 22.32 6.87987 22.46L4.40987 22.73C4.29987 22.74 4.18987 22.75 4.07987 22.75ZM6.44987 14.3C6.40987 14.3 6.35987 14.3 6.31987 14.3C4.80987 14.33 3.20987 15.36 3.00987 17.26L2.73987 19.72C2.68987 20.14 2.83987 20.55 3.12987 20.85C3.41987 21.14 3.82987 21.29 4.23987 21.24L6.69987 20.97C7.46987 20.87 8.15987 20.55 8.67987 20.03C9.31987 19.39 9.67987 18.53 9.67987 17.61C9.67987 17.46 9.66987 17.3 9.64987 17.14C9.55987 16.43 9.23987 15.81 8.69987 15.27C8.15987 14.73 7.48987 14.39 6.76987 14.3C6.68987 14.3 6.56987 14.3 6.44987 14.3Z"
+                  />
+                  <path
+                    d="M14.2398 15.22C13.8298 15.22 13.4898 14.88 13.4898 14.47C13.4898 12.27 11.6998 10.49 9.50977 10.49C9.09977 10.49 8.75977 10.15 8.75977 9.74C8.75977 9.33 9.08977 8.99 9.49977 8.99C12.5198 8.99 14.9798 11.45 14.9798 14.47C14.9898 14.89 14.6498 15.22 14.2398 15.22Z"
+                  />
+                </svg>
+              </div>
+              <span class="map-control-title">Draw Polygon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-body">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h5 class="new-campaign-title">Launch Expansion Campaigns</h5>
+      <svg
+        (click)="modal.dismiss('Cross click'); campaignName = ''"
+        style="cursor: pointer"
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+      >
+        <path
+          d="M10 18.3333C14.5833 18.3333 18.3333 14.5833 18.3333 9.99996C18.3333 5.41663 14.5833 1.66663 10 1.66663C5.41667 1.66663 1.66667 5.41663 1.66667 9.99996C1.66667 14.5833 5.41667 18.3333 10 18.3333Z"
+          stroke="#707791"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M7.64166 12.3584L12.3583 7.64172"
+          stroke="#707791"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M12.3583 12.3584L7.64166 7.64172"
+          stroke="#707791"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <ng-container *ngIf="userBuyBoxes && userBuyBoxes.length > 0">
+      <label
+        for="user-buybox"
+        class="form-label w-100 d-flex justify-content-start"
+        >Select Tenants</label
+      >
+      <select
+        id="user-buybox"
+        class="form-select mb-3"
+        aria-label="Buybox select"
+        name="userBuybox"
+        [(ngModel)]="buyBoxId"
+      >
+        <ng-container *ngFor="let buyBox of userBuyBoxes">
+          <option [value]="buyBox.id">
+            {{ buyBox.name }}
+          </option>
+        </ng-container>
+      </select>
+    </ng-container>
+    <input
+      type="text"
+      class="form-control mb-3 campaign-name-input"
+      placeholder="Campaign Name"
+      name="campaign-name"
+      [(ngModel)]="campaignName"
+    />
+    <div
+      class="d-flex align-items-center justify-content-between mb-3 campaign-visability"
+    >
+      <div class="campaign-status">Status</div>
+      <div class="campaign-status">
+        <p-selectButton
+          [options]="visabilityOptions"
+          [(ngModel)]="isPrivateCampaign"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <button
+          class="w-100 cancel-campaign"
+          (click)="modal.dismiss('Cross click'); campaignName = ''"
+        >
+          Cancel
+        </button>
+      </div>
+      <div class="col-6">
+        <button class="w-100 save-campaign" (click)="createNewCampaign()">
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #emptyPolygons>
+  <div
+    class="h-100 d-flex flex-column align-items-center justify-content-center gap-3"
+  >
+    <img
+      loading="lazy"
+      src="../../../../assets/Images/empty-state.png"
+      alt="empty polygons"
+      style="height: 50%"
+    />
+    <div class="text-center" style="font-size: 1.25rem; font-weight: 600">
+      Polygons will be shown in this area.
+    </div>
+  </div>
+</ng-template>
+
+<ngx-spinner type="ball-scale-multiple"> </ngx-spinner>

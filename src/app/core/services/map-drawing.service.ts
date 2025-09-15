@@ -1,10 +1,8 @@
 /// <reference types="google.maps" />
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { PlacesService } from 'src/app/core/services/places.service';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IMapShape } from 'src/app/shared/models/imap-shape';
-import { IProperty } from 'src/app/shared/models/iproperty';
-import { GenericMapService } from './generic-map.service';
 import { IMapBounds } from 'src/app/shared/interfaces/imap-bounds';
 declare const google: any;
 
@@ -29,16 +27,19 @@ export class MapDrawingService {
   };
   private drawingMode: string | null = null;
   private explorePolygons: IMapShape[] = [];
-  private globalPolygons: { id: string; shape: google.maps.Polygon }[] = [];
+  // allow both polygon and circle shapes
+  private globalPolygons: { id: string; shape: google.maps.Polygon | google.maps.Circle }[] = [];
   private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
 
+  // Events
+  onPolygonDeleted = new EventEmitter<number>();
   onPolygonCreated = new EventEmitter<IMapShape>();
   onCircleCreated = new EventEmitter<IMapShape>();
   onDrawingCancel = new EventEmitter<void>();
   onMapBoundsChanged = new EventEmitter<IMapBounds>();
   onMapZoomLevelChanged = new EventEmitter<boolean>();
 
-  constructor() {}
+  constructor(private placesService: PlacesService) {}
 
   private initializeInfoWindow() {
     this.infoWindow = new google.maps.InfoWindow();
@@ -59,7 +60,9 @@ export class MapDrawingService {
   }
 
   private hidePopupContent() {
-    this.infoWindow.close();
+    try {
+      this.infoWindow.close();
+    } catch {}
   }
 
   private addMapListener(map: any): void {
@@ -119,12 +122,24 @@ export class MapDrawingService {
     );
   }
 
-  private addCircleClickListener(map: any, circle: google.maps.Circle): void {
-    circle.addListener('click', (event: google.maps.MapMouseEvent) => {
-      event.stop();
+private addCircleClickListener(map: any, circle: google.maps.Circle): void {
+  circle.addListener('click', (event: google.maps.MapMouseEvent) => {
+    // stop propagation safely (some event shapes don't have stop())
+    this.safeStopEvent(event);
+
+    // debug so we can confirm handler runs
+    console.debug('circle clicked', circle);
+
+    // show the popup for circle
+    try {
       this.showCircleOptions(map, circle);
-    });
-  }
+    } catch (err) {
+      console.error('showCircleOptions error', err);
+    }
+  });
+}
+
+
 
   private addCircleChangeListener(map: any, circle: google.maps.Circle): void {
     const oldCircle = circle;
@@ -154,25 +169,58 @@ export class MapDrawingService {
 
   private addCircleDoubleClickListener(circle: google.maps.Circle): void {
     circle.addListener('dblclick', (event: google.maps.MapMouseEvent) => {
-      event.stop();
+      try {
+        const domEvt = (event as any)?.domEvent;
+        if (domEvt && typeof domEvt.stopPropagation === 'function') domEvt.stopPropagation();
+      } catch {}
       circle.setDraggable(true);
     });
   }
 
-  private addPolygonClickListener(
-    map: any,
-    polygon: google.maps.Polygon
-  ): void {
-    polygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-      event.stop();
-      this.showPolygonsOptions(map, polygon);
-    });
+  // add near top of class (private helper)
+private safeStopEvent(ev: any) {
+  try {
+    // new Google Maps MapMouseEvent often exposes domEvent (the actual DOM event)
+    const domEvt = ev?.domEvent ?? ev?.domEvent_;
+    if (domEvt && typeof domEvt.stopPropagation === 'function') {
+      domEvt.stopPropagation();
+      return;
+    }
+    // older builds used event.stop()
+    if (typeof ev?.stop === 'function') {
+      ev.stop();
+      return;
+    }
+    // fallback: try to stop immediate propagation if available
+    if (domEvt && typeof domEvt.stopImmediatePropagation === 'function') {
+      domEvt.stopImmediatePropagation();
+      return;
+    }
+  } catch (e) {
+    // swallow — we do not want this to break subsequent logic
+    console.debug('safeStopEvent error', e);
   }
+}
 
-  private addPolygonChangeListener(
-    map: any,
-    polygon: google.maps.Polygon
-  ): void {
+ private addPolygonClickListener(map: any, polygon: google.maps.Polygon): void {
+  polygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+    // stop propagation safely (some event shapes don't have stop())
+    this.safeStopEvent(event);
+
+    // debug so we can confirm handler runs
+    console.debug('polygon clicked', polygon);
+
+    // show the popup for polygon (existing code uses showPolygonsOptions)
+    try {
+      this.showPolygonsOptions(map, polygon);
+    } catch (err) {
+      console.error('showPolygonsOptions error', err);
+    }
+  });
+}
+
+
+  private addPolygonChangeListener(map: any, polygon: google.maps.Polygon): void {
     const oldPolygon = polygon;
     let resizeTimeout: any;
     let isDragging = false;
@@ -181,6 +229,7 @@ export class MapDrawingService {
         (p) => p.shape === oldPolygon
       );
       if (updatedPolygon) {
+        // place for emitting change if needed
       }
     };
     const path = polygon.getPath();
@@ -229,7 +278,10 @@ export class MapDrawingService {
 
   private addPolygonDoubleClickListener(polygon: google.maps.Polygon): void {
     polygon.addListener('dblclick', (event: google.maps.MapMouseEvent) => {
-      event.stop();
+      try {
+        const domEvt = (event as any)?.domEvent;
+        if (domEvt && typeof domEvt.stopPropagation === 'function') domEvt.stopPropagation();
+      } catch {}
       polygon.setDraggable(true);
     });
   }
@@ -245,6 +297,7 @@ export class MapDrawingService {
 
       if (!center) return null;
 
+      // computeOffset expects meters
       return google.maps.geometry.spherical.computeOffset(center, radius, 0);
     } else {
       const polygon = shape as google.maps.Polygon;
@@ -265,6 +318,10 @@ export class MapDrawingService {
     }
   }
 
+  /**
+   * Show the "name/save" UI right after drawing a new shape.
+   * Uses InfoWindow 'domready' to safely attach handlers.
+   */
   private showShapeNameOptions(
     map: google.maps.Map,
     shape: google.maps.Polygon | google.maps.Circle,
@@ -282,76 +339,139 @@ export class MapDrawingService {
     this.infoWindow.setPosition(position);
     this.infoWindow.open(map);
 
-    // Add a one-time click listener on the map to hide the shape and remove its listeners.
+    // If the user clicks the map outside before they press Save, we want to clear the shape
     const mapClickListener = map.addListener('click', () => {
-      this.setDrawingMode(this.drawingMode);
-      // Hide the shape from the map.
-      shape.setMap(null);
-      // Remove all event listeners for this shape.
+      try {
+        this.setDrawingMode(this.drawingMode);
+      } catch {}
+      // Hide the shape from the map and clear listeners
+      try {
+        shape.setMap(null);
+      } catch {}
       google.maps.event.clearInstanceListeners(shape);
-      // Close the infoWindow.
       this.infoWindow.close();
-      // Remove this listener.
-      google.maps.event.removeListener(mapClickListener);
-    });
-
-    setTimeout(() => {
-      const saveButton = document.getElementById('saveShapeNameBtn');
-      const input = document.getElementById(
-        'shapeNameInput'
-      ) as HTMLInputElement;
-
-      saveButton!.addEventListener('click', () => {
-        const targetArray = isCircle ? this.drawnCircles : this.drawnPolygons;
-        targetArray.push({ shape: shape });
-        const shapeEntry = targetArray.find((entry) => entry.shape === shape);
-        const name = input.value.trim();
-
-        if (shapeEntry) {
-          shapeEntry.shape.set('label', name ? name : 'Shape');
-        }
-        // Remove the one-time map click listener since the shape is saved.
+      try {
         google.maps.event.removeListener(mapClickListener);
+      } catch {}
+    });
 
-        this.infoWindow.close();
+    // Attach DOM handlers once DOM is ready
+    const domReadyListener = google.maps.event.addListener(this.infoWindow, 'domready', () => {
+      const saveButton = document.getElementById('saveShapeNameBtn');
+      const input = document.getElementById('shapeNameInput') as HTMLInputElement;
+      if (!saveButton) {
+        // no DOM element; detach listener
+        try { google.maps.event.removeListener(domReadyListener); } catch {}
+        return;
+      }
 
-        // emit created shape to the component for any operation
-        const event = isCircle ? this.onCircleCreated : this.onPolygonCreated;
-        event.emit(shapeEntry);
-      });
+      const onSave = () => {
+        try {
+          const targetArray: any[] = isCircle ? this.drawnCircles : this.drawnPolygons;
+          targetArray.push({ shape: shape });
+
+          const shapeEntry = targetArray.find((entry) => entry.shape === shape);
+          const name = input?.value?.trim() ?? '';
+
+          if (shapeEntry && shapeEntry.shape && typeof shapeEntry.shape.set === 'function') {
+            shapeEntry.shape.set('label', name ? name : 'Shape');
+          }
+
+          // Remove the map click abort listener now that shape was saved
+          try { google.maps.event.removeListener(mapClickListener); } catch {}
+
+          this.infoWindow.close();
+
+          // Emit created shape to component
+          const event = isCircle ? this.onCircleCreated : this.onPolygonCreated;
+          event.emit(shapeEntry);
+        } catch (err) {
+          console.error('saveShapeName onSave error', err);
+        } finally {
+          // cleanup
+          try { (saveButton as HTMLElement).removeEventListener('click', onSave); } catch {}
+          try { google.maps.event.removeListener(domReadyListener); } catch {}
+        }
+      };
+
+      // attach once
+      (saveButton as HTMLElement).addEventListener('click', onSave, { once: true });
     });
   }
 
-  private showCircleOptions(map: any, circle: google.maps.Circle): void {
-    const position = this.getShapeTopPoint(circle, true);
-    if (!position) return;
+private showCircleOptions(map: any, circle: google.maps.Circle): void {
+  const position = this.getShapeTopPoint(circle, true);
+  if (!position) return;
 
-    const offsetPosition = new google.maps.LatLng(
-      position.lat() + 0.003,
-      position.lng()
-    );
+  // small vertical offset so InfoWindow doesn't overlap shape too much
+  const offsetPosition = new google.maps.LatLng(position.lat() + 0.003, position.lng());
 
-    const optionsContent = this.getShapeOptionsPopup(circle.get('label'));
-    this.infoWindow.setContent(optionsContent);
-    this.infoWindow.setPosition(offsetPosition);
-    this.infoWindow.open(map);
+  const optionsContent = this.getShapeOptionsPopup(circle.get('label') ?? 'Shape');
+  this.infoWindow.setContent(optionsContent);
+  this.infoWindow.setPosition(offsetPosition);
+  this.infoWindow.open(map);
 
-    const deleteButtonInterval = setInterval(() => {
-      const deleteButton = document.getElementById('deleteShape');
-      if (deleteButton) {
-        clearInterval(deleteButtonInterval);
-        deleteButton.addEventListener('click', () => {
-          circle.setMap(null);
-          this.hidePopupContent();
+  // Use domready to reliably access rendered DOM in the InfoWindow
+  const domReadyListener = google.maps.event.addListener(this.infoWindow, 'domready', () => {
+    const deleteButton = document.getElementById('deleteShape');
+    if (!deleteButton) {
+      // nothing to attach, remove listener
+      try { google.maps.event.removeListener(domReadyListener); } catch {}
+      return;
+    }
 
-          this.drawnCircles = this.drawnCircles.filter(
-            (p) => p.shape !== circle
-          );
+    const onDelete = async () => {
+      try {
+        (deleteButton as HTMLElement).setAttribute('disabled', 'true');
+
+        // find entry in any of the local lists by shape reference
+        const findByShape = (list: any[]) => list.find((p) => p.shape === circle);
+        const drawnEntry = findByShape(this.drawnCircles as any);
+        const exploreEntry = findByShape(this.explorePolygons as any);
+        const globalEntry = findByShape(this.globalPolygons as any);
+
+        const entry = drawnEntry || exploreEntry || globalEntry || null;
+        const polygonId: number | null = entry && (entry as any).id != null
+          ? Number((entry as any).id)
+          : null;
+
+        if (polygonId != null && !isNaN(polygonId)) {
+          const body = { Name: 'DeletePolygon', Params: { PolygonId: polygonId } };
+          this.placesService.GenericAPI(body).pipe().subscribe({
+            next: (_resp: any) => {
+              try { circle.setMap(null); } catch {}
+              this.removeShapeFromLocalLists(circle, polygonId);
+              this.onDrawingCancel.emit();
+              try { this.onPolygonDeleted.emit(polygonId); } catch {}
+              this.infoWindow.close();
+            },
+            error: (err) => {
+              console.error('DeletePolygon API failed', err);
+              deleteButton.removeAttribute('disabled');
+              alert('Failed to delete polygon on the server. Try again.');
+            },
+          });
+        } else {
+          // local-only shape
+          try { circle.setMap(null); } catch {}
+          this.removeShapeFromLocalLists(circle, null);
           this.onDrawingCancel.emit();
-        });
+          this.infoWindow.close();
+        }
+      } catch (err) {
+        console.error('showCircleOptions onDelete error', err);
+        deleteButton.removeAttribute('disabled');
+      } finally {
+        try { (deleteButton as HTMLElement).removeEventListener('click', onDelete); } catch {}
+        try { google.maps.event.removeListener(domReadyListener); } catch {}
       }
-    }, 100);
-  }
+    };
+
+    // attach once
+    (deleteButton as HTMLElement).addEventListener('click', onDelete, { once: true });
+  });
+}
+
 
   private showPolygonsOptions(map: any, polygon: google.maps.Polygon): void {
     const position = this.getShapeTopPoint(polygon, false);
@@ -367,21 +487,61 @@ export class MapDrawingService {
     this.infoWindow.setPosition(offsetPosition);
     this.infoWindow.open(map);
 
-    const deleteButtonInterval = setInterval(() => {
+    const domReadyListener = google.maps.event.addListener(this.infoWindow, 'domready', () => {
       const deleteButton = document.getElementById('deleteShape');
-      if (deleteButton) {
-        clearInterval(deleteButtonInterval);
-        deleteButton.addEventListener('click', () => {
-          polygon.setMap(null);
-          this.hidePopupContent();
-
-          this.drawnPolygons = this.drawnPolygons.filter(
-            (p) => p.shape !== polygon
-          );
-          this.onDrawingCancel.emit();
-        });
+      if (!deleteButton) {
+        try { google.maps.event.removeListener(domReadyListener); } catch {}
+        return;
       }
-    }, 100);
+
+      const onDelete = async () => {
+        try {
+          (deleteButton as HTMLElement).setAttribute('disabled', 'true');
+
+          const findByShape = (list: any[]) => list.find((p) => p.shape === polygon);
+          const drawnEntry = findByShape(this.drawnPolygons as any);
+          const exploreEntry = findByShape(this.explorePolygons as any);
+          const globalEntry = findByShape(this.globalPolygons as any);
+
+          const entry = drawnEntry || exploreEntry || globalEntry || null;
+          const polygonId: number | null = entry && (entry as any).id != null
+            ? Number((entry as any).id)
+            : null;
+
+          if (polygonId != null && !isNaN(polygonId)) {
+            const body = { Name: 'DeletePolygon', Params: { PolygonId: polygonId } };
+
+            this.placesService.GenericAPI(body).pipe().subscribe({
+              next: (_resp: any) => {
+                try { polygon.setMap(null); } catch (e) {}
+                this.removeShapeFromLocalLists(polygon, polygonId);
+                this.onDrawingCancel.emit();
+                try { this.onPolygonDeleted.emit(polygonId); } catch (e) {}
+                this.infoWindow.close();
+              },
+              error: (err) => {
+                console.error('DeletePolygon API failed', err);
+                deleteButton.removeAttribute('disabled');
+                alert('Failed to delete polygon on the server. Try again.');
+              },
+            });
+          } else {
+            try { polygon.setMap(null); } catch (e) {}
+            this.removeShapeFromLocalLists(polygon, null);
+            this.onDrawingCancel.emit();
+            this.infoWindow.close();
+          }
+        } catch (err) {
+          console.error('showPolygonsOptions onDelete error', err);
+          deleteButton.removeAttribute('disabled');
+        } finally {
+          try { (deleteButton as HTMLElement).removeEventListener('click', onDelete); } catch {}
+          try { google.maps.event.removeListener(domReadyListener); } catch {}
+        }
+      };
+
+      (deleteButton as HTMLElement).addEventListener('click', onDelete, { once: true });
+    });
   }
 
   private showLargeSizeAlert(
@@ -403,7 +563,7 @@ export class MapDrawingService {
       google.maps.event.clearInstanceListeners(shape);
       this.infoWindow.close();
       this.onDrawingCancel.emit();
-      google.maps.event.removeListener(mapClickListener);
+      try { google.maps.event.removeListener(mapClickListener); } catch {}
     });
 
     const cancelButtonInterval = setInterval(() => {
@@ -414,7 +574,7 @@ export class MapDrawingService {
           shape.setMap(null);
           this.hidePopupContent();
           this.onDrawingCancel.emit();
-          google.maps.event.removeListener(mapClickListener);
+          try { google.maps.event.removeListener(mapClickListener); } catch {}
         });
       }
     }, 100);
@@ -463,33 +623,12 @@ export class MapDrawingService {
             font-weight: 500;">${label}</p>
 
             <div style="cursor:pointer;" id="deleteShape">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M21.0002 6.72998C20.9802 6.72998 20.9502 6.72998 20.9202 6.72998C15.6302 6.19998 10.3502 5.99998 5.12016 6.52998L3.08016 6.72998C2.66016 6.76998 2.29016 6.46998 2.25016 6.04998C2.21016 5.62998 2.51016 5.26998 2.92016 5.22998L4.96016 5.02998C10.2802 4.48998 15.6702 4.69998 21.0702 5.22998C21.4802 5.26998 21.7802 5.63998 21.7402 6.04998C21.7102 6.43998 21.3802 6.72998 21.0002 6.72998Z"
-                  fill="#292D32"
-                />
-                <path
-                  d="M8.49977 5.72C8.45977 5.72 8.41977 5.72 8.36977 5.71C7.96977 5.64 7.68977 5.25 7.75977 4.85L7.97977 3.54C8.13977 2.58 8.35977 1.25 10.6898 1.25H13.3098C15.6498 1.25 15.8698 2.63 16.0198 3.55L16.2398 4.85C16.3098 5.26 16.0298 5.65 15.6298 5.71C15.2198 5.78 14.8298 5.5 14.7698 5.1L14.5498 3.8C14.4098 2.93 14.3798 2.76 13.3198 2.76H10.6998C9.63977 2.76 9.61977 2.9 9.46977 3.79L9.23977 5.09C9.17977 5.46 8.85977 5.72 8.49977 5.72Z"
-                  fill="#292D32"
-                />
-                <path
-                  d="M15.2099 22.7501H8.7899C5.2999 22.7501 5.1599 20.8201 5.0499 19.2601L4.3999 9.19007C4.3699 8.78007 4.6899 8.42008 5.0999 8.39008C5.5199 8.37008 5.8699 8.68008 5.8999 9.09008L6.5499 19.1601C6.6599 20.6801 6.6999 21.2501 8.7899 21.2501H15.2099C17.3099 21.2501 17.3499 20.6801 17.4499 19.1601L18.0999 9.09008C18.1299 8.68008 18.4899 8.37008 18.8999 8.39008C19.3099 8.42008 19.6299 8.77007 19.5999 9.19007L18.9499 19.2601C18.8399 20.8201 18.6999 22.7501 15.2099 22.7501Z"
-                  fill="#292D32"
-                />
-                <path
-                  d="M13.6601 17.25H10.3301C9.92008 17.25 9.58008 16.91 9.58008 16.5C9.58008 16.09 9.92008 15.75 10.3301 15.75H13.6601C14.0701 15.75 14.4101 16.09 14.4101 16.5C14.4101 16.91 14.0701 17.25 13.6601 17.25Z"
-                  fill="#292D32"
-                />
-                <path
-                  d="M14.5 13.25H9.5C9.09 13.25 8.75 12.91 8.75 12.5C8.75 12.09 9.09 11.75 9.5 11.75H14.5C14.91 11.75 15.25 12.09 15.25 12.5C15.25 12.91 14.91 13.25 14.5 13.25Z"
-                  fill="#292D32"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M21.0002 6.72998C20.9802 6.72998 20.9502 6.72998 20.9202 6.72998C15.6302 6.19998 10.3502 5.99998 5.12016 6.52998L3.08016 6.72998C2.66016 6.76998 2.29016 6.46998 2.25016 6.04998C2.21016 5.62998 2.51016 5.26998 2.92016 5.22998L4.96016 5.02998C10.2802 4.48998 15.6702 4.69998 21.0702 5.22998C21.4802 5.26998 21.7802 5.63998 21.7402 6.04998C21.7102 6.43998 21.3802 6.72998 21.0002 6.72998Z" fill="#292D32"/>
+                <path d="M8.49977 5.72C8.45977 5.72 8.41977 5.72 8.36977 5.71C7.96977 5.64 7.68977 5.25 7.75977 4.85L7.97977 3.54C8.13977 2.58 8.35977 1.25 10.6898 1.25H13.3098C15.6498 1.25 15.8698 2.63 16.0198 3.55L16.2398 4.85C16.3098 5.26 16.0298 5.65 15.6298 5.71C15.2198 5.78 14.8298 5.5 14.7698 5.1L14.5498 3.8C14.4098 2.93 14.3798 2.76 13.3198 2.76H10.6998C9.63977 2.76 9.61977 2.9 9.46977 3.79L9.23977 5.09C9.17977 5.46 8.85977 5.72 8.49977 5.72Z" fill="#292D32"/>
+                <path d="M15.2099 22.7501H8.7899C5.2999 22.7501 5.1599 20.8201 5.0499 19.2601L4.3999 9.19007C4.3699 8.78007 4.6899 8.42008 5.0999 8.39008C5.5199 8.37008 5.8699 8.68008 5.8999 9.09008L6.5499 19.1601C6.6599 20.6801 6.6999 21.2501 8.7899 21.2501H15.2099C17.3099 21.2501 17.3499 20.6801 17.4499 19.1601L18.0999 9.09008C18.1299 8.68008 18.4899 8.37008 18.8999 8.39008C19.3099 8.42008 19.6299 8.77007 19.5999 9.19007L18.9499 19.2601C18.8399 20.8201 18.6999 22.7501 15.2099 22.7501Z" fill="#292D32"/>
+                <path d="M13.6601 17.25H10.3301C9.92008 17.25 9.58008 16.91 9.58008 16.5C9.58008 16.09 9.92008 15.75 10.3301 15.75H13.6601C14.0701 15.75 14.4101 16.09 14.4101 16.5C14.4101 16.91 14.0701 17.25 13.6601 17.25Z" fill="#292D32"/>
+                <path d="M14.5 13.25H9.5C9.09 13.25 8.75 12.91 8.75 12.5C8.75 12.09 9.09 11.75 9.5 11.75H14.5C14.91 11.75 15.25 12.09 15.25 12.5C15.25 12.91 14.91 13.25 14.5 13.25Z" fill="#292D32"/>
               </svg>
             </div>
           </div>
@@ -752,18 +891,15 @@ export class MapDrawingService {
       draggable: false,
     });
 
-    // Set the polygon on the map
     polygon.setMap(map);
-    // Create a LatLngBounds object to compute the bounds
+
     const bounds = new google.maps.LatLngBounds();
     coordinates.forEach((coordinate: any) => {
       bounds.extend(new google.maps.LatLng(coordinate.lat, coordinate.lng));
     });
 
-    // Get the center of the bounds
     const center = bounds.getCenter();
 
-    // Add the name label above the polygon
     const label = new google.maps.Marker({
       position: center,
       map: map,
@@ -775,7 +911,7 @@ export class MapDrawingService {
       },
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
-        scale: 0, // Use a scale of 0 to hide the marker icon (we only want the label)
+        scale: 0,
         fillColor: 'transparent',
         strokeColor: 'transparent',
       },
@@ -784,17 +920,13 @@ export class MapDrawingService {
 
     google.maps.event.addListener(map, 'zoom_changed', () => {
       const zoomLevel = map.getZoom();
-
-      // Set the label's visibility based on the zoom level
       if (zoomLevel < 15) {
-        // You can adjust this threshold value as needed
-        label.setVisible(false); // Hide the label for low zoom levels
+        label.setVisible(false);
       } else {
-        label.setVisible(true); // Show the label for higher zoom levels
+        label.setVisible(true);
       }
     });
 
-    // push the polygon into drawn list
     this.globalPolygons.push({ id: id, shape: polygon });
   }
 
@@ -812,7 +944,6 @@ export class MapDrawingService {
     if (shape) {
       return;
     }
-    // create new polygon
     const polygon: google.maps.Polygon = new google.maps.Polygon({
       paths: coordinates,
       strokeColor: '#AA00FF',
@@ -824,12 +955,10 @@ export class MapDrawingService {
       draggable: false,
     });
 
-    // Set the polygon on the map
     polygon.setMap(null);
 
     polygon.set('label', name.trim().length > 0 ? name : 'Shape');
 
-    // push the polygon into drawn list
     this.explorePolygons.push({ id: polygonId, shape: polygon });
   }
 
@@ -839,7 +968,6 @@ export class MapDrawingService {
     coordinates: any,
     name: string
   ): void {
-    // create new polygon
     const polygon: google.maps.Polygon = new google.maps.Polygon({
       paths: coordinates,
       strokeColor: '#AA00FF',
@@ -851,12 +979,10 @@ export class MapDrawingService {
       draggable: false,
     });
 
-    // Set the polygon on the map
     polygon.setMap(map);
 
     polygon.set('label', name.trim().length > 0 ? name : 'Shape');
 
-    // push the polygon into drawn list
     this.drawnPolygons.push({ id: polygonId, shape: polygon });
 
     this.addPolygonClickListener(map, polygon);
@@ -865,14 +991,11 @@ export class MapDrawingService {
   }
 
   hideShapeFromMap(id: number): void {
-    // get shape from the drawn list
     const shape =
       this.drawnPolygons.find((p) => p.id == id) ||
       this.drawnCircles.find((c) => c.id == id) ||
       this.explorePolygons.find((p) => p.id == id);
-    // debugger
     if (shape) {
-      // remove the shape from the map view
       shape.shape.setMap(null);
     }
   }
@@ -884,13 +1007,9 @@ export class MapDrawingService {
   updateMapZoom(map: any, coordinates: any[]): void {
     if (map) {
       const bounds = new google.maps.LatLngBounds();
-
-      // Extend the bounds to include each coordinate
       coordinates.forEach((point) => {
         bounds.extend(point);
       });
-
-      // Adjust the map to fit the bounds with optional padding
       map.fitBounds(bounds, { padding: 20 });
     }
   }
@@ -901,6 +1020,7 @@ export class MapDrawingService {
       map.setCenter(newCenter);
     }
   }
+
   displayShapeOnMap(id: number, map: any): void {
     const shape =
       this.drawnPolygons.find((p) => p.id == id) ||
@@ -944,10 +1064,7 @@ export class MapDrawingService {
 
   isMarkersExists(polygonId: number): boolean {
     const markers = this.markers.filter((m) => m.polygonId == polygonId);
-    if (markers && markers.length > 0) {
-      return true;
-    }
-    return false;
+    return markers && markers.length > 0;
   }
 
   createMarker(
@@ -963,11 +1080,10 @@ export class MapDrawingService {
         lng: Number(propertyData.longitude),
       },
       icon: icon,
-      // Use a higher zIndex to bring the marker “on top” of others
       zIndex: 999999,
     });
 
-    marker.propertyData = propertyData;
+    (marker as any).propertyData = propertyData;
     this.markers.push({ polygonId: polygonId, marker: marker });
   }
 
@@ -996,11 +1112,6 @@ export class MapDrawingService {
     return this.drawnCircles;
   }
   displayPolygon(coordinates: any, map: any): void {
-    // Convert the geoJSON coordinates into a google.maps.LatLng[] array
-    // const coordinates = polygon.geoJson?.geometry.coordinates[0].map((coord: number[]) => {
-    //   return { lat: coord[1], lng: coord[0] };
-    // });
-
     const polygonObj = new google.maps.Polygon({
       paths: coordinates,
       strokeColor: '#4d65b4',
@@ -1010,12 +1121,9 @@ export class MapDrawingService {
       fillOpacity: 0.35,
       editable: false,
       draggable: false,
-      // You can set other options like strokeColor, fillColor, etc.
     });
 
     polygonObj.setMap(map);
-    // debugger
-    // return polygonObj;
   }
   hidePolygon(polygonObj: google.maps.Polygon): void {
     polygonObj.setMap(null);
@@ -1023,5 +1131,40 @@ export class MapDrawingService {
 
   getMapZoomLevel(map: any): number {
     return map.getZoom() || 0;
+  }
+
+  /**
+   * Helper: remove a polygon/circle shape from local arrays (drawnPolygons, drawnCircles, explorePolygons, globalPolygons).
+   * If polygonId is provided it will also remove entries with matching id; otherwise it removes by shape reference only.
+   */
+  private removeShapeFromLocalLists(shape: google.maps.Polygon | google.maps.Circle, polygonId: number | null) {
+    if (polygonId != null && !isNaN(polygonId)) {
+      // Remove entries that match by numeric id OR by shape reference.
+      this.drawnPolygons = (this.drawnPolygons || []).filter((p) => {
+        const hasId = (p as any).id != null ? Number((p as any).id) : null;
+        return !(hasId === polygonId || p.shape === shape);
+      });
+
+      this.drawnCircles = (this.drawnCircles || []).filter((p) => {
+        const hasId = (p as any).id != null ? Number((p as any).id) : null;
+        return !(hasId === polygonId || p.shape === shape);
+      });
+
+      this.explorePolygons = (this.explorePolygons || []).filter((p) => {
+        const hasId = (p as any).id != null ? Number((p as any).id) : null;
+        return !(hasId === polygonId || p.shape === shape);
+      });
+
+      this.globalPolygons = (this.globalPolygons || []).filter((p) => {
+        const hasId = (p as any).id != null ? Number((p as any).id) : null;
+        return !(hasId === polygonId || p.shape === shape);
+      });
+    } else {
+      // remove purely by shape reference
+      this.drawnPolygons = (this.drawnPolygons || []).filter((p) => p.shape !== shape);
+      this.drawnCircles = (this.drawnCircles || []).filter((p) => p.shape !== shape);
+      this.explorePolygons = (this.explorePolygons || []).filter((p) => p.shape !== shape);
+      this.globalPolygons = (this.globalPolygons || []).filter((p) => p.shape !== shape);
+    }
   }
 }

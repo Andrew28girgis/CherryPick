@@ -22,6 +22,7 @@ import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.com
 import { UserPagesComponent } from './features/user-pages/user-pages.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
+import { PolygonsComponent } from './features/polygons/polygons.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,8 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
+    { path: 'polygons', component: PolygonsComponent, data: { hideHeader: true } },
+
   {
     path: 'accounts-link',
     loadChildren: () =>
