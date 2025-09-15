@@ -31,6 +31,7 @@ import { take, finalize, filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
+import { PolygonsComponent } from 'src/app/features/polygons/polygons.component';
 
 type ChatFrom = 'user' | 'system' | 'ai';
 
@@ -53,7 +54,7 @@ export {};
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, PolygonsComponent],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })
@@ -120,6 +121,7 @@ export class NotificationsComponent
   private wasSticky = true; // were we at/near bottom before content changed?
 
   private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
+  showingMap: boolean = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -177,13 +179,17 @@ export class NotificationsComponent
       });
 
     this.notificationService.initNotifications(this.CampaignId);
+
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
 
     // Debounced scan
-    this.scanSub = this.scanTrigger$
-      .pipe(debounceTime(120))
-      .subscribe(() => this.scanAndOpenOverlayForHtml());
+    this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(
+      () => {
+        this.scanAndOpenOverlayForHtml();
+        this.scanForShowMap();
+      } 
+    );
 
     // Polling
     this.intervalId = setInterval(() => {
@@ -756,6 +762,7 @@ export class NotificationsComponent
     // Any click directly on the backdrop should close overlay
     if (this.isOverlayMode) {
       this.isOverlayMode = false;
+      this.showingMap = false;
       if (this.electronSideBar) {
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
@@ -1151,5 +1158,43 @@ export class NotificationsComponent
     }
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
+  }
+
+  openPolygonOverlay(notification: Notification): void {
+    this.selectedNotification = notification;
+    this.showingMap = true; // controls <app-polygons> rendering
+    this.overlayHtml = ''; // clear HTML if previously set
+    this.isOverlayMode = true; // make sure overlay is open
+
+    if (!this.isOpen) {
+      this.isOpen = true;
+      this.notificationService.setChatOpen(true);
+    }
+
+    this.sidebarStateChange.emit({
+      isOpen: this.isOpen,
+      isFullyOpen: this.isOpen,
+      type: 'overlay',
+      overlayActive: this.isOverlayMode,
+    });
+
+    this.cdRef.detectChanges();
+  }
+  private scanForShowMap(): void {
+    const list = this.notificationService?.notifications ?? [];
+    if (!Array.isArray(list) || list.length === 0) return;
+
+    for (const n of list) {
+      const idKey = typeof n.id === 'number' ? n.id : String(n.id);
+      if (this.shownForIds.has(idKey)) continue;
+
+      const isSystem = !(
+        n.notificationCategoryId === true || n.notificationCategoryId === 1
+      );
+      if (isSystem && n.message?.toLowerCase().includes('show map')) {
+        this.shownForIds.add(idKey);
+        this.openPolygonOverlay(n);
+      }
+    }
   }
 }

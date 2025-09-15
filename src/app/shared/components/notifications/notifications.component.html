@@ -3,7 +3,7 @@
   class="copilot-sidebar-container"
   [ngClass]="{
     responsive: electronSideBar,
-    'overlay-mode': isOverlayMode,
+    'overlay-mode': isOverlayMode || showingMap,
     'chatbot-route': isChatbotRoute,
     'chatbot-overlay': isChatbotRoute && isOverlayMode
   }"
@@ -11,7 +11,7 @@
 >
   <!-- Add backdrop click handler for overlay mode -->
   <div
-    *ngIf="isOverlayMode"
+    *ngIf="isOverlayMode || showingMap"
     class="overlay-backdrop"
     (click)="onOverlayBackdropClick($event)"
   ></div>
@@ -23,16 +23,12 @@
     [class.visible]="isOpen"
     (click)="$event.stopPropagation()"
   >
-    <!-- ========================================================= -->
-    <!-- ONE GRID for both states:
-         - overlay OFF: left column is hidden via CSS, chat fills width
-         - overlay ON : left (content) | right (chat = 380px)        -->
-    <!-- ========================================================= -->
-
     <div class="overlay-grid" (click)="$event.stopPropagation()">
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
       <section
-        *ngIf="!electronSideBar && (isOverlayMode || !isChatbotRoute)"
+        *ngIf="
+          !electronSideBar && (isOverlayMode || showingMap || !isChatbotRoute)
+        "
         class="overlay-left"
       >
         <header
@@ -40,7 +36,10 @@
         >
           <h3 class="overlay-title mb-0">Details</h3>
 
-          <div *ngIf="isOverlayMode" class="d-flex align-items-center gap-2">
+          <div
+            *ngIf="isOverlayMode && !showingMap"
+            class="d-flex align-items-center gap-2"
+          >
             <!-- Title input -->
             <input
               type="text"
@@ -128,12 +127,11 @@
         </div>
 
         <!-- Wrapper: fills column height, content scrolls, button stays visible -->
-        <div *ngIf="isOverlayMode" class="container-overlay-btn">
-          <div
-            #contentToDownload
-            class="overlay-content"
-            [innerHTML]="overlayHtml"
-          ></div>
+        <div *ngIf="isOverlayMode || showingMap" class="container-overlay-btn">
+          <div #contentToDownload class="overlay-content">
+            <div *ngIf="overlayHtml" [innerHTML]="overlayHtml"></div>
+            <app-polygons *ngIf="showingMap"></app-polygons>
+          </div>
 
           <div
             class="save-div"
@@ -286,25 +284,28 @@
                   </span>
                 </p>
                 <p
-                class="message-text"
-                *ngIf="isCompilingReport(item, i); else staticCompiling"
-              >
-                Got some results, Compiling them into a nice report.
-                <span class="loading-dots">
-                  <span></span><span></span><span></span>
-                </span>
-              </p>
-              
-              <ng-template #staticCompiling>
-                <p *ngIf="
-                item.message?.includes(
-                  'Compiling them into a nice report'
-                )
-              " class="message-text">
+                  class="message-text"
+                  *ngIf="isCompilingReport(item, i); else staticCompiling"
+                >
                   Got some results, Compiling them into a nice report.
+                  <span class="loading-dots">
+                    <span></span><span></span><span></span>
+                  </span>
                 </p>
-              </ng-template>
-              
+
+                <ng-template #staticCompiling>
+                  <p
+                    *ngIf="
+                      item.message?.includes(
+                        'Compiling them into a nice report'
+                      )
+                    "
+                    class="message-text"
+                  >
+                    Got some results, Compiling them into a nice report.
+                  </p>
+                </ng-template>
+
                 <!-- After new message arrives: just static text -->
                 <ng-template #staticAutomation>
                   <p
@@ -325,13 +326,9 @@
                     item.notification?.html &&
                     !item.message?.includes(
                       'I am searching the web now for your request'
-                    )
-                    &&
-                    !item.message?.includes(
-                      'Compiling them into a nice report'
-                    )
+                    ) &&
+                    !item.message?.includes('Compiling them into a nice report')
                   "
-                  
                 >
                   Search Result
                 </p>
@@ -341,11 +338,8 @@
                     !item.notification?.html &&
                     !item.message?.includes(
                       'I am searching the web now for your request'
-                    )
-                    &&
-                    !item.message?.includes(
-                      'Compiling them into a nice report'
-                    )
+                    ) &&
+                    !item.message?.includes('Compiling them into a nice report')
                   "
                 >
                   <p class="message-text">Not Found Results</p>
@@ -356,21 +350,29 @@
                     Try Again
                   </button>
                 </div>
+
                 <p
                   class="message-text"
                   *ngIf="
                     item.from !== 'ai' &&
                     !item.message?.includes(
                       'I am searching the web now for your request'
-                    )
-                    &&
-                    !item.message?.includes(
-                      'Compiling them into a nice report'
-                    )
+                    ) &&
+                    !item.message?.includes('Compiling them into a nice report')
                   "
                 >
                   {{ item.message }}
                 </p>
+                <button
+                  *ngIf="
+                    item.from === 'system' &&
+                    item.message?.toLowerCase()?.includes('show map')
+                  "
+                  class="emily-btn"
+                  (click)="openPolygonOverlay(item.notification!)"
+                >
+                  Show Map
+                </button>
                 <time
                   class="message-time"
                   [dateTime]="item.created.toISOString()"
@@ -383,11 +385,11 @@
               <div class="d-flex gap-2">
                 <div
                   *ngIf="
-                    item.from === 'system' &&
-                    item.notification?.json &&
-                    !isNotificationLoaded(item.notification) &&
-                    item.notification?.html
-                    ||item.notification?.notificationCategoryId === 4
+                    (item.from === 'system' &&
+                      item.notification?.json &&
+                      !isNotificationLoaded(item.notification) &&
+                      item.notification?.html) ||
+                    item.notification?.notificationCategoryId === 4
                   "
                   class="choose"
                 >
@@ -400,12 +402,12 @@
                     Yes
                   </button>
                   <!-- <button
-                    class="emily-btn"
-                    (click)="choose(0, item.notification)"
-                    [disabled]="isNotificationLoading(item.notification)"
-                  >
-                    No
-                  </button> -->
+                      class="emily-btn"
+                      (click)="choose(0, item.notification)"
+                      [disabled]="isNotificationLoading(item.notification)"
+                    >
+                      No
+                    </button> -->
                 </div>
                 <div class="choose" *ngIf="item.notification?.html">
                   <button
