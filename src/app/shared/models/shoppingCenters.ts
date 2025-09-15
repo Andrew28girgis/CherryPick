@@ -61,6 +61,7 @@ export interface Center {
     lastIncomingEmail:any
     LastUpdateDate?: string
     sizeRange:any
+    scoreImage:any
   }
  
   

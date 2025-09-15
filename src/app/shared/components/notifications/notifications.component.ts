@@ -31,6 +31,7 @@ import { take, finalize, filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
+import { PolygonsComponent } from 'src/app/features/polygons/polygons.component';
 
 type ChatFrom = 'user' | 'system' | 'ai';
 
@@ -53,7 +54,7 @@ export {};
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, PolygonsComponent],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })
@@ -114,12 +115,13 @@ export class NotificationsComponent
   pdfId: string | number = '';
   currentMessage: string = '';
   private wasAtBottomBeforeUpdate = false;
-// ADD — sticky bottom + observers
-private mo?: MutationObserver;
-private ro?: ResizeObserver;
-private wasSticky = true; // were we at/near bottom before content changed?
+  // ADD — sticky bottom + observers
+  private mo?: MutationObserver;
+  private ro?: ResizeObserver;
+  private wasSticky = true; // were we at/near bottom before content changed?
 
-private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
+  private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
+  showingMap: boolean = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -132,7 +134,7 @@ private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: NgbModal,
-    private refreshService: RefreshService,
+    private refreshService: RefreshService
   ) {}
 
   showScrollButton = false;
@@ -177,40 +179,43 @@ private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
       });
 
     this.notificationService.initNotifications(this.CampaignId);
+
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
 
     // Debounced scan
-    this.scanSub = this.scanTrigger$
-      .pipe(debounceTime(120))
-      .subscribe(() => this.scanAndOpenOverlayForHtml());
+    this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(
+      () => {
+        this.scanAndOpenOverlayForHtml();
+        this.scanForShowMap();
+      } 
+    );
 
     // Polling
- this.intervalId = setInterval(() => {
-  // remember position BEFORE updating list (drives sticky behavior)
-  this.wasSticky = this.isAtBottom(); // REPLACE wasAtBottomBeforeUpdate usage
+    this.intervalId = setInterval(() => {
+      // remember position BEFORE updating list (drives sticky behavior)
+      this.wasSticky = this.isAtBottom(); // REPLACE wasAtBottomBeforeUpdate usage
 
-  const prevLength = this.notificationService.notifications.length;
+      const prevLength = this.notificationService.notifications.length;
 
-  this.notificationService.fetchUserNotifications(this.CampaignId);
-  this.sortNotificationsByDateAsc();
+      this.notificationService.fetchUserNotifications(this.CampaignId);
+      this.sortNotificationsByDateAsc();
 
-  setTimeout(() => {
-    const newLength = this.notificationService.notifications.length;
-    const diff = newLength - prevLength;
+      setTimeout(() => {
+        const newLength = this.notificationService.notifications.length;
+        const diff = newLength - prevLength;
 
-    if (diff > 0) {
-      // If user was sticky, observers will auto-pin; if not, show badge
-      this.onNewMessagesArrived(diff);
-    }
+        if (diff > 0) {
+          // If user was sticky, observers will auto-pin; if not, show badge
+          this.onNewMessagesArrived(diff);
+        }
 
-    this.previousNotificationsLength = newLength;
-    this.sortNotificationsByDateAsc();
+        this.previousNotificationsLength = newLength;
+        this.sortNotificationsByDateAsc();
 
-    this.scanTrigger$.next();
-  }, 200);
-}, 2000);
-
+        this.scanTrigger$.next();
+      }, 200);
+    }, 2000);
 
     this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
     setTimeout(() => this.scrollToBottom(), 100);
@@ -222,13 +227,9 @@ private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
     this.scanSub?.unsubscribe?.();
     this.sidebarStateChange.emit({ isOpen: false, isFullyOpen: false });
     clearTimeout(this.typingHideTimer);
-    // ADD inside ngOnDestroy()
-this.mo?.disconnect();
-this.ro?.disconnect();
-
+    this.mo?.disconnect();
+    this.ro?.disconnect();
   }
-
-  
 
   toggleSidebar(): void {
     this.isOpen = !this.isOpen;
@@ -369,7 +370,7 @@ this.ro?.disconnect();
 
       // Add campaignId directly into that object
       parsedJson.campaignId = notification.campaignId;
-      parsedJson.AutomationJson=json;
+      parsedJson.AutomationJson = json;
       const response = await fetch(
         'https://127.0.0.1:5443/api/Enrichment/EnrichShoppingCenter',
         {
@@ -437,7 +438,7 @@ this.ro?.disconnect();
       }
     }
   }
- 
+
   isAtTop(): boolean {
     if (!this.messagesContainer) return false;
     const container = this.messagesContainer.nativeElement;
@@ -446,31 +447,29 @@ this.ro?.disconnect();
   private handleNewMessage(newMessage: Notification): void {
     const atBottom = this.isAtBottom();
     const atTop = this.isAtTop();
-  
+
     // Case 1: If it's a reply to my last sent message → always scroll
     // if (this.lastUserMessageId && newMessage.replyToId === this.lastUserMessageId) {
     //   this.scrollToBottom();
     //   this.lastUserMessageId = null; // reset
     //   return;
     // }
-  
+
     // Case 2: If user is at bottom OR at top → scroll to bottom
     if (atBottom || atTop) {
       this.scrollToBottom();
       return;
     }
-  
+
     // Case 3: User is in the middle → show "scroll down" button
     this.newNotificationsCount++;
     this.showScrollButton = true;
   }
-  
-  
-  
-   onScroll(): void {
+
+  onScroll(): void {
     // user moved; refresh sticky state
     this.wasSticky = this.isAtBottom();
-  
+
     if (this.wasSticky) {
       this.showScrollButton = false;
       this.newNotificationsCount = 0;
@@ -478,7 +477,7 @@ this.ro?.disconnect();
       this.showScrollButton = true;
     }
   }
-  
+
   // In NotificationService, add this method:
   setChatOpen(isOpen: boolean): void {
     // Use a subject to communicate between components
@@ -763,6 +762,7 @@ this.ro?.disconnect();
     // Any click directly on the backdrop should close overlay
     if (this.isOverlayMode) {
       this.isOverlayMode = false;
+      this.showingMap = false;
       if (this.electronSideBar) {
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
@@ -842,7 +842,6 @@ this.ro?.disconnect();
 
     this.placesService.savemessages(notification.id).subscribe({
       next: (res) => {
-
         if (+notification.taskId === 3) {
           this.getCampaigns();
         }
@@ -872,7 +871,6 @@ this.ro?.disconnect();
     const request = { Name: 'GetCampaignsNeedUrls', Params: {} };
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
-
         const id = response?.json?.[0]?.id;
 
         if (id == null) {
@@ -881,7 +879,6 @@ this.ro?.disconnect();
         }
 
         try {
-
           (window as any).electronMessage.getLinksFromGoogle(
             '',
             localStorage.getItem('token'),
@@ -1061,27 +1058,29 @@ this.ro?.disconnect();
     this.placesService.sendmessages(body).subscribe({});
   }
   isAutomationLoading(item: ChatItem, index: number): boolean {
-     if (!item.message || !item.message.includes('I am searching the web now for your request')) {
+    if (
+      !item.message ||
+      !item.message.includes('I am searching the web now for your request')
+    ) {
       return false;
     }
-  
+
     // If there is a next message after this one, stop animation
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
-  
 
   private get containerEl(): HTMLElement | null {
     return this.messagesContainer?.nativeElement ?? null;
   }
-  
+
   // Optional: strict bottom check (rarely needed)
   private isAtBottomStrict(): boolean {
     const el = this.containerEl;
     if (!el) return true;
     return el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
   }
-  
+
   // REPLACE your current isAtBottom() with this version:
   isAtBottom(): boolean {
     const el = this.containerEl;
@@ -1089,7 +1088,7 @@ this.ro?.disconnect();
     const distance = el.scrollHeight - (el.scrollTop + el.clientHeight);
     return distance <= this.BOTTOM_STICKY_THRESHOLD;
   }
-  
+
   // ADD — immediate/smooth scroll helpers
   private scrollToBottomNow(): void {
     const el = this.containerEl;
@@ -1098,7 +1097,7 @@ this.ro?.disconnect();
     this.showScrollButton = false;
     this.newNotificationsCount = 0;
   }
-  
+
   // private scrollToBottomSmooth(): void {
   //   const el = this.containerEl;
   //   if (!el) return;
@@ -1113,49 +1112,89 @@ this.ro?.disconnect();
   ngAfterViewInit(): void {
     // initial scroll once UI is ready
     this.scrollToBottomNow();
-  
+
     const el = this.containerEl;
     if (!el) return;
-  
+
     // track stickiness at startup
     this.wasSticky = this.isAtBottom();
-  
+
     // Observe DOM mutations (new messages appended)
     this.mo = new MutationObserver(() => this.onContentMutated());
     this.mo.observe(el, { childList: true, subtree: true });
-  
+
     // Observe size changes (images, fonts, etc.)
     this.ro = new ResizeObserver(() => this.onContentMutated());
     this.ro.observe(el);
   }
   // ADD — called when DOM/size changes happen
-private onContentMutated(): void {
-  // If user was sticky before the change, keep them pinned to bottom
-  if (this.wasSticky) {
-    this.cdRef.detectChanges();
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => this.scrollToBottomNow());
-    });
+  private onContentMutated(): void {
+    // If user was sticky before the change, keep them pinned to bottom
+    if (this.wasSticky) {
+      this.cdRef.detectChanges();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => this.scrollToBottomNow());
+      });
+    }
+    // recompute for the next cycle
+    this.wasSticky = this.isAtBottom();
   }
-  // recompute for the next cycle
-  this.wasSticky = this.isAtBottom();
-}
-// ADD — handle "new X messages" badge only when not sticky
-private onNewMessagesArrived(count: number): void {
-  if (count <= 0) return;
-  if (this.wasSticky) {
-    // do nothing; Mutation/Resize observers will keep you at bottom
-    return;
+  // ADD — handle "new X messages" badge only when not sticky
+  private onNewMessagesArrived(count: number): void {
+    if (count <= 0) return;
+    if (this.wasSticky) {
+      // do nothing; Mutation/Resize observers will keep you at bottom
+      return;
+    }
+    this.newNotificationsCount += count;
+    this.showScrollButton = true;
   }
-  this.newNotificationsCount += count;
-  this.showScrollButton = true;
-}
-isCompilingReport(item: ChatItem, index: number): boolean {
-  if (!item.message || !item.message.includes('Compiling them into a nice report.')) {
-    return false;
+  isCompilingReport(item: ChatItem, index: number): boolean {
+    if (
+      !item.message ||
+      !item.message.includes('Compiling them into a nice report.')
+    ) {
+      return false;
+    }
+    const nextItem = this.chatTimeline[index + 1];
+    return !nextItem;
   }
-  const nextItem = this.chatTimeline[index + 1];
-  return !nextItem;
-}
 
+  openPolygonOverlay(notification: Notification): void {
+    this.selectedNotification = notification;
+    this.showingMap = true; // controls <app-polygons> rendering
+    this.overlayHtml = ''; // clear HTML if previously set
+    this.isOverlayMode = true; // make sure overlay is open
+
+    if (!this.isOpen) {
+      this.isOpen = true;
+      this.notificationService.setChatOpen(true);
+    }
+
+    this.sidebarStateChange.emit({
+      isOpen: this.isOpen,
+      isFullyOpen: this.isOpen,
+      type: 'overlay',
+      overlayActive: this.isOverlayMode,
+    });
+
+    this.cdRef.detectChanges();
+  }
+  private scanForShowMap(): void {
+    const list = this.notificationService?.notifications ?? [];
+    if (!Array.isArray(list) || list.length === 0) return;
+
+    for (const n of list) {
+      const idKey = typeof n.id === 'number' ? n.id : String(n.id);
+      if (this.shownForIds.has(idKey)) continue;
+
+      const isSystem = !(
+        n.notificationCategoryId === true || n.notificationCategoryId === 1
+      );
+      if (isSystem && n.message?.toLowerCase().includes('show map')) {
+        this.shownForIds.add(idKey);
+        this.openPolygonOverlay(n);
+      }
+    }
+  }
 }

@@ -13,4 +13,5 @@ export interface Notification {
   contextExtendPrompt:any;
   taskId:any;
   isEndInsertion:any
+  ispolygon:boolean
 }

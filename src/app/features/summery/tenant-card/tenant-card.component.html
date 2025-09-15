@@ -1,14 +1,13 @@
 <div class="page-card">
   <!--   [routerLink]="
-    tenant.Campaigns && tenant.Campaigns.length > 0
+    tenant.Campaigns && tenant.Campaigns?.length > 0
       ? ['/dashboard', tenant.id, tenant.name, tenant.Campaigns[0].Id]
       : null
   " -->
   <div
-    *ngIf="tenant.Campaigns.length > 0"
+    *ngIf="(tenant.Campaigns?.length || 0) > 0"
     class="card-badge date-flag"
-    [attr.aria-label]="tenant.Campaigns.length"
-  >
+   >
     <span>{{ tenant.Campaigns.length }} </span>
   </div>
 

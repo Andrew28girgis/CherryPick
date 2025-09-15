@@ -7,7 +7,7 @@
   min-height: 0;
 }
 .main-inner {
-  overflow-y: auto; 
+   overflow-y: auto; 
   align-items: center;
   border-radius: var(--Radius-R-20);
   backdrop-filter: blur(50px);
@@ -116,7 +116,7 @@
   align-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 1000;
+  z-index: -1000;
 }
 .fab-button:hover {
   background: #22147e;

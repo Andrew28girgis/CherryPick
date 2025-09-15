@@ -268,13 +268,10 @@
             <div
               class="metric-item"
               [ngClass]="{ link: campaign.Sites }"
-              [routerLink]="[
-                '/dashboard',
-                campaign.OrganizationId,
-                campaign.OrganizationName,
-                campaign.Id
-              ]"
-            >
+              [routerLink]="campaign.Sites > 0
+              ? ['/dashboard', campaign.OrganizationId, campaign.OrganizationName, campaign.Id]
+              : null"
+             >
               <div class="metric-value">
                 <span>{{ campaign.Sites }}</span>
                 <svg
