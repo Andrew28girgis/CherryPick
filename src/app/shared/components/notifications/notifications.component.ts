@@ -557,6 +557,8 @@ export class NotificationsComponent
   toggleOverlayMode(): void {
     if (!this.isOpen) return;
     this.isOverlayMode = !this.isOverlayMode;
+    this.showingMap = !this.showingMap;
+    
     if (this.isOverlayMode == false) {
       if (this.electronSideBar) {
         (window as any).electronMessage.maxmizeCRESideBrowser();
