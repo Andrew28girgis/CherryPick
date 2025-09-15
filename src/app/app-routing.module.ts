@@ -129,7 +129,7 @@ const routes: Routes = [
       import('./features/campaign/campaign.module').then(
         (m) => m.CampaignModule
       ),
-    canActivate: [TenantOnlyGuard],
+    canActivate: [TenantOnlyGuard,AuthGuardService],
   },
   {
     path: 'user-pages',
@@ -142,13 +142,13 @@ const routes: Routes = [
       import('./features/tenants/add-tenants/add-tenants.module').then(
         (m) => m.AddTenantsModule
       ),
-    canActivate: [TenantOnlyGuard],
+    canActivate: [TenantOnlyGuard,AuthGuardService],
   },
   {
     path: 'summary/:orgId',
     loadChildren: () =>
       import('./features/summery/summery.module').then((m) => m.SummeryModule),
-    canActivate: [TenantOnlyGuard],
+    canActivate: [TenantOnlyGuard,AuthGuardService],
   },
 
   {
@@ -254,6 +254,7 @@ const routes: Routes = [
   {
     path: 'contacts',
     component: ContactsComponent,
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'ai-ui-HTML/:notificationId',

@@ -1,8 +1,5 @@
 /// <reference types="google.maps" />
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
-import { IMapBounds } from 'src/app/shared/interfaces/imap-bounds';
-import { IGeoJson } from 'src/app/shared/models/igeo-json';
-import { IMapShape } from 'src/app/shared/models/imap-shape';
 import { GenericMapService } from './generic-map.service';
 declare const google: any;
 
@@ -44,7 +41,6 @@ export class CampaignDrawingService {
     // this.map.addListener('mousemove', (e: google.maps.MapMouseEvent) => {
     //   if (e.latLng) {
     //     const { lat, lng } = e.latLng.toJSON();
-    //     console.log(`Hovered at ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
     //   }
     // });
 

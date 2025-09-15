@@ -1,8 +1,7 @@
 // src/app/services/dropbox.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, from, Observable, switchMap, tap, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { BehaviorSubject, catchError, from, Observable, switchMap, throwError } from 'rxjs';
 
 export interface UploadArgs {
   path: string; // e.g. "/File Requests/Homework/andrew.json"
@@ -27,13 +26,11 @@ export class DropboxService {
 
   setToken(token: string): void {
     this.tokenSubject.next(token);
-    console.log('token set in dropbox service', token);
     this.token = token;
   }
 
   setRefreshToken(token: string): void {
      this.tokenSubject.next(token);
-    console.log('refresh token dropbox service', token);
     this.RefreshToken = token; 
   }
 
@@ -58,9 +55,6 @@ export class DropboxService {
 
   downloadFile(path: string): Observable<string> {
     const downloadUrl = 'https://content.dropboxapi.com/2/files/download';
-    console.log('tokenSubject',this.tokenSubject);
-    console.log('token',this.token);
-    console.log('RefreshToken',this.RefreshToken);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

@@ -146,8 +146,24 @@
   top: -6%;
 }
 
-.card-window_c {
-   border-radius: 18px;
+ 
+.cardResponsive {
+  background: #fff;
+  color: var(--app-color);
+  cursor: pointer;
+  min-height: 100%;
+  border-radius: var(--Radius-R-20);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* keep image corners clipped and prevent overlay */
+  border: 1px solid var(--Colors-Primary-light);
+  border-radius: 20px;
+  overflow: visible;
+}
+.cardResponsive:hover {
+  color: var(--Colors-Primary-500);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .total {
@@ -162,7 +178,6 @@
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-  color: #7a8591;
 }
 
 .ShoppingCenterUnit {
@@ -879,14 +894,12 @@
   text-decoration: underline;
 }
 
-/* Image and overlay to mirror card-view */
-.main-img {
+ .main-img {
   position: relative;
   width: 100%;
   height: 280px;
   overflow: hidden;
-  background-color: #f5f5f5;
-  border-radius: 18px 18px 0 0;
+   border-radius: 18px 18px 0 0;
 }
 
 .img-overlay {
@@ -947,4 +960,277 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.main-img {
+  position: relative;
+  width: 100%;
+  height: 280px; 
+  border-top-left-radius: 20px;
+ border-top-right-radius: 20px;
+}
+
+.img-overlay {
+  gap: var(--Space-S-12);
+
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  z-index: 2;
+
+  width: 100%;
+  justify-content: flex-end;
+}
+.stats {
+  gap: var(--Space-S-12);
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-top: 1px solid #e2e4e9;
+}
+.leased-by{
+  position: relative; /* anchor for org-mini-menu */
+
+}
+.stats .leased-by,
+.street-view,
+.map-view,
+.pdf {
+  gap: 4px;
+  color: var(--app-color) !important;
+}
+
+.image-overlay {
+  gap: var(--Space-S-12);
+  position: absolute;
+  bottom: 16px;
+  display: flex;
+  z-index: 2;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+.image-overlay .leased-by,
+.street-view,
+.map-view,
+.pdf {
+  display: inline-flex;
+  padding: 4px var(--Space-Space-16, 16px);
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+  color: var(--app-color) !important;
+  border: none;
+}
+.street-view,
+.map-view,
+.pdf {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+.img-overlay .custom-dropdown .selected-option {
+  border: none;
+  border-radius: var(--Radius-R-24);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+}
+
+.img-overlay .dropdown-options {
+  z-index: 3;
+}
+
+.main-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--Radius-R-12);
+}
+
+.main-img img.loading {
+  opacity: 0;
+}
+  
+
+/* full cover white surface */
+.score-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+ 
+}
+
+/* main score style */
+.score-text {
+  font-size: 2rem; /* big and bold */
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(
+    90deg,
+    var(--Colors-Primary-hover),
+    var(--Colors-Primary-500),
+    var(--Colors-Primary-500)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  font-size: 18px;
+  color: var(--Colors-Primary-500);
+}
+.icon-btn:hover {
+  color: var(--Colors-Primary-hover);
+}
+.MangerORG{
+  font-size: 14px;
+}
+
+.modal-title{
+  color: var(--Colors-Primary-500);
+}/* Header with score badge */
+.score-header {
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.score-pill {
+  background: var(--Colors-Primary-500); /* red by default */
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin: 0;
+}
+
+/* You can color-code dynamically if score >= 70 green, 40-70 orange, <40 red */
+.score-pill.good {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+.score-pill.medium {
+  background: linear-gradient(135deg, #facc15, #eab308);
+}
+.score-pill.bad {
+  background: var(--Colors-Primary-500);
+}
+
+/* Body */
+.score-body {
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 0 0 12px 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Narrative conclusion */
+.conclusion-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #374151;
+  margin-bottom: 20px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--Colors-Primary-500); /* red accent for rejection */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Rationale table (from infoData innerHTML) */
+.rationale-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.rationale-text th,
+.rationale-text td {
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.rationale-text thead {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #111827;
+}
+
+.rationale-text tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.rationale-text td:last-child {
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  padding: 20px;
+}
+
+.org-mini-menu {
+  position: absolute;
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid #e6e8ee;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+  padding: 8px;
+  font-size: 13px;
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+.org-mini-item .name {
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+.org-mini-item .small {
+  margin: 0;
+  color: #555;
+  font-size: 12px;
+}
+.divider {
+  margin: 6px 0;
+  border-top: 1px dashed #ddd;
+}
+
+.org-info-trigger {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
 }

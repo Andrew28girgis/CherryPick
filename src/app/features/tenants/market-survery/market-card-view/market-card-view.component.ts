@@ -106,7 +106,6 @@ getShoppingCenters(): void {
           [42, 44].includes(element.kanbanTemplateStageId)
         );
 
-        console.log('Shopping Centers:', this.shoppingCenters);
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.isLoadingShoppingCenters = false; // Set loading to false after data is loaded
         this.spinner.hide();

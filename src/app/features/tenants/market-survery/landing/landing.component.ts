@@ -312,8 +312,6 @@ export class LandingComponent {
             .filter((t) => t.Distance >= 800 && t.Distance <= 1200)
             .sort((a, b) => a.Distance - b.Distance),
         };
-
-        console.log('Grouped tenants:', this.tenantGroups);
       },
     });
   }
@@ -361,7 +359,6 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.OrgManager = data.json;
-        console.log(this.OrgManager);
       },
     });
   }

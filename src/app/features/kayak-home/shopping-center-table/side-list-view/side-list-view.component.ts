@@ -91,6 +91,15 @@ export class SideListViewComponent implements OnInit, OnDestroy {
 
   imageLoadingStates: { [key: number]: boolean } = {};
   imageErrorStates: { [key: number]: boolean } = {};
+  openOrgMenuId: number | null = null;
+  orgMenuPos: { top?: string; left?: string } = {};
+  isLoadingInfo = false;
+  infoData: any = null;
+  conclusion:any
+   score:any
+   cId!: number;
+   orgName!: string; 
+   Array = Array; // expose global Array constructor
 
   constructor(
     private markerService: MapsService,
@@ -786,9 +795,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     if (checkbox.checked) {
       this.AddPlaceToMarketSurvery(campaignId, placeId);
     } else {
-      console.log(
-        `Unchecked place with ID ${placeId} from shopping center ${campaignId}`
-      );
       this.AddPlaceToMarketSurvery(campaignId, placeId);
     }
   }
@@ -805,7 +811,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     };
     this.placesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log('API response data:', data);
       },
     });
   }
@@ -834,7 +839,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   }
 
   finContactMessage(shoppingCenter: Center): void {
-    console.log(`uploaded`);
     (window as any).electronMessage.findContacts(
       JSON.stringify({
         shoppingCenterName: shoppingCenter.CenterName,
@@ -856,7 +860,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     };
     this.placesService.GenericAPI(body).subscribe((data) => {
       if (data.json && data.json.length) {
-        console.log('API response data:', data);
         const newContacts = data.json.map((c: any) => ({
           ID: c.id,
           Name: c.name,
@@ -865,7 +868,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           Email: c.email,
           ContactId: c.contactId,
         }));
-        console.log('after refactor', newContacts);
 
         const center = this.cardsSideList.find((sc) => sc.Id == centerId);
 
@@ -886,7 +888,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           center.ShoppingCenter.ManagerOrganization = [...newContacts];
         }
 
-        console.log('center after update ', center);
       } else {
         setTimeout(() => {
           this.getShoppingCenterContact(centerId);
@@ -907,10 +908,123 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
 
     modalRef.componentInstance.contactCreated.subscribe((response: any) => {
-      // Handle successful contact creation
-      console.log('Contact created successfully:', response);
       // You can add any additional logic here, such as refreshing the shopping center contacts
       this.getShoppingCenterContact(shoppingCenterId);
     });
   }
-}
+  toggleOrgMenu(id: number, event: MouseEvent) {
+    event.stopPropagation();
+    if (this.openOrgMenuId === id) {
+      this.closeOrgMenu();
+    } else {
+      this.openOrgMenuId = id;
+      setTimeout(() => {
+        document.addEventListener('click', this.handleOutsideClick, true);
+      });
+    }
+  }
+  
+  closeOrgMenu() {
+    this.openOrgMenuId = null;
+     document.removeEventListener('click', this.handleOutsideClick, true);
+  }
+    // make sure to bind 'this' when declaring the handler
+    handleOutsideClick = (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
+        this.closeOrgMenu();
+      }
+    };
+    
+    openInfoPopup(shopping: any, content: TemplateRef<any>): void {
+      this.isLoadingInfo = true;
+      this.infoData = null;
+  
+      const body = {
+        Name: 'GetScoreRationale',
+        Params: { MSSCId: shopping.MarketSurveyId },
+      };
+  
+      this.placesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          this.infoData = res.json[0].scoreRationale || null;
+          this.score = res.json[0].score || null;
+          this.conclusion = res.json[0].conclusion || null;
+  
+          this.isLoadingInfo = false;
+          this.modalService.open(content, {
+            size: 'md',
+            backdrop: true,
+            centered: true,
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching info:', err);
+          this.isLoadingInfo = false;
+          this.modalService.open(content, {
+            size: 'md',
+            backdrop: true,
+            centered: true,
+          });
+        },
+      });
+    }
+    // Example: inside your component class
+    get hasUnscoredCenters(): boolean {
+      return this.cardsSideList?.some((sc) => !sc.MainImage) ?? false;
+    }
+    handleEllipsisClick(event: MouseEvent): void {
+      // Prevent default actions
+      event.preventDefault();
+      event.stopPropagation();
+  
+      // Close all dropdowns
+      this.cardsSideList.forEach((place) => {
+        place.isDropdownOpen = false;
+      });
+      this.activeDropdownId = null;
+  
+      // After closing the dropdown, open the ellipsis menu
+      const target = event.currentTarget as HTMLElement;
+      const placeId = this.findPlaceIdFromElement(target);
+      if (placeId) {
+        setTimeout(() => {
+          this.toggleShortcutsCard(placeId, event);
+        }, 10);
+      }
+    }
+    private findPlaceIdFromElement(element: HTMLElement): number | null {
+      // Navigate up the DOM to find the closest card element
+      const cardWindow = element.closest('.card-window');
+      if (!cardWindow) return null;
+  
+      // Find the index of this card in the cardsSideList
+      const cards = Array.from(document.querySelectorAll('.card-window'));
+      const index = cards.indexOf(cardWindow);
+  
+      if (index >= 0 && index < this.cardsSideList.length) {
+        return this.cardsSideList[index].Id;
+      }
+  
+      return null;
+    }
+    handleImageClick(event: MouseEvent): void {
+      // Prevent default navigation
+      event.preventDefault();
+      event.stopPropagation();
+  
+      // Close all dropdowns
+      if (this.activeDropdownId) {
+        this.cardsSideList.forEach((place) => {
+          place.isDropdownOpen = false;
+        });
+        this.activeDropdownId = null;
+      }
+  
+      // Close ellipsis menu if open
+      if (this.selectedIdCard !== null) {
+        this.viewManagerService.setSelectedIdCard(null);
+        document.removeEventListener('click', this.outsideClickHandler);
+      }
+    }
+  }

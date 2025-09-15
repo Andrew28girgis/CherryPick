@@ -135,10 +135,6 @@ export class AutomationComponent implements OnInit {
         }
 
         this.tableColumns = columnArray;
-
-        console.log('Automation Responses:', this.automationResponses);
-        console.log('Dynamic Table Columns:', this.tableColumns);
-        console.log('Consolidated Message:', this.conclusionMessage);
       },
       error: (error) => {
         this.isLoading = false; // Set loading to false on error
@@ -168,8 +164,6 @@ export class AutomationComponent implements OnInit {
         this.shoppingCenterDetails = data.json;
         this.shoppingCenterName =
           this.shoppingCenterDetails?.CenterName || 'Unknown Shopping Center';
-        console.log('Shopping Center Details:', this.shoppingCenterDetails);
-        console.log('Shopping Center Name:', this.shoppingCenterName);
       },
     });
   }

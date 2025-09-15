@@ -135,7 +135,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.orgName = params.orgName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.orgId);
-      console.log(this.orgId);
     });
 
     this.subscripe.add(
@@ -160,24 +159,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.ngZone.run(() => {
           this.cardsSideList = [...centers].sort((a: any, b: any) => {
             const aTime = this.parseDate(a.LastUpdateDate);
-            const bTime = this.parseDate(b.LastUpdateDate);
-
-            console.log(
-              `Sorting: ${a.CenterName} -> ${a.LastUpdateDate} => ${aTime}, 
-                         ${b.CenterName} -> ${b.LastUpdateDate} => ${bTime}`
-            );
-
+            const bTime = this.parseDate(b.LastUpdateDate); 
             return bTime - aTime; // newest first
           });
 
-          console.log(
-            'Final sorted list:',
-            this.cardsSideList.map((c) => ({
-              name: c.CenterName,
-              rawDate: c.LastUpdateDate,
-              parsed: this.parseDate(c.LastUpdateDate),
-            }))
-          );
+          
         });
 
         if (centers && centers.length > 0) {
@@ -703,9 +689,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     if (checkbox.checked) {
       this.AddPlaceToMarketSurvery(campaignId, placeId);
     } else {
-      console.log(
-        `Unchecked place with ID ${placeId} from shopping center ${campaignId}`
-      );
       this.AddPlaceToMarketSurvery(campaignId, placeId);
     }
   }
@@ -722,7 +705,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     };
     this.placesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log('API response data:', data);
       },
     });
   }
@@ -755,7 +737,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     };
     this.placesService.GenericAPI(body).subscribe((data) => {
       if (data.json && data.json.length) {
-        console.log('API response data:', data);
         const newContacts = data.json.map((c: any) => ({
           ID: c.id,
           Name: c.name,
@@ -764,7 +745,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
           Email: c.email,
           ContactId: c.contactId,
         }));
-        console.log('after refactor', newContacts);
 
         const center = this.cardsSideList.find((sc) => sc.Id == centerId);
 
@@ -784,8 +764,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
           // If ManagerOrganization exists, append; else create and assign
           center.ShoppingCenter.ManagerOrganization = [...newContacts];
         }
-
-        console.log('center after update ', center);
       } else {
         setTimeout(() => {
           this.getShoppingCenterContact(centerId);
@@ -795,7 +773,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   finContactMessage(shoppingCenter: Center): void {
-    console.log(`uploaded`);
     (window as any).electronMessage.findContacts(
       JSON.stringify({
         shoppingCenterName: shoppingCenter.CenterName,
@@ -820,8 +797,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.shoppingCenterId = shoppingCenterId;
 
     modalRef.componentInstance.contactCreated.subscribe((response: any) => {
-      // Handle successful contact creation
-      console.log('Contact created successfully:', response);
       // You can add any additional logic here, such as refreshing the shopping center contacts
       this.getShoppingCenterContact(shoppingCenterId);
     });
@@ -852,7 +827,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   // make sure to bind 'this' when declaring the handler
   handleOutsideClick = (event: Event) => {
     const target = event.target as HTMLElement;
-    if (!target.closest('.org-info-trigger')) {
+    if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
       this.closeOrgMenu();
     }
   };

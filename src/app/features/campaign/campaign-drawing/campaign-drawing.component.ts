@@ -35,7 +35,7 @@ import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IPolygon } from 'src/app/shared/models/ipolygons-controller';
 import { environment } from 'src/environments/environment';
 import { ShoppingCenter } from 'src/app/shared/models/campaign-shopping';
- 
+
 @Component({
   selector: 'app-campaign-drawing',
   templateUrl: './campaign-drawing.component.html',
@@ -316,7 +316,6 @@ export class CampaignDrawingComponent
           value: state.stateCode,
         }));
         this.filteredStates = this.states;
-        console.log(this.states);
       }
     });
   }
@@ -335,8 +334,6 @@ export class CampaignDrawingComponent
   onStateSelected(event: AutoCompleteSelectEvent) {
     // pull your selected state out of `.suggestion`
     const state = event.value;
-    console.log(state);
-    console.log(this.selectedState);
 
     this.filteredCities = [];
     this.cities = [];
@@ -511,7 +508,6 @@ export class CampaignDrawingComponent
             value: city,
           }));
           this.filteredCities = this.cities;
-          console.log(this.filteredCities);
         }
       },
     };
@@ -525,7 +521,6 @@ export class CampaignDrawingComponent
       .subscribe(observer);
   }
   searchForPolygons(): void {
-    console.log('hello');
     this.isSearching = true;
 
     const object = {

@@ -35,7 +35,6 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { EditorModule } from 'primeng/editor';
-
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';

@@ -44,7 +44,7 @@
 .bot-avatar {
   width: 24px;
   height: 24px;
-  background: var(--Colors-Primary-500); /* #B51F63 */
+  background: var(--Colors-Primary-500);  
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -480,7 +480,7 @@
 .message-bubble.user {
 
   align-self: flex-end !important;
-  background: var(--Colors-Primary-500, #b51f63) !important;
+  background: var(--Colors-Primary-500 ) !important;
   color: white !important;
   border-bottom-right-radius: 4px !important;
   border-bottom-left-radius: 18px !important;
@@ -528,9 +528,8 @@
 }
 
 .composer-input:focus {
-  border-color: var(--Colors-Primary-500, #b51f63) !important;
-  box-shadow: 0 0 0 0.2rem rgba(181, 31, 99, 0.15) !important;
-}
+  border-color: var(--Colors-Primary-500) !important;
+ }
 
 .composer-input:empty:before {
   content: attr(data-placeholder);
@@ -567,7 +566,7 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  background: var(--Colors-Primary-500, #b51f63);
+  background: var(--Colors-Primary-500 );
   color: #fff;
   transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
 }

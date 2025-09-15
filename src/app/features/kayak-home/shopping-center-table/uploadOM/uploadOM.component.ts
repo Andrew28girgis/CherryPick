@@ -39,7 +39,6 @@ export class UploadOMComponent implements OnInit {
     // If we have upload response, use it; otherwise fetch data normally
     // if (this.isFromUpload && this.uploadResponse) {
     //   this.BrokerShoppingCenters = this.uploadResponse;
-    //   console.log('Upload Response:', this.uploadResponse);
     //   this.showToast('File uploaded successfully!');
     // }
   }
@@ -57,7 +56,6 @@ export class UploadOMComponent implements OnInit {
         try {
           const rawJson = data.json[0].jsonResponse;
           this.BrokerShoppingCenters = JSON.parse(rawJson) as UploadOM;
-          console.log('Parsed BrokerShoppingCenters:', this.BrokerShoppingCenters);
         if (this.BrokerShoppingCenters?.Images) {
             this.imageArray = this.BrokerShoppingCenters.Images.split(',').map((img: string) => img.trim());
           }
