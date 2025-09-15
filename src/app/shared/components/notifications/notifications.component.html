@@ -379,12 +379,14 @@
                 >
                   {{ item.message }}
                 </p>
+                <div class="message-actions">
+
                 <button
                   *ngIf="
                     item.from === 'system' &&
-                    item.message?.toLowerCase()?.includes('listing')
+                    item.message?.toLowerCase()?.includes('show map')
                   "
-                  class="emily-btn"
+                  class="icon-btn"
                   style="width:fit-content;padding: 4px !important;border-radius: 10px;"
                   (click)="openPolygonOverlay(item.notification!)"
                 >
@@ -395,6 +397,7 @@
                   <path d="M9.11994 13.31C8.48994 13.31 7.85993 13.08 7.35993 12.61C5.76993 11.1 5.12996 9.44005 5.50996 7.82005C5.88996 6.16005 7.33994 5.04004 9.11994 5.04004C10.8999 5.04004 12.35 6.16005 12.73 7.82005C13.1 9.45005 12.4599 11.1 10.8699 12.61C10.3799 13.07 9.74994 13.31 9.11994 13.31ZM6.96995 8.15004C6.64995 9.51004 7.56994 10.7301 8.39994 11.5201C8.80994 11.91 9.43994 11.91 9.83994 11.5201C10.6599 10.7401 11.5799 9.52004 11.2699 8.15004C10.9999 6.96004 9.93994 6.53004 9.11994 6.53004C8.29994 6.53004 7.24995 6.96004 6.96995 8.15004Z" fill="#fff"/>
                   <path d="M9.1499 9.49023C8.5999 9.49023 8.1499 9.04023 8.1499 8.49023C8.1499 7.94023 8.5899 7.49023 9.1499 7.49023H9.15991C9.70991 7.49023 10.1599 7.94023 10.1599 8.49023C10.1599 9.04023 9.6999 9.49023 9.1499 9.49023Z" fill="#fff"/>
                 </svg>                </button>
+                </div>
                 <time
                   class="message-time"
                   [dateTime]="item.created.toISOString()"

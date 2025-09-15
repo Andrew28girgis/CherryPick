@@ -1102,3 +1102,39 @@
     opacity: 1;
   }
 }
+.message-content.with-icon {
+  display: flex;
+  align-items: flex-start; /* keeps text top-aligned with icon */
+  gap: 8px;                /* space between text and icon */
+}
+
+.message-content.with-icon p {
+  flex: 1;                 /* text takes available space */
+  margin: 0;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--Colors-Primary-500);
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background: var(--Colors-Primary-hover);
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #fff;
+}
+.message-actions {
+  display: flex;
+   margin-top: 6px;
+}
