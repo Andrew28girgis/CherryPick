@@ -41,16 +41,6 @@
   gap: 8px;
 }
 
-.bot-avatar {
-  width: 24px;
-  height: 24px;
-  background: var(--Colors-Primary-500); /* #B51F63 */
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .sidebar-title {
   font-size: 14px;
   font-weight: 600;
