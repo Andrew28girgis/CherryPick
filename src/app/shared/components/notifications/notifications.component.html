@@ -36,6 +36,7 @@
         >
           <h3 class="overlay-title mb-0">Details</h3>
           <button
+          *ngIf="!overlayHtml"
           class="overlay-toggle-button btn btn-sm btn-light"
           (click)="toggleOverlayMode()"
           title="Toggle overlay"
@@ -145,8 +146,8 @@
         <!-- Wrapper: fills column height, content scrolls, button stays visible -->
         <div *ngIf="isOverlayMode || showingMap" class="container-overlay-btn">
           <div #contentToDownload class="overlay-content">
-            <div *ngIf="overlayHtml" [innerHTML]="overlayHtml"></div>
-            <app-polygons *ngIf="showingMap"></app-polygons>
+            <div *ngIf="overlayHtml " [innerHTML]="overlayHtml"></div>
+            <app-polygons *ngIf="showingMap "></app-polygons>
           </div>
 
           <div
