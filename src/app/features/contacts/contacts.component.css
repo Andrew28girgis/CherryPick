@@ -42,9 +42,10 @@
 .org-summary::-webkit-details-marker {
   display: none;
 } /* remove default arrow */
-.organization-card:hover .org-hover {
+.org-summary.org-hover:hover {
   background: rgba(0, 0, 0, 0.02);
 }
+
 .org-hover {
   cursor: pointer;
 }
