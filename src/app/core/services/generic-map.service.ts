@@ -96,7 +96,7 @@ export class GenericMapService {
   loadGeoJsonFileOnMap(
     map: google.maps.Map,
     url: string
-  ): Promise<number | string | undefined> {
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       map.data.loadGeoJson(url, null, (features) => {
         try {
@@ -119,9 +119,9 @@ export class GenericMapService {
             type.trim().length > 0 &&
             type.toLowerCase() == 'point'
           ) {
-            if (this.tempCircles.find((t) => t.id == features[0].getId())) {
+            if (this.tempCircles.find((t) => t.id == features[0].getProperty('REGIONID'))) {
               const tempCircle = this.tempCircles.find(
-                (t) => t.id == features[0].getId()
+                (t) => t.id == features[0].getProperty('REGIONID')
               );
               tempCircle?.circle.setMap(map);
             } else {
@@ -129,14 +129,15 @@ export class GenericMapService {
               const latlng = (point as any).get();
               const tempCircle = this.drawStaticCircle(map, latlng);
               this.tempCircles.push({
-                id: features[0].getId(),
+                id: features[0].getProperty('REGIONID'),
                 circle: tempCircle,
               });
             }
           }
 
+          
           // resolve with whatever ID we picked up (or undefined if none)
-          resolve(features[0].getId());
+          resolve(features[0].getProperty('REGIONID') ||undefined);
         } catch (err) {
           reject(err);
         }
@@ -168,11 +169,9 @@ export class GenericMapService {
   //   return featureId;
   // }
 
-  removeFeatureById(map: google.maps.Map, id: string | number): void {
-
-    const feature = map.data.getFeatureById(id);
-
-    if (feature) {
+  removeFeatureById(map: google.maps.Map, id: any): void {
+    map.data.forEach((feature) => {
+    if (feature.getProperty('REGIONID') === id) { 
       const type = feature.getGeometry()?.getType();
       if (
         feature.getGeometry() instanceof google.maps.Data.Point &&
@@ -180,15 +179,16 @@ export class GenericMapService {
         type.trim().length > 0 &&
         type.toLowerCase() == 'point'
       ) {
-        if (this.tempCircles.find((t) => t.id == feature.getId())) {
+        if (this.tempCircles.find((t) => t.id == feature.getProperty('REGIONID'))) {
           const tempCircle = this.tempCircles.find(
-            (t) => t.id == feature.getId()
+            (t) => t.id == feature.getProperty('REGIONID')
           );
           tempCircle?.circle.setMap(null);
         }
       }
       map.data.remove(feature);
     }
+  });
   }
 
   getStatesInsideMapView(
