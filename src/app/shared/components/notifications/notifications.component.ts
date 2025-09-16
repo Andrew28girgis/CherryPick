@@ -919,6 +919,7 @@ export class NotificationsComponent
       );
     } else {
       this.isOverlayMode = true;
+      this.showingMap=false
       this.overlayHtml = notification.html;
     }
     this.selectedNotification = notification;

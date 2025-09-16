@@ -12,8 +12,7 @@
 
 .page-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(181, 31, 99, 0.15);
-  border-color: var(--Colors-Primary-500);
+   border-color: var(--Colors-Primary-500);
 }
 .card-header {
   display: flex;
