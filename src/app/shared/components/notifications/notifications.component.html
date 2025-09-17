@@ -5,16 +5,18 @@
     responsive: electronSideBar,
     'overlay-mode': isOverlayMode || showingMap,
     'chatbot-route': isChatbotRoute,
-    'chatbot-overlay': isChatbotRoute && isOverlayMode
-  }"
+    'chatbot-overlay': isChatbotRoute && isOverlayMode,
+    'overlay-wide': isoverlaywide,
+
+   }"
   [class.open]="isOpen"
 >
   <!-- Add backdrop click handler for overlay mode -->
   <div
-    *ngIf="isOverlayMode || showingMap"
-    class="overlay-backdrop"
-    (click)="onOverlayBackdropClick($event)"
-  ></div>
+  *ngIf="isOverlayMode || showingMap || isOverlayhtml"
+  class="overlay-backdrop"
+  (click)="onOverlayBackdropClick($event)"
+></div>
 
   <!-- Sidebar Panel -->
   <div

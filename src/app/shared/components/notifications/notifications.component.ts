@@ -122,6 +122,7 @@ export class NotificationsComponent
 
   private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
   showingMap: boolean = false;
+  isoverlaywide: boolean=false;
 
   constructor(
     private elementRef: ElementRef,
@@ -142,6 +143,7 @@ export class NotificationsComponent
   previousNotificationsLength = 0;
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
   private chatOpenSub?: Subscription;
+   public isOverlayhtml = false;
 
   ngOnInit(): void {
     if (this.router.url.includes('chatbot')) this.electronSideBar = true;
@@ -220,6 +222,29 @@ export class NotificationsComponent
     this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
     setTimeout(() => this.scrollToBottom(), 100);
     this.checkScreenSize();
+    this.notificationService.mapOpen$.subscribe((open) => {
+      this.showingMap = open;
+      if (open) {
+        this.overlayHtml = ''; // clear HTML content when map is open
+      }
+    });
+    this.notificationService.overlayWide$.subscribe((wide)=>{
+      this.isoverlaywide=wide;
+      if(wide){
+setTimeout(() => {
+  
+  this.showTyping()
+}, 2000);
+      }
+    })
+    
+    this.notificationService.htmlOpen$.subscribe((open) => {
+      this.isOverlayhtml = open;
+      if (!open) {
+        this.overlayHtml = ''; // clear content when html is closed
+      }
+    });
+ 
   }
 
   ngOnDestroy(): void {
@@ -232,6 +257,7 @@ export class NotificationsComponent
   }
 
   toggleSidebar(): void {
+     
     this.isOpen = !this.isOpen;
 
     // Update the notification service state
@@ -556,42 +582,58 @@ export class NotificationsComponent
 
   toggleOverlayMode(): void {
     if (!this.isOpen) return;
-    this.isOverlayMode = !this.isOverlayMode;
-    this.showingMap = !this.showingMap;
-    
-    if (this.isOverlayMode == false) {
-      if (this.electronSideBar) {
-        (window as any).electronMessage.maxmizeCRESideBrowser();
-      }
-    } else if (this.isOverlayMode == true) {
+  
+    if (this.isOverlayMode || this.showingMap || this.isOverlayhtml) {
+      // 🔑 closing everything
+      this.closeOverlayContent();
+    } else {
+      // opening overlay
+      this.isOverlayMode = true;
       if (this.electronSideBar) {
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
+      this.overlayStateChange.emit(true);
+      this.sidebarStateChange.emit({
+        isOpen: this.isOpen,
+        isFullyOpen: this.isOpen,
+        type: 'overlay',
+        overlayActive: true,
+        isChatbotRoute: this.isChatbotRoute,
+      });
     }
-    this.overlayStateChange.emit(this.isOverlayMode); // optional
-    this.sidebarStateChange.emit({
-      isOpen: this.isOpen,
-      isFullyOpen: this.isOpen,
-      type: 'overlay',
-      overlayActive: this.isOverlayMode,
-      isChatbotRoute: this.isChatbotRoute,
-    });
   }
+  
+  onOverlayBackdropClick(event: MouseEvent): void {
+    if (this.isOverlayMode || this.showingMap || this.isOverlayhtml) {
+      this.closeOverlayContent();
+    }
+  }
+  
+  
+  
   closeAll(): void {
     if (this.electronSideBar) {
       this.closeSide();
     } else {
       this.toggleSidebar();
     }
+    this.closeOverlayContent();
 
-    // also close overlay if open
     if (this.isOverlayMode) {
+      this.isOverlayMode = false;
+      this.showingMap = false;
+      this.isOverlayhtml = false;
+      this.overlayHtml = '';
+  
+      this.notificationService.setMapOpen(false);
+      this.notificationService.setOverlayWide(false);
+      this.notificationService.setHtmlOpen(false);
+  
       if (this.electronSideBar) {
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
-      this.isOverlayMode = false;
-      this.overlayStateChange.emit(false); // optional
-
+  
+      this.overlayStateChange.emit(false);
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
         isFullyOpen: this.isOpen,
@@ -600,6 +642,7 @@ export class NotificationsComponent
       });
     }
   }
+  
   setOverlayHtmlFromApi(htmlFromApi: string) {
     this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
   }
@@ -759,23 +802,9 @@ export class NotificationsComponent
     // Let the browser lay out the new DOM, then scroll
     requestAnimationFrame(() => this.scrollToBottom());
   }
-
-  onOverlayBackdropClick(event: MouseEvent): void {
-    // Any click directly on the backdrop should close overlay
-    if (this.isOverlayMode) {
-      this.isOverlayMode = false;
-      this.showingMap = false;
-      if (this.electronSideBar) {
-        (window as any).electronMessage.minimizeCRESideBrowser();
-      }
-      this.sidebarStateChange.emit({
-        isOpen: this.isOpen,
-        isFullyOpen: this.isOpen,
-        type: 'overlay',
-        overlayActive: false,
-      });
-    }
-  }
+ 
+  
+  
   private showTyping() {
     if (this.isTyping) return;
     this.isTyping = true;
@@ -1200,4 +1229,27 @@ export class NotificationsComponent
       }
     }
   }
+  private closeOverlayContent(): void {
+    this.isOverlayMode = false;
+    this.showingMap = false;
+    this.isOverlayhtml = false;
+    this.overlayHtml = '';
+  
+    this.notificationService.setMapOpen(false);
+    this.notificationService.setOverlayWide(false);
+    this.notificationService.setHtmlOpen(false);
+  
+    if (this.electronSideBar) {
+      (window as any).electronMessage.minimizeCRESideBrowser();
+    }
+  
+    this.overlayStateChange.emit(false);
+    this.sidebarStateChange.emit({
+      isOpen: this.isOpen,
+      isFullyOpen: this.isOpen,
+      type: 'overlay',
+      overlayActive: false,
+    });
+  }
+  
 }

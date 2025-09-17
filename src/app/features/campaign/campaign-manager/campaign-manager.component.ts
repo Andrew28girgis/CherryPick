@@ -1,3 +1,4 @@
+import { NotificationService } from 'src/app/core/services/notification.service';
 import {
   Component,
   OnInit,
@@ -49,11 +50,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   stages: { id: number; stageName: string }[] = [];
   searchCampaign = '';
   isMobile = false;
-  private dataLoaded = false;
-
+ 
   // Loading state
-  isLoading: boolean = true;
-  // Skeleton arrays for different views
+   // Skeleton arrays for different views
   skeletonCardArray = Array(6).fill(0);
   skeletonTableArray = Array(10).fill(0);
   skeletonStagesArray = Array(4).fill(0);
@@ -63,7 +62,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   constructor(
     private placesService: PlacesService,
-
+    private notificationService:NotificationService,
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
@@ -72,14 +71,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Only proceed if data hasn't been loaded before or if force reload is requested
-    if (!this.dataLoaded || this.forceReload) {
-      this.breadcrumbService.setBreadcrumbs([
-        { label: 'Campaigns', url: '/campaigns' },
-      ]);
-      this.loadData();
-    }
-     this.refreshService.refreshOrganizations$.subscribe(() => {
+    this.getAllCampaigns();
+       this.refreshService.refreshOrganizations$.subscribe(() => {
       this.getAllCampaigns();
     });
   }
@@ -119,8 +112,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   getAllCampaigns(): void {
-    this.isLoading = true;
-
+    // this.isLoading = true;
+ 
     const body: any = {
       Name: 'GetUserCampaigns',
       Params: {},
@@ -132,17 +125,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
         } else {
-          this.router.navigate(['/summary'], { replaceUrl: true });
+          // this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
           this.filteredCampaigns = [];
         }
         this.getKanbanTemplateStages();
-        this.dataLoaded = true; // Set dataLoaded to true on successful load
-      },
-      error: () => {
-        this.isLoading = false;
-        this.dataLoaded = false;
-      },
+       },
+      
     });
 
     this.subscriptions.add(subscription);
@@ -209,8 +198,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   getKanbanTemplateStages(): void {
-    this.isLoading = true; // Show skeleton
-    const body: any = {
+    // this.isLoading = true;  
+     const body: any = {
       Name: 'GetKanbanTemplateStages',
       Params: { KanbanTemplateId: 6 },
     };
@@ -220,19 +209,16 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.stages = response.json;
         }
-        this.isLoading = false; // Hide skeleton
-      },
+       },
       error: () => {
-        this.isLoading = false; // Hide skeleton on error
-      },
+       },
     });
 
     this.subscriptions.add(subscription);
   }
 
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
-    this.isLoading = true; // Show skeleton
-
+    
     const body: any = {
       Name: 'GetCampaignOrganizations',
       Params: { CampaignId: campaignId },
@@ -257,11 +243,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.emilyService.updateCheckList(emilyObject);
           this.router.navigate(['/MutipleEmail', campaignId]);
         }
-        this.isLoading = false; // Hide skeleton
-      },
-      error: () => {
-        this.isLoading = false; // Hide skeleton on error
-      },
+       }
+ 
     });
 
     this.subscriptions.add(subscription);
@@ -310,21 +293,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       : 0;
   }
 
-  private loadData(): void {
-    this.getAllCampaigns();
-    // this.getUserBuyBoxes();
-
-    // Check if there's a saved preference for view mode
-    const savedViewMode = localStorage.getItem('campaignViewMode') as
-      | 'table'
-      | 'card';
-    if (savedViewMode && !this.isMobile) {
-      this.viewMode = savedViewMode;
-    }
-
-    this.dataLoaded = true;
-  }
-
+  
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
   }
@@ -394,5 +363,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
+  openEmilyWithMap() {
+    this.notificationService.setChatOpen(true);  // ensure Emily is open
+    this.notificationService.setMapOpen(true);   // force map overlay
+    this.notificationService.setOverlayWide(true); // force 92vw
+  }
+  closeEmily() {
+    this.notificationService.setChatOpen(false);
+   }
   
 }

@@ -2,87 +2,13 @@
   <div class="title-div">
     <h2 class="title">User Pages</h2>
   </div>
-  <!-- <div class="view-controls">
-    <div class="view-toggle">
-      <button 
-            [class.active]="currentView === 'table'"
-            (click)="switchView('table')"
-            class="toggle-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 3h18v4H3V3zm0 6h18v4H3V9zm0 6h18v4H3v-4z"/>
-            </svg>
-            Table
-          </button>
-      <button
-        [class.active]="currentView === 'cards'"
-        (click)="switchView('cards')"
-        class="toggle-btn"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"
-          />
-        </svg>
-        Cards
-      </button>
-      <button 
-            [class.active]="currentView === 'timeline'"
-            (click)="switchView('timeline')"
-            class="toggle-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-            Timeline
-          </button>
-      <button
-        [class.active]="currentView === 'list'"
-        (click)="switchView('list')"
-        class="toggle-btn"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"
-          />
-        </svg>
-        List
-      </button>
-    </div>
-  </div> -->
 
-  <!-- Loading State  -->
-  <!-- <div *ngIf="loading" class="loading-container">
-     <div class="loading-spinner"></div>
-     <p>Loading user pages...</p>
-   </div> -->
-
-  <!-- Error State  -->
   <div *ngIf="error && !loading" class="error-container">
     <div class="error-icon">⚠️</div>
     <p class="error-message">{{ error }}</p>
     <button (click)="retry()" class="retry-btn">Try Again</button>
   </div>
 
-  <!-- Table View  -->
-  <!-- <div *ngIf="!loading && !error && currentView === 'table'" class="table-view">
-     <div class="table-container">
-       <table class="user-pages-table">
-         <thead>
-           <tr class="table-header">
-             <th>Page Name</th>
-             <th>Date Created</th>
-           </tr>
-         </thead>
-         <tbody>
-           <tr *ngFor="let page of userPages ">
-             <td class="page-name">{{ page.pageName }}</td>
-             <td class="page-date">{{ formatDate(page.date) }}</td>
-           </tr>
-         </tbody>
-       </table>
-     </div>
-   </div> -->
-
-  <!-- Cards View  -->
   <div *ngIf="!loading && !error && currentView === 'cards'" class="cards-view">
     <div class="cards-grid">
       <div *ngFor="let page of userPages" class="page-card">
@@ -100,24 +26,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Timeline View  -->
-  <!-- <div *ngIf="!loading && !error && currentView === 'timeline'" class="timeline-view">
-     <div class="timeline-container">
-       <div *ngFor="let page of userPages let i = index" class="timeline-item">
-         <div class="timeline-marker"></div>
-         <div class="timeline-content">
-           <div class="timeline-header">
-             <h3 class="timeline-title">{{ page.pageName }}</h3>
-             <span class="timeline-time">{{ getRelativeTime(page.date) }}</span>
-           </div>
-           <p class="timeline-date">{{ formatDate(page.date) }}</p>
-         </div>
-       </div>
-     </div>
-   </div> -->
-
-  <!-- List View  -->
   <div *ngIf="!loading && !error && currentView === 'list'" class="list-view">
     <div class="list-container">
       <div *ngFor="let page of userPages" class="list-item">
@@ -132,7 +40,6 @@
     </div>
   </div>
 
-  <!-- Empty State  -->
   <div *ngIf="!loading && !error && userPages.length === 0" class="empty-state">
     <div class="empty-icon">📄</div>
     <h3>No pages found</h3>
