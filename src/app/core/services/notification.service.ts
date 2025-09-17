@@ -1,13 +1,13 @@
- import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
-import {  Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class NotificationService  {
+export class  NotificationService {
   contactId = 0;
   notifications: Notification[] = [];
   dropdownVisible = false;
@@ -21,25 +21,28 @@ export class NotificationService  {
   // Initialize BehaviorSubject with true for default open state
   private chatOpenSubject = new BehaviorSubject<boolean>(true);
   public chatOpen$ = this.chatOpenSubject.asObservable();
-
+  private mapOpenSubject = new BehaviorSubject<boolean>(false);
+  private htmlOpenSubject = new BehaviorSubject<boolean>(false);
+  private overlayWideSubject = new BehaviorSubject<boolean>(false);
+  mapOpen$ = this.mapOpenSubject.asObservable();
+  htmlOpen$ = this.htmlOpenSubject.asObservable();
+  overlayWide$ = this.overlayWideSubject.asObservable();
+  
+ 
   // Property for notification count in the badge
   public newNotificationsCount = 0;
   CampaignId: any;
   params: any;
 
-  constructor(
-    private placesService: PlacesService,
-    private router: Router,
-   ) {}
+  constructor(private placesService: PlacesService, private router: Router) {}
 
-  
   getUploadRoute(notification: Notification): string | null {
     return notification.userSubmissionId
       ? `/uploadOM/${notification.userSubmissionId}`
       : null;
   }
 
-  initNotifications(campaignId:any): void {
+  initNotifications(campaignId: any): void {
     const storedContactId = localStorage.getItem('contactId');
     if (storedContactId) {
       this.contactId = +storedContactId;
@@ -47,11 +50,13 @@ export class NotificationService  {
     }
   }
 
-  fetchUserNotifications(campaignId:any): void {
-  
+  fetchUserNotifications(campaignId: any): void {
     const request = {
       Name: 'GetUserNotifications',
-      Params: { ContactId: this.contactId, CampaignID:campaignId?campaignId:null },
+      Params: {
+        ContactId: this.contactId,
+        CampaignID: campaignId ? campaignId : null,
+      },
     };
 
     this.placesService.GenericAPI(request).subscribe({
@@ -185,4 +190,22 @@ export class NotificationService  {
         new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
     );
   }
+  setMapOpen(isOpen: boolean) {
+    this.mapOpenSubject.next(isOpen);
+    if (isOpen) {
+       this.htmlOpenSubject.next(false);
+    }
+   }
+   setHtmlOpen(isOpen: boolean) {
+    this.htmlOpenSubject.next(isOpen);
+  
+    if (isOpen) {
+      // Close map explicitly
+      this.mapOpenSubject.next(false);
+    }
+  }
+  setOverlayWide(isWide: boolean) {
+    this.overlayWideSubject.next(isWide);
+  }
+  
 }

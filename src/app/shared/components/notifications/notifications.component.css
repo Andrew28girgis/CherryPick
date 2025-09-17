@@ -585,10 +585,14 @@
   cursor: not-allowed;
 }
 
-/* === Overlay mode (90% width) — append to notifications.component.css === */
+/* === Overlay mode (90% width) — append to notifications.component.css */
 .copilot-sidebar-container.overlay-mode .sidebar-panel.visible {
   width: 90vw !important; /* take 90% of viewport width */
   max-width: 100vw;
+}
+/* Special case: force 92% */
+.copilot-sidebar-container.overlay-mode.overlay-wide .sidebar-panel.visible {
+  width: 96vw !important;
 }
 
 .copilot-sidebar-container.overlay-mode {

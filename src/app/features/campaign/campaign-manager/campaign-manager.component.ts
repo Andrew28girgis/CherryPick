@@ -1,3 +1,4 @@
+import { NotificationService } from 'src/app/core/services/notification.service';
 import {
   Component,
   OnInit,
@@ -63,7 +64,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   constructor(
     private placesService: PlacesService,
-
+    private notificationService:NotificationService,
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
@@ -394,5 +395,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
+  openEmilyWithMap() {
+    this.notificationService.setChatOpen(true);  // ensure Emily is open
+    this.notificationService.setMapOpen(true);   // force map overlay
+    this.notificationService.setOverlayWide(true); // force 92vw
+  }
+  closeEmily() {
+    this.notificationService.setChatOpen(false);
+   }
   
 }

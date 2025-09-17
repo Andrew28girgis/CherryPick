@@ -606,7 +606,7 @@ private closeAllDropdowns(): void {
    this.shoppingCenters.forEach((sc: any) => sc.isDropdownOpen = false);
   this.activeDropdownId = null;
 }
- 
+
 
 openInfoPopup(shopping: any, content: TemplateRef<any>): void {
   this.isLoadingInfo = true;
