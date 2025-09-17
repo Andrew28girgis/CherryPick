@@ -72,6 +72,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.getAllCampaigns();
        this.refreshService.refreshOrganizations$.subscribe(() => {
       this.getAllCampaigns();
     });
