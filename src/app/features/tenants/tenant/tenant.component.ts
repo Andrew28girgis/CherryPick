@@ -34,13 +34,13 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { OrganizationBranches } from 'src/app/shared/models/organization-branches';
 import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
- import { ICustomPolygon } from 'src/app/shared/models/custom-polygon.model';
+import { ICustomPolygon } from 'src/app/shared/models/custom-polygon.model';
 import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter';
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { organizationContacts } from 'src/app/shared/models/organizationContacts';
- import * as CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 import {
   Bb,
   C,
@@ -78,7 +78,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   uploadProgress: number = 0;
   isConverting: boolean = false;
   images: IFile[] = [];
-   contactID!: any;
+  contactID!: any;
   contactIDs!: any;
   shoppingCentersIds!: string;
   TenantResult!: LandingPageTenants;
@@ -94,7 +94,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   CampaignData!: any;
   showFullReason: boolean = false;
   guid!: string;
-   removeavailable: boolean = false;
+  removeavailable: boolean = false;
   removetenant: boolean = false;
   userSubmission: any;
   jsonGUID!: string;
@@ -281,29 +281,31 @@ export class TenantComponent implements OnInit, AfterViewInit {
     return encodeURIComponent(encrypted.toString()); // Important: encode here
   }
   decrypt(encryptedValue: string): string {
-  try {
-    // Only decode if it's encoded
-    const isEncoded = encryptedValue.includes('%');
-    const rawValue = isEncoded ? decodeURIComponent(encryptedValue) : encryptedValue;
+    try {
+      // Only decode if it's encoded
+      const isEncoded = encryptedValue.includes('%');
+      const rawValue = isEncoded
+        ? decodeURIComponent(encryptedValue)
+        : encryptedValue;
 
-    const decrypted = CryptoJS.AES.decrypt(rawValue, this.key, {
-      keySize: 256 / 8,
-      iv: this.iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    });
+      const decrypted = CryptoJS.AES.decrypt(rawValue, this.key, {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      });
 
-    const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
-    if (!plaintext) {
-      throw new Error('Failed to decrypt — empty string');
+      const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+      if (!plaintext) {
+        throw new Error('Failed to decrypt — empty string');
+      }
+
+      return plaintext;
+    } catch (err) {
+      console.error('Decryption failed:', err);
+      return '';
     }
-
-    return plaintext;
-  } catch (err) {
-    console.error('Decryption failed:', err);
-    return '';
   }
-}
 
   GetContactData() {
     const body: any = {
@@ -380,6 +382,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       },
     });
   }
+
   InsertIntoDestinationTable(buyBox: Bb) {
     this.spinner.show();
     // Process each campaign in the buyBox
@@ -1471,4 +1474,4 @@ export class TenantComponent implements OnInit, AfterViewInit {
   isLast(currentItem: any, array: any[]): boolean {
     return this.shoppingCenterService.isLast(currentItem, array);
   }
- }
+}

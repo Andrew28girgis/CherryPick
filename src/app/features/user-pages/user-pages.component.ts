@@ -34,7 +34,7 @@ export class UserPagesComponent implements OnInit {
     this.currentView = view;
   }
 
-  loadFakeData(): void { 
+  loadFakeData(): void {
     this.userPages = [
       { pageName: 'Home Page', date: '2024-01-15T10:30:00Z' },
       { pageName: 'About Us', date: '2024-01-14T14:22:00Z' },
