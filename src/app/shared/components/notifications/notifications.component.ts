@@ -618,6 +618,7 @@ export class NotificationsComponent
       this.overlayHtml = '';
   
       this.notificationService.setMapOpen(false);
+      this.notificationService.setOverlayWide(false);
       this.notificationService.setHtmlOpen(false);
   
       if (this.electronSideBar) {
@@ -1227,6 +1228,7 @@ export class NotificationsComponent
     this.overlayHtml = '';
   
     this.notificationService.setMapOpen(false);
+    this.notificationService.setOverlayWide(false);
     this.notificationService.setHtmlOpen(false);
   
     if (this.electronSideBar) {

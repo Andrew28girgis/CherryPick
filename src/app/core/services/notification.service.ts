@@ -194,7 +194,9 @@ export class  NotificationService {
     this.mapOpenSubject.next(isOpen);
     if (isOpen) {
        this.htmlOpenSubject.next(false);
+       this.sendmessage();
     }
+   
    }
    setHtmlOpen(isOpen: boolean) {
     this.htmlOpenSubject.next(isOpen);
@@ -206,6 +208,11 @@ export class  NotificationService {
   }
   setOverlayWide(isWide: boolean) {
     this.overlayWideSubject.next(isWide);
+  }
+  sendmessage(){
+    const body: any = { Chat: 'Create a New Campaign' };
+    this.placesService.sendmessages(body).subscribe({
+    })
   }
   
 }

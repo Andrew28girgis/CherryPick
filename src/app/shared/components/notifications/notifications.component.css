@@ -202,28 +202,7 @@
 .sidebar-panel.visible {
   animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-/* Add these responsive styles */
-@media (max-width: 1200px) {
-  .copilot-sidebar-container.open {
-    width: 320px !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .sidebar-panel {
-    width: 280px !important; /* Even smaller width on small screens */
-  }
-
-  .copilot-sidebar-container {
-    width: 280px !important;
-  }
-
-  /* Make message bubbles adapt better to smaller width */
-  .message-bubble {
-    max-width: 95%;
-  }
-}
+ 
 
 /* Add to notifications.component.css */
 .choose {
@@ -691,16 +670,7 @@
   background: #fff;
 }
 
-/* Responsive: stack columns on small screens */
-@media (max-width: 900px) {
-  .overlay-grid {
-    grid-template-columns: 1fr;
-  }
-  .overlay-left {
-    border-right: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  }
-}
+ 
 /* ==== FIX: let grid children shrink so the middle track can scroll ==== */
 .overlay-grid,
 .overlay-left,
@@ -756,16 +726,7 @@
   overflow: visible;
 }
 
-/* Responsive: stack on small screens (chat remains below content) */
-@media (max-width: 900px) {
-  .overlay-grid {
-    grid-template-columns: 1fr;
-  }
-  .overlay-right {
-    border-left: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-  }
-}
+ 
 .message-row.system {
   display: flex;
   justify-content: flex-start; /* align like system messages */
