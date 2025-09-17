@@ -34,7 +34,7 @@
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
   <ng-container *ngFor="let shopping of cardsSideList">
-    <div class="cardResponsive" *ngIf="shopping.MainImage || shopping.scoreImage">
+    <div class="cardResponsive"  >
       <div
         class="main-img"
         (click)="handleImageClick($event)"

@@ -2,6 +2,7 @@ import { Component, Input, TemplateRef } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Tenant } from 'src/app/shared/models/tenant';
 import { AddCampaignPopupComponent } from '../../campaign/add-campaign-popup/add-campaign-popup.component';
+import { NotificationService } from 'src/app/core/services/notification.service';
 
 @Component({
   selector: 'app-tenant-card',
@@ -16,7 +17,8 @@ export class TenantCardComponent {
 
   constructor(
     private offcanvasService: NgbOffcanvas,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private notificationService:NotificationService
   ) {}
 
   getImageUrl(id: number): string {
@@ -104,5 +106,13 @@ export class TenantCardComponent {
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
-  
+  openEmilyWithMap() {
+    this.notificationService.setChatOpen(true);  // ensure Emily is open
+    this.notificationService.setMapOpen(true);   // force map overlay
+    this.notificationService.setOverlayWide(true); // force 92vw
+    this.closeOffcanvas()
+  }
+  closeEmily() {
+    this.notificationService.setChatOpen(false);
+   }
 }
