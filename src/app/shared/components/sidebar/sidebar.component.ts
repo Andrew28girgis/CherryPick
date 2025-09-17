@@ -167,11 +167,4 @@ export class SidebarComponent implements OnInit {
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
-
-  @HostListener('document:click', ['$event'])
-  clickOutside(event: any) {
-    if (!event.target.closest('.avatar-container') && this.isDropdownOpen) {
-      this.isDropdownOpen = false;
-    }
-  }
 }

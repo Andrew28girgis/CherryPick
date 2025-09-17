@@ -216,12 +216,12 @@
 /* contact card container */
 .contact-card {
   /* auto-size to content but never overflow its parent */
-  display: inline-grid;            /* lets faces overlap and still size to content */
+  display: inline-grid; /* lets faces overlap and still size to content */
   grid-auto-rows: auto;
   perspective: 1000px;
-  inline-size: fit-content;        /* same as width: fit-content */
-  max-inline-size: 100%;           /* don’t overflow container */
-  block-size: auto;                /* height grows with content */
+  inline-size: fit-content; /* same as width: fit-content */
+  max-inline-size: 100%; /* don’t overflow container */
+  block-size: auto; /* height grows with content */
   cursor: pointer;
   position: relative;
 }
@@ -234,13 +234,13 @@
 }
 .contact-card .flip-front,
 .contact-card .flip-back {
-  grid-area: 1 / 1;                /* overlap */
+  grid-area: 1 / 1; /* overlap */
   backface-visibility: hidden;
   border-radius: 12px;
-  border: 1px solid var(--Body-Border, #F8E9EF);
+  border: 1px solid var(--Body-Border, #f8e9ef);
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   padding: 16px;
   /* allow content to define size */
   inline-size: max-content;
@@ -249,10 +249,14 @@
 .contact-card.flipped .flip-inner {
   transform: rotateY(180deg);
 }
- 
+
 /* flip */
-.contact-card.flipped .flip-inner { transform: rotateY(180deg); }
-.contact-card .flip-back { transform: rotateY(180deg); }
+.contact-card.flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+.contact-card .flip-back {
+  transform: rotateY(180deg);
+}
 
 .flip-back {
   transform: rotateY(180deg);
@@ -335,7 +339,7 @@
   display: flex;
   align-items: center;
   width: 44px;
-  transition: width .3s, background-color .3s, border-color .3s;
+  transition: width 0.3s, background-color 0.3s, border-color 0.3s;
   will-change: width;
   position: relative;
   overflow: hidden;
