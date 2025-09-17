@@ -50,8 +50,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   stages: { id: number; stageName: string }[] = [];
   searchCampaign = '';
   isMobile = false;
-  private dataLoaded = true;
-
+ 
   // Loading state
    // Skeleton arrays for different views
   skeletonCardArray = Array(6).fill(0);
@@ -126,17 +125,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
         } else {
-          this.router.navigate(['/summary'], { replaceUrl: true });
+          // this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
           this.filteredCampaigns = [];
         }
         this.getKanbanTemplateStages();
-        this.dataLoaded = true; // Set dataLoaded to true on successful load
-      },
-      error: () => {
-        // this.isLoading = false;
-        this.dataLoaded = false;
-      },
+       },
+      
     });
 
     this.subscriptions.add(subscription);
