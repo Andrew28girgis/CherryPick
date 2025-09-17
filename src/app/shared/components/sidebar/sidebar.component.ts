@@ -164,7 +164,18 @@ export class SidebarComponent implements OnInit {
     this.router.navigate([newView]);
   }
 
+
+ 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  // Close dropdown if clicked outside
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      this.isDropdownOpen = false;
+    }
   }
 }
