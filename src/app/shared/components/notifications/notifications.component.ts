@@ -230,6 +230,12 @@ export class NotificationsComponent
     });
     this.notificationService.overlayWide$.subscribe((wide)=>{
       this.isoverlaywide=wide;
+      if(wide){
+setTimeout(() => {
+  
+  this.showTyping()
+}, 2000);
+      }
     })
     
     this.notificationService.htmlOpen$.subscribe((open) => {
