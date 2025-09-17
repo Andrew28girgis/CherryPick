@@ -146,10 +146,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     return item.name;
   }
 
-  startDrawing(shape: 'move' | 'circle' | 'polygon') {
-    this.mapDrawingService.setDrawingMode(shape);
-  }
-
   async viewSelectedItem(item: SearchItem) {
     const itemKey = this.getItemKey(item);
     this.spinner.show();
