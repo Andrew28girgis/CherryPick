@@ -257,6 +257,7 @@ setTimeout(() => {
   }
 
   toggleSidebar(): void {
+     
     this.isOpen = !this.isOpen;
 
     // Update the notification service state
@@ -616,7 +617,8 @@ setTimeout(() => {
     } else {
       this.toggleSidebar();
     }
-  
+    this.closeOverlayContent();
+
     if (this.isOverlayMode) {
       this.isOverlayMode = false;
       this.showingMap = false;
