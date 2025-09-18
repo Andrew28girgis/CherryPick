@@ -203,7 +203,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       this.mapFeatureIdByItemKey.delete(itemKey);
     } else {
       (this.mapDrawingService as any)?.completelyRemoveExplorePolygon?.();
-    } 
+    }
     const index = this.selectedItems.findIndex((selected) =>
       this.areItemsEquivalent(selected, item)
     );
@@ -255,8 +255,8 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
   }
 
   private areItemsEquivalent(itemA: SearchItem, itemB: SearchItem): boolean {
-    if (itemA.type !== itemB.type) return false; 
-    if (itemA.id != null || itemB.id != null) return itemA.id === itemB.id; 
+    if (itemA.type !== itemB.type) return false;
+    if (itemA.id != null || itemB.id != null) return itemA.id === itemB.id;
     return (
       (itemA.name ?? '').toLowerCase() === (itemB.name ?? '').toLowerCase()
     );
