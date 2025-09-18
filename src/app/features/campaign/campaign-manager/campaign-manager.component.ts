@@ -6,6 +6,10 @@ import {
   HostListener,
   OnDestroy,
   Input,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -17,11 +21,10 @@ import {
 } from 'src/app/shared/models/icampaign';
 import { EmilyService } from 'src/app/core/services/emily.service';
 import { Router } from '@angular/router';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
-import { Subscription } from 'rxjs';
+ import { Subscription } from 'rxjs';
 import { AddCampaignPopupComponent } from '../add-campaign-popup/add-campaign-popup.component';
 import { RefreshService } from 'src/app/core/services/refresh.service';
-
+ 
 @Component({
   selector: 'app-campaign-manager',
   templateUrl: './campaign-manager.component.html',
@@ -30,6 +33,7 @@ import { RefreshService } from 'src/app/core/services/refresh.service';
 export class CampaignManagerComponent implements OnInit, OnDestroy {
   protected campaignMinSize: number = 100;
   protected campaignMaxSize: number = 100;
+  
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
   @Input() set viewMode(value: 'card' | 'table') {
@@ -59,23 +63,23 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   // Subscription to manage and clean up subscriptions
   private subscriptions = new Subscription();
   // Interval for hiding spinner
-
+ 
   constructor(
     private placesService: PlacesService,
     private notificationService:NotificationService,
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
-    private breadcrumbService: BreadcrumbService,
-    private refreshService:RefreshService,
-  ) {}
+     private refreshService:RefreshService,
+   ) {}
 
   ngOnInit(): void {
-    this.getAllCampaigns();
+     this.getAllCampaigns();
        this.refreshService.refreshOrganizations$.subscribe(() => {
       this.getAllCampaigns();
     });
   }
+ 
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -124,7 +128,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
-        } else {
+         } else {
           // this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
           this.filteredCampaigns = [];
@@ -368,8 +372,5 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.notificationService.setMapOpen(true);   // force map overlay
     this.notificationService.setOverlayWide(true); // force 92vw
   }
-  closeEmily() {
-    this.notificationService.setChatOpen(false);
-   }
   
 }

@@ -42,7 +42,11 @@ type ChatItem = {
   created: Date;
   // optional raw objects if you still need them:
   notification?: Notification;
-  userMsg?: { message: string; createdDate: string };
+  userMsg?: {
+    message: string;
+    createdDate: string;
+    status: 'sending' | 'sent' | 'failed';
+  };
 };
 declare global {
   interface Window {
@@ -122,7 +126,7 @@ export class NotificationsComponent
 
   private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
   showingMap: boolean = false;
-  isoverlaywide: boolean=false;
+  isoverlaywide: boolean = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -143,7 +147,7 @@ export class NotificationsComponent
   previousNotificationsLength = 0;
   scrollThreshold = 100; // pixels from bottom to consider "at bottom"
   private chatOpenSub?: Subscription;
-   public isOverlayhtml = false;
+  public isOverlayhtml = false;
 
   ngOnInit(): void {
     if (this.router.url.includes('chatbot')) this.electronSideBar = true;
@@ -186,12 +190,10 @@ export class NotificationsComponent
       this.notificationService.notifications.length;
 
     // Debounced scan
-    this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(
-      () => {
-        this.scanAndOpenOverlayForHtml();
-        this.scanForShowMap();
-      } 
-    );
+    this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(() => {
+      this.scanAndOpenOverlayForHtml();
+      this.scanForShowMap();
+    });
 
     // Polling
     this.intervalId = setInterval(() => {
@@ -228,23 +230,21 @@ export class NotificationsComponent
         this.overlayHtml = ''; // clear HTML content when map is open
       }
     });
-    this.notificationService.overlayWide$.subscribe((wide)=>{
-      this.isoverlaywide=wide;
-      if(wide){
-setTimeout(() => {
-  
-  this.showTyping()
-}, 2000);
+    this.notificationService.overlayWide$.subscribe((wide) => {
+      this.isoverlaywide = wide;
+      if (wide) {
+        setTimeout(() => {
+          this.showTyping();
+        }, 2000);
       }
-    })
-    
+    });
+
     this.notificationService.htmlOpen$.subscribe((open) => {
       this.isOverlayhtml = open;
       if (!open) {
         this.overlayHtml = ''; // clear content when html is closed
       }
     });
- 
   }
 
   ngOnDestroy(): void {
@@ -257,7 +257,6 @@ setTimeout(() => {
   }
 
   toggleSidebar(): void {
-     
     this.isOpen = !this.isOpen;
 
     // Update the notification service state
@@ -294,12 +293,12 @@ setTimeout(() => {
     }
   }
 
-  handleNotificationClick(notification: Notification): void {
-    if (notification.userSubmissionId) {
-      const route = `/uploadOM/${notification.userSubmissionId}`;
-      this.router.navigate([route]);
-    }
-  }
+  // handleNotificationClick(notification: Notification): void {
+  //   if (notification.userSubmissionId) {
+  //     const route = `/uploadOM/${notification.userSubmissionId}`;
+  //     this.router.navigate([route]);
+  //   }
+  // }
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
@@ -470,27 +469,7 @@ setTimeout(() => {
     const container = this.messagesContainer.nativeElement;
     return container.scrollTop === 0;
   }
-  private handleNewMessage(newMessage: Notification): void {
-    const atBottom = this.isAtBottom();
-    const atTop = this.isAtTop();
-
-    // Case 1: If it's a reply to my last sent message → always scroll
-    // if (this.lastUserMessageId && newMessage.replyToId === this.lastUserMessageId) {
-    //   this.scrollToBottom();
-    //   this.lastUserMessageId = null; // reset
-    //   return;
-    // }
-
-    // Case 2: If user is at bottom OR at top → scroll to bottom
-    if (atBottom || atTop) {
-      this.scrollToBottom();
-      return;
-    }
-
-    // Case 3: User is in the middle → show "scroll down" button
-    this.newNotificationsCount++;
-    this.showScrollButton = true;
-  }
+ 
 
   onScroll(): void {
     // user moved; refresh sticky state
@@ -504,10 +483,8 @@ setTimeout(() => {
     }
   }
 
-  // In NotificationService, add this method:
-  setChatOpen(isOpen: boolean): void {
-    // Use a subject to communicate between components
-    this.notificationService.setChatOpen(this.isOpen);
+   setChatOpen(isOpen: boolean): void {
+     this.notificationService.setChatOpen(this.isOpen);
   }
 
   onInputChange(event: any): void {
@@ -545,6 +522,7 @@ setTimeout(() => {
     this.sentMessages.push({
       message: text,
       createdDate: new Date().toISOString(),
+      status: 'sending', // ✅ sending | sent | failed
     });
     this.scrollAfterRender();
     this.showTyping();
@@ -558,18 +536,21 @@ setTimeout(() => {
         this.awaitingResponse = true;
         this.isSending = false;
         this.hideTyping();
+        const lastMsg = this.sentMessages[this.sentMessages.length - 1];
+        if (lastMsg) lastMsg.status = 'sent';
         this.scanTrigger$.next();
       },
       error: (err) => {
         console.error('sendmessage failed', err);
         this.isSending = false;
-
+        this.hideTyping();
         // restore text
         this.outgoingText = text;
         if (this.messageInput) this.messageInput.nativeElement.innerText = text;
 
-        // remove optimistic bubble
-        this.sentMessages.pop();
+        // mark last message as failed
+        const lastMsg = this.sentMessages[this.sentMessages.length - 1];
+        if (lastMsg) lastMsg.status = 'failed';
 
         // cancel turn
         this.awaitingResponse = false;
@@ -579,10 +560,18 @@ setTimeout(() => {
       },
     });
   }
+  retryMessage(msg: any) {
+    if (!msg) return;
+    this.outgoingText = msg.message;
+    if (this.messageInput) {
+      this.messageInput.nativeElement.innerText = msg.message;
+    }
+    this.sendMessage();
+  }
 
   toggleOverlayMode(): void {
     if (!this.isOpen) return;
-  
+
     if (this.isOverlayMode || this.showingMap || this.isOverlayhtml) {
       // 🔑 closing everything
       this.closeOverlayContent();
@@ -602,15 +591,13 @@ setTimeout(() => {
       });
     }
   }
-  
+
   onOverlayBackdropClick(event: MouseEvent): void {
     if (this.isOverlayMode || this.showingMap || this.isOverlayhtml) {
       this.closeOverlayContent();
     }
   }
-  
-  
-  
+
   closeAll(): void {
     if (this.electronSideBar) {
       this.closeSide();
@@ -624,15 +611,15 @@ setTimeout(() => {
       this.showingMap = false;
       this.isOverlayhtml = false;
       this.overlayHtml = '';
-  
+
       this.notificationService.setMapOpen(false);
       this.notificationService.setOverlayWide(false);
       this.notificationService.setHtmlOpen(false);
-  
+
       if (this.electronSideBar) {
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
-  
+
       this.overlayStateChange.emit(false);
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
@@ -642,7 +629,7 @@ setTimeout(() => {
       });
     }
   }
-  
+
   setOverlayHtmlFromApi(htmlFromApi: string) {
     this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
   }
@@ -802,16 +789,10 @@ setTimeout(() => {
     // Let the browser lay out the new DOM, then scroll
     requestAnimationFrame(() => this.scrollToBottom());
   }
- 
-  
-  
+
   private showTyping() {
     if (this.isTyping) return;
     this.isTyping = true;
-
-    // safety auto-hide (e.g., after 30s) in case no reply arrives
-    clearTimeout(this.typingHideTimer);
-    this.typingHideTimer = setTimeout(() => this.hideTyping(), 30000);
 
     // cause a render & scroll if you're at bottom
     this.cdRef.detectChanges();
@@ -948,7 +929,7 @@ setTimeout(() => {
       );
     } else {
       this.isOverlayMode = true;
-      this.showingMap=false
+      this.showingMap = false;
       this.overlayHtml = notification.html;
     }
     this.selectedNotification = notification;
@@ -1234,15 +1215,15 @@ setTimeout(() => {
     this.showingMap = false;
     this.isOverlayhtml = false;
     this.overlayHtml = '';
-  
+
     this.notificationService.setMapOpen(false);
     this.notificationService.setOverlayWide(false);
     this.notificationService.setHtmlOpen(false);
-  
+
     if (this.electronSideBar) {
       (window as any).electronMessage.minimizeCRESideBrowser();
     }
-  
+
     this.overlayStateChange.emit(false);
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
@@ -1251,5 +1232,4 @@ setTimeout(() => {
       overlayActive: false,
     });
   }
-  
 }

@@ -17,7 +17,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { AddNewCampaignComponent } from './add-new-campaign/add-new-campaign.component';
 import { AddCampaignPopupComponent } from './add-campaign-popup/add-campaign-popup.component';
-
+ 
 @NgModule({
   declarations: [
     CampaignDrawingComponent,
@@ -25,7 +25,7 @@ import { AddCampaignPopupComponent } from './add-campaign-popup/add-campaign-pop
     AddCampaignComponent,
     AddNewCampaignComponent,
     AddCampaignPopupComponent,
-  ],
+   ],
   imports: [
     CommonModule,
     CampaignRoutingModule,
