@@ -1,6 +1,6 @@
-<div class="h-100 d-flex flex-column">
+<div class="h-100 d-flex flex-column container-fluid">
   <div class="row">
-    <div class="col-4 ps-2 pe-0">
+    <div class="col-3">
       <div class="unified-search-container">
         <input
           id="unifiedSearch"
@@ -26,32 +26,68 @@
             Loading…
           </div>
 
-          <!-- Custom List of Suggestions -->
-          <ul class="custom-dropdown-list">
-            <li
-              *ngFor="let item of searchResults"
-              class="custom-dropdown-item d-flex align-items-center"
-            >
-              <div class="dropdown-item-box">
-                <input
-                  type="checkbox"
-                  [checked]="isSelected(item)"
-                  (change)="toggleSelection(item)"
-                  [id]="'chk-' + (item.type + '-' + (item.id ?? item.name))"
-                  class="custom-checkbox"
-                />
-                <label
-                  class="mb-0 ms-2 flex-grow-1 custom-label"
-                  [for]="'chk-' + (item.type + '-' + (item.id ?? item.name))"
-                  (click)="$event.preventDefault(); toggleSelection(item)"
-                >
-                  {{ getItemLabel(item) }}
-                </label>
-              </div>
-            </li>
-          </ul>
+          <div *ngIf="stateCityResults.length">
+            <div class="px-2 py-1 fw-bold">
+              State, City
+            </div>
+            <ul class="custom-dropdown-list">
+              <li
+                *ngFor="let item of stateCityResults"
+                class="custom-dropdown-item d-flex align-items-center"
+              >
+                <div class="dropdown-item-box">
+                  <input
+                    #chk
+                    type="checkbox"
+                    [checked]="isSelected(item)"
+                    (change)="toggleSelection(item)"
+                    (click)="$event.stopPropagation()"
+                    [id]="getItemId(item)"
+                    class="custom-checkbox"
+                  />
+                  <label
+                    class="mb-0 ms-2 flex-grow-1 custom-label"
+                    [for]="getItemId(item)"
+                    (click)="$event.preventDefault(); toggleSelection(item)"
+                  >
+                    {{ getItemLabel(item) }}
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
 
-          <!-- No Results Message -->
+          <div *ngIf="neighborhoodResults.length" class="mt-2">
+            <div class="px-2 py-1 fw-bold">
+              Neighborhood
+            </div>
+            <ul class="custom-dropdown-list">
+              <li
+                *ngFor="let item of neighborhoodResults"
+                class="custom-dropdown-item d-flex align-items-center"
+              >
+                <div class="dropdown-item-box">
+                  <input
+                    #chk2
+                    type="checkbox"
+                    [checked]="isSelected(item)"
+                    (change)="toggleSelection(item)"
+                    (click)="$event.stopPropagation()"
+                    [id]="getItemId(item)"
+                    class="custom-checkbox"
+                  />
+                  <label
+                    class="mb-0 ms-2 flex-grow-1 custom-label"
+                    [for]="getItemId(item)"
+                    (click)="$event.preventDefault(); toggleSelection(item)"
+                  >
+                    {{ getItemLabel(item) }}
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+
           <div
             class="p-2 small text-muted"
             *ngIf="!isLoadingSuggestions && !searchResults.length"
@@ -60,7 +96,6 @@
           </div>
         </div>
 
-        <!-- Selected Items List -->
         <div
           class="selected-item gap-2 d-flex align-items-center mt-2"
           *ngFor="let selectedItem of selectedItems"
@@ -89,7 +124,6 @@
           </button>
         </div>
 
-        <!-- Save Button for Selected Items -->
         <div
           class="d-flex align-items-center justify-content-center mt-2"
           *ngIf="selectedItems.length"
@@ -100,15 +134,15 @@
             (click)="onSaveLocationCriteria()"
             aria-label="Save all selected location criteria"
           >
-            Save
+            Done
           </button>
         </div>
       </div>
     </div>
 
     <!-- Map Container -->
-    <div class="col-8">
-      <div class="px-3 pb-3 flex-grow-1 d-flex">
+    <div class="col-9">
+      <div class="pb-3 flex-grow-1 d-flex">
         <div class="map-wrapper flex-grow-1 position-relative">
           <div #mapContainer class="map-container w-100 h-100"></div>
         </div>
