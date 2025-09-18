@@ -1,14 +1,14 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+ 
 <div class="campaign-manager-container container-fluid">
-  <div class=" title-div ">
-    
+  <div class="title-div">
     <h2 class="title">Campaigns</h2>
   </div>
   <div
     class="w-100 d-flex align-items-center justify-content-end"
-    style=" padding-bottom: 21px"
+    style="padding-bottom: 21px"
   >
-
     <div
       class="d-flex align-items-center gap-3 toggle-cont"
       *ngIf="!hideViewToggles"
@@ -193,9 +193,7 @@
   <!-- Actual content -->
   <div
     *ngIf="
-       filteredCampaigns &&
-      filteredCampaigns.length > 0 &&
-      stages.length > 0
+      filteredCampaigns && filteredCampaigns.length > 0 && stages.length > 0
     "
     class="campaign-manager-body"
   >
@@ -224,15 +222,22 @@
                 [ngClass]="{ 'title-hover': campaign.Sites }"
                 [routerLink]="
                   campaign.Sites
-                    ? ['/dashboard', campaign.OrganizationId, campaign.OrganizationName, campaign.Id]
+                    ? [
+                        '/dashboard',
+                        campaign.OrganizationId,
+                        campaign.OrganizationName,
+                        campaign.Id
+                      ]
                     : null
                 "
               >
                 <!-- Logo or placeholder -->
-                <ng-container *ngIf="campaign.logoUrl ; else logoPlaceholder">
+                <ng-container *ngIf="campaign.logoUrl; else logoPlaceholder">
                   <img
-                    [src]="campaign.logoUrl" 
+                    [src]="campaign.logoUrl"
                     class="org-logo"
+                    #logoImg
+                    crossorigin="anonymous"
                   />
                 </ng-container>
                 <ng-template #logoPlaceholder>
@@ -240,15 +245,17 @@
                     {{ getInitials(campaign.CampaignName) }}
                   </div>
                 </ng-template>
-            
+
                 <!-- Text block -->
                 <div class="title-text">
                   <div class="campaign-title">{{ campaign.CampaignName }}</div>
-                  <div class="organization-name">{{ campaign.OrganizationName }}</div>
+                  <div class="organization-name">
+                    {{ campaign.OrganizationName }}
+                  </div>
                 </div>
               </a>
             </div>
-            
+
             <div
               class="privacy-badge"
               [ngClass]="{
@@ -267,10 +274,17 @@
             <div
               class="metric-item"
               [ngClass]="{ link: campaign.Sites }"
-              [routerLink]="campaign.Sites > 0
-              ? ['/dashboard', campaign.OrganizationId, campaign.OrganizationName, campaign.Id]
-              : null"
-             >
+              [routerLink]="
+                campaign.Sites > 0
+                  ? [
+                      '/dashboard',
+                      campaign.OrganizationId,
+                      campaign.OrganizationName,
+                      campaign.Id
+                    ]
+                  : null
+              "
+            >
               <div class="metric-value">
                 <span>{{ campaign.Sites }}</span>
                 <svg
@@ -541,10 +555,9 @@
   </div>
 
   <div
-    *ngIf=" !(filteredCampaigns && filteredCampaigns.length > 0)"
+    *ngIf="!(filteredCampaigns && filteredCampaigns.length > 0)"
     class="empty-campaigns"
   >
-    
     <h4>Campaigns Will Appear Here!</h4>
     <p>Create, Track, and Manage Expansion Campaigns Here.</p>
   </div>
