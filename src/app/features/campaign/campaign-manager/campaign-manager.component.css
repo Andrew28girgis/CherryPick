@@ -672,10 +672,7 @@
   cursor: pointer;
   text-decoration: none;
 }
-
-.tenant-name:hover {
-  color: #3b82f6;
-}
+ 
 
 /* Privacy Badge Styles */
 .campaign-privacy {
@@ -1212,4 +1209,138 @@
   background-color: #102e50;
   flex-shrink: 0; /* keep logo fixed size */
   cursor: auto;
+}
+.tenant-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.tenant-card {
+  position: relative;
+  background: #fff;
+  border: 2px solid #e0e6ed;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+ }
+
+.tenant-card:hover {
+  border-color: var(--Colors-Primary-400 );
+   transform: translateY(-2px);
+}
+
+.tenant-card.selected {
+  border: 2px solid var(--Colors-Primary-500 );
+   }
+
+.tenant-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.tenant-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e6ed;
+  background: #f8f9fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+.tenant-logo.placeholder {
+  background: #102e50;
+  color: #fff;
+  font-size: 20px;
+}
+
+.tenant-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--Colors-Primary-500);
+}
+
+.tenant-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #102e50;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.tenant-check {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background: var(--Colors-Primary-500);
+  color: #fff;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+/* Stepper container */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Step circles/text */
+.step {
+  font-size: 14px;
+  font-weight: 600;
+  color: #a0a0a0;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid #d1d9e0;
+  background: #f5f6f8;
+  transition: all 0.2s ease;
+}
+
+.step.active {
+  color: #fff;
+  background: var(--Colors-Primary-500 );
+  border-color: var(--Colors-Primary-500 );
+}
+
+/* line between steps */
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #d1d9e0;
+  margin: 0 4px;
+}
+
+/* Next button override */
+.next-btn {
+  background: var(--Colors-Primary-500 );
+  border-color: var(--Colors-Primary-500 );
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 8px;
+}
+
+.next-btn:hover {
+  background: var(--Colors-Primary-hover );
+  border-color: var(--Colors-Primary-hover );
 }

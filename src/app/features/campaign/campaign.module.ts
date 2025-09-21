@@ -17,14 +17,15 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { AddNewCampaignComponent } from './add-new-campaign/add-new-campaign.component';
 import { AddCampaignPopupComponent } from './add-campaign-popup/add-campaign-popup.component';
- 
-@NgModule({
+import { PolygonsComponent } from '../polygons/polygons.component';
+ @NgModule({
   declarations: [
     CampaignDrawingComponent,
     CampaignManagerComponent,
     AddCampaignComponent,
     AddNewCampaignComponent,
     AddCampaignPopupComponent,
+    
    ],
   imports: [
     CommonModule,
@@ -38,6 +39,7 @@ import { AddCampaignPopupComponent } from './add-campaign-popup/add-campaign-pop
     InputTextModule,
     AutoCompleteModule,
     ButtonModule,
+    PolygonsComponent,
   ],
   exports: [
     CampaignDrawingComponent,

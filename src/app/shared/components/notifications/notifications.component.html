@@ -25,7 +25,13 @@
     [class.visible]="isOpen"
     (click)="$event.stopPropagation()"
   >
-    <div class="overlay-grid" (click)="$event.stopPropagation()">
+    <div
+      class="overlay-grid"
+      (click)="$event.stopPropagation()"
+      [ngClass]="{
+        'hidden': electronSideBar
+      }"
+    >
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
       <section
         *ngIf="
@@ -201,7 +207,46 @@
             />
             <h3 class="sidebar-title">Emily</h3>
           </div>
+          <div
+            *ngIf="electronSideBar"
+            class="segmented-scan"
+            role="radiogroup"
+            aria-label="Scan mode"
+          >
+            <label class="segment" title="Enable scanning">
+              <input type="radio" name="scanMode" (change)="scan(true)" />
+              <span class="seg">
+                <i class="fa fa-check" aria-hidden="true"></i>
 
+                Scan
+              </span>
+            </label>
+            <label class="segment" title="Disable scanning">
+              <input
+                type="radio"
+                name="scanMode"
+                (change)="scan(false)"
+                checked
+              />
+              <span class="seg">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M18 6L6 18M6 6l12 12"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                No Scan
+              </span>
+            </label>
+          </div>
           <div style="display: flex; gap: 6px; align-items: center">
             <!-- Close (closes chat panel AND ensures overlay off) -->
             <button

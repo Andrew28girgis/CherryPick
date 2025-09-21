@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  border-bottom: 1px solid #d1d9e0;
+   border-bottom: 1px solid #d1d9e0;
   background: #f6f8fa;
 }
 
@@ -44,7 +44,7 @@
 .bot-avatar {
   width: 24px;
   height: 24px;
-  background: var(--Colors-Primary-500);  
+  background: var(--Colors-Primary-500);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -95,7 +95,7 @@
   position: relative;
   margin-bottom: 8px;
   transition: all 0.2s ease;
-  background:var(--Colors-Primary-light);
+  background: var(--Colors-Primary-light);
   border: none;
   align-self: flex-start;
   border-bottom-left-radius: 4px;
@@ -202,7 +202,6 @@
 .sidebar-panel.visible {
   animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
- 
 
 /* Add to notifications.component.css */
 .choose {
@@ -457,9 +456,8 @@
 }
 
 .message-bubble.user {
-
   align-self: flex-end !important;
-  background: var(--Colors-Primary-500 ) !important;
+  background: var(--Colors-Primary-500) !important;
   color: white !important;
   border-bottom-right-radius: 4px !important;
   border-bottom-left-radius: 18px !important;
@@ -508,7 +506,7 @@
 
 .composer-input:focus {
   border-color: var(--Colors-Primary-500) !important;
- }
+}
 
 .composer-input:empty:before {
   content: attr(data-placeholder);
@@ -545,7 +543,7 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  background: var(--Colors-Primary-500 );
+  background: var(--Colors-Primary-500);
   color: #fff;
   transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
 }
@@ -633,7 +631,9 @@
   background: #fff;
 }
 
- 
+.hidden{
+  grid-template-columns: minmax(0, 1fr) !important;
+}
 
 /* Right column = content */
 .overlay-right {
@@ -656,7 +656,6 @@
   font-size: 14px;
   font-weight: 600;
 }
- 
 
 /* Make the chat list in overlay left column scroll nicely */
 .overlay-left .chat-messages-container {
@@ -670,7 +669,6 @@
   background: #fff;
 }
 
- 
 /* ==== FIX: let grid children shrink so the middle track can scroll ==== */
 .overlay-grid,
 .overlay-left,
@@ -697,7 +695,6 @@
   background: #fff;
 }
 
- 
 /* Right chat column (fixed width, fixed place on the right) */
 .overlay-right {
   display: grid;
@@ -726,7 +723,6 @@
   overflow: visible;
 }
 
- 
 .message-row.system {
   display: flex;
   justify-content: flex-start; /* align like system messages */
@@ -797,49 +793,40 @@
   background-image: url("../../../../assets/Images/bot.png"); /* you already use this asset */
   background-color: transparent;
 }
- 
- 
- 
+
 .container-overlay-btn {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
- 
+
 .save-btn:active {
   background-color: var(--Colors-Primary-hover);
   color: #fff;
 }
-
- 
-
 
 .overlay-content::-webkit-scrollbar {
   height: 10px;
 }
 
 .overlay-content::-webkit-scrollbar-track {
- background: transparent;
+  background: transparent;
 }
 
 .overlay-content::-webkit-scrollbar-thumb {
- background: var(--Colors-Primary-500);
- border-radius: 10px;
+  background: var(--Colors-Primary-500);
+  border-radius: 10px;
 }
 
 .overlay-content::-webkit-scrollbar-thumb:hover {
- background: var(--Colors-Primary-hover);
+  background: var(--Colors-Primary-hover);
 }
-
-
-
-
 
 /* The overlay-left column should have header + body (where body fills the rest) */
 .overlay-left {
   display: grid;
   grid-template-rows: auto 1fr; /* header + body wrapper */
-  min-height: 0;                /* allow shrinking within grid */
+  min-height: 0; /* allow shrinking within grid */
   overflow: scroll;
 }
 
@@ -847,16 +834,16 @@
 .container-overlay-btn {
   display: flex;
   flex-direction: column;
-  height: 100%;   /* IMPORTANT: fill the 1fr row */
-  min-height: 0;  /* IMPORTANT: allow child to scroll */
+  height: 100%; /* IMPORTANT: fill the 1fr row */
+  min-height: 0; /* IMPORTANT: allow child to scroll */
 }
 
 /* Scroll area */
 .overlay-content {
-  flex: 1 1 auto;     /* grow to fill, can shrink */
-  min-height: 0;      /* allow scrolling within */
-  overflow-y: scroll;   /* vertical scroll */
-  overflow-x: scroll;   /* keep if your tables can overflow horizontally */
+  flex: 1 1 auto; /* grow to fill, can shrink */
+  min-height: 0; /* allow scrolling within */
+  overflow-y: scroll; /* vertical scroll */
+  overflow-x: scroll; /* keep if your tables can overflow horizontally */
   padding: 16px;
   /* remove/override previous fixed height/width */
   height: auto;
@@ -869,8 +856,8 @@
   display: flex;
   justify-content: center;
   padding: 12px 16px;
-  border-top: 1px solid rgba(0,0,0,0.06);
- }
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
 
 /* Optional: make it “sticky” if you want it to stay visible even if wrapper scrolls */
 .save-div {
@@ -890,42 +877,59 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-.save-btn:active { background-color: var(--Colors-Primary-hover); }
+.save-btn:active {
+  background-color: var(--Colors-Primary-hover);
+}
 
 /* Spinner used inside button */
 .btn-spinner {
   display: inline-block;
-  width: 14px; height: 14px;
+  width: 14px;
+  height: 14px;
   margin-right: 6px;
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: 50%;
-  animation: spin .8s linear infinite;
+  animation: spin 0.8s linear infinite;
   vertical-align: -2px;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* Toast (alert) */
 .save-toast {
   position: fixed;
   right: 30vw;
   top: 24px;
-  background: var(--Colors-Primary-500);      /* success green */
+  background: var(--Colors-Primary-500); /* success green */
   color: #fff;
   padding: 10px 14px;
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   z-index: 3000;
   font-size: 14px;
-  animation: fadeSlideIn .25s ease-out;
+  animation: fadeSlideIn 0.25s ease-out;
 }
 @keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Keep the overlay grid scrollable logic correct (these exist in your CSS) */
-.overlay-grid, .overlay-left, .overlay-right { min-height: 0; }
+.overlay-grid,
+.overlay-left,
+.overlay-right {
+  min-height: 0;
+}
 /* You already have most of the overlay scaffolding; the important change is the
    .container-overlay-btn + .overlay-content flex/scroll and removing fixed height. */
 /* <CHANGE> Add PDF dialog styles */
@@ -970,26 +974,24 @@
   color: #666;
 }
 
-.title-btn{
-  background: var(--Colors-Primary-500); border: none
+.title-btn {
+  background: var(--Colors-Primary-500);
+  border: none;
 }
-.title-btn:hover{
+.title-btn:hover {
   background: var(--Colors-Primary-hover);
   color: white;
 }
 
-.save-pdf-btn{
+.save-pdf-btn {
   border-color: var(--Colors-Primary-500);
   color: var(--Colors-Primary-500);
 }
 
-.save-pdf-btn:hover{
+.save-pdf-btn:hover {
   background: var(--Colors-Primary-500);
   color: white;
 }
-
-
-
 
 /* On /emily-chatbot: chat takes full screen when open */
 .copilot-sidebar-container.chatbot-route .sidebar-panel.visible {
@@ -999,37 +1001,37 @@
 
 /* On /emily-chatbot WITH overlay: split the inside grid to 50/50 */
 .copilot-sidebar-container.chatbot-route.overlay-mode .overlay-grid {
-  grid-template-columns: 1fr 1fr !important;   /* 50% | 50% */
+  grid-template-columns: 1fr 1fr !important; /* 50% | 50% */
 }
 .copilot-sidebar-container.chatbot-route .overlay-grid {
-  grid-template-columns: 1fr !important;   /* 50% | 50% */
+  grid-template-columns: 1fr !important; /* 50% | 50% */
 }
 
 .copilot-sidebar-container.chatbot-route.overlay-mode .overlay-left,
 .copilot-sidebar-container.chatbot-route.overlay-mode .overlay-right {
   min-width: 0; /* allow scrolling inside each column */
 }
-.close-route{
+.close-route {
   display: none;
 }
 
-
-
-.copilot-sidebar-container.chatbot-route{
+.copilot-sidebar-container.chatbot-route {
   top: 64px !important;
   height: calc(100vh - 64px) !important;
 }
 
 /* If you have an overlay/backdrop, offset it too so it doesn't cover the header */
 .app-shell.chatbot-route.with-sidebar
-  .copilot-sidebar-container .overlay-backdrop {
+  .copilot-sidebar-container
+  .overlay-backdrop {
   top: 64px !important;
   height: calc(100vh - 64px) !important;
 }
 
 /* Keep the 50/50 overlay grid within the reduced height */
 .app-shell.chatbot-route.with-sidebar
-  .copilot-sidebar-container.overlay-mode .overlay-grid {
+  .copilot-sidebar-container.overlay-mode
+  .overlay-grid {
   height: calc(100vh - 64px) !important;
 }
 
@@ -1059,7 +1061,9 @@
 }
 
 @keyframes bounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.6);
     opacity: 0.4;
   }
@@ -1071,11 +1075,11 @@
 .message-content.with-icon {
   display: flex;
   align-items: flex-start; /* keeps text top-aligned with icon */
-  gap: 8px;                /* space between text and icon */
+  gap: 8px; /* space between text and icon */
 }
 
 .message-content.with-icon p {
-  flex: 1;                 /* text takes available space */
+  flex: 1; /* text takes available space */
   margin: 0;
 }
 
@@ -1102,7 +1106,7 @@
 }
 .message-actions {
   display: flex;
-   margin-top: 6px;
+  margin-top: 6px;
 }
 .message-status {
   font-size: 0.75rem;
@@ -1198,3 +1202,61 @@
     animation: none;
   }
 }
+
+ .segmented-scan {
+  display: inline-flex;
+  align-items: center;
+  background: var(--Colors-Primary-light);
+  border: 1px solid #d1d9e0;
+  border-radius: 24px;
+  padding: 2px;
+  height: 32px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  user-select: none;
+}
+.segmented-scan .segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 24px;  
+  overflow: hidden;
+}  
+.segmented-scan .segment input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  pointer-events: none;
+}
+.segmented-scan .seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 28px; 
+  border-radius: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #6b7280;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.04s ease;
+  cursor: pointer;
+}  
+.segmented-scan .segment:hover .seg {
+  background: rgba(0, 0, 0, 0.04);
+  color: #1f2328;
+} 
+.segmented-scan .segment:active .seg {
+  transform: translateY(1px);
+} 
+.segmented-scan .segment input[type="radio"]:checked + .seg {
+  background: var(--Colors-Primary-400);
+  color: var(--app-color);
+ }  
+.segmented-scan .segment input[type="radio"]:focus-visible + .seg {
+  outline: 2px solid #5c6bc0; 
+  outline-offset: 2px;
+}  
+.segmented-scan .seg svg {
+  display: inline-block;
+}  
+ 

@@ -1,6 +1,5 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
- 
 <div class="campaign-manager-container container-fluid">
   <div class="title-div">
     <h2 class="title">Campaigns</h2>
@@ -60,7 +59,7 @@
           </svg>
         </button>
       </div>
-      <button class="g-button" (click)="openEmilyWithMap()">
+      <button class="g-button" (click)="openAddCampaign(addCampaign)">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -579,6 +578,100 @@
         [userBuyBoxes]="userBuyBoxes"
         (onCampaignCreated)="onCampaignCreated()"
       ></app-campaign-drawing>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addCampaign let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add Campaign</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Stepper -->
+    <div class="stepper mb-4">
+      <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
+      <div class="step-line"></div>
+      <div class="step" [class.active]="step === 'polygon'">Locations</div>
+    </div>
+
+    <!-- Step 1: Tenants -->
+    <div *ngIf="!TenantStep && step === 'tenant'">
+      <div class="tenant-cards-grid">
+        <div
+          *ngFor="let tenant of tenants"
+          class="tenant-card"
+          [class.selected]="selectedTenant === tenant"
+          (click)="selectTenant(tenant)"
+        >
+          <!-- logo + name -->
+          <div class="tenant-header">
+            <ng-container *ngIf="tenant.logoUrl; else logoPlaceholder">
+              <img
+                [src]="tenant.logoUrl"
+                class="tenant-logo"
+                crossorigin="anonymous"
+              />
+            </ng-container>
+            <ng-template #logoPlaceholder>
+              <div class="tenant-logo placeholder">
+                {{ getInitials(tenant.OrganizationName || tenant.name) }}
+              </div>
+            </ng-template>
+            <h3 class="tenant-name">
+              {{ tenant.OrganizationName || tenant.name }}
+            </h3>
+          </div>
+
+          <!-- selection mark -->
+          <div class="tenant-check" *ngIf="selectedTenant === tenant">✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Polygons -->
+    <div *ngIf="step === 'polygon'">
+      <app-polygons
+        *ngIf="polygonsStep"
+        (saveLocationCriteria)="handleSave($event)"
+      >
+      </app-polygons>
+      <!-- [tenant]="selectedTenant" -->
+    </div>
+    <div class="d-flex justify-content-between mt-4">
+      <!-- Previous: only if polygons step is active -->
+      <button
+        *ngIf="polygonsStep"
+        class="btn btn-outline-secondary back-btn"
+        (click)="prevStep()"
+      >
+        Previous
+      </button>
+
+      <!-- Next: only if tenants step is active -->
+      <button
+        *ngIf="!polygonsStep"
+        class="btn btn-primary next-btn ms-auto"
+        [disabled]="!selectedTenant"
+        (click)="nextStep()"
+      >
+        Next
+      </button>
+
+      <!-- Finish: only if polygons step is active -->
+      <button
+        *ngIf="polygonsStep"
+        class="btn btn-primary next-btn ms-auto"
+        (click)="finish()"
+      >
+        Finish
+      </button>
     </div>
   </div>
 </ng-template>
