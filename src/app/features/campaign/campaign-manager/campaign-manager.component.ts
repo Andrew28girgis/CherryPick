@@ -73,6 +73,16 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
    TenantStep = false;
 
   private modalRef?: NgbModalRef;
+  protected newTenant = {
+    name: '',
+    url: '',
+    linkedin: '',
+  };
+  private newTenantId!: number;
+  private newTenantName!: string;
+  @ViewChild('tenantModal', { static: true })
+  private tenantModal!: TemplateRef<any>;
+  private createTenantModalRef?: NgbModalRef;
 
   constructor(
     private placesService: PlacesService,
@@ -396,31 +406,41 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   //   this.notificationService.setOverlayWide(true);  
   // }
 
+  
+  getAllActiveOrganizations(onLoaded?: () => void): void {
+    const body: any = {
+      Name: 'GetAllActiveOrganizations',
+      Params: {},
+    };
+  
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.tenants = data?.json || data?.Result || [];
+  
+        if (!this.tenants || this.tenants.length === 0) {
+          this.openAddTenantModal(this.tenantModal);
+          return;
+        }
+  
+        if (onLoaded) onLoaded(); // ✅ callback after tenants are ready
+      },
+      error: (err) => console.error('Error loading tenants', err),
+    });
+  }
+  
   openAddCampaign(content: TemplateRef<any>) {
     this.TenantStep = true;
     this.selectedTenant = null;
     this.step = 'tenant';
     this.polygonsStep = false;
-
-    const body = {
-      Name: 'GetAllActiveOrganizations',
-      Params: {}
-    };
-
-    this.placesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-         this.tenants = data?.json || data?.Result || [];
-        this.TenantStep = false;
-        this.modalRef = this.modalService.open(content, {
-          size: 'xl',
-         });
-      },      
-      error: (err) => {
-        this.TenantStep = false;
-        console.error('Error loading tenants', err);
-       }
+  
+    // ✅ wait until tenants are loaded, then open modal
+    this.getAllActiveOrganizations(() => {
+      this.TenantStep = false;
+      this.modalRef = this.modalService.open(content, { size: 'xl' });
     });
   }
+  
 
 selectTenant(tenant: any) {
   this.selectedTenant = tenant;
@@ -438,7 +458,7 @@ nextStep() {
 
    finish(): void {
      this.refreshService.requestPolygonSave(this.selectedTenant.name);
-    this.notificationService.sendmessage('Create A new Campaign');
+    this.notificationService.sendmessage('Create New Campaign');
     this.modalRef?.close();
   }
   
@@ -451,6 +471,45 @@ nextStep() {
   }
   
  
+  protected addNewTenant() {
+    if (!this.newTenant.name.trim().length) return;
+    this.createNewTenant();
+  }
+
+  protected openAddTenantModal(content: any): void {
+    this.createTenantModalRef = this.modalService.open(content, { centered: true });
+  }
     
-    
+  private createNewTenant(): void {
+     const body = {
+      Name: 'CreateOrganizationByName',
+      Params: {
+        Name: this.newTenant.name,
+        URL: this.newTenant.url.trim().length ? this.newTenant.url : '',
+        LinkedIn: this.newTenant.linkedin.trim().length
+          ? this.newTenant.linkedin
+          : '',
+      },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((orgResponse: any) => {
+      this.getAllActiveOrganizations();
+
+       const orgId = orgResponse?.json?.[0]?.id;
+      const orgName = orgResponse?.json?.[0]?.name;
+      if (!orgId) {
+        alert('Tenant creation failed. Please try again.');
+        return;
+      } else {
+        this.newTenantId = orgId;
+        this.newTenantName = orgName;
+        this.createTenantModalRef?.close();
+        this.resetAddTenantForm();
+        // this.openCampaignModal();
+      }
+    });
+  }
+  private resetAddTenantForm() {
+    this.newTenant = { name: '', url: '', linkedin: '' };
+  }
 }

@@ -632,8 +632,14 @@
           <!-- selection mark -->
           <div class="tenant-check" *ngIf="selectedTenant === tenant">✓</div>
         </div>
+        <div class="tenant-card add-card" (click)="openAddTenantModal(tenantModal)">
+          <div class="add-card-content">
+            <div class="plus-icon">+</div>
+            <h3 class="tenant-name">Add Tenant</h3>
+          </div>
+        </div>
       </div>
-    </div>
+     </div>
 
     <!-- Step 2: Polygons -->
     <div *ngIf="step === 'polygon'">
@@ -673,5 +679,102 @@
         Finish
       </button>
     </div>
+  </div>
+</ng-template>
+<ng-template #tenantModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title" ngbAutofocus>
+      Add New Tenant
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form #tenantForm="ngForm">
+      <div class="mb-3">
+        <label for="name" class="form-label d-flex align-items-center gap-2">
+          Name *
+          <span
+            class="text-danger name-isrequired"
+            *ngIf="nameInput.invalid && nameInput.touched"
+          >
+            required
+          </span>
+        </label>
+
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          name="name"
+          required
+          [(ngModel)]="newTenant.name"
+          #nameInput="ngModel"
+          [ngClass]="{
+            'is-invalid': nameInput.invalid && nameInput.touched
+          }"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="url" class="form-label">URL</label>
+        <input
+          type="url"
+          id="url"
+          class="form-control"
+          name="url"
+          pattern="https?://.+"
+          [(ngModel)]="newTenant.url"
+          #urlInput="ngModel"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="linkedin" class="form-label">LinkedIn</label>
+        <input
+          type="text"
+          id="linkedin"
+          class="form-control"
+          name="linkedin"
+          [(ngModel)]="newTenant.linkedin"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="g-button g-button-outline cancel-tenant-btn"
+      (click)="modal.close('Save click')"
+    >
+      <span>Cancel</span>
+    </button>
+
+    <button
+      class="g-button g-button-primary add-tenant-btn-text"
+      [disabled]="tenantForm.invalid"
+      (click)="addNewTenant()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M6 12H18M12 18V6"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span class="add-tenant-text">Add Tenant</span>
+    </button>
   </div>
 </ng-template>
