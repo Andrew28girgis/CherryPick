@@ -3,7 +3,7 @@
     
     <h2 class="title">Tenants</h2>
   </div>
-  <div class="header-container">
+  <div class="header-container justify-content-between align-items-center d-flex w-100">
     <div class="d-flex flex-row w-100  " style="gap: 12px;">
     <div class="search-section">
       <div class="search-container">
@@ -37,7 +37,7 @@
     </div>
 
     </div>
-    <!-- <button class="g-button" (click)="openAddTenantModal(tenantModal)">
+    <button class="g-button" (click)="openAddTenantModal(tenantModal)">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="20"
@@ -68,12 +68,11 @@
         />
       </svg>
       <span>Add Tenant</span>
-    </button> -->
+    </button>
   </div>
  
    </div>
   <div class="main-inner">
- 
        <div class="cards-grid">
         <ng-container *ngFor="let tenant of filteredTenants">
              <app-tenant-card  [tenant]="tenant"></app-tenant-card>
