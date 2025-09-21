@@ -10,8 +10,9 @@ import {
   QueryList,
   ElementRef,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
@@ -21,11 +22,12 @@ import {
 } from 'src/app/shared/models/icampaign';
 import { EmilyService } from 'src/app/core/services/emily.service';
 import { Router } from '@angular/router';
- import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AddCampaignPopupComponent } from '../add-campaign-popup/add-campaign-popup.component';
 import { RefreshService } from 'src/app/core/services/refresh.service';
- 
-@Component({
+import { Tenant } from 'src/app/shared/models/tenant';
+import { PolygonsComponent } from '../../polygons/polygons.component';
+ @Component({
   selector: 'app-campaign-manager',
   templateUrl: './campaign-manager.component.html',
   styleUrls: ['./campaign-manager.component.css'],
@@ -33,6 +35,8 @@ import { RefreshService } from 'src/app/core/services/refresh.service';
 export class CampaignManagerComponent implements OnInit, OnDestroy {
   protected campaignMinSize: number = 100;
   protected campaignMaxSize: number = 100;
+  @ViewChild(PolygonsComponent, { static: false })
+  polygonsComponentRef!: PolygonsComponent;
   
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
@@ -54,32 +58,50 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   stages: { id: number; stageName: string }[] = [];
   searchCampaign = '';
   isMobile = false;
- 
+
   // Loading state
-   // Skeleton arrays for different views
+  // Skeleton arrays for different views
   skeletonCardArray = Array(6).fill(0);
   skeletonTableArray = Array(10).fill(0);
   skeletonStagesArray = Array(4).fill(0);
   // Subscription to manage and clean up subscriptions
   private subscriptions = new Subscription();
-  // Interval for hiding spinner
- 
+   tenants: any[] = [];
+  selectedTenant: any = null;
+  step: 'tenant' | 'polygon' = 'tenant';
+  polygonsStep = false;
+   TenantStep = false;
+
+  private modalRef?: NgbModalRef;
+
   constructor(
     private placesService: PlacesService,
-    private notificationService:NotificationService,
+    private notificationService: NotificationService,
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
-     private refreshService:RefreshService,
-   ) {}
+    private refreshService: RefreshService
+  ) {}
 
   ngOnInit(): void {
-     this.getAllCampaigns();
-       this.refreshService.refreshOrganizations$.subscribe(() => {
+    this.getAllCampaigns();
+    this.refreshService.refreshOrganizations$.subscribe(() => {
       this.getAllCampaigns();
     });
+      this.refreshService.polygonSavedData$.subscribe((data) => {
+    console.log('[CampaignManager] Got polygon saved data:', data);
+
+    this.placesService.sendmessages({ Chat: data, NeedToSaveIt: true }).subscribe({
+      next: (res) => {
+        console.log('[CampaignManager] API success:', res);
+        this.modalRef?.close();
+      },
+      error: (err) => {
+        console.error('[CampaignManager] API error:', err);
+      },
+    });
+  });
   }
- 
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -117,7 +139,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getAllCampaigns(): void {
     // this.isLoading = true;
- 
+
     const body: any = {
       Name: 'GetUserCampaigns',
       Params: {},
@@ -128,14 +150,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
-         } else {
+        } else {
           // this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
           this.filteredCampaigns = [];
         }
         this.getKanbanTemplateStages();
-       },
-      
+      },
     });
 
     this.subscriptions.add(subscription);
@@ -202,8 +223,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   getKanbanTemplateStages(): void {
-    // this.isLoading = true;  
-     const body: any = {
+    // this.isLoading = true;
+    const body: any = {
       Name: 'GetKanbanTemplateStages',
       Params: { KanbanTemplateId: 6 },
     };
@@ -213,16 +234,14 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.stages = response.json;
         }
-       },
-      error: () => {
-       },
+      },
+      error: () => {},
     });
 
     this.subscriptions.add(subscription);
   }
 
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
-    
     const body: any = {
       Name: 'GetCampaignOrganizations',
       Params: { CampaignId: campaignId },
@@ -247,8 +266,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.emilyService.updateCheckList(emilyObject);
           this.router.navigate(['/MutipleEmail', campaignId]);
         }
-       }
- 
+      },
     });
 
     this.subscriptions.add(subscription);
@@ -297,26 +315,30 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       : 0;
   }
 
-  
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
   }
   checkImage(event: Event) {
     const img = event.target as HTMLImageElement;
-  
+
     // Create canvas
     const canvas = document.createElement('canvas');
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
-  
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-  
+
     try {
       ctx.drawImage(img, 0, 0);
-  
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  
+
+      const imageData = ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      ).data;
+
       let isWhite = true;
       for (let i = 0; i < imageData.length; i += 4) {
         const r = imageData[i];
@@ -328,14 +350,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           break;
         }
       }
-  
+
       if (isWhite) {
         img.src = 'assets/Images/placeholder.png';
       }
-  
     } catch (err) {
-      console.warn("Canvas image data blocked due to CORS:", err);
-      // Fallback: if the image is very small (like a white dot), use placeholder
+       // Fallback: if the image is very small (like a white dot), use placeholder
       if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
         img.src = 'assets/Images/placeholder.png';
       }
@@ -356,9 +376,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
   stageClass(name: string): string {
     const n = (name || '').toLowerCase();
-    if (n.includes('accept') || n.includes('approved') || n.includes('success')) return 'is-accepted';
-    if (n.includes('reject') || n.includes('decline') || n.includes('failed')) return 'is-rejected';
-    if (n.includes('new') || n.includes('pending') || n.includes('open')) return 'is-new';
+    if (n.includes('accept') || n.includes('approved') || n.includes('success'))
+      return 'is-accepted';
+    if (n.includes('reject') || n.includes('decline') || n.includes('failed'))
+      return 'is-rejected';
+    if (n.includes('new') || n.includes('pending') || n.includes('open'))
+      return 'is-new';
     return 'is-neutral';
   }
   getInitials(name: string): string {
@@ -367,10 +390,67 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
-  openEmilyWithMap() {
-    this.notificationService.setChatOpen(true);  // ensure Emily is open
-    this.notificationService.setMapOpen(true);   // force map overlay
-    this.notificationService.setOverlayWide(true); // force 92vw
+  // openEmilyWithMap() {
+  //   this.notificationService.setChatOpen(true);  
+  //   this.notificationService.setMapOpen(true); 
+  //   this.notificationService.setOverlayWide(true);  
+  // }
+
+  openAddCampaign(content: TemplateRef<any>) {
+    this.TenantStep = true;
+    this.selectedTenant = null;
+    this.step = 'tenant';
+    this.polygonsStep = false;
+
+    const body = {
+      Name: 'GetAllActiveOrganizations',
+      Params: {}
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+         this.tenants = data?.json || data?.Result || [];
+        this.TenantStep = false;
+        this.modalRef = this.modalService.open(content, {
+          size: 'xl',
+         });
+      },      
+      error: (err) => {
+        this.TenantStep = false;
+        console.error('Error loading tenants', err);
+       }
+    });
+  }
+
+selectTenant(tenant: any) {
+  this.selectedTenant = tenant;
+}
+
+nextStep() {
+  if (!this.selectedTenant) return;
+  this.step = 'polygon';
+  this.polygonsStep = true;
+   }
+  prevStep() {
+    this.step = 'tenant';
+    this.polygonsStep = false;
+   }
+
+   finish(): void {
+     this.refreshService.requestPolygonSave(this.selectedTenant.name);
+    this.notificationService.sendmessage('Create A new Campaign');
+    this.modalRef?.close();
   }
   
+  
+  handleSave(data: string) {
+   
+    this.placesService.sendmessages({ Chat: data, NeedToSaveIt: true });
+    this.modalRef?.close();
+
+  }
+  
+ 
+    
+    
 }

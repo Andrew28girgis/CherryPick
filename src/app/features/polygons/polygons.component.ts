@@ -20,6 +20,7 @@ import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.s
 import { PlacesService } from 'src/app/core/services/places.service';
 import { GenericMapService } from 'src/app/core/services/generic-map.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { RefreshService } from 'src/app/core/services/refresh.service';
 
 type SearchType = 'state' | 'city' | 'neighborhood';
 export interface SearchItem {
@@ -55,6 +56,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
   isLoadingSuggestions = false;
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
   @Output() onCampaignCreated = new EventEmitter<void>();
+  @Output() saveLocationCriteria = new EventEmitter<string>();
 
   constructor(
     private mapDrawingService: MapDrawingService,
@@ -62,7 +64,8 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     private placesService: PlacesService,
     private genericMapService: GenericMapService,
     private spinner: NgxSpinnerService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private refreshService: RefreshService,
   ) {
     // Autocomplete pipeline with automatic unsubscribe on destroy
     this.searchInput$
@@ -83,6 +86,10 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
         this.showSuggestions = true;
         this.mark();
       });
+      this.refreshService.triggerPolygonSave$.subscribe((tenantName) => {
+         this.onSaveLocationCriteria(tenantName);
+      });
+    
   }
 
   ngAfterViewInit(): void {
@@ -133,7 +140,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     if (item.type === 'neighborhood') return item.name ?? '';
     if (item.type === 'city')
       return (
-        item.name ?? `${item.city ?? ''}${item.state ? '' + item.state : ''}`
+        item.name ?? `${item.city ?? ''}${item.state ? ', ' + item.state : ''}`
       );
     if (item.type === 'state') return item.name ?? item.code ?? '';
     return item.name ?? '';
@@ -161,8 +168,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
             return;
           }
         } catch (err) {
-          console.warn('Failed to load neighborhood geojson:', err);
-        }
+         }
       }
 
       const geometrySrc = item.raw?.json ?? item.raw?.geometry ?? item.raw;
@@ -201,9 +207,13 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     this.mark();
   }
 
-  onSaveLocationCriteria() {
-    if (!this.selectedItems.length) return;
-
+  onSaveLocationCriteria(tenantName: any) {
+   
+    if (!this.selectedItems.length) {
+       this.saveLocationCriteria.emit(`Tenant Name:${tenantName}\n(No location criteria selected)\n`);
+      return;
+    }
+  
     const rows = this.selectedItems.map((it) => {
       const raw = it.raw ?? {};
       const isNeighborhood = it.type === 'neighborhood';
@@ -217,14 +227,18 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
         .map((v) => (v == null || v === '' ? 'null' : String(v)))
         .join(', ');
     });
-
-    const header =
-      'Location Criteria\nId,NeighborhoodName,CityName,StateCode,StateName\n';
+  
+    const header = `Tenant Name:${tenantName} Location Criteria\nId,NeighborhoodName,CityName,StateCode,StateName\n`;
     const body = rows.join('\n') + '\n';
-    this.placesService
-      .sendmessages({ Chat: header + body, NeedToSaveIt: true })
-      .subscribe();
+  
+   
+    this.refreshService.sendPolygonSavedData(header + body);
   }
+  public triggerSave(tenantName: string) {
+    this.onSaveLocationCriteria(tenantName);
+  }
+  
+  
 
   private areItemsEquivalent(a: SearchItem, b: SearchItem) {
     if (a.type !== b.type) return false;

@@ -127,6 +127,7 @@ export class NotificationsComponent
   private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
   showingMap: boolean = false;
   isoverlaywide: boolean = false;
+  scanEnabled: boolean = true; // default ON
 
   constructor(
     private elementRef: ElementRef,
@@ -1232,4 +1233,16 @@ export class NotificationsComponent
       overlayActive: false,
     });
   }
+
+  scan(scan: boolean) {
+    
+    if (scan) {
+      (window as any).electronMessage.enableCREAutomationMode(
+        localStorage.getItem('token')
+      );
+    } else if (!scan) {
+      (window as any).electronMessage.disableCREAutomationMode();
+    }
+  }
+
 }
