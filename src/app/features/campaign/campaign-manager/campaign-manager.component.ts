@@ -27,7 +27,7 @@ import { AddCampaignPopupComponent } from '../add-campaign-popup/add-campaign-po
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { Tenant } from 'src/app/shared/models/tenant';
 import { PolygonsComponent } from '../../polygons/polygons.component';
- @Component({
+@Component({
   selector: 'app-campaign-manager',
   templateUrl: './campaign-manager.component.html',
   styleUrls: ['./campaign-manager.component.css'],
@@ -37,9 +37,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   protected campaignMaxSize: number = 100;
   @ViewChild(PolygonsComponent, { static: false })
   polygonsComponentRef!: PolygonsComponent;
-  
+
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
+  tempTenant: any;
   @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
@@ -66,11 +67,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   skeletonStagesArray = Array(4).fill(0);
   // Subscription to manage and clean up subscriptions
   private subscriptions = new Subscription();
-   tenants: any[] = [];
+  tenants: any[] = [];
   selectedTenant: any = null;
   step: 'tenant' | 'polygon' = 'tenant';
   polygonsStep = false;
-   TenantStep = false;
+  TenantStep = false;
 
   private modalRef?: NgbModalRef;
   protected newTenant = {
@@ -98,19 +99,21 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.refreshService.refreshOrganizations$.subscribe(() => {
       this.getAllCampaigns();
     });
-      this.refreshService.polygonSavedData$.subscribe((data) => {
-    console.log('[CampaignManager] Got polygon saved data:', data);
+    this.refreshService.polygonSavedData$.subscribe((data) => {
+      console.log('[CampaignManager] Got polygon saved data:', data);
 
-    this.placesService.sendmessages({ Chat: data, NeedToSaveIt: true }).subscribe({
-      next: (res) => {
-        console.log('[CampaignManager] API success:', res);
-        this.modalRef?.close();
-      },
-      error: (err) => {
-        console.error('[CampaignManager] API error:', err);
-      },
+      this.placesService
+        .sendmessages({ Chat: data, NeedToSaveIt: true })
+        .subscribe({
+          next: (res) => {
+            console.log('[CampaignManager] API success:', res);
+            this.modalRef?.close();
+          },
+          error: (err) => {
+            console.error('[CampaignManager] API error:', err);
+          },
+        });
     });
-  });
   }
 
   ngOnDestroy(): void {
@@ -365,7 +368,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         img.src = 'assets/Images/placeholder.png';
       }
     } catch (err) {
-       // Fallback: if the image is very small (like a white dot), use placeholder
+      // Fallback: if the image is very small (like a white dot), use placeholder
       if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
         img.src = 'assets/Images/placeholder.png';
       }
@@ -401,87 +404,86 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   // openEmilyWithMap() {
-  //   this.notificationService.setChatOpen(true);  
-  //   this.notificationService.setMapOpen(true); 
-  //   this.notificationService.setOverlayWide(true);  
+  //   this.notificationService.setChatOpen(true);
+  //   this.notificationService.setMapOpen(true);
+  //   this.notificationService.setOverlayWide(true);
   // }
 
-  
   getAllActiveOrganizations(onLoaded?: () => void): void {
     const body: any = {
       Name: 'GetAllActiveOrganizations',
       Params: {},
     };
-  
+
     this.placesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.tenants = data?.json || data?.Result || [];
-  
+
         if (!this.tenants || this.tenants.length === 0) {
           this.openAddTenantModal(this.tenantModal);
           return;
         }
-  
+
         if (onLoaded) onLoaded(); // ✅ callback after tenants are ready
       },
       error: (err) => console.error('Error loading tenants', err),
     });
   }
-  
+
   openAddCampaign(content: TemplateRef<any>) {
     this.TenantStep = true;
     this.selectedTenant = null;
     this.step = 'tenant';
     this.polygonsStep = false;
-  
+
     // ✅ wait until tenants are loaded, then open modal
     this.getAllActiveOrganizations(() => {
       this.TenantStep = false;
       this.modalRef = this.modalService.open(content, { size: 'xl' });
     });
   }
-  
 
-selectTenant(tenant: any) {
-  this.selectedTenant = tenant;
-}
+  selectTenant(tenant: any) {
+    this.selectedTenant = tenant;
+  }
 
-nextStep() {
-  if (!this.selectedTenant) return;
-  this.step = 'polygon';
-  this.polygonsStep = true;
-   }
+  nextStep() {
+    if (!this.selectedTenant) return;
+    this.step = 'polygon';
+    this.polygonsStep = true;
+  }
   prevStep() {
     this.step = 'tenant';
     this.polygonsStep = false;
-   }
+  }
 
-   finish(): void {
-     this.refreshService.requestPolygonSave(this.selectedTenant.name);
+  finish(): void {
+    this.refreshService.requestPolygonSave(this.selectedTenant.name);
     this.notificationService.sendmessage('Create New Campaign');
     this.modalRef?.close();
   }
-  
-  
+
   handleSave(data: string) {
-   
     this.placesService.sendmessages({ Chat: data, NeedToSaveIt: true });
     this.modalRef?.close();
-
   }
-  
- 
+
   protected addNewTenant() {
+    const prevTenantId = this.selectedTenant?.id;
     if (!this.newTenant.name.trim().length) return;
-    this.createNewTenant();
+    this.createNewTenant(() => {
+      this.selectedTenant = this.tenants.find((t) => t.id === prevTenantId);
+     });
   }
 
   protected openAddTenantModal(content: any): void {
-    this.createTenantModalRef = this.modalService.open(content, { centered: true });
+    this.createTenantModalRef = this.modalService.open(content, {
+      centered: true,
+    });
   }
-    
-  private createNewTenant(): void {
-     const body = {
+
+  private createNewTenant(onDone?: () => void) {
+    const body = {
       Name: 'CreateOrganizationByName',
       Params: {
         Name: this.newTenant.name,
@@ -493,9 +495,11 @@ nextStep() {
     };
 
     this.placesService.GenericAPI(body).subscribe((orgResponse: any) => {
-      this.getAllActiveOrganizations();
+      this.getAllActiveOrganizations(() => {
+        if (onDone) onDone();
+      });
 
-       const orgId = orgResponse?.json?.[0]?.id;
+      const orgId = orgResponse?.json?.[0]?.id;
       const orgName = orgResponse?.json?.[0]?.name;
       if (!orgId) {
         alert('Tenant creation failed. Please try again.');
