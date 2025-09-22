@@ -583,8 +583,28 @@
 </ng-template>
 
 <ng-template #addCampaign let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Add Campaign</h4>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0">Add Campaign</h4>
+  
+    <div class="selected-tenant-header mx-3" *ngIf="selectedTenant">
+      <ng-container *ngIf="selectedTenant.logoUrl; else logoPlaceholder">
+        <img
+          [src]="selectedTenant.logoUrl"
+          class="tenant-logop"
+          crossorigin="anonymous"
+        />
+      </ng-container>
+      <ng-template #logoPlaceholder>
+        <div class="tenant-logop placeholder">
+          {{ getInitials(selectedTenant.name) }}
+        </div>
+      </ng-template>
+  
+      <span class="tenant-name">
+        {{ selectedTenant.name }}
+      </span>
+    </div>
+  
     <button
       type="button"
       class="btn-close"
@@ -592,6 +612,7 @@
       (click)="modal.dismiss()"
     ></button>
   </div>
+  
 
   <div class="modal-body">
     <!-- Stepper -->
@@ -654,25 +675,7 @@
 
     <!-- Step 2: Polygons -->
     <div *ngIf="step === 'polygon'">
-      <div class="selected-tenant-header" *ngIf="selectedTenant">
-        <ng-container *ngIf="selectedTenant.logoUrl; else logoPlaceholder">
-          <img
-            [src]="selectedTenant.logoUrl"
-            class="tenant-logop"
-            crossorigin="anonymous"
-          />
-        </ng-container>
-        <ng-template #logoPlaceholder>
-          <div class="tenant-logop placeholder">
-            {{ getInitials(selectedTenant.name) }}
-          </div>
-        </ng-template>
-
-        <h3 class="tenant-name">
-          {{ selectedTenant.name }}
-        </h3>
-      </div>
-
+   
       <app-polygons
         *ngIf="polygonsStep"
         (saveLocationCriteria)="handleSave($event)"

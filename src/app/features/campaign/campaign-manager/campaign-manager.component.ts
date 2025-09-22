@@ -41,6 +41,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
   tempTenant: any;
+  tempTenantId: any;
   @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
@@ -479,6 +480,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   protected addNewTenant() {
     const prevTenantId = this.selectedTenant?.id;
+    this.tempTenantId=prevTenantId;
     if (!this.newTenant.name.trim().length) return;
     this.createNewTenant(() => {
       this.selectedTenant = this.tenants.find((t) => t.id === prevTenantId);
@@ -536,7 +538,7 @@ private startLogoPolling(orgId: string) {
       const tenant = this.tenants.find(t => t.id === orgId);
       if (tenant) {
         this.selectedTenant = tenant;
-
+        // this.selectedTenant = this.tenants.find((t) => t.id === this.tempTenantId);
         // stop polling once logo exists
         if (tenant.logoUrl) {
           clearInterval(this.logoInterval);

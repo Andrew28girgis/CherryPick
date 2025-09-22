@@ -1295,7 +1295,7 @@
 }
  .stepper {
   display: flex;
-  width: 40%;
+  width: 27%;
   align-items: center;
   justify-content: center;
   gap: 12px;
@@ -1378,22 +1378,18 @@
 .selected-tenant-header {
   display: flex;
   align-items: center;
-  justify-content: center; 
-  gap: 12px;
-  margin: 20px auto;
-  padding: 10px 20px;
-  border: 2px solid var(--Colors-Primary-500); 
-  border-radius: 8px;
+  gap: 8px;
+  padding: 4px 10px;
+  border: 2px solid var(--Colors-Primary-500);
+  border-radius: 20px; /* pill shape */
   background: var(--Colors-Primary-light);
-  width: fit-content; 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .tenant-logop {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 50%;
   background: #f8f9fa;
   display: flex;
   justify-content: center;
@@ -1401,14 +1397,13 @@
 }
 
 .tenant-logop.placeholder {
-  font-weight: bold;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 13px;
   color: var(--Colors-Primary-500);
 }
 
 .tenant-name {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
-  margin: 0;
   color: var(--Colors-Primary-500);
 }
