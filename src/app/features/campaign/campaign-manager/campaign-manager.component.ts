@@ -71,7 +71,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   selectedTenant: any = null;
   step: 'tenant' | 'polygon' = 'tenant';
   polygonsStep = false;
-  TenantStep = false;
+  TenantStepLoad = false;
 
   private modalRef?: NgbModalRef;
   protected newTenant = {
@@ -435,20 +435,19 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   openAddCampaign(content: TemplateRef<any>) {
-    this.TenantStep = true;
+    this.TenantStepLoad = true;
     this.selectedTenant = null;
     this.step = 'tenant';
     this.polygonsStep = false;
+    this.modalRef = this.modalService.open(content, { size: 'xl' });
 
     this.getAllActiveOrganizations(
       () => {
-        this.TenantStep = false;
-        this.modalRef = this.modalService.open(content, { size: 'xl' });
-      },
+        this.TenantStepLoad = false;
+       },
       () => {
-        this.TenantStep = false;
-        this.modalRef = this.modalService.open(content, { size: 'xl' });
-      }
+        this.TenantStepLoad = false;
+       }
     );
   }
 

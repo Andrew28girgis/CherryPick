@@ -1379,3 +1379,6 @@
   align-items: center;
   justify-content: center;
 }
+.custom-spinner {
+  color:var(--Colors-Primary-500);  
+}

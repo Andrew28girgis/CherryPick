@@ -601,8 +601,13 @@
       <div class="step" [class.active]="step === 'polygon'">Locations</div>
     </div>
 
+    <div *ngIf="TenantStepLoad" class="d-flex justify-content-center align-items-center p-5">
+      <div class="spinner-border custom-spinner" role="status">
+        <span class="visually-hidden">Loading tenants...</span>
+      </div>
+          </div>
     <!-- Step 1: Tenants -->
-    <div *ngIf="!TenantStep && step === 'tenant'">
+    <div *ngIf="!TenantStepLoad && step === 'tenant'">
       <div class="tenant-cards-grid">
         <div
           *ngFor="let tenant of tenants"
