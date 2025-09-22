@@ -409,7 +409,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   //   this.notificationService.setOverlayWide(true);
   // }
 
-  getAllActiveOrganizations(onLoaded?: () => void): void {
+  getAllActiveOrganizations(onLoaded?: () => void, onEmpty?: () => void): void {
     const body: any = {
       Name: 'GetAllActiveOrganizations',
       Params: {},
@@ -420,13 +420,17 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         this.tenants = data?.json || data?.Result || [];
 
         if (!this.tenants || this.tenants.length === 0) {
-          this.openAddTenantModal(this.tenantModal);
+          if (onEmpty) onEmpty();
           return;
         }
 
-        if (onLoaded) onLoaded(); // ✅ callback after tenants are ready
+        if (onLoaded) onLoaded();
       },
-      error: (err) => console.error('Error loading tenants', err),
+      error: (err) => {
+        console.error('Error loading tenants', err);
+        this.tenants = [];
+        if (onEmpty) onEmpty();
+      },
     });
   }
 
@@ -436,11 +440,16 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.step = 'tenant';
     this.polygonsStep = false;
 
-    // ✅ wait until tenants are loaded, then open modal
-    this.getAllActiveOrganizations(() => {
-      this.TenantStep = false;
-      this.modalRef = this.modalService.open(content, { size: 'xl' });
-    });
+    this.getAllActiveOrganizations(
+      () => {
+        this.TenantStep = false;
+        this.modalRef = this.modalService.open(content, { size: 'xl' });
+      },
+      () => {
+        this.TenantStep = false;
+        this.modalRef = this.modalService.open(content, { size: 'xl' });
+      }
+    );
   }
 
   selectTenant(tenant: any) {
@@ -473,7 +482,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (!this.newTenant.name.trim().length) return;
     this.createNewTenant(() => {
       this.selectedTenant = this.tenants.find((t) => t.id === prevTenantId);
-     });
+    });
   }
 
   protected openAddTenantModal(content: any): void {
