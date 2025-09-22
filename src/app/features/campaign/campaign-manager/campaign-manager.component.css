@@ -1048,7 +1048,7 @@
 /* label can shrink and ellipsize; this prevents pushing the count out */
 .stage-chip__label {
   flex: 1 1 auto;
-  min-width: 0; /* important for ellipsis in flex items */
+  min-width: 0;  
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1060,8 +1060,7 @@
   color: #6b7280;
 }
 
-/* count stays fixed; never shrinks */
-.stage-chip__count {
+ .stage-chip__count {
   flex: 0 0 auto;
   font-size: 12px;
   font-weight: 700;
@@ -1069,8 +1068,7 @@
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.04);
 }
-/* color hints by semantic class (you can swap colors to match your theme) */
-.stage-chip.is-new {
+ .stage-chip.is-new {
   background: #f5f0e4;
 }
 .stage-chip.is-accepted {
@@ -1093,15 +1091,13 @@
   background: rgba(0, 0, 0, 0.04);
 }
 
-/* optional: tighter on phones */
-@media (max-width: 767px) {
+ @media (max-width: 767px) {
   .stages-chips {
     grid-template-columns: repeat(2, minmax(150px, 1fr));
   }
 }
 
-/* Mobile Responsive Updates for Dashboard Cards */
-@media (max-width: 767px) {
+ @media (max-width: 767px) {
   .dashboard-cards-container {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -1166,10 +1162,9 @@
   color: #6b7280;
 }
 
-/* Hover state on the whole block */
-.title-hover:hover .campaign-title,
+ .title-hover:hover .campaign-title,
 .title-hover:hover .organization-name {
-  color: #cfb579; /* your highlight color */
+  color: #cfb579;  
   text-decoration: underline;
   cursor: pointer;
 }
@@ -1188,10 +1183,10 @@
 .title::after {
   content: "";
   display: block;
-  width: 70%; /* adjust line length */
-  height: 2px; /* line thickness */
-  background-color: var(--Colors-Primary-500); /* line color */
-  margin-top: 6px; /* space between text and line */
+  width: 70%;  
+  height: 2px; 
+  background-color: var(--Colors-Primary-500);   
+  margin-top: 6px;  
 }
 .org-logo {
   width: 56px;
@@ -1298,16 +1293,15 @@
   justify-content: center;
   font-size: 14px;
 }
-/* Stepper container */
-.stepper {
+ .stepper {
   display: flex;
+  width: 40%;
   align-items: center;
   justify-content: center;
   gap: 12px;
 }
 
-/* Step circles/text */
-.step {
+ .step {
   font-size: 14px;
   font-weight: 600;
   color: #a0a0a0;
@@ -1324,16 +1318,14 @@
   border-color: var(--Colors-Primary-500 );
 }
 
-/* line between steps */
-.step-line {
+ .step-line {
   flex: 1;
   height: 2px;
   background: #d1d9e0;
   margin: 0 4px;
 }
 
-/* Next button override */
-.next-btn {
+ .next-btn {
   background: var(--Colors-Primary-500 );
   border-color: var(--Colors-Primary-500 );
   font-weight: 600;
@@ -1371,8 +1363,8 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 2px solid var(--Colors-Primary-500, #007bff);
-  color: var(--Colors-Primary-500, #007bff);
+  border: 2px solid var(--Colors-Primary-500 );
+  color: var(--Colors-Primary-500 );
   font-size: 28px;
   font-weight: bold;
   display: flex;
@@ -1381,4 +1373,42 @@
 }
 .custom-spinner {
   color:var(--Colors-Primary-500);  
+}
+
+.selected-tenant-header {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 12px;
+  margin: 20px auto;
+  padding: 10px 20px;
+  border: 2px solid var(--Colors-Primary-500); 
+  border-radius: 8px;
+  background: var(--Colors-Primary-light);
+  width: fit-content; 
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.tenant-logop {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tenant-logop.placeholder {
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--Colors-Primary-500);
+}
+
+.tenant-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--Colors-Primary-500);
 }

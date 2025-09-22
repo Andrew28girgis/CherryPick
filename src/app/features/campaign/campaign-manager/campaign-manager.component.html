@@ -601,11 +601,14 @@
       <div class="step" [class.active]="step === 'polygon'">Locations</div>
     </div>
 
-    <div *ngIf="TenantStepLoad" class="d-flex justify-content-center align-items-center p-5">
+    <div
+      *ngIf="TenantStepLoad"
+      class="d-flex justify-content-center align-items-center p-5"
+    >
       <div class="spinner-border custom-spinner" role="status">
         <span class="visually-hidden">Loading tenants...</span>
       </div>
-          </div>
+    </div>
     <!-- Step 1: Tenants -->
     <div *ngIf="!TenantStepLoad && step === 'tenant'">
       <div class="tenant-cards-grid">
@@ -637,17 +640,39 @@
           <!-- selection mark -->
           <div class="tenant-check" *ngIf="selectedTenant === tenant">✓</div>
         </div>
-        <div class="tenant-card add-card" (click)="openAddTenantModal(tenantModal)">
+        <div
+          class="tenant-card add-card"
+          (click)="openAddTenantModal(tenantModal)"
+        >
           <div class="add-card-content">
             <div class="plus-icon">+</div>
             <h3 class="tenant-name">Add Tenant</h3>
           </div>
         </div>
       </div>
-     </div>
+    </div>
 
     <!-- Step 2: Polygons -->
     <div *ngIf="step === 'polygon'">
+      <div class="selected-tenant-header" *ngIf="selectedTenant">
+        <ng-container *ngIf="selectedTenant.logoUrl; else logoPlaceholder">
+          <img
+            [src]="selectedTenant.logoUrl"
+            class="tenant-logop"
+            crossorigin="anonymous"
+          />
+        </ng-container>
+        <ng-template #logoPlaceholder>
+          <div class="tenant-logop placeholder">
+            {{ getInitials(selectedTenant.name) }}
+          </div>
+        </ng-template>
+
+        <h3 class="tenant-name">
+          {{ selectedTenant.name }}
+        </h3>
+      </div>
+
       <app-polygons
         *ngIf="polygonsStep"
         (saveLocationCriteria)="handleSave($event)"

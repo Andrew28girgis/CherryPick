@@ -84,6 +84,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   @ViewChild('tenantModal', { static: true })
   private tenantModal!: TemplateRef<any>;
   private createTenantModalRef?: NgbModalRef;
+  private logoInterval: any;
 
   constructor(
     private placesService: PlacesService,
@@ -518,10 +519,33 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         this.createTenantModalRef?.close();
         this.resetAddTenantForm();
         // this.openCampaignModal();
+        this.startLogoPolling(orgId);
+
       }
     });
   }
   private resetAddTenantForm() {
     this.newTenant = { name: '', url: '', linkedin: '' };
   }
+  
+private startLogoPolling(orgId: string) {
+  if (this.logoInterval) clearInterval(this.logoInterval);
+
+  this.logoInterval = setInterval(() => {
+    this.getAllActiveOrganizations(() => {
+      const tenant = this.tenants.find(t => t.id === orgId);
+      if (tenant) {
+        this.selectedTenant = tenant;
+
+        // stop polling once logo exists
+        if (tenant.logoUrl) {
+          clearInterval(this.logoInterval);
+          this.logoInterval = null;
+        }
+      }
+    });
+  }, 2000);
+}
+
+ 
 }
