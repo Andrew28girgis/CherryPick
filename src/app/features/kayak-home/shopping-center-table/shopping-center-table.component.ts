@@ -39,7 +39,7 @@ import {
 } from '@angular/router';
 type Stat =
   | { key: 'owner'; label: string; name: string; avatarUrl: string }
-  | { key: 'scoring'; label: string; values: number[] }  // e.g., [17,15,50]
+  | { key: 'scoring'; label: string; values: number[] } // e.g., [17,15,50]
   | { key: 'text'; label: string; value: string | number };
 
 @Component({
@@ -118,16 +118,21 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     { id: 2, text: 'Name (Z-A)', icon: 'fa-solid fa-sort-alpha-up' },
   ];
   stats: Stat[] = [
-    { key: 'owner',  label: 'Owner', name: 'Hassan Magdy', avatarUrl: 'https://i.pravatar.cc/64?img=12' },
-    { key: 'text',   label: 'State', value: 'Texas' },
-    { key: 'text',   label: 'City', value: 'Austin' },
-    { key: 'text',   label: 'Date Created', value: 'Aug 20, 2025' },
-    { key: 'text',   label: 'Initial State Selection', value: '-------' },
-    { key: 'text',   label: 'Inriching', value: 50 },
-    { key: 'scoring',label: 'Scoring', values: [17, 15, 50] },
-    { key: 'text',   label: 'Reaching Out', value: 120 },
-    { key: 'text',   label: 'Short Listed', value: 34 },
-    { key: 'text',   label: 'Shared With Tenant', value: 3 },
+    {
+      key: 'owner',
+      label: 'Owner',
+      name: 'Hassan Magdy',
+      avatarUrl: 'https://i.pravatar.cc/64?img=12',
+    },
+    { key: 'text', label: 'State', value: 'Texas' },
+    { key: 'text', label: 'City', value: 'Austin' },
+    { key: 'text', label: 'Date Created', value: 'Aug 20, 2025' },
+    { key: 'text', label: 'Initial State Selection', value: '-------' },
+    { key: 'text', label: 'Inriching', value: 50 },
+    { key: 'scoring', label: 'Scoring', values: [17, 15, 50] },
+    { key: 'text', label: 'Reaching Out', value: 120 },
+    { key: 'text', label: 'Short Listed', value: 34 },
+    { key: 'text', label: 'Shared With Tenant', value: 3 },
   ];
 
   selectedSortId = 0;
@@ -174,7 +179,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-
     this.getUserpages();
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params['openUpload'] === 'true') {
@@ -283,9 +287,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
-     // Add subscription to reload event
-      
- 
+    // Add subscription to reload event
+
     this.subscriptions.add(
       this.shoppingCenterService.reloadShoppingCenters$.subscribe(
         (shouldReload) => {
@@ -297,11 +300,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       )
     );
     setInterval(() => {
-       
       this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
-
-  }, 30000);
-
+    }, 30000);
   }
 
   // Add method to sync filter state
@@ -354,14 +354,13 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
 
   toggleSearch(): void {
     this.isSearchExpanded = !this.isSearchExpanded;
-  
+
     if (this.isSearchExpanded) {
       setTimeout(() => {
         this.searchInput?.nativeElement.focus({ preventScroll: true });
       }, 300); // wait for *ngIf render + CSS transition
     }
   }
-  
 
   toggleView(event?: MouseEvent): void {
     if (event) {
@@ -538,7 +537,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       0
     );
   }
-  
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
@@ -761,11 +760,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  fileOver(event: any): void {
-  }
+  fileOver(event: any): void {}
 
-  fileLeave(event: any): void {
-  }
+  fileLeave(event: any): void {}
 
   uploadFile(file: File): void {
     this.isUploading = true;

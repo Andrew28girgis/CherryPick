@@ -340,7 +340,7 @@ img[alt="logo"] {
      
 
 ::ng-deep .contact-broker-modal-class .modal-content {
-  height: 80vh;
+  height: 80vh; 
   overflow: hidden;
 }
 

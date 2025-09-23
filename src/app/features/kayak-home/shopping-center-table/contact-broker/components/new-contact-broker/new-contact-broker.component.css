@@ -24,8 +24,6 @@
 .send-as {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  border: 1px solid #c6c9d3;
-  border-radius: 1.5rem;
 }
 
 .contact-information {
@@ -46,7 +44,6 @@
 }
 
 .send-as {
-  width: 50%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -160,7 +157,7 @@
 }
 
 .checkbox-section-head {
-  padding-bottom: var(--Space-S-8) ;
+  padding-bottom: var(--Space-S-8);
 }
 
 .checkbox-section-body {
@@ -169,7 +166,7 @@
 }
 
 .checkbox-section-body-first {
-  padding-inline-start: var(--Space-S-20) ;
+  padding-inline-start: var(--Space-S-20);
   padding-bottom: 3px;
   padding-top: 3px;
 }
@@ -182,6 +179,7 @@
 
 .checkbox-section-select {
   padding-bottom: 3px;
+  display: flex;
   /* margin-inline: 1rem; */
 }
 
@@ -207,10 +205,6 @@
   border-right: 1px solid #dee2e6;
 }
 
-.checkbox-section-select select {
-  height: 3rem;
-}
-
 .showMoreRelations {
   color: #707791;
   font-size: 14px;
@@ -223,6 +217,7 @@
 .prompt-controls {
   width: 100%;
   display: flex;
+
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -256,8 +251,8 @@
 
 .generate-btn button:disabled,
 .advanced-controls button:disabled {
-   background-color: var(--Colors-Primary-light);
-   border: none;
+  border: 1px solid var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-500);
 }
 
 .generate-btn button *,
@@ -296,9 +291,6 @@
 
 .email-container {
   width: 100%;
-  padding: 1rem;
-  border: 1px solid #c6c9d3;
-  border-radius: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -429,12 +421,10 @@
   box-shadow: none !important;
 }
 .form-control {
-  background: var(--Main-Container-BG) !important;
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
 }
 .form-select {
-  background: var(--Main-Container-BG) !important;
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
 }
