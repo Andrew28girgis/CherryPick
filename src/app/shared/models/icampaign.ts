@@ -13,6 +13,7 @@ export interface ICampaign {
   expanded?: boolean;
   Kanban: KanbanStage[];
   cardBg?: string;
+  changed: boolean;
 }
 export interface MailsSent {
   MailsSent: number;

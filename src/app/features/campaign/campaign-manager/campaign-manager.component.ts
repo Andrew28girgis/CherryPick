@@ -505,4 +505,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       });
     }, 2000);
   }
+  markChanged(campaign: ICampaign) {
+    campaign.changed = true;
+    setTimeout(() => campaign.changed = false, 600); // match animation duration
+  }
+  
 }

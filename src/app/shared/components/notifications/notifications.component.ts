@@ -40,7 +40,7 @@ type ChatItem = {
   from: 'user' | 'system' | 'ai';
   message: string;
   created: Date;
-   notification?: Notification;
+  notification?: Notification;
   userMsg?: {
     message: string;
     createdDate: string;
@@ -210,14 +210,20 @@ export class NotificationsComponent
         const diff = newLength - prevLength;
 
         if (diff > 0) {
-          // If user was sticky, observers will auto-pin; if not, show badge
+          const newMessages = this.notificationService.notifications.slice(
+            -diff
+          );
+
+          // ✅ Only check new messages for Emily’s "I have found X Shopping Centers"
+          this.checkForShoppingCentersReply(newMessages);
+
           this.onNewMessagesArrived(diff);
         }
 
         this.previousNotificationsLength = newLength;
         this.sortNotificationsByDateAsc();
 
-        this.scanTrigger$.next();
+        this.scanTrigger$.next(); // still needed for overlay + map
       }, 200);
     }, 2000);
 
@@ -469,7 +475,6 @@ export class NotificationsComponent
     const container = this.messagesContainer.nativeElement;
     return container.scrollTop === 0;
   }
- 
 
   onScroll(): void {
     // user moved; refresh sticky state
@@ -483,8 +488,8 @@ export class NotificationsComponent
     }
   }
 
-   setChatOpen(isOpen: boolean): void {
-     this.notificationService.setChatOpen(this.isOpen);
+  setChatOpen(isOpen: boolean): void {
+    this.notificationService.setChatOpen(this.isOpen);
   }
 
   onInputChange(event: any): void {
@@ -1234,7 +1239,6 @@ export class NotificationsComponent
   }
 
   scan(scan: boolean) {
-    
     if (scan) {
       (window as any).electronMessage.enableCREAutomationMode(
         localStorage.getItem('token')
@@ -1243,5 +1247,19 @@ export class NotificationsComponent
       (window as any).electronMessage.disableCREAutomationMode();
     }
   }
-
+  private checkForShoppingCentersReply(newMessages: Notification[]): void {
+    for (const n of newMessages) {
+      const isSystem = !(n.notificationCategoryId === true || n.notificationCategoryId === 1);
+      if (!isSystem) continue;
+  
+      const match = n.message?.match(/I have found\s+(\d+)\s+Shopping Centers/i);
+      if (match) {
+        console.log('[Notifications] Emily found shopping centers:', match[1]);
+  
+        this.refreshService.triggerRefreshOrganizations();
+        break;
+      }
+    }
+  }
+  
 }
