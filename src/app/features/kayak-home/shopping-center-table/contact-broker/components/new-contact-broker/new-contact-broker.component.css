@@ -256,8 +256,8 @@
 
 .generate-btn button:disabled,
 .advanced-controls button:disabled {
-  border: 1px solid #d294a9;
-  background-color: #d294a9;
+   background-color: var(--Colors-Primary-light);
+   border: none;
 }
 
 .generate-btn button *,
