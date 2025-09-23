@@ -426,7 +426,7 @@
   background-color: var(--Colors-Primary-500);
 }
 .form-check-input:focus {
-  box-shadow: 0 0 0 0.25rem rgba(181, 31, 99, 0.25) !important;
+  box-shadow: none !important;
 }
 .form-control {
   background: var(--Main-Container-BG) !important;
