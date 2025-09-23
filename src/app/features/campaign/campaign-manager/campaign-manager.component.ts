@@ -153,8 +153,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   getAllCampaigns(): void {
-    // this.isLoading = true;
-
     const body: any = {
       Name: 'GetUserCampaigns',
       Params: {},
@@ -163,13 +161,23 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     const subscription = this.placesService.GenericAPI(body).subscribe({
       next: (response) => {
         if (response.json && response.json.length > 0) {
-          this.campaigns = response.json;
-          this.filteredCampaigns = response.json;
+          const newCampaigns: ICampaign[] = response.json;
+
+          // Compare with existing campaigns
+          newCampaigns.forEach((newCamp) => {
+            const oldCamp = this.campaigns.find((c) => c.Id === newCamp.Id);
+            if (oldCamp && oldCamp.Sites !== newCamp.Sites) {
+              this.markChanged(newCamp);
+            }
+          });
+
+          this.campaigns = newCampaigns;
+          this.filteredCampaigns = newCampaigns;
         } else {
-          // this.router.navigate(['/summary'], { replaceUrl: true });
           this.campaigns = [];
           this.filteredCampaigns = [];
         }
+
         this.getKanbanTemplateStages();
       },
     });
@@ -505,9 +513,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       });
     }, 2000);
   }
+
   markChanged(campaign: ICampaign) {
     campaign.changed = true;
-    setTimeout(() => campaign.changed = false, 600); // match animation duration
+    setTimeout(() => (campaign.changed = false), 600);
   }
-  
 }

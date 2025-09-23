@@ -201,7 +201,7 @@
       <ng-container
         *ngFor="let campaign of filteredCampaigns; let index = index"
       >
-        <div class="dashboard-card">
+        <div class="dashboard-card" [class.changed]="campaign.changed">
           <div
             class="card-badge date-flag"
             [attr.aria-label]="campaign.CreatedDate | date : 'MMMM d, y'"
