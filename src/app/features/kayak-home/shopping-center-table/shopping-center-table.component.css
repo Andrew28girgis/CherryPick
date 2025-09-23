@@ -1257,11 +1257,6 @@
   backdrop-filter: blur(4px);
 }
 
-.modal-dialog {
-  max-width: 90%;
-  width: 800px;
-}
-
 .modal-content {
   overflow: visible !important;
   border: none;
@@ -1304,10 +1299,7 @@
     grid-template-columns: 1fr;
   }
 
-  .modal-dialog {
-    width: 95%;
-    max-width: 95%;
-  }
+
 
   .website-cards-container {
     padding: 16px;

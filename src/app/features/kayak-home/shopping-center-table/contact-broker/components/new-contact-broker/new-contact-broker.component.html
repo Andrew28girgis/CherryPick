@@ -25,7 +25,7 @@
     }
   </div>
 
-  <div class="d-flex justify-content-between w-100">
+  <!-- <div class="d-flex justify-content-between w-100">
     <div class="w-100 load-another-contact pt-3" (click)="getContactsByOrgID()">
       Show all {{ contacts[0].Name }} Brokers
     </div>
@@ -49,12 +49,12 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="generate-email-container">
-    <div class="prompt-controls">
-      <div class="w-100 checkbox-section-select">
-        <label for="discussionDropdown">Select Prompt</label>
+    <div class="prompt-controls mt-3">
+      <div class="w-50 checkbox-section-select ms-2">
+        <!-- <label for="discussionDropdown">Select Prompt</label> -->
         <select
           class="form-select form-select-lg"
           aria-label="Large select example"
@@ -67,7 +67,24 @@
             {{ prompt?.name }}
           </option>
         </select>
+        
       </div>
+      <div class="send-as-switch ms-2">
+          <div
+            class="send-as-to"
+            [ngClass]="{ 'send-as-active': sendAsTo }"
+            (click)="sendAsTo = true; sendAsCC = false"
+          >
+            To
+          </div>
+          <div
+            class="send-as-cc"
+            [ngClass]="{ 'send-as-active': sendAsCC }"
+            (click)="sendAsTo = false; sendAsCC = true"
+          >
+            CC
+          </div>
+        </div>
     </div>
 
     <div class="w-100 mx-3 mb-3">
@@ -180,7 +197,8 @@
       <h5>Send Email With</h5>
       <a class="send-mail-card" [href]="generateMailtoLink()" target="_blank">
         <div class="mail-card-icon">
-          <img loading="lazy" 
+          <img
+            loading="lazy"
             src="../../../../../../../assets/Images/Icons/outlook-icon.svg"
             alt="send with outlook"
           />
@@ -197,7 +215,8 @@
         target="_blank"
       >
         <div class="mail-card-icon">
-          <img loading="lazy" 
+          <img
+            loading="lazy"
             src="../../../../../../../assets/Images/Icons/gmail-icon.svg"
             alt="send with gmail"
           />
@@ -249,7 +268,8 @@
         target="_blank"
       >
         <div class="mail-card-icon">
-          <img loading="lazy" 
+          <img
+            loading="lazy"
             src="../../../../../../../assets/Images/Icons/mail-icon.svg"
             alt="send with normal email"
           />
