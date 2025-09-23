@@ -330,52 +330,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       : 0;
   }
 
-  onImageError(event: any) {
-    event.target.src = 'assets/Images/placeholder.png';
-  }
-  checkImage(event: Event) {
-    const img = event.target as HTMLImageElement;
-
-    // Create canvas
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    try {
-      ctx.drawImage(img, 0, 0);
-
-      const imageData = ctx.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      ).data;
-
-      let isWhite = true;
-      for (let i = 0; i < imageData.length; i += 4) {
-        const r = imageData[i];
-        const g = imageData[i + 1];
-        const b = imageData[i + 2];
-        const a = imageData[i + 3];
-        if (!(r > 240 && g > 240 && b > 240 && a > 0)) {
-          isWhite = false;
-          break;
-        }
-      }
-
-      if (isWhite) {
-        img.src = 'assets/Images/placeholder.png';
-      }
-    } catch (err) {
-      // Fallback: if the image is very small (like a white dot), use placeholder
-      if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
-        img.src = 'assets/Images/placeholder.png';
-      }
-    }
-  }
   protected openCampaignModal(): void {
     this.modalService.open(AddCampaignPopupComponent, { centered: true });
   }
@@ -446,10 +400,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.getAllActiveOrganizations(
       () => {
         this.TenantStepLoad = false;
-       },
+      },
       () => {
         this.TenantStepLoad = false;
-       }
+      }
     );
   }
 
@@ -480,7 +434,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   protected addNewTenant() {
     const prevTenantId = this.selectedTenant?.id;
-    this.tempTenantId=prevTenantId;
+    this.tempTenantId = prevTenantId;
     if (!this.newTenant.name.trim().length) return;
     this.createNewTenant(() => {
       this.selectedTenant = this.tenants.find((t) => t.id === prevTenantId);
@@ -522,32 +476,33 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         this.resetAddTenantForm();
         // this.openCampaignModal();
         this.startLogoPolling(orgId);
-
       }
     });
   }
   private resetAddTenantForm() {
     this.newTenant = { name: '', url: '', linkedin: '' };
   }
-  
-private startLogoPolling(orgId: string) {
-  if (this.logoInterval) clearInterval(this.logoInterval);
 
-  this.logoInterval = setInterval(() => {
-    this.getAllActiveOrganizations(() => {
-      const tenant = this.tenants.find(t => t.id === orgId);
-      if (tenant) {
-        this.selectedTenant = tenant;
-        // this.selectedTenant = this.tenants.find((t) => t.id === this.tempTenantId);
-        // stop polling once logo exists
-        if (tenant.logoUrl) {
-          clearInterval(this.logoInterval);
-          this.logoInterval = null;
+  private startLogoPolling(orgId: string) {
+    if (this.logoInterval) clearInterval(this.logoInterval);
+
+    this.logoInterval = setInterval(() => {
+      this.getAllActiveOrganizations(() => {
+        const tenant = this.tenants.find((t) => t.id === orgId);
+        if (tenant) {
+          // select created teannt after creation
+          this.selectedTenant = tenant;
+
+          // select previous selected  teannt before creation
+          // this.selectedTenant = this.tenants.find((t) => t.id === this.tempTenantId);
+
+          // stop polling once logo exists
+          if (tenant.logoUrl) {
+            clearInterval(this.logoInterval);
+            this.logoInterval = null;
+          }
         }
-      }
-    });
-  }, 2000);
-}
-
- 
+      });
+    }, 2000);
+  }
 }

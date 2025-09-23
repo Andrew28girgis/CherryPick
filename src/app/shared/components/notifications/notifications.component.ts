@@ -40,8 +40,7 @@ type ChatItem = {
   from: 'user' | 'system' | 'ai';
   message: string;
   created: Date;
-  // optional raw objects if you still need them:
-  notification?: Notification;
+   notification?: Notification;
   userMsg?: {
     message: string;
     createdDate: string;
