@@ -93,8 +93,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   @ViewChild('addContact') addContactModal!: TemplateRef<any>;
   selectedShoppingCenterId: any;
   infoData: any = null;
-  conclusion:any
-   score:any
+  conclusion: any;
+  score: any;
   isLoadingInfo = false;
 
   constructor(
@@ -159,11 +159,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.ngZone.run(() => {
           this.cardsSideList = [...centers].sort((a: any, b: any) => {
             const aTime = this.parseDate(a.LastUpdateDate);
-            const bTime = this.parseDate(b.LastUpdateDate); 
+            const bTime = this.parseDate(b.LastUpdateDate);
             return bTime - aTime; // newest first
           });
-
-          
         });
 
         if (centers && centers.length > 0) {
@@ -538,7 +536,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   openContactModal(center: Center): void {
     const modalRef = this.modalService.open(ContactBrokerComponent, {
       size: 'lg',
-      centered: true, 
+      centered: true,
     });
     modalRef.componentInstance.center = center;
     modalRef.componentInstance.buyboxId = this.BuyBoxId;
@@ -703,8 +701,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       Json: null,
     };
     this.placesService.GenericAPI(body).subscribe({
-      next: (data) => {
-      },
+      next: (data) => {},
     });
   }
 
