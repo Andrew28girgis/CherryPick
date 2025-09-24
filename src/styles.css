@@ -6,6 +6,7 @@
   --app-font: "Poppins", sans-serif;
   --Colors-Primary-500: #cfb579;
   --Colors-Primary-400: #e7dabc;
+  --Colors-Primary-300: #f5f0e4;
   --Colors-Primary-hover: #baa36d;
   --Colors-Primary-light: #f5f0e4;
   --Colors-diffrent: #fffdf6;
@@ -241,10 +242,10 @@ a {
 .custom-toast {
   position: fixed;
   top: 20px;
-  right: 190px;
+  right: 120px;
   padding: 12px var(--Space-S-20);
-  background-color: var(--Colors-Primary-500);
-  color: var(--Colors-Pure-White);
+  background-color: var(--Colors-Primary-light);
+  color: var(--Colors-Primary-500);
   border-radius: var(--Radius-R-8);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 9999;

@@ -1532,6 +1532,26 @@
   font-size: 16px;
   color: #fff;
   background-color: #102e50;
-  flex-shrink: 0; /* keep logo fixed size */
+  flex-shrink: 0; 
   cursor: auto;
+}
+.delete-btn {
+  background-color: #f8d7da;    
+  border: 1px solid #f5c2c7;    
+  color: #dc3545;               
+   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.delete-btn:hover {
+  background-color: #f1aeb5;      
+  color: #fff; 
+  border-color: #f1aeb5;
+ }
+.delete-toast{
+  background-color: #f8d7da;
+  color: #dc3545;     
+  border: none;   
+  border-left: 5px solid  #dc3545;
+
 }
