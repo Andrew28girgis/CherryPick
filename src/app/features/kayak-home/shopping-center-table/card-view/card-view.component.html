@@ -59,6 +59,13 @@
           class="imgggg"
           [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
         />
+        <button 
+  class="plus-icon" 
+  (click)="InsertAutomation(shopping.Id); $event.stopPropagation()"
+  title="Add Contact"
+>
+  <i class="fa-solid fa-plus"></i>
+</button>
         <div
           (click)="openInfoPopup(shopping, infoModal); $event.stopPropagation()"
           *ngIf="shopping.Score && !shopping.scoreImage"

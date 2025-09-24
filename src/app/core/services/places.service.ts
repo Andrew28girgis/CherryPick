@@ -401,4 +401,10 @@ export class PlacesService {
       body
     );
   }
+  public InsertAutomation(body: any) {
+    return this.http.get<any>(
+      `${environment.api}/Automation/InsertAutomationForSC/${body}`,
+      body
+    );
+  }
 }

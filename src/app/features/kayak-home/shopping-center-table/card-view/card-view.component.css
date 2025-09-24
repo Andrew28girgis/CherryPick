@@ -1247,3 +1247,25 @@ table tbody td {
   font-size: 14px;
   padding: 20px;
 }
+.plus-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  background: #704e73; /* your theme color */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.2s ease;
+}
+
+.plus-icon:hover {
+  background: #563a57;
+}
