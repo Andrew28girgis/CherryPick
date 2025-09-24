@@ -108,6 +108,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.InsertAutomation(28);
     this.isLoading = true;
     this.loadStages();
 
@@ -888,5 +889,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
   // Example: inside your component class
   get hasUnscoredCenters(): boolean {
     return this.cardsSideList?.some((sc) => !sc.MainImage) ?? false;
+  }
+
+  InsertAutomation(id: any) {
+    this.placesService.InsertAutomation(id).subscribe({
+      next:(res)=> {
+        
+      },
+    });
   }
 }

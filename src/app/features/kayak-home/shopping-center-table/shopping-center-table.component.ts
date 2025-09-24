@@ -905,7 +905,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     }
 
     this.modalService.open(tpl, {
-      size: 'sm',
+      size: 'xl',
       centered: true,
       scrollable: true,
       backdrop: true,
