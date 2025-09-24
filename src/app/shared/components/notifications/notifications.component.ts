@@ -582,8 +582,10 @@ export class NotificationsComponent
       this.closeOverlayContent();
     } else {
       // opening overlay
-      this.isOverlayMode = true;
-      if (this.electronSideBar) {
+      if (!this.electronSideBar) {
+
+        this.isOverlayMode = true;
+      }      if (this.electronSideBar) {
         (window as any).electronMessage.minimizeCRESideBrowser();
       }
       this.overlayStateChange.emit(true);
@@ -709,7 +711,10 @@ export class NotificationsComponent
       this.notificationService.setChatOpen(true);
     }
     if (!this.isOverlayMode) {
-      this.isOverlayMode = true;
+      if (!this.electronSideBar) {
+
+        this.isOverlayMode = true;
+      }
       if (this.electronSideBar) {
         (window as any).electronMessage.maxmizeCRESideBrowser();
       }
@@ -933,8 +938,10 @@ export class NotificationsComponent
         notification.html
       );
     } else {
-      this.isOverlayMode = true;
-      this.showingMap = false;
+      if (!this.electronSideBar) {
+
+        this.isOverlayMode = true;
+      }      this.showingMap = false;
       this.overlayHtml = notification.html;
     }
     this.selectedNotification = notification;
@@ -1182,8 +1189,10 @@ export class NotificationsComponent
     this.selectedNotification = notification;
     this.showingMap = true; // controls <app-polygons> rendering
     this.overlayHtml = ''; // clear HTML if previously set
-    this.isOverlayMode = true; // make sure overlay is open
+    if (!this.electronSideBar) {
 
+      this.isOverlayMode = true;
+    }
     if (!this.isOpen) {
       this.isOpen = true;
       this.notificationService.setChatOpen(true);
