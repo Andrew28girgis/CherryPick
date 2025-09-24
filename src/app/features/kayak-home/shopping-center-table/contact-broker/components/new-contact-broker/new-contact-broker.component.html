@@ -13,12 +13,12 @@
           <div class="contact-name">
             {{ contact.Firstname }} {{ contact.LastName }}
           </div>
-          <div class="contact-phone">
+          <!-- <div class="contact-phone">
             {{ contact.CellPhone }}
           </div>
           <div class="contact-email" style="font-size: 13px">
             {{ contact.Email }}
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -67,24 +67,23 @@
             {{ prompt?.name }}
           </option>
         </select>
-        
       </div>
       <div class="send-as-switch ms-2">
-          <div
-            class="send-as-to"
-            [ngClass]="{ 'send-as-active': sendAsTo }"
-            (click)="sendAsTo = true; sendAsCC = false"
-          >
-            To
-          </div>
-          <div
-            class="send-as-cc"
-            [ngClass]="{ 'send-as-active': sendAsCC }"
-            (click)="sendAsTo = false; sendAsCC = true"
-          >
-            CC
-          </div>
+        <div
+          class="send-as-to"
+          [ngClass]="{ 'send-as-active': sendAsTo }"
+          (click)="sendAsTo = true; sendAsCC = false"
+        >
+          To
         </div>
+        <div
+          class="send-as-cc"
+          [ngClass]="{ 'send-as-active': sendAsCC }"
+          (click)="sendAsTo = false; sendAsCC = true"
+        >
+          CC
+        </div>
+      </div>
     </div>
 
     <div class="w-100 mx-3 mb-3">
