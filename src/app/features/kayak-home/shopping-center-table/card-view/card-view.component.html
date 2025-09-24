@@ -75,7 +75,7 @@
 
         <!--  White div with Score -->
         <ng-template #score>
-          <div *ngIf="shopping.Score;else fallback" class="score-placeholder">
+          <div *ngIf="shopping.Score; else fallback" class="score-placeholder">
             <div
               class="score-text"
               (click)="
@@ -99,14 +99,11 @@
           </div>
           <ng-template #fallback>
             <div class="score-placeholder">
-
-              <div
-              class="score-text"
-             >
-              {{ shopping.CenterName }}
+              <div class="score-text">
+                {{ shopping.CenterName }}
+              </div>
             </div>
-            </div>
-</ng-template>
+          </ng-template>
         </ng-template>
         <!-- Overlayed stage chip on image -->
         <div class="img-overlay" *ngIf="shopping.stageName">
@@ -615,6 +612,7 @@
                     let i = index
                   "
                   class="org-mini-item"
+                  (click)="openContactModal(shopping)"
                 >
                   <p class="name">
                     {{ org.Firstname | titlecase }}
