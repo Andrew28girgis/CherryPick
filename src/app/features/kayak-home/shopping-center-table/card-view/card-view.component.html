@@ -33,6 +33,11 @@
 
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
+   <div id="customToastsuccess" class="custom-toast">
+    <div class="toast-content">
+      <p id="toastMessagesuccess"></p>
+    </div>
+  </div>
   <ng-container *ngFor="let shopping of cardsSideList">
     <div
       class="cardResponsive"
@@ -59,13 +64,7 @@
           class="imgggg"
           [routerLink]="(activeDropdownId || selectedIdCard === shopping.Id) ? null : ['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
         />
-        <button 
-  class="plus-icon" 
-  (click)="InsertAutomation(shopping.Id); $event.stopPropagation()"
-  title="Add Contact"
->
-  <i class="fa-solid fa-plus"></i>
-</button>
+
         <div
           (click)="openInfoPopup(shopping, infoModal); $event.stopPropagation()"
           *ngIf="shopping.Score && !shopping.scoreImage"
@@ -780,7 +779,11 @@
                   class="table-text"
                   [innerHTML]="shopping.CenterName | titlecase"
                 ></span>
-                <div class="relativee" style="position: relative">
+                
+                <div class="relativee d-flex justify-content-between flex-row"style="position: relative">
+                  <button class="plus-icon" (click)="InsertAutomation(shopping.Id); $event.stopPropagation()" >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
                   <button
                     class="ellipsis_icont"
                     (click)="toggleShortcutsCard(shopping.Id)"

@@ -96,6 +96,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   conclusion: any;
   score: any;
   isLoadingInfo = false;
+  showSaveToast: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -108,7 +109,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.InsertAutomation(28);
     this.isLoading = true;
     this.loadStages();
 
@@ -893,9 +893,22 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   InsertAutomation(id: any) {
     this.placesService.InsertAutomation(id).subscribe({
-      next:(res)=> {
-        
+      next: () => {
+        this.showToast("Automation Started")
       },
     });
+  }
+  showToast(message: string) {
+    const toast = document.getElementById('customToastsuccess');
+    const toastMessage = document.getElementById('toastMessagesuccess');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    } else {
+      console.warn('Toast elements not found in DOM.');
+    }
   }
 }
