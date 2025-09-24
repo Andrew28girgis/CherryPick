@@ -237,11 +237,11 @@ export class NotificationsComponent
       }
     });
     this.notificationService.overlayWide$.subscribe((wide) => {
-      this.isoverlaywide = wide;
-      if (wide) {
-        setTimeout(() => {
-          this.showTyping();
-        }, 2000);
+      if (!this.electronSideBar) {
+        this.isoverlaywide = wide;
+        if (wide) {
+          setTimeout(() => this.showTyping(), 2000);
+        }
       }
     });
 
@@ -583,11 +583,9 @@ export class NotificationsComponent
     } else {
       // opening overlay
       if (!this.electronSideBar) {
-
         this.isOverlayMode = true;
-      }      if (this.electronSideBar) {
-        (window as any).electronMessage.minimizeCRESideBrowser();
       }
+  
       this.overlayStateChange.emit(true);
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
@@ -623,9 +621,7 @@ export class NotificationsComponent
       this.notificationService.setOverlayWide(false);
       this.notificationService.setHtmlOpen(false);
 
-      if (this.electronSideBar) {
-        (window as any).electronMessage.minimizeCRESideBrowser();
-      }
+ 
 
       this.overlayStateChange.emit(false);
       this.sidebarStateChange.emit({
@@ -712,12 +708,9 @@ export class NotificationsComponent
     }
     if (!this.isOverlayMode) {
       if (!this.electronSideBar) {
-
         this.isOverlayMode = true;
       }
-      if (this.electronSideBar) {
-        (window as any).electronMessage.maxmizeCRESideBrowser();
-      }
+ 
     }
 
     this.sidebarStateChange.emit({
@@ -938,12 +931,11 @@ export class NotificationsComponent
         notification.html
       );
     } else {
-      if (!this.electronSideBar) {
-
-        this.isOverlayMode = true;
-      }      this.showingMap = false;
+      this.isOverlayMode = true;
+      this.showingMap = false;
       this.overlayHtml = notification.html;
     }
+
     this.selectedNotification = notification;
   }
   async downloadPDF(): Promise<void> {
@@ -1190,7 +1182,6 @@ export class NotificationsComponent
     this.showingMap = true; // controls <app-polygons> rendering
     this.overlayHtml = ''; // clear HTML if previously set
     if (!this.electronSideBar) {
-
       this.isOverlayMode = true;
     }
     if (!this.isOpen) {
@@ -1234,9 +1225,7 @@ export class NotificationsComponent
     this.notificationService.setOverlayWide(false);
     this.notificationService.setHtmlOpen(false);
 
-    if (this.electronSideBar) {
-      (window as any).electronMessage.minimizeCRESideBrowser();
-    }
+  
 
     this.overlayStateChange.emit(false);
     this.sidebarStateChange.emit({
@@ -1258,17 +1247,20 @@ export class NotificationsComponent
   }
   private checkForShoppingCentersReply(newMessages: Notification[]): void {
     for (const n of newMessages) {
-      const isSystem = !(n.notificationCategoryId === true || n.notificationCategoryId === 1);
+      const isSystem = !(
+        n.notificationCategoryId === true || n.notificationCategoryId === 1
+      );
       if (!isSystem) continue;
-  
-      const match = n.message?.match(/I have found\s+(\d+)\s+Shopping Centers/i);
+
+      const match = n.message?.match(
+        /I have found\s+(\d+)\s+Shopping Centers/i
+      );
       if (match) {
         console.log('[Notifications] Emily found shopping centers:', match[1]);
-  
+
         this.refreshService.triggerRefreshOrganizations();
         break;
       }
     }
   }
-  
 }
