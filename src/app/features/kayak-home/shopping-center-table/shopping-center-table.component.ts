@@ -179,7 +179,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getUserpages();
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params['openUpload'] === 'true') {
         setTimeout(() => this.openUpload(), 0);
@@ -287,20 +286,19 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
-    // Add subscription to reload event
-
-    this.subscriptions.add(
-      this.shoppingCenterService.reloadShoppingCenters$.subscribe(
-        (shouldReload) => {
-          if (shouldReload) {
-            const orgId = Number(localStorage.getItem('OrgId')) || 0;
-            this.shoppingCenterService.initializeData(this.CampaignId, orgId);
-          }
-        }
-      )
-    );
+ 
+    // this.subscriptions.add(
+    //   this.shoppingCenterService.reloadShoppingCenters$.subscribe(
+    //     (shouldReload) => {
+    //       if (shouldReload) {
+    //         const orgId = Number(localStorage.getItem('OrgId')) || 0;
+    //         this.shoppingCenterService.initializeData(this.CampaignId, orgId);
+    //       }
+    //     }
+    //   )
+    // );
     setInterval(() => {
-      this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
+      this.shoppingCenterService.loadShoppingCenters(this.CampaignId);
     }, 30000);
   }
 
@@ -991,16 +989,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.openLikeCard(url);
   }
 
-  getUserpages(): void {
-    const body: any = {
-      Name: 'GetUserPages',
-      Params: {},
-    };
 
-    this.placesService.GenericAPI(body).subscribe({
-      next: (data: any) => {},
-    });
-  }
   scoringColorClass(i: number): string {
     return ['score-low', 'score-mid', 'score-high'][i] || 'score-low';
   }

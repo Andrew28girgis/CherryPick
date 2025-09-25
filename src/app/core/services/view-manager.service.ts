@@ -135,9 +135,9 @@ export class ViewManagerService {
     // Load all required data in parallel
     const promises = [
       this.loadShoppingCenters(campaignId),
-      this.loadBuyBoxCategories(campaignId),
-      this.loadOrganizationById(orgId),
-      this.loadBuyBoxPlaces(campaignId),
+      //this.loadBuyBoxCategories(campaignId),
+      //this.loadOrganizationById(orgId),
+      // this.loadBuyBoxPlaces(campaignId),
     ];
 
     Promise.all(promises)
@@ -147,7 +147,7 @@ export class ViewManagerService {
 
         // Start polling (waits 20s after each finished request)
         if (this._lastBuyboxId != null) {
-          this.startShoppingCentersPolling(this._lastBuyboxId);
+          // this.startShoppingCentersPolling(this._lastBuyboxId);
         }
 
         const centers = this._shoppingCenters.getValue();
@@ -867,31 +867,31 @@ export class ViewManagerService {
   /**
    * Load shopping centers
    */
-  private startShoppingCentersPolling(campaignId: number): void {
-    // stop any previous polling
-    this.stopShoppingCentersPolling();
+  // private startShoppingCentersPolling(campaignId: number): void {
+  //   // stop any previous polling
+  //   this.stopShoppingCentersPolling();
 
-    this.shoppingCentersPollingSub = defer(() =>
-      from(this.loadShoppingCenters(campaignId))
-    )
-      .pipe(
-        // after each successful completion, wait 20s, then resubscribe
-        repeatWhen((completed$) =>
-          completed$.pipe(delayWhen(() => timer(20000)))
-        ),
-        // allow external stop
-        takeUntil(this.stopPolling$)
-      )
-      .subscribe({
-        error: (err) => console.error('Polling error:', err),
-      });
-  }
+  //   this.shoppingCentersPollingSub = defer(() =>
+  //     from(this.loadShoppingCenters(campaignId))
+  //   )
+  //     .pipe(
+  //       // after each successful completion, wait 20s, then resubscribe
+  //       repeatWhen((completed$) =>
+  //         completed$.pipe(delayWhen(() => timer(20000)))
+  //       ),
+  //       // allow external stop
+  //       takeUntil(this.stopPolling$)
+  //     )
+  //     .subscribe({
+  //       error: (err) => console.error('Polling error:', err),
+  //     });
+  // }
 
-  private stopShoppingCentersPolling(): void {
-    this.stopPolling$.next();
-    this.shoppingCentersPollingSub?.unsubscribe();
-    this.shoppingCentersPollingSub = undefined;
-  }
+  // private stopShoppingCentersPolling(): void {
+  //   this.stopPolling$.next();
+  //   this.shoppingCentersPollingSub?.unsubscribe();
+  //   this.shoppingCentersPollingSub = undefined;
+  // }
 
   public loadShoppingCenters(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
