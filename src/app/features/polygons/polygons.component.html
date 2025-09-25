@@ -95,34 +95,36 @@
             No results
           </div>
         </div>
+<div class="selected-container">
 
-        <div
-          class="selected-item gap-2 d-flex align-items-center mt-2"
-          *ngFor="let selectedItem of selectedItems"
-        >
-          <span class="me-2 flex-grow-1">{{ getItemLabel(selectedItem) }}</span>
+  <div
+    class="selected-item gap-2 d-flex align-items-center mt-2"
+    *ngFor="let selectedItem of selectedItems"
+  >
+    <span class="me-2 flex-grow-1">{{ getItemLabel(selectedItem) }}</span>
 
-          <button
-            class="view-btn"
-            type="button"
-            (click)="viewSelectedItem(selectedItem)"
-            [attr.aria-label]="
-              'View ' + getItemLabel(selectedItem) + ' on the map'
-            "
-            *ngIf="selectedItem.id"
-          >
-            View
-          </button>
+    <button
+      class="view-btn"
+      type="button"
+      (click)="viewSelectedItem(selectedItem)"
+      [attr.aria-label]="
+        'View ' + getItemLabel(selectedItem) + ' on the map'
+      "
+      *ngIf="selectedItem.id"
+    >
+      View
+    </button>
 
-          <button
-            class="x-bt btn btn-sm btn-outline-secondary border-0 rounded-circle"
-            type="button"
-            (click)="removeSelectedItem(selectedItem)"
-            [attr.aria-label]="'Remove ' + getItemLabel(selectedItem)"
-          >
-            <span style="font-size: 1.2em; line-height: 1"> x </span>
-          </button>
-        </div>
+    <button
+      class="x-bt btn btn-sm btn-outline-secondary border-0 rounded-circle"
+      type="button"
+      (click)="removeSelectedItem(selectedItem)"
+      [attr.aria-label]="'Remove ' + getItemLabel(selectedItem)"
+    >
+      <span style="font-size: 1.2em; line-height: 1"> x </span>
+    </button>
+  </div>
+</div>
 
         <!-- <div
           class="d-flex align-items-center justify-content-center mt-2"

@@ -184,7 +184,7 @@ export class NotificationsComponent
         this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
 
-    this.notificationService.initNotifications(this.CampaignId);
+    // this.notificationService.initNotifications(this.CampaignId);
 
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
@@ -202,7 +202,7 @@ export class NotificationsComponent
 
       const prevLength = this.notificationService.notifications.length;
 
-      this.notificationService.fetchUserNotifications(this.CampaignId);
+      // this.notificationService.fetchUserNotifications(this.CampaignId);
       this.sortNotificationsByDateAsc();
 
       setTimeout(() => {
