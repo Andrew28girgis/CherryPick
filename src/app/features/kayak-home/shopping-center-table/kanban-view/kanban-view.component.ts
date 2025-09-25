@@ -32,7 +32,7 @@ export class KanbanViewComponent implements OnInit {
 
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
     });
-    this.initializeData();
+    //this.initializeData();
   }
 
   async initializeData() {

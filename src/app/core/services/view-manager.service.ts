@@ -17,6 +17,7 @@ import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { ShareOrg } from 'src/app/shared/models/shareOrg';
 
 declare const google: any;
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -114,14 +115,14 @@ export class ViewManagerService {
    * This should be called once when the main component loads
    */
   public initializeData(campaignId: number, orgId: number): void {
-    // if (
-    //   this._dataLoaded &&
-    //   this._lastBuyboxId === campaignId &&
-    //   this._lastOrgId === orgId
-    // ) {
-    //   this._dataLoadedEvent.next();
-    //   return;
-    // }
+    if (
+      this._dataLoaded &&
+      this._lastBuyboxId === campaignId &&
+      this._lastOrgId === orgId
+    ) {
+      this._dataLoadedEvent.next();
+      return;
+    }
 
     this._lastBuyboxId = campaignId;
     this._lastOrgId = orgId;
@@ -893,71 +894,47 @@ export class ViewManagerService {
   //   this.shoppingCentersPollingSub = undefined;
   // }
 
-  public loadShoppingCenters(campaignId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this._isLoading.next(true);
+  public loadShoppingCenters(campaignId: number) {
+    
+    console.log('Loading shopping centers for campaign:', campaignId);
 
-      const body: any = {
-        Name: 'GetMarketSurveyShoppingCenters',
-        Params: {
-          CampaignId: campaignId,
-          ShoppingCenterStageId: 0, // Load all centers
-        },
-      };
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCenters',
+      Params: {
+        CampaignId: campaignId,
+        ShoppingCenterStageId: 0,
+      },
+    };
 
-      this.placesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          const centers = data.json;
+    this.placesService.GenericAPI(body).pipe(take(1)).subscribe({
+      next: (data) => {
+        const centers = data.json;
 
-          centers.forEach((center: any) => {
-            if (center.ShoppingCenter && center.ShoppingCenter.Places) {
-              const sizes: number[] = center.ShoppingCenter.Places.map(
-                (p: any) => p.BuildingSizeSf as number
-              ).filter(
-                (s: number | null | undefined): s is number => s != null
-              );
+        centers.forEach((center: any) => {
+          if (center.ShoppingCenter?.Places) {
+            const sizes: number[] = center.ShoppingCenter.Places
+              .map((p: any) => p.BuildingSizeSf as number)
+              .filter((s: number | null | undefined): s is number => s != null);
 
-              if (sizes.length > 0) {
-                const uniqueSizes: number[] = Array.from(
-                  new Set<number>(sizes)
-                ).sort((a, b) => a - b);
-
-                if (uniqueSizes.length === 1) {
-                  center.sizeRange = uniqueSizes[0];
-         
-                } else {
-                  // More than one → store as [min, max]
-                  const min = uniqueSizes[0];
-                  const max = uniqueSizes[uniqueSizes.length - 1];
-                  center.sizeRange = [min, max];
- 
-                }
-              } else {
-                center.sizeRange = null;
-              }
+            if (sizes.length > 0) {
+              const uniqueSizes = Array.from(new Set<number>(sizes)).sort((a, b) => a - b);
+              center.sizeRange = uniqueSizes.length === 1
+                ? uniqueSizes[0]
+                : [uniqueSizes[0], uniqueSizes[uniqueSizes.length - 1]];
             } else {
               center.sizeRange = null;
             }
-          });
+          } else {
+            center.sizeRange = null;
+          }
+        });
 
-          // Store all centers
-          this._allShoppingCenters.next(centers);
-
-          // Apply current filters
-          this.applyFilters();
-
-          resolve();
-        },
-        error: (err) => {
-          console.error('Error loading shopping centers:', err);
-          reject(err);
-        },
-        complete: () => {
-          this._isLoading.next(false);
-        },
-      });
+        this._allShoppingCenters.next(centers);
+        this.applyFilters();
+      },
     });
-  }
+
+}
 
   /**
    * Load buybox categories

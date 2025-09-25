@@ -4,10 +4,10 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  OnDestroy,
   ViewEncapsulation,
   TemplateRef,
   ElementRef,
+  OnDestroy
 } from '@angular/core';
 import { MapViewComponent } from './map-view/map-view.component';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -167,6 +167,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   private urlsPollSub: Subscription | null = null;
   private readonly URLS_POLL_MS = 2000;
   private readonly URLS_MAX_WAIT_MS = 30000; // optional safety cap
+  private intervalId: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -236,9 +237,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.tenantImageUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${this.OrgId}`;
       }
 
-      if (Number(localStorage.getItem('currentViewDashBord')) !== 1) {
-        this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
-      }
+        // this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
+      
     });
     this.GetCREUrls();
 
@@ -297,9 +297,10 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     //     }
     //   )
     // );
-    setInterval(() => {
+    
+ this.intervalId = setInterval(() => {
       this.shoppingCenterService.loadShoppingCenters(this.CampaignId);
-    }, 30000);
+    }, 3000);
   }
 
   // Add method to sync filter state
@@ -594,6 +595,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+      if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
     this.shoppingCenterService.resetSelectedStageId();
     this.subscriptions.unsubscribe();
     this.stopUrlsPolling();
