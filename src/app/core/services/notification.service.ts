@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject,tap,catchError,of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -57,23 +57,27 @@ export class NotificationService {
         CampaignID: campaignId ?? null,
       },
     };
-
-     return this.placesService.GenericAPI(request).subscribe({
-      next: (response: any) => {
+  
+    return this.placesService.GenericAPI(request).pipe(
+      tap((response: any) => {
         const previousNotifications = [...this.notifications];
         this.notifications = (response.json || []) as Notification[];
         this.sortNotificationsByDate();
-
+  
         if (this.isChatOpen) {
           this.handleNewMessagesWhileChatOpen(previousNotifications);
         }
-
+  
         this.updateNotificationCounts();
         this.newNotificationsCount = this.unreadCount;
-      },
-      error: (err) => console.error('fetch failed', err),
-    });
+      }),
+      catchError((err) => {
+        console.error('fetch failed', err);
+        return of(null); // prevent breaking the stream
+      })
+    );
   }
+  
 
   private handleNewMessagesWhileChatOpen(
     previousNotifications: Notification[]

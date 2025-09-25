@@ -1,9 +1,7 @@
- 
 .cursor {
   cursor: pointer;
 }
- 
- 
+
 .custom-dropdown {
   position: relative;
   cursor: pointer;
@@ -139,7 +137,6 @@
 img[alt="logo"] {
   margin-right: var(--Space-S-20);
 }
- 
 
 .card-window {
   position: relative;
@@ -190,7 +187,6 @@ img[alt="logo"] {
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
 }
- 
 
 .nearset-category {
   font-size: 14px;
@@ -220,9 +216,8 @@ img[alt="logo"] {
   font-size: 18px;
   margin-top: 3px;
   width: 24px;
-} 
- 
- 
+}
+
 @keyframes shimmer {
   0% {
     background-position: -468px 0;
@@ -337,10 +332,9 @@ img[alt="logo"] {
   animation: shimmer 1.5s infinite linear;
   border-radius: var(--Radius-R-4);
 }
-     
 
 ::ng-deep .contact-broker-modal-class .modal-content {
-  height: 80vh; 
+  height: 80vh;
   overflow: hidden;
 }
 
@@ -511,7 +505,7 @@ img[alt="logo"] {
 
 .dropdown-item.active {
   color: var(--app-color) !important;
-} 
+}
 .dropdown-item {
   display: block;
   width: 100%;
@@ -554,7 +548,6 @@ img[alt="logo"] {
     min-width: unset;
   }
 }
-  
 
 /* summary line */
 .mail-summary {
@@ -565,14 +558,14 @@ img[alt="logo"] {
 .mail-summary:hover {
   text-decoration: underline;
 }
- 
+
 .mail-date {
   margin-left: 1rem;
   font-style: italic;
   color: #555;
   white-space: nowrap;
 }
- 
+
 /* Modal container as a card with grid layout */
 .modal-body {
   display: grid;
@@ -690,9 +683,9 @@ img[alt="logo"] {
 .main-img {
   position: relative;
   width: 100%;
-  height: 280px;  
+  height: 280px;
   border-top-left-radius: 20px;
- border-top-right-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .img-overlay {
@@ -785,14 +778,11 @@ img[alt="logo"] {
 .main-img img.loading {
   opacity: 0;
 }
-  
-
 
 @media screen and (max-width: 1024px) {
   .main-img {
     height: 150px;
   }
- 
 }
 
 .cards-row {
@@ -801,9 +791,7 @@ img[alt="logo"] {
   gap: var(--Space-S-24);
   align-items: stretch;
 }
-  
- 
- 
+
 label {
   font-weight: 500;
   color: #495057;
@@ -827,7 +815,7 @@ label {
   transform: translateY(-2px);
   color: #fff;
 }
-       
+
 /* Update your input styles to include the Angular attributes */
 .fancy-modal-body .form-control,
 .fancy-modal-body .form-control:focus,
@@ -890,9 +878,9 @@ label {
 .imgggg.click-disabled {
   pointer-events: none;
 }
-.imgggg{
+.imgggg {
   border-top-left-radius: 20px;
-  border-top-right-radius: 20px; 
+  border-top-right-radius: 20px;
 }
 
 /* positioning (same as before) */
@@ -903,24 +891,23 @@ label {
   transform: translateY(-40%);
   z-index: 2;
   animation: floatUpDown 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-padding: 5px;
+  padding: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-width: 40px;
-height: 40px;
-   border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   background: #102e50; /* navy */
   color: #fff;
   line-height: 1.1;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
-.card-badge span{
-  white-space:nowrap;
+.card-badge span {
+  white-space: nowrap;
   font-size: 14px;
 }
-
 
 .table-responsive {
   max-height: 600px;
@@ -1122,7 +1109,6 @@ table tbody td {
   background: #ffffff;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
- 
 }
 
 /* main score style */
@@ -1151,13 +1137,13 @@ table tbody td {
 .icon-btn:hover {
   color: var(--Colors-Primary-hover);
 }
-.MangerORG{
+.MangerORG {
   font-size: 14px;
 }
 
-.modal-title{
+.modal-title {
   color: var(--Colors-Primary-500);
-}/* Header with score badge */
+} /* Header with score badge */
 .score-header {
   border-bottom: 1px solid #e5e7eb;
   display: flex;
@@ -1206,7 +1192,7 @@ table tbody td {
   padding: 16px;
   border-radius: 8px;
   border-left: 4px solid var(--Colors-Primary-500); /* red accent for rejection */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* Rationale table (from infoData innerHTML) */
@@ -1246,25 +1232,25 @@ table tbody td {
   color: #6b7280;
   font-size: 14px;
   padding: 20px;
-} 
+}
 .plus-icon {
-  background: var(--Colors-Primary-light);         
-  border: none;   
-  border-radius: 50%;        
+  background: var(--Colors-Primary-light);
+  border: none;
+  border-radius: 50%;
   width: 28px;
   height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--Colors-Primary-500);              
+  color: var(--Colors-Primary-500);
   font-size: 14px;
   transition: all 0.2s ease-in-out;
 }
 
 .plus-icon:hover {
   background: #f1e9d7;
- }
+}
 
 .actions-cell {
   text-align: center;
@@ -1298,4 +1284,9 @@ table tbody td {
     opacity: 1;
     transform: translateY(0);
   }
+}
+.reload {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
 }

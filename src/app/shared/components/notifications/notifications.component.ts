@@ -191,34 +191,35 @@ export class NotificationsComponent
     });
 
     //  Polling changed: recursive instead of setInterval
-// 🔄 Recursive polling
-const poll = () => {
-  this.wasSticky = this.isAtBottom();
-  const prevLength = this.notificationService.notifications.length;
+    // 🔄 Recursive polling
+    const poll = () => {
+      this.wasSticky = this.isAtBottom();
+      const prevLength = this.notificationService.notifications.length;
 
-  this.notificationService.fetchUserNotifications(this.CampaignId).add(() => {
-    // ^ add() ensures this runs when the subscription completes (success or error)
+      this.notificationService
+        .fetchUserNotifications(this.CampaignId)
+        .subscribe({
+          complete: () => {
+            const newLength = this.notificationService.notifications.length;
+            const diff = newLength - prevLength;
 
-    const newLength = this.notificationService.notifications.length;
-    const diff = newLength - prevLength;
+            if (diff > 0) {
+              const newMessages = this.notificationService.notifications.slice(
+                -diff
+              );
+              this.checkForShoppingCentersReply(newMessages);
+              this.onNewMessagesArrived(diff);
+            }
 
-    if (diff > 0) {
-      const newMessages = this.notificationService.notifications.slice(-diff);
-      this.checkForShoppingCentersReply(newMessages);
-      this.onNewMessagesArrived(diff);
-    }
+            this.previousNotificationsLength = newLength;
+            this.sortNotificationsByDateAsc();
+            this.scanTrigger$.next();
 
-    this.previousNotificationsLength = newLength;
-    this.sortNotificationsByDateAsc();
-    this.scanTrigger$.next();
-
-    // ⏱️ schedule next run after 2s
-    setTimeout(poll, 2000);
-  });
-};
-
-poll(); // kick it off
-
+            // ⏱️ Wait 2s AFTER finishing
+            setTimeout(poll, 2000);
+          },
+        });
+    };
 
     poll();
 
