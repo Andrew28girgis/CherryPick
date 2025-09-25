@@ -9,8 +9,8 @@
   gap: var(--Space-S-24);
   overflow-y: auto; /* Make only this container scroll */
 }
-.intro-container { 
-  padding: 0 40px 34px 40px; 
+.intro-container {
+  padding: 0 40px 34px 40px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -888,4 +888,26 @@ li {
   text-overflow: ellipsis;
 
   transition: background-color 0.2s ease;
+}
+.user-card-wrapper {
+  position: relative; /* important for absolute positioning */
+  margin-top: 24px; /* add space so badge doesn’t get cut */
+}
+
+.card-badge {
+  position: absolute;
+  top: -1px;
+  left: 12px;
+  transform: translateY(-40%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--app-color);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }

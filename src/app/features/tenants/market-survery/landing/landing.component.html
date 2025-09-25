@@ -201,7 +201,10 @@
       <div>
         <div class="contact-container">
           <ng-container *ngFor="let Manager of CustomPlace.Contacts">
-            <div *ngIf="Manager.FirstName || Manager.LastName">
+            <div class="user-card-wrapper" *ngIf="Manager.FirstName || Manager.LastName">
+              <span class="card-badge" *ngIf="Manager.OrganizationName">
+                {{ Manager.OrganizationName }}
+              </span>
               <div class="user-card gap-2">
                 <div class="org-logo placeholder">
                   {{ getInitials(Manager.FirstName, Manager.LastName) }}

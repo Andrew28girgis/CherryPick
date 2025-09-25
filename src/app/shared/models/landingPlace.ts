@@ -26,6 +26,7 @@ export interface place{
 
 export interface Contact {
   OrganizationId: number;
+  OrganizationName:string
   FirstName: string;
   LastName: string;
   Email: string;
