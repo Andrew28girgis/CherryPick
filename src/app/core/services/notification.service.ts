@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class  NotificationService {
+export class NotificationService {
   contactId = 0;
   notifications: Notification[] = [];
   dropdownVisible = false;
@@ -27,8 +27,7 @@ export class  NotificationService {
   mapOpen$ = this.mapOpenSubject.asObservable();
   htmlOpen$ = this.htmlOpenSubject.asObservable();
   overlayWide$ = this.overlayWideSubject.asObservable();
-  
- 
+
   // Property for notification count in the badge
   public newNotificationsCount = 0;
   CampaignId: any;
@@ -50,19 +49,18 @@ export class  NotificationService {
     }
   }
 
-  fetchUserNotifications(campaignId: any): void {
+  fetchUserNotifications(campaignId: any) {
     const request = {
       Name: 'GetUserNotifications',
       Params: {
         ContactId: this.contactId,
-        CampaignID: campaignId ? campaignId : null,
+        CampaignID: campaignId ?? null,
       },
     };
 
-    this.placesService.GenericAPI(request).subscribe({
+     return this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
         const previousNotifications = [...this.notifications];
-        // No conversion to boolean — keep the API's number
         this.notifications = (response.json || []) as Notification[];
         this.sortNotificationsByDate();
 
@@ -71,10 +69,9 @@ export class  NotificationService {
         }
 
         this.updateNotificationCounts();
-
-        // Update the badge count for unread messages
         this.newNotificationsCount = this.unreadCount;
       },
+      error: (err) => console.error('fetch failed', err),
     });
   }
 
@@ -193,13 +190,12 @@ export class  NotificationService {
   setMapOpen(isOpen: boolean) {
     this.mapOpenSubject.next(isOpen);
     if (isOpen) {
-       this.htmlOpenSubject.next(false);
-     }
-   
-   }
-   setHtmlOpen(isOpen: boolean) {
+      this.htmlOpenSubject.next(false);
+    }
+  }
+  setHtmlOpen(isOpen: boolean) {
     this.htmlOpenSubject.next(isOpen);
-  
+
     if (isOpen) {
       // Close map explicitly
       this.mapOpenSubject.next(false);
@@ -208,10 +204,8 @@ export class  NotificationService {
   setOverlayWide(isWide: boolean) {
     this.overlayWideSubject.next(isWide);
   }
-  sendmessage(message:any){
+  sendmessage(message: any) {
     const body: any = { Chat: message };
-    this.placesService.sendmessages(body).subscribe({
-    })
+    this.placesService.sendmessages(body).subscribe({});
   }
-  
 }

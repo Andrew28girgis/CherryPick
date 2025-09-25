@@ -2,6 +2,13 @@ export class LandingPlace {
   ShoppingCenter!: ShoppingCenter[]
   OtherPlaces!: OtherPlace[]
   Place!:OtherPlace[]
+  Contacts!:Contact[]
+}
+export interface Contact {
+  OrganizationId: number;
+  FirstName: string;
+  LastName: string;
+  Email: string;
 }
 
 export class ShoppingCenter {

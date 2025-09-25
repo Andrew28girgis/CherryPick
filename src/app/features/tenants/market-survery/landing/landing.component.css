@@ -696,10 +696,83 @@ li {
   background-color: #102e50;
   flex-shrink: 0; /* keep logo fixed size */
 }
+.contacts-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+
 .contact-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.org-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #3498db, #2c3e50);
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name .name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #374151;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email i {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.email-link {
+  color: var(--Colors-Primary-500);
+  text-decoration: none;
+}
+
+.email-link:hover {
+  text-decoration: underline;
 }
 
 /* tenant category cards */
@@ -820,4 +893,3 @@ li {
 
   transition: background-color 0.2s ease;
 }
-
