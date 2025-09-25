@@ -12,7 +12,6 @@ import {
   PlaceCotenants,
   ShoppingCenterTenant,
 } from 'src/app/shared/models/PlaceCo';
-import { OrgManager } from 'src/app/shared/models/organization';
 import { BuyboxOrg } from 'src/app/shared/models/buyboxOrg';
 import { OrgBranch } from 'src/app/shared/models/branches';
 import { permission } from 'src/app/shared/models/permission';
@@ -51,7 +50,6 @@ export class LandingComponent {
   NearByType: NearByType[] = [];
   placeImage: string[] = [];
   placeCotenants: PlaceCotenants[] = [];
-  OrgManager: OrgManager[] = [];
   ShoppingCenterId!: number;
   StandAlonePlace!: OtherPlace | null | undefined;
   BuyboxOrg!: BuyboxOrg;
@@ -248,11 +246,7 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.CustomPlace = data.json?.[0] || null;
-
-        if (ShoppingcenterId !== 0) {
-          this.ShoppingCenter = this.CustomPlace;
-          this.GetShoppingCenterManager(this.ShoppingCenter?.Id);
-        }
+   
 
         if (this.ShoppingCenter && this.ShoppingCenter.Images) {
           this.placeImage = this.ShoppingCenter.Images?.split(',').map(
@@ -346,22 +340,7 @@ export class LandingComponent {
         }
       },
     });
-  }
-
-  GetShoppingCenterManager(ShoppingCenterId: number): void {
-    const body: any = {
-      Name: 'GetShoppingCenterManager',
-      Params: {
-        ShoppingCenterId: ShoppingCenterId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.OrgManager = data.json;
-      },
-    });
-  }
+  } 
 
   changeStreetView(place: any) {
     this.sanitizedUrl = '';
@@ -1296,14 +1275,7 @@ export class LandingComponent {
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
-  get hasContacts(): boolean {
-    return (
-      this.OrgManager?.some(
-        (sc) =>
-          sc?.firstName?.trim() || sc?.lastName?.trim() || sc?.email?.trim()
-      ) ?? false
-    );
-  }
+ 
 
   getCategoryIcon(category: string): string {
     if (!category) return this.categoryIcons['unknown'];

@@ -156,27 +156,23 @@ export class NotificationsComponent
       if (this.isOpen !== open) {
         this.isOpen = open;
 
-        // keep parent/host in sync if you rely on this
         this.sidebarStateChange.emit({
           isOpen: this.isOpen,
           isFullyOpen: this.isOpen,
         });
 
         if (open) {
-          // optional: ensure it scrolls when opened from avatar
           setTimeout(() => this.scrollToBottom(), 0);
         }
       }
     });
     this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(this.router.url);
 
-    // auto-open in route mode
     if (this.isChatbotRoute) {
       this.isOpen = true;
       setTimeout(() => this.scrollToBottom(), 0);
     }
 
-    // keep it updated on internal navigations
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
@@ -184,48 +180,47 @@ export class NotificationsComponent
         this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
 
-    // this.notificationService.initNotifications(this.CampaignId);
+    this.notificationService.initNotifications(this.CampaignId);
 
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
 
-    // Debounced scan
     this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(() => {
       this.scanAndOpenOverlayForHtml();
       this.scanForShowMap();
     });
 
-    // Polling
-    this.intervalId = setInterval(() => {
-      // remember position BEFORE updating list (drives sticky behavior)
-      this.wasSticky = this.isAtBottom(); // REPLACE wasAtBottomBeforeUpdate usage
+    //  Polling changed: recursive instead of setInterval
+// 🔄 Recursive polling
+const poll = () => {
+  this.wasSticky = this.isAtBottom();
+  const prevLength = this.notificationService.notifications.length;
 
-      const prevLength = this.notificationService.notifications.length;
+  this.notificationService.fetchUserNotifications(this.CampaignId).add(() => {
+    // ^ add() ensures this runs when the subscription completes (success or error)
 
-      // this.notificationService.fetchUserNotifications(this.CampaignId);
-      this.sortNotificationsByDateAsc();
+    const newLength = this.notificationService.notifications.length;
+    const diff = newLength - prevLength;
 
-      setTimeout(() => {
-        const newLength = this.notificationService.notifications.length;
-        const diff = newLength - prevLength;
+    if (diff > 0) {
+      const newMessages = this.notificationService.notifications.slice(-diff);
+      this.checkForShoppingCentersReply(newMessages);
+      this.onNewMessagesArrived(diff);
+    }
 
-        if (diff > 0) {
-          const newMessages = this.notificationService.notifications.slice(
-            -diff
-          );
+    this.previousNotificationsLength = newLength;
+    this.sortNotificationsByDateAsc();
+    this.scanTrigger$.next();
 
-          // ✅ Only check new messages for Emily’s "I have found X Shopping Centers"
-          this.checkForShoppingCentersReply(newMessages);
+    // ⏱️ schedule next run after 2s
+    setTimeout(poll, 2000);
+  });
+};
 
-          this.onNewMessagesArrived(diff);
-        }
+poll(); // kick it off
 
-        this.previousNotificationsLength = newLength;
-        this.sortNotificationsByDateAsc();
 
-        this.scanTrigger$.next(); // still needed for overlay + map
-      }, 200);
-    }, 2000);
+    poll();
 
     this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
     setTimeout(() => this.scrollToBottom(), 100);
@@ -233,7 +228,7 @@ export class NotificationsComponent
     this.notificationService.mapOpen$.subscribe((open) => {
       this.showingMap = open;
       if (open) {
-        this.overlayHtml = ''; // clear HTML content when map is open
+        this.overlayHtml = '';
       }
     });
     this.notificationService.overlayWide$.subscribe((wide) => {
@@ -248,7 +243,7 @@ export class NotificationsComponent
     this.notificationService.htmlOpen$.subscribe((open) => {
       this.isOverlayhtml = open;
       if (!open) {
-        this.overlayHtml = ''; // clear content when html is closed
+        this.overlayHtml = '';
       }
     });
   }
@@ -585,7 +580,7 @@ export class NotificationsComponent
       if (!this.electronSideBar) {
         this.isOverlayMode = true;
       }
-  
+
       this.overlayStateChange.emit(true);
       this.sidebarStateChange.emit({
         isOpen: this.isOpen,
@@ -620,8 +615,6 @@ export class NotificationsComponent
       this.notificationService.setMapOpen(false);
       this.notificationService.setOverlayWide(false);
       this.notificationService.setHtmlOpen(false);
-
- 
 
       this.overlayStateChange.emit(false);
       this.sidebarStateChange.emit({
@@ -710,7 +703,6 @@ export class NotificationsComponent
       if (!this.electronSideBar) {
         this.isOverlayMode = true;
       }
- 
     }
 
     this.sidebarStateChange.emit({
@@ -1224,8 +1216,6 @@ export class NotificationsComponent
     this.notificationService.setMapOpen(false);
     this.notificationService.setOverlayWide(false);
     this.notificationService.setHtmlOpen(false);
-
-  
 
     this.overlayStateChange.emit(false);
     this.sidebarStateChange.emit({

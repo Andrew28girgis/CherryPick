@@ -33,12 +33,12 @@
 
 <!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
-   <div id="customToastsuccess" class="custom-toast">
+  <div id="customToastsuccess" class="custom-toast">
     <div class="toast-content">
       <p id="toastMessagesuccess"></p>
     </div>
   </div>
-  <ng-container *ngFor="let shopping of cardsSideList">
+  <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
     <div
       class="cardResponsive"
       *ngIf="shopping.MainImage || shopping.scoreImage"
@@ -779,9 +779,17 @@
                   class="table-text"
                   [innerHTML]="shopping.CenterName | titlecase"
                 ></span>
-                
-                <div class="relativee d-flex justify-content-between flex-row"style="position: relative">
-                  <button class="plus-icon" (click)="InsertAutomation(shopping.Id); $event.stopPropagation()" >
+
+                <div
+                  class="relativee d-flex justify-content-between flex-row"
+                  style="position: relative"
+                >
+                  <button
+                    class="plus-icon"
+                    (click)="
+                      InsertAutomation(shopping.Id); $event.stopPropagation()
+                    "
+                  >
                     <i class="fa-solid fa-plus"></i>
                   </button>
                   <button
