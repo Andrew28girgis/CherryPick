@@ -1,10 +1,29 @@
 export class LandingPlace {
   ShoppingCenter!: ShoppingCenter[]
   OtherPlaces!: OtherPlace[]
-  Place!:OtherPlace[]
-  Contacts!:Contact[]
+   Contacts!:Contact[]
+  CenterAddress!:string
+  CenterName!:string
+  DocsLink!:string
+  SitePlan!:string
   MainImage!:any
+  Place:place[] = []
+  Longitude!:number
+  Latitude!:number
 }
+export interface place{
+  Id: number
+  BuildingSizeSf: number
+  LandSf: any
+  SecondaryType: string
+  ForLeasePrice: any
+  LeaseType: string
+  Suite: string
+  StreetViewURL: any
+  Extras: any
+  Type: any
+}
+
 export interface Contact {
   OrganizationId: number;
   FirstName: string;

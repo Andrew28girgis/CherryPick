@@ -9,18 +9,14 @@
   gap: var(--Space-S-24);
   overflow-y: auto; /* Make only this container scroll */
 }
-.intro-container {
-  margin: 0;
-  padding: 0 40px 34px 40px;
-  width: 100%;
+.intro-container { 
+  padding: 0 40px 34px 40px; 
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: flex-end;
   height: 100%;
-  z-index: 100000;
+  z-index: 10000;
   position: relative;
-  justify-content: space-between;
 }
 
 .map-section {

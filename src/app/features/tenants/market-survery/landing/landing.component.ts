@@ -75,86 +75,7 @@ export class LandingComponent {
     longer: [] as ShoppingCenterTenant[],
   };
   categoryIcons: { [key: string]: string } = {
-    // Transport
-    bus: '🚌',
-    bus_stop: '🚏',
-    stop_position: '🚏',
-    stop_area: '🚏',
-    train: '🚆',
-    railway: '🚆',
-    light_rail: '🚊',
-    bicycle: '🚲',
-    cycleway: '🚴',
-    car: '🚗',
-    car_repair: '🔧',
-    car_parts: '⚙️',
-    car_wash: '🚿',
-    parking_space: '🅿️',
-    fuel: '⛽',
 
-    // Food & Drink
-    fast_food: '🍔',
-    restaurant: '🍽️',
-    cafe: '☕',
-    bar: '🍺',
-    nightclub: '🎶',
-    biergarten: '🍻',
-    bakery: '🥐',
-    food: '🍴', // generic fallback for food if needed
-
-    // Retail & Shopping
-    retail: '🛍️',
-    convenience: '🏪',
-    clothes: '👕',
-     store: '🏬',
-     craft: '🎨',
-    florist: '🌸',
-    furniture: '🛋️',
-    music: '🎵',
-
-    // Services & Facilities
-    bank: '🏦',
-    money_lender: '💰',
-    clinic: '🏥',
-    pharmacy: '💊',
-    beauty: '💄',
-    hairdresser: '💇‍♀️',
-    laundry: '🧺',
-    funeral_directors: '⚰️',
-    social_facility: '🤝',
-    community_centre: '🏢',
-    events_venue: '🎉',
-    ballroom: '💃',
-    theatre: '🎭',
-    cinema: '🎬',
-    studio: '🎙️',
-    office: '🏢',
-    service: '🛠️',
-    industrial: '🏭',
-    printer: '🖨️',
-    printing: '🖨️',
-
-    // Living & Places
-    apartments: '🏢',
-    residential: '🏠',
-    detached: '🏡',
-    terrace: '🏘️',
-    place_of_worship: '⛪',
-    allotments: '🌱',
-    common: '🏞️',
-
-    // Education
-    school: '🏫',
-    university: '🎓',
-
-    // Misc
-    alcohol: '🍷',
-    erotic: '🔞',
-    hackerspace: '💻',
-    yes: '✔️',
-
-    // Fallback
-    unknown: '🏷️',
   };
 
   constructor(
@@ -246,8 +167,11 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.CustomPlace = data.json?.[0] || null;
-   
-
+        this.initializeMap(this.CustomPlace.Latitude, this.CustomPlace.Longitude);
+  this.streetMap(
+        this.CustomPlace.Latitude,
+        this.CustomPlace.Longitude,
+      );
         if (this.ShoppingCenter && this.ShoppingCenter.Images) {
           this.placeImage = this.ShoppingCenter.Images?.split(',').map(
             (link: any) => link.trim()
@@ -265,10 +189,6 @@ export class LandingComponent {
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
-          this.StandAlonePlace = this.CustomPlace?.Place?.[0];
-          this.placeImage = this.StandAlonePlace?.Images?.split(',').map(
-            (link) => link.trim()
-          );
           this.StandAlonePlace?.StreetViewURL
             ? this.changeStreetView(this.StandAlonePlace)
             : this.viewOnStreet();
@@ -494,7 +414,7 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.NearByType = data.json;
-        this.getAllMarker();
+        //this.getAllMarker();
       },
     });
   }
@@ -570,9 +490,13 @@ export class LandingComponent {
   }
 
   addMarkerForPrimaryLocation(map: any) {
-    const primaryLocation = this.ShoppingCenter || this.StandAlonePlace;
-    const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
+    const primaryLocation = this.CustomPlace;
+  
+    
+    
+    const type = this.CustomPlace ? 'Shopping Center' : 'Stand Alone';
     this.createMarker(map, primaryLocation, type);
+
   }
 
   private currentlyOpenInfoWindow: any | null = null;
@@ -588,11 +512,13 @@ export class LandingComponent {
 
   // Method to initialize a marker with custom icon and position
   private initializeMarker(map: any, markerData: any, type: string): any {
-    const icon = this.getIcon(markerData, type);
+    //const icon = this.getIcon(markerData, type);
+      console.log(`777`);
+    console.log(markerData);
     return new google.maps.Marker({
       map,
       position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
-      icon: icon,
+      //icon: icon,
       zIndex: 999999,
     });
   }
@@ -960,7 +886,7 @@ export class LandingComponent {
       : +this.CustomPlace?.OtherPlaces?.[0]?.Pitch;
   }
 
-  streetMap(lat: number, lng: number, heading: number, pitch: number) {
+  streetMap(lat: number, lng: number, heading?: number, pitch?: number) {
     const streetViewElement = document.getElementById('street-view');
     if (streetViewElement) {
       const panorama = new google.maps.StreetViewPanorama(
@@ -1182,7 +1108,7 @@ export class LandingComponent {
 
   getBackgroundImage(): string {
     const imageUrl =
-      this.ShoppingCenter?.MainImage || this.StandAlonePlace?.MainImage;
+      this.CustomPlace?.MainImage || this.StandAlonePlace?.MainImage;
     return imageUrl ? `url(${imageUrl}) no-repeat center center / cover` : '';
   }
 
