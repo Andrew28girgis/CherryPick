@@ -481,13 +481,32 @@ export class LandingComponent {
       : this.StandAlonePlace?.Longitude;
   }
 
-  async initializeMap(lat: number, lon: number): Promise<any> {
-    const { Map } = await google.maps.importLibrary('maps');
-    return new Map(document.getElementById('map') as HTMLElement, {
-      center: { lat: lat || 0, lng: lon || 0 },
-      zoom: 13,
-    });
-  }
+async initializeMap(lat: number, lon: number): Promise<any> {
+  // Use Promise.all to import multiple libraries efficiently
+  const [{ Map }, { AdvancedMarkerElement }] = await Promise.all([
+    google.maps.importLibrary('maps'),
+    google.maps.importLibrary('marker'),
+  ]);
+
+  // Define the position for the map center and marker
+  const position = { lat: lat || 0, lng: lon || 0 };
+
+  const map = new Map(document.getElementById('map') as HTMLElement, {
+    center: position,
+    zoom: 13,
+    // A mapId is required for using Advanced Markers
+    mapId: 'YOUR_MAP_ID', 
+  });
+
+  // Create and add the marker to the map
+  const marker = new AdvancedMarkerElement({
+    map: map,
+    position: position,
+    title: 'This is a marker!',
+  });
+
+  return map;
+}
 
   addMarkerForPrimaryLocation(map: any) {
     const primaryLocation = this.CustomPlace;
