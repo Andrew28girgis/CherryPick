@@ -65,7 +65,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     private genericMapService: GenericMapService,
     private spinner: NgxSpinnerService,
     private changeDetector: ChangeDetectorRef,
-    private refreshService: RefreshService,
+    private refreshService: RefreshService
   ) {
     // Autocomplete pipeline with automatic unsubscribe on destroy
     this.searchInput$
@@ -75,7 +75,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
           this.isLoadingSuggestions = true;
           this.showSuggestions = true;
           this.searchResults = [];
-          this.mark();
+          this.changeDetector.markForCheck();
         }),
         switchMap((term) => this.fetchAutocompleteResults(term)),
         takeUntil(this.destroy$)
@@ -84,12 +84,11 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
         this.isLoadingSuggestions = false;
         this.searchResults = items;
         this.showSuggestions = true;
-        this.mark();
+        this.changeDetector.markForCheck();
       });
-      this.refreshService.triggerPolygonSave$.subscribe((tenantName) => {
-         this.onSaveLocationCriteria(tenantName);
-      });
-    
+    this.refreshService.triggerPolygonSave$.subscribe((tenantName) => {
+      this.onSaveLocationCriteria(tenantName);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -112,7 +111,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     if (trimmed.length < this.minSearchLength) {
       this.searchResults = [];
       this.showSuggestions = false;
-      this.mark();
+      this.changeDetector.markForCheck();
       return;
     }
     this.searchInput$.next(trimmed);
@@ -128,7 +127,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     } else {
       this.selectedItems.push({ ...item });
     }
-    this.mark;
+    this.changeDetector.markForCheck();
   }
 
   isSelected(item: SearchItem) {
@@ -164,11 +163,10 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
           );
           if (featureId != null) {
             this.mapFeatureIdByItemKey.set(itemKey, featureId);
-            this.mark();
+            this.changeDetector.markForCheck();
             return;
           }
-        } catch (err) {
-         }
+        } catch (err) {}
       }
 
       const geometrySrc = item.raw?.json ?? item.raw?.geometry ?? item.raw;
@@ -179,7 +177,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
           item.name ?? undefined
         );
         this.mapFeatureIdByItemKey.set(itemKey, tempId);
-        this.mark();
+        this.changeDetector.markForCheck();
         return;
       }
 
@@ -204,16 +202,17 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       this.areItemsEquivalent(selected, item)
     );
     if (index >= 0) this.selectedItems.splice(index, 1);
-    this.mark();
+    this.changeDetector.markForCheck();
   }
 
   onSaveLocationCriteria(tenantName: any) {
-   
     if (!this.selectedItems.length) {
-       this.saveLocationCriteria.emit(`Tenant Name:${tenantName}\n(No location criteria selected)\n`);
+      this.saveLocationCriteria.emit(
+        `Tenant Name:${tenantName}\n(No location criteria selected)\n`
+      );
       return;
     }
-  
+
     const rows = this.selectedItems.map((it) => {
       const raw = it.raw ?? {};
       const isNeighborhood = it.type === 'neighborhood';
@@ -227,18 +226,15 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
         .map((v) => (v == null || v === '' ? 'null' : String(v)))
         .join(', ');
     });
-  
+
     const header = `Tenant Name:${tenantName} Location Criteria\nId,NeighborhoodName,CityName,StateCode,StateName\n`;
     const body = rows.join('\n') + '\n';
-  
-   
+
     this.refreshService.sendPolygonSavedData(header + body);
   }
   public triggerSave(tenantName: string) {
     this.onSaveLocationCriteria(tenantName);
   }
-  
-  
 
   private areItemsEquivalent(a: SearchItem, b: SearchItem) {
     if (a.type !== b.type) return false;
@@ -410,9 +406,5 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       .replace(/\s+/g, '_')
       .replace(/[^a-zA-Z0-9_\-:]/g, '');
     return `chk-${item.type}-${item.id ?? namePart}`;
-  }
-
-  private mark() {
-    this.changeDetector.markForCheck();
   }
 }
