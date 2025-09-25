@@ -68,9 +68,7 @@
                       >
                         <img
                           loading="lazy"
-                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                            branch.OrganizationId
-                          }}"
+                          [src]="CustomPlace.MainImage"
                           alt=""
                           title="{{ branch.RelationOrganization[0].Name }}"
                           class="RelationOrganization"
@@ -318,8 +316,10 @@
         </ng-container>
       </section>
     </div>
-    <div class="contacts-wrapper d-flex justify-content-between gap-4 flex-column py-2"  *ngIf="hasContacts()"
-      >
+    <div
+      class="contacts-wrapper d-flex justify-content-between gap-4 flex-column py-2"
+      *ngIf="hasContacts()"
+    >
       <div>
         <div class="contact-container">
           <ng-container *ngFor="let Manager of CustomPlace.Contacts">
@@ -328,13 +328,19 @@
                 <div class="org-logo placeholder">
                   {{ getInitials(Manager.FirstName, Manager.LastName) }}
                 </div>
-    
+
                 <div class="user-info">
                   <h3 class="user-name m-0">
-                    <span class="name">{{ Manager.FirstName + " " + Manager.LastName }}</span>
+                    <span class="name">{{
+                      Manager.FirstName + " " + Manager.LastName
+                    }}</span>
                   </h3>
-    
-                  <p class="user-email email-link" *ngIf="Manager.Email" [attr.data-email]="Manager.Email">
+
+                  <p
+                    class="user-email email-link"
+                    *ngIf="Manager.Email"
+                    [attr.data-email]="Manager.Email"
+                  >
                     <i class="fa-regular fa-envelope"></i>
                     {{ Manager.Email }}
                   </p>
@@ -345,7 +351,6 @@
         </div>
       </div>
     </div>
-    
 
     <div class="row py-4">
       <!-- very short -->

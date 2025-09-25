@@ -3,6 +3,7 @@ export class LandingPlace {
   OtherPlaces!: OtherPlace[]
   Place!:OtherPlace[]
   Contacts!:Contact[]
+  MainImage!:any
 }
 export interface Contact {
   OrganizationId: number;
