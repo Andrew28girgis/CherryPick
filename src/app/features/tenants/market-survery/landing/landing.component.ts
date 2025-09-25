@@ -1298,5 +1298,9 @@ export class LandingComponent {
     return this.categoryIcons['unknown'];
   }
   
-  
+  hasContacts(): boolean {
+    return !!this.CustomPlace?.Contacts?.some(
+      c => c.FirstName || c.LastName || c.Email
+    );
+  }
 }

@@ -318,7 +318,8 @@
         </ng-container>
       </section>
     </div>
-    <div class="contacts-wrapper d-flex justify-content-between gap-4 flex-column py-2">
+    <div class="contacts-wrapper d-flex justify-content-between gap-4 flex-column py-2"  *ngIf="hasContacts()"
+      >
       <div>
         <div class="contact-container">
           <ng-container *ngFor="let Manager of CustomPlace.Contacts">
