@@ -1010,15 +1010,15 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
-  deleteAutomation() {
-    const body: any = {
-      Name: 'DeleteAllWorkflowTriggers',
-      Params: {},
-    };
-    this.placesService.GenericAPI(body).subscribe({
-      next:()=> {
-        this.showToast("Automation Workflows Deleted")
-      },
-    });
-  }
+  // deleteAutomation() {
+  //   const body: any = {
+  //     Name: 'DeleteAllWorkflowTriggers',
+  //     Params: {},
+  //   };
+  //   this.placesService.GenericAPI(body).subscribe({
+  //     next:()=> {
+  //       this.showToast("Automation Workflows Deleted")
+  //     },
+  //   });
+  // }
 }
