@@ -97,6 +97,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   score: any;
   isLoadingInfo = false;
   showSaveToast: any;
+  rotatingId: number | null = null;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -891,11 +892,24 @@ export class CardViewComponent implements OnInit, OnDestroy {
     return this.cardsSideList?.some((sc) => !sc.MainImage) ?? false;
   }
 
-  InsertAutomation(id: any) {
+  InsertAutomation(id: any, reload?: any) {
+    if (reload) {
+      this.rotatingId = id;
+      setTimeout(() => {
+        this.rotatingId = null;
+      }, 1200);
+    }
+
     this.placesService.InsertAutomation(id).subscribe({
       next: () => {
-        this.showToast("Automation Started")
-      },
+        if (!reload) {
+        this.showToast('Automation Started');
+        }
+        else{
+          this.showToast('Automation is running again');
+
+        }
+       },
     });
   }
   showToast(message: string) {

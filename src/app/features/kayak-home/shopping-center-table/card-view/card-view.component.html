@@ -66,8 +66,9 @@
         />
         <button
         class="plus-icon reload"
+        [ngClass]="{ rotate: rotatingId === shopping.Id }"
         (click)="
-          InsertAutomation(shopping.Id); $event.stopPropagation()
+          InsertAutomation(shopping.Id,1); $event.stopPropagation()
         "
       >
       <svg
