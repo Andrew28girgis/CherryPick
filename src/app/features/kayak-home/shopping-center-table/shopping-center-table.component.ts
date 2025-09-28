@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
   TemplateRef,
   ElementRef,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import { MapViewComponent } from './map-view/map-view.component';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -237,8 +237,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.tenantImageUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${this.OrgId}`;
       }
 
-        // this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
-      
+      // this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
     });
     this.GetCREUrls();
 
@@ -286,7 +285,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
- 
+
     // this.subscriptions.add(
     //   this.shoppingCenterService.reloadShoppingCenters$.subscribe(
     //     (shouldReload) => {
@@ -297,8 +296,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     //     }
     //   )
     // );
-    
- this.intervalId = setInterval(() => {
+
+    this.intervalId = setInterval(() => {
       this.shoppingCenterService.loadShoppingCenters(this.CampaignId);
     }, 3000);
   }
@@ -595,7 +594,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      if (this.intervalId) {
+    if (this.intervalId) {
       clearInterval(this.intervalId);
     }
     this.shoppingCenterService.resetSelectedStageId();
@@ -840,21 +839,18 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       Name: 'GetCREUrls',
       Params: { CampaignId: this.CampaignId },
     };
-
     this.placesService.GenericAPI(body).subscribe({
       next: (response) => {
         const list = response?.json ?? [];
         this.urls = Array.isArray(list) ? list : [];
         this.cdr.detectChanges();
-
         if (this.urls.length > 0) {
-          this.stopUrlsPolling(); // we have data → stop
+          this.stopUrlsPolling();
         } else {
-          this.startUrlsPolling(); // 👈 empty → begin polling
+          this.startUrlsPolling();
         }
       },
       error: () => {
-        // If the first call fails, still try polling (network hiccup, backend warming up, etc.)
         this.startUrlsPolling();
       },
     });
@@ -992,7 +988,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     const url = this.buildSearchUrl(website, this.searchTerm);
     this.openLikeCard(url);
   }
-
 
   scoringColorClass(i: number): string {
     return ['score-low', 'score-mid', 'score-high'][i] || 'score-low';
