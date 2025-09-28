@@ -97,7 +97,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   score: any;
   isLoadingInfo = false;
   showSaveToast: any;
-  rotatingId: number | null = null;
+  rotatingKeys: { [id: number]: number } = {};
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -894,11 +894,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   InsertAutomation(id: any, reload?: any) {
     if (reload) {
-      this.rotatingId = id;
+       this.rotatingKeys[id] = (this.rotatingKeys[id] || 0) + 1;
+  
       setTimeout(() => {
-        this.rotatingId = null;
+        this.rotatingKeys[id] = 0; 
       }, 1200);
     }
+  
 
     this.placesService.InsertAutomation(id).subscribe({
       next: () => {
