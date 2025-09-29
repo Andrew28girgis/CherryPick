@@ -250,6 +250,7 @@ export class LandingComponent {
       title: 'Location Marker',
     });
   }
+
   goBack() {
     window.history.back();
   }
