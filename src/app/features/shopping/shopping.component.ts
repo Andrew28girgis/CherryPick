@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { HttpClient } from '@angular/common/http';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -6,6 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component'; // Adjust path as needed
 import { ShoppingCenter } from 'src/app/shared/models/shopping';
 import { Router } from '@angular/router';
+import { ICampaign } from 'src/app/shared/models/icampaign';
 
 @Component({
   selector: 'app-shopping',
@@ -50,6 +57,9 @@ export class ShoppingComponent implements OnInit {
   isLoading: boolean = true;
   openMenuId: number | null = null;
   viewMode: 'grid' | 'table' = 'grid'; // default
+  campaigns: ICampaign[] = [];
+  selectedCampaign!: ICampaign;
+  currentCenterId!: number;
 
   constructor(
     private placesService: PlacesService,
@@ -346,9 +356,54 @@ export class ShoppingComponent implements OnInit {
   }
 
   onRowNavigate(center: any, event?: MouseEvent) {
-    // avoid navigating when the 3-dots menu gets clicked
-    if (event) event.stopPropagation();
-    // same route you already use in the card view
-    this.router.navigate(['/landing', 0, center?.scId, center.campaignId]);
+     if (event) event.stopPropagation();
+     this.router.navigate(['/landing', 0, center?.scId, center.campaignId]);
+  }
+  addCenter(shoppingCenterId: number, campaignId: number) {
+    const body: any = {
+      Name: 'InsertSCToMSSC',
+      Params: { ShoppingCenterId: shoppingCenterId, CampaignId: campaignId },
+    };
+    this.placesService.GenericAPI(body).subscribe({});
+  }
+
+  openCampaignModal(content: TemplateRef<any>, centerId: number): void {
+    this.currentCenterId = centerId;
+
+    this.getAllCampaigns();
+
+    this.modalService.open(content, {
+      size: 'lg',
+    });
+  }
+
+  getAllCampaigns(): void {
+    const body: any = {
+      Name: 'GetUserCampaigns',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        if (response.json && response.json.length > 0) {
+          this.campaigns = response.json as ICampaign[];
+        } else {
+          this.campaigns = [];
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load campaigns', err);
+        this.campaigns = [];
+      },
+    });
+  }
+  goToAddCampaign(): void {
+    this.modalService.dismissAll();
+    this.router.navigate(['/campaigns'], {
+      queryParams: { openAdd: true },
+    });
+  }
+  trackByCenterId(index: number, center: any): number {
+    return center?.id || index;
   }
 }

@@ -33,7 +33,7 @@
 .dropdown-options {
   position: absolute;
   top: 100%;
-  left: 9px;
+  right: 10%;
   width: 100%;
   max-height: 200px;
   overflow-y: hidden;
@@ -908,6 +908,17 @@ label {
   white-space: nowrap;
   font-size: 14px;
 }
+.delete-badge{
+  background-color: #fdecea;   /* very light red (almost white) */
+  color: #d32f2f;              /* material red-700 */
+  top: -15px;
+  right: 12px;
+transition: all 0.3s ease;
+}
+.delete-badge:hover {
+  background-color: #f9c4c4;   /* slightly darker red on hover */
+  cursor: pointer;
+}
 
 .table-responsive {
   max-height: 600px;
@@ -1296,9 +1307,94 @@ table tbody td {
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(720deg);  
+    transform: rotate(720deg);
   }
 }
 .rotate {
-  animation: spin 1.2s linear; 
+  animation: spin 1.2s linear;
+}
+.card-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.menu-btn {
+  border: none;
+  border-radius: var(--Radius-R-16);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 1);
+}
+.menu-wrapper,
+.menu-wrapper * {
+  pointer-events: auto;
+}
+
+.menu-wrapper {
+  position: relative;
+  z-index: 3;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+}
+.menu-table {
+  position: absolute;
+  top: -30px;
+  right: 30px;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+}
+.menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-item:hover {
+  background: #f5f5f7;
+}
+
+.click-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+}
+.card-click-area.click-disabled {
+  pointer-events: none;
 }

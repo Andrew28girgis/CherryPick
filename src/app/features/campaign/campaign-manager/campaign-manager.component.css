@@ -1208,3 +1208,216 @@
     transform: scale(1);
   }
 }
+
+.card-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.menu-btn {
+  border: none;
+  border-radius: var(--Radius-R-16);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 1);
+}
+.menu-wrapper,
+.menu-wrapper * {
+  pointer-events: auto;
+}
+
+.menu-wrapper {
+  position: relative;
+  z-index: 3;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+}
+.menu-table {
+  position: absolute;
+  top: -30px;
+  right: 30px;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+}
+.menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-item:hover {
+  background: #f5f5f7;
+}
+
+.click-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+}
+.card-click-area.click-disabled {
+  pointer-events: none;
+}
+
+.modal-header {
+  background: var(--Colors-Primary-light);
+  border-bottom: 1px solid var(--Colors-Primary-500);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: center;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--Colors-Primary-500);
+  margin: 0;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.btn-close:hover {
+  opacity: 1;
+}
+
+.popup-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.popup-body section {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.popup-body h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--Colors-Primary-500);
+  margin-bottom: 0.75rem;
+}
+.pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+.pill-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0.3rem;
+  color: #374151; /* adjust to theme */
+}
+
+.data-pill {
+  display: inline-block;
+  background: var(--Colors-Primary-light);
+  color: var(--app-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  margin: 0.2rem 0.2rem 0 0;
+  white-space: normal;
+  word-break: break-word;
+  max-width: 100%;
+  line-height: 1.3;
+  transition: background 0.2s ease-in-out;
+}
+.country {
+  background: var(--Colors-Primary-500);
+  color: #fff;
+}
+.popup-body ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.popup-body ul li {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #374151;
+  transition: all 0.2s ease-in-out;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+  display: flex;
+  justify-content: flex-end;
+  border-radius: 0 0 8px 8px;
+}
+
+.btn-custom {
+  background: var(--Colors-Primary-500);
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+
+ .btn-custom:hover {
+  background: var(--Colors-Primary-hover);
+  }
+
+ 

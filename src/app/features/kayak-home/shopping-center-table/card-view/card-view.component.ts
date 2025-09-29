@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
- import {
+import {
   Center,
   SentMails,
   Stage,
@@ -42,7 +42,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   BuyBoxId!: any;
   orgId!: any;
   mapViewOnePlacex = false;
-   shoppingCenters: Center[] = [];
+  shoppingCenters: Center[] = [];
   shoppingCenter: any;
   buyboxPlaces: BbPlace[] = [];
   savedMapView: any;
@@ -85,8 +85,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   imageLoadingStates: { [key: number]: boolean } = {};
   imageErrorStates: { [key: number]: boolean } = {};
-  cId!: number;
-  orgName!: string;
+   orgName!: string;
 
   @ViewChild('addContact') addContactModal!: TemplateRef<any>;
   selectedShoppingCenterId: any;
@@ -96,6 +95,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   isLoadingInfo = false;
   showSaveToast: any;
   rotatingKeys: { [id: number]: number } = {};
+  openMenuId: number | null = null;
+  openStageId: number | null = null;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -131,7 +132,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.BuyBoxId = params.buyboxid;
       this.orgId = +params.orgId;
       this.Campaign = params.campaign;
-      this.cId = params.campaignId;
+      this.CampaignId = params.campaignId;
       this.orgName = params.orgName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.orgId);
@@ -171,17 +172,22 @@ export class CardViewComponent implements OnInit, OnDestroy {
       })
     );
 
-  
-
- 
-
     this.subscriptions.push(
-      this.viewManagerService.kanbanStages$.subscribe((stages) => {
-        this.KanbanStages = stages;
-        this.cdr.markForCheck();
+      this.viewManagerService.kanbanStages$.subscribe({
+        next: (stages) => {
+          if (stages && Array.isArray(stages)) {
+            this.KanbanStages = [...stages]; // Create a new array reference
+            console.log('Component received stages:', this.KanbanStages);
+            this.cdr.markForCheck(); // Force change detection
+          }
+        },
+        error: (err) => {
+          console.error('Error in kanban stages subscription:', err);
+          this.KanbanStages = [];
+          this.cdr.markForCheck();
+        },
       })
     );
-
     this.subscriptions.push(
       this.viewManagerService.selectedId$.subscribe((id) => {
         this.selectedId = id;
@@ -205,32 +211,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
-  toggleDropdown(place: any, event?: MouseEvent): void {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    if (this.isUpdatingStage) {
-      return;
-    }
-
-    // Close any open ellipsis menu first
-    if (this.selectedIdCard !== null) {
-      this.viewManagerService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-
-    this.cardsSideList.forEach((p) => {
-      if (p.Id !== place.Id) {
-        p.isDropdownOpen = false;
-      }
-    });
-
-    place.isDropdownOpen = !place.isDropdownOpen;
-    this.activeDropdownId = place.isDropdownOpen ? place.Id : null;
   }
 
   /**
@@ -318,55 +298,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles clicks on the image area
-   * Closes both dropdown and ellipsis menu if they're open
-   */
-  handleImageClick(event: MouseEvent): void {
-    // Prevent default navigation
-    event.preventDefault();
-    event.stopPropagation();
-
-    // Close all dropdowns
-    if (this.activeDropdownId) {
-      this.cardsSideList.forEach((place) => {
-        place.isDropdownOpen = false;
-      });
-      this.activeDropdownId = null;
-    }
-
-    // Close ellipsis menu if open
-    if (this.selectedIdCard !== null) {
-      this.viewManagerService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-  }
-
-  /**
-   * Handles clicks on the ellipsis icon when a dropdown is open
-   * This ensures the dropdown closes when clicking on the ellipsis
-   */
-  handleEllipsisClick(event: MouseEvent): void {
-    // Prevent default actions
-    event.preventDefault();
-    event.stopPropagation();
-
-    // Close all dropdowns
-    this.cardsSideList.forEach((place) => {
-      place.isDropdownOpen = false;
-    });
-    this.activeDropdownId = null;
-
-    // After closing the dropdown, open the ellipsis menu
-    const target = event.currentTarget as HTMLElement;
-    const placeId = this.findPlaceIdFromElement(target);
-    if (placeId) {
-      setTimeout(() => {
-        this.toggleShortcutsCard(placeId, event);
-      }, 10);
-    }
-  }
-
-  /**
    * Helper method to find the place ID from a clicked element
    */
   private findPlaceIdFromElement(element: HTMLElement): number | null {
@@ -393,10 +324,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       lng
     );
   }
-
- 
-
- 
 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
@@ -457,9 +384,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     navigator.clipboard.writeText(link);
   }
 
- 
-
- 
   outsideClickHandler = (event: Event): void => {
     const targetElement = event.target as HTMLElement;
     const isInside = targetElement.closest(
@@ -471,22 +395,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       document.removeEventListener('click', this.outsideClickHandler);
     }
   };
-
-  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
-    event?.stopPropagation();
-
-    if (this.selectedIdCard === id) {
-      this.viewManagerService.setSelectedIdCard(null);
-     } else {
-      this.viewManagerService.setSelectedIdCard(id);
-      setTimeout(() => {
-       });
-    }
-  }
-
-  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    this.viewManagerService.toggleShortcuts(id, close, event);
-  }
 
   getSelectedStageName(stageId: number): string {
     return this.viewManagerService.getSelectedStageName(stageId);
@@ -851,24 +759,21 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   InsertAutomation(id: any, reload?: any) {
     if (reload) {
-       this.rotatingKeys[id] = (this.rotatingKeys[id] || 0) + 1;
-  
+      this.rotatingKeys[id] = (this.rotatingKeys[id] || 0) + 1;
+
       setTimeout(() => {
-        this.rotatingKeys[id] = 0; 
+        this.rotatingKeys[id] = 0;
       }, 1200);
     }
-  
 
     this.placesService.InsertAutomation(id).subscribe({
       next: () => {
         if (!reload) {
-        this.showToast('Automation Started');
-        }
-        else{
+          this.showToast('Automation Started');
+        } else {
           this.showToast('Automation is running again');
-
         }
-       },
+      },
     });
   }
   showToast(message: string) {
@@ -883,5 +788,36 @@ export class CardViewComponent implements OnInit, OnDestroy {
     } else {
       console.warn('Toast elements not found in DOM.');
     }
+  }
+  toggleMenu(Id: number, event: MouseEvent, stage?: boolean) {
+    event.stopPropagation();
+    if (!stage) {
+      this.openMenuId = this.openMenuId === Id ? null : Id;
+    }
+    if (stage) {
+      this.openStageId = this.openStageId === Id ? null : Id;
+    }
+  }
+
+  closeMenu() {
+    this.openMenuId = null;
+    this.openStageId = null;
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(_event: MouseEvent) {
+    if (this.openMenuId !== null || this.openStageId !== null) {
+      this.closeMenu();
+    }
+  }
+  deleteCenter(shoppingCenterId: number) {
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromMSSC',
+      Params: { CampaignId: this.CampaignId, ShoppingCenterId: shoppingCenterId },
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.viewManagerService.loadShoppingCenters(this.CampaignId);
+      },
+    });
   }
 }

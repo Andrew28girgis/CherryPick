@@ -21,12 +21,13 @@ import {
   Submission,
 } from 'src/app/shared/models/icampaign';
 import { EmilyService } from 'src/app/core/services/emily.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AddCampaignPopupComponent } from '../add-campaign-popup/add-campaign-popup.component';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { Tenant } from 'src/app/shared/models/tenant';
 import { PolygonsComponent } from '../../polygons/polygons.component';
+import { CampaignSpecs } from 'src/app/shared/models/campaignSpecs';
 @Component({
   selector: 'app-campaign-manager',
   templateUrl: './campaign-manager.component.html',
@@ -42,6 +43,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   @Input() forceReload: boolean = false;
   tempTenant: any;
   tempTenantId: any;
+  specs: any;
+  campaignlogo: any;
   @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
@@ -86,6 +89,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   private tenantModal!: TemplateRef<any>;
   private createTenantModalRef?: NgbModalRef;
   private logoInterval: any;
+  openMenuId: number | null = null;
+  @ViewChild('campaignDetails') campaignDetailsTpl!: TemplateRef<any>;
+  @ViewChild('addCampaign', { static: true }) addCampaignTpl!: TemplateRef<any>;
+  selectedCampaign!: CampaignSpecs;
 
   constructor(
     private placesService: PlacesService,
@@ -93,10 +100,24 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['openAdd']) {
+        this.openAddCampaign(this.addCampaignTpl);
+
+        // Clean query params after opening modal
+        this.router.navigate([], {
+          queryParams: { openAdd: null },
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        });
+      }
+    });
+
     this.getAllCampaigns();
     this.refreshService.refreshOrganizations$.subscribe(() => {
       this.getAllCampaigns();
@@ -517,5 +538,77 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   markChanged(campaign: ICampaign) {
     campaign.changed = true;
     setTimeout(() => (campaign.changed = false), 600);
+  }
+  toggleMenu(scId: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === scId ? null : scId;
+  }
+
+  closeMenu() {
+    this.openMenuId = null;
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(_event: MouseEvent) {
+    if (this.openMenuId !== null) {
+      this.closeMenu();
+    }
+  }
+  viewSpecs(campaign: any) {
+    const body: any = {
+      Name: 'GetCampaignDetailsJSON',
+      Params: { CampaignId: campaign.Id },
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        this.selectedCampaign = JSON.parse(
+          response.json[0].campaignDetailsJSON
+        );
+        this.campaignlogo = campaign.logoUrl;
+
+        this.modalService.open(this.campaignDetailsTpl, { size: 'lg' });
+      },
+    });
+  }
+  deleteCampaign(campaignId: number) {
+    const body: any = {
+      Name: 'DeleteCampaign',
+      Params: { CampaignId: campaignId },
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.getAllCampaigns();
+      },
+    });
+  }
+  getArrayFromValue(value: string | string[] | null | undefined): string[] {
+    if (!value) return [];
+    if (Array.isArray(value)) {
+      return value.map((v) => v.trim());
+    }
+    return value.split(',').map((v) => v.trim());
+  }
+  editCampaign(campaign: any) {
+    const body: any = {
+      Name: 'GetCampaignDetailsJSON',
+      Params: { CampaignId: campaign.Id },
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        this.selectedCampaign = JSON.parse(
+          response.json[0].campaignDetailsJSON
+        );
+        this.placesService
+          .sendmessages({
+            Chat: `i want to edit this campaign 
+            Campaign ID: ${campaign.Id}
+            Campaign Json Details: ${response.json[0].campaignDetailsJSON} `,
+            NeedToSaveIt: true,
+          })
+          .subscribe({});
+          this.notificationService.sendmessage('Edit this Campaign');
+      },
+    });
   }
 }

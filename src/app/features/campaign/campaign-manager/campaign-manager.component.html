@@ -201,7 +201,69 @@
       <ng-container
         *ngFor="let campaign of filteredCampaigns; let index = index"
       >
-        <div class="dashboard-card" [class.changed]="campaign.changed">
+        <div
+          class="dashboard-card"
+          [class.click-disabled]="openMenuId === campaign.Id"
+          [class.changed]="campaign.changed"
+        >
+          <div class="card-overlay">
+            <div class="menu-wrapper" (click)="$event.stopPropagation()">
+              <button
+                class="menu-btn"
+                (click)="toggleMenu(campaign.Id, $event)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
+                  <path
+                    d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
+                    fill="#18171F"
+                    stroke="#18171F"
+                  />
+                  <path
+                    d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
+                    fill="#18171F"
+                  />
+                  <path
+                    d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
+                    fill="#18171F"
+                  />
+                </svg>
+              </button>
+
+              <!-- DROPDOWN -->
+              <div class="menu-dropdown" *ngIf="openMenuId === campaign.Id">
+                <button
+                  class="menu-item"
+                  (click)="viewSpecs(campaign); closeMenu()"
+                >
+                  View Specs
+                </button>
+                <button
+                  class="menu-item"
+                  (click)="deleteCampaign(campaign.Id); closeMenu()"
+                >
+                  Delete Campaign
+                </button>
+                <button
+                  class="menu-item"
+                  (click)="editCampaign(campaign); closeMenu()"
+                >
+                  Edit Campaign
+                </button>
+              </div>
+            </div>
+            <div
+              class="click-shield"
+              *ngIf="openMenuId === campaign.Id"
+              (click)="closeMenu()"
+            ></div>
+          </div>
+
           <div
             class="card-badge date-flag"
             [attr.aria-label]="campaign.CreatedDate | date : 'MMMM d, y'"
@@ -255,7 +317,7 @@
               </a>
             </div>
 
-            <div
+            <!-- <div
               class="privacy-badge"
               [ngClass]="{
                 'privacy-public': campaign.CampaignPrivacy == 0,
@@ -266,7 +328,7 @@
               <span>{{
                 campaign.CampaignPrivacy == 0 ? "Public" : "Private"
               }}</span>
-            </div>
+            </div> -->
           </div>
 
           <div class="card-metrics">
@@ -284,7 +346,7 @@
                   : null
               "
             >
-              <div class="metric-value"  [class.changed]="campaign.changed">
+              <div class="metric-value" [class.changed]="campaign.changed">
                 <span>{{ campaign.Sites }}</span>
                 <svg
                   *ngIf="campaign.Sites"
@@ -585,7 +647,7 @@
 <ng-template #addCampaign let-modal>
   <div class="modal-header d-flex justify-content-between align-items-center">
     <h4 class="modal-title mb-0">Add Campaign</h4>
-  
+
     <div class="selected-tenant-header mx-3" *ngIf="selectedTenant">
       <ng-container *ngIf="selectedTenant.logoUrl; else logoPlaceholder">
         <img
@@ -599,12 +661,12 @@
           {{ getInitials(selectedTenant.name) }}
         </div>
       </ng-template>
-  
+
       <span class="tenant-name">
         {{ selectedTenant.name }}
       </span>
     </div>
-  
+
     <button
       type="button"
       class="btn-close"
@@ -612,7 +674,6 @@
       (click)="modal.dismiss()"
     ></button>
   </div>
-  
 
   <div class="modal-body">
     <!-- Stepper -->
@@ -675,7 +736,6 @@
 
     <!-- Step 2: Polygons -->
     <div *ngIf="step === 'polygon'">
-   
       <app-polygons
         *ngIf="polygonsStep"
         (saveLocationCriteria)="handleSave($event)"
@@ -810,4 +870,185 @@
       <span class="add-tenant-text">Add Tenant</span>
     </button>
   </div>
+</ng-template>
+
+<ng-template #campaignDetails let-modal>
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <div class="d-flex align-items-center flex-row gap-2"> 
+     <ng-container *ngIf="campaignlogo; else logoPlaceholder">
+      <img
+        [src]="campaignlogo"
+        class="tenant-logo"
+        style="width: 50px; height: 50px"
+        crossorigin="anonymous"
+      />
+    </ng-container>
+    <ng-template #logoPlaceholder>
+      <div class="tenant-logo placeholder">
+        {{ getInitials(selectedCampaign.campaignName || "") }}
+      </div>
+    </ng-template>
+    <h4 class="modal-title">
+      {{ selectedCampaign.campaignName ?? "Campaign" }}
+    </h4>
+    </div>
+    <button class="btn btn-primary btn-custom" (click)="modal.close()">
+      X
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body popup-body">
+    <!-- Client Info -->
+    <section *ngIf="selectedCampaign?.client">
+      <h5>Client Info</h5>
+      <div class="pills-container">
+        <span *ngIf="selectedCampaign.client?.clientName" class="data-pill">
+          Name: {{ selectedCampaign.client?.clientName }}
+        </span>
+        <span *ngIf="selectedCampaign.client?.company" class="data-pill">
+          Company: {{ selectedCampaign.client?.company }}
+        </span>
+      </div>
+    </section>
+
+    <!-- Site Details -->
+    <section
+      *ngIf="
+        selectedCampaign?.siteType ||
+        selectedCampaign?.secondaryType ||
+        selectedCampaign?.placementType
+      "
+    >
+      <h5>Site Details</h5>
+
+      <!-- Site Type -->
+      <div *ngIf="selectedCampaign?.siteType">
+        <div class="pill-label">Type:</div>
+        <div class="pills-container">
+          <ng-container
+            *ngFor="let type of getArrayFromValue(selectedCampaign?.siteType)"
+          >
+            <span class="data-pill">{{ type }}</span>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Secondary Type -->
+      <div *ngIf="selectedCampaign?.secondaryType">
+        <div class="pill-label">Secondary:</div>
+        <div class="pills-container">
+          <ng-container
+            *ngFor="
+              let sec of getArrayFromValue(selectedCampaign?.secondaryType)
+            "
+          >
+            <span class="data-pill">{{ sec }}</span>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Placement Type -->
+      <div *ngIf="selectedCampaign?.placementType">
+        <div class="pill-label">Placement:</div>
+        <div class="pills-container">
+          <ng-container
+            *ngFor="
+              let place of getArrayFromValue(selectedCampaign?.placementType)
+            "
+          >
+            <span class="data-pill">{{ place }}</span>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+
+    <!-- Financials -->
+    <section *ngIf="selectedCampaign?.financialCriteria">
+      <h5>Financials</h5>
+      <div class="pills-container">
+        <span
+          *ngIf="
+            selectedCampaign.financialCriteria?.budgetMin !== undefined &&
+            selectedCampaign.financialCriteria?.budgetMax
+          "
+          class="data-pill"
+        >
+          Budget:
+          {{ selectedCampaign.financialCriteria?.budgetMin | currency }} –
+          {{ selectedCampaign.financialCriteria?.budgetMax | currency }}
+        </span>
+        <span
+          *ngIf="selectedCampaign.financialCriteria?.leaseRateMaxPerSqFt"
+          class="data-pill"
+        >
+          Lease Rate Max:
+          {{ selectedCampaign.financialCriteria?.leaseRateMaxPerSqFt }}/sqft
+        </span>
+        <span
+          *ngIf="
+            selectedCampaign.financialCriteria?.purchasePreferred !== undefined
+          "
+          class="data-pill"
+        >
+          Purchase Preferred:
+          {{
+            selectedCampaign.financialCriteria?.purchasePreferred ? "Yes" : "No"
+          }}
+        </span>
+        <span
+          *ngIf="
+            selectedCampaign.financialCriteria?.leasePreferred !== undefined
+          "
+          class="data-pill"
+        >
+          Lease Preferred:
+          {{
+            selectedCampaign.financialCriteria?.leasePreferred ? "Yes" : "No"
+          }}
+        </span>
+      </div>
+    </section>
+
+    <!-- Timing -->
+    <section *ngIf="selectedCampaign?.timing">
+      <h5>Timing</h5>
+      <div class="pills-container">
+        <span *ngIf="selectedCampaign.timing?.requiredBy" class="data-pill">
+          Required By: {{ selectedCampaign.timing?.requiredBy }}
+        </span>
+        <span
+          *ngIf="selectedCampaign.timing?.leaseTermYears !== undefined"
+          class="data-pill"
+        >
+          Lease Term: {{ selectedCampaign.timing?.leaseTermYears }} years
+        </span>
+      </div>
+    </section>
+
+    <!-- Locations -->
+    <section *ngIf="selectedCampaign?.locationCriteria?.locations?.length">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="m-0">Locations</h5>
+        <span
+          *ngIf="selectedCampaign.locationCriteria?.country"
+          class="data-pill country"
+        >
+          Country: {{ selectedCampaign.locationCriteria?.country }}
+        </span>
+      </div>
+      <div class="pills-container">
+        <span
+          *ngFor="let loc of selectedCampaign.locationCriteria?.locations"
+          class="data-pill"
+        >
+          {{ loc.city }}, {{ loc.state }}
+          <span *ngIf="loc.neighborhoodName">({{ loc.neighborhoodName }})</span>
+        </span>
+      </div>
+    </section>
+  </div>
+
+ 
 </ng-template>
