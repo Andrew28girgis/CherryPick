@@ -327,21 +327,7 @@
                             Add Contact
                           </a>
                         </li>
-                        <li *ngIf="place.Deleted == true">
-                          <a
-                            class="target"
-                            (click)="
-                              RestoreShoppingCenter(
-                                place.MarketSurveyId,
-                                place.Deleted,
-                                place.Id
-                              )
-                            "
-                          >
-                            <i class="fa-solid fa-trash-arrow-up emily"></i>
-                            Restore
-                          </a>
-                        </li>
+                        
                       </ul>
                       <i class="fa-solid fa-caret-up"></i>
                     </div>
@@ -436,9 +422,7 @@
                     class="col-12 d-flex flex-column spec"
                   >
                     <div class="d-flex flex-column">
-                      <p class="nearset-category">
-                        <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
-                      </p>
+                  
                       <p>
                         {{ item.RelationOrganizationName }}
                         <!-- <img loading="lazy" 
@@ -735,13 +719,7 @@
         >
           Cancel
         </button>
-        <button
-          type="button"
-          class="btn btn-danger px-4 py-2 btnborder"
-          (click)="deleteShCenter()"
-        >
-          Remove
-        </button>
+       
       </div>
     </div>
   </ng-template>

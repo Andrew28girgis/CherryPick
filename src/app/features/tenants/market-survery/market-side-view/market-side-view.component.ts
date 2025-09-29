@@ -585,10 +585,7 @@ private isCenterVisible(center: any, bounds: any): boolean {
     });
   }
 
-  getNeareastCategoryName(categoryId: number) {
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
-    return categories[0]?.name;
-  }
+ 
   isLast(currentItem: any, array: any[]): boolean {
     return array.indexOf(currentItem) === array.length - 1;
   }

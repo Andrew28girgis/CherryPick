@@ -73,7 +73,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
 
     // Subscribe to data from ViewManagerService
     this.subscribeToServiceData();
-   // this.viewManagerService.initializeData(this.CampaignId, this.OrgId);
+    // this.viewManagerService.initializeData(this.CampaignId, this.OrgId);
   }
   private subscribeToServiceData(): void {
     // Subscribe to data loaded event
@@ -86,33 +86,14 @@ export class MapViewComponent implements OnInit, OnDestroy {
   }
 
   private loadDataFromService(): void {
-    combineLatest([
-      this.viewManagerService.shoppingCenters$,
-      this.viewManagerService.buyboxPlaces$,
-      this.viewManagerService.buyboxCategories$,
-      this.viewManagerService.shareOrg$,
-    ])
+    combineLatest([this.viewManagerService.shoppingCenters$])
       .pipe(take(1))
-      .subscribe(
-        ([shoppingCenters, buyboxPlaces, buyboxCategories, shareOrg]) => {
-          // Get shopping centers from service
-          this.shoppingCenters = shoppingCenters;
-
-          // Get buybox places from service
-          this.buyboxPlaces = buyboxPlaces;
-
-          // Get buybox categories from service
-          this.buyboxCategories = buyboxCategories;
-
-          // Get share org from service
-          this.ShareOrg = shareOrg;
-
-          // After data is loaded, update the map
-          this.getAllMarker();
-        }
-      );
+      .subscribe(([shoppingCenters]) => {
+        // Get shopping centers from service
+        this.shoppingCenters = shoppingCenters;
+        this.getAllMarker();
+      });
   }
-
 
   ngOnDestroy(): void {
     this.clearMarkers();
@@ -134,7 +115,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
-        this.stateService.setShoppingCenters(data.json); 
+        this.stateService.setShoppingCenters(data.json);
         this.getBuyBoxPlaces(this.CampaignId);
       },
     });

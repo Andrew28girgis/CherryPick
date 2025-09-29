@@ -134,10 +134,7 @@ export class MarketTableViewComponent implements OnInit {
       },
     });
   }
-  getNeareastCategoryName(categoryId: number) {
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
-    return categories[0]?.name;
-  }
+ 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',

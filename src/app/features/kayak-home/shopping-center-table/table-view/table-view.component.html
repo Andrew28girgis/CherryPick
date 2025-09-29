@@ -52,18 +52,7 @@
           <th *ngIf="hasAnySizeRange">Size Range</th>
           <!-- <th *ngIf="hasAnyStages">Stage Name</th> -->
           <!-- *ngIf="placesRepresentative" -->
-          <th *ngIf="shoppingCenters[0].ShoppingCenter">
-            <ng-container *ngIf="shoppingCenters[0]?.ShoppingCenter">
-              <th
-                *ngFor="
-                  let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
-                  trackBy: trackByIndex
-                "
-              >
-                {{ getNeareastCategoryName(item.CategoryId) }}
-              </th>
-            </ng-container>
-          </th>
+         
           <!-- <th>Actions</th> -->
         </tr>
       </thead>
@@ -358,21 +347,7 @@
                         Remove Shopping
                       </a>
                     </li> -->
-                        <li *ngIf="shoppingCenter.Deleted == true">
-                          <a
-                            class="target"
-                            (click)="
-                              RestoreShoppingCenter(
-                                shoppingCenter.MarketSurveyId,
-                                shoppingCenter.Deleted
-                              );
-                              toggleShortcuts(shoppingCenter.Id, 'close')
-                            "
-                          >
-                            <i class="fa-solid fa-trash-arrow-up emily"></i>
-                            Restore
-                          </a>
-                        </li>
+                    
                       </ul>
                       <i class="fa-solid fa-caret-right"></i>
                     </div>
@@ -721,13 +696,7 @@
       >
         Cancel
       </button>
-      <button
-        type="button"
-        class="btn btn-danger px-4 py-2 btnborder"
-        (click)="deleteShCenter()"
-      >
-        Remove
-      </button>
+     
     </div>
   </div>
 </ng-template>

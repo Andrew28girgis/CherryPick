@@ -549,10 +549,7 @@ export class SocialMediaViewComponent implements OnInit {
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
 
-  getNeareastCategoryName(categoryId: number) {
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
-    return categories[0]?.name;
-  }
+ 
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
 
