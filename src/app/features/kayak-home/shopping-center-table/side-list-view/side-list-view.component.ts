@@ -199,17 +199,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.subscriptions.push(
-      this.viewManagerService.buyboxCategories$.subscribe((categories) => {
-        this.buyboxCategories = categories;
-      })
-    );
-
-    this.subscriptions.push(
-      this.viewManagerService.buyboxPlaces$.subscribe((places) => {
-        this.buyboxPlaces = places;
-      })
-    );
+ 
 
     this.subscriptions.push(
       this.viewManagerService.kanbanStages$.subscribe((stages) => {
@@ -488,17 +478,10 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  getShoppingCenterUnitSize(shoppingCenter: any): string {
-    return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
-  }
+ 
+ 
 
-  getNeareastCategoryName(categoryId: number): string {
-    return this.viewManagerService.getNearestCategoryName(categoryId);
-  }
-
-  isLast(currentItem: any, array: any[]): boolean {
-    return this.viewManagerService.isLast(currentItem, array);
-  }
+ 
 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
@@ -574,30 +557,9 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  async deleteShCenter() {
-    try {
-      // await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete!)
-      this.modalService.dismissAll();
-    } catch (error) {
-      console.error('Error deleting shopping center:', error);
-    }
-  }
+ 
 
-  async RestoreShoppingCenter(
-    MarketSurveyId: any,
-    Deleted: boolean,
-    placeId: number
-  ) {
-    try {
-      await this.viewManagerService.restoreShoppingCenter(
-        +MarketSurveyId,
-        Deleted
-      );
-      this.toggleShortcuts(placeId, 'close');
-    } catch (error) {
-      console.error('Error restoring shopping center:', error);
-    }
-  }
+ 
 
   outsideClickHandler = (event: Event): void => {
     const targetElement = event.target as HTMLElement;

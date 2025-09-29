@@ -323,10 +323,7 @@ getShoppingCenters(): void {
 
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
-  getNeareastCategoryName(categoryId: number) {
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
-    return categories[0]?.name;
-  }
+ 
   acceptShoppingCenter(shopping: any): void {
     // Toggle selection
     if (this.selectedActionType[shopping.Id] === "accept") {

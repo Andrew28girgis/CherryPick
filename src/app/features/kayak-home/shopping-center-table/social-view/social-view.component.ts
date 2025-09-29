@@ -122,8 +122,7 @@ export class SocialViewComponent implements OnInit, OnDestroy {
 
   // Properties used in subscriptions
   buyboxCategories: BuyboxCategory[] = [];
-  ShareOrg: any = null;
-  buyboxPlaces: any[] = [];
+   buyboxPlaces: any[] = [];
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   mapsLoaded = false;
@@ -182,13 +181,7 @@ export class SocialViewComponent implements OnInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
-    // Subscribe to data from the centralized service
-    this.subscriptions.add(
-      this.shoppingCenterService.isLoading$.subscribe((loading) => {
-        this.isLoading = loading;
-        this.cdr.markForCheck();
-      })
-    );
+ 
 
     this.subscriptions.add(
       this.shoppingCenterService.shoppingCenters$.subscribe((centers) => {
@@ -197,26 +190,9 @@ export class SocialViewComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.subscriptions.add(
-      this.shoppingCenterService.buyboxCategories$.subscribe((categories) => {
-        this.buyboxCategories = categories;
-        this.cdr.markForCheck();
-      })
-    );
-
-    this.subscriptions.add(
-      this.shoppingCenterService.shareOrg$.subscribe((org) => {
-        this.ShareOrg = org;
-        this.cdr.markForCheck();
-      })
-    );
-
-    this.subscriptions.add(
-      this.shoppingCenterService.buyboxPlaces$.subscribe((places) => {
-        this.buyboxPlaces = places;
-        this.cdr.markForCheck();
-      })
-    );
+ 
+ 
+ 
 
     this.subscriptions.add(
       this.shoppingCenterService.selectedId$.subscribe((id) => {
@@ -250,10 +226,7 @@ export class SocialViewComponent implements OnInit, OnDestroy {
       clearTimeout(this.heartTimeout);
     }
   }
-
-  getShoppingCenterUnitSize(shoppingCenter: any): string {
-    return this.shoppingCenterService.getShoppingCenterUnitSize(shoppingCenter);
-  }
+ 
 
   toggleCommentsVisibility(shopping: any, event: MouseEvent): void {
     event.stopPropagation();

@@ -102,10 +102,7 @@ export class MarketSurveyComponent implements OnInit {
     window.history.back();
   }
 
-  getNeareastCategoryName(categoryId: number) {
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
-    return categories[0]?.name;
-  }
+ 
   onCheckboxChange(category: BuyboxCategory): void {
     this.markerService.toggleMarkers(this.map, category);
   }

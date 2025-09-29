@@ -11,8 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
-import {
+ import {
   Center,
   SentMails,
   Stage,
@@ -43,8 +42,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   BuyBoxId!: any;
   orgId!: any;
   mapViewOnePlacex = false;
-  buyboxCategories: BuyboxCategory[] = [];
-  shoppingCenters: Center[] = [];
+   shoppingCenters: Center[] = [];
   shoppingCenter: any;
   buyboxPlaces: BbPlace[] = [];
   savedMapView: any;
@@ -173,19 +171,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.subscriptions.push(
-      this.viewManagerService.buyboxCategories$.subscribe((categories) => {
-        this.buyboxCategories = categories;
-        this.cdr.markForCheck();
-      })
-    );
+  
 
-    this.subscriptions.push(
-      this.viewManagerService.buyboxPlaces$.subscribe((places) => {
-        this.buyboxPlaces = places;
-        this.cdr.markForCheck();
-      })
-    );
+ 
 
     this.subscriptions.push(
       this.viewManagerService.kanbanStages$.subscribe((stages) => {
@@ -406,13 +394,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  getNeareastCategoryName(categoryId: number): string {
-    return this.viewManagerService.getNearestCategoryName(categoryId);
-  }
+ 
 
-  isLast(currentItem: any, array: any[]): boolean {
-    return this.viewManagerService.isLast(currentItem, array);
-  }
+ 
 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
@@ -473,34 +457,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
     navigator.clipboard.writeText(link);
   }
 
-  async deleteShCenter() {
-    try {
-      await this.viewManagerService.deleteShoppingCenter(
-        this.BuyBoxId,
-        this.shoppingCenterIdToDelete!
-      );
-      this.modalService.dismissAll();
-    } catch (error) {
-      console.error('Error deleting shopping center:', error);
-    }
-  }
+ 
 
-  async RestoreShoppingCenter(
-    MarketSurveyId: any,
-    Deleted: boolean,
-    placeId: number
-  ) {
-    try {
-      await this.viewManagerService.restoreShoppingCenter(
-        +MarketSurveyId,
-        Deleted
-      );
-      this.toggleShortcuts(placeId, 'close');
-    } catch (error) {
-      console.error('Error restoring shopping center:', error);
-    }
-  }
-
+ 
   outsideClickHandler = (event: Event): void => {
     const targetElement = event.target as HTMLElement;
     const isInside = targetElement.closest(
@@ -518,12 +477,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
     if (this.selectedIdCard === id) {
       this.viewManagerService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandler);
-    } else {
+     } else {
       this.viewManagerService.setSelectedIdCard(id);
       setTimeout(() => {
-        document.addEventListener('click', this.outsideClickHandler);
-      });
+       });
     }
   }
 

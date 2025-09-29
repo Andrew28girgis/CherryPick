@@ -352,9 +352,7 @@ export class NotificationsComponent
                 notification
               );
 
-              // Trigger reload instead of calling initializeData directly
-              this.viewManagerService.triggerReload();
-            } catch (error) {
+             } catch (error) {
               console.error('Error saving shopping center data:', error);
             }
           }

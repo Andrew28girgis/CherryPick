@@ -286,16 +286,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       })
     );
 
-    // this.subscriptions.add(
-    //   this.shoppingCenterService.reloadShoppingCenters$.subscribe(
-    //     (shouldReload) => {
-    //       if (shouldReload) {
-    //         const orgId = Number(localStorage.getItem('OrgId')) || 0;
-    //         this.shoppingCenterService.initializeData(this.CampaignId, orgId);
-    //       }
-    //     }
-    //   )
-    // );
+ 
 
     this.intervalId = setInterval(() => {
       this.shoppingCenterService.loadShoppingCenters(this.CampaignId);
@@ -325,10 +316,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   selectStagekan(stageId: number): void {
-    // Prevent interference from ongoing updates
-    if (this.shoppingCenterService.getCurrentLoadingState()) {
-      return;
-    }
+ 
 
     this.selectedStageId = stageId;
     if (stageId === 0) {
@@ -597,8 +585,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
-    this.shoppingCenterService.resetSelectedStageId();
-    this.subscriptions.unsubscribe();
+     this.subscriptions.unsubscribe();
     this.stopUrlsPolling();
   }
 

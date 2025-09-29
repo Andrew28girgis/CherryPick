@@ -1471,7 +1471,5 @@ export class TenantComponent implements OnInit, AfterViewInit {
       },
     });
   }
-  isLast(currentItem: any, array: any[]): boolean {
-    return this.shoppingCenterService.isLast(currentItem, array);
-  }
+ 
 }
