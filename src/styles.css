@@ -321,6 +321,7 @@ a {
   background: var(--Colors-Primary-500);
   white-space: nowrap;
 }
+
 .g-button:hover {
   background-color: var(--Colors-Primary-hover);
 }

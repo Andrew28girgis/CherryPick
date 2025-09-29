@@ -1,13 +1,7 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="main-container-all">
   <div>
-    <p *ngIf="showAlert" class="alert-container">
-      <ngb-alert [dismissible]="false" class="alert-success">
-        <strong>Thank</strong> you for letting us know.
-      </ngb-alert>
-    </p>
     <i
-      *ngIf="windowHistrony !== 1"
       class="fa-solid fa-arrow-left goback mb-1"
       (click)="goBack()"
     ></i>
@@ -17,15 +11,15 @@
         <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
           <div class="intro-container wow fadeIn">
             <h1
-              *ngIf="CustomPlace?.CenterName"
+              *ngIf="shoppingCenter?.CenterName"
               class="mb-2 pb-0"
-              [innerHTML]="CustomPlace.CenterName | titlecase"
+              [innerHTML]="shoppingCenter.CenterName | titlecase"
             ></h1>
             <p
               class="mb-2 pb-0 address-city"
-              (click)="openMapViewPlace(mapPopup, CustomPlace)"
+              (click)="openMapViewPlace(mapPopup, shoppingCenter)"
             >
-              {{ CustomPlace.CenterAddress }}
+              {{ shoppingCenter.CenterAddress }}
             </p>
             <ng-container>
               <div class="d-flex">
@@ -36,7 +30,7 @@
                     >
                       <img
                         loading="lazy"
-                        [src]="CustomPlace.MainImage"
+                        [src]="shoppingCenter.MainImage"
                         alt=""
                         title="{{ branch.RelationOrganization[0].Name }}"
                         class="RelationOrganization"
@@ -59,8 +53,8 @@
                 <div
                   class="d-flex mx-2"
                   *ngIf="
-                    CustomPlace.OtherPlaces &&
-                    CustomPlace.OtherPlaces.length > 0
+                    shoppingCenter.OtherPlaces &&
+                    shoppingCenter.OtherPlaces.length > 0
                   "
                 >
                   <svg
@@ -98,17 +92,17 @@
 
                   <p class="m-0 px-2">
                     <span class="CustomPlace">{{
-                      CustomPlace.OtherPlaces.length
+                      shoppingCenter.OtherPlaces.length
                     }}</span>
 
                     Available Units
                   </p>
                 </div>
               </div>
-              <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p>
+              <!-- <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p> -->
 
               <div class="d-flex">
-                <div class="pe-2" *ngIf="CustomPlace?.DocsLink">
+                <div class="pe-2" *ngIf="shoppingCenter?.DocsLink">
                   <div>
                     <svg
                       width="24"
@@ -137,13 +131,13 @@
 
                     <a
                       class="info-value text-light px-1"
-                      href="{{ CustomPlace.DocsLink }}"
+                      href="{{ shoppingCenter.DocsLink }}"
                       target="_blank"
                       >Property Docs</a
                     >
                   </div>
                 </div>
-                <div class="pe-2" *ngIf="CustomPlace?.SitePlan">
+                <div class="pe-2" *ngIf="shoppingCenter?.SitePlan">
                   <div>
                     <svg
                       width="24"
@@ -172,7 +166,7 @@
 
                     <a
                       class="info-value text-light px-1"
-                      href="{{ CustomPlace.SitePlan }}"
+                      href="{{ shoppingCenter.SitePlan }}"
                       target="_blank"
                       >View Site Plan</a
                     >
@@ -200,7 +194,7 @@
     >
       <div>
         <div class="contact-container">
-          <ng-container *ngFor="let Manager of CustomPlace.Contacts">
+          <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
             <div class="user-card-wrapper" *ngIf="Manager.FirstName || Manager.LastName">
               <span class="card-badge" *ngIf="Manager.OrganizationName">
                 {{ Manager.OrganizationName }}
@@ -232,7 +226,7 @@
         </div>
       </div>
     </div>
-    <div class="main-section" *ngIf="CustomPlace && CustomPlace.Place.length > 0">
+    <div class="main-section" *ngIf="shoppingCenter && shoppingCenter.Place.length > 0">
       <section id="hero">
         <ng-container>
           <div class="col-md-12">
@@ -248,18 +242,17 @@
                     <th>Lease Price</th> 
                     <th>Unit Size (SF)</th>
                     <th>Secondary Type</th>
-                    <th>Street View</th>
                   </tr>
                 </thead>
                 <tbody class="procpect-table-body">
-                  <ng-container *ngFor="let place of CustomPlace.Place">
+                  <ng-container *ngFor="let place of shoppingCenter.Place">
                     <tr>
                       <td>{{ place.Suite }}</td>
                       <td>
                         {{ place.LeaseType }}
                       </td>
                       <td>
-                        <span *ngIf="place.ForLeasePrice != 'undefined'"
+                        <!-- <span *ngIf="place.ForLeasePrice != 'undefined'"
                           >{{
                             place.ForLeasePrice
                               ? getLeasePriceStandAlone(place)
@@ -268,32 +261,14 @@
                           <p *ngIf="place.ForLeasePrice">
                             ${{ place.ForLeasePrice }}/sqft/Year
                           </p>
-                        </span>
+                        </span> -->
                       </td> 
                       <td *ngIf="place.BuildingSizeSf">
                         {{ place.BuildingSizeSf | number }} SF
                       </td>
                       <td *ngIf="!place.BuildingSizeSf">On Request</td>
                       <td>{{ place.SecondaryType }}</td>
-                      <td>
-                        <div
-                          class="total"
-                          (click)="openStreetViewPlace(StreetViewPlace, place)"
-                        >
-                          <svg
-                            width="46"
-                            height="30"
-                            viewBox="0 0 46 30"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M19.4961 29.8983C19.655 29.9556 19.8212 30 20 30H23H26C26.1788 30 26.3451 29.9556 26.504 29.8983C31.8508 29.597 38 28.5817 38 25.5C38 22.6886 32.8809 21.5968 27.9231 21.1979L30.0605 19.0605C30.3418 18.7793 30.5 18.3977 30.5 18V13.5C30.5 10.7502 28.6304 8.45124 26.1025 7.7449C26.9597 6.92505 27.5 5.77698 27.5 4.5C27.5 2.01855 25.4814 0 23 0C20.5185 0 18.5 2.01855 18.5 4.5C18.5 5.77698 19.0403 6.92505 19.8975 7.7449C17.3696 8.45124 15.5 10.7502 15.5 13.5V18C15.5 18.3977 15.6582 18.7793 15.9395 19.0605L18.0769 21.1979C13.1191 21.5968 8 22.6886 8 25.5C8 28.5817 14.1493 29.597 19.4961 29.8983ZM27.5 26.825V24.175C31.0845 24.4636 33.3286 25.0481 34.4067 25.5C33.3286 25.9519 31.0845 26.5364 27.5 26.825ZM23 3C23.8276 3 24.5 3.67309 24.5 4.5C24.5 5.32691 23.8276 6 23 6C22.1724 6 21.5 5.32691 21.5 4.5C21.5 3.67309 22.1724 3 23 3ZM18.5 13.5C18.5 11.8455 19.8462 10.5 21.5 10.5H24.5C26.1538 10.5 27.5 11.8455 27.5 13.5V17.3789L24.9395 19.9395C24.6582 20.2207 24.5 20.6023 24.5 21V22.5747V26.9625C24.2734 26.9685 24.0508 26.9759 23.8203 26.9795C23.273 26.9873 22.7271 26.9873 22.1797 26.9795C21.9492 26.9759 21.7266 26.9685 21.5 26.9625V22.5747V21C21.5 20.6023 21.3418 20.2207 21.0605 19.9395L18.5 17.3789V13.5ZM18.5 24.175V26.825C14.9155 26.5364 12.6714 25.9519 11.5933 25.5C12.6714 25.0481 14.9155 24.4636 18.5 24.175Z"
-                              fill="#0D0C0C"
-                            />
-                          </svg>
-                        </div>
-                      </td>
+            
                     </tr>
                   </ng-container>
                 </tbody>
@@ -565,8 +540,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <!-- Right: Map/Street View Section -->
+  </div> 
+  
   <div class="map-section">
     <div class="view-toggle">
       <button [class.active]="isMapView" (click)="isMapView = true">
@@ -574,21 +549,16 @@
       </button>
       <button
         [class.active]="!isMapView"
-        (click)="isMapView = false; onStreetToggle()"
+        (click)="isMapView = false;"
       >
         Street View
       </button>
     </div>
 
-    <div class="map-street">
-      <!-- Map View -->
-      <div [hidden]="!isMapView" id="map" class="mapView"></div>
-
-      <!-- Street View -->
+    <div class="map-street"> 
+      <div [hidden]="!isMapView" id="map" class="mapView"></div> 
       <div [hidden]="isMapView">
-        <iframe *ngIf="sanitizedUrl" ...></iframe>
         <div
-          [ngStyle]="{ display: sanitizedUrl ? 'none' : 'block' }"
           id="street-view"
           class="streetview"
         ></div>
@@ -599,25 +569,6 @@
 
 <ng-template #mapPopup let-modal>
   <div id="mapInPopup" class="mapViewOneheight" *ngIf="mapViewOnePlacex"></div>
-</ng-template>
-
-<ng-template #StreetViewPlace let-modal>
-  <ng-container *ngIf="sanitizedUrlPopup; else linkView">
-    <iframe
-      [src]="sanitizedUrlPopup"
-      class="UrlPopup"
-      allowfullscreen=""
-      loading="lazy"
-    ></iframe>
-  </ng-container>
-
-  <ng-template #linkView>
-    <div
-      id="street-view-pop"
-      class="StreetViewOneheight"
-      *ngIf="StreetViewOnePlace"
-    ></div>
-  </ng-template>
 </ng-template>
 
 <ng-template #galleryModal let-modal>

@@ -749,7 +749,7 @@ export class ViewManagerService {
               this.streetViewCache[cacheKey] = panorama;
               setTimeout(() => delete this.streetViewCache[cacheKey], 300000);
               resolve(panorama);
-            } else {
+            } else { 
               streetViewElement.innerHTML = `
             <div class="street-view-fallback">
               <i class="fa-solid fa-street-view"></i>
