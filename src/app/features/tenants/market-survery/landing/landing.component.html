@@ -1,10 +1,7 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="main-container-all">
   <div>
-    <i
-      class="fa-solid fa-arrow-left goback mb-1"
-      (click)="goBack()"
-    ></i>
+    <i class="fa-solid fa-arrow-left goback mb-1" (click)="goBack()"></i>
 
     <div class="image-map-container">
       <div class="image-section">
@@ -188,14 +185,17 @@
         </section>
       </div>
     </div>
-  <div
+    <div
       class="contacts-wrapper d-flex justify-content-between gap-4 flex-column py-2"
       *ngIf="hasContacts()"
     >
       <div>
         <div class="contact-container">
           <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
-            <div class="user-card-wrapper" *ngIf="Manager.FirstName || Manager.LastName">
+            <div
+              class="user-card-wrapper"
+              *ngIf="Manager.FirstName || Manager.LastName"
+            >
               <span class="card-badge" *ngIf="Manager.OrganizationName">
                 {{ Manager.OrganizationName }}
               </span>
@@ -226,7 +226,10 @@
         </div>
       </div>
     </div>
-    <div class="main-section" *ngIf="shoppingCenter && shoppingCenter.Place.length > 0">
+    <div
+      class="main-section"
+      *ngIf="shoppingCenter && shoppingCenter.Place.length > 0"
+    >
       <section id="hero">
         <ng-container>
           <div class="col-md-12">
@@ -238,8 +241,8 @@
                 <thead class="procpect-table-head">
                   <tr>
                     <th>Suite</th>
-                     <th>Listing Type</th>
-                    <th>Lease Price</th> 
+                    <th>Listing Type</th>
+                    <th>Lease Price</th>
                     <th>Unit Size (SF)</th>
                     <th>Secondary Type</th>
                   </tr>
@@ -262,13 +265,12 @@
                             ${{ place.ForLeasePrice }}/sqft/Year
                           </p>
                         </span> -->
-                      </td> 
+                      </td>
                       <td *ngIf="place.BuildingSizeSf">
                         {{ place.BuildingSizeSf | number }} SF
                       </td>
                       <td *ngIf="!place.BuildingSizeSf">On Request</td>
                       <td>{{ place.SecondaryType }}</td>
-            
                     </tr>
                   </ng-container>
                 </tbody>
@@ -540,28 +542,22 @@
         </div>
       </div>
     </div>
-  </div> 
-  
+  </div>
+
   <div class="map-section">
     <div class="view-toggle">
       <button [class.active]="isMapView" (click)="isMapView = true">
         Map View
       </button>
-      <button
-        [class.active]="!isMapView"
-        (click)="isMapView = false;"
-      >
+      <button [class.active]="!isMapView" (click)="isMapView = false">
         Street View
       </button>
     </div>
 
-    <div class="map-street"> 
-      <div [hidden]="!isMapView" id="map" class="mapView"></div> 
+    <div class="map-street">
+      <div [hidden]="!isMapView" id="map" class="mapView"></div>
       <div [hidden]="isMapView">
-        <div
-          id="street-view"
-          class="streetview"
-        ></div>
+        <div id="street-view" class="streetview"></div>
       </div>
     </div>
   </div>
