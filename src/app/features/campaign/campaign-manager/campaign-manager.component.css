@@ -1223,7 +1223,7 @@
 .menu-btn {
   border: none;
   border-radius: var(--Radius-R-16);
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(220, 220, 220, 10.6);
   backdrop-filter: blur(1.5px);
   width: 32px;
   height: 32px;
@@ -1232,10 +1232,11 @@
   justify-content: center;
   cursor: pointer;
   backdrop-filter: blur(4px);
+  transition: 0.3s ease all;
 }
 
 .menu-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: rgba(210, 210, 210, 10.6);
 }
 .menu-wrapper,
 .menu-wrapper * {
@@ -1249,7 +1250,7 @@
 
 .menu-dropdown {
   position: absolute;
-  top: 28px;
+  top: 5vh;
   right: 0;
   min-width: 220px;
   background: #fff;
