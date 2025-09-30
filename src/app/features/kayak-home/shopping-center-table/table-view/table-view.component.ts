@@ -475,8 +475,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       marketSurveyId,
       stageId,
       shoppingCenter,
-      this.CampaignId
-    );
+     );
 
     setTimeout(() => {
       this.isUpdatingStage = false;

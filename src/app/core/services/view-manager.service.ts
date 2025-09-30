@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 export class ViewManagerService {
   private _shoppingCenters = new BehaviorSubject<Center[]>([]);
   private _filteredCenters = new BehaviorSubject<Center[]>([]);
-  private _allShoppingCenters = new BehaviorSubject<Center[]>([]); // Store all shopping centers
+  private _allShoppingCenters = new BehaviorSubject<Center[]>([]);
   private _kanbanStages = new BehaviorSubject<any[]>([]);
   private _lastBuyboxId: number | null = null;
   private _lastOrgId: number | null = null;
@@ -47,7 +47,7 @@ export class ViewManagerService {
   private currentSelectedStageId = 0;
   private currentSortOption = 0;
   private streetViewLastRequestTime = 0;
-  private readonly STREET_VIEW_MIN_DELAY = 5000; // 1 second between requests
+  private readonly STREET_VIEW_MIN_DELAY = 5000;
   private activeStreetViews: { [key: string]: google.maps.StreetViewPanorama } =
     {};
   private streetViewCache: { [key: string]: any } = {};
@@ -67,10 +67,10 @@ export class ViewManagerService {
     }
 
     this._lastBuyboxId = campaignId;
-    this._lastOrgId = orgId; 
+    this._lastOrgId = orgId;
     this.categoryNameCache.clear();
-    this.unitSizeCache.clear(); 
-    this._loadingComplete.next(false); // reset loading state
+    this.unitSizeCache.clear();
+    this._loadingComplete.next(false);
 
     const promises = [this.loadShoppingCenters(campaignId)];
 
@@ -81,8 +81,8 @@ export class ViewManagerService {
           this.loadKanbanStages(centers[0].kanbanId);
         }
 
-        this._loadingComplete.next(true); // ✅ mark as done
-        this._dataLoadedEvent.next(); // ✅ emit event
+        this._loadingComplete.next(true);
+        this._dataLoadedEvent.next();
       })
       .catch((error) => {
         this._loadingComplete.next(false);
@@ -168,8 +168,7 @@ export class ViewManagerService {
   public updatePlaceKanbanStage(
     marketSurveyId: number,
     stageId: number,
-    shoppingCenter: any,
-    campaignId: number
+    shoppingCenter: any
   ): void {
     const body: any = {
       Name: 'UpdatePlaceKanbanStage',
@@ -185,7 +184,6 @@ export class ViewManagerService {
         shoppingCenter.stageName = this.getSelectedStageName(stageId);
         shoppingCenter.kanbanTemplateStageId = stageId;
 
-        // Update the center in the all centers list
         const allCenters = this._allShoppingCenters.getValue();
         const updatedAllCenters = allCenters.map((center) =>
           center.Id === shoppingCenter.Id
@@ -200,9 +198,6 @@ export class ViewManagerService {
 
         this._allShoppingCenters.next(updatedAllCenters);
 
-        const updatedCenter = updatedAllCenters.find(
-          (c) => c.Id === shoppingCenter.Id
-        );
         this.applyFilters();
         this.stageUpdateSubject.next();
       },
@@ -358,31 +353,6 @@ export class ViewManagerService {
         .subscribe({
           next: (data) => {
             const centers = data.json;
-
-            centers.forEach((center: any) => {
-              if (center.ShoppingCenter?.Places) {
-                const sizes: number[] = center.ShoppingCenter.Places.map(
-                  (p: any) => p.BuildingSizeSf as number
-                ).filter(
-                  (s: number | null | undefined): s is number => s != null
-                );
-
-                if (sizes.length > 0) {
-                  const uniqueSizes = Array.from(new Set<number>(sizes)).sort(
-                    (a, b) => a - b
-                  );
-                  center.sizeRange =
-                    uniqueSizes.length === 1
-                      ? uniqueSizes[0]
-                      : [uniqueSizes[0], uniqueSizes[uniqueSizes.length - 1]];
-                } else {
-                  center.sizeRange = null;
-                }
-              } else {
-                center.sizeRange = null;
-              }
-            });
-
             this._allShoppingCenters.next(centers);
             this.applyFilters();
 

@@ -154,6 +154,8 @@ export class MapsService {
   }
 
   private shoopingCenterPopup(markerData: any): string {
+    console.log('Marker Data:', markerData);
+    console.log('Main Image URL:', markerData.MainImage);  
     const managerOrgs =
       markerData.ShoppingCenter?.ManagerOrganization?.map((org: any) => {
         if (org.Firstname && org.LastName) {
