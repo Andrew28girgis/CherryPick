@@ -181,7 +181,7 @@
     </div>
 
     <div class="add-new-actions">
-      <button
+      <!-- <button
         class="g-button"
         (click)="openFileExplorer(); $event.stopPropagation()"
       >
@@ -208,7 +208,7 @@
           />
         </svg>
         Add New
-      </button>
+      </button> -->
       <!-- <div class="view-toggle-icons" (click)="$event.stopPropagation()">
         <button
           class="icon-btn"
@@ -428,7 +428,21 @@
           *ngIf="!isLoading && viewMode === 'grid' && !isLoading"
         >
           <div class="center-card" *ngFor="let center of filteredCenters;trackBy: trackByCenterId">
+            
             <div
+              class="card-click-area"
+              [class.click-disabled]="openMenuId === center.scId"
+              [routerLink]="['/landing', 0, center?.scId, center.campaignId]"
+            >
+              <div class="image-container">
+                <img
+                  loading="lazy"
+                  [src]="center.mainImage || 'assets/Images/placeholder.png'"
+                  [alt]="center.centerName"
+                  class="center-image"
+                  (error)="center.mainImage = 'assets/Images/placeholder.png'"
+                />
+                <div
               (click)="
                 openCampaignModal(campaignModal, center.scId);
                 $event.stopPropagation()
@@ -504,19 +518,6 @@
                 />
               </svg>
             </div>
-            <div
-              class="card-click-area"
-              [class.click-disabled]="openMenuId === center.scId"
-              [routerLink]="['/landing', 0, center?.scId, center.campaignId]"
-            >
-              <div class="image-container">
-                <img
-                  loading="lazy"
-                  [src]="center.mainImage || 'assets/Images/placeholder.png'"
-                  [alt]="center.centerName"
-                  class="center-image"
-                  (error)="center.mainImage = 'assets/Images/placeholder.png'"
-                />
                 <div class="card-overlay">
                   <!-- Only show shared badge if center is shared -->
                   <div class="share-badge" *ngIf="center.isShared">

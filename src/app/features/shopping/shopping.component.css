@@ -1237,9 +1237,8 @@ tr.click-disabled td:last-child * {
 }
 .add-badge {
   position: absolute;
-  top: 0;
+  bottom: 12px;
   right: 12px;
-  transform: translateY(-40%);
   z-index: 2;
   animation: floatUpDown 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   padding: 5px;
@@ -1247,13 +1246,17 @@ tr.click-disabled td:last-child * {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--Colors-Primary-light); /* navy */
   color: var(--Colors-Primary-500);
   line-height: 1.1;
+  transition: all 0.2s ease-in-out;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+.add-badge:hover {
+  background: var(--Colors-Primary-400);
 }
 .add-badge span {
   white-space: nowrap;
@@ -1336,31 +1339,10 @@ tr.click-disabled td:last-child * {
   font-size: 14px;
 }
 
-.add-badge {
-  position: absolute;        /* float over the card */
-  top: -8px;
-  right: -9px;  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--Colors-Primary-light);       /* very light red background */
-  color: var(--Colors-Primary-500);            /* red icon */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  z-index: 2;
-}
-
-.add-badge:hover {
-  background: var(--Colors-Primary-400);
- }
-
 .center-card {
   overflow: visible;
   position: relative; /* required so .add-badge positions inside */
 }
-
 
 .btn-custom {
   background: var(--Colors-Primary-500);
@@ -1372,10 +1354,13 @@ tr.click-disabled td:last-child * {
   transition: background 0.25s ease, transform 0.15s ease;
 }
 
- .btn-custom:hover {
+.btn-custom:hover {
   background: var(--Colors-Primary-hover);
-  }
-/* Add card */
+}
+.campaign-card.add-card:hover {
+  border-color: var(--Colors-Primary-500);
+  background: var(--Colors-Primary-light);
+}
 .add-card {
   display: flex;
   align-items: center;
@@ -1391,7 +1376,16 @@ tr.click-disabled td:last-child * {
 }
 
 .plus-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--Colors-Primary-500);
+  color: var(--Colors-Primary-500);
   font-size: 28px;
   font-weight: bold;
-  color: var(--Colors-Primary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+
