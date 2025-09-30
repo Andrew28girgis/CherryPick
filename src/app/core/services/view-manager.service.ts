@@ -31,12 +31,7 @@ export class ViewManagerService {
       return s?.stageName ?? 'Stage';
     })
   );
-
-  // Current view
-  private _currentView = new BehaviorSubject<number>(5); // Default to social view
-
- 
-  // Add stage update subject for communication between components
+  private _currentView = new BehaviorSubject<number>(5); 
   private stageUpdateSubject = new Subject<void>();
   public stageUpdate$ = this.stageUpdateSubject.asObservable();
   public shoppingCenters$ = this._shoppingCenters.asObservable();
@@ -44,8 +39,6 @@ export class ViewManagerService {
   public allShoppingCenters$ = this._allShoppingCenters.asObservable();
   public searchQuery$ = this._searchQuery.asObservable();
   public currentView$ = this._currentView.asObservable();
- 
-  // Cache for optimizations
   private categoryNameCache = new Map<number, string>();
   private unitSizeCache = new Map<string, string>();
   StageId = 0;
@@ -61,7 +54,6 @@ export class ViewManagerService {
   private streetViewCache: { [key: string]: any } = {};
   private _loadingComplete = new BehaviorSubject<boolean>(false);
   public loadingComplete$ = this._loadingComplete.asObservable();
-  
   private _dataLoadedEvent = new Subject<void>();
   public dataLoadedEvent$ = this._dataLoadedEvent.asObservable();
   
@@ -102,11 +94,7 @@ export class ViewManagerService {
         this._loadingComplete.next(false);
       });
   }
-  
 
-  /**
-   * Set the current view
-   */
   public setCurrentView(viewId: number): void {
     this._currentView.next(viewId);
     localStorage.setItem('currentViewDashBord', viewId.toString());
@@ -416,11 +404,7 @@ export class ViewManagerService {
         });
     });
   }
-  
 
-  /**
-   * Load kanban stages
-   */
   private loadKanbanStages(kanbanId: number): void {
     const body: any = {
       Name: 'GetKanbanStages',
