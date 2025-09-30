@@ -3,7 +3,6 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { UserViewService } from 'src/app/core/services/user-view.service';
  import { filter } from 'rxjs/operators';
  type UserView = 'campaigns' | 'landlord';
 
@@ -19,7 +18,6 @@ export class SidebarComponent implements OnInit {
     private placesService: PlacesService,
     public router: Router,
     private modalService: NgbModal,
-    private userViewService: UserViewService,
     private route: ActivatedRoute
   ) {}
   currentView: UserView = 'campaigns';
@@ -157,12 +155,12 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  switchView(): void {
-    const newView: UserView =
-      this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
-    this.userViewService.switchView(newView);
-    this.router.navigate([newView]);
-  }
+  // switchView(): void {
+  //   const newView: UserView =
+  //     this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
+  //   this.userViewService.switchView(newView);
+  //   this.router.navigate([newView]);
+  // }
 
 
  
