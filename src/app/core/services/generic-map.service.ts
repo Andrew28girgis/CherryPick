@@ -208,7 +208,6 @@ export class GenericMapService {
       }
     }
 
-    // If no requests were made (empty bounds), invoke the callback with an empty array
     if (totalRequests === 0) {
       callback([]);
     }
@@ -241,8 +240,6 @@ export class GenericMapService {
                   component.types.includes('administrative_area_level_1')
                 )?.short_name || '',
             };
-
-            // Check if the state code is unique and add it to the list
             if (!uniqueStates.has(mapState.code)) {
               uniqueStates.add(mapState.code);
               stateList.push(mapState);

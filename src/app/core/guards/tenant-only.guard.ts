@@ -21,22 +21,15 @@ export class TenantOnlyGuard implements CanActivate {
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
-    | UrlTree {
-    // Check if the current view is landlord
-    const isLandlordView = this.isLandlordView();
-
-    // If user is in landlord view, block access to tenant routes
-    if (isLandlordView) {
-      // Redirect to landlord dashboard if landlord tries to access tenant routes
+    | UrlTree { 
+    const isLandlordView = this.isLandlordView(); 
+    if (isLandlordView) { 
       return this.router.parseUrl('/landlord');
-    }
-
-    // Allow tenant users to access tenant routes
+    } 
     return true;
   }
 
   private isLandlordView(): boolean {
-    // Check if the user is in landlord view
     return localStorage.getItem('userView') === 'landlord';
   }
 }

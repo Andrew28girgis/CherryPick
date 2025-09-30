@@ -13,7 +13,6 @@ export class AccountLinkedGuard implements CanActivate {
   ) {}
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    // Skip the tasks route itself
     if (state.url === '/overview') {
       return true;
     }
@@ -33,8 +32,6 @@ export class AccountLinkedGuard implements CanActivate {
       };
 
       const response = await firstValueFrom(this.genericApiService.GenericAPI(contactRequestBody));
-      
-      // Allow navigation if at least one account is linked
       if (response.json && response.json.length) {
         const hasGoogleToken = response.json[0].googleAccessToken;
         const hasMicrosoftToken = response.json[0].microsoftAccessToken;

@@ -8,7 +8,6 @@ export class AuthService {
   private readonly LOGIN_DATE_KEY = 'loginDate';
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
-    // Save login date timestamp
     localStorage.setItem(
       this.LOGIN_DATE_KEY,
       new Date().toISOString().split('T')[0]
