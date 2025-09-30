@@ -22,7 +22,7 @@ import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { Email } from 'src/app/shared/models/email';
 import { AddContactComponent } from '../add-contact/add-contact.component';
@@ -97,6 +97,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   rotatingKeys: { [id: number]: number } = {};
   openMenuId: number | null = null;
   openStageId: number | null = null;
+  dataReady = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -109,7 +110,14 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
+    this.subscriptions.push(
+      this.viewManagerService.loadingComplete$.subscribe((done) => {
+        this.isLoading = !done; // show loader until both flags are satisfied
+        this.dataReady = done;
+        this.cdr.markForCheck();
+      })
+    );
+
     this.loadStages();
 
     this.subscriptions.push(
@@ -152,7 +160,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.isLoading = true;
     this.skeletonItems = Array(6);
 
     this.subscriptions.push(
@@ -165,9 +172,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
           });
         });
 
-        if (centers && centers.length > 0) {
-          this.isLoading = false;
-        }
         this.cdr.markForCheck();
       })
     );
@@ -656,7 +660,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       },
     });
   }
-  // Example: inside your component class
+
   get hasUnscoredCenters(): boolean {
     return this.cardsSideList?.some((sc) => !sc.MainImage) ?? false;
   }

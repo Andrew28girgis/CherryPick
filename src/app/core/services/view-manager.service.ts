@@ -44,12 +44,7 @@ export class ViewManagerService {
   // Current view
   private _currentView = new BehaviorSubject<number>(5); // Default to social view
 
-  // Data loaded flag
-  private _dataLoaded = false;
-
-  // Event emitters
-  private _dataLoadedEvent = new Subject<void>();
-
+ 
   // Add stage update subject for communication between components
   private stageUpdateSubject = new Subject<void>();
   public stageUpdate$ = this.stageUpdateSubject.asObservable();
@@ -60,8 +55,7 @@ export class ViewManagerService {
   public allShoppingCenters$ = this._allShoppingCenters.asObservable();
   public searchQuery$ = this._searchQuery.asObservable();
   public currentView$ = this._currentView.asObservable();
-  public dataLoadedEvent$ = this._dataLoadedEvent.asObservable();
-
+ 
   // Cache for optimizations
   private categoryNameCache = new Map<number, string>();
   private unitSizeCache = new Map<string, string>();
@@ -80,6 +74,13 @@ export class ViewManagerService {
   private activeStreetViews: { [key: string]: google.maps.StreetViewPanorama } =
     {};
   private streetViewCache: { [key: string]: any } = {};
+  private _loadingComplete = new BehaviorSubject<boolean>(false);
+  public loadingComplete$ = this._loadingComplete.asObservable();
+  
+  private _dataLoadedEvent = new Subject<void>();
+  public dataLoadedEvent$ = this._dataLoadedEvent.asObservable();
+  
+ 
 
   constructor(
     private placesService: PlacesService,
@@ -91,39 +92,36 @@ export class ViewManagerService {
    * This should be called once when the main component loads
    */
   public initializeData(campaignId: number, orgId: number): void {
-    if (
-      this._dataLoaded &&
-      this._lastBuyboxId === campaignId &&
-      this._lastOrgId === orgId
-    ) {
-      this._dataLoadedEvent.next();
+    if (this._lastBuyboxId === campaignId && this._lastOrgId === orgId) {
       return;
     }
-
+  
     this._lastBuyboxId = campaignId;
     this._lastOrgId = orgId;
-    this._dataLoaded = false;
-
+  
     this.categoryNameCache.clear();
     this.unitSizeCache.clear();
-
-    // Load all required data in parallel
+  
+    this._loadingComplete.next(false); // reset loading state
+  
     const promises = [this.loadShoppingCenters(campaignId)];
-
+  
     Promise.all(promises)
       .then(() => {
-        this._dataLoaded = true;
-        this._dataLoadedEvent.next();
-
         const centers = this._shoppingCenters.getValue();
         if (centers && centers.length > 0) {
           this.loadKanbanStages(centers[0].kanbanId);
         }
+  
+        this._loadingComplete.next(true); // ✅ mark as done
+        this._dataLoadedEvent.next();     // ✅ emit event
       })
       .catch((error) => {
         console.error('Error loading data:', error);
+        this._loadingComplete.next(false);
       });
   }
+  
 
   /**
    * Set the current view
@@ -437,53 +435,57 @@ export class ViewManagerService {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  public loadShoppingCenters(campaignId: number) {
-    console.log('Loading shopping centers for campaign:', campaignId);
-
-    const body: any = {
-      Name: 'GetMarketSurveyShoppingCenters',
-      Params: {
-        CampaignId: campaignId,
-        ShoppingCenterStageId: 0,
-      },
-    };
-
-    this.placesService
-      .GenericAPI(body)
-      .pipe(take(1))
-      .subscribe({
-        next: (data) => {
-          const centers = data.json;
-
-          centers.forEach((center: any) => {
-            if (center.ShoppingCenter?.Places) {
-              const sizes: number[] = center.ShoppingCenter.Places.map(
-                (p: any) => p.BuildingSizeSf as number
-              ).filter(
-                (s: number | null | undefined): s is number => s != null
-              );
-
-              if (sizes.length > 0) {
-                const uniqueSizes = Array.from(new Set<number>(sizes)).sort(
-                  (a, b) => a - b
-                );
-                center.sizeRange =
-                  uniqueSizes.length === 1
-                    ? uniqueSizes[0]
-                    : [uniqueSizes[0], uniqueSizes[uniqueSizes.length - 1]];
+  public loadShoppingCenters(campaignId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const body: any = {
+        Name: 'GetMarketSurveyShoppingCenters',
+        Params: {
+          CampaignId: campaignId,
+          ShoppingCenterStageId: 0,
+        },
+      };
+  
+      this.placesService
+        .GenericAPI(body)
+        .pipe(take(1))
+        .subscribe({
+          next: (data) => {
+            const centers = data.json;
+  
+            centers.forEach((center: any) => {
+              if (center.ShoppingCenter?.Places) {
+                const sizes: number[] = center.ShoppingCenter.Places.map(
+                  (p: any) => p.BuildingSizeSf as number
+                ).filter((s: number | null | undefined): s is number => s != null);
+  
+                if (sizes.length > 0) {
+                  const uniqueSizes = Array.from(new Set<number>(sizes)).sort(
+                    (a, b) => a - b
+                  );
+                  center.sizeRange =
+                    uniqueSizes.length === 1
+                      ? uniqueSizes[0]
+                      : [uniqueSizes[0], uniqueSizes[uniqueSizes.length - 1]];
+                } else {
+                  center.sizeRange = null;
+                }
               } else {
                 center.sizeRange = null;
               }
-            } else {
-              center.sizeRange = null;
-            }
-          });
-
-          this._allShoppingCenters.next(centers);
-          this.applyFilters();
-        },
-      });
+            });
+  
+            this._allShoppingCenters.next(centers);
+            this.applyFilters();
+  
+            resolve();
+          },
+          error: (err) => {
+            reject(err);
+          },
+        });
+    });
   }
+  
 
   /**
    * Load kanban stages

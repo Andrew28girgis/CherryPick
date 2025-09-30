@@ -103,6 +103,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   rotatingKeys: { [id: number]: number } = {};
   openMenuId: number | null = null;
   openStageId: number | null = null;
+  dataReady = false;
 
   constructor(
     private markerService: MapsService,
@@ -209,8 +210,10 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.viewManagerService.dataLoadedEvent$.subscribe(() => {
-        // Data is loaded, perform any additional initialization
+      this.viewManagerService.loadingComplete$.subscribe((done) => {
+        this.isLoading = !done; // show loader until both flags are satisfied
+        this.dataReady = done;
+        this.cdr.markForCheck();
       })
     );
   }
