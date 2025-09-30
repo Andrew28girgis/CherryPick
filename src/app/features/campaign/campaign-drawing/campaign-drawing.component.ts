@@ -535,12 +535,7 @@ export class CampaignDrawingComponent
           this.externalPolygons = response;
           this.addExplorePolygonsToMap();
         }
-      },
-      error: (error) => {
-        this.isSearching = false;
-
-        console.error(error);
-      },
+      }
     });
   }
   addExplorePolygonsToMap(): void {

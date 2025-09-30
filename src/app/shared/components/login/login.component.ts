@@ -174,7 +174,6 @@ export class LoginComponent implements OnInit {
         this.handleLoginSuccess(response);
       },
       error: (error) => {
-        console.error(error);
         this.handleLoginError();
       },
       complete: () => {

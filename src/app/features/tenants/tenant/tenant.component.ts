@@ -197,7 +197,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
             this.GetContactData();
           }
         } catch (err) {
-          console.error('Decryption failed', err);
         }
       }
       if (!encryptedContactId) {
@@ -302,7 +301,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
       return plaintext;
     } catch (err) {
-      console.error('Decryption failed:', err);
       return '';
     }
   }
@@ -407,7 +405,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
         this.showToast('Campaigns and Places Approved Successfully');
       })
       .catch((error) => {
-        console.error('Approval failed', error);
         this.spinner.hide();
         this.showToast('Error approving campaigns');
       });
@@ -961,7 +958,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
       },
       error: (error) => {
-        console.error('Error occurred while updating shopping center:', error);
 
         // Check if it's actually a success response being misinterpreted as an error
         if (error.status === 200) {
@@ -1119,7 +1115,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   loadPolygons(): void {
     if (!this.Polgons || !Array.isArray(this.Polgons)) {
-      console.error('No polygons available');
       return;
     }
     // Replace apiResponse with this.Polgons

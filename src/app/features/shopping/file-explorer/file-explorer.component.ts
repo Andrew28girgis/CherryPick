@@ -77,10 +77,6 @@ export class FileExplorerComponent implements OnInit {
         this.pathStack = [];
         this.spinner.hide();
       },
-      error: (err) => {
-        console.error(err);
-        this.spinner.hide();
-      },
     });
   }
 
@@ -169,7 +165,6 @@ export class FileExplorerComponent implements OnInit {
         this.spinner.hide();
       },
       error: (err) => {
-        console.error(err);
         this.spinner.hide();
       },
     });

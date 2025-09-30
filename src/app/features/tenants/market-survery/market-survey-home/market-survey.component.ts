@@ -147,7 +147,6 @@ export class MarketSurveyComponent implements OnInit {
         this.modalService.dismissAll();
       })
       .catch((err) => {
-        console.error('Failed to copy: ', err);
       });
   }
   showToast(message: string) {
@@ -202,7 +201,6 @@ export class MarketSurveyComponent implements OnInit {
       // first attempt: direct fetch
       return await fetchAndConvert(src);
     } catch (err) {
-      console.warn('Direct fetch failed, retrying via CORS proxy:', src, err);
       // fallback to public CORS proxy
       const proxyUrl =
         'https://api.allorigins.win/raw?url=' + encodeURIComponent(src);
@@ -218,7 +216,6 @@ export class MarketSurveyComponent implements OnInit {
     this.spinner.show();
     const container = this.contentToDownload.nativeElement as HTMLElement;
     if (!container) {
-      console.error('No container found for PDF export');
       this.spinner.hide();
       return;
     }
@@ -238,7 +235,6 @@ export class MarketSurveyComponent implements OnInit {
             img.src = await this.toDataURL(img.src);
           }
         } catch (err) {
-          console.warn('Could not embed image, skipping:', img.src, err);
         }
       })
     );
@@ -470,7 +466,6 @@ export class MarketSurveyComponent implements OnInit {
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error('Error generating CSV:', error);
       // Show error to user
     } finally {
       this.spinner.hide();

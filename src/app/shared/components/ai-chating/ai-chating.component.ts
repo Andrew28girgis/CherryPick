@@ -230,7 +230,6 @@ async sendMessage() {
   }
 
   private handleApiError(error: any) {
-    console.error('Error sending message:', error);
     let errorMessage = 'Sorry, there was an error processing your request. Please try again.';
 
     if (error.status === 400 || error.status === 415) {

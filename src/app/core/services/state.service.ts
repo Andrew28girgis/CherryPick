@@ -18,18 +18,13 @@ export class StateService {
   private Permission: permission[] = [];
 
   private shareOrg: ShareOrg[] = [];
-  private scrollPosition: number = 0;
   placesRepresentative: boolean | undefined;
-
   private shoppingCentersSubject = new BehaviorSubject<Center[]>([]);
   shoppingCenters$ = this.shoppingCentersSubject.asObservable();
-
   private buyboxCategoriesSubject = new BehaviorSubject<BuyboxCategory[]>([]);
   buyboxCategories$ = this.buyboxCategoriesSubject.asObservable();
-
   private buyboxPlacesSubject = new BehaviorSubject<BbPlace[]>([]);
   buyboxPlaces$ = this.buyboxPlacesSubject.asObservable();
-
   private shareOrgSubject = new BehaviorSubject<ShareOrg[]>([]);
   shareOrg$ = this.shareOrgSubject.asObservable();
 
@@ -53,7 +48,6 @@ export class StateService {
     this.shareOrgSubject.next(org);
   }
 
-  // Selected SS methods
   setSelectedSS(value: number) {
     this.selectedSS = value;
   }
@@ -61,19 +55,9 @@ export class StateService {
   getSelectedSS(): number | null {
     return this.selectedSS;
   }
-
-  // Data storage methods
-  // setBuyboxCategories(categories: BuyboxCategory[]) {
-  //   this.buyboxCategories = categories;
-  // }
-
   getBuyboxCategories(): BuyboxCategory[] {
     return this.buyboxCategories;
   }
-
-  // setShoppingCenters(centers: Center[]) {
-  //   this.shoppingCenters = centers;
-  // }
 
   getShoppingCenters(): Center[] {
     return this.shoppingCenters;
@@ -87,18 +71,9 @@ export class StateService {
     return this.standAlone;
   }
 
-  // setBuyboxPlaces(places: BbPlace[]) {
-  //   this.buyboxPlaces = places;
-  // }
-
   getBuyboxPlaces(): BbPlace[] {
     return this.buyboxPlaces;
   }
-
-  // setShareOrg(org: ShareOrg[]) {
-  //   this.shareOrg = org;
-  // }
-
   getShareOrg(): ShareOrg[] {
     return this.shareOrg;
   }

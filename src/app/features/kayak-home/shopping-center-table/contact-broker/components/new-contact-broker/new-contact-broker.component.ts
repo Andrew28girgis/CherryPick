@@ -201,7 +201,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
 
       // If categoryId doesn't exist, exit early
       if (!categoryId) {
-        console.error('Category ID not found.');
         return;
       }
 
@@ -231,7 +230,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
       } else {
       }
     } catch (error) {
-      console.error('Error fetching prompts:', error);
     }
   }
 
@@ -394,7 +392,6 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         this.ResponseContextEmail.push(response);
         return response;
       } catch (error) {
-        console.error('Error executing API call for', body, ':', error);
         throw error;
       }
     });

@@ -181,15 +181,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
         next: (stages) => {
           if (stages && Array.isArray(stages)) {
             this.KanbanStages = [...stages]; // Create a new array reference
-            console.log('Component received stages:', this.KanbanStages);
             this.cdr.markForCheck(); // Force change detection
           }
-        },
-        error: (err) => {
-          console.error('Error in kanban stages subscription:', err);
-          this.KanbanStages = [];
-          this.cdr.markForCheck();
-        },
+        }
       })
     );
 
@@ -421,7 +415,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
         }
         this.cdr.markForCheck();
       },
-      error: (err) => console.error('Error loading kanban stages:', err),
     });
   }
 
@@ -614,7 +607,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       const normalized = dateValue.replace(' ', 'T');
       const parsed = Date.parse(normalized);
       if (isNaN(parsed)) {
-        console.warn('Invalid date string:', dateValue);
         return 0;
       }
       return parsed;
@@ -623,10 +615,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
     if (typeof dateValue === 'number') {
       return dateValue;
     }
-
-    console.warn('Unexpected date type:', dateValue);
     return 0;
   }
+
   openInfoPopup(shopping: any, content: TemplateRef<any>): void {
     this.isLoadingInfo = true;
     this.infoData = null;
@@ -648,16 +639,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
           backdrop: true,
           centered: true,
         });
-      },
-      error: (err) => {
-        console.error('Error fetching info:', err);
-        this.isLoadingInfo = false;
-        this.modalService.open(content, {
-          size: 'md',
-          backdrop: true,
-          centered: true,
-        });
-      },
+      }
     });
   }
 
@@ -694,7 +676,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
         toast.classList.remove('show');
       }, 2500);
     } else {
-      console.warn('Toast elements not found in DOM.');
     }
   }
   toggleMenu(Id: number, event: MouseEvent, stage?: boolean) {

@@ -109,7 +109,6 @@ export class MarketCardViewComponent implements OnInit {
         this.getBuyBoxPlaces(this.campainId);
       },
       error: (error) => {
-        console.error('Error loading shopping centers:', error);
         this.isLoadingShoppingCenters = false; // Set loading to false on error
         this.spinner.hide();
       },

@@ -291,8 +291,7 @@ export class NotificationsComponent
         }
       }
     } catch (err) {
-      console.error('Error scrolling to bottom:', err);
-    }
+     }
   }
 
   // handleNotificationClick(notification: Notification): void {
@@ -353,15 +352,13 @@ export class NotificationsComponent
               );
 
              } catch (error) {
-              console.error('Error saving shopping center data:', error);
-            }
+             }
           }
           this.setNotificationLoading(notification, false);
           this.loadedNotifications.add(notification.id);
         },
         error: (error) => {
-          console.error('Error in DeleteJSONNotification API call:', error);
-          this.setNotificationLoading(notification, false);
+           this.setNotificationLoading(notification, false);
         },
       });
     } else if (choice === 0) {
@@ -375,15 +372,7 @@ export class NotificationsComponent
           // Clear loading state when done
           this.setNotificationLoading(notification, false);
           this.loadedNotifications.add(notification.id);
-        },
-        error: (error) => {
-          console.error(
-            'Error in DeleteJSONNotification API call for choice 0:',
-            error
-          );
-          // Clear loading state on error
-          this.setNotificationLoading(notification, false);
-        },
+        }
       });
     }
   }
@@ -409,8 +398,7 @@ export class NotificationsComponent
 
       return response;
     } catch (error) {
-      console.error(':x::x::x::x: Fetch error:', error);
-      return null;
+       return null;
     }
   }
 
@@ -540,8 +528,7 @@ export class NotificationsComponent
         this.scanTrigger$.next();
       },
       error: (err) => {
-        console.error('sendmessage failed', err);
-        this.isSending = false;
+         this.isSending = false;
         this.hideTyping();
         // restore text
         this.outgoingText = text;
@@ -864,12 +851,7 @@ export class NotificationsComponent
         this.refreshService.triggerRefreshOrganizations();
 
         this.isSaving = false;
-      },
-      error: (err) => {
-        console.error('Save failed', err);
-        this.isSaving = false;
-        this.cdRef.detectChanges();
-      },
+      }
     });
   }
 
@@ -880,8 +862,7 @@ export class NotificationsComponent
         const id = response?.json?.[0]?.id;
 
         if (id == null) {
-          console.error('No id found in response.json');
-          return;
+           return;
         }
 
         try {
@@ -891,12 +872,8 @@ export class NotificationsComponent
             id // <-- send only the id
           );
         } catch (e) {
-          console.error('electronMessage.getLinksFromGoogle failed', e);
-        }
-      },
-      error: (err) => {
-        console.error('GetCampaignsNeedUrls failed', err);
-      },
+         }
+      }
     });
   }
 
@@ -931,8 +908,7 @@ export class NotificationsComponent
   }
   async downloadPDF(): Promise<void> {
     if (!this.contentToDownload) {
-      console.error('No container found for PDF export');
-      return;
+       return;
     }
 
     const container = this.contentToDownload.nativeElement as HTMLElement;
@@ -951,8 +927,7 @@ export class NotificationsComponent
             img.src = await this.toDataURL(img.src);
           }
         } catch (err) {
-          console.warn('Could not embed image:', img.src, err);
-        }
+         }
       })
     );
 
@@ -1038,11 +1013,7 @@ export class NotificationsComponent
 
         this.isSaving = false;
         this.pdfTitle = ''; // reset
-      },
-      error: (err) => {
-        console.error('SetTitleInNotification failed', err);
-        this.isSaving = false;
-      },
+      } 
     });
   }
   ngOnChanges(changes: SimpleChanges) {
@@ -1245,8 +1216,7 @@ export class NotificationsComponent
         /I have found\s+(\d+)\s+Shopping Centers/i
       );
       if (match) {
-        console.log('[Notifications] Emily found shopping centers:', match[1]);
-
+ 
         this.refreshService.triggerRefreshOrganizations();
         break;
       }

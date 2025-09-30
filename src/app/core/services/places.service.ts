@@ -87,10 +87,6 @@ export class PlacesService {
                 throw new Error('Empty result, continue polling');
               }
             } catch (err) {
-              console.error(
-                'Error parsing JSON from Dropbox file content:',
-                err
-              );
               throw err;
             }
           }),
@@ -240,10 +236,7 @@ export class PlacesService {
           }),
           tap((data) => {
             // Fire-and-forget delete
-            this.dropbox.deleteFile(dropboxPath!).subscribe({
-              next: () => console.log('Dropbox file deleted:', dropboxPath),
-              error: (err) => console.error('Dropbox file delete error:', err),
-            });
+            this.dropbox.deleteFile(dropboxPath!).subscribe();
           }),
           catchError((error: any) => {
             if (

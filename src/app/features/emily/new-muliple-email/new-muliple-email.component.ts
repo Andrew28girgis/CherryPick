@@ -333,7 +333,6 @@ export class NewMulipleEmailComponent implements OnInit {
   //       this.originalEmailTemplates = [...this.emailTemplates];
   //     }
   //   } catch (error) {
-  //     console.error('Error in GetBuyBoxOrganizationsForEmail:', error);
   //   } finally {
   //     this.spinner.hide();
   //     this.updateEmailBody();
@@ -533,7 +532,6 @@ export class NewMulipleEmailComponent implements OnInit {
         this.ResponseContextEmail.push(response);
         return response;
       } catch (error) {
-        console.error('Error executing API call for', body, ':', error);
         throw error;
       }
     });

@@ -451,10 +451,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
           ) || null;
 
         this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading tenants:', error);
-      },
+      }
     });
   }
 
@@ -635,13 +632,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.selectedTenant =
           this.tenants.find((t) => t.OrganizationId == this.OrgId) || null;
         this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading tenants:', error);
-        this.tenants = [];
-        this.filteredTenants = [];
-        this.groupTenantsByAlphabet();
-      },
+      }
     });
   }
 
@@ -681,7 +672,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         img.src = '../../../../assets/Images/placeholder.png';
       }
     } catch (err) {
-      console.warn('Canvas image data blocked due to CORS:', err);
       if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
         img.src = '../../../../assets/Images/placeholder.png';
       }
@@ -697,7 +687,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         toast.classList.remove('show');
       }, 5000);
     } else {
-      console.warn('Toast elements not found in DOM.');
     }
   }
 
@@ -779,7 +768,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         // });
       },
       error: (error) => {
-        console.error('Upload failed:', error);
         this.isUploading = false;
         this.showToast('Upload failed. Please try again.');
       },

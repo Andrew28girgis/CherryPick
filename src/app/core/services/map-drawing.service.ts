@@ -126,15 +126,9 @@ private addCircleClickListener(map: any, circle: google.maps.Circle): void {
   circle.addListener('click', (event: google.maps.MapMouseEvent) => {
     // stop propagation safely (some event shapes don't have stop())
     this.safeStopEvent(event);
-
-    // debug so we can confirm handler runs
-    console.debug('circle clicked', circle);
-
-    // show the popup for circle
     try {
       this.showCircleOptions(map, circle);
     } catch (err) {
-      console.error('showCircleOptions error', err);
     }
   });
 }
@@ -197,8 +191,6 @@ private safeStopEvent(ev: any) {
       return;
     }
   } catch (e) {
-    // swallow — we do not want this to break subsequent logic
-    console.debug('safeStopEvent error', e);
   }
 }
 
@@ -207,14 +199,10 @@ private safeStopEvent(ev: any) {
     // stop propagation safely (some event shapes don't have stop())
     this.safeStopEvent(event);
 
-    // debug so we can confirm handler runs
-    console.debug('polygon clicked', polygon);
-
     // show the popup for polygon (existing code uses showPolygonsOptions)
     try {
       this.showPolygonsOptions(map, polygon);
     } catch (err) {
-      console.error('showPolygonsOptions error', err);
     }
   });
 }
@@ -386,7 +374,6 @@ private safeStopEvent(ev: any) {
           const event = isCircle ? this.onCircleCreated : this.onPolygonCreated;
           event.emit(shapeEntry);
         } catch (err) {
-          console.error('saveShapeName onSave error', err);
         } finally {
           // cleanup
           try { (saveButton as HTMLElement).removeEventListener('click', onSave); } catch {}
@@ -446,7 +433,6 @@ private showCircleOptions(map: any, circle: google.maps.Circle): void {
               this.infoWindow.close();
             },
             error: (err) => {
-              console.error('DeletePolygon API failed', err);
               deleteButton.removeAttribute('disabled');
               alert('Failed to delete polygon on the server. Try again.');
             },
@@ -459,7 +445,6 @@ private showCircleOptions(map: any, circle: google.maps.Circle): void {
           this.infoWindow.close();
         }
       } catch (err) {
-        console.error('showCircleOptions onDelete error', err);
         deleteButton.removeAttribute('disabled');
       } finally {
         try { (deleteButton as HTMLElement).removeEventListener('click', onDelete); } catch {}
@@ -520,7 +505,6 @@ private showCircleOptions(map: any, circle: google.maps.Circle): void {
                 this.infoWindow.close();
               },
               error: (err) => {
-                console.error('DeletePolygon API failed', err);
                 deleteButton.removeAttribute('disabled');
                 alert('Failed to delete polygon on the server. Try again.');
               },
@@ -532,7 +516,6 @@ private showCircleOptions(map: any, circle: google.maps.Circle): void {
             this.infoWindow.close();
           }
         } catch (err) {
-          console.error('showPolygonsOptions onDelete error', err);
           deleteButton.removeAttribute('disabled');
         } finally {
           try { (deleteButton as HTMLElement).removeEventListener('click', onDelete); } catch {}

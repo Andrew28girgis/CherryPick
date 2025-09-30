@@ -257,14 +257,10 @@ export class ContactsComponent implements OnInit {
       this.PlacesService.GenericAPI(params).subscribe(
         (response: any) => {
           if (response.error) {
-            console.error('Error from API:', response.error);
           } else {
             this.loadContacts();
             this.closeAddForm();
           }
-        },
-        (error) => {
-          console.error('Error creating contact:', error);
         }
       );
     }

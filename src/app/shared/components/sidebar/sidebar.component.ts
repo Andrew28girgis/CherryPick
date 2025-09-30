@@ -107,11 +107,7 @@ export class SidebarComponent implements OnInit {
         this.saveSuccess = true;
         this.showToast('ChatGPT Key Has Been Added Successfully');
         this.modalService.dismissAll();
-      },
-      error: (err) => {
-        this.isSaving = false;
-        this.errorMessage = err.message || 'Failed to save ChatGPT Key';
-      },
+      }
     });
   }
 
@@ -130,8 +126,7 @@ export class SidebarComponent implements OnInit {
       setTimeout(() => {
         toast.classList.remove('show');
       }, 5000);
-    } else {
-      console.warn('Toast elements not found in DOM.');
+    } else { 
     }
   }
   GetUserAPIAIKey() {
@@ -142,10 +137,7 @@ export class SidebarComponent implements OnInit {
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.AIKey = res?.json[0]?.openAIKey || '';
-      },
-      error: (err) => {
-        this.errorMessage = err.message || 'Failed to retrieve ChatGPT Key';
-      },
+      }
     });
   }
 

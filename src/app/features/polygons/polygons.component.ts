@@ -180,10 +180,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
         this.changeDetector.markForCheck();
         return;
       }
-
-      console.info('No geometry available to view for item', item);
     } catch (error) {
-      console.error('Error viewing selected item:', error);
     } finally {
       this.spinner.hide();
     }

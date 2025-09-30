@@ -17,8 +17,7 @@ export class ViewManagerService {
   private _lastBuyboxId: number | null = null;
   private _lastOrgId: number | null = null;
   private _searchQuery = new BehaviorSubject<string>('');
-  private _selectedStageId = new BehaviorSubject<number>(0); // Default to 0 (All)
-
+  private _selectedStageId = new BehaviorSubject<number>(0);
   public selectedStageId$ = this._selectedStageId.asObservable();
   public kanbanStages$ = this._kanbanStages.asObservable();
   public selectedStageName$ = combineLatest([
@@ -31,7 +30,7 @@ export class ViewManagerService {
       return s?.stageName ?? 'Stage';
     })
   );
-  private _currentView = new BehaviorSubject<number>(5); 
+  private _currentView = new BehaviorSubject<number>(5);
   private stageUpdateSubject = new Subject<void>();
   public stageUpdate$ = this.stageUpdateSubject.asObservable();
   public shoppingCenters$ = this._shoppingCenters.asObservable();
@@ -56,8 +55,6 @@ export class ViewManagerService {
   public loadingComplete$ = this._loadingComplete.asObservable();
   private _dataLoadedEvent = new Subject<void>();
   public dataLoadedEvent$ = this._dataLoadedEvent.asObservable();
-  
- 
 
   constructor(
     private placesService: PlacesService,
@@ -68,29 +65,26 @@ export class ViewManagerService {
     if (this._lastBuyboxId === campaignId && this._lastOrgId === orgId) {
       return;
     }
-  
+
     this._lastBuyboxId = campaignId;
-    this._lastOrgId = orgId;
-  
+    this._lastOrgId = orgId; 
     this.categoryNameCache.clear();
-    this.unitSizeCache.clear();
-  
+    this.unitSizeCache.clear(); 
     this._loadingComplete.next(false); // reset loading state
-  
+
     const promises = [this.loadShoppingCenters(campaignId)];
-  
+
     Promise.all(promises)
       .then(() => {
         const centers = this._shoppingCenters.getValue();
         if (centers && centers.length > 0) {
           this.loadKanbanStages(centers[0].kanbanId);
         }
-  
+
         this._loadingComplete.next(true); // ✅ mark as done
-        this._dataLoadedEvent.next();     // ✅ emit event
+        this._dataLoadedEvent.next(); // ✅ emit event
       })
       .catch((error) => {
-        console.error('Error loading data:', error);
         this._loadingComplete.next(false);
       });
   }
@@ -242,7 +236,6 @@ export class ViewManagerService {
         zoom: zoom,
       });
 
-      // Create a new marker
       const marker = new google.maps.Marker({
         position: { lat, lng },
         map: map,
@@ -250,7 +243,7 @@ export class ViewManagerService {
       });
 
       return map;
-    } catch (error) { 
+    } catch (error) {
       return null;
     }
   }
@@ -263,7 +256,6 @@ export class ViewManagerService {
     pitch = 0
   ): Promise<any> {
     try {
-      // Throttle requests
       const now = Date.now();
       const timeSinceLastRequest = now - this.streetViewLastRequestTime;
 
@@ -274,14 +266,10 @@ export class ViewManagerService {
       }
 
       this.streetViewLastRequestTime = Date.now();
-
-      // Check cache
       const cacheKey = `${lat.toFixed(6)}_${lng.toFixed(6)}`;
       if (this.streetViewCache[cacheKey]) {
         return this.streetViewCache[cacheKey];
       }
-
-      // Clean up previous instance
       if (this.activeStreetViews[elementId]) {
         this.activeStreetViews[elementId].unbind('pano_changed');
         this.activeStreetViews[elementId].setVisible(false);
@@ -363,20 +351,22 @@ export class ViewManagerService {
           ShoppingCenterStageId: 0,
         },
       };
-  
+
       this.placesService
         .GenericAPI(body)
         .pipe(take(1))
         .subscribe({
           next: (data) => {
             const centers = data.json;
-  
+
             centers.forEach((center: any) => {
               if (center.ShoppingCenter?.Places) {
                 const sizes: number[] = center.ShoppingCenter.Places.map(
                   (p: any) => p.BuildingSizeSf as number
-                ).filter((s: number | null | undefined): s is number => s != null);
-  
+                ).filter(
+                  (s: number | null | undefined): s is number => s != null
+                );
+
                 if (sizes.length > 0) {
                   const uniqueSizes = Array.from(new Set<number>(sizes)).sort(
                     (a, b) => a - b
@@ -392,10 +382,10 @@ export class ViewManagerService {
                 center.sizeRange = null;
               }
             });
-  
+
             this._allShoppingCenters.next(centers);
             this.applyFilters();
-  
+
             resolve();
           },
           error: (err) => {

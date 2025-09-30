@@ -92,7 +92,6 @@ export class MarketSideViewComponent implements OnInit {
         this.getShoppingCenters();
       },
       error: (err) => {
-        console.error('Error loading categories:', err);
         this.spinner.hide();
       }
     });
@@ -129,7 +128,6 @@ export class MarketSideViewComponent implements OnInit {
         this.getBuyBoxPlaces(this.campaignId);
       },
       error: (err) => {
-        console.error('Error loading shopping centers:', err);
         this.spinner.hide();
       }
     });
@@ -156,7 +154,6 @@ export class MarketSideViewComponent implements OnInit {
         this.initializeMap();
       },
       error: (err) => {
-        console.error('Error loading buybox places:', err);
         this.spinner.hide();
       }
     });
@@ -187,7 +184,6 @@ export class MarketSideViewComponent implements OnInit {
       // Timeout after 10 seconds
       setTimeout(() => {
         clearInterval(checkInterval);
-        console.error('Google Maps API not loaded after timeout');
         resolve(false);
       }, 10000);
     });
@@ -201,14 +197,12 @@ export class MarketSideViewComponent implements OnInit {
       const mapsAvailable = await this.checkGoogleMapsAvailable();
       if (!mapsAvailable) {
         this.spinner.hide();
-        console.error('Google Maps API not available');
         return;
       }
       // Now initialize the map with data
       await this.createMap();
       this.mapInitialized = true;
     } catch (error) {
-      console.error('Error initializing map:', error);
       this.spinner.hide();
     }
   }
@@ -225,9 +219,7 @@ export class MarketSideViewComponent implements OnInit {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
       },
-      error: (err) => {
-        console.error('Error loading polygons:', err);
-      }
+
     });
   }
   // Separate map creation from marker creation
@@ -235,7 +227,6 @@ export class MarketSideViewComponent implements OnInit {
     try {
       const mapElement = document.getElementById('map');
       if (!mapElement) {
-        console.error('Map element not found');
         this.spinner.hide();
         return;
       }
@@ -261,7 +252,6 @@ export class MarketSideViewComponent implements OnInit {
       this.updateCardsSideList(this.map);
       this.addMarkersToMap();
     } catch (error) {
-      console.error('Error creating map:', error);
       this.spinner.hide();
     }
   }
@@ -321,9 +311,6 @@ export class MarketSideViewComponent implements OnInit {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
       },
-      error: (err) => {
-        console.error('Error loading polygons:', err);
-      }
     });
   }
 
@@ -368,7 +355,6 @@ export class MarketSideViewComponent implements OnInit {
         );
       }
     } catch (error) {
-      console.error('Error saving map view:', error);
     }
   }
   
@@ -412,7 +398,6 @@ export class MarketSideViewComponent implements OnInit {
           return visibleCoords.has(`${center.Latitude},${center.Longitude}`) || 
                  bounds.contains(centerLatLng);
         } catch (e) {
-          console.error('Error checking center visibility:', e);
           return false;
         }
       });
@@ -443,7 +428,6 @@ private isCenterVisible(center: any, bounds: any): boolean {
       }
       return bounds.contains({ lat, lng });
     } catch (error) {
-      console.error('Error checking if property is within bounds:', error);
       return false;
     }
   }
@@ -461,7 +445,6 @@ private isCenterVisible(center: any, bounds: any): boolean {
         this.map.setZoom(17);
       }
     } catch (error) {
-      console.error('Error in onMouseEnter:', error);
     }
   }
 
@@ -494,7 +477,6 @@ private isCenterVisible(center: any, bounds: any): boolean {
         this.addMarkerToStreetView(panorama, lat, lng);
       }
     } catch (error) {
-      console.error('Error creating street view:', error);
     }
   }
 
@@ -517,7 +499,6 @@ private isCenterVisible(center: any, bounds: any): boolean {
         },
       });
     } catch (error) {
-      console.error('Error adding marker to street view:', error);
     }
   }
   /////////////////////////

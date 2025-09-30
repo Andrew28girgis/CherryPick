@@ -58,7 +58,6 @@ export class SettingsComponent implements OnInit {
         this.settingsService.getStageIdAndName()
       );
     } catch (error) {
-      console.error('Error while getting email stages:', error);
     }
   }
 

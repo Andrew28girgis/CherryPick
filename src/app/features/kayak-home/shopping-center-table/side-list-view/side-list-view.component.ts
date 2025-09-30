@@ -660,8 +660,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           this.selectedStageName = current ? current.stageName : 'Stage';
         }
         this.cdr.markForCheck();
-      },
-      error: (err) => console.error('Error loading kanban stages:', err),
+      }
     });
   }
 
@@ -870,16 +869,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           backdrop: true,
           centered: true,
         });
-      },
-      error: (err) => {
-        console.error('Error fetching info:', err);
-        this.isLoadingInfo = false;
-        this.modalService.open(content, {
-          size: 'md',
-          backdrop: true,
-          centered: true,
-        });
-      },
+      }
     });
   }
   // Example: inside your component class
@@ -916,7 +906,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
         toast.classList.remove('show');
       }, 2500);
     } else {
-      console.warn('Toast elements not found in DOM.');
     }
   }
   toggleMenu(Id: number, event: MouseEvent, stage?: boolean) {

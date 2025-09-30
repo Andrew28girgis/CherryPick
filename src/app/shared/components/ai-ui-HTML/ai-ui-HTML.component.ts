@@ -140,7 +140,6 @@ Return exactly one code block containing the HTML with an embedded <style> block
           this.sendToAI();
         },
         error: (error) => {
-          console.error('Error fetching JSON:', error);
           this.error = 'Failed to load data';
           this.isLoading = false;
         },
@@ -198,7 +197,6 @@ Return exactly one code block containing the HTML with an embedded <style> block
   }
 
   private handleApiError(error: any): void {
-    console.error('AI API Error:', error);
     this.error =
       error?.error?.message ||
       error?.message ||

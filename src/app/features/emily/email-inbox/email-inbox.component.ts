@@ -396,7 +396,6 @@ export class EmailInboxComponent implements OnInit {
       this.ResponseContextEmail = JSON.stringify(data.context, null, 2);
       this.spinner.hide();
     } catch (error) {
-      console.error('Error in GenerateContext:', error);
     } finally {
       this.spinner.hide();
     }
@@ -455,13 +454,7 @@ export class EmailInboxComponent implements OnInit {
           this.dataLoaded = true;
           this.showToast('Failed to create email draft.');
         }
-      },
-      error: (error) => {
-        console.error('Error in PutMailsDraft:', error);
-        // this.spinner.hide();
-        this.dataLoaded = true;
-        this.showToast('Error generating email draft.');
-      },
+      }
     });
   }
 
@@ -517,7 +510,6 @@ export class EmailInboxComponent implements OnInit {
   //       this.returnGetMailContextGenerated = data.json;
   //     }
   //   } catch (error) {
-  //     console.error('Error fetching generated emails:', error);
   //   }
   // }
 
@@ -562,7 +554,6 @@ export class EmailInboxComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error checking mail generation:', error);
         this.spinner.hide();
         this.dataLoaded = true;
         this.showToast('Error checking email generation status.');
@@ -606,12 +597,7 @@ export class EmailInboxComponent implements OnInit {
           this.spinner.hide();
         }
       },
-      error: (error) => {
-        console.error('Error reading specific mails:', error);
-        this.spinner.hide();
-        this.dataLoaded = true;
-        this.showToast('Error reading generated email.');
-      },
+
     });
   }
 
@@ -648,7 +634,6 @@ export class EmailInboxComponent implements OnInit {
   //       this.showToast('Email sent successfully!');
   //     },
   //     error: (error) => {
-  //       console.error('Error sending email:', error);
   //       this.spinner.hide();
   //       this.showToast('Error sending email.');
   //     },

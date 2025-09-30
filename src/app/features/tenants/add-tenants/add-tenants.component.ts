@@ -205,7 +205,6 @@ export class AddTenantsComponent implements OnInit {
           // this.router.navigate(['/dashboard/', buyBox.id, buyBox.organizationId, buyBox.name]);
         },
         error: (error) => {
-          console.error('API error:', error);
           this.spinner.hide();
         },
       });

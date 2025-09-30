@@ -76,10 +76,6 @@ export class MarketMapViewComponent implements OnInit {
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters();
       },
-      error: (err) => {
-        console.error('Error loading categories:', err);
-        this.spinner.hide();
-      },
     });
   }
 
@@ -113,7 +109,6 @@ export class MarketMapViewComponent implements OnInit {
         this.getBuyBoxPlaces(this.campaignId);
       },
       error: (err) => {
-        console.error('Error loading shopping centers:', err);
         this.spinner.hide();
       },
     });
@@ -139,10 +134,7 @@ export class MarketMapViewComponent implements OnInit {
         this.processCategories();
         this.initializeMap();
       },
-      error: (err) => {
-        console.error('Error loading buybox places:', err);
-        this.spinner.hide();
-      },
+
     });
   }
 
@@ -175,7 +167,6 @@ export class MarketMapViewComponent implements OnInit {
       // Timeout after 10 seconds
       setTimeout(() => {
         clearInterval(checkInterval);
-        console.error('Google Maps API not loaded after timeout');
         resolve(false);
       }, 10000);
     });
@@ -190,7 +181,6 @@ export class MarketMapViewComponent implements OnInit {
       const mapsAvailable = await this.checkGoogleMapsAvailable();
       if (!mapsAvailable) {
         this.spinner.hide();
-        console.error('Google Maps API not available');
         return;
       }
 
@@ -198,7 +188,6 @@ export class MarketMapViewComponent implements OnInit {
       await this.createMap();
       this.mapInitialized = true;
     } catch (error) {
-      console.error('Error initializing map:', error);
       this.spinner.hide();
     }
   }
@@ -215,9 +204,6 @@ export class MarketMapViewComponent implements OnInit {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
       },
-      error: (err) => {
-        console.error('Error loading polygons:', err);
-      },
     });
   }
 
@@ -227,7 +213,6 @@ export class MarketMapViewComponent implements OnInit {
       const mapElement = document.getElementById('map');
 
       if (!mapElement) {
-        console.error('Map element not found');
         this.spinner.hide();
         return;
       }
@@ -257,7 +242,6 @@ export class MarketMapViewComponent implements OnInit {
             mapOptions.zoom = savedView.zoom;
           }
         } catch (e) {
-          console.error('Error parsing saved map view:', e);
         }
       }
       // Otherwise, try to use the first shopping center
@@ -281,7 +265,6 @@ export class MarketMapViewComponent implements OnInit {
       // Now add markers and polygons
       this.addMarkersToMap();
     } catch (error) {
-      console.error('Error creating map:', error);
       this.spinner.hide();
     }
   }
@@ -332,10 +315,7 @@ export class MarketMapViewComponent implements OnInit {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      },
-      error: (err) => {
-        console.error('Error loading polygons:', err);
-      },
+      }
     });
   }
 
@@ -385,7 +365,6 @@ export class MarketMapViewComponent implements OnInit {
         );
       }
     } catch (error) {
-      console.error('Error saving map view:', error);
     }
   }
 
@@ -420,7 +399,6 @@ export class MarketMapViewComponent implements OnInit {
         );
       });
     } catch (error) {
-      console.error('Error updating cards side list:', error);
     }
   }
 
@@ -435,7 +413,6 @@ export class MarketMapViewComponent implements OnInit {
       }
       return bounds.contains({ lat, lng });
     } catch (error) {
-      console.error('Error checking if property is within bounds:', error);
       return false;
     }
   }
@@ -453,7 +430,6 @@ export class MarketMapViewComponent implements OnInit {
         this.map.setZoom(17);
       }
     } catch (error) {
-      console.error('Error in onMouseEnter:', error);
     }
   }
 
@@ -483,7 +459,6 @@ export class MarketMapViewComponent implements OnInit {
         this.addMarkerToStreetView(panorama, lat, lng);
       }
     } catch (error) {
-      console.error('Error creating street view:', error);
     }
   }
 
@@ -506,7 +481,6 @@ export class MarketMapViewComponent implements OnInit {
         },
       });
     } catch (error) {
-      console.error('Error adding marker to street view:', error);
     }
   }
 }

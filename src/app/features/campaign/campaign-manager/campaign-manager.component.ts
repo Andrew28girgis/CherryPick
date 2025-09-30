@@ -123,18 +123,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       this.getAllCampaigns();
     });
     this.refreshService.polygonSavedData$.subscribe((data) => {
-      console.log('[CampaignManager] Got polygon saved data:', data);
 
       this.placesService
         .sendmessages({ Chat: data, NeedToSaveIt: true })
         .subscribe({
           next: (res) => {
-            console.log('[CampaignManager] API success:', res);
             this.modalRef?.close();
-          },
-          error: (err) => {
-            console.error('[CampaignManager] API error:', err);
-          },
+          }
         });
     });
   }
@@ -377,12 +372,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         }
 
         if (onLoaded) onLoaded();
-      },
-      error: (err) => {
-        console.error('Error loading tenants', err);
-        this.tenants = [];
-        if (onEmpty) onEmpty();
-      },
+      }
     });
   }
 

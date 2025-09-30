@@ -55,12 +55,7 @@ export class EmailInfoComponent implements OnInit {
           this.error = 'No email data found';
         }
         this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Failed to load email data';
-        this.loading = false;
-        console.error('API Error:', err);
-      },
+      }
     });
   }
 

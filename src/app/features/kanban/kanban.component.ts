@@ -199,12 +199,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
     const targetStage = this.findStageById(targetStageNumId);
 
     if (!sourceStage || !targetStage) {
-      console.error('Could not find source or target stage');
       return;
     }
 
     if (dragData.orgIndex === -1) {
-      console.error('Could not find organization in source stage');
       return;
     }
 
@@ -234,12 +232,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
     const targetStage = this.findStageById(targetStageNumId);
 
     if (!sourceStage || !targetStage) {
-      console.error('Could not find source or target stage');
       return;
     }
 
     if (dragData.orgIndex === -1) {
-      console.error('Could not find organization in source stage');
       return;
     }
 

@@ -72,7 +72,6 @@ export class NotificationService {
         this.newNotificationsCount = this.unreadCount;
       }),
       catchError((err) => {
-        console.error('fetch failed', err);
         return of(null); // prevent breaking the stream
       })
     );
@@ -124,9 +123,6 @@ export class NotificationService {
         this.updateNotificationCounts();
         // Update badge count when a notification is read
         this.newNotificationsCount = this.unreadCount;
-      },
-      error: (err) => {
-        console.error('Error marking notification as read:', err);
       },
     });
   }

@@ -70,7 +70,6 @@ export class PropertyCardComponent {
         zIndex: 999999,
       });
     } catch (error) {
-      console.error('Error initializing map:', error);
       return;
     }
   }

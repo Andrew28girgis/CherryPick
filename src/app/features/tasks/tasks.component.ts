@@ -550,7 +550,6 @@ export class TasksComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-        console.error('Error fetching counts:', error);
       },
     });
   }

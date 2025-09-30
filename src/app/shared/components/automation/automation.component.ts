@@ -66,7 +66,6 @@ export class AutomationComponent implements OnInit {
             try {
               parsedJsonResponse = JSON.parse(item.automationJsonResponse);
             } catch (error) {
-              console.error('Error parsing JSON response:', error);
               parsedJsonResponse = null;
             }
           } else {
@@ -137,8 +136,7 @@ export class AutomationComponent implements OnInit {
         this.tableColumns = columnArray;
       },
       error: (error) => {
-        this.isLoading = false; // Set loading to false on error
-        console.error('Error fetching automation response:', error);
+        this.isLoading = false; 
       },
     });
 
@@ -188,7 +186,6 @@ export class AutomationComponent implements OnInit {
     const contact = response.jsonResponse;
 
     if (!this.isValidEmail(contact?.email)) {
-      console.warn('Invalid or missing email. Skipping contact creation.');
       return;
     }
 
@@ -210,7 +207,6 @@ export class AutomationComponent implements OnInit {
         this.showToast('Contact created successfully!');
       },
       error: (error) => {
-        console.error('Error creating contact:', error);
         this.showToast('Error creating contact. Please try again.');
       },
     });
@@ -225,7 +221,6 @@ export class AutomationComponent implements OnInit {
         this.respondToAutomation(item);
         addedCount++;
       } else {
-        console.warn(`Skipped index ${index}: Invalid or missing email.`);
       }
     });
 
@@ -243,7 +238,6 @@ export class AutomationComponent implements OnInit {
         toast.classList.remove('show');
       }, 3000);
     } else {
-      console.warn('Toast elements not found in DOM.');
     }
   }
   // Updated close method with confirmation logic

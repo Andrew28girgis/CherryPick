@@ -381,8 +381,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
           this.selectedStageName = current ? current.stageName : 'Stage';
         }
         this.cdr.detectChanges();
-      },
-      error: (err) => console.error('Error loading kanban stages:', err),
+      }
+  
     });
   }
 
@@ -541,7 +541,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
         });
       },
       error: (err) => {
-        console.error('Error fetching info:', err);
         this.isLoadingInfo = false;
         this.modalService.open(content, {
           size: 'md',
@@ -581,7 +580,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
         toast.classList.remove('show');
       }, 2500);
     } else {
-      console.warn('Toast elements not found in DOM.');
     }
   }
   toggleMenu(Id: number, event: MouseEvent, stage?: boolean) {

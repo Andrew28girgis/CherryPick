@@ -93,10 +93,6 @@ export class ShoppingComponent implements OnInit {
           this.applyFiltersAndSort();
           this.isLoading = false;
         }
-      },
-      (error) => {
-        console.error('Error loading shopping centers:', error);
-        this.isLoading = false;
       }
     );
   }
@@ -390,11 +386,7 @@ export class ShoppingComponent implements OnInit {
         } else {
           this.campaigns = [];
         }
-      },
-      error: (err) => {
-        console.error('Failed to load campaigns', err);
-        this.campaigns = [];
-      },
+      }
     });
   }
   goToAddCampaign(): void {

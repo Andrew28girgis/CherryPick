@@ -48,16 +48,13 @@ export class AddContactComponent {
       this.placesService.GenericAPI(params).subscribe(
         (response: any) => {
           if (response.error) {
-            console.error('Error from API:', response.error);
           } else {
             this.contactCreated.emit(response);
             this.activeModal.close(response);
             this.resetForm();
           }
-        },
-        (error) => {
-          console.error('Error creating contact:', error);
         }
+  
       );
     }
   }

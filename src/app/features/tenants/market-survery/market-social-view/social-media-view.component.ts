@@ -241,13 +241,11 @@ export class SocialMediaViewComponent implements OnInit {
       this.authService.setToken(response.token);
       // Optionally you can add any further logic after successful login
     } else {
-      console.error('Token not found in the response.');
       this.showToast('Login failed. Please try again.');
     }
   }
 
   private handleLoginError(error: any): void {
-    console.error('Login failed:', error);
     this.showToast('Something went wrong. Please try again.');
   }
   resetForm(): void {
@@ -624,7 +622,6 @@ export class SocialMediaViewComponent implements OnInit {
         this.modalService.dismissAll();
       })
       .catch((err) => {
-        console.error('Failed to copy: ', err);
       });
   }
   showToast(message: string) {

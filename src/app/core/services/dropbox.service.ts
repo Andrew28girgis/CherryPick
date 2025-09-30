@@ -71,7 +71,6 @@ export class DropboxService {
           if (error.status === 401) {
             return this.refreshToken().pipe(
               switchMap(() => {
-                // Retry with new token
                 const newHeaders = new HttpHeaders({
                   Authorization: `Bearer ${this.token}`,
                   'Dropbox-API-Arg': JSON.stringify({ path }),
@@ -94,7 +93,6 @@ export class DropboxService {
       'accept': 'application/json',
       'Content-Type': 'application/json-patch+json'
     });
-    // The API expects the refresh token as a JSON string in the body
     return this.http.post(url, JSON.stringify(this.RefreshToken), { headers });
   }
 
@@ -106,7 +104,6 @@ export class DropboxService {
     });
 
     const body = { path };
-
     return this.http.post(dropboxApiUrl, body, {
       headers,
       responseType: 'json',

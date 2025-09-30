@@ -112,11 +112,7 @@ export class RegisterationComponent implements OnInit {
                 this.spinner.hide();
               },
             });
-          },
-          error: () => {
-            this.errorMessage = 'Failed to create contact.';
-            this.spinner.hide();
-          },
+          }
         });
       },
     });

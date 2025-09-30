@@ -44,7 +44,6 @@ export class AutomationShoppingCentersComponent implements OnInit {
           const rawJson = data.json[0].automationJsonResponse;
           this.automationData = JSON.parse(rawJson); // ✅ Convert string to object
         } catch (error) {
-          console.error('Failed to parse automationJsonResponse:', error);
         }
       },
     });
@@ -54,7 +53,6 @@ export class AutomationShoppingCentersComponent implements OnInit {
     if ((window as any).chrome?.webview?.postMessage) {
       (window as any).chrome.webview.postMessage('close-automation-window');
     } else {
-      console.warn('chrome.webview is not available on this platform');
     }
   }
   showToast(message: string) {
@@ -67,7 +65,6 @@ export class AutomationShoppingCentersComponent implements OnInit {
         toast.classList.remove('show');
       }, 3000);
     } else {
-      console.warn('Toast elements not found in DOM.');
     }
   }
   get paginatedTenants(): any[] {

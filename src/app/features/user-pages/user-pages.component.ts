@@ -63,7 +63,6 @@ export class UserPagesComponent implements OnInit {
         this.loading = false;
       },
       error: (error: any) => {
-        console.error('[v0] API Error:', error);
         this.error = 'Failed to load user pages. Please try again.';
         this.loading = false;
       },

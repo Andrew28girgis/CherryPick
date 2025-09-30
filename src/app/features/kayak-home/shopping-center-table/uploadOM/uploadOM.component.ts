@@ -60,7 +60,6 @@ export class UploadOMComponent implements OnInit {
             this.imageArray = this.BrokerShoppingCenters.Images.split(',').map((img: string) => img.trim());
           }
         } catch (error) {
-          console.error('Failed to parse jsonResponse:', error);
         }
       },
     });
@@ -76,7 +75,6 @@ export class UploadOMComponent implements OnInit {
         toast.classList.remove('show');
       }, 3000);
     } else {
-      console.warn('Toast elements not found in DOM.');
     }
   }
 }

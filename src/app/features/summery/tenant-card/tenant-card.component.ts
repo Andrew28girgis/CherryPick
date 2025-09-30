@@ -66,8 +66,6 @@ export class TenantCardComponent {
         img.src = 'assets/Images/placeholder.png';
       }
     } catch (err) {
-      console.warn('Canvas image data blocked due to CORS:', err);
-      // Fallback: if the image is very small (like a white dot), use placeholder
       if (img.naturalWidth <= 5 && img.naturalHeight <= 5) {
         img.src = 'assets/Images/placeholder.png';
       }

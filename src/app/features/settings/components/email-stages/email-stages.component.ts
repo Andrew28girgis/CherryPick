@@ -49,7 +49,6 @@ export class EmailStagesComponent implements OnInit {
       );
       return response.totalMailCount;
     } catch (error) {
-      console.error('Error while getting read mails stages:', error);
     }
   }
 
@@ -68,10 +67,7 @@ export class EmailStagesComponent implements OnInit {
         this.stagesList[0].inProgress = false;
         this.stagesList[0].mailsCount = response.countOfMails;
         this.realEstateEmailsCount.emit(response.countOfMails);
-      },
-      error: (error) => {
-        console.error('Error while normalizing emails: ', error);
-      },
+      }
     });
   }
 }

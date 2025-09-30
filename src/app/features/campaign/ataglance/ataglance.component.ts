@@ -87,10 +87,7 @@ export class AtaglanceComponent implements OnInit {
         }
 
         this.componentLoaded = true;
-      },
-      error: (err) => {
-        console.error('Error:', err);
-      },
+      }
     });
   }
 

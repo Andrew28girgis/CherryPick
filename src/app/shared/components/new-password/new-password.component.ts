@@ -75,7 +75,6 @@ export class NewPasswordComponent {
         this.spinner.hide();
       },
       error: (err) => {
-        console.error('API error:', err);
         this.errorMessage = 'An error occurred. Please try again.';
         this.fadeError = true;
         setTimeout(() => (this.fadeError = false), 4000);

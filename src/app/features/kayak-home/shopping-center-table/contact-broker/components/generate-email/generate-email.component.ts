@@ -241,7 +241,6 @@ export class GenerateEmailComponent implements OnInit {
 
       // If categoryId doesn't exist, exit early
       if (!categoryId) {
-        console.error('Category ID not found.');
         this.spinner.hide(); // Hide the spinner when exiting early
         return;
       }
@@ -272,7 +271,6 @@ export class GenerateEmailComponent implements OnInit {
       } else {
       }
     } catch (error) {
-      console.error('Error fetching prompts:', error);
     } finally {
       // Hide the spinner after the process is complete
       this.spinner.hide();
@@ -468,7 +466,6 @@ export class GenerateEmailComponent implements OnInit {
         this.ResponseContextEmail.push(response);
         return response;
       } catch (error) {
-        console.error('Error executing API call for', body, ':', error);
         throw error;
       }
     });
