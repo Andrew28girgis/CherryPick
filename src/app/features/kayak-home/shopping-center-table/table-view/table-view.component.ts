@@ -11,12 +11,13 @@ import {
   ElementRef,
   ViewChildren,
   QueryList,
+  Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Center, Stage } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -52,6 +53,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   // Loading state for skeleton
   isLoading = true;
   isLoadingstatus = true;
+  dataReady = false;
   // Kanban stages
   KanbanStages: any[] = [];
   activeDropdown: any = null;
@@ -95,6 +97,13 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.General = new General();
+    this.subscriptions.add(
+      this.viewManagerService.loadingComplete$.subscribe((done) => {
+        this.isLoading = !done; // show loader until both flags are satisfied
+        this.dataReady = done;
+        this.cdr.markForCheck();
+      })
+    );
     this.loadStages();
 
     this.subscriptions.add(
