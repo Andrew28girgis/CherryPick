@@ -275,8 +275,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       marketSurveyId,
       stageId,
       shoppingCenter,
-      this.CampaignId
-    );
+     );
 
     this.cdr.markForCheck();
 

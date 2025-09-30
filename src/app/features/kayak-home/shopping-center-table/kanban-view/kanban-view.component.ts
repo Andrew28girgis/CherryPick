@@ -1,9 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { StateService } from 'src/app/core/services/state.service';
-import { SocialServiceService } from 'src/app/core/services/social-service.service';
-import { Center } from 'src/app/shared/models/shoppingCenters';
+  import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 
 @Component({
   selector: 'app-kanban-view',
@@ -18,10 +16,9 @@ export class KanbanViewComponent implements OnInit {
   CampaignId: any;
 
   constructor(
-    private viewManagerService: SocialServiceService,
+    private viewManagerService: ViewManagerService,
     private activatedRoute: ActivatedRoute,
-    private stateService: StateService,
-    private cdr: ChangeDetectorRef,
+     private cdr: ChangeDetectorRef,
     private spinner: NgxSpinnerService
   ) {}
 
@@ -39,15 +36,14 @@ export class KanbanViewComponent implements OnInit {
     try {
       this.spinner.show();
 
-      const shoppingCenters = await this.viewManagerService.getShoppingCenters(
+      const shoppingCenters = await this.viewManagerService.loadShoppingCenters(
         this.CampaignId
       );
-      this.stateService.setShoppingCenters(shoppingCenters);
-      // Get kanban stages using the first kanban ID from the first shopping center
-      if (shoppingCenters && shoppingCenters.length > 0) {
-        this.kanbanId = shoppingCenters[0].kanbanId;
+       // Get kanban stages using the first kanban ID from the first shopping center
+      // if (shoppingCenters && shoppingCenters.length > 0) {
+      //   this.kanbanId = shoppingCenters[0].kanbanId;
         
-      }
+      // }
     } catch (error) {
       // Handle error
     } finally {

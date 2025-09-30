@@ -48,13 +48,13 @@ export class MapViewComponent implements OnInit, OnDestroy {
   isdataLoaded = false;
   private subscriptions: Subscription[] = [];
   CampaignId: any;
+  allShoppingCenters: Center[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService,
     private viewManagerService: ViewManagerService,
     private markerService: MapsService,
-    private stateService: StateService,
     private ngZone: NgZone
   ) {}
 
@@ -71,63 +71,28 @@ export class MapViewComponent implements OnInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
-    // Subscribe to data from ViewManagerService
-    this.subscribeToServiceData();
-    // this.viewManagerService.initializeData(this.CampaignId, this.OrgId);
-  }
-  private subscribeToServiceData(): void {
-    // Subscribe to data loaded event
     this.subscriptions.push(
-      this.viewManagerService.dataLoadedEvent$.subscribe(() => {
-        // When all data is loaded, get it from the service
-        this.loadDataFromService();
+      this.viewManagerService.allShoppingCenters$.subscribe((centers) => {
+        this.allShoppingCenters = centers;
       })
     );
-  }
 
-  private loadDataFromService(): void {
-    combineLatest([this.viewManagerService.shoppingCenters$])
-      .pipe(take(1))
-      .subscribe(([shoppingCenters]) => {
-        // Get shopping centers from service
-        this.shoppingCenters = shoppingCenters;
-        this.getAllMarker();
-      });
+    this.subscriptions.push(
+      this.viewManagerService.shoppingCenters$.subscribe((centers) => {
+        this.shoppingCenters = centers;
+        if (centers && centers.length > 0) {
+          this.getAllMarker();
+        }
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.clearMarkers();
   }
-
-  getShoppingCenters(): void {
-    if (this.stateService.getShoppingCenters().length > 0) {
-      this.shoppingCenters = this.stateService.getShoppingCenters();
-      return;
-    }
-
-    const body: any = {
-      Name: 'GetMarketSurveyShoppingCenters',
-      Params: {
-        CampaignId: this.CampaignId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.shoppingCenters = data.json;
-        this.stateService.setShoppingCenters(data.json);
-        this.getBuyBoxPlaces(this.CampaignId);
-      },
-    });
-  }
+ 
 
   getBuyBoxPlaces(campaignId: number): void {
-    if (this.stateService.getBuyboxPlaces()?.length > 0) {
-      this.buyboxPlaces = this.stateService.getBuyboxPlaces();
-      this.getAllMarker();
-      return;
-    }
-
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
@@ -137,7 +102,6 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxPlaces = data.json;
-        this.stateService.setBuyboxPlaces(data.json);
         this.buyboxCategories?.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces?.filter((place) =>
@@ -150,13 +114,6 @@ export class MapViewComponent implements OnInit, OnDestroy {
   }
 
   GetOrganizationById(orgId: number): void {
-    const shareOrg = this.stateService.getShareOrg() || [];
-
-    if (shareOrg && shareOrg.length > 0) {
-      this.ShareOrg = this.stateService.getShareOrg();
-      return;
-    }
-
     const body: any = {
       Name: 'GetOrganizationById',
       Params: {
@@ -166,18 +123,11 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.ShareOrg = data.json;
-        this.stateService.setShareOrg(data.json);
       },
     });
   }
 
   BuyBoxPlacesCategories(): void {
-    if (this.stateService.getBuyboxCategories().length > 0) {
-      this.buyboxCategories = this.stateService.getBuyboxCategories();
-      this.getShoppingCenters();
-      return;
-    }
-
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
@@ -187,9 +137,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
-        this.stateService.setBuyboxCategories(data.json);
-        this.getShoppingCenters();
-      },
+       },
     });
   }
 
