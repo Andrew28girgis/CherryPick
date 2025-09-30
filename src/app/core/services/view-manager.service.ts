@@ -26,8 +26,6 @@ export class ViewManagerService {
   private _searchQuery = new BehaviorSubject<string>('');
 
   // Selected items
-  private _selectedIdCard = new BehaviorSubject<number | null>(null);
-  private _selectedId = new BehaviorSubject<number | null>(null);
   private _selectedStageId = new BehaviorSubject<number>(0); // Default to 0 (All)
 
   public selectedStageId$ = this._selectedStageId.asObservable();
@@ -61,8 +59,6 @@ export class ViewManagerService {
   public filteredCenters$ = this._filteredCenters.asObservable();
   public allShoppingCenters$ = this._allShoppingCenters.asObservable();
   public searchQuery$ = this._searchQuery.asObservable();
-  public selectedIdCard$ = this._selectedIdCard.asObservable();
-  public selectedId$ = this._selectedId.asObservable();
   public currentView$ = this._currentView.asObservable();
   public dataLoadedEvent$ = this._dataLoadedEvent.asObservable();
 
@@ -220,34 +216,6 @@ export class ViewManagerService {
       default:
         return sortedCenters;
     }
-  }
-
-  /**
-   * Toggle dropdown for kanban stages
-   */
-  public toggleDropdown(shoppingCenter: any, activeDropdown: any): any {
-    // Close any open dropdown
-    if (activeDropdown && activeDropdown !== shoppingCenter) {
-      activeDropdown.isDropdownOpen = false;
-    }
-
-    // Toggle current dropdown
-    shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
-
-    // Set as active dropdown
-    const newActiveDropdown = shoppingCenter.isDropdownOpen
-      ? shoppingCenter
-      : null;
-
-    // If opening this dropdown, load kanban stages if not already loaded
-    if (shoppingCenter.isDropdownOpen) {
-      const stages = this._kanbanStages.getValue();
-      if (!stages || stages.length === 0) {
-        this.loadKanbanStages(shoppingCenter.kanbanId);
-      }
-    }
-
-    return newActiveDropdown;
   }
 
   /**
@@ -435,7 +403,7 @@ export class ViewManagerService {
               this.streetViewCache[cacheKey] = panorama;
               setTimeout(() => delete this.streetViewCache[cacheKey], 300000);
               resolve(panorama);
-            } else { 
+            } else {
               streetViewElement.innerHTML = `
             <div class="street-view-fallback">
               <i class="fa-solid fa-street-view"></i>
@@ -467,39 +435,6 @@ export class ViewManagerService {
    */
   public sanitizeUrl(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
-
-  /**
-   * Set selected ID card
-   */
-  public setSelectedIdCard(id: number | null): void {
-    this._selectedIdCard.next(id);
-  }
-
-  /**
-   * Set selected ID
-   */
-  public setSelectedId(id: number | null): void {
-    this._selectedId.next(id);
-  }
-
-  /**
-   * Toggle shortcuts
-   */
-  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    if (close === 'close') {
-      this.setSelectedIdCard(null);
-      this.setSelectedId(null);
-      return;
-    }
-
-    // Toggle the selected ID
-    const currentSelectedIdCard = this._selectedIdCard.getValue();
-    const currentSelectedId = this._selectedId.getValue();
-
-    // Also update the card ID
-    this.setSelectedIdCard(currentSelectedIdCard === id ? null : id);
-    this.setSelectedId(currentSelectedId === id ? null : id);
   }
 
   public loadShoppingCenters(campaignId: number) {

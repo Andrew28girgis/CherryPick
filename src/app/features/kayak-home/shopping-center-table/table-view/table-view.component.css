@@ -107,81 +107,7 @@
   border-radius: var(--Radius-R-4);
 }
 
-/* Your existing CSS */
-.shortcuts_iconCard {
-  position: absolute;
-  background: white;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
-  padding: var(--Space-S-16);
-  border-radius: 10px;
-  text-align: start;
-  margin: 0;
-  z-index: 100;
-  right: 3vw;
-  width: max-content;
-  top: -23%;
-}
-
-.shortcuts_iconCard > ul {
-  text-decoration: none;
-  list-style: none;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  gap: 8px;
-  display: grid;
-}
-
-.shortcuts_iconCard > ul > li {
-  display: flex;
-  gap: 6px;
-  color: #707791;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  cursor: pointer;
-}
-
-.shortcuts_iconCard > ul > li > .target {
-  display: flex;
-  gap: 6px;
-  color: #707791;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  text-decoration: none;
-  cursor: pointer;
-  align-items: center;
-}
-
-.shortcuts_iconCard > ul > li > .target i {
-  font-size: 16px;
-  cursor: w-resize;
-  width: 20px;
-  height: 20px;
-  color: #707791;
-}
-
-.shortcuts_iconCard > ul > li > .target svg {
-  width: 20px;
-  height: 20px;
-}
-
-.shortcuts_iconCard > i {
-  position: absolute;
-  right: -8px;
-  top: 5%;
-  font-size: 25px;
-  color: white;
-}
+ 
 
 .h700 {
   height: 700px;
@@ -194,15 +120,7 @@
   font-size: 14px;
 }
 
-.ellipsis_icont {
-  border: 1.5px solid #7077915b;
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border-radius: 50%;
-  position: relative;
-  z-index: 1;
-}
+ 
 
 .option {
   display: flex;
@@ -243,11 +161,7 @@ img[alt="logo"] {
   font-weight: 500;
 }  
    
-@media (max-width: 768px) {
-  .shortcuts_iconCard {
-    right: 5vw !important;
-  }
-}
+ 
 
 .skeleton-loader {
   text-align: center;
@@ -646,4 +560,106 @@ table tbody td {
   color: #333;
   line-height: 1.5;
 }
- 
+.card-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.menu-btn {
+  border: none;
+  border-radius: var(--Radius-R-16);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 1);
+}
+.menu-wrapper,
+.menu-wrapper * {
+  pointer-events: auto;
+}
+
+.menu-wrapper {
+  position: relative;
+  z-index: 3;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+}
+.menu-table {
+  position: absolute;
+  top: -30px;
+  right: 30px;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+}
+.menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-item:hover {
+  background: #f5f5f7;
+}
+
+.click-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+}
+.card-click-area.click-disabled {
+  pointer-events: none;
+}
+.plus-icon {
+  background: var(--Colors-Primary-light);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--Colors-Primary-500);
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+}
+
+.plus-icon:hover {
+  background: #f1e9d7;
+}

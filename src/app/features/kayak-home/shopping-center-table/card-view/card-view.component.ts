@@ -85,7 +85,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   imageLoadingStates: { [key: number]: boolean } = {};
   imageErrorStates: { [key: number]: boolean } = {};
-   orgName!: string;
+  orgName!: string;
 
   @ViewChild('addContact') addContactModal!: TemplateRef<any>;
   selectedShoppingCenterId: any;
@@ -188,19 +188,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
         },
       })
     );
-    this.subscriptions.push(
-      this.viewManagerService.selectedId$.subscribe((id) => {
-        this.selectedId = id;
-        this.cdr.markForCheck();
-      })
-    );
-
-    this.subscriptions.push(
-      this.viewManagerService.selectedIdCard$.subscribe((id) => {
-        this.selectedIdCard = id;
-        this.cdr.markForCheck();
-      })
-    );
 
     this.subscriptions.push(
       this.viewManagerService.dataLoadedEvent$.subscribe(() => {
@@ -243,77 +230,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.isUpdatingStage = false;
       this.cdr.markForCheck();
     }, 100);
-  }
-
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-
-    if (this.isUpdatingStage || !target) {
-      return;
-    }
-
-    // Check if any dropdown or menu is currently open
-    const hasActiveDropdown = this.activeDropdownId !== null;
-    const hasActiveOrgMenu = this.openOrgMenuId !== null;
-    const hasActiveEllipsisMenu = this.selectedIdCard !== null;
-
-    if (hasActiveDropdown || hasActiveOrgMenu || hasActiveEllipsisMenu) {
-      const clickedDropdown = target.closest('.custom-dropdown');
-      const clickedOrgMenu = target.closest('.org-mini-menu');
-      const clickedOrgTrigger = target.closest('.org-info-trigger');
-      const clickedEllipsisMenu = target.closest('.shortcuts_iconCard');
-      const clickedEllipsisTrigger = target.closest('.ellipsis_icont');
-
-      // If click is outside all menus and triggers
-      if (
-        !clickedDropdown &&
-        !clickedOrgMenu &&
-        !clickedOrgTrigger &&
-        !clickedEllipsisMenu &&
-        !clickedEllipsisTrigger
-      ) {
-        // Prevent default behavior and stop propagation for ALL outside clicks
-        event.preventDefault();
-        event.stopPropagation();
-
-        // Close all open menus
-        if (hasActiveDropdown) {
-          this.cardsSideList.forEach((place) => {
-            place.isDropdownOpen = false;
-          });
-          this.activeDropdownId = null;
-        }
-
-        if (hasActiveOrgMenu) {
-          this.openOrgMenuId = null;
-        }
-
-        if (hasActiveEllipsisMenu) {
-          this.selectedIdCard = null;
-          document.removeEventListener('click', this.outsideClickHandler);
-        }
-      }
-    }
-  }
-
-  /**
-   * Helper method to find the place ID from a clicked element
-   */
-  private findPlaceIdFromElement(element: HTMLElement): number | null {
-    // Navigate up the DOM to find the closest card element
-    const cardWindow = element.closest('.card-window');
-    if (!cardWindow) return null;
-
-    // Find the index of this card in the cardsSideList
-    const cards = Array.from(document.querySelectorAll('.card-window'));
-    const index = cards.indexOf(cardWindow);
-
-    if (index >= 0 && index < this.cardsSideList.length) {
-      return this.cardsSideList[index].Id;
-    }
-
-    return null;
   }
 
   async viewOnMap(lat: number, lng: number) {
@@ -383,18 +299,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   copyLink(link: string) {
     navigator.clipboard.writeText(link);
   }
-
-  outsideClickHandler = (event: Event): void => {
-    const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest(
-      '.shortcuts_iconCard, .ellipsis_icont'
-    );
-
-    if (!isInside) {
-      this.viewManagerService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-  };
 
   getSelectedStageName(stageId: number): string {
     return this.viewManagerService.getSelectedStageName(stageId);
@@ -812,7 +716,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
   deleteCenter(shoppingCenterId: number) {
     const body: any = {
       Name: 'DeleteShoppingCenterFromMSSC',
-      Params: { CampaignId: this.CampaignId, ShoppingCenterId: shoppingCenterId },
+      Params: {
+        CampaignId: this.CampaignId,
+        ShoppingCenterId: shoppingCenterId,
+      },
     };
     this.placesService.GenericAPI(body).subscribe({
       next: () => {

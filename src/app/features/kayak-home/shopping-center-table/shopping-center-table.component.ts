@@ -286,11 +286,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       })
     );
 
- 
-
     this.intervalId = setInterval(() => {
       this.shoppingCenterService.loadShoppingCenters(this.CampaignId);
-    }, 3000);
+    }, 30000);
   }
 
   // Add method to sync filter state
@@ -316,8 +314,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   selectStagekan(stageId: number): void {
- 
-
     this.selectedStageId = stageId;
     if (stageId === 0) {
       this.selectedStageName = 'All';
@@ -585,7 +581,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
-     this.subscriptions.unsubscribe();
+    this.subscriptions.unsubscribe();
     this.stopUrlsPolling();
   }
 

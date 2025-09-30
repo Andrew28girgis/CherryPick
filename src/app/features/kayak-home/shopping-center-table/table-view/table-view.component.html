@@ -30,7 +30,11 @@
       </tbody>
     </table>
   </div> -->
-
+  <div id="customToastsuccess" class="custom-toast">
+    <div class="toast-content">
+      <p id="toastMessagesuccess"></p>
+    </div>
+  </div>
   <!-- Main content -->
   <div
     *ngIf="
@@ -65,363 +69,272 @@
         >
           <tr  *ngIf="shoppingCenter.CenterName">
             <td>
-              <div  [ngClass]="{'green': shoppingCenter.Score>50,'yellow': shoppingCenter.Score<50,'red':!shoppingCenter.Score}" class="d-flex flex-column">
-                <div class="d-flex flex-row justify-content-between">
-                  <span
-                    class="table-text"
-                    [innerHTML]="shoppingCenter.CenterName | titlecase"
-                  ></span>
-                  <div class="relativee" style="position: relative">
-                    <button
-                      class="ellipsis_icont"
-                      (click)="toggleShortcutsCard(shoppingCenter.Id)"
-                    >
-                      <i class="fa-solid fa-ellipsis"></i>
-                    </button>
-                    <div
-                      class="shortcuts_iconCard"
-                      *ngIf="selectedIdCard === shoppingCenter.Id"
-                    >
-                      <ul>
-                        <li
-                          (click)="toggleShortcuts(shoppingCenter.Id, 'close')"
-                        >
-                          <a
-                            class="target"
-                            [routerLink]="['/landing',shoppingCenter?.ShoppingCenter?.Places?.[0]?.Id || 0,shoppingCenter?.Id,shoppingCenter.CampaignId]"
-                          >
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
-                                fill="#707791"
-                              />
-                            </svg>
-                            View Details
-                          </a>
-                        </li>
-                        <!-- <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
-                    <a
-                     class="target"
-                      href="https://www.google.com/search?q=leasing manager for+{{
-                        shoppingCenter.CenterName
-                      }}+{{ shoppingCenter.CenterAddress }}+{{ shoppingCenter.CenterCity }}+{{
-                        shoppingCenter.CenterState
-                      }}+{{
-                        shoppingCenter.ZipCode}}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{ shoppingCenter.CenterAddress }},{{shoppingCenter.CenterCity }},{{ shoppingCenter.CenterState }},{{ shoppingCenter.ZipCode }}&orgId={{orgId}}&orgName={{orgName}}&campaignId={{cId}}"
-                      target="_blank"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path
-                          d="M21.12 9.88h-7.19v2.46h4.11c-.18 1.17-.73 2.06-1.62 2.68-.91.63-2.09 1.02-3.51 1.02-2.69 0-4.88-2.18-4.88-4.88s2.19-4.88 4.88-4.88c1.31 0 2.45.49 3.33 1.29l2.28-2.28C16.95 3.17 14.91 2.25 12.61 2.25c-5.69 0-10.25 4.56-10.25 10.25s4.56 10.25 10.25 10.25c5.43 0 9.71-4.2 9.71-10.05 0-.73-.08-1.25-.2-1.82z"
-                        />
-                      </svg>
-                      Google Search
-                    </a>
-                  </li> -->
-                        <li>
-                          <a
-                            class="target"
-                            (click)="openContactModal(shoppingCenter)"
-                          >
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
-                                fill="#707791"
-                              />
-                              <path
-                                d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
-                                fill="#707791"
-                              />
-                            </svg>
-                            Contact Broker
-                          </a>
-                        </li>
-                        <li
-                          (click)="toggleShortcuts(shoppingCenter.Id, 'close')"
-                        >
-                          <a
-                            class="target"
-                            (click)="
-                              openMapViewPlace(MapViewPlace, shoppingCenter)
-                            "
-                          >
-                            <i class="fa-solid fa-map-location-dot emily"></i>
-                            View Location
-                          </a>
-                        </li>
-                        <li
-                          (click)="toggleShortcuts(shoppingCenter.Id, 'close')"
-                        >
-                          <a
-                            class="target"
-                            (click)="
-                              openStreetViewPlace(
-                                StreetViewPlace,
-                                shoppingCenter
-                              )
-                            "
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              fill="none"
-                            >
-                              <path
-                                d="M12.875 10.4795C13.4656 10.6906 13.9543 10.9406 14.3145 11.2207C14.7916 11.5918 15 11.9774 15 12.375C15 12.7171 14.8475 13.0452 14.5088 13.3652C14.1632 13.6916 13.6427 13.989 12.9736 14.2383C11.637 14.7362 9.82503 15 8 15C6.17497 15 4.36301 14.7362 3.02637 14.2383C2.35725 13.989 1.83682 13.6916 1.49121 13.3652C1.15247 13.0452 1 12.7171 1 12.375C1 11.9774 1.20837 11.5918 1.68555 11.2207C2.0457 10.9406 2.53444 10.6906 3.125 10.4795V10.752C2.65623 10.925 2.25971 11.1182 1.95801 11.3262C1.77158 11.4547 1.60411 11.5983 1.47949 11.7598C1.3564 11.9192 1.25 12.1291 1.25 12.375C1.25 12.6094 1.34695 12.8109 1.46191 12.9668C1.57781 13.1239 1.73351 13.2641 1.90625 13.3887C2.25197 13.6379 2.73008 13.8684 3.30371 14.0654C4.45653 14.4614 6.07492 14.75 8 14.75C9.92508 14.75 11.5435 14.4614 12.6963 14.0654C13.2699 13.8684 13.748 13.6379 14.0938 13.3887C14.2665 13.2641 14.4222 13.1239 14.5381 12.9668C14.653 12.8109 14.75 12.6094 14.75 12.375C14.75 12.1291 14.6436 11.9192 14.5205 11.7598C14.3959 11.5983 14.2284 11.4547 14.042 11.3262C13.7403 11.1182 13.3438 10.925 12.875 10.752V10.4795ZM8 5C6.68138 5 5.625 6.05638 5.625 7.375V9.79297L5.90137 9.93164L6.875 10.418V12.875H9.125V10.418L10.0986 9.93164L10.375 9.79297V7.375C10.375 6.05638 9.31862 5 8 5ZM8 1.25C7.02562 1.25 6.25 2.02562 6.25 3C6.25 3.97438 7.02562 4.75 8 4.75C8.97438 4.75 9.75 3.97438 9.75 3C9.75 2.02562 8.97438 1.25 8 1.25ZM6.625 10.582L6.34863 10.4434L5.375 9.95605V7.375C5.375 6.47551 5.83943 5.66741 6.54199 5.19141L7.04883 4.84766L6.61133 4.41992C6.23466 4.05112 6 3.54923 6 3C6 1.90163 6.90163 1 8 1C9.09837 1 10 1.90163 10 3C10 3.54923 9.76534 4.05112 9.38867 4.41992L8.95117 4.84766L9.45801 5.19141C10.1606 5.66741 10.625 6.47551 10.625 7.375V9.95605L9.65137 10.4434L9.375 10.582V13.125H6.625V10.582Z"
-                                fill="#161017"
-                                stroke="#161017"
-                              />
-                            </svg>
-                            Street View
-                          </a>
-                        </li>
-                        <li
-                          (click)="toggleShortcuts(shoppingCenter.Id, 'close')"
-                        >
-                          <a
-                            *ngIf="
-                              checkSubmission(
-                                shoppingCenter?.ShoppingCenter?.UserSubmmision
-                              )
-                            "
-                            class="target"
-                            (click)="
-                              openModalSubmission(
-                                shoppingCenter?.ShoppingCenter
-                                  ?.UserSubmmision || [],
-                                submission
-                              )
-                            "
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              class="lucide lucide-file-icon lucide-file"
-                            >
-                              <path
-                                style="fill: none"
-                                d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
-                              />
-                              <path
-                                style="fill: none"
-                                d="M14 2v4a2 2 0 0 0 2 2h4"
-                              />
-                            </svg>
-                            View Submissions
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            class="target"
-                            (click)="
-                              $event.preventDefault();
-                              $event.stopPropagation();
-                              requestCenterStatus(
-                                shoppingCenter.Id,
-                                shoppingCenter.CampaignId
-                              )
-                            "
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              class="lucide lucide-circle-check-big-icon lucide-circle-check-big"
-                            >
-                              <path d="M21.801 10A10 10 0 1 1 17 3.335" />
-                              <path d="m9 11 3 3L22 4" />
-                            </svg>
-                            Center Status</a
-                          >
-                        </li>
-                        <li (click)="openAddContactModal(shoppingCenter.Id)">
-                          <a class="target">
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M12 5V19"
-                                stroke="#707791"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                              />
-                              <path
-                                d="M5 12H19"
-                                stroke="#707791"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                              />
-                            </svg>
-                            Add Contact
-                          </a>
-                        </li>
-                        <!-- <li *ngIf="shoppingCenter.Deleted != true" class="cursor">
-                      <a
-                        class="target"
-                        (click)="
-                          openDeleteShoppingCenterModal(
-                            deleteSingleShoppingCenterModal,
-                            shopping
-                          );
-                          toggleShortcuts(shopping.Id, 'close')
-                        "
-                      >
-                        <i class="fa-regular fa-trash-can emily"></i>
-                        Remove Shopping
-                      </a>
-                    </li> -->
-                    
-                      </ul>
-                      <i class="fa-solid fa-caret-right"></i>
-                    </div>
-                  </div>
-                </div>
+              <div
+              [ngClass]="{
+                green: shoppingCenter.Score > 50,
+                yellow: shoppingCenter.Score < 50,
+                red: !shoppingCenter.Score
+              }"
+              class="d-flex flex-column"
+            >
+              <!-- <div
+            (click)="deleteCenter(shoppingCenter.Id); $event.stopPropagation()"
+            class="card-badge delete-badge"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M21 5.98001C17.67 5.65001 14.32 5.48001 10.98 5.48001C9 5.48001 7.02 5.58001 5.04 5.78001L3 5.98001"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8.5 4.97L8.72 3.66C8.88 2.71 9 2 10.69 2H13.31C15 2 15.13 2.75 15.28 3.67L15.5 4.97"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M18.85 9.14001L18.2 19.21C18.09 20.78 18 22 15.21 22H8.78999C5.99999 22 5.90999 20.78 5.79999 19.21L5.14999 9.14001"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M10.33 16.5H13.66"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.5 12.5H14.5"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>    -->
+              <div class="d-flex flex-row justify-content-between">
+                <span
+                  class="table-text"
+                  [innerHTML]="shoppingCenter.CenterName | titlecase"
+                ></span>
 
                 <div
-                  *ngIf="
-                    shoppingCenter.CenterAddress ||
-                    shoppingCenter.CenterCity ||
-                    shoppingCenter.CenterState
-                  "
+                  class="relativee d-flex justify-content-between flex-row gap-3"
+                  style="position: relative"
                 >
-                  <div
-                    class="table-text cursor addresss"
-                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                  <button
+                    class="plus-icon"
+                    (click)="
+                      InsertAutomation(shoppingCenter.Id); $event.stopPropagation()
+                    "
                   >
-                    {{ shoppingCenter.CenterAddress }}
-                    <span *ngIf="shoppingCenter.CenterCity">,</span>
-
-                    {{ shoppingCenter.CenterCity | titlecase }}
-                    <span *ngIf="shoppingCenter.CenterState">,</span>
-
-                    {{ shoppingCenter.CenterState }}
-                  </div>
-                </div>
-                <div #dropdownRef class="custom-dropdown">
-                  <div
-                    class="selected-option"
-                    (click)="toggleDropdown(shoppingCenter, $event)"
-                  >
-                    {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                    >
-                      <path
-                        d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
-                        fill="#161017"
-                      />
-                    </svg>
-                  </div>
-                  <div
-                    class="dropdown-options"
-                    [class.show]="shoppingCenter.isDropdownOpen"
-                  >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                  <div>
                     <div
-                      *ngFor="let stage of KanbanStages"
-                      class="dropdown-item"
-                      [class.active]="stage.id === shoppingCenter.kanbanStageId"
-                      (click)="
-                        selectStage(
-                          shoppingCenter.MarketSurveyId,
-                          stage.id,
-                          shoppingCenter,
-                          $event
-                        )
-                      "
+                      class="menu-wrapper"
+                      (click)="$event.stopPropagation()"
                     >
-                      {{ stage.stageName }}
+                      <button
+                        class="menu-btn"
+                        (click)="toggleMenu(shoppingCenter.Id, $event)"
+                      >
+                        <svg
+                        *ngIf="!openMenuId || openMenuId == shoppingCenter.Id"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                        >
+                          <path
+                            d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
+                            fill="#18171F"
+                            stroke="#18171F"
+                          />
+                          <path
+                            d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
+                            fill="#18171F"
+                          />
+                          <path
+                            d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
+                            fill="#18171F"
+                          />
+                        </svg>
+                      </button>
+
+                      <!-- DROPDOWN -->
+                      <div
+                        class="menu-dropdown"
+                        *ngIf="openMenuId === shoppingCenter.Id"
+                      >
+                        <button
+                          [routerLink]="['/landing',shoppingCenter?.ShoppingCenter?.Places?.[0]?.Id || 0,shoppingCenter?.Id,shoppingCenter.CampaignId]"
+                          class="menu-item"
+                          (click)="closeMenu()"
+                        >
+                          View Details
+                        </button>
+
+                        <button
+                          class="menu-item"
+                          (click)="openContactModal(shoppingCenter); closeMenu()"
+                        >
+                          Contact Broker
+                        </button>
+                        <button
+                          class="menu-item"
+                          (click)="
+                            openMapViewPlace(MapViewPlace, shoppingCenter);
+                            closeMenu()
+                          "
+                        >
+                          View Location
+                        </button>
+                        <button
+                          class="menu-item"
+                          (click)="
+                            openStreetViewPlace(StreetViewPlace, shoppingCenter);
+                            closeMenu()
+                          "
+                        >
+                          Street View
+                        </button>
+                        <button
+                          *ngIf="
+                            checkSubmission(
+                              shoppingCenter?.ShoppingCenter?.UserSubmmision
+                            )
+                          "
+                          class="menu-item"
+                          (click)="
+                            openModalSubmission(
+                              shoppingCenter?.ShoppingCenter?.UserSubmmision || [],
+                              submission
+                            );
+                            closeMenu()
+                          "
+                        >
+                          View Submissions
+                        </button>
+
+                        <button
+                          class="menu-item"
+                          (click)="
+                            openAddContactModal(shoppingCenter.Id); closeMenu()
+                          "
+                        >
+                          Add Contact
+                        </button>
+                        <button
+                          class="menu-item"
+                          (click)="
+                            deleteCenter(shoppingCenter.Id); $event.stopPropagation()
+                          "
+                        >
+                          Delete Center
+                        </button>
+                      </div>
                     </div>
+                    <div
+                      class="click-shield"
+                      *ngIf="
+                        openStageId === shoppingCenter.Id ||
+                        openMenuId === shoppingCenter.Id
+                      "
+                      (click)="closeMenu()"
+                    ></div>
                   </div>
-                </div>
-                <div>
-                  <span
-                    class="badge badge-danger mx-2 h-auto"
-                    *ngIf="shoppingCenter.Deleted == true"
-                    >Deleted</span
-                  >
                 </div>
               </div>
+
+              <div
+                *ngIf="
+                  shoppingCenter.CenterAddress ||
+                  shoppingCenter.CenterCity ||
+                  shoppingCenter.CenterState
+                "
+              >
+                <div
+                  class="table-text cursor addresss"
+                  (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                >
+                  {{ shoppingCenter.CenterAddress }}
+                  <span *ngIf="shoppingCenter.CenterCity">,</span>
+
+                  {{ shoppingCenter.CenterCity | titlecase }}
+                  <span *ngIf="shoppingCenter.CenterState">,</span>
+
+                  {{ shoppingCenter.CenterState }}
+                </div>
+              </div>
+              <div
+                *ngIf="KanbanStages.length > 0"
+                #dropdownRef
+                class="menu-wrapper"
+                style="width: fit-content; z-index: 1"
+              >
+                <div
+                  class="selected-option"
+                  (click)="toggleMenu(shoppingCenter.Id, $event, true)"
+                >
+                  {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
+                      fill="#161017"
+                    />
+                  </svg>
+                </div>
+                <div
+                  (click)="$event.stopPropagation()"
+                  class="dropdown-options"
+                  [class.show]="openStageId === shoppingCenter.Id"
+                >
+                  <div
+                    *ngFor="let stage of KanbanStages"
+                    class="dropdown-item"
+                    [class.active]="stage.id === shoppingCenter.kanbanStageId"
+                    (click)="
+                      selectStage(
+                        shoppingCenter.MarketSurveyId,
+                        stage.id,
+                        shoppingCenter,
+                        $event
+                      )
+                    "
+                  >
+                    {{ stage.stageName }}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span
+                  class="badge badge-danger mx-2 h-auto"
+                  *ngIf="shoppingCenter.Deleted == true"
+                  >Deleted</span
+                >
+              </div>
+            </div>
             </td>
 
             <td class="ManagerOrg">{{ shoppingCenter.ManagerORG }}</td>

@@ -78,6 +78,9 @@ export class TableViewComponent implements OnInit, OnDestroy {
   @ViewChildren('dropdownRef') dropdowns!: QueryList<ElementRef>;
   infoData: any = null;
   isLoadingInfo = false;
+  openMenuId: number | null = null;
+  openStageId: number | null = null;
+  rotatingKeys: { [id: number]: number } = {};
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -137,20 +140,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.selectedId$.subscribe((id) => {
-        this.selectedId = id;
-        this.cdr.detectChanges();
-      })
-    );
-
-    this.subscriptions.add(
-      this.shoppingCenterService.selectedIdCard$.subscribe((id) => {
-        this.selectedIdCard = id;
-        this.cdr.detectChanges();
-      })
-    );
-
-    this.subscriptions.add(
       this.shoppingCenterService.kanbanStages$.subscribe((stages) => {
         this.KanbanStages = stages;
         this.cdr.detectChanges();
@@ -181,38 +170,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
     this.modalService.open(modalTemplate, {
       ariaLabelledBy: 'modal-basic-title',
     });
-  }
-
-  
-
- 
-  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    this.shoppingCenterService.toggleShortcuts(id, close, event);
-  }
-
-  outsideClickHandlerr = (event: Event): void => {
-    const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest(
-      '.shortcuts_iconCard, .ellipsis_icont'
-    );
-
-    if (!isInside) {
-      this.shoppingCenterService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandlerr);
-    }
-  };
-
-  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
-    event?.stopPropagation();
-    if (this.selectedIdCard === id) {
-      this.shoppingCenterService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandlerr);
-    } else {
-      this.shoppingCenterService.setSelectedIdCard(id);
-      setTimeout(() => {
-        document.addEventListener('click', this.outsideClickHandlerr);
-      });
-    }
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
@@ -277,16 +234,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.shoppingCenterService.sanitizeUrl(url);
-  }
-
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-    if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
-      this.activeDropdown.isDropdownOpen = false;
-      this.activeDropdown = null;
-      this.cdr.detectChanges();
-    }
   }
 
   openContactModal(center: Center): void {
@@ -592,6 +539,73 @@ export class TableViewComponent implements OnInit, OnDestroy {
           backdrop: true,
           centered: true,
         });
+      },
+    });
+  }
+
+  InsertAutomation(id: any, reload?: any) {
+    if (reload) {
+      this.rotatingKeys[id] = (this.rotatingKeys[id] || 0) + 1;
+
+      setTimeout(() => {
+        this.rotatingKeys[id] = 0;
+      }, 1200);
+    }
+
+    this.placesService.InsertAutomation(id).subscribe({
+      next: () => {
+        if (!reload) {
+          this.showToast('Automation Started');
+        } else {
+          this.showToast('Automation is running again');
+        }
+      },
+    });
+  }
+  showToast(message: string) {
+    const toast = document.getElementById('customToastsuccess');
+    const toastMessage = document.getElementById('toastMessagesuccess');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    } else {
+      console.warn('Toast elements not found in DOM.');
+    }
+  }
+  toggleMenu(Id: number, event: MouseEvent, stage?: boolean) {
+    event.stopPropagation();
+    if (!stage) {
+      this.openMenuId = this.openMenuId === Id ? null : Id;
+    }
+    if (stage) {
+      this.openStageId = this.openStageId === Id ? null : Id;
+    }
+  }
+
+  closeMenu() {
+    this.openMenuId = null;
+    this.openStageId = null;
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(_event: MouseEvent) {
+    if (this.openMenuId !== null || this.openStageId !== null) {
+      this.closeMenu();
+    }
+  }
+  deleteCenter(shoppingCenterId: number) {
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromMSSC',
+      Params: {
+        CampaignId: this.CampaignId,
+        ShoppingCenterId: shoppingCenterId,
+      },
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.viewManagerService.loadShoppingCenters(this.CampaignId);
       },
     });
   }

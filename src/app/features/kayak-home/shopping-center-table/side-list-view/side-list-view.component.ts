@@ -7,7 +7,7 @@ import {
   OnDestroy,
   TemplateRef,
   ViewChild,
-  ChangeDetectionStrategy,  
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -95,11 +95,14 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   orgMenuPos: { top?: string; left?: string } = {};
   isLoadingInfo = false;
   infoData: any = null;
-  conclusion:any
-   score:any
-   cId!: number;
-   orgName!: string; 
-   Array = Array; // expose global Array constructor
+  conclusion: any;
+  score: any;
+  cId!: number;
+  orgName!: string;
+  Array = Array; // expose global Array constructor
+  rotatingKeys: { [id: number]: number } = {};
+  openMenuId: number | null = null;
+  openStageId: number | null = null;
 
   constructor(
     private markerService: MapsService,
@@ -199,23 +202,9 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       })
     );
 
- 
-
     this.subscriptions.push(
       this.viewManagerService.kanbanStages$.subscribe((stages) => {
         this.KanbanStages = stages;
-      })
-    );
-
-    this.subscriptions.push(
-      this.viewManagerService.selectedId$.subscribe((id) => {
-        this.selectedId = id;
-      })
-    );
-
-    this.subscriptions.push(
-      this.viewManagerService.selectedIdCard$.subscribe((id) => {
-        this.selectedIdCard = id;
       })
     );
 
@@ -478,11 +467,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     });
   }
 
- 
- 
-
- 
-
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -555,40 +539,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     this.modalService.open(modalTemplate, {
       ariaLabelledBy: 'modal-basic-title',
     });
-  }
-
- 
-
- 
-
-  outsideClickHandler = (event: Event): void => {
-    const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest(
-      '.shortcuts_iconCard, .ellipsis_icont'
-    );
-
-    if (!isInside) {
-      this.viewManagerService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-  };
-
-  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
-    event?.stopPropagation();
-
-    if (this.selectedIdCard === id) {
-      this.viewManagerService.setSelectedIdCard(null);
-      document.removeEventListener('click', this.outsideClickHandler);
-    } else {
-      this.viewManagerService.setSelectedIdCard(id);
-      setTimeout(() => {
-        document.addEventListener('click', this.outsideClickHandler);
-      });
-    }
-  }
-
-  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    this.viewManagerService.toggleShortcuts(id, close, event);
   }
 
   getSelectedStageName(stageId: number): string {
@@ -772,8 +722,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       Json: null,
     };
     this.placesService.GenericAPI(body).subscribe({
-      next: (data) => {
-      },
+      next: (data) => {},
     });
   }
 
@@ -849,7 +798,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           // If ManagerOrganization exists, append; else create and assign
           center.ShoppingCenter.ManagerOrganization = [...newContacts];
         }
-
       } else {
         setTimeout(() => {
           this.getShoppingCenterContact(centerId);
@@ -885,108 +833,121 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
+
   closeOrgMenu() {
     this.openOrgMenuId = null;
-     document.removeEventListener('click', this.handleOutsideClick, true);
+    document.removeEventListener('click', this.handleOutsideClick, true);
   }
-    // make sure to bind 'this' when declaring the handler
-    handleOutsideClick = (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
-        this.closeOrgMenu();
-      }
+  // make sure to bind 'this' when declaring the handler
+  handleOutsideClick = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
+      this.closeOrgMenu();
+    }
+  };
+
+  openInfoPopup(shopping: any, content: TemplateRef<any>): void {
+    this.isLoadingInfo = true;
+    this.infoData = null;
+
+    const body = {
+      Name: 'GetScoreRationale',
+      Params: { MSSCId: shopping.MarketSurveyId },
     };
-    
-    openInfoPopup(shopping: any, content: TemplateRef<any>): void {
-      this.isLoadingInfo = true;
-      this.infoData = null;
-  
-      const body = {
-        Name: 'GetScoreRationale',
-        Params: { MSSCId: shopping.MarketSurveyId },
-      };
-  
-      this.placesService.GenericAPI(body).subscribe({
-        next: (res: any) => {
-          this.infoData = res.json[0].scoreRationale || null;
-          this.score = res.json[0].score || null;
-          this.conclusion = res.json[0].conclusion || null;
-  
-          this.isLoadingInfo = false;
-          this.modalService.open(content, {
-            size: 'md',
-            backdrop: true,
-            centered: true,
-          });
-        },
-        error: (err) => {
-          console.error('Error fetching info:', err);
-          this.isLoadingInfo = false;
-          this.modalService.open(content, {
-            size: 'md',
-            backdrop: true,
-            centered: true,
-          });
-        },
-      });
-    }
-    // Example: inside your component class
-    get hasUnscoredCenters(): boolean {
-      return this.cardsSideList?.some((sc) => !sc.MainImage) ?? false;
-    }
-    handleEllipsisClick(event: MouseEvent): void {
-      // Prevent default actions
-      event.preventDefault();
-      event.stopPropagation();
-  
-      // Close all dropdowns
-      this.cardsSideList.forEach((place) => {
-        place.isDropdownOpen = false;
-      });
-      this.activeDropdownId = null;
-  
-      // After closing the dropdown, open the ellipsis menu
-      const target = event.currentTarget as HTMLElement;
-      const placeId = this.findPlaceIdFromElement(target);
-      if (placeId) {
-        setTimeout(() => {
-          this.toggleShortcutsCard(placeId, event);
-        }, 10);
-      }
-    }
-    private findPlaceIdFromElement(element: HTMLElement): number | null {
-      // Navigate up the DOM to find the closest card element
-      const cardWindow = element.closest('.card-window');
-      if (!cardWindow) return null;
-  
-      // Find the index of this card in the cardsSideList
-      const cards = Array.from(document.querySelectorAll('.card-window'));
-      const index = cards.indexOf(cardWindow);
-  
-      if (index >= 0 && index < this.cardsSideList.length) {
-        return this.cardsSideList[index].Id;
-      }
-  
-      return null;
-    }
-    handleImageClick(event: MouseEvent): void {
-      // Prevent default navigation
-      event.preventDefault();
-      event.stopPropagation();
-  
-      // Close all dropdowns
-      if (this.activeDropdownId) {
-        this.cardsSideList.forEach((place) => {
-          place.isDropdownOpen = false;
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.infoData = res.json[0].scoreRationale || null;
+        this.score = res.json[0].score || null;
+        this.conclusion = res.json[0].conclusion || null;
+
+        this.isLoadingInfo = false;
+        this.modalService.open(content, {
+          size: 'md',
+          backdrop: true,
+          centered: true,
         });
-        this.activeDropdownId = null;
-      }
-  
-      // Close ellipsis menu if open
-      if (this.selectedIdCard !== null) {
-        this.viewManagerService.setSelectedIdCard(null);
-        document.removeEventListener('click', this.outsideClickHandler);
-      }
+      },
+      error: (err) => {
+        console.error('Error fetching info:', err);
+        this.isLoadingInfo = false;
+        this.modalService.open(content, {
+          size: 'md',
+          backdrop: true,
+          centered: true,
+        });
+      },
+    });
+  }
+  // Example: inside your component class
+  get hasUnscoredCenters(): boolean {
+    return this.cardsSideList?.some((sc) => !sc.MainImage) ?? false;
+  }
+
+  InsertAutomation(id: any, reload?: any) {
+    if (reload) {
+      this.rotatingKeys[id] = (this.rotatingKeys[id] || 0) + 1;
+
+      setTimeout(() => {
+        this.rotatingKeys[id] = 0;
+      }, 1200);
+    }
+
+    this.placesService.InsertAutomation(id).subscribe({
+      next: () => {
+        if (!reload) {
+          this.showToast('Automation Started');
+        } else {
+          this.showToast('Automation is running again');
+        }
+      },
+    });
+  }
+  showToast(message: string) {
+    const toast = document.getElementById('customToastsuccess');
+    const toastMessage = document.getElementById('toastMessagesuccess');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    } else {
+      console.warn('Toast elements not found in DOM.');
     }
   }
+  toggleMenu(Id: number, event: MouseEvent, stage?: boolean) {
+    event.stopPropagation();
+    if (!stage) {
+      this.openMenuId = this.openMenuId === Id ? null : Id;
+    }
+    if (stage) {
+      this.openStageId = this.openStageId === Id ? null : Id;
+    }
+  }
+
+  closeMenu() {
+    this.openMenuId = null;
+    this.openStageId = null;
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(_event: MouseEvent) {
+    if (this.openMenuId !== null || this.openStageId !== null) {
+      this.closeMenu();
+    }
+  }
+  deleteCenter(shoppingCenterId: number) {
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromMSSC',
+      Params: {
+        CampaignId: this.CampaignId,
+        ShoppingCenterId: shoppingCenterId,
+      },
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.viewManagerService.loadShoppingCenters(this.CampaignId);
+      },
+    });
+  }
+}

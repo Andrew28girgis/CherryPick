@@ -1084,7 +1084,7 @@
 }
 .stepper {
   display: flex;
-  width: 27%;
+  width: 40%;
   align-items: center;
   justify-content: center;
   gap: 12px;

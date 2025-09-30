@@ -1,22 +1,22 @@
 import {
   Component,
-    OnInit,
+  OnInit,
   ViewChild,
-    ElementRef,
-    TemplateRef,
-    ChangeDetectorRef,
+  ElementRef,
+  TemplateRef,
+  ChangeDetectorRef,
   ChangeDetectionStrategy, // Added OnPush change detection strategy
-    OnDestroy,
-    NgZone,
+  OnDestroy,
+  NgZone,
   HostListener,
   EventEmitter,
   Output,
   Pipe,
-    PipeTransform,
+  PipeTransform,
 } from '@angular/core';
-import   { ActivatedRoute } from '@angular/router';
-import   { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
-import   { Center, Stage } from '../../../../shared/models/shoppingCenters';
+import { ActivatedRoute } from '@angular/router';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center, Stage } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import {
   trigger,
@@ -26,8 +26,8 @@ import {
   keyframes,
 } from '@angular/animations';
 import { Subscription } from 'rxjs';
-import   { ViewManagerService } from 'src/app/core/services/view-manager.service';
-import   { PlacesService } from 'src/app/core/services/places.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Pipe({
   name: 'filterReplies',
@@ -122,7 +122,7 @@ export class SocialViewComponent implements OnInit, OnDestroy {
 
   // Properties used in subscriptions
   buyboxCategories: BuyboxCategory[] = [];
-   buyboxPlaces: any[] = [];
+  buyboxPlaces: any[] = [];
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   mapsLoaded = false;
@@ -181,29 +181,9 @@ export class SocialViewComponent implements OnInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
- 
-
     this.subscriptions.add(
       this.shoppingCenterService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
-        this.cdr.markForCheck();
-      })
-    );
-
- 
- 
- 
-
-    this.subscriptions.add(
-      this.shoppingCenterService.selectedId$.subscribe((id) => {
-        this.selectedId = id;
-        this.cdr.markForCheck();
-      })
-    );
-
-    this.subscriptions.add(
-      this.shoppingCenterService.selectedIdCard$.subscribe((id) => {
-        this.selectedIdCard = id;
         this.cdr.markForCheck();
       })
     );
@@ -226,7 +206,6 @@ export class SocialViewComponent implements OnInit, OnDestroy {
       clearTimeout(this.heartTimeout);
     }
   }
- 
 
   toggleCommentsVisibility(shopping: any, event: MouseEvent): void {
     event.stopPropagation();

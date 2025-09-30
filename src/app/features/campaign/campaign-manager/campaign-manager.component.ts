@@ -216,33 +216,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  // getUserBuyBoxes(): void {
-  //   this.isLoading = true; // Show skeleton
-
-  //   const body: any = {
-  //     Name: 'GetUserBuyBoxes',
-  //     Params: {},
-  //   };
-
-  //   const subscription = this.placesService.GenericAPI(body).subscribe({
-  //     next: (response) => {
-  //       if (response.json && response.json.length > 0) {
-  //         this.userBuyBoxes = response.json.map((buybox: any) => {
-  //           return {
-  //             id: buybox.id,
-  //             name: buybox.name,
-  //           };
-  //         });
-  //         this.selectedBuyBoxId = this.userBuyBoxes[0].id;
-  //       } else {
-  //         this.userBuyBoxes = [];
-  //       }
-  //     },
-  //     error: () => {},
-  //   });
-
-  //   this.subscriptions.add(subscription);
-  // }
+ 
 
   onCampaignCreated(): void {
     this.getAllCampaigns();
@@ -256,14 +230,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
     if (withOrg) {
       this.getCampaignOrganizations(campaign.OrganizationId, campaign.Id);
-    } else {
-      // const emilyObject: { buyboxId: number[]; organizations: any[] } = {
-      //   buyboxId: [campaign.id],
-      //   organizations: [],
-      // };
-      // this.emilyService.updateCheckList(emilyObject);
-      // this.router.navigate(['/MutipleEmail', campaign.id]);
-    }
+    } 
   }
 
   getKanbanTemplateStages(): void {
@@ -360,7 +327,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   protected openCampaignModal(): void {
-    this.modalService.open(AddCampaignPopupComponent, { centered: true });
+    this.modalService.open(AddCampaignPopupComponent, { centered: true,size:'lg' });
   }
 
   protected navigateToCampaign(): void {
@@ -424,7 +391,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.selectedTenant = null;
     this.step = 'tenant';
     this.polygonsStep = false;
-    this.modalRef = this.modalService.open(content, { size: 'xl' });
+    this.modalRef = this.modalService.open(content, { size: 'lg' });
 
     this.getAllActiveOrganizations(
       () => {

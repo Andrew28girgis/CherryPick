@@ -587,13 +587,7 @@ export class SocialMediaViewComponent implements OnInit {
   //   });
   //   this.modalService.open(this.ShareWithContact, { size: 'lg' });
   // }
-  toggleShortcutsCard(id: number | null, close?: string): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-    } else {
-      this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    }
-  }
+ 
   openGallery(shpping: number) {
     this.GetPlaceDetails(0, shpping);
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
@@ -621,13 +615,7 @@ export class SocialMediaViewComponent implements OnInit {
       },
     });
   }
-  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    if (close === 'close') {
-      this.selectedId = null;
-      this.selectedIdCard = null;
-      return;
-    }
-  }
+ 
   copyGUID(link: string) {
     navigator.clipboard
       .writeText(link)

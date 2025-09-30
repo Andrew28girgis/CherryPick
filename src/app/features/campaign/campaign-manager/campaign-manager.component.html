@@ -669,10 +669,12 @@
 
     <button
       type="button"
-      class="btn-close"
+      class="btn-close d-flex align-items-center justify-content-center"
       aria-label="Close"
       (click)="modal.dismiss()"
-    ></button>
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
   <div class="modal-body">
@@ -875,23 +877,23 @@
 <ng-template #campaignDetails let-modal>
   <!-- Modal Header -->
   <div class="modal-header">
-    <div class="d-flex align-items-center flex-row gap-2"> 
-     <ng-container *ngIf="campaignlogo; else logoPlaceholder">
-      <img
-        [src]="campaignlogo"
-        class="tenant-logo"
-        style="width: 50px; height: 50px"
-        crossorigin="anonymous"
-      />
-    </ng-container>
-    <ng-template #logoPlaceholder>
-      <div class="tenant-logo placeholder">
-        {{ getInitials(selectedCampaign.campaignName || "") }}
-      </div>
-    </ng-template>
-    <h4 class="modal-title">
-      {{ selectedCampaign.campaignName ?? "Campaign" }}
-    </h4>
+    <div class="d-flex align-items-center flex-row gap-2">
+      <ng-container *ngIf="campaignlogo; else logoPlaceholder">
+        <img
+          [src]="campaignlogo"
+          class="tenant-logo"
+          style="width: 50px; height: 50px"
+          crossorigin="anonymous"
+        />
+      </ng-container>
+      <ng-template #logoPlaceholder>
+        <div class="tenant-logo placeholder">
+          {{ getInitials(selectedCampaign.campaignName || "") }}
+        </div>
+      </ng-template>
+      <h4 class="modal-title">
+        {{ selectedCampaign.campaignName ?? "Campaign" }}
+      </h4>
     </div>
     <button class="btn btn-primary btn-custom" (click)="modal.close()">
       X
@@ -1049,6 +1051,4 @@
       </div>
     </section>
   </div>
-
- 
 </ng-template>
