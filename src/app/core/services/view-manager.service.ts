@@ -3,29 +3,20 @@ import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlacesService } from './places.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from 'src/app/shared/models/shoppingCenters';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
-
 declare const google: any;
 import { take } from 'rxjs/operators';
-
 @Injectable({
   providedIn: 'root',
 })
 export class ViewManagerService {
-  // Data streams
   private _shoppingCenters = new BehaviorSubject<Center[]>([]);
   private _filteredCenters = new BehaviorSubject<Center[]>([]);
   private _allShoppingCenters = new BehaviorSubject<Center[]>([]); // Store all shopping centers
   private _kanbanStages = new BehaviorSubject<any[]>([]);
   private _lastBuyboxId: number | null = null;
   private _lastOrgId: number | null = null;
-
-  // Search query
   private _searchQuery = new BehaviorSubject<string>('');
-
-  // Selected items
   private _selectedStageId = new BehaviorSubject<number>(0); // Default to 0 (All)
 
   public selectedStageId$ = this._selectedStageId.asObservable();
@@ -48,8 +39,6 @@ export class ViewManagerService {
   // Add stage update subject for communication between components
   private stageUpdateSubject = new Subject<void>();
   public stageUpdate$ = this.stageUpdateSubject.asObservable();
-
-  // Public observables
   public shoppingCenters$ = this._shoppingCenters.asObservable();
   public filteredCenters$ = this._filteredCenters.asObservable();
   public allShoppingCenters$ = this._allShoppingCenters.asObservable();
@@ -59,13 +48,9 @@ export class ViewManagerService {
   // Cache for optimizations
   private categoryNameCache = new Map<number, string>();
   private unitSizeCache = new Map<string, string>();
-
   StageId = 0;
-
   private sortOptionSubject = new BehaviorSubject<number>(1);
   sortOption$ = this.sortOptionSubject.asObservable();
-
-  // Store current filter values for proper filtering
   private currentSearchQuery = '';
   private currentSelectedStageId = 0;
   private currentSortOption = 0;
@@ -87,10 +72,6 @@ export class ViewManagerService {
     private sanitizer: DomSanitizer
   ) {}
 
-  /**
-   * Initialize all data for the shopping center views
-   * This should be called once when the main component loads
-   */
   public initializeData(campaignId: number, orgId: number): void {
     if (this._lastBuyboxId === campaignId && this._lastOrgId === orgId) {
       return;
@@ -131,42 +112,27 @@ export class ViewManagerService {
     localStorage.setItem('currentViewDashBord', viewId.toString());
   }
 
-  /**
-   * Get the current view
-   */
   public getCurrentView(): number {
     return this._currentView.getValue();
   }
 
-  /**
-   * Filter centers based on search query and stage ID
-   */
   public filterCenters(query: string): void {
     this.currentSearchQuery = query;
     this._searchQuery.next(query);
     this.applyFilters();
   }
 
-  /**
-   * Set selected stage ID and filter centers
-   */
   public setSelectedStageId(stageId: number): void {
     this.currentSelectedStageId = stageId;
     this._selectedStageId.next(stageId);
     this.applyFilters();
-    // Store in localStorage to persist across page refreshes
     localStorage.setItem('selectedStageId', stageId.toString());
   }
 
-  /**
-   * Apply all filters (search query, stage ID, and sorting)
-   */
   private applyFilters(): void {
     const allCenters = this._allShoppingCenters.getValue();
 
     let filtered = [...allCenters];
-
-    // Apply stage filter if not "All" (0)
     if (this.currentSelectedStageId !== 0) {
       filtered = filtered.filter((center) => {
         const matches =
@@ -177,7 +143,6 @@ export class ViewManagerService {
       });
     }
 
-    // Apply search filter
     if (this.currentSearchQuery && this.currentSearchQuery.trim()) {
       const query = this.currentSearchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -187,8 +152,6 @@ export class ViewManagerService {
           center.CenterCity?.toLowerCase().includes(query)
       );
     }
-
-    // Apply sorting
     if (this.currentSortOption !== 0 && this.currentSortOption !== 3) {
       filtered = this.applySorting(filtered, this.currentSortOption);
     }
@@ -196,9 +159,6 @@ export class ViewManagerService {
     this._shoppingCenters.next(filtered);
   }
 
-  /**
-   * Apply sorting to centers
-   */
   private applySorting(centers: Center[], sortOption: number): Center[] {
     const sortedCenters = [...centers];
 
@@ -216,20 +176,13 @@ export class ViewManagerService {
     }
   }
 
-  /**
-   * Get stage name for the selected ID
-   */
   public getSelectedStageName(stageId: number): string {
     const stages = this._kanbanStages.getValue();
     if (!stages) return 'Select Stage';
-
     const stage = stages.find((s) => s.id === stageId);
     return stage ? stage.stageName : 'Select Stage';
   }
 
-  /**
-   * Update place kanban stage - Fixed version
-   */
   public updatePlaceKanbanStage(
     marketSurveyId: number,
     stageId: number,
@@ -246,7 +199,6 @@ export class ViewManagerService {
 
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        // Update local data after successful API call
         shoppingCenter.kanbanStageId = stageId;
         shoppingCenter.stageName = this.getSelectedStageName(stageId);
         shoppingCenter.kanbanTemplateStageId = stageId;
@@ -269,28 +221,16 @@ export class ViewManagerService {
         const updatedCenter = updatedAllCenters.find(
           (c) => c.Id === shoppingCenter.Id
         );
-
         this.applyFilters();
-
-        // Notify about stage update
         this.stageUpdateSubject.next();
-      },
-      error: (err) => {
-        console.error('Error updating kanban stage:', err);
       },
     });
   }
 
-  /**
-   * Get current selected stage ID
-   */
   public getCurrentSelectedStageId(): number {
     return this._selectedStageId.getValue();
   }
 
-  /**
-   * Initialize map
-   */
   public async initializeMap(
     elementId: string,
     lat: number,
@@ -322,15 +262,10 @@ export class ViewManagerService {
       });
 
       return map;
-    } catch (error) {
-      console.error('Error initializing map:', error);
+    } catch (error) { 
       return null;
     }
   }
-
-  /**
-   * Initialize street view
-   */
 
   public async initializeStreetView(
     elementId: string,
@@ -414,7 +349,6 @@ export class ViewManagerService {
         );
       });
     } catch (error) {
-      console.error('Error initializing Street View:', error);
       const streetViewElement = document.getElementById(elementId);
       if (streetViewElement) {
         streetViewElement.innerHTML = `
@@ -428,9 +362,6 @@ export class ViewManagerService {
     }
   }
 
-  /**
-   * Sanitize URL
-   */
   public sanitizeUrl(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
@@ -497,13 +428,9 @@ export class ViewManagerService {
         kanbanid: kanbanId,
       },
     };
-
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this._kanbanStages.next(res.json || []);
-      },
-      error: (err) => {
-        console.error('Error loading kanban stages:', err);
       },
     });
   }
@@ -511,8 +438,6 @@ export class ViewManagerService {
   setSortOption(sortId: number): void {
     this.currentSortOption = sortId;
     this.sortOptionSubject.next(sortId);
-
-    // Re-apply all filters including the new sort option
     this.applyFilters();
   }
 }
