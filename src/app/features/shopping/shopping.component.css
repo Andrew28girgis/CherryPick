@@ -1256,7 +1256,7 @@ tr.click-disabled td:last-child * {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 .add-badge:hover {
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-300);
 }
 .add-badge span {
   white-space: nowrap;
