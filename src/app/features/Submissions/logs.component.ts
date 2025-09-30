@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ActivatedRoute } from '@angular/router';
 import { submission, Places } from 'src/app/shared/models/submissions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/app/shared/models/domain';
-import { FormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-logs',
@@ -29,17 +26,12 @@ export class SubmissionsComponent implements OnInit {
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService,
-    private breadcrumbService: BreadcrumbService
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
-    });
-    this.breadcrumbService.addBreadcrumb({
-      label: 'Submissions',
-      url: `/campaigns/${this.campaignId}`,
     });
 
     this.contactID = localStorage.getItem('contactId');

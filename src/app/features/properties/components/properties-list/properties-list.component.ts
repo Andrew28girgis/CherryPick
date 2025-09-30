@@ -1,11 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { IProperty } from '../../models/iproperty';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { PropertiesService } from '../../services/properties.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IPageEvent } from '../../../../shared/interfaces/ipage-event';
 
 @Component({
@@ -22,12 +18,10 @@ export class PropertiesListComponent implements OnInit {
 
   constructor(
     private placeService: PlacesService,
-    private breadcrumbService: BreadcrumbService,
     private propertiesService: PropertiesService
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.clearBreadcrumbs();
     this.getAllProperties();
   }
 

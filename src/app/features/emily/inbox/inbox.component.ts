@@ -25,7 +25,6 @@ import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { EmailComposeComponent } from './email-compose/email-compose.component';
 import { IEmailContent } from '../../kayak-home/shopping-center-table/contact-broker/models/iemail-content';
 
@@ -90,7 +89,6 @@ export class InboxComponent implements OnInit {
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private breadcrumbService: BreadcrumbService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 

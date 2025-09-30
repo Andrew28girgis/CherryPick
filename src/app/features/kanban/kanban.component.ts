@@ -15,7 +15,6 @@ import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { sharedColors } from '../../shared/models/shared-colors';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-kanban',
@@ -40,13 +39,9 @@ export class KanbanComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private location: Location,
     private modalService: NgbModal,
-    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'Cadence', url: '/Kanban' },
-    ]);
     this.getUserKanbans();
 
     const fetchingKanbanDetailsInterval = setInterval(() => {

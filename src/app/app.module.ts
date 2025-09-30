@@ -29,7 +29,6 @@ import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
-import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
@@ -46,7 +45,6 @@ import { Landing2Component } from './features/tenants/market-survery/landing2/la
     LogoutComponent,
     TermsComponent,
     NumberWithCommasPipe,
-    BreadcrumbComponent,
     UploadOMComponent,
     SidebarComponent,
     LandingComponent,

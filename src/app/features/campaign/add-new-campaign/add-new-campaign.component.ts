@@ -14,7 +14,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
 import { GenericMapService } from 'src/app/core/services/generic-map.service';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -78,15 +77,10 @@ export class AddNewCampaignComponent
     private httpClient: HttpClient,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private breadcrumbService: BreadcrumbService,
     private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'Campaigns', url: '/summary' },
-      { label: 'Add Campaign', url: '/add-campaign' },
-    ]);
     const contact = localStorage.getItem('contactId');
     if (contact) {
       this.contactId = +contact;

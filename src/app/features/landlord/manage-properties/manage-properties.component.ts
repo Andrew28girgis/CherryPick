@@ -26,7 +26,6 @@ import {
   Tenant,
 } from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-manage-properties',
@@ -70,12 +69,8 @@ export class ManagePropertiesComponent implements OnInit {
     private PlacesService: PlacesService,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    private breadcrumbService: BreadcrumbService
   ) {}
   ngOnInit() {
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'Manage Properties', url: '/manage-properties' },
-    ]);
     this.contactID = localStorage.getItem('contactId');
     this.GetContactShoppingCenters();
   }

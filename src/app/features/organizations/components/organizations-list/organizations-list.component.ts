@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IOrganization } from '../../models/iorganization';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { OrganizationsService } from '../../services/organizations.service';
 import { IPageEvent } from 'src/app/shared/interfaces/ipage-event';
 
@@ -19,12 +18,10 @@ export class OrganizationsListComponent implements OnInit {
 
   constructor(
     private placeService: PlacesService,
-    private breadcrumbService: BreadcrumbService,
     private organizationsService: OrganizationsService
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.clearBreadcrumbs();
     this.getAllOrganizations();
   }
 

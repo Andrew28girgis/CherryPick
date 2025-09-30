@@ -10,7 +10,6 @@ import { IcampaignComment } from './models/icampaign-comment';
 import { ICampaignOrgCadence } from './models/icampaign-org-cadence';
 import { ICampaignSiteCadence } from './models/icampaign-site-cadence';
 import { ICampaignEmail } from './models/icampaign-email';
-import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-ataglance',
@@ -32,7 +31,6 @@ export class AtaglanceComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private placeService: PlacesService,
     private spinner: NgxSpinnerService,
-    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
@@ -41,10 +39,6 @@ export class AtaglanceComponent implements OnInit {
       if (id) {
         this.campaignId = +id;
       }
-    });
-    this.breadcrumbService.addBreadcrumb({
-      label: 'At a glance',
-      url: `/campaigns/ataglance/${this.campaignId}`,
     });
 
     this.initializeAtaglance();
