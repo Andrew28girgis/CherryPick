@@ -7,9 +7,7 @@ import { firstValueFrom, forkJoin, Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DiamondLoaderComponent } from './diamond-loader/diamond-loader.component';
-import { DataCollectionProgress, CountData } from 'src/app/shared/models/diamonds';
-
-
+import { DataCollectionProgress, CountData } from 'src/app/shared/models/diamonds';  
 @Component({
   selector: 'app-tasks',
   standalone: true,
