@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-landing2',
-  
+  selector: 'app-landing2', 
   templateUrl: './landing2.component.html',
   styleUrl: './landing2.component.css'
 })

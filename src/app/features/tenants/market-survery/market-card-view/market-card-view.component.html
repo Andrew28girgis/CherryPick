@@ -16,18 +16,18 @@
               shopping?.CampaignId 
             ]"
           >
-                    <!-- <a
+            <!-- <a
             class="info-value text-dark px-1"
             href="{{ shopping.DocsLink }}"
             target="_blank"
           > -->
             <div class="main-img">
-              <img loading="lazy" 
+              <img
+                loading="lazy"
                 class="card-photo"
                 [src]="shopping.MainImage"
                 alt="{{ shopping.CenterName }}"
                 referrerpolicy="no-referrer"
-                
               />
             </div>
           </a>
@@ -84,10 +84,10 @@
                     class="col-12 d-flex flex-column spec"
                   >
                     <div class="d-flex flex-column">
-                      
                       <p style="color: #000">
                         {{ item.RelationOrganizationName }}
-                        <img loading="lazy" 
+                        <img
+                          loading="lazy"
                           class="logo ms-2"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                             item.RelationOrganizationId
@@ -277,7 +277,7 @@
   </ng-container>
 </div>
 <ng-template #noShoppingCenters>
-   <div
+  <div
     *ngIf="!isLoadingShoppingCenters"
     class="no-shopping-centers-container d-flex flex-column align-items-center justify-content-center p-5"
   >

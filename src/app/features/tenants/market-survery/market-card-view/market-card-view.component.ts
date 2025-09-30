@@ -28,7 +28,7 @@ export class MarketCardViewComponent implements OnInit {
   mapViewOnePlacex: boolean = false;
   sanitizedUrl!: any;
   StreetViewOnePlace!: boolean;
-  selectedActionType: { [key: number]: string } = {}
+  selectedActionType: { [key: number]: string } = {};
 
   @Input() layout: 'grid' | 'side' = 'grid'; // default layout
   campainId!: any;
@@ -40,11 +40,8 @@ export class MarketCardViewComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef,
-
-  ) {
-  }
-
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: any) => {
@@ -78,7 +75,7 @@ export class MarketCardViewComponent implements OnInit {
       },
     });
   }
-getShoppingCenters(): void {
+  getShoppingCenters(): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
       this.isLoadingShoppingCenters = false; // Set loading to false
@@ -115,7 +112,7 @@ getShoppingCenters(): void {
         console.error('Error loading shopping centers:', error);
         this.isLoadingShoppingCenters = false; // Set loading to false on error
         this.spinner.hide();
-      }
+      },
     });
   }
   getBuyBoxPlaces(campaignId: number): void {
@@ -323,38 +320,34 @@ getShoppingCenters(): void {
 
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
- 
+
   acceptShoppingCenter(shopping: any): void {
     // Toggle selection
-    if (this.selectedActionType[shopping.Id] === "accept") {
-      delete this.selectedActionType[shopping.Id]
+    if (this.selectedActionType[shopping.Id] === 'accept') {
+      delete this.selectedActionType[shopping.Id];
     } else {
-      this.selectedActionType[shopping.Id] = "accept"
-
-
+      this.selectedActionType[shopping.Id] = 'accept';
 
       // Here you would typically call your API to update the status
       // For example:
       // this.updateShoppingCenterStatus(shoppingId, 'accepted');
     }
-    this.cdr.detectChanges()
+    this.cdr.detectChanges();
   }
 
   rejectShoppingCenter(shopping: any): void {
     // Toggle selection
-    if (this.selectedActionType[shopping.Id] === "reject") {
-      delete this.selectedActionType[shopping.Id]
+    if (this.selectedActionType[shopping.Id] === 'reject') {
+      delete this.selectedActionType[shopping.Id];
     } else {
-      this.selectedActionType[shopping.Id] = "reject"
-
-
+      this.selectedActionType[shopping.Id] = 'reject';
     }
-    this.cdr.detectChanges()
+    this.cdr.detectChanges();
   }
-getCheckedPlaces(places: any[]): any[] {
-      if (!places) return [];
-      else{
-    return places?.filter(place => place.Checked);
+  getCheckedPlaces(places: any[]): any[] {
+    if (!places) return [];
+    else {
+      return places?.filter((place) => place.Checked);
     }
   }
 }
