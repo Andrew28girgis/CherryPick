@@ -4,16 +4,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { MicrosoftMailsService } from 'src/app/core/services/microsoft-mails.service';
-import { MicrosoftLoginService } from 'src/app/core/services/microsoft-login.service';
+import { MicrosoftMailsService } from 'src/app/core/services/microsoft-mails.service'; 
 @Component({
   selector: 'app-link-microsoft',
   standalone: true,
   imports: [CommonModule, NgxSpinnerModule],
   providers: [
     MicrosoftMailsService,
-    NgxSpinnerService,
-    MicrosoftLoginService,
+    NgxSpinnerService, 
     PlacesService,
   ],
   templateUrl: './link-microsoft.component.html',
@@ -34,8 +32,7 @@ export class LinkMicrosoftComponent implements OnInit {
   constructor(
     public spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private PlacesService: PlacesService,
-    private microsoftLogin: MicrosoftLoginService,
+    private PlacesService: PlacesService, 
     private microsoftMailsService: MicrosoftMailsService,
     private ngZone: NgZone
   ) {}
@@ -43,7 +40,7 @@ export class LinkMicrosoftComponent implements OnInit {
   async ngOnInit() {
     this.user = localStorage.getItem('accountMicrosoftLinked') === 'true';
     this.contactId = localStorage.getItem('contactId');
-    this.url = this.microsoftLogin.getSigninUrl(this.contactId);
+    this.url = this.microsoftMailsService.getSigninUrl(this.contactId);
     this.CheckMicrosoftLinked();
   }
 

@@ -7,7 +7,10 @@ import { environment } from '../../../environments/environment';
 })
 export class MicrosoftMailsService {
   constructor(private http: HttpClient) {}
-
+  
+  public getSigninUrl(ContactId: number): string {
+    return `${environment.api}/auth/signin?ContactId=${ContactId}`;
+  }
   public GetContactFolders(ContactId: number) {
     return this.http.get<any>(
       `${environment.api}/MicrosoftMails/GetContactFolders?ContactId=${ContactId}`
