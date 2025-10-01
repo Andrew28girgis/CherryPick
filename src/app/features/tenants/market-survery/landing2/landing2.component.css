@@ -409,6 +409,38 @@
   }
 }
 
+/* ================= Employment & Commutting ================= */
+.employment-card .demo-row,
+.commuting-card  .demo-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;                      
+  padding: 6px 0;                
+}
+
+.employment-card .demo-row > span:first-child,
+.commuting-card  .demo-row > span:first-child {
+  font-weight: 600;                
+}
+
+.employment-card .demo-row .value,
+.commuting-card  .demo-row .value {
+  text-align: right;
+  white-space: nowrap;         
+}
+
+.employment-card .demo-row > span:first-child,
+.commuting-card  .demo-row > span:first-child {
+  color: var(--text-muted, #555);
+}
+
+.employment-card .demo-row .value,
+.commuting-card  .demo-row .value {
+  font-variant-numeric: tabular-nums; 
+}
+
+
 /* ================= INTERACTIONS ================= */
 .card a,
 .card button {
