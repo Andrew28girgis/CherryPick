@@ -1030,4 +1030,5 @@
   color: #fff;
   background-color: #102e50;
   flex-shrink: 0; /* keep logo fixed size */
+  cursor: auto;
 }

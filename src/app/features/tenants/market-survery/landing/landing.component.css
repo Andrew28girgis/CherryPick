@@ -668,23 +668,10 @@ li {
   background: var(--Colors-Primary-light);
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: auto;
 }
 
-.org-logo {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid rgba(0, 0, 0, 0.1); 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 16px;
-  color: #fff;
-  background-color: #102e50;
-  flex-shrink: 0; /* keep logo fixed size */
-}
+ 
 .contacts-wrapper {
   background: #ffffff;
   border-radius: 16px;
@@ -722,6 +709,7 @@ li {
   color: #fff;
   background: linear-gradient(135deg, #3498db, #2c3e50);
   flex-shrink: 0;
+  cursor: auto;
 }
 
 .user-info {
