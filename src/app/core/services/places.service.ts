@@ -138,10 +138,9 @@ export class PlacesService {
           map((fileContent: string) => {
             try {
               const convertedBytes = JSON.parse(fileContent);
- 
+
               // Check if we got a meaningful result (not empty)
               if (convertedBytes && Object.keys(convertedBytes).length > 0) {
- 
                 return convertedBytes;
               } else {
                 // If empty result, continue polling
@@ -400,4 +399,10 @@ export class PlacesService {
       body
     );
   }
+  public GetScore(campaignIdScore: number, shoppingCenterId: number) {
+    return this.http.post<any>(
+      `${environment.api}/Enrichment/GenerateMatchScore?campaignId=${campaignIdScore}&shoppingCenterId=${shoppingCenterId}`,campaignIdScore
+    );
+  }
+  
 }

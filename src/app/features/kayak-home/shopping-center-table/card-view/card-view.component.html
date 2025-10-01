@@ -90,6 +90,21 @@
             />
           </svg>
         </button>
+        <button
+          class="plus-icon score"
+          [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
+          (click)="getscore(shopping); $event.stopPropagation()"
+          *ngIf="!shopping.Score"
+        >
+          <span *ngIf="scoringId !== shopping.Id">Get Score</span>
+          <span *ngIf="scoringId === shopping.Id">
+            Getting Score
+            <span class="stat-bars" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span
+              ><span></span>
+            </span>
+          </span>
+        </button>
         <!-- <div
           (click)="deleteCenter(shopping.Id); $event.stopPropagation()"
           class="card-badge delete-badge"
@@ -655,8 +670,6 @@
   </ng-container>
 </div>
 
-
-
 <div *ngIf="hasUnscoredCenters">
   <h3 class="split-heading">
     <span>Emily is working on</span>
@@ -781,8 +794,7 @@
                         (click)="toggleMenu(shopping.Id, $event)"
                       >
                         <svg
-                        *ngIf="!openMenuId || openMenuId == shopping.Id"
-
+                          *ngIf="!openMenuId || openMenuId == shopping.Id"
                           xmlns="http://www.w3.org/2000/svg"
                           width="20"
                           height="20"

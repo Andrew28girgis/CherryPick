@@ -98,6 +98,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   openMenuId: number | null = null;
   openStageId: number | null = null;
   dataReady = false;
+  scoringId: number | null = null; // track the current shopping center being scored
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -183,7 +184,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
             this.KanbanStages = [...stages]; // Create a new array reference
             this.cdr.markForCheck(); // Force change detection
           }
-        }
+        },
       })
     );
 
@@ -220,8 +221,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.viewManagerService.updatePlaceKanbanStage(
       marketSurveyId,
       stageId,
-      shoppingCenter,
-     );
+      shoppingCenter
+    );
 
     setTimeout(() => {
       this.isUpdatingStage = false;
@@ -638,7 +639,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
           backdrop: true,
           centered: true,
         });
-      }
+      },
     });
   }
 
@@ -673,7 +674,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       toast.classList.add('show');
       setTimeout(() => {
         toast.classList.remove('show');
-      }, 2500);
+      }, 3500);
     } else {
     }
   }
@@ -709,6 +710,29 @@ export class CardViewComponent implements OnInit, OnDestroy {
       next: () => {
         this.viewManagerService.loadShoppingCenters(this.CampaignId);
       },
+    });
+  }
+  getscore(shopping: any) {
+    if (!shopping.Score) {
+      this.scoringId = shopping.Id; // set loader only for this center
+    }
+    this.placesService.GetScore(this.CampaignId, shopping.Id).subscribe({
+      next: (response) => {
+        this.scoringId = null; // stop loader when finished
+        this.viewManagerService.loadShoppingCenters(this.CampaignId);
+        if (!response) {
+          this.showToast(
+            `Shopping center ${shopping.CenterName} has already been scored`
+          );
+        } else {
+          this.showToast(
+            `Shopping center ${shopping.CenterName} scored successfully`
+          );
+        }
+      },
+      error: () => {
+        this.scoringId = null; // also stop loader if error happens
+      }
     });
   }
 }
