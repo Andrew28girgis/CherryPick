@@ -1,66 +1,15 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 declare const google: any;
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
 import { NearByType } from 'src/app/shared/models/nearBy';
 import { ShoppingCenterTenant } from 'src/app/shared/models/PlaceCo';
 import { OrgBranch } from 'src/app/shared/models/branches';
 import { PlacesService } from 'src/app/core/services/places.service';
-
-type CensusData = {
-  name: string;
-  lat: number;
-  lon: number;
-  population: number;
-  medianAge: number;
-  households: number;
-  avgHouseholdSize: number;
-  medianIncome: number;
-  perCapitaIncome: number;
-  housing: {
-    medianRent: number;
-    medianHomeValue: number;
-    ownerOccupied: number;
-    renterOccupied: number;
-    totalUnits: number;
-    occupiedUnits: number;
-    vacantUnits: number;
-  };
-  education: {
-    highSchool: number;
-    bachelors: number;
-    masters: number;
-    doctorate: number;
-  };
-  race: {
-    white: number;
-    black: number;
-    americanIndian: number;
-    asian: number;
-    pacificIslander: number;
-    hispanic: number;
-  };
-  incomeBrackets: {
-    Total: number;
-    '<10k': number;
-    '10-15k': number;
-    '200k+': number;
-  };
-  ageGroups: Record<string, number>;
-  employment?: {
-    employedTotal?: number;
-  };
-  commuting?: {
-    workersTotal?: number;
-    driveAlone?: number;
-    publicTransit?: number;
-    avgCommuteMinutes?: number;
-  };
-};
+import { Demographics } from 'src/app/shared/models/demographics';
 
 type LandingPlaceWithDemo = LandingPlace & {
-  Demographics?: string | Record<string, any>;
+  Demographics?: Demographics | string | Record<string, any>;
 };
 
 @Component({
@@ -69,13 +18,13 @@ type LandingPlaceWithDemo = LandingPlace & {
   styleUrls: ['./landing2.component.css'],
 })
 export class Landing2Component implements OnInit {
-  campaignId!: any;
-  shoppingCenter!: LandingPlaceWithDemo;
+  campaignId!: string | null;
+  shoppingCenter!: LandingPlaceWithDemo | null;
   ShoppingCenterId!: number;
   NearByType: NearByType[] = [];
   PlaceId!: number;
-  OrganizationBranches!: OrgBranch;
-  shoppingId!: any;
+  OrganizationBranches!: OrgBranch | null;
+  shoppingId!: string | null;
 
   tenantGroups = {
     onSite: [] as ShoppingCenterTenant[],
@@ -84,7 +33,7 @@ export class Landing2Component implements OnInit {
     longer: [] as ShoppingCenterTenant[],
   };
 
-  censusData: CensusData = {
+  censusData: Demographics = {
     name: '',
     lat: 0,
     lon: 0,
@@ -131,10 +80,8 @@ export class Landing2Component implements OnInit {
   };
 
   constructor(
-    public activatedRoute: ActivatedRoute,
-    public router: Router,
-    private PlacesService: PlacesService,
-    private modalService: NgbModal
+    private activatedRoute: ActivatedRoute,
+    private PlacesService: PlacesService
   ) {}
 
   private toNumber(n: any, fallback = 0): number {
@@ -231,6 +178,7 @@ export class Landing2Component implements OnInit {
       ageGroups: normalizedAges as any,
     } as any;
 
+    // assign normalized income, employment & commuting
     (this.censusData as any).incomeBrackets = normalizedIncome;
 
     (this.censusData as any).employment = {
@@ -309,7 +257,8 @@ export class Landing2Component implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.campaignId = params.campaignId;
       this.PlaceId = params.id;
-      this.ShoppingCenterId = params.shoppiongCenterId; 
+      this.ShoppingCenterId = params.shoppiongCenterId;
+
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
         this.GetPlaceDetails(0, this.ShoppingCenterId);
@@ -349,10 +298,7 @@ export class Landing2Component implements OnInit {
     });
   }
 
-  GetBuyBoxOrganizationDetails(
-    Shoppingcenterid: number,
-    PlaceId: number
-  ): void {
+  GetBuyBoxOrganizationDetails(Shoppingcenterid: number, PlaceId: number): void {
     const body: any = {
       Name: 'GetBuyBoxOrganizationDetails',
       Params: {
@@ -384,14 +330,9 @@ export class Landing2Component implements OnInit {
       next: (data) => {
         this.shoppingCenter = data.json?.[0] || null;
         this.hydrateCensusFromApi();
-        this.initializeMap(
-          this.shoppingCenter.Latitude,
-          this.shoppingCenter.Longitude
-        );
-        this.initializestreetView(
-          this.shoppingCenter.Latitude,
-          this.shoppingCenter.Longitude
-        );
+        if (this.shoppingCenter) {
+          this.initializeMap(this.shoppingCenter.Latitude, this.shoppingCenter.Longitude);
+        }
         this.GetPlaceNearBy(this.PlaceId);
       },
     });
@@ -409,33 +350,16 @@ export class Landing2Component implements OnInit {
       zoom: 13,
       mapId: '1234567890abcdef',
     });
-    const marker = new AdvancedMarkerElement({
-      map: map,
-      position: position,
+    new AdvancedMarkerElement({
+      map,
+      position,
       title: 'This is a marker!',
     });
 
     return map;
   }
 
-  initializestreetView(
-    lat: number,
-    lng: number,
-    heading?: number,
-    pitch?: number
-  ) {
-    const streetViewElement = document.getElementById('street-view');
-    if (streetViewElement) {
-      const panorama = new google.maps.StreetViewPanorama(
-        streetViewElement as HTMLElement,
-        {
-          position: { lat: lat, lng: lng },
-          pov: { heading: heading, pitch: pitch },
-        }
-      );
-    } else {
-    }
-  }
+
 
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
@@ -460,12 +384,12 @@ export class Landing2Component implements OnInit {
     const pct = (v: number) => (total ? Math.round((v / total) * 100) : 0);
 
     const colors = [
-      '#D1D5DB', 
+      '#D1D5DB',
       '#111827',
-      '#10B981', 
-      '#F59E0B', 
-      '#8B5CF6', 
-      '#14B8A6', 
+      '#10B981',
+      '#F59E0B',
+      '#8B5CF6',
+      '#14B8A6',
     ];
 
     return [
@@ -527,6 +451,7 @@ export class Landing2Component implements OnInit {
     '200k+',
     'Total',
   ];
+
   getIncomeData() {
     const income: Record<string, any> =
       (this.censusData as any).incomeBrackets || {};
