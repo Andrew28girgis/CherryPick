@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { General } from 'src/app/shared/models/domain';
 declare const google: any;
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
@@ -60,7 +59,6 @@ type CensusData = {
   };
 };
 
-// Extend LandingPlace so TS allows .Demographics
 type LandingPlaceWithDemo = LandingPlace & {
   Demographics?: string | Record<string, any>;
 };
@@ -139,7 +137,6 @@ export class Landing2Component implements OnInit {
     private modalService: NgbModal
   ) {}
 
-  // Tiny helper for safe number conversion
   private toNumber(n: any, fallback = 0): number {
     const v = Number(n);
     return Number.isFinite(v) ? v : fallback;
@@ -166,13 +163,11 @@ export class Landing2Component implements OnInit {
     const employment = demo.Employment ?? {};
     const commuting = demo.Commuting ?? {};
 
-    // Normalize helpers
     const num = (v: any, fb = 0) => {
       const n = Number(v);
       return Number.isFinite(n) ? n : fb;
     };
 
-    // Normalize ALL income buckets (keep every key the API provides)
     const normalizedIncome: Record<string, number> = Object.keys(income).reduce(
       (acc, k) => {
         acc[k] = num(income[k], 0);
@@ -181,7 +176,6 @@ export class Landing2Component implements OnInit {
       {} as Record<string, number>
     );
 
-    // Normalize ALL age groups dynamically
     const normalizedAges: Record<string, number> = Object.keys(ages).reduce(
       (acc, k) => {
         acc[k] = num(ages[k], 0);
@@ -190,7 +184,6 @@ export class Landing2Component implements OnInit {
       {} as Record<string, number>
     );
 
-    // Build the base object using your existing shape
     this.censusData = {
       name: demo.Name ?? '',
       lat: num(demo.Lat),
@@ -228,7 +221,6 @@ export class Landing2Component implements OnInit {
         hispanic: num(race.hispanic),
       },
 
-      // Keep your original keys for compatibility; we'll overwrite with full map below
       incomeBrackets: {
         Total: num(income.Total),
         '<10k': num(income['<10k']),
@@ -236,15 +228,11 @@ export class Landing2Component implements OnInit {
         '200k+': num(income['200k+']),
       },
 
-      // If your type was updated to Record<string, number>, this assignment is fine.
-      // If not, we will cast below to keep TS happy without changing your types here.
       ageGroups: normalizedAges as any,
     } as any;
 
-    // Overwrite incomeBrackets with the FULL normalized map (keeps all API buckets)
     (this.censusData as any).incomeBrackets = normalizedIncome;
 
-    // Add Employment & Commuting (typed optional)
     (this.censusData as any).employment = {
       employedTotal: num(employment.employedTotal),
     };
@@ -321,7 +309,7 @@ export class Landing2Component implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.campaignId = params.campaignId;
       this.PlaceId = params.id;
-      this.ShoppingCenterId = params.shoppiongCenterId; // ensure this matches your actual route param
+      this.ShoppingCenterId = params.shoppiongCenterId; 
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
         this.GetPlaceDetails(0, this.ShoppingCenterId);
@@ -395,11 +383,7 @@ export class Landing2Component implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenter = data.json?.[0] || null;
-        console.log('sss', this.shoppingCenter);
-
-        // hydrate demographics from API → updates censusData used by the template
         this.hydrateCensusFromApi();
-
         this.initializeMap(
           this.shoppingCenter.Latitude,
           this.shoppingCenter.Longitude
@@ -450,7 +434,6 @@ export class Landing2Component implements OnInit {
         }
       );
     } else {
-      // element not found; no-op
     }
   }
 
@@ -525,7 +508,6 @@ export class Landing2Component implements OnInit {
     ];
   }
 
-  // logical order for API income bracket KEYS (not display labels)
   private readonly incomeOrder: string[] = [
     '<10k',
     '10-15k',
@@ -549,7 +531,6 @@ export class Landing2Component implements OnInit {
     const income: Record<string, any> =
       (this.censusData as any).incomeBrackets || {};
 
-    // Prefer API "Total"; else compute it
     const explicitTotal = this.toNumber(income['Total'], 0);
     const computedTotal = Object.entries(income)
       .filter(([k]) => k !== 'Total')
@@ -598,7 +579,6 @@ export class Landing2Component implements OnInit {
     }));
     const total = entries.reduce((s, e) => s + e.count, 0);
 
-    // Sort by the first number in the label if present (so 0-4, 5-9, 10-14, 15-17, 18-19, ...)
     const startNum = (label: string) => {
       const m = label.match(/(\d+)/);
       return m ? parseInt(m[1], 10) : Number.MAX_SAFE_INTEGER;
