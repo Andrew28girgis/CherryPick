@@ -16,20 +16,20 @@
  
 
 .selected-option {
-  padding: 2px var(--Space-S-8)  ;
-   display: flex;
-  justify-content: space-between;
+  display: flex;
+  padding: var(--Space-S-4) var(--Space-S-16);
   align-items: center;
-  transition: all 0.2s;
-  gap: 5px;
-  height: 30px;
+  gap: var(--Space-S-4);
+
+  border-radius: var(--Radius-R-16);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5px);
   color: var(--Body-Heading, #161017);
-   
+
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 171.429% */
-
 }
 
 .selected-option:hover {
