@@ -1,1 +1,32 @@
-<p>tree works!</p>
+ 
+    <div class="tree-container"> 
+      <div class="tree">
+        <ng-container *ngFor="let node of treeData">
+          <ng-container
+            [ngTemplateOutlet]="nodeTemplate"
+            [ngTemplateOutletContext]="{ node: node, isRoot: true }"
+          ></ng-container>
+        </ng-container>
+      </div>
+    </div>
+    
+    <ng-template #nodeTemplate let-node="node" let-isRoot="isRoot">
+      <div class="tree-node" [class.leaf-node]="!node.children || node.children.length === 0">
+        <!-- This is the visible box for the employee -->
+        <div class="node-box">
+          <div class="node-name">{{ node.name }}</div>
+          <div class="node-role">{{ node.role }}</div>
+        </div>
+
+        <!-- If the node has children, create a container for them -->
+        <div *ngIf="node.children && node.children.length > 0" class="tree-children">
+          <!-- Loop through the children and recursively call the template for each one -->
+          <ng-container *ngFor="let child of node.children">
+            <ng-container
+              [ngTemplateOutlet]="nodeTemplate"
+              [ngTemplateOutletContext]="{ node: child, isRoot: false }"
+            ></ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </ng-template>

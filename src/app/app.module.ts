@@ -37,6 +37,7 @@ import { EditorModule } from 'primeng/editor';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
+import { TreeComponent } from './features/tree/tree.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { Landing2Component } from './features/tenants/market-survery/landing2/la
     AiChatingComponent,
     AiUiHTMLComponent,
     Landing2Component,
+    TreeComponent
   ],
   imports: [
     BrowserModule,
