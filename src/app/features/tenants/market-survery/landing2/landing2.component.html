@@ -1,7 +1,7 @@
 <div class="census-container">
-      <!-- Header Section -->
-      <div class="header-card">
-        <!-- <div class="location-info">
+  <!-- Header Section -->
+  <div class="header-card">
+    <!-- <div class="location-info">
           <h1 class="tract-name">{{ censusData.name }}</h1>
           <div class="coordinates">
             <span class="coord-item">
@@ -10,160 +10,296 @@
             </span>
           </div>
         </div> -->
-        <div class="key-stats">
-          <div class="stat-item">
-            <div class="stat-value">{{ formatNumber(censusData.population) }}</div>
-            <div class="stat-label">Population</div>
+    <div class="key-stats">
+      <div class="stat-item">
+        <div class="stat-value">{{ formatNumber(censusData.population) }}</div>
+        <div class="stat-label">Population</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ censusData.medianAge }}</div>
+        <div class="stat-label">Median Age</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">
+          {{ formatCurrency(censusData.medianIncome) }}
+        </div>
+        <div class="stat-label">Median Income</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="grid-container">
+    <!-- Demographics Card -->
+    <div class="card demographics-card">
+      <div class="card-header">
+        <h2>Demographics</h2>
+        <i class="header-icon">👥</i>
+      </div>
+      <div class="card-content">
+        <div class="demo-stats">
+          <div class="demo-row">
+            <span>Name</span>
+            <span class="value">{{ censusData.name || "—" }}</span>
           </div>
-          <div class="stat-item">
-            <div class="stat-value">{{ censusData.medianAge }}</div>
-            <div class="stat-label">Median Age</div>
+
+          <div class="demo-row">
+            <span>Latitude</span>
+            <span class="value">{{ censusData.lat }}</span>
           </div>
-          <div class="stat-item">
-            <div class="stat-value">{{ formatCurrency(censusData.medianIncome) }}</div>
-            <div class="stat-label">Median Income</div>
+
+          <div class="demo-row">
+            <span>Longitude</span>
+            <span class="value">{{ censusData.lon }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Population</span>
+            <span class="value">{{
+              formatNumber(censusData.population || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Median Age</span>
+            <span class="value">{{ censusData.medianAge || 0 }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Households</span>
+            <span class="value">{{
+              formatNumber(censusData.households || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Avg Household Size</span>
+            <span class="value">{{ censusData.avgHouseholdSize || 0 }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Median Income</span>
+            <span class="value">{{
+              formatCurrency(censusData.medianIncome || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Per Capita Income</span>
+            <span class="value">{{
+              formatCurrency(censusData.perCapitaIncome || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Owner-Occupied</span>
+            <span class="value">{{
+              formatNumber(censusData.housing.ownerOccupied || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Renter-Occupied</span>
+            <span class="value">{{
+              formatNumber(censusData.housing.renterOccupied || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Total Units</span>
+            <span class="value">{{
+              formatNumber(censusData.housing.totalUnits || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Occupied Units</span>
+            <span class="value">{{
+              formatNumber(censusData.housing.occupiedUnits || 0)
+            }}</span>
+          </div>
+
+          <div class="demo-row">
+            <span>Vacant Units</span>
+            <span class="value">{{
+              formatNumber(censusData.housing.vacantUnits || 0)
+            }}</span>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Main Grid -->
-      <div class="grid-container">
-        <!-- Demographics Card -->
-        <div class="card demographics-card">
-          <div class="card-header">
-            <h2>Demographics</h2>
-            <i class="header-icon">👥</i>
+    <!-- Housing Card -->
+    <div class="card housing-card">
+      <div class="card-header">
+        <h2>Housing</h2>
+        <i class="header-icon">🏠</i>
+      </div>
+      <div class="card-content">
+        <div class="housing-overview">
+          <div class="housing-stat">
+            <div class="housing-value">
+              {{
+                censusData.housing.medianHomeValue > 0
+                  ? formatCurrency(censusData.housing.medianHomeValue)
+                  : "N/A"
+              }}
+            </div>
+            <div class="housing-label">Median Home Value</div>
           </div>
-          <div class="card-content">
-            <div class="demo-stats">
-              <div class="demo-row">
-                <span>Households</span>
-                <span class="value">{{ formatNumber(censusData.households) }}</span>
-              </div>
-              <div class="demo-row">
-                <span>Avg Household Size</span>
-                <span class="value">{{ censusData.avgHouseholdSize }}</span>
-              </div>
-              <div class="demo-row">
-                <span>Per Capita Income</span>
-                <span class="value">{{ formatCurrency(censusData.perCapitaIncome) }}</span>
-              </div>
+          <div class="housing-stat">
+            <div class="housing-value">
+              {{ formatCurrency(censusData.housing.medianRent || 0) }}
+            </div>
+            <div class="housing-label">Median Rent</div>
+          </div>
+        </div>
+        <div class="housing-breakdown">
+          <div class="units-info">
+            <span
+              >{{ censusData.housing.totalUnits }} total units •
+              {{ censusData.housing.vacantUnits }} vacant</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education Card -->
+    <div class="card education-card">
+      <div class="card-header">
+        <h2>Education</h2>
+        <i class="header-icon">🎓</i>
+      </div>
+      <div class="card-content">
+        <div class="education-chart">
+          <div class="edu-item" *ngFor="let item of getEducationData()">
+            <div class="edu-bar">
+              <div class="edu-fill" [style.width.%]="item.percentage"></div>
+            </div>
+            <div class="edu-info">
+              <span class="edu-label">{{ item.label }}</span>
+              <span class="edu-value"
+                >{{ item.count }} ({{ item.percentage }}%)</span
+              >
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Housing Card -->
-        <div class="card housing-card">
-          <div class="card-header">
-            <h2>Housing</h2>
-            <i class="header-icon">🏠</i>
-          </div>
-          <div class="card-content">
-            <div class="housing-overview">
-              <div class="housing-stat">
-                <div class="housing-value">{{ formatCurrency(censusData.housing.medianHomeValue) }}</div>
-                <div class="housing-label">Median Home Value</div>
-              </div>
-              <div class="housing-stat">
-                <div class="housing-value">{{ formatCurrency(censusData.housing.medianRent) }}</div>
-                <div class="housing-label">Median Rent</div>
-              </div>
-            </div>
-            <div class="housing-breakdown">
-              <div class="occupancy-chart">
-                <div class="chart-item owner" [style.width.%]="getOwnershipPercentage()">
-                  <span>Owner ({{ getOwnershipPercentage() }}%)</span>
-                </div>
-                <div class="chart-item renter" [style.width.%]="getRenterPercentage()">
-                  <span>Renter ({{ getRenterPercentage() }}%)</span>
-                </div>
-              </div>
-              <div class="units-info">
-                <span>{{ censusData.housing.totalUnits }} total units • {{ censusData.housing.vacantUnits }} vacant</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Education Card -->
-        <div class="card education-card">
-          <div class="card-header">
-            <h2>Education</h2>
-            <i class="header-icon">🎓</i>
-          </div>
-          <div class="card-content">
-            <div class="education-chart">
-              <div class="edu-item" *ngFor="let item of getEducationData()">
-                <div class="edu-bar">
-                  <div class="edu-fill" [style.width.%]="item.percentage"></div>
-                </div>
-                <div class="edu-info">
-                  <span class="edu-label">{{ item.label }}</span>
-                  <span class="edu-value">{{ item.count }} ({{ item.percentage }}%)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Race/Ethnicity Card -->
-        <div class="card race-card">
-          <div class="card-header">
-            <h2>Race & Ethnicity</h2>
-            <i class="header-icon">🌍</i>
-          </div>
-          <div class="card-content">
-            <div class="race-grid">
-              <div class="race-item" *ngFor="let item of getRaceData()">
-                <div class="race-color" [style.background-color]="item.color"></div>
-                <div class="race-info">
-                  <div class="race-label">{{ item.label }}</div>
-                  <div class="race-stats">
-                    <span class="race-count">{{ formatNumber(item.count) }}</span>
-                    <span class="race-percent">({{ item.percentage }}%)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Income Brackets Card -->
-        <div class="card income-card">
-          <div class="card-header">
-            <h2>Income Distribution</h2>
-            <i class="header-icon">💰</i>
-          </div>
-          <div class="card-content">
-            <div class="income-bars">
-              <div class="income-item" *ngFor="let item of getIncomeData()">
-                <div class="income-label">{{ item.label }}</div>
-                <div class="income-bar">
-                  <div class="income-fill" [style.width.%]="item.percentage"></div>
-                </div>
-                <div class="income-value">{{ item.count }} ({{ item.percentage }}%)</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Age Groups Card -->
-        <div class="card age-card">
-          <div class="card-header">
-            <h2>Age Groups (Sample)</h2>
-            <i class="header-icon">👶</i>
-          </div>
-          <div class="card-content">
-            <div class="age-breakdown">
-              <div class="age-item" *ngFor="let item of getAgeData()">
-                <div class="age-group">{{ item.group }}</div>
-                <div class="age-bar">
-                  <div class="age-fill" [style.width.%]="item.percentage"></div>
-                </div>
-                <div class="age-count">{{ item.count }}</div>
+    <!-- Race/Ethnicity Card -->
+    <div class="card race-card">
+      <div class="card-header">
+        <h2>Race & Ethnicity</h2>
+        <i class="header-icon">🌍</i>
+      </div>
+      <div class="card-content">
+        <div class="race-grid">
+          <div class="race-item" *ngFor="let item of getRaceData()">
+            <div class="race-color" [style.background-color]="item.color"></div>
+            <div class="race-info">
+              <div class="race-label">{{ item.label }}</div>
+              <div class="race-stats">
+                <span class="race-count">{{ formatNumber(item.count) }}</span>
+                <span class="race-percent">({{ item.percentage }}%)</span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Income Brackets Card -->
+    <div class="card income-card">
+      <div class="card-header">
+        <h2>Income Distribution</h2>
+        <i class="header-icon">💰</i>
+      </div>
+      <div class="card-content">
+        <div class="income-bars">
+          <div class="income-item" *ngFor="let item of getIncomeData()">
+            <div class="income-label">{{ item.label }}</div>
+            <div class="income-bar">
+              <div class="income-fill" [style.width.%]="item.percentage"></div>
+            </div>
+            <div class="income-value">
+              {{ item.count }} ({{ item.percentage }}%)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Age Groups Card -->
+    <div class="card age-card">
+      <div class="card-header">
+        <h2>Age Groups (Sample)</h2>
+        <i class="header-icon">👶</i>
+      </div>
+      <div class="card-content">
+        <div class="age-breakdown">
+          <div class="age-item" *ngFor="let item of getAgeData()">
+            <div class="age-group">{{ item.group }}</div>
+            <div class="age-bar">
+              <div class="age-fill" [style.width.%]="item.percentage"></div>
+            </div>
+            <div class="age-count">{{ item.count }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Employment Card -->
+    <div class="card employment-card" *ngIf="censusData.employment">
+      <div class="card-header">
+        <h2>Employment</h2>
+        <i class="header-icon">💼</i>
+      </div>
+      <div class="card-content">
+        <div class="demo-stats">
+          <div class="demo-row">
+            <span>Total Employed</span>
+            <span class="value">{{
+              formatNumber(censusData.employment.employedTotal || 0)
+            }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Commuting Card -->
+    <div class="card commuting-card" *ngIf="censusData.commuting">
+      <div class="card-header">
+        <h2>Commuting</h2>
+        <i class="header-icon">🚌</i>
+      </div>
+      <div class="card-content">
+        <div class="demo-stats">
+          <div class="demo-row">
+            <span>Total Workers</span>
+            <span class="value">{{
+              formatNumber(censusData.commuting.workersTotal || 0)
+            }}</span>
+          </div>
+          <div class="demo-row">
+            <span>Drive Alone</span>
+            <span class="value">{{
+              formatNumber(censusData.commuting.driveAlone || 0)
+            }}</span>
+          </div>
+          <div class="demo-row">
+            <span>Public Transit</span>
+            <span class="value">{{
+              formatNumber(censusData.commuting.publicTransit || 0)
+            }}</span>
+          </div>
+          <div class="demo-row">
+            <span>Avg Commute (min)</span>
+            <span class="value">{{
+              censusData.commuting.avgCommuteMinutes || 0
+            }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
