@@ -23,6 +23,7 @@ import { UserPagesComponent } from './features/user-pages/user-pages.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
 import { PolygonsComponent } from './features/polygons/polygons.component';
+import { TreeComponent } from './features/tree/tree.component';
 
 const routes: Routes = [
   {
@@ -164,7 +165,11 @@ const routes: Routes = [
     component: AiChatingComponent,
     data: { hideHeader: true },
   },
-
+   {
+    path: 'tree',
+    component: TreeComponent,
+    data: { hideHeader: true },
+  },
   {
     path: 'Kanban',
     loadChildren: () =>

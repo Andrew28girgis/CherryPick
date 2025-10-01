@@ -113,13 +113,7 @@ export class TodoCardComponent {
           if (--emailCount === 0) {
             this.modalService.dismissAll();
           }
-        },
-        error: () => {
-          errorCount++;
-          // Check if all emails have been processed
-          if (--emailCount === 0) {
-          }
-        },
+        }
       });
     });
   }

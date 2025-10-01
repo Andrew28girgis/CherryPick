@@ -60,7 +60,6 @@ export class LoginComponent implements OnInit {
     this.route.queryParamMap.subscribe((params) => {
       this.loginToken = params.get('t');
       if (this.loginToken) {
-        //       this.router.navigate(['/not-found']);
         localStorage.setItem('loginToken', this.loginToken || '');
         this.loginWithGUID();
       }
@@ -285,11 +284,7 @@ export class LoginComponent implements OnInit {
       next: (data: any) => {
         this.placesService.setAppMode('api');
         localStorage.setItem('apiMode', JSON.stringify(true));
-      },
-      error: (error: any) => {
-        this.placesService.setAppMode('dropbox');
-        localStorage.setItem('apiMode', JSON.stringify(false));
-      },
+      }
     });
   }
 }

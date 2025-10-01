@@ -57,7 +57,7 @@ export {};
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, PolygonsComponent],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })
@@ -290,8 +290,7 @@ export class NotificationsComponent
           this.newNotificationsCount = 0;
         }
       }
-    } catch (err) {
-     }
+    } catch (err) {}
   }
 
   // handleNotificationClick(notification: Notification): void {
@@ -350,15 +349,13 @@ export class NotificationsComponent
                 notification.json,
                 notification
               );
-
-             } catch (error) {
-             }
+            } catch (error) {}
           }
           this.setNotificationLoading(notification, false);
           this.loadedNotifications.add(notification.id);
         },
         error: (error) => {
-           this.setNotificationLoading(notification, false);
+          this.setNotificationLoading(notification, false);
         },
       });
     } else if (choice === 0) {
@@ -372,7 +369,7 @@ export class NotificationsComponent
           // Clear loading state when done
           this.setNotificationLoading(notification, false);
           this.loadedNotifications.add(notification.id);
-        }
+        },
       });
     }
   }
@@ -398,7 +395,7 @@ export class NotificationsComponent
 
       return response;
     } catch (error) {
-       return null;
+      return null;
     }
   }
 
@@ -528,7 +525,7 @@ export class NotificationsComponent
         this.scanTrigger$.next();
       },
       error: (err) => {
-         this.isSending = false;
+        this.isSending = false;
         this.hideTyping();
         // restore text
         this.outgoingText = text;
@@ -851,7 +848,7 @@ export class NotificationsComponent
         this.refreshService.triggerRefreshOrganizations();
 
         this.isSaving = false;
-      }
+      },
     });
   }
 
@@ -862,7 +859,7 @@ export class NotificationsComponent
         const id = response?.json?.[0]?.id;
 
         if (id == null) {
-           return;
+          return;
         }
 
         try {
@@ -871,9 +868,8 @@ export class NotificationsComponent
             localStorage.getItem('token'),
             id // <-- send only the id
           );
-        } catch (e) {
-         }
-      }
+        } catch (e) {}
+      },
     });
   }
 
@@ -908,7 +904,7 @@ export class NotificationsComponent
   }
   async downloadPDF(): Promise<void> {
     if (!this.contentToDownload) {
-       return;
+      return;
     }
 
     const container = this.contentToDownload.nativeElement as HTMLElement;
@@ -926,8 +922,7 @@ export class NotificationsComponent
           ) {
             img.src = await this.toDataURL(img.src);
           }
-        } catch (err) {
-         }
+        } catch (err) {}
       })
     );
 
@@ -1013,7 +1008,7 @@ export class NotificationsComponent
 
         this.isSaving = false;
         this.pdfTitle = ''; // reset
-      } 
+      },
     });
   }
   ngOnChanges(changes: SimpleChanges) {
@@ -1066,7 +1061,7 @@ export class NotificationsComponent
     if (!el) return true;
     const distance = el.scrollHeight - (el.scrollTop + el.clientHeight);
     return distance <= this.BOTTOM_STICKY_THRESHOLD;
-  }
+  } 
 
   // ADD — immediate/smooth scroll helpers
   private scrollToBottomNow(): void {
@@ -1216,7 +1211,6 @@ export class NotificationsComponent
         /I have found\s+(\d+)\s+Shopping Centers/i
       );
       if (match) {
- 
         this.refreshService.triggerRefreshOrganizations();
         break;
       }

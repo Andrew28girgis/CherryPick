@@ -240,8 +240,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.stages = response.json;
         }
-      },
-      error: () => {},
+      }
     });
 
     this.subscriptions.add(subscription);

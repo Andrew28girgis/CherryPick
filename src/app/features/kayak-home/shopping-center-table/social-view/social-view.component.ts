@@ -356,14 +356,7 @@ export class SocialViewComponent implements OnInit, OnDestroy {
             }
             this.cdr.markForCheck();
           }
-        },
-        error: () => {
-          shoppingCenter.ShoppingCenter.Comments =
-            shoppingCenter.ShoppingCenter.Comments.filter(
-              (c) => c.Id !== newReply.Id
-            );
-          this.cdr.markForCheck();
-        },
+        }
       });
     }
   }
@@ -494,18 +487,7 @@ export class SocialViewComponent implements OnInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {},
-      error: () => {
-        // Revert changes on error
-        shopping.ShoppingCenter.Reactions =
-          shopping.ShoppingCenter.Reactions.filter(
-            (reaction) =>
-              !(
-                reaction.ReactionId === reactionId &&
-                reaction.ContactId === contactId
-              )
-          );
-        this.cdr.markForCheck();
-      },
+    
       complete: () => {
         this.cdr.markForCheck();
       },

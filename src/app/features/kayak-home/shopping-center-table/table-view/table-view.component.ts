@@ -538,15 +538,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
           backdrop: true,
           centered: true,
         });
-      },
-      error: (err) => {
-        this.isLoadingInfo = false;
-        this.modalService.open(content, {
-          size: 'md',
-          backdrop: true,
-          centered: true,
-        });
-      },
+      }
     });
   }
 
