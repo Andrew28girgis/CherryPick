@@ -7,10 +7,10 @@ interface Stage {
   id: number;
   stageMessage: string;
 }
-
 @Injectable({
   providedIn: 'root',
 })
+
 export class SettingsService {
   constructor(private httpClient: HttpClient) {}
 

@@ -7,7 +7,10 @@ import { firstValueFrom, forkJoin, Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DiamondLoaderComponent } from './diamond-loader/diamond-loader.component';
-import { DataCollectionProgress, CountData } from 'src/app/shared/models/diamonds';  
+import {
+  DataCollectionProgress,
+  CountData,
+} from 'src/app/shared/models/diamonds';
 @Component({
   selector: 'app-tasks',
   standalone: true,
@@ -18,20 +21,19 @@ import { DataCollectionProgress, CountData } from 'src/app/shared/models/diamond
 export class TasksComponent implements OnInit, OnDestroy {
   private guid!: string;
   private contactId!: number;
-   private mailCountInterval: any;
+  private mailCountInterval: any;
   private totalMailsSubscription?: Subscription;
-  private diamondsCountSubscription?: Subscription;
-
+  private diamondsCountSubscription?: Subscription; 
   protected microsoftState: number = 1; // 1: not linked, 2: linking, 3: linked
   protected googleState: number = 1;
-   protected counts: CountData = {
+  protected counts: CountData = {
     mailCount: 0,
     contactCount: 0,
     organizationCount: 0,
     shoppingCentersCount: 0,
     placeCount: 0,
   };
-   protected microsoftDataProgress: DataCollectionProgress = {
+  protected microsoftDataProgress: DataCollectionProgress = {
     step1: false,
     step2: false,
     step3: false,
@@ -63,12 +65,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   googleEmailsList: { email: string; isAdded: boolean }[] = [];
   googleDomainList: { domain: string; isAdded: boolean }[] = [];
 
-   totalProgressedMessage: any;
+  totalProgressedMessage: any;
   constructor(
     private genericApiService: PlacesService,
     private http: HttpClient,
-    private modalService: NgbModal,
-   ) {}
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -84,7 +86,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-     this.totalMailsSubscription?.unsubscribe();
+    this.totalMailsSubscription?.unsubscribe();
     this.diamondsCountSubscription?.unsubscribe();
     this.clearMailCountInterval();
   }
@@ -177,7 +179,6 @@ export class TasksComponent implements OnInit, OnDestroy {
           folder.isChecked = false;
         }
       });
-
       this.emailsList = [...this.ContactInfos.readEmailsWithFroms];
       this.domainList = [...this.ContactInfos.readEmailsWithDomains];
     }
@@ -204,10 +205,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       IsAdded: IsAdded.target.checked,
     };
     this.http
-      .post<any>(
-        `${environment.api}/MicrosoftMails/AddFolderToBeRead`,
-        payload
-      )
+      .post<any>(`${environment.api}/MicrosoftMails/AddFolderToBeRead`, payload)
       .subscribe(() => {});
   }
 
@@ -269,10 +267,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     };
 
     this.http
-      .post<any>(
-        `${environment.api}/MicrosoftMails/AddDomainToBeRead`,
-        payload
-      )
+      .post<any>(`${environment.api}/MicrosoftMails/AddDomainToBeRead`, payload)
       .subscribe(() => {
         this.domainList.push({ domain: domain, isAdded: true });
         domainInput.value = '';
@@ -534,34 +529,38 @@ export class TasksComponent implements OnInit, OnDestroy {
       Params: {},
     };
 
-    this.diamondsCountSubscription = this.genericApiService.GenericAPI(body).subscribe({
-      next: (response) => {
-        if (response.json && response.json.length > 0) {
-          const data = response.json[0];
-          this.counts = {
-            mailCount: data.mailCount || 0,
-            contactCount: data.contactCount || 0,
-            organizationCount: data.organizationCount || 0,
-            shoppingCentersCount: data.shoppingCentersCount || 0,
-            placeCount: data.placeCount || 0,
-          };
-        }
-      },
-      error: (error) => {
-      },
-    });
+    this.diamondsCountSubscription = this.genericApiService
+      .GenericAPI(body)
+      .subscribe({
+        next: (response) => {
+          if (response.json && response.json.length > 0) {
+            const data = response.json[0];
+            this.counts = {
+              mailCount: data.mailCount || 0,
+              contactCount: data.contactCount || 0,
+              organizationCount: data.organizationCount || 0,
+              shoppingCentersCount: data.shoppingCentersCount || 0,
+              placeCount: data.placeCount || 0,
+            };
+          }
+        },
+        error: (error) => {},
+      });
   }
   getTotalMailsCount(): void {
     const body = {
       Name: 'TotalMails',
       Params: {},
     };
-    this.totalMailsSubscription = this.genericApiService.GenericAPI(body).subscribe({
-      next: (response) => {
-        this.totalProgressedMessage = response.json[0]?.totalProgressedMessage;
-      },
-      complete: () => {},
-    });
+    this.totalMailsSubscription = this.genericApiService
+      .GenericAPI(body)
+      .subscribe({
+        next: (response) => {
+          this.totalProgressedMessage =
+            response.json[0]?.totalProgressedMessage;
+        },
+        complete: () => {},
+      });
   }
 
   private startMailCountInterval() {

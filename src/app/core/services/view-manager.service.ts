@@ -253,7 +253,7 @@ export class ViewManagerService {
     try {
       const now = Date.now();
       const timeSinceLastRequest = now - this.streetViewLastRequestTime;
-
+      
       if (timeSinceLastRequest < this.STREET_VIEW_MIN_DELAY) {
         await new Promise((resolve) =>
           setTimeout(resolve, this.STREET_VIEW_MIN_DELAY - timeSinceLastRequest)
