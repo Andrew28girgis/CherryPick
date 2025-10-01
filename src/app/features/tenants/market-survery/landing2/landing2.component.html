@@ -139,7 +139,11 @@
         <div class="housing-overview">
           <div class="housing-stat">
             <div class="housing-value">
-              {{ formatCurrency(censusData.housing.medianHomeValue) }}
+              {{
+                censusData.housing.medianHomeValue > 0
+                  ? formatCurrency(censusData.housing.medianHomeValue)
+                  : "N/A"
+              }}
             </div>
             <div class="housing-label">Median Home Value</div>
           </div>
