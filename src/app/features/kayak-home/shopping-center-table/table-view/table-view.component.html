@@ -289,6 +289,8 @@
               >
                 <div
                   class="selected-option"
+                  *ngIf="!openStageId || openStageId == shoppingCenter.Id"
+
                   (click)="toggleMenu(shoppingCenter.Id, $event, true)"
                 >
                   {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
