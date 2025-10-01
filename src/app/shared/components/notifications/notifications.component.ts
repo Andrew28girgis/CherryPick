@@ -13,21 +13,15 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterModule,
-} from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { FormsModule } from '@angular/forms';
-import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
-import { take, finalize, filter } from 'rxjs/operators';
+import { take, filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
@@ -72,7 +66,6 @@ export class NotificationsComponent
   private shownForIds = new Set<string | number>(); // avoid re-opening same overlay
   private scanTrigger$ = new BehaviorSubject<void>(undefined);
   private scanSub?: import('rxjs').Subscription;
-  private typingTempId = '__typing__'; // a stable pseudo id for trackBy
   isTyping = false;
   private typingHideTimer?: any; // to auto-hide after a long delay, just in case
   private lastUserMessageId: number | null = null;
@@ -95,7 +88,6 @@ export class NotificationsComponent
   isNotificationsOpen = false;
 
   electronSideBar = false;
-  displayViewButton = true;
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
@@ -115,26 +107,23 @@ export class NotificationsComponent
   public selectedNotification: Notification | null = null;
   public isSaving = false; // component-level flag
   public showSaveToast = false;
-  pdfId: string | number = '';
   currentMessage: string = '';
   private wasAtBottomBeforeUpdate = false;
   // ADD — sticky bottom + observers
   private mo?: MutationObserver;
   private ro?: ResizeObserver;
-  private wasSticky = true; // were we at/near bottom before content changed?
+  private wasSticky = true;
 
-  private readonly BOTTOM_STICKY_THRESHOLD = 28; // px "near bottom" feel
+  private readonly BOTTOM_STICKY_THRESHOLD = 28;
   showingMap: boolean = false;
   isoverlaywide: boolean = false;
-  scanEnabled: boolean = true; // default ON
+  scanEnabled: boolean = true;
 
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
     private placesService: PlacesService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private viewManagerService: ViewManagerService,
     private sanitizer: DomSanitizer,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
@@ -145,7 +134,7 @@ export class NotificationsComponent
   showScrollButton = false;
   newNotificationsCount = 0;
   previousNotificationsLength = 0;
-  scrollThreshold = 100; // pixels from bottom to consider "at bottom"
+  scrollThreshold = 100;
   private chatOpenSub?: Subscription;
   public isOverlayhtml = false;
 
@@ -190,8 +179,6 @@ export class NotificationsComponent
       this.scanForShowMap();
     });
 
-    //  Polling changed: recursive instead of setInterval
-    // 🔄 Recursive polling
     const poll = () => {
       this.wasSticky = this.isAtBottom();
       const prevLength = this.notificationService.notifications.length;
@@ -261,16 +248,13 @@ export class NotificationsComponent
   toggleSidebar(): void {
     this.isOpen = !this.isOpen;
 
-    // Update the notification service state
     this.notificationService.setChatOpen(this.isOpen);
 
-    // Emit the state change to the parent component
     this.sidebarStateChange.emit({
       isOpen: this.isOpen,
       isFullyOpen: this.isOpen,
     });
 
-    // If closing, reset scroll behavior
     if (!this.isOpen) {
       this.showScrollButton = false;
       this.newNotificationsCount = 0;
@@ -284,7 +268,6 @@ export class NotificationsComponent
 
         container.scrollTop = container.scrollHeight;
 
-        // Check immediately if we're at bottom and reset indicators
         if (this.isAtBottom()) {
           this.showScrollButton = false;
           this.newNotificationsCount = 0;
@@ -292,13 +275,6 @@ export class NotificationsComponent
       }
     } catch (err) {}
   }
-
-  // handleNotificationClick(notification: Notification): void {
-  //   if (notification.userSubmissionId) {
-  //     const route = `/uploadOM/${notification.userSubmissionId}`;
-  //     this.router.navigate([route]);
-  //   }
-  // }
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
@@ -308,26 +284,21 @@ export class NotificationsComponent
     const chatDropdown =
       this.elementRef.nativeElement.querySelector('.chat-dropdown');
 
-    // Check if the click was on the chat button
     if (chatButton && chatButton.contains(target)) {
-      // The toggleDropdown method will be called by the click binding
-      // so we don't need to do anything here
       return;
     }
 
-    // If the dropdown is open and the click is outside both the button and dropdown
     if (
       this.isOpen &&
       target &&
       chatDropdown &&
       !chatDropdown.contains(target)
     ) {
-      // Close the dropdown
-      this.notificationService.setChatOpen(false); // Use new method instead of direct assignment
+      this.notificationService.setChatOpen(false);
       this.isOpen = false;
       this.sidebarStateChange.emit({
-        isOpen: true, // Tab remains visible
-        isFullyOpen: false, // Panel is now closed
+        isOpen: true,
+        isFullyOpen: false,
       });
     }
   }
@@ -366,7 +337,6 @@ export class NotificationsComponent
 
       this.placesService.GenericAPI(request).subscribe({
         next: (response: any) => {
-          // Clear loading state when done
           this.setNotificationLoading(notification, false);
           this.loadedNotifications.add(notification.id);
         },
@@ -376,10 +346,8 @@ export class NotificationsComponent
 
   async saveShoppingCenterData(json: any, notification: any) {
     try {
-      // Parse the JSON string into an object
       const parsedJson = JSON.parse(json);
 
-      // Add campaignId directly into that object
       parsedJson.campaignId = notification.campaignId;
       parsedJson.AutomationJson = json;
       const response = await fetch(
@@ -389,7 +357,7 @@ export class NotificationsComponent
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(parsedJson), // send it as one object have campaign id
+          body: JSON.stringify(parsedJson),
         }
       );
 
@@ -409,7 +377,6 @@ export class NotificationsComponent
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    // You could dynamically adjust UI based on screen size if needed
     this.checkScreenSize();
   }
 
@@ -456,7 +423,6 @@ export class NotificationsComponent
   }
 
   onScroll(): void {
-    // user moved; refresh sticky state
     this.wasSticky = this.isAtBottom();
 
     if (this.wasSticky) {
@@ -465,10 +431,6 @@ export class NotificationsComponent
     } else if (this.newNotificationsCount > 0) {
       this.showScrollButton = true;
     }
-  }
-
-  setChatOpen(isOpen: boolean): void {
-    this.notificationService.setChatOpen(this.isOpen);
   }
 
   onInputChange(event: any): void {
@@ -543,23 +505,13 @@ export class NotificationsComponent
       },
     });
   }
-  retryMessage(msg: any) {
-    if (!msg) return;
-    this.outgoingText = msg.message;
-    if (this.messageInput) {
-      this.messageInput.nativeElement.innerText = msg.message;
-    }
-    this.sendMessage();
-  }
 
   toggleOverlayMode(): void {
     if (!this.isOpen) return;
 
     if (this.isOverlayMode || this.showingMap || this.isOverlayhtml) {
-      // 🔑 closing everything
       this.closeOverlayContent();
     } else {
-      // opening overlay
       if (!this.electronSideBar) {
         this.isOverlayMode = true;
       }
@@ -613,7 +565,6 @@ export class NotificationsComponent
     this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
   }
 
-  /** Normalize any html payload to a comparable string */
   private htmlToString(raw: any): string {
     if (raw == null) return '';
     if (typeof raw === 'string') return raw;
@@ -624,7 +575,6 @@ export class NotificationsComponent
     }
   }
 
-  /** True if notification has non-empty HTML */
   private hasHtml(n: Notification): boolean {
     const htmlContent = this.htmlToString(n?.html).trim();
     return htmlContent.length > 0 && htmlContent !== n?.message?.trim();
@@ -717,7 +667,6 @@ export class NotificationsComponent
       notification: n,
     }));
 
-    // unchanged: “user” notifications are those with id === true | 1
     const userNotificationMessages = new Set(
       (this.notificationService?.notifications ?? [])
         .filter(
@@ -747,10 +696,8 @@ export class NotificationsComponent
     });
   }
 
-  // optional but recommended: stable trackBy
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 
-  // (Optional) keep your notifications sorted alone, too:
   private sortNotificationsByDateAsc(): void {
     const arr = this.notificationService?.notifications;
     if (!Array.isArray(arr)) return;
@@ -772,7 +719,6 @@ export class NotificationsComponent
     if (this.isTyping) return;
     this.isTyping = true;
 
-    // cause a render & scroll if you're at bottom
     this.cdRef.detectChanges();
     if (this.isAtBottom()) this.scrollToBottomNow();
   }
@@ -951,7 +897,6 @@ export class NotificationsComponent
       .save();
   }
 
-  // helper
   private async toDataURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -996,7 +941,7 @@ export class NotificationsComponent
     };
 
     this.placesService.GenericAPI(request).subscribe({
-      next: (res) => {
+      next: () => {
         (this.selectedNotification as any).title = this.pdfTitle.trim();
 
         this.showSaveToast = true;
@@ -1013,9 +958,7 @@ export class NotificationsComponent
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isChatbotRoute']?.currentValue === true) {
-      // open the panel and start in non-overlay mode (chat = 100%)
       this.isOpen = true;
-      // don't force overlay here; overlay should be toggled by your existing button/action
     }
   }
   showprompt(message: any) {
@@ -1048,14 +991,6 @@ export class NotificationsComponent
     return this.messagesContainer?.nativeElement ?? null;
   }
 
-  // Optional: strict bottom check (rarely needed)
-  private isAtBottomStrict(): boolean {
-    const el = this.containerEl;
-    if (!el) return true;
-    return el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-  }
-
-  // REPLACE your current isAtBottom() with this version:
   isAtBottom(): boolean {
     const el = this.containerEl;
     if (!el) return true;
@@ -1063,7 +998,6 @@ export class NotificationsComponent
     return distance <= this.BOTTOM_STICKY_THRESHOLD;
   } 
 
-  // ADD — immediate/smooth scroll helpers
   private scrollToBottomNow(): void {
     const el = this.containerEl;
     if (!el) return;
@@ -1072,19 +1006,7 @@ export class NotificationsComponent
     this.newNotificationsCount = 0;
   }
 
-  // private scrollToBottomSmooth(): void {
-  //   const el = this.containerEl;
-  //   if (!el) return;
-  //   el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-  //   setTimeout(() => {
-  //     if (this.isAtBottom()) {
-  //       this.showScrollButton = false;
-  //       this.newNotificationsCount = 0;
-  //     }
-  //   }, 350);
-  // }
   ngAfterViewInit(): void {
-    // initial scroll once UI is ready
     this.scrollToBottomNow();
 
     const el = this.containerEl;
@@ -1208,8 +1130,9 @@ export class NotificationsComponent
       if (!isSystem) continue;
 
       const match = n.message?.match(
-        /I have found\s+(\d+)\s+Shopping Centers/i
+        /(?:I have found\s+(\d+)\s+Shopping Centers|(\d+)\s+Shopping Centers are matching the geographic filter for the campaign\s+(.+))/i
       );
+
       if (match) {
         this.refreshService.triggerRefreshOrganizations();
         break;

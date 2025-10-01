@@ -59,7 +59,7 @@ export class ShoppingComponent implements OnInit {
   viewMode: 'grid' | 'table' = 'grid'; // default
   campaigns: ICampaign[] = [];
   selectedCampaign!: ICampaign;
-  currentCenterId!: number;
+  currentCenter!: number;
 
   constructor(
     private placesService: PlacesService,
@@ -81,20 +81,18 @@ export class ShoppingComponent implements OnInit {
       Params: {},
     };
 
-    this.placesService.GenericAPI(params).subscribe(
-      (response: any) => {
-        if (response && response.json) {
-          this.centers = response.json.map((center: any, index: number) => ({
-            ...center,
-            id: center.id || index + 1,
-            isShared: center.isShared || center.shared || false,
-            mainImage: this.processImageUrl(center.mainImage),
-          }));
-          this.applyFiltersAndSort();
-          this.isLoading = false;
-        }
+    this.placesService.GenericAPI(params).subscribe((response: any) => {
+      if (response && response.json) {
+        this.centers = response.json.map((center: any, index: number) => ({
+          ...center,
+          id: center.id || index + 1,
+          isShared: center.isShared || center.shared || false,
+          mainImage: this.processImageUrl(center.mainImage),
+        }));
+        this.applyFiltersAndSort();
+        this.isLoading = false;
       }
-    );
+    });
   }
 
   processImageUrl(imageUrl: string): string {
@@ -352,19 +350,28 @@ export class ShoppingComponent implements OnInit {
   }
 
   onRowNavigate(center: any, event?: MouseEvent) {
-     if (event) event.stopPropagation();
-     this.router.navigate(['/landing', 0, center?.scId, center.campaignId]);
+    if (event) event.stopPropagation();
+    this.router.navigate(['/landing', 0, center?.scId, center.campaignId]);
   }
-  addCenter(shoppingCenterId: number, campaignId: number) {
+  addCenter(shoppingCenter: any, campaignId: number) {
+    const campaignName = this.campaigns.find(
+      (campaign) => campaign.Id === campaignId
+    )?.CampaignName;
     const body: any = {
       Name: 'InsertSCToMSSC',
-      Params: { ShoppingCenterId: shoppingCenterId, CampaignId: campaignId },
+      Params: { ShoppingCenterId: shoppingCenter.scId, CampaignId: campaignId },
     };
-    this.placesService.GenericAPI(body).subscribe({});
+    this.placesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.showToast(
+          ` ${shoppingCenter.centerName} added to ${campaignName} campaign successfully!`
+        );
+      },
+    });
   }
 
-  openCampaignModal(content: TemplateRef<any>, centerId: number): void {
-    this.currentCenterId = centerId;
+  openCampaignModal(content: TemplateRef<any>, center: any): void {
+    this.currentCenter = center;
 
     this.getAllCampaigns();
 
@@ -386,7 +393,7 @@ export class ShoppingComponent implements OnInit {
         } else {
           this.campaigns = [];
         }
-      }
+      },
     });
   }
   goToAddCampaign(): void {

@@ -444,7 +444,7 @@
                 />
                 <div
               (click)="
-                openCampaignModal(campaignModal, center.scId);
+                openCampaignModal(campaignModal, center);
                 $event.stopPropagation()
               "
               class="add-badge"
@@ -845,9 +845,15 @@
     <!-- <button class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button> -->
     <button
       class="btn btn-primary btn-custom"
-      (click)="addCenter(currentCenterId, selectedCampaign.Id); modal.close()"
+      (click)="addCenter(currentCenter, selectedCampaign.Id); modal.close()"
     >
       Add
     </button>
   </div>
 </ng-template>
+
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
