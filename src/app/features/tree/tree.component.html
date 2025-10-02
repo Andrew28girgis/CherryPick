@@ -1,32 +1,52 @@
- 
-    <div class="tree-container"> 
-      <div class="tree">
-        <ng-container *ngFor="let node of treeData">
-          <ng-container
-            [ngTemplateOutlet]="nodeTemplate"
-            [ngTemplateOutletContext]="{ node: node, isRoot: true }"
-          ></ng-container>
-        </ng-container>
+<div class="wrapper">
+  <div class="tree-container">
+    <svg class="lines-svg">
+      <g *ngFor="let line of lines">
+        <line
+          [attr.x1]="line.x1"
+          [attr.y1]="line.y1"
+          [attr.x2]="line.x2"
+          [attr.y2]="line.y2"
+        />
+      </g>
+    </svg>
+
+    <div class="tree-content">
+      <div class="column">
+        <h3>Contacts</h3>
+        <div
+          class="node-box"
+          *ngFor="let item of groupedData.contacts"
+          [id]="'node-' + item.id"
+        >
+          <div class="node-name">{{ item.name }}</div>
+          <div class="node-id">{{ item.id }}</div>
+        </div>
+      </div>
+
+      <div class="column">
+        <h3>Organizations</h3>
+        <div
+          class="node-box"
+          *ngFor="let item of groupedData.organizations"
+          [id]="'node-' + item.id"
+        >
+          <div class="node-name">{{ item.name }}</div>
+          <div class="node-id">{{ item.id }}</div>
+        </div>
+      </div>
+
+      <div class="column">
+        <h3>Shopping Centers</h3>
+        <div
+          class="node-box"
+          *ngFor="let item of groupedData.shopping"
+          [id]="'node-' + item.id"
+        >
+          <div class="node-name">{{ item.name }}</div>
+          <div class="node-id">{{ item.id }}</div>
+        </div>
       </div>
     </div>
-    
-    <ng-template #nodeTemplate let-node="node" let-isRoot="isRoot">
-      <div class="tree-node" [class.leaf-node]="!node.children || node.children.length === 0">
-        <!-- This is the visible box for the employee -->
-        <div class="node-box">
-          <div class="node-name">{{ node.name }}</div>
-          <div class="node-role">{{ node.role }}</div>
-        </div>
-
-        <!-- If the node has children, create a container for them -->
-        <div *ngIf="node.children && node.children.length > 0" class="tree-children">
-          <!-- Loop through the children and recursively call the template for each one -->
-          <ng-container *ngFor="let child of node.children">
-            <ng-container
-              [ngTemplateOutlet]="nodeTemplate"
-              [ngTemplateOutletContext]="{ node: child, isRoot: false }"
-            ></ng-container>
-          </ng-container>
-        </div>
-      </div>
-    </ng-template>
+  </div>
+</div>
