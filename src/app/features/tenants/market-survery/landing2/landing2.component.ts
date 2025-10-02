@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 declare const google: any;
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
@@ -33,6 +33,7 @@ export class Landing2Component implements OnInit {
     longer: [] as ShoppingCenterTenant[],
   };
 
+  // cached census data
   censusData: Demographics = {
     name: '',
     lat: 0,
@@ -79,9 +80,16 @@ export class Landing2Component implements OnInit {
     },
   };
 
+  // Derived / memoized arrays for template use
+  raceItems: Array<{ label: string; count: number; percentage: number; color: string }> = [];
+  educationItems: Array<{ label: string; count: number; percentage: number }> = [];
+  incomeItems: Array<{ label: string; count: number; percentage: number }> = [];
+  ageItems: Array<{ group: string; count: number; percentage: number }> = [];
+
   constructor(
     private activatedRoute: ActivatedRoute,
-    private PlacesService: PlacesService
+    private PlacesService: PlacesService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   private toNumber(n: any, fallback = 0): number {
@@ -191,6 +199,38 @@ export class Landing2Component implements OnInit {
       publicTransit: num(commuting.publicTransit),
       avgCommuteMinutes: num(commuting.avgCommuteMinutes),
     };
+
+    // --- Derived, stable arrays for template rendering ---
+    try {
+      this.raceItems = this.getRaceData();
+    } catch (err) {
+      this.raceItems = [];
+    }
+
+    try {
+      this.educationItems = this.getEducationData();
+    } catch (err) {
+      this.educationItems = [];
+    }
+
+    try {
+      this.incomeItems = this.getIncomeData();
+    } catch (err) {
+      this.incomeItems = [];
+    }
+
+    try {
+      this.ageItems = this.getAgeData();
+    } catch (err) {
+      this.ageItems = [];
+    }
+
+    // Ensure Angular updates the view immediately (if needed)
+    try {
+      this.cdr?.detectChanges();
+    } catch (e) {
+      // ignore if detectChanges throws in unusual environments
+    }
   }
 
   ngOnInit(): void {
@@ -359,8 +399,6 @@ export class Landing2Component implements OnInit {
     return map;
   }
 
-
-
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
       Name: 'GetNearBuyRetails',
@@ -519,5 +557,10 @@ export class Landing2Component implements OnInit {
       count: e.count,
       percentage: total ? Math.round((e.count / total) * 100) : 0,
     }));
+  }
+
+  // helper trackBy for ngFor
+  trackByLabel(index: number, item: any) {
+    return item?.label ?? item?.group ?? index;
   }
 }
