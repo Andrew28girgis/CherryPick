@@ -92,6 +92,7 @@
         </button>
         <button
           class="plus-icon score"
+          [class.active]="scoringId === shopping.Id"
           [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
           (click)="getscore(shopping); $event.stopPropagation()"
           *ngIf="!shopping.Score"
@@ -155,7 +156,7 @@
         </div> -->
         <div
           (click)="openInfoPopup(shopping, infoModal); $event.stopPropagation()"
-          *ngIf="shopping.Score && !shopping.scoreImage"
+          *ngIf="shopping.Score"
           class="card-badge"
           [ngClass]="{
             'green-circle': shopping.Score > 50,
@@ -178,9 +179,9 @@
                 openInfoPopup(shopping, infoModal)
               "
             >
-              {{ shopping.Score | number : "1.0-0" }}%
+              <!-- {{ shopping.Score | number : "1.0-0" }}% -->
             </div>
-            <button
+            <!-- <button
               (click)="
                 $event.preventDefault();
                 $event.stopPropagation();
@@ -189,7 +190,7 @@
               class="icon-btn"
             >
               <i class="fa-solid fa-circle-info"></i>
-            </button>
+            </button> -->
           </div>
           <ng-template #fallback>
             <div class="score-placeholder">

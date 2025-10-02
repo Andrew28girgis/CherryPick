@@ -1252,8 +1252,8 @@ table tbody td {
   cursor: pointer;
  }
 
-.score:active {
-  background: var(--Colors-Primary-500);
+.score.active {
+  background: var(--Colors-Primary-400);
  }
 
 /* spin animation */
