@@ -34,7 +34,11 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
-    { path: 'polygons', component: PolygonsComponent, data: { hideHeader: true } },
+  {
+    path: 'polygons',
+    component: PolygonsComponent,
+    data: { hideHeader: true },
+  },
 
   {
     path: 'accounts-link',
@@ -131,7 +135,7 @@ const routes: Routes = [
       import('./features/campaign/campaign.module').then(
         (m) => m.CampaignModule
       ),
-    canActivate: [TenantOnlyGuard,AuthGuardService],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
   },
   {
     path: 'user-pages',
@@ -144,13 +148,13 @@ const routes: Routes = [
       import('./features/tenants/add-tenants/add-tenants.module').then(
         (m) => m.AddTenantsModule
       ),
-    canActivate: [TenantOnlyGuard,AuthGuardService],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
   },
   {
     path: 'summary/:orgId',
     loadChildren: () =>
       import('./features/summery/summery.module').then((m) => m.SummeryModule),
-    canActivate: [TenantOnlyGuard,AuthGuardService],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
   },
 
   {
@@ -171,7 +175,7 @@ const routes: Routes = [
   //   component: TreeComponent,
   //   data: { hideHeader: true },
   // },
-   {
+  {
     path: 'tree',
     component: Tree2Component,
     data: { hideHeader: true },
@@ -271,7 +275,7 @@ const routes: Routes = [
     path: 'ai-ui-HTML/:notificationId',
     component: AiUiHTMLComponent,
   },
- 
+
   {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
