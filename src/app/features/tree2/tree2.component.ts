@@ -162,7 +162,7 @@ export class Tree2Component implements OnInit {
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.selectedEmail = res.json[0];
-        this.modalService.open(this.emailModal, { size: 'lg' });
+        this.modalService.open(this.emailModal, { size: 'xl' });
       },
     });
   }
