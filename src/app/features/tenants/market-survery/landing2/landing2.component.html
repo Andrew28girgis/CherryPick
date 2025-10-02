@@ -129,41 +129,44 @@
       </div>
     </div>
 
-    <!-- Housing Card -->
-    <div class="card housing-card">
-      <div class="card-header">
-        <h2>Housing</h2>
-        <i class="header-icon">🏠</i>
+<!-- Housing Card -->
+<div class="card housing-card">
+  <div class="card-header">
+    <h2>Housing</h2>
+    <i class="header-icon">🏠</i>
+  </div>
+  <div class="card-content">
+    <div class="housing-overview">
+      <div class="housing-stat">
+        <div class="housing-value">
+          {{
+            censusData.housing.medianHomeValue > 0
+              ? formatCurrency(censusData.housing.medianHomeValue || 0)
+              : 'N/A'
+          }}
+        </div>
+        <div class="housing-label">Median Home Value</div>
       </div>
-      <div class="card-content">
-        <div class="housing-overview">
-          <div class="housing-stat">
-            <div class="housing-value">
-              {{
-                censusData.housing.medianHomeValue > 0
-                  ? formatCurrency(censusData.housing.medianHomeValue)
-                  : "N/A"
-              }}
-            </div>
-            <div class="housing-label">Median Home Value</div>
-          </div>
-          <div class="housing-stat">
-            <div class="housing-value">
-              {{ formatCurrency(censusData.housing.medianRent || 0) }}
-            </div>
-            <div class="housing-label">Median Rent</div>
-          </div>
+      <div class="housing-stat">
+        <div class="housing-value">
+          {{ formatCurrency(censusData.housing.medianRent || 0) }}
         </div>
-        <div class="housing-breakdown">
-          <div class="units-info">
-            <span
-              >{{ censusData.housing.totalUnits }} total units •
-              {{ censusData.housing.vacantUnits }} vacant</span
-            >
-          </div>
-        </div>
+        <div class="housing-label">Median Rent</div>
       </div>
     </div>
+
+    <div class="housing-breakdown">
+      <div class="units-info">
+        <span>
+          {{ censusData.housing.totalUnits || 0 }} total units •
+          {{ censusData.housing.vacantUnits || 0 }} vacant
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
     <!-- Education Card -->
     <div class="card education-card">
@@ -173,7 +176,10 @@
       </div>
       <div class="card-content">
         <div class="education-chart">
-          <div class="edu-item" *ngFor="let item of getEducationData()">
+          <div
+            class="edu-item"
+            *ngFor="let item of educationItems; trackBy: trackByLabel"
+          >
             <div class="edu-bar">
               <div class="edu-fill" [style.width.%]="item.percentage"></div>
             </div>
@@ -196,7 +202,10 @@
       </div>
       <div class="card-content">
         <div class="race-grid">
-          <div class="race-item" *ngFor="let item of getRaceData()">
+          <div
+            class="race-item"
+            *ngFor="let item of raceItems; trackBy: trackByLabel"
+          >
             <div class="race-color" [style.background-color]="item.color"></div>
             <div class="race-info">
               <div class="race-label">{{ item.label }}</div>
@@ -218,7 +227,10 @@
       </div>
       <div class="card-content">
         <div class="income-bars">
-          <div class="income-item" *ngFor="let item of getIncomeData()">
+          <div
+            class="income-item"
+            *ngFor="let item of incomeItems; trackBy: trackByLabel"
+          >
             <div class="income-label">{{ item.label }}</div>
             <div class="income-bar">
               <div class="income-fill" [style.width.%]="item.percentage"></div>
@@ -239,7 +251,7 @@
       </div>
       <div class="card-content">
         <div class="age-breakdown">
-          <div class="age-item" *ngFor="let item of getAgeData()">
+          <div class="age-item" *ngFor="let item of ageItems; trackBy: trackByLabel">
             <div class="age-group">{{ item.group }}</div>
             <div class="age-bar">
               <div class="age-fill" [style.width.%]="item.percentage"></div>
