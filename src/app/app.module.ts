@@ -38,6 +38,8 @@ import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.co
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
 import { TreeComponent } from './features/tree/tree.component';
+import { Tree2Component } from './features/tree2/tree2.component';
+import { FFlowModule, FConnectionContent } from '@foblex/flow';   
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { TreeComponent } from './features/tree/tree.component';
     AiChatingComponent,
     AiUiHTMLComponent,
     Landing2Component,
-    TreeComponent
+    TreeComponent,
+    Tree2Component,
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,9 @@ import { TreeComponent } from './features/tree/tree.component';
     SelectButtonModule,
     EditorModule,
     NotificationsComponent,
-    ],
+    FFlowModule,
+    FConnectionContent
+],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {

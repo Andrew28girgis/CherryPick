@@ -24,6 +24,7 @@ import { ContactsComponent } from './features/contacts/contacts.component';
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
 import { PolygonsComponent } from './features/polygons/polygons.component';
 import { TreeComponent } from './features/tree/tree.component';
+import { Tree2Component } from './features/tree2/tree2.component';
 
 const routes: Routes = [
   {
@@ -168,6 +169,11 @@ const routes: Routes = [
    {
     path: 'tree',
     component: TreeComponent,
+    data: { hideHeader: true },
+  },
+   {
+    path: 'tree2',
+    component: Tree2Component,
     data: { hideHeader: true },
   },
   {

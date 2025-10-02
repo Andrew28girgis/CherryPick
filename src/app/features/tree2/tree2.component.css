@@ -1,0 +1,102 @@
+.f-flow {
+  width: 100%;
+  height: 500px;
+  background: #f5f7fa;
+  border-radius: 24px;
+  border: 1px solid rgba(60, 60, 67, 0.4);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+}
+.flow-wrapper {
+  width: 100%;
+}
+
+.f-node {
+  width: 200px;
+  padding: 16px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid rgba(60, 60, 67, 0.4);
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: grab;
+  overflow: hidden;
+  white-space: normal; /* allow wrapping */
+  word-wrap: break-word; /* break long words if needed */
+  line-height: 1.2em;
+}
+
+.org-node {
+  background: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.shop-node {
+  background: #e8f5e9;
+  border-color: #4caf50;
+}
+
+.contact-node {
+  background: #fff3e0;
+  border-color: #ff9800;
+}
+
+.f-drag-handle {
+  cursor: move;
+}
+
+::ng-deep .f-connection .f-connection-path {
+  cursor: pointer;
+  stroke-width: 5;
+}
+
+::ng-deep .f-connection.f-selected .f-connection-path {
+  stroke: #3451b2;
+}
+/* Darkest → Most recent */
+::ng-deep .near-date .f-connection-path {
+  stroke: #8e1616 !important;
+  stroke-width: 4;
+}
+
+/* Second */
+::ng-deep .mid-date .f-connection-path {
+  stroke: #cc0000 !important;
+  stroke-width: 4;
+}
+
+/* Third */
+::ng-deep .far-date .f-connection-path {
+  stroke: #f7374f !important;
+  stroke-width: 4;
+}
+
+/* Lightest → Oldest */
+::ng-deep .very-far-date .f-connection-path {
+  stroke: #e19393 !important;
+  stroke-width: 4;
+}
+.email-body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  padding: 12px;
+  background: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.modal-header {
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-footer {
+  border-top: 1px solid #ddd;
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 0.35em 0.65em;
+  border-radius: 4px;
+}
