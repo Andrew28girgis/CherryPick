@@ -17,7 +17,7 @@ export class Tree2Component implements OnInit {
   // Keep full data for reset
   allObjects: FlowObject[] = [];
   allConnections: FlowConnection[] = [];
-  selectedEmail: { Id: number; Body: string; Subject: string } | null = null;
+  selectedEmail: { Id: number; Body: string; Subject: string,Date:Date } | null = null;
   private dragStartX = 0;
   private dragStartY = 0;
   private dragThreshold = 5;

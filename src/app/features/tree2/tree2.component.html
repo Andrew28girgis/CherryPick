@@ -65,7 +65,13 @@
     </h5>
 
     <!-- Body Section -->
-    <span class="badge bg-secondary mb-2">Body</span>
+     <div class="d-flex align-items-center mb-2 flex-row gap-3">
+
+         <span class="badge bg-secondary ">Body</span>
+         <span class="text-muted " >
+           {{ selectedEmail?.Date | date : 'medium' }} 
+         </span>
+     </div>
     <div class="email-body" [innerHTML]="selectedEmail?.Body"></div>
   </div>
 
