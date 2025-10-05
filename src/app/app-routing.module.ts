@@ -21,9 +21,7 @@ import { NotificationsComponent } from './shared/components/notifications/notifi
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { UserPagesComponent } from './features/user-pages/user-pages.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
-import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
 import { PolygonsComponent } from './features/polygons/polygons.component';
-import { TreeComponent } from './features/tree/tree.component';
 import { Tree2Component } from './features/tree2/tree2.component';
 
 const routes: Routes = [
@@ -34,8 +32,11 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
-    { path: 'polygons', component: PolygonsComponent, data: { hideHeader: true } },
-
+  {
+    path: 'polygons',
+    component: PolygonsComponent,
+    data: { hideHeader: true },
+  },
   {
     path: 'accounts-link',
     loadChildren: () =>
@@ -131,7 +132,7 @@ const routes: Routes = [
       import('./features/campaign/campaign.module').then(
         (m) => m.CampaignModule
       ),
-    canActivate: [TenantOnlyGuard,AuthGuardService],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
   },
   {
     path: 'user-pages',
@@ -144,13 +145,13 @@ const routes: Routes = [
       import('./features/tenants/add-tenants/add-tenants.module').then(
         (m) => m.AddTenantsModule
       ),
-    canActivate: [TenantOnlyGuard,AuthGuardService],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
   },
   {
     path: 'summary/:orgId',
     loadChildren: () =>
       import('./features/summery/summery.module').then((m) => m.SummeryModule),
-    canActivate: [TenantOnlyGuard,AuthGuardService],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
   },
 
   {
@@ -166,13 +167,8 @@ const routes: Routes = [
     component: AiChatingComponent,
     data: { hideHeader: true },
   },
-   {
+  {
     path: 'tree',
-    component: TreeComponent,
-    data: { hideHeader: true },
-  },
-   {
-    path: 'tree2',
     component: Tree2Component,
     data: { hideHeader: true },
   },
@@ -271,7 +267,6 @@ const routes: Routes = [
     path: 'ai-ui-HTML/:notificationId',
     component: AiUiHTMLComponent,
   },
- 
   {
     path: ':uploadOM/:submissionId',
     component: UploadOMComponent,
@@ -281,7 +276,6 @@ const routes: Routes = [
     component: NotificationsComponent,
   },
   { path: 'emily-chatsbot', component: NotificationsComponent },
-
   {
     path: ':guid',
     component: TenantComponent,

@@ -37,9 +37,8 @@ import { EditorModule } from 'primeng/editor';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
-import { TreeComponent } from './features/tree/tree.component';
 import { Tree2Component } from './features/tree2/tree2.component';
-import { FFlowModule, FConnectionContent } from '@foblex/flow';   
+import { FFlowModule, FConnectionContent } from '@foblex/flow';
 
 @NgModule({
   declarations: [
@@ -54,7 +53,6 @@ import { FFlowModule, FConnectionContent } from '@foblex/flow';
     AiChatingComponent,
     AiUiHTMLComponent,
     Landing2Component,
-    TreeComponent,
     Tree2Component,
   ],
   imports: [
@@ -84,8 +82,8 @@ import { FFlowModule, FConnectionContent } from '@foblex/flow';
     EditorModule,
     NotificationsComponent,
     FFlowModule,
-    FConnectionContent
-],
+    FConnectionContent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {
