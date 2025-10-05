@@ -123,13 +123,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       this.getAllCampaigns();
     });
     this.refreshService.polygonSavedData$.subscribe((data) => {
-
       this.placesService
         .sendmessages({ Chat: data, NeedToSaveIt: true })
         .subscribe({
           next: (res) => {
             this.modalRef?.close();
-          }
+          },
         });
     });
   }
@@ -211,8 +210,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     }
   }
 
- 
-
   onCampaignCreated(): void {
     this.getAllCampaigns();
     this.modalService.dismissAll();
@@ -225,7 +222,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
     if (withOrg) {
       this.getCampaignOrganizations(campaign.OrganizationId, campaign.Id);
-    } 
+    }
   }
 
   getKanbanTemplateStages(): void {
@@ -240,7 +237,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.stages = response.json;
         }
-      }
+      },
     });
 
     this.subscriptions.add(subscription);
@@ -321,7 +318,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   protected openCampaignModal(): void {
-    this.modalService.open(AddCampaignPopupComponent, { centered: true,size:'xl' });
+    this.modalService.open(AddCampaignPopupComponent, {
+      centered: true,
+      size: 'xl',
+    });
   }
 
   protected navigateToCampaign(): void {
@@ -371,7 +371,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         }
 
         if (onLoaded) onLoaded();
-      }
+      },
     });
   }
 
@@ -557,13 +557,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         );
         this.placesService
           .sendmessages({
-            Chat: `i want to edit this campaign 
+            Chat: `Show the campaign specs, in a nice html representation and the user will start telling new the new specs for the campaign
             Campaign ID: ${campaign.Id}
             Campaign Json Details: ${response.json[0].campaignDetailsJSON} `,
             NeedToSaveIt: true,
           })
           .subscribe({});
-          this.notificationService.sendmessage('Edit this Campaign');
+        this.notificationService.sendmessage('Edit this Campaign');
       },
     });
   }
