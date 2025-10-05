@@ -321,7 +321,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   protected openCampaignModal(): void {
-    this.modalService.open(AddCampaignPopupComponent, { centered: true,size:'lg' });
+    this.modalService.open(AddCampaignPopupComponent, { centered: true,size:'xl' });
   }
 
   protected navigateToCampaign(): void {
@@ -380,7 +380,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.selectedTenant = null;
     this.step = 'tenant';
     this.polygonsStep = false;
-    this.modalRef = this.modalService.open(content, { size: 'lg' });
+    this.modalRef = this.modalService.open(content, { size: 'xl' });
 
     this.getAllActiveOrganizations(
       () => {
@@ -522,7 +522,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         );
         this.campaignlogo = campaign.logoUrl;
 
-        this.modalService.open(this.campaignDetailsTpl, { size: 'lg' });
+        this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
       },
     });
   }

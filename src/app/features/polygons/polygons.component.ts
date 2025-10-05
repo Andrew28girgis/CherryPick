@@ -203,32 +203,51 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
   }
 
   onSaveLocationCriteria(tenantName: any) {
-    if (!this.selectedItems.length) {
-      this.saveLocationCriteria.emit(
-        `Tenant Name:${tenantName}\n(No location criteria selected)\n`
-      );
+     if (!this.selectedItems.length) {
+      const locationCriteria = {
+        tenantName: tenantName,
+        locationCriteria: {
+          locations: []
+        }
+      };
+  
+       const jsonString =
+        JSON.stringify(locationCriteria, null, 2) +
+        '\n\nAdd this location criteria json as it is to the campaign schema';
+  
+      // Emit and send as a string
+      this.saveLocationCriteria.emit(jsonString);
+      this.refreshService.sendPolygonSavedData(jsonString);
       return;
     }
-
-    const rows = this.selectedItems.map((it) => {
+  
+     const locations = this.selectedItems.map((it) => {
       const raw = it.raw ?? {};
       const isNeighborhood = it.type === 'neighborhood';
-      return [
-        isNeighborhood ? it.id ?? 'null' : 'null',
-        isNeighborhood ? it.name ?? raw?.Name ?? 'null' : 'null',
-        it.city ?? raw?.City ?? (it.type === 'city' ? it.name : 'null'),
-        it.state ?? it.code ?? raw?.StateCode ?? 'null',
-        raw?.StateName ?? 'null',
-      ]
-        .map((v) => (v == null || v === '' ? 'null' : String(v)))
-        .join(', ');
+  
+      return {
+        state: it.state ?? it.code ?? raw?.StateCode ?? null,
+        city: it.city ?? raw?.City ?? (it.type === 'city' ? it.name : null),
+        neighborhoodId: isNeighborhood ? it.id ?? null : null,
+        neighborhoodName: isNeighborhood ? it.name ?? raw?.Name ?? null : null,
+      };
     });
-
-    const header = `Tenant Name:${tenantName} Location Criteria\nId,NeighborhoodName,CityName,StateCode,StateName\n`;
-    const body = rows.join('\n') + '\n';
-
-    this.refreshService.sendPolygonSavedData(header + body);
+  
+     const locationCriteria = {
+      tenantName: tenantName,
+      locationCriteria: {
+        locations: locations
+      }
+    };
+  
+     const jsonString =
+      JSON.stringify(locationCriteria, null, 2) +
+      '\n\nAdd this location criteria json as it is to the campaign schema';
+  
+     this.saveLocationCriteria.emit(jsonString);
+    this.refreshService.sendPolygonSavedData(jsonString);
   }
+  
   public triggerSave(tenantName: string) {
     this.onSaveLocationCriteria(tenantName);
   }
