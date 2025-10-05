@@ -39,7 +39,7 @@ import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.com
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
 import { TreeComponent } from './features/tree/tree.component';
 import { Tree2Component } from './features/tree2/tree2.component';
-import { FFlowModule, FConnectionContent } from '@foblex/flow';   
+import { FFlowModule, FConnectionContent } from '@foblex/flow';
 
 @NgModule({
   declarations: [
@@ -84,8 +84,8 @@ import { FFlowModule, FConnectionContent } from '@foblex/flow';
     EditorModule,
     NotificationsComponent,
     FFlowModule,
-    FConnectionContent
-],
+    FConnectionContent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {
