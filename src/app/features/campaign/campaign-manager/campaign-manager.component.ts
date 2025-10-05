@@ -408,7 +408,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   finish(): void {
     this.refreshService.requestPolygonSave(this.selectedTenant.name);
-    this.notificationService.sendmessage('Create New Campaign');
+    // this.notificationService.sendmessage('Create New Campaign');
     this.modalRef?.close();
   }
 
@@ -557,13 +557,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         );
         this.placesService
           .sendmessages({
-            Chat: `Show the campaign specs, in a nice html representation and the user will start telling new the new specs for the campaign
+            Chat: `Edit this Campaign and Show the campaign specs, in a nice html representation and the user will start telling new the new specs for the campaign
             Campaign ID: ${campaign.Id}
             Campaign Json Details: ${response.json[0].campaignDetailsJSON} `,
             NeedToSaveIt: true,
           })
           .subscribe({});
-        this.notificationService.sendmessage('Edit this Campaign');
+        // this.notificationService.sendmessage('Edit this Campaign');
       },
     });
   }

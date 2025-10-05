@@ -242,7 +242,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
   
      const jsonString =
       JSON.stringify(locationCriteria, null, 2) +
-      '\n\nAdd this location criteria json as it is to the campaign schema';
+      '\n\nCreate a new campagn and Add this location criteria json as it is to the campaign schema';
   
      this.saveLocationCriteria.emit(jsonString);
     this.refreshService.sendPolygonSavedData(jsonString);
