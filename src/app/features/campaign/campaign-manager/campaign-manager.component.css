@@ -1417,8 +1417,11 @@
   transition: background 0.25s ease, transform 0.15s ease;
 }
 
- .btn-custom:hover {
+.btn-custom:hover {
   background: var(--Colors-Primary-hover);
-  }
+}
 
- 
+.modal-body {
+  height: 80vh;
+  overflow-y: scroll;
+}
