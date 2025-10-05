@@ -635,7 +635,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
         this.isLoadingInfo = false;
         this.modalService.open(content, {
-          size: 'md',
+          size: 'xl',
           backdrop: true,
           centered: true,
         });
