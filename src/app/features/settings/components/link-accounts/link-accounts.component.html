@@ -1,17 +1,21 @@
 <div class="row g-4">
   <div class="col-lg-6 col-12">
     <div class="x-section h-100">
-      <img loading="lazy" 
+      <img
+        loading="lazy"
         class="section-img"
         src="../../../assets/icons/microsoft.png"
         alt="microsoft"
       />
       <div class="w-100 d-flex align-items-center gap-2">
         <a
-          [href]="MICROSOFT_CONNECT_LINK"
           class="w-100 btn card-btn"
           [ngClass]="{ 'card-btn-unlink': microsoftState == 3 }"
-          (click)="microsoftState == 3 ? $event.preventDefault() : null"
+          (click)="
+            microsoftState == 3
+              ? $event.preventDefault()
+              : openUrlInsideUserDefaultBrowser(MICROSOFT_CONNECT_LINK)
+          "
         >
           @if (microsoftState == 2) {
           <div
@@ -54,17 +58,21 @@
 
   <div class="col-lg-6 col-12">
     <div class="x-section h-100">
-      <img loading="lazy" 
+      <img
+        loading="lazy"
         class="section-img"
         src="../../../assets/icons/google.png"
         alt="google"
       />
       <div class="w-100 d-flex align-items-center gap-2">
         <a
-          [href]="GOOGLE_CONNECT_LINK"
           class="w-100 btn card-btn"
           [ngClass]="{ 'card-btn-unlink': googleState == 3 }"
-          (click)="googleState == 3 ? UnlinkGoogle($event) : null"
+          (click)="
+            googleState == 3
+              ? UnlinkGoogle($event)
+              : openUrlInsideUserDefaultBrowser(GOOGLE_CONNECT_LINK)
+          "
         >
           @if (googleState == 2) {
           <div

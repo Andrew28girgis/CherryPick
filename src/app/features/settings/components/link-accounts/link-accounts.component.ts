@@ -101,4 +101,8 @@ export class LinkAccountsComponent implements OnInit {
       this.router.navigate(['/campaigns']);
     });
   }
+
+  openUrlInsideUserDefaultBrowser(url:string): void {
+    (window as any).electronMessage.openUrlInsideUserDefaultBrowser(url);
+  }
 }
