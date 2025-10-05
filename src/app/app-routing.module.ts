@@ -167,11 +167,6 @@ const routes: Routes = [
     component: AiChatingComponent,
     data: { hideHeader: true },
   },
-  //  {
-  //   path: 'tree',
-  //   component: TreeComponent,
-  //   data: { hideHeader: true },
-  // },
   {
     path: 'tree',
     component: Tree2Component,
