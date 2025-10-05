@@ -505,8 +505,7 @@ img[alt="logo"] {
   grid-template-columns: 1fr auto;
   gap: var(--Space-S-24) var(--Space-S-32);
   padding: var(--Space-S-32);
-  max-width: 800px;
-  margin: 0 auto;
+   margin: 0 auto;
   background: var(--Colors-Pure-White);
   border-radius: 10px;
   box-shadow: 0 var(--Space-S-4) 20px rgba(0, 0, 0, 0.08);
