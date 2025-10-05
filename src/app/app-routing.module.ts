@@ -23,6 +23,7 @@ import { UserPagesComponent } from './features/user-pages/user-pages.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { PolygonsComponent } from './features/polygons/polygons.component';
 import { Tree2Component } from './features/tree2/tree2.component';
+import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component';
 
 const routes: Routes = [
   {
@@ -170,6 +171,11 @@ const routes: Routes = [
   {
     path: 'tree',
     component: Tree2Component,
+    data: { hideHeader: true },
+  },
+  {
+    path: 'linked',
+    component: LinkedSuccesfulyComponent,
     data: { hideHeader: true },
   },
   {
