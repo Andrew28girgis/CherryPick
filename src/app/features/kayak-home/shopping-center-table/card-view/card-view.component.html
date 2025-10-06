@@ -1412,7 +1412,7 @@
 </ng-template>
 <ng-template #infoModal let-modal>
   <div class="modal-header score-header">
-    <h5 class="modal-title score-pill">{{ score }}%</h5>
+    <h5 class="modal-title score-pill">{{ score ||0}}%</h5>
     <button
       type="button"
       class="btn-close"
@@ -1434,7 +1434,7 @@
       ></div>
 
       <ng-template #noData>
-        <p>No rationale found.</p>
+        <!-- <p>No rationale found.</p> -->
       </ng-template>
     </div>
   </div>
