@@ -93,8 +93,7 @@
         <button
           class="plus-icon score"
           [class.active]="scoringId === shopping.Id"
-          [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
-          (click)="getscore(shopping); $event.stopPropagation()"
+           (click)="getscore(shopping); $event.stopPropagation()"
           *ngIf="!shopping.Score && shopping.Score !== 0"
         >
           <span *ngIf="scoringId !== shopping.Id">Get Score</span>
