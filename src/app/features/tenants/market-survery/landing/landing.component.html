@@ -240,7 +240,7 @@
                 <tr>
                   <th>Suite</th>
                   <th>Listing Type</th>
-                  <th>Lease Price</th>
+                  <th>Price</th>
                   <th>Unit Size (SF)</th>
                   <th>Secondary Type</th>
                 </tr>
@@ -253,16 +253,11 @@
                       {{ place.LeaseType }}
                     </td>
                     <td>
-                      <!-- <span *ngIf="place.ForLeasePrice != 'undefined'"
-                          >{{
-                            place.ForLeasePrice
-                              ? getLeasePriceStandAlone(place)
-                              : "On Request"
-                          }}
-                          <p *ngIf="place.ForLeasePrice">
-                            ${{ place.ForLeasePrice }}/sqft/Year
-                          </p>
-                        </span> -->
+                      <span *ngIf="place.Price"
+                          > 
+                            ${{ place.Price }}/sqft/Year
+                    
+                        </span>
                     </td>
                     <td *ngIf="place.BuildingSizeSf">
                       {{ place.BuildingSizeSf | number }} SF
