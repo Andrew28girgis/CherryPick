@@ -977,15 +977,17 @@ export class NotificationsComponent
   isAutomationLoading(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
-      !item.message.includes('I am searching the web now for your request')
+      !item.message.includes('I am searching the web now for your request') &&
+      !item.message.includes('I will start scanning and analyzing the current page for you')
     ) {
       return false;
     }
-
-    // If there is a next message after this one, stop animation
+  
+    // Stop showing animation when next message arrives
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
+  
 
   private get containerEl(): HTMLElement | null {
     return this.messagesContainer?.nativeElement ?? null;

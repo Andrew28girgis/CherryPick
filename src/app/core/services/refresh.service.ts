@@ -11,11 +11,11 @@ export class RefreshService {
   triggerRefreshOrganizations(): void {
     this.refreshOrganizationsSource.next();
   }
-  private triggerPolygonSaveSource = new Subject<string>();
+  private triggerPolygonSaveSource = new Subject<number>();
   triggerPolygonSave$ = this.triggerPolygonSaveSource.asObservable();
 
-  requestPolygonSave(tenantName: string): void {
-    this.triggerPolygonSaveSource.next(tenantName);
+  requestPolygonSave(tenantId: number): void {
+    this.triggerPolygonSaveSource.next(tenantId);
   }
 
   private polygonSavedDataSource = new Subject<string>();

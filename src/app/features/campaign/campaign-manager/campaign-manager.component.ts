@@ -73,10 +73,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   tenants: any[] = [];
   selectedTenant: any = null;
-  step: 'tenant' | 'polygon' = 'tenant';
   polygonsStep = false;
   TenantStepLoad = false;
-
+  step: 'tenant' | 'campaign' | 'polygon' = 'tenant';
+  campaignName = '';
+  campaignType: 'standalone' | 'standaloneShopping' | '' = '';
   private modalRef?: NgbModalRef;
   protected newTenant = {
     name: '',
@@ -395,27 +396,92 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   selectTenant(tenant: any) {
     this.selectedTenant = tenant;
   }
-
   nextStep() {
-    if (!this.selectedTenant) return;
-    this.step = 'polygon';
-    this.polygonsStep = true;
+    // Step 1: Tenant → Campaign
+    if (this.step === 'tenant') {
+      if (!this.selectedTenant) return;
+      this.step = 'campaign';
+      this.polygonsStep = false;
+      return;
+    }
+
+    // Step 2: Campaign → Polygon
+    if (this.step === 'campaign') {
+      if (!this.campaignName || !this.campaignType) return;
+      this.step = 'polygon';
+      this.polygonsStep = true;
+      return;
+    }
   }
+
   prevStep() {
-    this.step = 'tenant';
-    this.polygonsStep = false;
+    // Step back from Polygon → Campaign
+    if (this.step === 'polygon') {
+      this.step = 'campaign';
+      this.polygonsStep = false;
+      return;
+    }
+
+    // Step back from Campaign → Tenant
+    if (this.step === 'campaign') {
+      this.step = 'tenant';
+      this.polygonsStep = false;
+      return;
+    }
   }
 
   finish(): void {
-    this.refreshService.requestPolygonSave(this.selectedTenant.name);
-    // this.notificationService.sendmessage('Create New Campaign');
-    this.modalRef?.close();
+    if (!this.selectedTenant) return;
+  
+    console.log('Saving campaign:', {
+      tenantId: this.selectedTenant.id,
+      campaignName: this.campaignName,
+      campaignType: this.campaignType,
+    });
+  
+    // This triggers the polygons component to emit the data
+    this.refreshService.requestPolygonSave(this.selectedTenant.id);
+  }
+  
+  private resetAddCampaignForm(): void {
+    this.selectedTenant = null;
+    this.campaignName = '';
+    this.campaignType = '';
+    this.polygonsStep = false;
+    this.step = 'tenant';
   }
 
-  handleSave(data: string) {
-    this.placesService.sendmessages({ Chat: data, NeedToSaveIt: true });
-    this.modalRef?.close();
+  handleSave(locationData: any) {
+    console.log('Received locationData:', locationData);
+  
+    const isStandalone = this.campaignType === 'standalone';
+    const campaignLocations = locationData.locationCriteria.locations.map(
+      (loc: any) => ({
+        State: loc.state,
+        City: loc.city,
+        NeighborhoodId: loc.neighborhoodId,
+      })
+    );
+  
+    this.placesService
+      .CreateCampaign(
+        this.campaignName,
+        locationData.organizationId,  // ✅ fixed property name
+        isStandalone,
+        campaignLocations
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('✅ Campaign created successfully:', response);
+          this.modalRef?.close();
+          this.getAllCampaigns();
+        },
+        error: (err) => {
+          console.error('❌ Error creating campaign:', err);
+        },
+      });
   }
+  
 
   protected addNewTenant() {
     const prevTenantId = this.selectedTenant?.id;

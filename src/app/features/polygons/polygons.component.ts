@@ -56,7 +56,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
   isLoadingSuggestions = false;
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
   @Output() onCampaignCreated = new EventEmitter<void>();
-  @Output() saveLocationCriteria = new EventEmitter<string>();
+  @Output() saveLocationCriteria = new EventEmitter<any>();
 
   constructor(
     private mapDrawingService: MapDrawingService,
@@ -202,29 +202,10 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     this.changeDetector.markForCheck();
   }
 
-  onSaveLocationCriteria(tenantName: any) {
-     if (!this.selectedItems.length) {
-      const locationCriteria = {
-        tenantName: tenantName,
-        locationCriteria: {
-          locations: []
-        }
-      };
-  
-       const jsonString =
-        JSON.stringify(locationCriteria, null, 2) +
-        '\n\nAdd this location criteria json as it is to the campaign schema';
-  
-      // Emit and send as a string
-      this.saveLocationCriteria.emit(jsonString);
-      this.refreshService.sendPolygonSavedData(jsonString);
-      return;
-    }
-  
-     const locations = this.selectedItems.map((it) => {
+  onSaveLocationCriteria(tenantId: number) {
+    const locations = this.selectedItems.map((it) => {
       const raw = it.raw ?? {};
       const isNeighborhood = it.type === 'neighborhood';
-  
       return {
         state: it.state ?? it.code ?? raw?.StateCode ?? null,
         city: it.city ?? raw?.City ?? (it.type === 'city' ? it.name : null),
@@ -233,24 +214,20 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       };
     });
   
-     const locationCriteria = {
-      tenantName: tenantName,
-      locationCriteria: {
-        locations: locations
-      }
+    const locationCriteria = {
+      organizationId: tenantId, // ✅ include the id explicitly
+      locationCriteria: { locations },
     };
   
-     const jsonString =
-      JSON.stringify(locationCriteria, null, 2) +
-      '\n\nCreate a new campagn and Add this location criteria json as it is to the campaign schema';
-  
-     this.saveLocationCriteria.emit(jsonString);
-    this.refreshService.sendPolygonSavedData(jsonString);
+    this.saveLocationCriteria.emit(locationCriteria);
   }
   
-  public triggerSave(tenantName: string) {
-    this.onSaveLocationCriteria(tenantName);
+  
+  
+  public triggerSave(campaignData: any) {
+    this.onSaveLocationCriteria(campaignData);
   }
+  
 
   private areItemsEquivalent(a: SearchItem, b: SearchItem) {
     if (a.type !== b.type) return false;

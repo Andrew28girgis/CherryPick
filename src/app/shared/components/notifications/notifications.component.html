@@ -29,7 +29,7 @@
       class="overlay-grid"
       (click)="$event.stopPropagation()"
       [ngClass]="{
-        'hidden': electronSideBar
+        hidden: electronSideBar
       }"
     >
       <!-- LEFT: Content column (appears only when overlay is ON via CSS) -->
@@ -353,6 +353,17 @@
                 </p>
                 <p
                   class="message-text"
+                  *ngIf="isAutomationLoading(item, i); else staticAutomation"
+                >
+                  I will start scanning and analyzing the current page for you
+                  <span class="stat-bars" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span
+                    ><span></span><span></span>
+                  </span>
+                </p>
+
+                <p
+                  class="message-text"
                   *ngIf="isCompilingReport(item, i); else staticCompiling"
                 >
                   Got some results, Compiling them into a nice report.
@@ -380,6 +391,7 @@
 
                 <!-- After new message arrives: just static text -->
                 <ng-template #staticAutomation>
+                  <!-- Static: Searching message -->
                   <p
                     class="message-text"
                     *ngIf="
@@ -390,7 +402,20 @@
                   >
                     I am searching the web now for your request
                   </p>
+
+                  <!-- Static: Scanning message -->
+                  <p
+                    class="message-text"
+                    *ngIf="
+                      item.message?.includes(
+                        'I will start scanning and analyzing the current page for you'
+                      )
+                    "
+                  >
+                    I will start scanning and analyzing the current page for you
+                  </p>
                 </ng-template>
+
                 <p
                   class="message-text"
                   *ngIf="
@@ -525,7 +550,6 @@
                   </button>
                 </div>
               </div>
-                
             </div>
           </div>
           <!-- Typing indicator bubble -->

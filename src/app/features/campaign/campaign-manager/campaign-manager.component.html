@@ -682,6 +682,10 @@
     <div class="stepper mb-4">
       <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
       <div class="step-line"></div>
+      <div class="step" [class.active]="step === 'campaign'">
+        Campaign Details
+      </div>
+      <div class="step-line"></div>
       <div class="step" [class.active]="step === 'polygon'">Locations</div>
     </div>
 
@@ -736,28 +740,67 @@
       </div>
     </div>
 
-    <!-- Step 2: Polygons -->
+    <!-- Step 2: Campaign Details -->
+ <div *ngIf="step === 'campaign'" class="campaign-step">
+  <!-- Left side: Campaign name -->
+  <div class="left">
+    <label for="campaignName" class="form-label">Campaign Name</label>
+    <input
+      id="campaignName"
+      type="text"
+      class="form-control"
+      [(ngModel)]="campaignName"
+      placeholder="Enter campaign name"
+    />
+  </div>
+
+  <!-- Right side: Campaign type -->
+  <div class="right">
+    <label class="form-label">Campaign Type</label>
+    <div class="type-options">
+      <div
+        class="type-option"
+        [class.active]="campaignType === 'standalone'"
+        (click)="campaignType = 'standalone'"
+      >
+        <i class="fa-solid fa-store"></i>
+        <span>Standalone Only</span>
+      </div>
+
+      <div
+        class="type-option"
+        [class.active]="campaignType === 'standaloneShopping'"
+        (click)="campaignType = 'standaloneShopping'"
+      >
+        <i class="fa-solid fa-shop"></i>
+        <span>Standalone + Shopping Center</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Step 3: Polygons -->
     <div *ngIf="step === 'polygon'">
       <app-polygons
         *ngIf="polygonsStep"
         (saveLocationCriteria)="handleSave($event)"
       >
       </app-polygons>
-      <!-- [tenant]="selectedTenant" -->
-    </div>
+     </div>
     <div class="d-flex justify-content-between mt-4">
-      <!-- Previous: only if polygons step is active -->
+      <!-- Previous button -->
       <button
-        *ngIf="polygonsStep"
+        *ngIf="step !== 'tenant'"
         class="btn btn-outline-secondary back-btn"
         (click)="prevStep()"
       >
         Previous
       </button>
 
-      <!-- Next: only if tenants step is active -->
+      <!-- Next from Tenant -->
       <button
-        *ngIf="!polygonsStep"
+        *ngIf="step === 'tenant'"
         class="btn btn-primary next-btn ms-auto"
         [disabled]="!selectedTenant"
         (click)="nextStep()"
@@ -765,9 +808,19 @@
         Next
       </button>
 
-      <!-- Finish: only if polygons step is active -->
+      <!-- Next from Campaign -->
       <button
-        *ngIf="polygonsStep"
+        *ngIf="step === 'campaign'"
+        class="btn btn-primary next-btn ms-auto"
+        [disabled]="!campaignName || !campaignType"
+        (click)="nextStep()"
+      >
+        Next
+      </button>
+
+      <!-- Finish -->
+      <button
+        *ngIf="step === 'polygon'"
         class="btn btn-primary next-btn ms-auto"
         (click)="finish()"
       >
@@ -788,7 +841,7 @@
       (click)="modal.dismiss('Cross click')"
     ></button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" style="height: fit-content !important;">
     <form #tenantForm="ngForm">
       <div class="mb-3">
         <label for="name" class="form-label d-flex align-items-center gap-2">
