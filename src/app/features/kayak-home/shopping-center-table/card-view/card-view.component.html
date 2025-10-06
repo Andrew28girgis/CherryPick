@@ -95,7 +95,7 @@
           [class.active]="scoringId === shopping.Id"
           [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
           (click)="getscore(shopping); $event.stopPropagation()"
-          *ngIf="!shopping.Score && shopping.Score !== 0 "
+          *ngIf="!shopping.Score && shopping.Score !== 0"
         >
           <span *ngIf="scoringId !== shopping.Id">Get Score</span>
           <span *ngIf="scoringId === shopping.Id">
@@ -170,7 +170,10 @@
 
         <!--  White div with Score -->
         <ng-template #score>
-          <div *ngIf="shopping.Score !==undefined; else fallback" class="score-placeholder">
+          <div
+            *ngIf="shopping.Score !== undefined; else fallback"
+            class="score-placeholder"
+          >
             <div
               class="score-text"
               (click)="
@@ -795,7 +798,7 @@
                         (click)="toggleMenu(shopping.Id, $event)"
                       >
                         <svg
-                           xmlns="http://www.w3.org/2000/svg"
+                          xmlns="http://www.w3.org/2000/svg"
                           width="20"
                           height="20"
                           viewBox="0 0 20 20"
@@ -980,8 +983,8 @@
 
           <td class="ManagerOrg">{{ shopping.ManagerORG }}</td>
           <td class="last-update">{{ shopping.LastUpdateDate | date }}</td>
-          <td class="score">
-            <span class="d-flex align-items-center" *ngIf="shopping.Score !==undefined"
+          <td class="score" *ngIf="shopping.Score !== null">
+            <span class="d-flex align-items-center"
               >{{ shopping.Score + "%" }}
               <button
                 class="icon-btn"
@@ -1412,7 +1415,7 @@
 </ng-template>
 <ng-template #infoModal let-modal>
   <div class="modal-header score-header">
-    <h5 class="modal-title score-pill">{{ score ||0}}%</h5>
+    <h5 class="modal-title score-pill">{{ score || 0 }}%</h5>
     <button
       type="button"
       class="btn-close"

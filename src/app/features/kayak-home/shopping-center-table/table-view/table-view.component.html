@@ -1,4 +1,4 @@
-<div >
+<div>
   <!-- Skeleton loading for table -->
   <!-- <div *ngIf="isLoading">
     <table class="procpect-table">
@@ -37,13 +37,9 @@
   </div>
   <!-- Main content -->
   <div
-    *ngIf="
-       showShoppingCenters &&
-      shoppingCenters &&
-      shoppingCenters.length > 0
-    "
-   >
-    <table   class=" ">
+    *ngIf="showShoppingCenters && shoppingCenters && shoppingCenters.length > 0"
+  >
+    <table class=" ">
       <thead class=" ">
         <tr>
           <th>Name</th>
@@ -56,7 +52,7 @@
           <th *ngIf="hasAnySizeRange">Size Range</th>
           <!-- <th *ngIf="hasAnyStages">Stage Name</th> -->
           <!-- *ngIf="placesRepresentative" -->
-         
+
           <!-- <th>Actions</th> -->
         </tr>
       </thead>
@@ -67,17 +63,17 @@
             trackBy: trackByShoppingCenterId
           "
         >
-          <tr  *ngIf="shoppingCenter.CenterName">
+          <tr *ngIf="shoppingCenter.CenterName">
             <td>
               <div
-              [ngClass]="{
-                green: shoppingCenter.Score > 50,
-                yellow: shoppingCenter.Score < 50,
-                red: !shoppingCenter.Score
-              }"
-              class="d-flex flex-column"
-            >
-              <!-- <div
+                [ngClass]="{
+                  green: shoppingCenter.Score > 50,
+                  yellow: shoppingCenter.Score < 50,
+                  red: !shoppingCenter.Score
+                }"
+                class="d-flex flex-column"
+              >
+                <!-- <div
             (click)="deleteCenter(shoppingCenter.Id); $event.stopPropagation()"
             class="card-badge delete-badge"
           >
@@ -125,228 +121,241 @@
               />
             </svg>
           </div>    -->
-              <div class="d-flex flex-row justify-content-between">
-                <span
-                  class="table-text"
-                  [innerHTML]="shoppingCenter.CenterName | titlecase"
-                ></span>
+                <div class="d-flex flex-row justify-content-between">
+                  <span
+                    class="table-text"
+                    [innerHTML]="shoppingCenter.CenterName | titlecase"
+                  ></span>
 
-                <div
-                  class="relativee d-flex justify-content-between flex-row gap-3"
-                  style="position: relative"
-                >
-                  <button
-                    class="plus-icon"
-                    (click)="
-                      InsertAutomation(shoppingCenter.Id); $event.stopPropagation()
-                    "
+                  <div
+                    class="relativee d-flex justify-content-between flex-row gap-3"
+                    style="position: relative"
                   >
-                    <i class="fa-solid fa-plus"></i>
-                  </button>
-                  <div>
-                    <div
-                      class="menu-wrapper"
-                      (click)="$event.stopPropagation()"
-                    >
-                      <button
-                        class="menu-btn"
-                        (click)="toggleMenu(shoppingCenter.Id, $event)"
-                      >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                        >
-                          <path
-                            d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
-                            fill="#18171F"
-                            stroke="#18171F"
-                          />
-                          <path
-                            d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
-                            fill="#18171F"
-                          />
-                          <path
-                            d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
-                            fill="#18171F"
-                          />
-                        </svg>
-                      </button>
-
-                      <!-- DROPDOWN -->
-                      <div
-                        class="menu-dropdown"
-                        *ngIf="openMenuId === shoppingCenter.Id"
-                      >
-                        <button
-                          [routerLink]="['/landing',shoppingCenter?.ShoppingCenter?.Places?.[0]?.Id || 0,shoppingCenter?.Id,shoppingCenter.CampaignId]"
-                          class="menu-item"
-                          (click)="closeMenu()"
-                        >
-                          View Details
-                        </button>
-
-                        <button
-                          class="menu-item"
-                          (click)="openContactModal(shoppingCenter); closeMenu()"
-                        >
-                          Contact Broker
-                        </button>
-                        <button
-                          class="menu-item"
-                          (click)="
-                            openMapViewPlace(MapViewPlace, shoppingCenter);
-                            closeMenu()
-                          "
-                        >
-                          View Location
-                        </button>
-                        <button
-                          class="menu-item"
-                          (click)="
-                            openStreetViewPlace(StreetViewPlace, shoppingCenter);
-                            closeMenu()
-                          "
-                        >
-                          Street View
-                        </button>
-                        <button
-                          *ngIf="
-                            checkSubmission(
-                              shoppingCenter?.ShoppingCenter?.UserSubmmision
-                            )
-                          "
-                          class="menu-item"
-                          (click)="
-                            openModalSubmission(
-                              shoppingCenter?.ShoppingCenter?.UserSubmmision || [],
-                              submission
-                            );
-                            closeMenu()
-                          "
-                        >
-                          View Submissions
-                        </button>
-
-                        <button
-                          class="menu-item"
-                          (click)="
-                            openAddContactModal(shoppingCenter.Id); closeMenu()
-                          "
-                        >
-                          Add Contact
-                        </button>
-                        <button
-                          class="menu-item"
-                          (click)="
-                            deleteCenter(shoppingCenter.Id); $event.stopPropagation()
-                          "
-                        >
-                          Delete Center
-                        </button>
-                      </div>
-                    </div>
-                    <div
-                      class="click-shield"
-                      *ngIf="
-                        openStageId === shoppingCenter.Id ||
-                        openMenuId === shoppingCenter.Id
+                    <button
+                      class="plus-icon"
+                      (click)="
+                        InsertAutomation(shoppingCenter.Id);
+                        $event.stopPropagation()
                       "
-                      (click)="closeMenu()"
-                    ></div>
+                    >
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <div>
+                      <div
+                        class="menu-wrapper"
+                        (click)="$event.stopPropagation()"
+                      >
+                        <button
+                          class="menu-btn"
+                          (click)="toggleMenu(shoppingCenter.Id, $event)"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                          >
+                            <path
+                              d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
+                              fill="#18171F"
+                              stroke="#18171F"
+                            />
+                            <path
+                              d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
+                              fill="#18171F"
+                            />
+                            <path
+                              d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
+                              fill="#18171F"
+                            />
+                          </svg>
+                        </button>
+
+                        <!-- DROPDOWN -->
+                        <div
+                          class="menu-dropdown"
+                          *ngIf="openMenuId === shoppingCenter.Id"
+                        >
+                          <button
+                            [routerLink]="['/landing',shoppingCenter?.ShoppingCenter?.Places?.[0]?.Id || 0,shoppingCenter?.Id,shoppingCenter.CampaignId]"
+                            class="menu-item"
+                            (click)="closeMenu()"
+                          >
+                            View Details
+                          </button>
+
+                          <button
+                            class="menu-item"
+                            (click)="
+                              openContactModal(shoppingCenter); closeMenu()
+                            "
+                          >
+                            Contact Broker
+                          </button>
+                          <button
+                            class="menu-item"
+                            (click)="
+                              openMapViewPlace(MapViewPlace, shoppingCenter);
+                              closeMenu()
+                            "
+                          >
+                            View Location
+                          </button>
+                          <button
+                            class="menu-item"
+                            (click)="
+                              openStreetViewPlace(
+                                StreetViewPlace,
+                                shoppingCenter
+                              );
+                              closeMenu()
+                            "
+                          >
+                            Street View
+                          </button>
+                          <button
+                            *ngIf="
+                              checkSubmission(
+                                shoppingCenter?.ShoppingCenter?.UserSubmmision
+                              )
+                            "
+                            class="menu-item"
+                            (click)="
+                              openModalSubmission(
+                                shoppingCenter?.ShoppingCenter
+                                  ?.UserSubmmision || [],
+                                submission
+                              );
+                              closeMenu()
+                            "
+                          >
+                            View Submissions
+                          </button>
+
+                          <button
+                            class="menu-item"
+                            (click)="
+                              openAddContactModal(shoppingCenter.Id);
+                              closeMenu()
+                            "
+                          >
+                            Add Contact
+                          </button>
+                          <button
+                            class="menu-item"
+                            (click)="
+                              deleteCenter(shoppingCenter.Id);
+                              $event.stopPropagation()
+                            "
+                          >
+                            Delete Center
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="click-shield"
+                        *ngIf="
+                          openStageId === shoppingCenter.Id ||
+                          openMenuId === shoppingCenter.Id
+                        "
+                        (click)="closeMenu()"
+                      ></div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div
-                *ngIf="
-                  shoppingCenter.CenterAddress ||
-                  shoppingCenter.CenterCity ||
-                  shoppingCenter.CenterState
-                "
-              >
                 <div
-                  class="table-text cursor addresss"
-                  (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
-                >
-                  {{ shoppingCenter.CenterAddress }}
-                  <span *ngIf="shoppingCenter.CenterCity">,</span>
-
-                  {{ shoppingCenter.CenterCity | titlecase }}
-                  <span *ngIf="shoppingCenter.CenterState">,</span>
-
-                  {{ shoppingCenter.CenterState }}
-                </div>
-              </div>
-              <div
-                *ngIf="KanbanStages.length > 0"
-                #dropdownRef
-                class="menu-wrapper"
-                style="width: fit-content; z-index: 1"
-              >
-                <div
-                  class="selected-option"
-                  *ngIf="!openStageId || openStageId == shoppingCenter.Id"
-
-                  (click)="toggleMenu(shoppingCenter.Id, $event, true)"
-                >
-                  {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                  >
-                    <path
-                      d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
-                      fill="#161017"
-                    />
-                  </svg>
-                </div>
-                <div
-                  (click)="$event.stopPropagation()"
-                  class="dropdown-options"
-                  [class.show]="openStageId === shoppingCenter.Id"
+                  *ngIf="
+                    shoppingCenter.CenterAddress ||
+                    shoppingCenter.CenterCity ||
+                    shoppingCenter.CenterState
+                  "
                 >
                   <div
-                    *ngFor="let stage of KanbanStages"
-                    class="dropdown-item"
-                    [class.active]="stage.id === shoppingCenter.kanbanStageId"
-                    (click)="
-                      selectStage(
-                        shoppingCenter.MarketSurveyId,
-                        stage.id,
-                        shoppingCenter,
-                        $event
-                      )
-                    "
+                    class="table-text cursor addresss"
+                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
                   >
-                    {{ stage.stageName }}
+                    {{ shoppingCenter.CenterAddress }}
+                    <span *ngIf="shoppingCenter.CenterCity">,</span>
+
+                    {{ shoppingCenter.CenterCity | titlecase }}
+                    <span *ngIf="shoppingCenter.CenterState">,</span>
+
+                    {{ shoppingCenter.CenterState }}
                   </div>
                 </div>
-              </div>
-              <div>
-                <span
-                  class="badge badge-danger mx-2 h-auto"
-                  *ngIf="shoppingCenter.Deleted == true"
-                  >Deleted</span
+                <div
+                  *ngIf="KanbanStages.length > 0"
+                  #dropdownRef
+                  class="menu-wrapper"
+                  style="width: fit-content; z-index: 1"
                 >
+                  <div
+                    class="selected-option"
+                    *ngIf="!openStageId || openStageId == shoppingCenter.Id"
+                    (click)="toggleMenu(shoppingCenter.Id, $event, true)"
+                  >
+                    {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                    >
+                      <path
+                        d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
+                        fill="#161017"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    (click)="$event.stopPropagation()"
+                    class="dropdown-options"
+                    [class.show]="openStageId === shoppingCenter.Id"
+                  >
+                    <div
+                      *ngFor="let stage of KanbanStages"
+                      class="dropdown-item"
+                      [class.active]="stage.id === shoppingCenter.kanbanStageId"
+                      (click)="
+                        selectStage(
+                          shoppingCenter.MarketSurveyId,
+                          stage.id,
+                          shoppingCenter,
+                          $event
+                        )
+                      "
+                    >
+                      {{ stage.stageName }}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <span
+                    class="badge badge-danger mx-2 h-auto"
+                    *ngIf="shoppingCenter.Deleted == true"
+                    >Deleted</span
+                  >
+                </div>
               </div>
-            </div>
             </td>
 
             <td class="ManagerOrg">{{ shoppingCenter.ManagerORG }}</td>
-            <td class="last-update">{{ shoppingCenter.LastUpdateDate |date}}</td>
-            <td class="score"  ><span class="d-flex align-items-center" *ngIf="shoppingCenter.Score">{{ shoppingCenter.Score +'%'}} <button 
-              class="icon-btn" 
-              (click)="openInfoPopup(shoppingCenter, infoModal)">
-              <i class="fa-solid fa-circle-info"></i>
-            </button></span> 
-           
-             </td>
+            <td class="last-update">
+              {{ shoppingCenter.LastUpdateDate | date }}
+            </td>
+            <td class="score" *ngIf="shoppingCenter.Score !== null">
+              <span class="d-flex align-items-center"
+                >{{ shoppingCenter.Score + "%" }}
+                <button
+                  class="icon-btn"
+                  (click)="openInfoPopup(shoppingCenter, infoModal)"
+                >
+                  <i class="fa-solid fa-circle-info"></i></button
+              ></span>
+            </td>
             <td class="type">{{ shoppingCenter.CenterType }}</td>
             <td class="category">{{ shoppingCenter.Category }}</td>
             <td *ngIf="shoppingCenter.sizeRange as sr">
@@ -496,8 +505,7 @@
                 *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
                 class="table-responsive mt-2"
                 style="max-height: 150px; overflow-y: auto"
-              >
-                </div>
+              ></div>
 
               <!-- <div
                 *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
@@ -610,7 +618,6 @@
       >
         Cancel
       </button>
-     
     </div>
   </div>
 </ng-template>
@@ -805,17 +812,23 @@
 <ng-template #infoModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Score Info</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
 
   <div class="modal-body">
     <div *ngIf="isLoadingInfo">Loading...</div>
 
     <div *ngIf="!isLoadingInfo">
-      <div *ngIf="infoData; else noData" 
-           class="rationale-text" 
-           [innerHTML]="infoData">
-      </div>
+      <div
+        *ngIf="infoData; else noData"
+        class="rationale-text"
+        [innerHTML]="infoData"
+      ></div>
 
       <ng-template #noData>
         <p>No rationale found.</p>
@@ -823,4 +836,3 @@
     </div>
   </div>
 </ng-template>
-
