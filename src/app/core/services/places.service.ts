@@ -401,8 +401,26 @@ export class PlacesService {
   }
   public GetScore(campaignIdScore: number, shoppingCenterId: number) {
     return this.http.post<any>(
-      `${environment.api}/Enrichment/GenerateMatchScore?campaignId=${campaignIdScore}&shoppingCenterId=${shoppingCenterId}`,campaignIdScore
+      `${environment.api}/Enrichment/GenerateMatchScore?campaignId=${campaignIdScore}&shoppingCenterId=${shoppingCenterId}`,
+      campaignIdScore
     );
   }
+  public CreateCampaign(
+    CampaignName: string,
+    OrganizationId: number,
+    IsStandAlone: boolean,
+    CampaignLocations: any[]
+  ) {
+    const body = {
+      CampaignName,
+      OrganizationId,
+      IsStandAlone,
+      CampaignLocations
+    };
   
+    return this.http.post<any>(
+      `${environment.api}/Campaign/CreateCampaign`,
+      body
+    );
+  }
 }

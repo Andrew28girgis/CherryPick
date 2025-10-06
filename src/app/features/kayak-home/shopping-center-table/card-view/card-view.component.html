@@ -95,7 +95,7 @@
           [class.active]="scoringId === shopping.Id"
           [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
           (click)="getscore(shopping); $event.stopPropagation()"
-          *ngIf="!shopping.Score"
+          *ngIf="shopping.Score === undefined "
         >
           <span *ngIf="scoringId !== shopping.Id">Get Score</span>
           <span *ngIf="scoringId === shopping.Id">
@@ -156,7 +156,7 @@
         </div> -->
         <div
           (click)="openInfoPopup(shopping, infoModal); $event.stopPropagation()"
-          *ngIf="shopping.Score"
+          *ngIf="shopping.Score !==undefined"
           class="card-badge"
           [ngClass]="{
             'green-circle': shopping.Score > 50,
@@ -170,7 +170,7 @@
 
         <!--  White div with Score -->
         <ng-template #score>
-          <div *ngIf="shopping.Score; else fallback" class="score-placeholder">
+          <div *ngIf="shopping.Score !==undefined; else fallback" class="score-placeholder">
             <div
               class="score-text"
               (click)="
@@ -795,8 +795,7 @@
                         (click)="toggleMenu(shopping.Id, $event)"
                       >
                         <svg
-                          *ngIf="!openMenuId || openMenuId == shopping.Id"
-                          xmlns="http://www.w3.org/2000/svg"
+                           xmlns="http://www.w3.org/2000/svg"
                           width="20"
                           height="20"
                           viewBox="0 0 20 20"
@@ -982,7 +981,7 @@
           <td class="ManagerOrg">{{ shopping.ManagerORG }}</td>
           <td class="last-update">{{ shopping.LastUpdateDate | date }}</td>
           <td class="score">
-            <span class="d-flex align-items-center" *ngIf="shopping.Score"
+            <span class="d-flex align-items-center" *ngIf="shopping.Score !==undefined"
               >{{ shopping.Score + "%" }}
               <button
                 class="icon-btn"
