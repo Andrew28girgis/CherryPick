@@ -451,7 +451,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
           ) || null;
 
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -632,7 +632,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
         this.selectedTenant =
           this.tenants.find((t) => t.OrganizationId == this.OrgId) || null;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 

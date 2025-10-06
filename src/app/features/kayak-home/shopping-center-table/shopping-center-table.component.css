@@ -672,14 +672,14 @@
   will-change: width;
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--Colors-Primary-500, #6d133b);
+  border: none;
   border-radius: 22px;
   background: transparent;
 }
 
 .search-icon-btn {
   background: transparent;
-  border: none;
+  border: none !important;
   cursor: pointer;
   width: 44px;
   height: 44px;
@@ -743,7 +743,7 @@
 .actions-container {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
 }
 
 .action-btn,
@@ -891,8 +891,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 22px;
-  border: 1px solid var(--Colors-Primary-500, #6d133b);
-
+  border: none ;
   display: flex;
   padding: var(--Space-S-12);
   align-items: center;
