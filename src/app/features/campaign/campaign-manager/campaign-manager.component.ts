@@ -474,6 +474,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         next: (response) => {
           console.log('✅ Campaign created successfully:', response);
           this.modalRef?.close();
+          this.resetAddCampaignForm();
           this.getAllCampaigns();
         },
         error: (err) => {
