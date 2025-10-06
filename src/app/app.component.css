@@ -44,19 +44,13 @@
 }
 
 
-.app-shell.with-copilot.authenticated {
-  margin-right: min(48px, 5vw); 
-}
+ 
 
 .app-shell.with-copilot.copilot-expanded.authenticated {
   margin-right: min(380px, 40vw); 
 }
 
-.app-shell.with-sidebar.with-copilot.authenticated {
-  grid-template-columns: 96px minmax(0, 1fr);
-  margin-right: min(48px, 5vw);
-}
-
+ 
 .app-shell.with-sidebar.with-copilot.copilot-expanded.authenticated:not(
     .chatbot-route
   ) {
