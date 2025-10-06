@@ -16,7 +16,7 @@ export interface place{
   BuildingSizeSf: number
   LandSf: any
   SecondaryType: string
-  ForLeasePrice: any
+  Price: any
   LeaseType: string
   Suite: string
   StreetViewURL: any
