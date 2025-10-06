@@ -1388,4 +1388,19 @@ tr.click-disabled td:last-child * {
   justify-content: center;
 }
 
-
+.reload {
+  position: absolute;
+  border: none;
+  right: 50px;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(720deg);
+  }
+}
+.rotate {
+  animation: spin 1.2s linear;
+}

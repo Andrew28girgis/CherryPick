@@ -60,6 +60,7 @@ export class ShoppingComponent implements OnInit {
   campaigns: ICampaign[] = [];
   selectedCampaign!: ICampaign;
   currentCenter!: number;
+  rotatingKeys: { [id: number]: number } = {};
 
   constructor(
     private placesService: PlacesService,
@@ -404,5 +405,24 @@ export class ShoppingComponent implements OnInit {
   }
   trackByCenterId(index: number, center: any): number {
     return center?.id || index;
+  }
+  InsertAutomation(id: any, reload?: any) {
+    if (reload) {
+      this.rotatingKeys[id] = (this.rotatingKeys[id] || 0) + 1;
+
+      setTimeout(() => {
+        this.rotatingKeys[id] = 0;
+      }, 1200);
+    }
+
+    this.placesService.InsertAutomation(id).subscribe({
+      next: () => {
+        if (!reload) {
+          this.showToast('Automation Started');
+        } else {
+          this.showToast('Automation is running again');
+        }
+      },
+    });
   }
 }
