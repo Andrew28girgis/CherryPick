@@ -682,10 +682,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     if (!stage) {
       this.openMenuId = this.openMenuId === Id ? null : Id;
-    }
+      this.openStageId = null
+     }
     if (stage) {
       this.openStageId = this.openStageId === Id ? null : Id;
-    }
+      this.openMenuId = null
+
+     }
   }
 
   closeMenu() {
