@@ -432,17 +432,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   finish(): void {
     if (!this.selectedTenant) return;
-  
-    console.log('Saving campaign:', {
-      tenantId: this.selectedTenant.id,
-      campaignName: this.campaignName,
-      campaignType: this.campaignType,
-    });
-  
-    // This triggers the polygons component to emit the data
+
     this.refreshService.requestPolygonSave(this.selectedTenant.id);
   }
-  
+
   private resetAddCampaignForm(): void {
     this.selectedTenant = null;
     this.campaignName = '';
@@ -452,8 +445,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   handleSave(locationData: any) {
-    console.log('Received locationData:', locationData);
-  
     const isStandalone = this.campaignType === 'standalone';
     const campaignLocations = locationData.locationCriteria.locations.map(
       (loc: any) => ({
@@ -462,27 +453,23 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         NeighborhoodId: loc.neighborhoodId,
       })
     );
-  
+
     this.placesService
       .CreateCampaign(
         this.campaignName,
-        locationData.organizationId,  // ✅ fixed property name
+        locationData.organizationId,
         isStandalone,
         campaignLocations
       )
       .subscribe({
         next: (response) => {
-          console.log('✅ Campaign created successfully:', response);
           this.modalRef?.close();
           this.resetAddCampaignForm();
           this.getAllCampaigns();
         },
-        error: (err) => {
-          console.error('❌ Error creating campaign:', err);
-        },
+        error: (err) => {},
       });
   }
-  
 
   protected addNewTenant() {
     const prevTenantId = this.selectedTenant?.id;
