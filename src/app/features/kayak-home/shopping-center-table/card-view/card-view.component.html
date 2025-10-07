@@ -791,6 +791,7 @@
                     <div
                       class="menu-wrapper"
                       (click)="$event.stopPropagation()"
+                      [ngClass]="{'opened-menu': openMenuId === shopping.Id}"
                     >
                       <button
                         class="menu-btn"
@@ -928,7 +929,8 @@
                 *ngIf="KanbanStages.length > 0"
                 #dropdownRef
                 class="menu-wrapper"
-                style="width: fit-content; z-index: 1"
+                [ngClass]="{'opened-stage': openStageId === shopping.Id}"
+                style="width: fit-content"
               >
                 <div
                   class="selected-option"
