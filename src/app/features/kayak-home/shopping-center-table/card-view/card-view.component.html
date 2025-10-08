@@ -97,8 +97,10 @@
           *ngIf="shopping.LastUpdateDate"
         >
           {{ shopping.LastUpdateDate | date }}
-          <span class="source">By </span>{{ shopping.Source }}
-      </div>
+          <span *ngIf="shopping.Source">
+            <span class="source">By </span>{{ shopping.Source }}
+          </span>
+        </div>
 
         <button
           class="plus-icon score"
