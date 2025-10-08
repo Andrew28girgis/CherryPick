@@ -243,6 +243,8 @@
                   <th>Price</th>
                   <th>Unit Size (SF)</th>
                   <th>Secondary Type</th>
+                  <th>Source</th>
+                  <th>Created Date</th>
                 </tr>
               </thead>
               <tbody class="procpect-table-body">
@@ -253,17 +255,15 @@
                       {{ place.LeaseType }}
                     </td>
                     <td>
-                      <span *ngIf="place.Price"
-                          > 
-                            ${{ place.Price }}
-                    
-                        </span>
+                      <span *ngIf="place.Price"> ${{ place.Price }} </span>
                     </td>
                     <td *ngIf="place.BuildingSizeSf">
                       {{ place.BuildingSizeSf | number }} SF
                     </td>
                     <td *ngIf="!place.BuildingSizeSf">On Request</td>
                     <td>{{ place.SecondaryType }}</td>
+                    <td>{{ place.Source }}</td>
+                    <td>{{ place.CreateDate | date }}</td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -338,7 +338,10 @@
         <ng-template #noVeryShort><p>No tenants in this range</p></ng-template>
       </div>
     </div>
-    <div class="col-md-6 position-relative" *ngIf="tenantGroups.veryShort.length">
+    <div
+      class="col-md-6 position-relative"
+      *ngIf="tenantGroups.veryShort.length"
+    >
       <span class="card-badge cb">
         {{ tenantGroups.veryShort.length }}
       </span>
@@ -382,7 +385,10 @@
     </div>
 
     <!-- walking -->
-    <div class="col-md-6 mt-4 position-relative" *ngIf="tenantGroups.walking.length">
+    <div
+      class="col-md-6 mt-4 position-relative"
+      *ngIf="tenantGroups.walking.length"
+    >
       <span class="card-badge cb">
         {{ tenantGroups.walking.length }}
       </span>
@@ -426,7 +432,10 @@
     </div>
 
     <!-- longer -->
-    <div class="col-md-6 mt-4 position-relative" *ngIf="tenantGroups.longer.length">
+    <div
+      class="col-md-6 mt-4 position-relative"
+      *ngIf="tenantGroups.longer.length"
+    >
       <span class="card-badge cb">
         {{ tenantGroups.longer.length }}
       </span>
