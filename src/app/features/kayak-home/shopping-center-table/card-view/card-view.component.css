@@ -63,7 +63,7 @@
   background-color: #e9ecef;
   font-weight: 500;
 }
- 
+
 .h700 {
   height: 700px;
 }
@@ -88,7 +88,6 @@ img[alt="logo"] {
   width: 100%;
 }
 
- 
 .table-text {
   color: #7a8591;
   font-size: 0.8rem;
@@ -505,7 +504,7 @@ img[alt="logo"] {
   grid-template-columns: 1fr auto;
   gap: var(--Space-S-24) var(--Space-S-32);
   padding: var(--Space-S-32);
-   margin: 0 auto;
+  margin: 0 auto;
   background: var(--Colors-Pure-White);
   border-radius: 10px;
   box-shadow: 0 var(--Space-S-4) 20px rgba(0, 0, 0, 0.08);
@@ -837,15 +836,15 @@ label {
   white-space: nowrap;
   font-size: 14px;
 }
-.delete-badge{
-  background-color: #fdecea;   /* very light red (almost white) */
-  color: #d32f2f;              /* material red-700 */
+.delete-badge {
+  background-color: #fdecea; /* very light red (almost white) */
+  color: #d32f2f; /* material red-700 */
   top: -15px;
   right: 12px;
-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 .delete-badge:hover {
-  background-color: #f9c4c4;   /* slightly darker red on hover */
+  background-color: #f9c4c4; /* slightly darker red on hover */
   cursor: pointer;
 }
 
@@ -1232,28 +1231,28 @@ table tbody td {
 }
 .score {
   background: var(--Colors-Primary-300);
-  color: var(--app-color); 
+  color: var(--app-color);
   width: fit-content;
   position: absolute;
   bottom: 16px;
   right: 4vw;
-  padding: 8px 16px;   
-  border-radius: 14px; 
-  border: none; 
+  padding: 8px 16px;
+  border-radius: 14px;
+  border: none;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .score:hover {
   background: var(--Colors-Primary-400) !important;
   cursor: pointer;
- }
+}
 
 .score.active {
   background: var(--Colors-Primary-400);
- }
+}
 
 /* spin animation */
 @keyframes spin {
@@ -1396,6 +1395,23 @@ table tbody td {
   animation-duration: 1020ms;
   animation-delay: 400ms;
 }
-.opened-menu,.opened-stage{
+.opened-menu,
+.opened-stage {
   z-index: 4;
+}
+
+.date {
+  background: var(--app-color);
+  color: var(--Colors-Primary-300);
+  width: -moz-fit-content;
+  width: fit-content;
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  padding: 8px 16px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
