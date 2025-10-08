@@ -60,6 +60,7 @@ export interface Center {
     lastOutgoingEmail:any
     lastIncomingEmail:any
     LastUpdateDate?: string
+    Source?: string
     sizeRange:any
     scoreImage:any
   }

@@ -91,9 +91,14 @@
           </svg>
         </button>
 
-        <button class="plus-icon date score" *ngIf="shopping.LastUpdateDate">
+        <div
+          (click)="$event.stopPropagation()"
+          class="plus-icon date score"
+          *ngIf="shopping.LastUpdateDate"
+        >
           {{ shopping.LastUpdateDate | date }}
-        </button>
+          <span class="source">By </span>{{ shopping.Source }}
+      </div>
 
         <button
           class="plus-icon score"

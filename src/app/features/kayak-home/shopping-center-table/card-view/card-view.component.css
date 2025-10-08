@@ -1401,8 +1401,30 @@ table tbody td {
 }
 
 .date {
-  background: var(--app-color);
-  color: var(--Colors-Primary-300);
+  background: var(--Colors-Primary-400);
+  color: var(--app-color);
   bottom: 16px;
   left: 16px;
+
+  display: inline-block;
+  max-width: 240px;
+  width: max-content;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  line-height: 0.8;
+}
+.date:hover {
+  background: var(--Colors-Primary-400);
+  cursor: pointer;
+  overflow: visible;
+  white-space: normal;
+  max-width: none;
+  z-index: 10;
+}
+.source {
+  color: var(--teal-600);
+  font-weight: 700;
+  margin: 0 4px;
 }
