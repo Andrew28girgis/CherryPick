@@ -1403,14 +1403,14 @@ table tbody td {
   vertical-align: middle;
   line-height: 0.8;
 }
-.date:hover {
+/* .date:hover {
   background: var(--Colors-Primary-400);
   cursor: pointer;
   overflow: visible;
   white-space: normal;
   max-width: none;
   z-index: 10;
-}
+} */
 .source {
   color: var(--teal-600);
   font-weight: 700;
