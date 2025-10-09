@@ -92,16 +92,16 @@
         </button>
 
         <div
-          (click)="$event.stopPropagation()"
-          class="plus-icon date score"
-          *ngIf="shopping.LastUpdateDate"
-        >
-          {{ shopping.LastUpdateDate | date }}
-          <span *ngIf="shopping.Source">
-            <span class="source">By </span>{{ shopping.Source }}
-          </span>
-        </div>
-
+        (click)="$event.stopPropagation()"
+        class="plus-icon date score"
+        *ngIf="shopping.LastUpdateDate"
+      >
+        {{ shopping.LastUpdateDate | date }}
+        <span *ngIf="shopping.Source">
+          <span class="source">By </span>{{ getSourceDisplay(shopping.Source) }}
+        </span>
+      </div>
+      
         <button
           class="plus-icon score"
           [class.active]="scoringId === shopping.Id"
