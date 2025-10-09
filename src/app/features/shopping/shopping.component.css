@@ -1404,3 +1404,129 @@ tr.click-disabled td:last-child * {
 .rotate {
   animation: spin 1.2s linear;
 }
+ 
+ 
+
+ 
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+}
+
+ 
+ 
+
+/* =============================
+   Modal Styling
+============================= */
+.modal-header {
+  border-bottom: 1px solid #eee;
+}
+
+.modal-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.modal-body {
+  text-align: center;
+  padding: 24px;
+}
+
+/* =============================
+   File Drop Zone
+============================= */
+ 
+
+.file-drop-zone {
+  width: 100%;
+  min-height: 120px;
+  align-items: center;
+  justify-content: center;
+}
+.file-drop-zone:hover {
+  background-color: #f0faff;
+  border-color: #00b8d9;
+}
+::ng-deep .ngx-file-drop__drop-zone:hover{
+  background-color: #f0faff;
+  border-color: #00b8d9;
+
+}
+
+.file-drop-content {
+  width: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: #666;
+}
+
+.browse-btn {
+  background: none;
+  border: none;
+  color: var(--Colors-Assistant-2-500);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.browse-btn:hover {
+  color: #0056b3;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  stroke: #00b8d9;
+}
+
+.browse-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.browse-btn:hover {
+  color: #0056b3;
+}
+
+.file-drop-content small {
+  color: #888;
+  font-size: 12px;
+}
+
+/* =============================
+   Modal Footer
+============================= */
+.modal-footer {
+  border-top: 1px solid #eee;
+  justify-content: flex-end;
+}
+
+.btn.btn-secondary {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.btn.btn-secondary:hover {
+  background-color: #e9ecef;
+}
+
+ 
