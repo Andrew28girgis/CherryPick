@@ -50,8 +50,6 @@
   width: fit-content;
 }
 
- 
-
 .h700 {
   height: 700px;
 }
@@ -437,7 +435,7 @@ img[alt="logo"] {
   cursor: pointer;
 }
 
-.dropdown-item:hover ,
+.dropdown-item:hover,
 .dropdown-item:focus {
   color: #16181b;
   text-decoration: none;
@@ -448,7 +446,7 @@ img[alt="logo"] {
 .dropdown-item:active {
   color: var(--Colors-Pure-White) !important;
   text-decoration: none;
-  background-color: var(--Colors-Primary-500)!important;
+  background-color: var(--Colors-Primary-500) !important;
 }
 
 /* Responsive adjustments */
@@ -1403,14 +1401,7 @@ table tbody td {
   vertical-align: middle;
   line-height: 0.8;
 }
-.date:hover {
-  background: var(--Colors-Primary-400);
-  cursor: pointer;
-  overflow: visible;
-  white-space: normal;
-  max-width: none;
-  z-index: 10;
-}
+
 .source {
   color: var(--teal-600);
   font-weight: 700;
