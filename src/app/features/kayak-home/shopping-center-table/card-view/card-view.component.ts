@@ -536,17 +536,17 @@ export class CardViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  finContactMessage(shoppingCenter: Center): void {
-    (window as any).electronMessage.findContacts(
-      JSON.stringify({
-        shoppingCenterName: shoppingCenter.CenterName,
-        shoppingCenterAddress: shoppingCenter.CenterAddress,
-        shoppingCenterId: shoppingCenter.Id,
-      })
-    );
+  // finContactMessage(shoppingCenter: Center): void {
+  //   (window as any).electronMessage.findContacts(
+  //     JSON.stringify({
+  //       shoppingCenterName: shoppingCenter.CenterName,
+  //       shoppingCenterAddress: shoppingCenter.CenterAddress,
+  //       shoppingCenterId: shoppingCenter.Id,
+  //     })
+  //   );
 
-    this.getShoppingCenterContact(shoppingCenter.Id);
-  }
+  //   this.getShoppingCenterContact(shoppingCenter.Id);
+  // }
 
   openAddContactModal(shoppingCenterId: number): void {
     const modalRef = this.modalService.open(AddContactComponent, {

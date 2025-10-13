@@ -89,20 +89,20 @@ export class AddCampaignPopupComponent implements OnInit {
         this.navigateToShoppingCenterAndOpenUpload(campaignId);
         // const url = 'https://www.google.com/maps/search/shopping+centers+malls';
         // window.location.href = `${url}?campaignId=${response.json[0].id}&campaignName=${this.campaignName}&organizationId=${this.organizationId}`;
-        this.electronMessageWithStateName();
+        // this.electronMessageWithStateName();
       } else {
         this.activeModalService.close();
       }
     });
   }
 
-  electronMessageWithStateName() {
-    (window as any).electronMessage.getLinksFromGoogle(
-      this.selectedState,
-      localStorage.getItem('token'),
-      this.campaignId
-    );
-  }
+  // electronMessageWithStateName() {
+  //   (window as any).electronMessage.getLinksFromGoogle(
+  //     this.selectedState,
+  //     localStorage.getItem('token'),
+  //     this.campaignId
+  //   );
+  // }
 
   protected closeActiveModal(): void {
     this.onSecondaryButtonClicked.emit(true);

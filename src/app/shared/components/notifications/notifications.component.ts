@@ -407,7 +407,7 @@ export class NotificationsComponent
   }
 
   closeSide() {
-    (window as any).electronMessage.closeCRESideBrowser();
+    (window as any).electronMessage.closeEmilySideBrowser();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -854,13 +854,13 @@ export class NotificationsComponent
           return;
         }
 
-        try {
-          (window as any).electronMessage.getLinksFromGoogle(
-            '',
-            localStorage.getItem('token'),
-            id // <-- send only the id
-          );
-        } catch (e) {}
+        // try {
+        //   (window as any).electronMessage.getLinksFromGoogle(
+        //     '',
+        //     localStorage.getItem('token'),
+        //     id // <-- send only the id
+        //   );
+        // } catch (e) {}
       },
     });
   }
@@ -1162,15 +1162,15 @@ export class NotificationsComponent
     });
   }
 
-  scan(scan: boolean) {
-    if (scan) {
-      (window as any).electronMessage.enableCREAutomationMode(
-        localStorage.getItem('token')
-      );
-    } else if (!scan) {
-      (window as any).electronMessage.disableCREAutomationMode();
-    }
-  }
+  // scan(scan: boolean) {
+  //   if (scan) {
+  //     (window as any).electronMessage.enableCREAutomationMode(
+  //       localStorage.getItem('token')
+  //     );
+  //   } else if (!scan) {
+  //     (window as any).electronMessage.disableCREAutomationMode();
+  //   }
+  // }
   private checkForShoppingCentersReply(newMessages: Notification[]): void {
     for (const n of newMessages) {
       const isSystem = !(
