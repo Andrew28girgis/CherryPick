@@ -186,47 +186,80 @@ export class NotificationsComponent
       this.scanForShowMap();
     });
 
+    // old way of loading notifications every 2 seconds
+    const poll = () => {
+      this.wasSticky = this.isAtBottom();
+      const prevLength = this.notificationService.notifications.length;
+
+      this.notificationService
+        .fetchUserNotifications(this.CampaignId)
+        .subscribe({
+          complete: () => {
+            const newLength = this.notificationService.notifications.length;
+            const diff = newLength - prevLength;
+
+            if (diff > 0) {
+              const newMessages = this.notificationService.notifications.slice(
+                -diff
+              );
+              this.checkForShoppingCentersReply(newMessages);
+              this.onNewMessagesArrived(diff);
+            }
+
+            this.previousNotificationsLength = newLength;
+            this.sortNotificationsByDateAsc();
+            this.scanTrigger$.next();
+
+            // ⏱️ Wait 2s AFTER finishing
+            setTimeout(poll, 2000);
+          },
+        });
+    };
+
+    poll();
+    /* the old way */
+
     // === SignalR WebSocket ===
-    this.webSocketService.startConnection();
+    // this.webSocketService.startConnection();
 
     // Listen for new notifications in real time
-    this.webSocketService.notificationReceived$.subscribe({
-      next: (newNotification: any) => {
-        console.log('📩 Received via WebSocket:', newNotification);
+    // this.webSocketService.notificationReceived$.subscribe({
+    //   next: (newNotification: any) => {
+    //     console.log('📩 Received via WebSocket:', newNotification);
 
-        // Map categoryId to notificationCategoryId for consistency
-        const notification = {
-          ...newNotification,
-          notificationCategoryId: newNotification.categoryId,
-        };
+    //     // Map categoryId to notificationCategoryId for consistency
+    //     const notification = {
+    //       ...newNotification,
+    //       notificationCategoryId: newNotification.categoryId,
+    //     };
 
-        // Skip if this is a user message (we already added it optimistically)
-        if (
-          notification.notificationCategoryId === 1 ||
-          notification.notificationCategoryId === true
-        ) {
-          return;
-        }
+    //     // Skip if this is a user message (we already added it optimistically)
+    //     if (
+    //       notification.notificationCategoryId === 1 ||
+    //       notification.notificationCategoryId === true
+    //     ) {
+    //       return;
+    //     }
 
-        this.wasSticky = this.isAtBottom();
+    //     this.wasSticky = this.isAtBottom();
 
-        this.notificationService.notifications.push(notification);
+    //     this.notificationService.notifications.push(notification);
 
-        this.checkForShoppingCentersReply([notification]);
+    //     this.checkForShoppingCentersReply([notification]);
 
-        this.onNewMessagesArrived(1);
-        this.previousNotificationsLength =
-          this.notificationService.notifications.length;
-        this.sortNotificationsByDateAsc();
-        this.scanTrigger$.next();
+    //     this.onNewMessagesArrived(1);
+    //     this.previousNotificationsLength =
+    //       this.notificationService.notifications.length;
+    //     this.sortNotificationsByDateAsc();
+    //     this.scanTrigger$.next();
 
-        if (this.wasSticky) {
-          this.cdRef.detectChanges();
-          requestAnimationFrame(() => this.scrollToBottomNow());
-        }
-      },
-      error: (err) => console.error('❌ SignalR subscription error:', err),
-    });
+    //     if (this.wasSticky) {
+    //       this.cdRef.detectChanges();
+    //       requestAnimationFrame(() => this.scrollToBottomNow());
+    //     }
+    //   },
+    //   error: (err) => console.error('❌ SignalR subscription error:', err),
+    // });
     this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
     setTimeout(() => this.scrollToBottom(), 100);
     this.checkScreenSize();
@@ -1202,9 +1235,7 @@ export class NotificationsComponent
     this.awaitingResponse = false;
   }
 
-  /**
-   * Safer, rAF-based scroll method (no jump flicker)
-   */
+ 
   scrollToBottom(): void {
     const el = this.messagesContainer?.nativeElement as HTMLElement | undefined;
     if (!el) return;
