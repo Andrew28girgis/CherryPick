@@ -750,17 +750,17 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     return shopping.MainImage || 'assets/Images/DefaultImage.png';
   }
 
-  finContactMessage(shoppingCenter: Center): void {
-    (window as any).electronMessage.findContacts(
-      JSON.stringify({
-        shoppingCenterName: shoppingCenter.CenterName,
-        shoppingCenterAddress: shoppingCenter.CenterAddress,
-        shoppingCenterId: shoppingCenter.Id,
-      })
-    );
+  // finContactMessage(shoppingCenter: Center): void {
+  //   (window as any).electronMessage.findContacts(
+  //     JSON.stringify({
+  //       shoppingCenterName: shoppingCenter.CenterName,
+  //       shoppingCenterAddress: shoppingCenter.CenterAddress,
+  //       shoppingCenterId: shoppingCenter.Id,
+  //     })
+  //   );
 
-    this.getShoppingCenterContact(shoppingCenter.Id);
-  }
+  //   this.getShoppingCenterContact(shoppingCenter.Id);
+  // }
   getShoppingCenterContact(centerId: any): void {
     const body: any = {
       Name: 'GetShoppingCenterContact',

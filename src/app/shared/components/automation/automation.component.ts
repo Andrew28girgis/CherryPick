@@ -248,17 +248,17 @@ export class AutomationComponent implements OnInit {
       return false;
     }
     // Otherwise, close normally
-    this.performClose();
+    // this.performClose();
     return false;
   }
   // Method to actually perform the close action
-  performClose() {
-    (window as any).electronMessage.closeSideBrowser();
-  }
+  // performClose() {
+  //   (window as any).electronMessage.closeSideBrowser();
+  // }
   // Method to handle confirmation dialog actions
   confirmClose() {
     this.showCloseConfirmation = false;
-    this.performClose();
+    // this.performClose();
   }
   
   cancelClose() {

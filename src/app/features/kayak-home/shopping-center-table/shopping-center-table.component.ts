@@ -786,10 +786,10 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.showWebsiteCardsModal = false;
     const url = website.url || website.URL || 'https://www.google.com';
     window.location.href = url;
-    (window as any).electronMessage.startCREAutomation(
-      this.CampaignId,
-      localStorage.getItem('token')
-    );
+    // (window as any).electronMessage.startCREAutomation(
+    //   this.CampaignId,
+    //   localStorage.getItem('token')
+    // );
   }
   // <CHANGE> Add method to close website cards modal
   closeWebsiteCardsModal() {
@@ -922,10 +922,10 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   private openLikeCard(url: string) {
     this.showWebsiteCardsModal = false;
     window.location.href = url; // same as onWebsiteCardClick
-    (window as any).electronMessage.startCREAutomation(
-      this.CampaignId,
-      localStorage.getItem('token')
-    );
+    // (window as any).electronMessage.startCREAutomation(
+    //   this.CampaignId,
+    //   localStorage.getItem('token')
+    // );
   }
 
   openSearchOnSite(
