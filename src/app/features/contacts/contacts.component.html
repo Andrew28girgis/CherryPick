@@ -37,6 +37,7 @@
             role="tab"
             [attr.aria-selected]="role === 'broker'"
             (click)="setRole('broker')"
+            *ngIf="brokerOrgs"
           >
             Broker
           </button>
@@ -46,6 +47,7 @@
             role="tab"
             [attr.aria-selected]="role === 'tenant'"
             (click)="setRole('tenant')"
+            *ngIf="tenantsOrgs"
           >
             Tenant
           </button>

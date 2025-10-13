@@ -90,10 +90,22 @@
             />
           </svg>
         </button>
+
+        <div
+        (click)="$event.stopPropagation()"
+        class="plus-icon date score"
+        *ngIf="shopping.LastUpdateDate"
+      >
+        {{ shopping.LastUpdateDate | date }}
+        <span *ngIf="shopping.Source">
+          <span class="source">By </span>{{ getSourceDisplay(shopping.Source) }}
+        </span>
+      </div>
+      
         <button
           class="plus-icon score"
           [class.active]="scoringId === shopping.Id"
-           (click)="getscore(shopping); $event.stopPropagation()"
+          (click)="getscore(shopping); $event.stopPropagation()"
           *ngIf="!shopping.Score && shopping.Score !== 0"
         >
           <span *ngIf="scoringId !== shopping.Id">Get Score</span>
@@ -791,6 +803,7 @@
                     <div
                       class="menu-wrapper"
                       (click)="$event.stopPropagation()"
+                      [ngClass]="{ 'opened-menu': openMenuId === shopping.Id }"
                     >
                       <button
                         class="menu-btn"
@@ -928,7 +941,8 @@
                 *ngIf="KanbanStages.length > 0"
                 #dropdownRef
                 class="menu-wrapper"
-                style="width: fit-content; z-index: 1"
+                [ngClass]="{ 'opened-stage': openStageId === shopping.Id }"
+                style="width: fit-content"
               >
                 <div
                   class="selected-option"

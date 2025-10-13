@@ -65,6 +65,8 @@ export class ContactsComponent implements OnInit {
   expandedOrgs: { [orgId: number]: boolean } = {};
   isSearchExpanded = false;
   role: 'broker' | 'tenant' = 'broker';
+  tenantsOrgs: any;
+  brokerOrgs: any;
 
 
   
@@ -127,7 +129,9 @@ export class ContactsComponent implements OnInit {
     } else {
       orgs = orgs.filter(org => org.stakeholderId !== 2);
     }
-  
+  this.tenantsOrgs=orgs.filter(org => org.stakeholderId === 2).length;
+  this.brokerOrgs=orgs.filter(org => org.stakeholderId !== 2).length;
+   
     // 👥 Attach contacts to each org
     const grouped = orgs.map(org => ({
       ...org,

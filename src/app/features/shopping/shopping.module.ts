@@ -5,22 +5,19 @@ import { FormsModule } from '@angular/forms';
 import { ShoppingComponent } from './shopping.component';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
-const routes: Routes = [
-  { path: '', component: ShoppingComponent }
-];
+const routes: Routes = [{ path: '', component: ShoppingComponent }];
 
 @NgModule({
-  declarations: [
-    ShoppingComponent,
-    FileExplorerComponent
-  ],
+  declarations: [ShoppingComponent, FileExplorerComponent],
   imports: [
     CommonModule,
     FormsModule,
     NgxSpinnerModule,
-    RouterModule.forChild(routes)
+    NgxFileDropModule,
+    RouterModule.forChild(routes),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ShoppingModule { }
+export class ShoppingModule {}

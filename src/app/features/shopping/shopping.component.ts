@@ -13,7 +13,9 @@ import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { ShoppingCenter } from 'src/app/shared/models/shopping';
 import { Router } from '@angular/router';
 import { ICampaign } from 'src/app/shared/models/icampaign';
-
+import { environment } from 'src/environments/environment';
+import { NgxFileDropEntry } from 'ngx-file-drop';
+ 
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
@@ -21,6 +23,7 @@ import { ICampaign } from 'src/app/shared/models/icampaign';
 })
 export class ShoppingComponent implements OnInit {
   @ViewChild('fileExplorer') fileExplorer!: FileExplorerComponent;
+  @ViewChild('uploadTypes') uploadTypes!: any;
 
   Math = Math;
   contactID: any = localStorage.getItem('contactId');
@@ -61,6 +64,8 @@ export class ShoppingComponent implements OnInit {
   selectedCampaign!: ICampaign;
   currentCenter!: number;
   rotatingKeys: { [id: number]: number } = {};
+  showFileDropArea = false;
+  isUploading = false;
 
   constructor(
     private placesService: PlacesService,
@@ -425,4 +430,97 @@ export class ShoppingComponent implements OnInit {
       },
     });
   }
+    openUpload(): void {
+      if (this.uploadTypes) {
+        this.modalService.open(this.uploadTypes, {
+          size: 'md',
+          backdrop: true,
+          backdropClass: 'fancy-modal-backdrop',
+          keyboard: true,
+          windowClass: 'fancy-modal-window',
+          centered: true,
+        });
+      }
+    }
+  
+    openFileUpload(): void {
+      if (!this.isUploading) {
+        this.showFileDropArea = true;
+      }
+    }
+  
+    cancelFileUpload(): void {
+      this.showFileDropArea = false;
+    }
+  
+    dropped(files: NgxFileDropEntry[]): void {
+      if (files.length > 0) {
+        const droppedFile = files[0];
+  
+        if (droppedFile.fileEntry.isFile) {
+          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+          fileEntry.file((file: File) => {
+            if (
+              file.type === 'application/pdf' ||
+              file.name.toLowerCase().endsWith('.pdf')
+            ) {
+              this.uploadFile(file);
+            } else {
+              alert('Please select a PDF file only.');
+            }
+          });
+        }
+      }
+    }
+  
+    fileOver(event: any): void {}
+  
+    fileLeave(event: any): void {}
+  
+    uploadFile(file: File): void {
+      this.isUploading = true;
+      this.showFileDropArea = false;
+  
+      const formData = new FormData();
+      formData.append('filename', file);
+  
+      const apiUrl = `${environment.api}/BrokerWithChatGPT/UploadOM/0`;
+      this.http.post(apiUrl, formData).subscribe({
+        next: (response: any) => {
+          this.isUploading = false;
+  
+          this.modalService.dismissAll();
+  
+          if (
+            response &&
+            response.Message === 'The PDF has been uploaded successfully'
+          ) {
+            this.showToast(
+              'Emily is processing with the PDF and will Notify when finished in the notifications'
+            );
+          } else {
+            this.showToast(
+              'File uploaded successfully! Emily will process it and notify you when finished.'
+            );
+          }
+          // this.router.navigate(['/uploadOM', this.CampaignId], {
+          //   state: { uploadResponse: response }
+          // });
+        },
+        error: (error) => {
+          this.isUploading = false;
+          this.showToast('Upload failed. Please try again.');
+        },
+      });
+    }
+    openUploadModal(content: TemplateRef<any>) {
+      this.modalService.open(content, {
+        size: 'md',
+        backdrop: true,
+        backdropClass: 'fancy-modal-backdrop',
+        windowClass: 'fancy-modal-window',
+        centered: true,
+      });
+    }
+    
 }

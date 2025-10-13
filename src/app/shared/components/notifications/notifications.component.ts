@@ -26,6 +26,7 @@ import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { PolygonsComponent } from 'src/app/features/polygons/polygons.component';
+import { WebSocketService } from './../../../core/services/notification-signalr.service';
 
 type ChatFrom = 'user' | 'system' | 'ai';
 
@@ -71,6 +72,7 @@ export class NotificationsComponent
   private lastUserMessageId: number | null = null;
 
   notifications: Notification[] = [];
+
   messageText = '';
   CampaignId: any;
   loaded = false;
@@ -118,6 +120,8 @@ export class NotificationsComponent
   showingMap: boolean = false;
   isoverlaywide: boolean = false;
   scanEnabled: boolean = true;
+  private wsConnected = false;
+  private knownIds = new Set<string | number>();
 
   constructor(
     private elementRef: ElementRef,
@@ -128,7 +132,8 @@ export class NotificationsComponent
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: NgbModal,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private webSocketService: WebSocketService
   ) {}
 
   showScrollButton = false;
@@ -170,7 +175,9 @@ export class NotificationsComponent
       });
 
     this.notificationService.initNotifications(this.CampaignId);
-
+    this.notificationService
+      .fetchUserNotifications(this.CampaignId)
+      .subscribe(() => {});
     this.previousNotificationsLength =
       this.notificationService.notifications.length;
 
@@ -179,37 +186,47 @@ export class NotificationsComponent
       this.scanForShowMap();
     });
 
-    const poll = () => {
-      this.wasSticky = this.isAtBottom();
-      const prevLength = this.notificationService.notifications.length;
+    // === SignalR WebSocket ===
+    this.webSocketService.startConnection();
 
-      this.notificationService
-        .fetchUserNotifications(this.CampaignId)
-        .subscribe({
-          complete: () => {
-            const newLength = this.notificationService.notifications.length;
-            const diff = newLength - prevLength;
+    // Listen for new notifications in real time
+    this.webSocketService.notificationReceived$.subscribe({
+      next: (newNotification: any) => {
+        console.log('📩 Received via WebSocket:', newNotification);
 
-            if (diff > 0) {
-              const newMessages = this.notificationService.notifications.slice(
-                -diff
-              );
-              this.checkForShoppingCentersReply(newMessages);
-              this.onNewMessagesArrived(diff);
-            }
+        // Map categoryId to notificationCategoryId for consistency
+        const notification = {
+          ...newNotification,
+          notificationCategoryId: newNotification.categoryId,
+        };
 
-            this.previousNotificationsLength = newLength;
-            this.sortNotificationsByDateAsc();
-            this.scanTrigger$.next();
+        // Skip if this is a user message (we already added it optimistically)
+        if (
+          notification.notificationCategoryId === 1 ||
+          notification.notificationCategoryId === true
+        ) {
+          return;
+        }
 
-            // ⏱️ Wait 2s AFTER finishing
-            setTimeout(poll, 2000);
-          },
-        });
-    };
+        this.wasSticky = this.isAtBottom();
 
-    poll();
+        this.notificationService.notifications.push(notification);
 
+        this.checkForShoppingCentersReply([notification]);
+
+        this.onNewMessagesArrived(1);
+        this.previousNotificationsLength =
+          this.notificationService.notifications.length;
+        this.sortNotificationsByDateAsc();
+        this.scanTrigger$.next();
+
+        if (this.wasSticky) {
+          this.cdRef.detectChanges();
+          requestAnimationFrame(() => this.scrollToBottomNow());
+        }
+      },
+      error: (err) => console.error('❌ SignalR subscription error:', err),
+    });
     this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
     setTimeout(() => this.scrollToBottom(), 100);
     this.checkScreenSize();
@@ -259,21 +276,6 @@ export class NotificationsComponent
       this.showScrollButton = false;
       this.newNotificationsCount = 0;
     }
-  }
-
-  scrollToBottom(): void {
-    try {
-      if (this.messagesContainer) {
-        const container = this.messagesContainer.nativeElement;
-
-        container.scrollTop = container.scrollHeight;
-
-        if (this.isAtBottom()) {
-          this.showScrollButton = false;
-          this.newNotificationsCount = 0;
-        }
-      }
-    } catch (err) {}
   }
 
   @HostListener('document:click', ['$event'])
@@ -464,12 +466,23 @@ export class NotificationsComponent
     this.outgoingText = '';
     if (this.messageInput) this.messageInput.nativeElement.innerText = '';
 
-    // Optimistic local bubble
-    this.sentMessages.push({
+    const optimisticMsg = {
+      id: `temp-${Date.now()}`,
+      campaignId: this.CampaignId,
       message: text,
       createdDate: new Date().toISOString(),
-      status: 'sending', // ✅ sending | sent | failed
+      notificationCategoryId: 1, // ✅ mark as user
+      isTemp: true,
+    };
+
+    this.notificationService.notifications.push(optimisticMsg as any);
+
+    this.sentMessages.push({
+      message: text,
+      createdDate: optimisticMsg.createdDate,
+      status: 'sending',
     });
+
     this.scrollAfterRender();
     this.showTyping();
 
@@ -977,17 +990,18 @@ export class NotificationsComponent
   isAutomationLoading(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
-      !item.message.includes('I am searching the web now for your request') &&
-      !item.message.includes('I will start scanning and analyzing the current page for you')
+      (!item.message.includes('I am searching the web now for your request') &&
+        !item.message.includes(
+          'I will start scanning and analyzing the current page for you'
+        ))
     ) {
       return false;
     }
-  
+
     // Stop showing animation when next message arrives
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
-  
 
   private get containerEl(): HTMLElement | null {
     return this.messagesContainer?.nativeElement ?? null;
@@ -998,7 +1012,7 @@ export class NotificationsComponent
     if (!el) return true;
     const distance = el.scrollHeight - (el.scrollTop + el.clientHeight);
     return distance <= this.BOTTOM_STICKY_THRESHOLD;
-  } 
+  }
 
   private scrollToBottomNow(): void {
     const el = this.containerEl;
@@ -1140,5 +1154,68 @@ export class NotificationsComponent
         break;
       }
     }
+  }
+
+  private idKey(n: { id: any }): string | number {
+    return typeof n.id === 'number' ? n.id : String(n.id);
+  }
+
+  private seedKnownIds(list: Notification[]): void {
+    this.knownIds.clear();
+    for (const n of list ?? []) this.knownIds.add(this.idKey(n));
+  }
+
+  /**
+   * Incrementally merges new notifications without re-fetching everything.
+   * Handles scroll stickiness and triggers scanning.
+   */
+  private ingestNotifications(newOnes: Notification[]): void {
+    if (!Array.isArray(newOnes) || !newOnes.length) return;
+
+    const list = this.notificationService.notifications ?? [];
+    let added = 0;
+
+    for (const n of newOnes) {
+      const key = this.idKey(n);
+      if (this.knownIds.has(key)) continue;
+      this.knownIds.add(key);
+      list.push(n);
+      added++;
+    }
+
+    if (!added) return;
+
+    list.sort(
+      (a, b) =>
+        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+    );
+
+    if (this.wasSticky) {
+      this.cdRef.detectChanges();
+      requestAnimationFrame(() => this.scrollToBottomNow());
+    } else {
+      this.onNewMessagesArrived(added);
+    }
+
+    this.scanTrigger$.next();
+    this.hideTyping();
+    this.awaitingResponse = false;
+  }
+
+  /**
+   * Safer, rAF-based scroll method (no jump flicker)
+   */
+  scrollToBottom(): void {
+    const el = this.messagesContainer?.nativeElement as HTMLElement | undefined;
+    if (!el) return;
+
+    this.cdRef.detectChanges();
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+      if (this.isAtBottom()) {
+        this.showScrollButton = false;
+        this.newNotificationsCount = 0;
+      }
+    });
   }
 }
