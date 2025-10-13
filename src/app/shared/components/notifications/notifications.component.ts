@@ -217,7 +217,9 @@ export class NotificationsComponent
     };
 
     poll();
-    /* the old way */
+
+    
+    /* the new way */
 
     // === SignalR WebSocket ===
     // this.webSocketService.startConnection();
