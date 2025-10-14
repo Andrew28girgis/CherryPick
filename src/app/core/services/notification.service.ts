@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { Router } from '@angular/router';
-import { BehaviorSubject,tap,catchError,of } from 'rxjs';
+import { BehaviorSubject,tap,catchError,of, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +26,8 @@ export class NotificationService {
   public newNotificationsCount = 0;
   CampaignId: any;
   params: any;
+  private _openOverlaySource = new Subject<any>();
+  openOverlay$ = this._openOverlaySource.asObservable();
 
   constructor(private placesService: PlacesService, private router: Router) {}
 
@@ -184,5 +186,10 @@ export class NotificationService {
   sendmessage(message: any) {
     const body: any = { Chat: message };
     this.placesService.sendmessages(body).subscribe({});
+  }
+
+  // Called by other components (like campaign)
+  triggerOverlay(notification: any) {
+    this._openOverlaySource.next(notification);
   }
 }
