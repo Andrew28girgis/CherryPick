@@ -204,7 +204,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   onSearchCampaign(): void {
     if (this.searchCampaign && this.searchCampaign.trim().length > 0) {
       this.filteredCampaigns = this.campaigns.filter((c) =>
-        c.CampaignName?.toLowerCase().includes(this.searchCampaign?.toLowerCase())
+        c.CampaignName?.toLowerCase().includes(
+          this.searchCampaign?.toLowerCase()
+        )
       );
     } else {
       this.filteredCampaigns = this.campaigns;
@@ -434,6 +436,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (!this.selectedTenant) return;
 
     this.refreshService.requestPolygonSave(this.selectedTenant.id);
+    this.placesService
+      .sendmessages({
+        Chat: 'display the specs of this campaign',
+        NeedToSaveIt: false,
+      })
+      .subscribe({});
   }
 
   private resetAddCampaignForm(): void {
