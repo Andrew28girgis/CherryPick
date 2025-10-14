@@ -125,7 +125,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     });
     this.refreshService.polygonSavedData$.subscribe((data) => {
       this.placesService
-        .sendmessages({ Chat: data, NeedToSaveIt: true })
+        .sendmessages({ Chat: data, NeedToSaveIt: false })
         .subscribe({
           next: (res) => {
             this.modalRef?.close();
