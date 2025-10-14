@@ -436,12 +436,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (!this.selectedTenant) return;
 
     this.refreshService.requestPolygonSave(this.selectedTenant.id);
-    this.placesService
-      .sendmessages({
-        Chat: 'display the specs of this campaign',
-        NeedToSaveIt: false,
-      })
-      .subscribe({});
+ 
   }
 
   private resetAddCampaignForm(): void {
@@ -474,6 +469,21 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.modalRef?.close();
           this.resetAddCampaignForm();
           this.getAllCampaigns();
+// console.log(response);
+console.log(response.campaign);
+const campaignDetails = JSON.stringify(response.campaign);
+          this.placesService
+          .sendmessages({
+            Chat: `display the specs of this campaign: ${campaignDetails}`,
+            NeedToSaveIt: true,
+          })
+          .subscribe({
+            next: (res) => {
+              const notification = res.notification ;
+              this.notificationService.triggerOverlay(notification);
+      
+          }
+          });
         },
         error: (err) => {},
       });

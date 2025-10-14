@@ -186,6 +186,14 @@ export class NotificationsComponent
       this.scanForShowMap();
     });
 
+
+    this.notificationService.openOverlay$.subscribe((notification) => {
+      if (notification) {
+        this.loadHtmlInsideNewWindow(notification); 
+      }
+    });
+  
+
     // old way of loading notifications every 2 seconds
     const poll = () => {
       this.wasSticky = this.isAtBottom();
@@ -218,7 +226,6 @@ export class NotificationsComponent
 
     poll();
 
-    
     /* the new way */
 
     // === SignalR WebSocket ===
@@ -889,7 +896,6 @@ export class NotificationsComponent
         notification.html
       );
     } else {
-      
       this.isOverlayMode = true;
       this.showingMap = false;
       this.overlayHtml = notification.html;
@@ -1238,7 +1244,6 @@ export class NotificationsComponent
     this.awaitingResponse = false;
   }
 
- 
   scrollToBottom(): void {
     const el = this.messagesContainer?.nativeElement as HTMLElement | undefined;
     if (!el) return;
