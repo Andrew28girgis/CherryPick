@@ -722,12 +722,12 @@ export class NotificationsComponent
             n.notificationCategoryId === true ||
             Number(n.notificationCategoryId) === 1
         )
-        .map((n) => n.message.trim().toLowerCase())
+        .map((n) => n.message.trim()?.toLowerCase())
     );
 
     const sentMessageItems: ChatItem[] = (this.sentMessages ?? [])
       .filter(
-        (m) => !userNotificationMessages.has(m.message.trim().toLowerCase())
+        (m) => !userNotificationMessages.has(m.message.trim()?.toLowerCase())
       )
       .map((m) => ({
         key: `u-${m.createdDate}-${seqCounter++}`,
@@ -889,6 +889,7 @@ export class NotificationsComponent
         notification.html
       );
     } else {
+      
       this.isOverlayMode = true;
       this.showingMap = false;
       this.overlayHtml = notification.html;

@@ -204,7 +204,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   onSearchCampaign(): void {
     if (this.searchCampaign && this.searchCampaign.trim().length > 0) {
       this.filteredCampaigns = this.campaigns.filter((c) =>
-        c.CampaignName.toLowerCase().includes(this.searchCampaign.toLowerCase())
+        c.CampaignName?.toLowerCase().includes(this.searchCampaign?.toLowerCase())
       );
     } else {
       this.filteredCampaigns = this.campaigns;
@@ -311,7 +311,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getKanbanCount(stageName: string, kanbansList: KanbanStage[]): number {
     const kanbanStage = kanbansList?.find(
-      (k) => k.stageName.toLowerCase() === stageName.toLowerCase()
+      (k) => k.stageName?.toLowerCase() === stageName?.toLowerCase()
     );
     return kanbanStage && kanbanStage.MarketSurveyShoppingCenters[0]?.Id
       ? kanbanStage.MarketSurveyShoppingCenters.length
@@ -335,7 +335,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     });
   }
   stageClass(name: string): string {
-    const n = (name || '').toLowerCase();
+    const n = (name || '')?.toLowerCase();
     if (n.includes('accept') || n.includes('approved') || n.includes('success'))
       return 'is-accepted';
     if (n.includes('reject') || n.includes('decline') || n.includes('failed'))
