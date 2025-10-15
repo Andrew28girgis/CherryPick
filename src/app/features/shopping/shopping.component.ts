@@ -15,7 +15,9 @@ import { Router } from '@angular/router';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { environment } from 'src/environments/environment';
 import { NgxFileDropEntry } from 'ngx-file-drop';
- 
+import { General } from 'src/app/shared/models/domain';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
@@ -66,13 +68,17 @@ export class ShoppingComponent implements OnInit {
   rotatingKeys: { [id: number]: number } = {};
   showFileDropArea = false;
   isUploading = false;
+  General: General = new General();
+  mapViewOnePlacex = false;
+  map: any;
 
   constructor(
     private placesService: PlacesService,
     private http: HttpClient,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private viewManagerService: ViewManagerService
   ) {}
 
   ngOnInit(): void {
@@ -430,97 +436,179 @@ export class ShoppingComponent implements OnInit {
       },
     });
   }
-    openUpload(): void {
-      if (this.uploadTypes) {
-        this.modalService.open(this.uploadTypes, {
-          size: 'md',
-          backdrop: true,
-          backdropClass: 'fancy-modal-backdrop',
-          keyboard: true,
-          windowClass: 'fancy-modal-window',
-          centered: true,
-        });
-      }
-    }
-  
-    openFileUpload(): void {
-      if (!this.isUploading) {
-        this.showFileDropArea = true;
-      }
-    }
-  
-    cancelFileUpload(): void {
-      this.showFileDropArea = false;
-    }
-  
-    dropped(files: NgxFileDropEntry[]): void {
-      if (files.length > 0) {
-        const droppedFile = files[0];
-  
-        if (droppedFile.fileEntry.isFile) {
-          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-          fileEntry.file((file: File) => {
-            if (
-              file.type === 'application/pdf' ||
-              file.name.toLowerCase().endsWith('.pdf')
-            ) {
-              this.uploadFile(file);
-            } else {
-              alert('Please select a PDF file only.');
-            }
-          });
-        }
-      }
-    }
-  
-    fileOver(event: any): void {}
-  
-    fileLeave(event: any): void {}
-  
-    uploadFile(file: File): void {
-      this.isUploading = true;
-      this.showFileDropArea = false;
-  
-      const formData = new FormData();
-      formData.append('filename', file);
-  
-      const apiUrl = `${environment.api}/BrokerWithChatGPT/UploadOM/0`;
-      this.http.post(apiUrl, formData).subscribe({
-        next: (response: any) => {
-          this.isUploading = false;
-  
-          this.modalService.dismissAll();
-  
-          if (
-            response &&
-            response.Message === 'The PDF has been uploaded successfully'
-          ) {
-            this.showToast(
-              'Emily is processing with the PDF and will Notify when finished in the notifications'
-            );
-          } else {
-            this.showToast(
-              'File uploaded successfully! Emily will process it and notify you when finished.'
-            );
-          }
-          // this.router.navigate(['/uploadOM', this.CampaignId], {
-          //   state: { uploadResponse: response }
-          // });
-        },
-        error: (error) => {
-          this.isUploading = false;
-          this.showToast('Upload failed. Please try again.');
-        },
-      });
-    }
-    openUploadModal(content: TemplateRef<any>) {
-      this.modalService.open(content, {
+  openUpload(): void {
+    if (this.uploadTypes) {
+      this.modalService.open(this.uploadTypes, {
         size: 'md',
         backdrop: true,
         backdropClass: 'fancy-modal-backdrop',
+        keyboard: true,
         windowClass: 'fancy-modal-window',
         centered: true,
       });
     }
-    
+  }
+
+  openFileUpload(): void {
+    if (!this.isUploading) {
+      this.showFileDropArea = true;
+    }
+  }
+
+  cancelFileUpload(): void {
+    this.showFileDropArea = false;
+  }
+
+  dropped(files: NgxFileDropEntry[]): void {
+    if (files.length > 0) {
+      const droppedFile = files[0];
+
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          if (
+            file.type === 'application/pdf' ||
+            file.name.toLowerCase().endsWith('.pdf')
+          ) {
+            this.uploadFile(file);
+          } else {
+            alert('Please select a PDF file only.');
+          }
+        });
+      }
+    }
+  }
+
+  fileOver(event: any): void {}
+
+  fileLeave(event: any): void {}
+
+  uploadFile(file: File): void {
+    this.isUploading = true;
+    this.showFileDropArea = false;
+
+    const formData = new FormData();
+    formData.append('filename', file);
+
+    const apiUrl = `${environment.api}/BrokerWithChatGPT/UploadOM/0`;
+    this.http.post(apiUrl, formData).subscribe({
+      next: (response: any) => {
+        this.isUploading = false;
+
+        this.modalService.dismissAll();
+
+        if (
+          response &&
+          response.Message === 'The PDF has been uploaded successfully'
+        ) {
+          this.showToast(
+            'Emily is processing with the PDF and will Notify when finished in the notifications'
+          );
+        } else {
+          this.showToast(
+            'File uploaded successfully! Emily will process it and notify you when finished.'
+          );
+        }
+        // this.router.navigate(['/uploadOM', this.CampaignId], {
+        //   state: { uploadResponse: response }
+        // });
+      },
+      error: (error) => {
+        this.isUploading = false;
+        this.showToast('Upload failed. Please try again.');
+      },
+    });
+  }
+  openUploadModal(content: TemplateRef<any>) {
+    this.modalService.open(content, {
+      size: 'md',
+      backdrop: true,
+      backdropClass: 'fancy-modal-backdrop',
+      windowClass: 'fancy-modal-window',
+      centered: true,
+    });
+  }
+
+  deleteCenter(id: number) {
+    const body: any = {
+      Name: 'DeleteShoppingCenter',
+      Params: { id: id },
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.loadShoppingCenters();
+      }
+    });
+  }
+   getSourceDisplay(source: string): string {
+    try {
+      const url = new URL(source);
+      let domain = url.hostname.replace(/^www\./, '');
+      domain = domain.split('.')[0];
+      return domain;
+    } catch {
+      return source;
+    }
+  }
+  openMapViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+  }
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true;
+    this.map = await this.viewManagerService.initializeMap(
+      'mappopup',
+      lat,
+      lng
+    );
+  }
+
+  openStreetViewPlace(content: any, modalObject?: any) {
+    const modalRef = this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+
+    // Store the modal object
+    this.General.modalObject = modalObject;
+
+    // Initialize street view after modal is opened
+    modalRef.result.then(
+      () => {
+        // Cleanup if needed
+      },
+      () => {
+        // Cleanup if needed
+      }
+    );
+
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+      this.viewOnStreet();
+    }, 100);
+  }
+  viewOnStreet() {
+    if (!this.General.modalObject) return;
+
+    const lat = Number.parseFloat(this.General.modalObject.Latitude);
+    const lng = Number.parseFloat(this.General.modalObject.Longitude);
+
+    // Default values for heading and pitch if not provided
+    const heading = this.General.modalObject.Heading || 165;
+    const pitch = this.General.modalObject.Pitch || 0;
+
+    // Initialize street view
+    this.viewManagerService.initializeStreetView(
+      'street-view',
+      lat,
+      lng,
+      heading,
+      pitch
+    );
+  }
 }

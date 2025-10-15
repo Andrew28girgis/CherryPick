@@ -477,6 +477,40 @@
                     />
                   </svg>
                 </button>
+                <div
+                  *ngIf="center.DocsLink"
+                  class="add-badge docs"
+                  (click)="$event.stopPropagation()"
+                >
+                  <a
+                    class="info-value text-dark"
+                    [href]="center.DocsLink"
+                    target="_blank"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </div>
+
+                <div
+                  (click)="$event.stopPropagation()"
+                  class="date score"
+                  *ngIf="center.lastUpdateDate"
+                >
+                  {{ center.lastUpdateDate | date }}
+                  <span *ngIf="center.source">
+                    <span class="source">By </span
+                    >{{ getSourceDisplay(center.source) }}
+                  </span>
+                </div>
+
                 <div class="card-overlay">
                   <!-- Only show shared badge if center is shared -->
                   <div class="share-badge" *ngIf="center.isShared">
@@ -542,8 +576,11 @@
                       >
                         Enriche Data
                       </button>
-                      <button class="menu-item" (click)="closeMenu()">
-                        Upload OM Files
+                      <button
+                        class="menu-item"
+                        (click)="deleteCenter(center.scId); closeMenu()"
+                      >
+                        Delete Center
                       </button>
                     </div>
                   </div>
@@ -564,6 +601,11 @@
                     *ngIf="center.forSalePrice && center.forSalePrice > 0"
                     >Purchase Price</span
                   >
+                  <span
+                    class="info-badge"
+                    *ngIf="center.centerType"
+                    >{{center.centerType}}</span
+                  >
                 </div>
                 <div class="price-line" *ngIf="center.buildingSizeSf">
                   <span
@@ -574,6 +616,99 @@
                   <span *ngIf="center.buildingSizeSf" class="unit-size">
                     {{ center.buildingSizeSf }} SF</span
                   >
+                </div>
+
+                <div
+                  class="property-details"
+                  *ngIf="center.ShoppingCenter?.places?.[0]"
+                >
+                  <div class="detail-row">
+                    <span
+                      *ngIf="center.ShoppingCenter.places[0].BuildingSizeSf"
+                      class="building-size"
+                    >
+                      {{
+                        center.ShoppingCenter.places[0].BuildingSizeSf | number
+                      }}
+                      SF
+                    </span>
+                    <span
+                      *ngIf="center.ShoppingCenter.places[0].Price"
+                      class="price"
+                    >
+                      ${{ center.ShoppingCenter.places[0].Price | number }}
+                      <span *ngIf="center.ShoppingCenter.places[0].LeaseType">
+                        ({{ center.ShoppingCenter.places[0].LeaseType }})
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="manager-org" *ngIf="center.managerORG">
+                  <div class="org-header">
+                    <img
+                      *ngIf="center.managerORGLogoURL"
+                      [src]="center.managerORGLogoURL"
+                      [alt]="center.managerORG"
+                      class="org-logo"
+                    />
+                    <span class="org-name">{{ center.managerORG }}</span>
+                  </div>
+                  <!-- <div class="street-view">
+                    <a
+                      class="target"
+                      (click)="openStreetViewPlace(StreetViewPlace, center); $event.stopPropagation()"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
+                        <path
+                          d="M12.875 10.4795C13.4656 10.6906 13.9543 10.9406 14.3145 11.2207C14.7916 11.5918 15 11.9774 15 12.375C15 12.7171 14.8475 13.0452 14.5088 13.3652C14.1632 13.6916 13.6427 13.989 12.9736 14.2383C11.637 14.7362 9.82503 15 8 15C6.17497 15 4.36301 14.7362 3.02637 14.2383C2.35725 13.989 1.83682 13.6916 1.49121 13.3652C1.15247 13.0452 1 12.7171 1 12.375C1 11.9774 1.20837 11.5918 1.68555 11.2207C2.0457 10.9406 2.53444 10.6906 3.125 10.4795V10.752C2.65623 10.925 2.25971 11.1182 1.95801 11.3262C1.77158 11.4547 1.60411 11.5983 1.47949 11.7598C1.3564 11.9192 1.25 12.1291 1.25 12.375C1.25 12.6094 1.34695 12.8109 1.46191 12.9668C1.57781 13.1239 1.73351 13.2641 1.90625 13.3887C2.25197 13.6379 2.73008 13.8684 3.30371 14.0654C4.45653 14.4614 6.07492 14.75 8 14.75C9.92508 14.75 11.5435 14.4614 12.6963 14.0654C13.2699 13.8684 13.748 13.6379 14.0938 13.3887C14.2665 13.2641 14.4222 13.1239 14.5381 12.9668C14.653 12.8109 14.75 12.6094 14.75 12.375C14.75 12.1291 14.6436 11.9192 14.5205 11.7598C14.3959 11.5983 14.2284 11.4547 14.042 11.3262C13.7403 11.1182 13.3438 10.925 12.875 10.752V10.4795ZM8 5C6.68138 5 5.625 6.05638 5.625 7.375V9.79297L5.90137 9.93164L6.875 10.418V12.875H9.125V10.418L10.0986 9.93164L10.375 9.79297V7.375C10.375 6.05638 9.31862 5 8 5ZM8 1.25C7.02562 1.25 6.25 2.02562 6.25 3C6.25 3.97438 7.02562 4.75 8 4.75C8.97438 4.75 9.75 3.97438 9.75 3C9.75 2.02562 8.97438 1.25 8 1.25ZM6.625 10.582L6.34863 10.4434L5.375 9.95605V7.375C5.375 6.47551 5.83943 5.66741 6.54199 5.19141L7.04883 4.84766L6.61133 4.41992C6.23466 4.05112 6 3.54923 6 3C6 1.90163 6.90163 1 8 1C9.09837 1 10 1.90163 10 3C10 3.54923 9.76534 4.05112 9.38867 4.41992L8.95117 4.84766L9.45801 5.19141C10.1606 5.66741 10.625 6.47551 10.625 7.375V9.95605L9.65137 10.4434L9.375 10.582V13.125H6.625V10.582Z"
+                          fill="#161017"
+                          stroke="#161017"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="map-view">
+                    <a
+                      class="target"
+                      (click)="openMapViewPlace(MapViewPlace, center); $event.stopPropagation()"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M20.3799 21.13C20.1799 21.13 19.9899 21.05 19.8499 20.91L13.4699 14.53C13.1799 14.24 13.1799 13.76 13.4699 13.47L21.2 5.74001C21.39 5.55001 21.6799 5.48001 21.9399 5.55001C22.1999 5.63001 22.3999 5.84001 22.4599 6.10001C22.6499 6.95001 22.7499 7.90001 22.7499 9.00001V15C22.7499 17.77 22.1699 19.64 20.9099 20.91C20.7699 21.05 20.5599 21.08 20.3799 21.13ZM15.0599 14L20.3199 19.26C20.9499 18.29 21.2499 16.91 21.2499 15V9.00001C21.2499 8.59001 21.2399 8.21001 21.2099 7.85001L15.0599 14Z"
+                          fill="#292D32"
+                        />
+                        <path
+                          d="M6.26999 22.48C6.20999 22.48 6.16001 22.47 6.10001 22.46C2.79001 21.7 1.25 19.33 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H15C19.33 1.25 21.7 2.79001 22.46 6.10001C22.52 6.35001 22.44 6.62 22.26 6.8L6.79999 22.26C6.65999 22.4 6.46999 22.48 6.26999 22.48ZM9 2.75C4.39 2.75 2.75 4.39 2.75 9V15C2.75 18.47 3.71001 20.21 6.04001 20.9L20.89 6.05C20.21 3.72 18.46 2.75999 14.99 2.75999H9V2.75Z"
+                          fill="#292D32"
+                        />
+                        <path
+                          d="M14.9999 22.7499H8.99989C7.89989 22.7499 6.95989 22.6599 6.09989 22.4599C5.82989 22.3999 5.61987 22.1999 5.54987 21.9399C5.46987 21.6799 5.54988 21.3999 5.73988 21.1999L13.4699 13.4699C13.7599 13.1799 14.2399 13.1799 14.5299 13.4699L20.9099 19.8499C21.0499 19.9899 21.1299 20.1799 21.1299 20.3799C21.1299 20.5799 21.0499 20.7699 20.9099 20.9099C19.6399 22.1699 17.7699 22.7499 14.9999 22.7499ZM7.84989 21.2099C8.20989 21.2399 8.58989 21.2499 8.99989 21.2499H14.9999C16.9199 21.2499 18.2899 20.9499 19.2599 20.3199L13.9999 15.0599L7.84989 21.2099Z"
+                          fill="#292D32"
+                        />
+                        <path
+                          d="M9.11994 13.31C8.48994 13.31 7.85993 13.08 7.35993 12.61C5.76993 11.1 5.12996 9.44005 5.50996 7.82005C5.88996 6.16005 7.33994 5.04004 9.11994 5.04004C10.8999 5.04004 12.35 6.16005 12.73 7.82005C13.1 9.45005 12.4599 11.1 10.8699 12.61C10.3799 13.07 9.74994 13.31 9.11994 13.31ZM6.96995 8.15004C6.64995 9.51004 7.56994 10.7301 8.39994 11.5201C8.80994 11.91 9.43994 11.91 9.83994 11.5201C10.6599 10.7401 11.5799 9.52004 11.2699 8.15004C10.9999 6.96004 9.93994 6.53004 9.11994 6.53004C8.29994 6.53004 7.24995 6.96004 6.96995 8.15004Z"
+                          fill="#292D32"
+                        />
+                        <path
+                          d="M9.1499 9.49023C8.5999 9.49023 8.1499 9.04023 8.1499 8.49023C8.1499 7.94023 8.5899 7.49023 9.1499 7.49023H9.15991C9.70991 7.49023 10.1599 7.94023 10.1599 8.49023C10.1599 9.04023 9.6999 9.49023 9.1499 9.49023Z"
+                          fill="#292D32"
+                        />
+                      </svg>
+                    </a>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -882,3 +1017,13 @@
     <p id="toastMessage"></p>
   </div>
 </div>
+
+
+
+<ng-template #StreetViewPlace let-modal>
+  <div id="street-view" class="h700"></div>
+</ng-template>
+
+<ng-template #MapViewPlace let-modal>
+  <div id="mappopup" class="h700"></div>
+</ng-template>

@@ -368,9 +368,10 @@
 
 .center-details {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: var(--Space-S-4);
+  padding: 5px 0 0 0;
 }
 
 .center-id {
@@ -381,13 +382,9 @@
 
 .purchase-price {
   color: var(--Body-Heading-Color, #18171f);
-
-  /* Body/14/24/SemiBold */
-
   font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 24px; /* 171.429% */
+   font-weight: 600;
+  line-height: 24px; 
   margin-bottom: 0;
 }
 
@@ -1377,7 +1374,7 @@ tr.click-disabled td:last-child * {
 
 .plus-icon {
   width: 48px;
-  height: 48px;
+  height: 28px;
   border-radius: 50%;
   border: 2px solid var(--Colors-Primary-500);
   color: var(--Colors-Primary-500);
@@ -1404,18 +1401,11 @@ tr.click-disabled td:last-child * {
 .rotate {
   animation: spin 1.2s linear;
 }
- 
- 
-
- 
 
 .btn-icon {
   width: 20px;
   height: 20px;
 }
-
- 
- 
 
 /* =============================
    Modal Styling
@@ -1438,7 +1428,6 @@ tr.click-disabled td:last-child * {
 /* =============================
    File Drop Zone
 ============================= */
- 
 
 .file-drop-zone {
   width: 100%;
@@ -1450,10 +1439,9 @@ tr.click-disabled td:last-child * {
   background-color: #f0faff;
   border-color: #00b8d9;
 }
-::ng-deep .ngx-file-drop__drop-zone:hover{
+::ng-deep .ngx-file-drop__drop-zone:hover {
   background-color: #f0faff;
   border-color: #00b8d9;
-
 }
 
 .file-drop-content {
@@ -1528,5 +1516,96 @@ tr.click-disabled td:last-child * {
 .btn.btn-secondary:hover {
   background-color: #e9ecef;
 }
+.score {
+  position: absolute;
+  padding: 8px 16px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.date {
+  background: var(--Colors-Primary-400);
+  color: var(--app-color);
+  top: 10px;
+  left: 10px;
+
+  display: inline-block;
+  max-width: 240px;
+  width: max-content;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  line-height: 0.8;
+}
+
+.source {
+  color: var(--teal-600);
+  font-weight: 700;
+  margin: 0 4px;
+}
+
+.docs {
+  position: absolute;
+  bottom: 12px;
+  right: 88px;
+  z-index: 2;
+  border: none;
+}
 
  
+.property-details {
+  margin-top: 8px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.manager-org {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.org-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.org-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.org-name {
+  font-size: 13px;
+  color: #666;
+}
+
+.info-badge{
+  background-color: var(--app-color);
+  color: var(--Colors-Primary-500);
+   padding: 8px 16px;
+  border-radius: 24px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.h700 {
+  height: 700px;
+}
