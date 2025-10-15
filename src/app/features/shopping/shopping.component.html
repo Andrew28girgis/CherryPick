@@ -620,13 +620,13 @@
 
                 <div class="property-details" *ngIf="center.shoppingCenter?.places">
                   <div class="detail-row" *ngFor="let place of center.shoppingCenter.places">
-                    <span *ngIf="place.buildingSizeSf" class="building-size">
+                    <!-- <span *ngIf="place.buildingSizeSf" class="building-size">
                       {{ place.buildingSizeSf | number }} SF
-                    </span>
-                    <span *ngIf="place.price" class="price">
+                    </span> -->
+                    <!-- <span *ngIf="place.price" class="price">
                       ${{ place.price | number }}
                       <span *ngIf="place.leaseType">({{ place.leaseType }})</span>
-                    </span>
+                    </span> -->
                   </div>
                 </div>
                 
