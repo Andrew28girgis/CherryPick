@@ -739,17 +739,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
   getSourceDisplay(source: string): string {
     try {
-      // Check if it's a URL
       const url = new URL(source);
-      // Extract hostname, remove 'www.'
       let domain = url.hostname.replace(/^www\./, '');
-      // Optionally, remove TLD (if you want just 'fogorealty' instead of 'fogorealty.com')
       domain = domain.split('.')[0];
       return domain;
     } catch {
-      // Not a valid URL → return the source as-is
       return source;
     }
   }
-  
 }
