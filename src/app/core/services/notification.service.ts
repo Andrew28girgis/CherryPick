@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
 import { Router } from '@angular/router';
-import { BehaviorSubject,tap,catchError,of, Subject } from 'rxjs';
+import { BehaviorSubject, tap, catchError, of, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +28,6 @@ export class NotificationService {
   params: any;
   private _openOverlaySource = new Subject<any>();
   openOverlay$ = this._openOverlaySource.asObservable();
-
   constructor(private placesService: PlacesService, private router: Router) {}
 
   getUploadRoute(notification: Notification): string | null {
@@ -53,17 +52,17 @@ export class NotificationService {
         CampaignID: campaignId ?? null,
       },
     };
-  
+
     return this.placesService.GenericAPI(request).pipe(
       tap((response: any) => {
         const previousNotifications = [...this.notifications];
         this.notifications = (response.json || []) as Notification[];
         this.sortNotificationsByDate();
-  
+
         if (this.isChatOpen) {
           this.handleNewMessagesWhileChatOpen(previousNotifications);
         }
-  
+
         this.updateNotificationCounts();
         this.newNotificationsCount = this.unreadCount;
       }),
@@ -72,7 +71,6 @@ export class NotificationService {
       })
     );
   }
-  
 
   private handleNewMessagesWhileChatOpen(
     previousNotifications: Notification[]
@@ -188,7 +186,6 @@ export class NotificationService {
     this.placesService.sendmessages(body).subscribe({});
   }
 
-  // Called by other components (like campaign)
   triggerOverlay(notification: any) {
     this._openOverlaySource.next(notification);
   }
