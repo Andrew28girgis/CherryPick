@@ -1,9 +1,4 @@
 export interface ShoppingCenter {
-
-}
-
-
-export interface ShoppingCenter {
   scId: number
   centerName: string
   centerAddress: string
@@ -20,7 +15,7 @@ export interface ShoppingCenter {
   campaignId: number
   managerORG: string
   managerORGLogoURL: string
-  ShoppingCenter: ShoppingCenterarr
+  shoppingCenter: ShoppingCenterarr
   isShared?: boolean;
   isDropdownOpen?: boolean;
   buildingSizeSf?: number;
@@ -36,19 +31,19 @@ export interface ShoppingCenterarr {
 }
 
 export interface ManagerOrganization {
-  Id: number
-  Name: string
-  ContactId: number
-  Firstname: string
-  LastName: string
-  Email: string
+  id: number
+  name: string
+  contactId: number
+  firstname: string
+  lastName: string
+  email: string
 }
 
 export interface Place {
-  Id: number
-  BuildingSizeSf: number
-  SecondaryType: string
-  Suite: string
-  Price: number
-  LeaseType: string
+  id: number
+  buildingSizeSf: number
+  secondaryType: string
+  suite: string
+  price: number;         // lowercase
+  leaseType: string
 }

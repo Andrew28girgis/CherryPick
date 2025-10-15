@@ -17,6 +17,8 @@ import { environment } from 'src/environments/environment';
 import { NgxFileDropEntry } from 'ngx-file-drop';
 import { General } from 'src/app/shared/models/domain';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { Center } from 'src/app/shared/models/shoppingCenters';
+import { ContactBrokerComponent } from '../kayak-home/shopping-center-table/contact-broker/contact-broker.component';
 
 @Component({
   selector: 'app-shopping',
@@ -71,6 +73,10 @@ export class ShoppingComponent implements OnInit {
   General: General = new General();
   mapViewOnePlacex = false;
   map: any;
+  BuyBoxId!: any;
+  openOrgMenuId: number | null = null;
+  orgMenuPos: { top?: string; left?: string } = {};
+  activeDropdownId: number | null = null;
 
   constructor(
     private placesService: PlacesService,
@@ -611,4 +617,41 @@ export class ShoppingComponent implements OnInit {
       pitch
     );
   }
+  
+    openContactModal(center: any): void {
+      const modalRef = this.modalService.open(ContactBrokerComponent, {
+        size: 'lg',
+        centered: true,
+      });
+      modalRef.componentInstance.center = center;
+      modalRef.componentInstance.buyboxId = this.BuyBoxId;
+    }
+  
+    toggleOrgMenu(id: number, event: MouseEvent) {
+      event.stopPropagation(); // prevents bubbling to document
+  
+      if (this.openOrgMenuId === id) {
+        this.closeOrgMenu();
+      } else {
+        this.openOrgMenuId = id;
+        this.activeDropdownId = id;
+         setTimeout(() => {
+          document.addEventListener('click', this.handleOutsideClick, true);
+        });
+      }
+    }
+      // make sure to bind 'this' when declaring the handler
+  handleOutsideClick = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
+      this.closeOrgMenu();
+    }
+  }
+  closeOrgMenu() {
+    this.openOrgMenuId = null;
+    this.activeDropdownId = null;
+    document.removeEventListener('click', this.handleOutsideClick, true);
+  }
+ 
+
 }
