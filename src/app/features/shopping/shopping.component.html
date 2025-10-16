@@ -38,8 +38,8 @@
           />
         </div>
       </div>
-      <!-- <div class="actions-section">
-        Filter Dropdown
+      <div class="actions-section">
+        <!-- Filter Dropdown -->
         <div class="dropdown" ngbDropdown>
           <button class="filter-btn" ngbDropdownToggle>
             <svg
@@ -57,7 +57,7 @@
             Filter
           </button>
           <div class="dropdown-menu" ngbDropdownMenu>
-            <h3 class="dropdown-header">Share Status</h3>
+            <!-- <h3 class="dropdown-header">Share Status</h3>
             <div class="radio-group px-3">
               <div class="form-check">
                 <input
@@ -97,9 +97,9 @@
                   >Not Shared</label
                 >
               </div>
-            </div>
+            </div> -->
 
-            <h3 class="dropdown-header mt-3">Price</h3>
+            <!-- <h3 class="dropdown-header mt-3">Price</h3>
             <div class="px-3 mb-3">
               <div class="input-group input-group-sm">
                 <input
@@ -117,9 +117,9 @@
                   (input)="onFilterChange()"
                 />
               </div>
-            </div>
+            </div> -->
 
-            <h3 class="dropdown-header">Building Size (SF)</h3>
+            <!-- <h3 class="dropdown-header">Building Size (SF)</h3>
             <div class="px-3 mb-3">
               <div class="input-group input-group-sm">
                 <input
@@ -137,12 +137,42 @@
                   (input)="onFilterChange()"
                 />
               </div>
+            </div> -->
+
+            <h3 class="dropdown-header">State</h3>
+            <div class="px-3 mb-3">
+              <select class="form-select" [(ngModel)]="stateFilter" (change)="onFilterChange()">
+                <option value="all">All States</option>
+                <option *ngFor="let state of availableStates" [value]="state">
+                  {{state}}
+                </option>
+              </select>
+            </div>
+
+            <h3 class="dropdown-header">Property Type</h3>
+            <div class="px-3 mb-3">
+              <select class="form-select" [(ngModel)]="typeFilter" (change)="onFilterChange()">
+                <option value="all">All Types</option>
+                <option *ngFor="let type of availableTypes" [value]="type">
+                  {{type}}
+                </option>
+              </select>
+            </div>
+
+            <h3 class="dropdown-header">Lease Type</h3>
+            <div class="px-3 mb-3">
+              <select class="form-select" [(ngModel)]="leaseTypeFilter" (change)="onFilterChange()">
+                <option value="all">All Lease Types</option>
+                <option *ngFor="let leaseType of availableLeaseTypes" [value]="leaseType">
+                  {{leaseType}}
+                </option>
+              </select>
             </div>
           </div>
         </div>
 
-        Sort Dropdown
-        <div class="dropdown" ngbDropdown>
+        <!-- Sort Dropdown -->
+        <!-- <div class="dropdown" ngbDropdown>
           <button class="sort-btn" ngbDropdownToggle>
             <svg
               width="16"
@@ -176,8 +206,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </div> -->
+        </div> -->
+      </div>
     </div>
 
     <!-- ===================== Upload Button ===================== -->
@@ -982,7 +1012,7 @@
       <!-- Add Campaign Card -->
       <div class="campaign-card add-card" (click)="goToAddCampaign()">
         <div class="add-card-content">
-          <div class="plus-icon">+</div>
+          <div class="plus-icon" style="height: 48px !important;">+</div>
           <h3 class="campaign-name">Add Campaign</h3>
         </div>
       </div>

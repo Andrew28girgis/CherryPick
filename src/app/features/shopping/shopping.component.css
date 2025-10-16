@@ -69,13 +69,14 @@
   gap: var(--Space-S-4);
   border: none;
   border-radius: var(--Radius-R-24);
-  background: var(--Main-Container-BG);
+  background: var(--Colors-Primary-500);
+  color:#fff;
   backdrop-filter: blur(50px);
 }
 
 .filter-btn:hover,
 .sort-btn:hover {
-  background: rgba(255, 255, 255, 0.6);
+  /* background: var(--Colors-Primary-500); */
 }
 
 .add-new-btn {

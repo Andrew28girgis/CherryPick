@@ -78,6 +78,10 @@ export class ShoppingComponent implements OnInit {
   orgMenuPos: { top?: string; left?: string } = {};
   activeDropdownId: number | null = null;
 
+  stateFilter: string = 'all';
+  typeFilter: string = 'all';
+  leaseTypeFilter: string = 'all';
+
   constructor(
     private placesService: PlacesService,
     private http: HttpClient,
@@ -181,6 +185,22 @@ export class ShoppingComponent implements OnInit {
       });
     }
 
+    if (this.stateFilter !== 'all') {
+      filtered = filtered.filter(center => center.centerState === this.stateFilter);
+    }
+
+    if (this.typeFilter !== 'all') {
+      filtered = filtered.filter(center => center.centerType === this.typeFilter);
+    }
+
+    if (this.leaseTypeFilter !== 'all') {
+      filtered = filtered.filter(center => 
+        center.shoppingCenter?.places?.some(place => 
+          place.leaseType === this.leaseTypeFilter
+        )
+      );
+    }
+
     filtered.sort((a, b) => {
       switch (this.sortBy) {
         case 'name':
@@ -204,20 +224,8 @@ export class ShoppingComponent implements OnInit {
       }
     });
 
-    this.totalItems = filtered.length;
-    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = 1;
-    }
-
-    this.updateVisiblePages();
-
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.filteredCenters = filtered.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
+    this.filteredCenters = filtered;
+    this.updatePagination();
   }
 
   onFilter(event: Event): void {
@@ -682,4 +690,34 @@ export class ShoppingComponent implements OnInit {
     };
   }
 
+  get availableStates(): string[] {
+    return [...new Set(this.centers.map(c => c.centerState))].filter(Boolean).sort();
+  }
+
+  get availableTypes(): string[] {
+    return [...new Set(this.centers.map(c => c.centerType))].filter(Boolean).sort();
+  }
+
+  get availableLeaseTypes(): string[] {
+    return [...new Set(
+      this.centers
+        .flatMap(c => c.shoppingCenter?.places || [])
+        .map(p => p.leaseType)
+    )].filter(Boolean).sort();
+  }
+
+  private updatePagination(): void {
+    this.totalItems = this.filteredCenters.length;
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = 1;
+    }
+
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    this.filteredCenters = this.filteredCenters.slice(
+      startIndex,
+      startIndex + this.itemsPerPage
+    );
+  }
 }
