@@ -1701,3 +1701,18 @@ tr.click-disabled td:last-child * {
    display: flex;
     justify-content: space-between;
 }
+.reset-btn {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+}
+
+.reset-btn:hover {
+  background-color: var(--Colors-Primary-light);
+  border-color: var(--Colors-Primary-500);
+  color: var(--Colors-Primary-500);
+}

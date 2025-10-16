@@ -40,7 +40,7 @@ export class ShoppingComponent implements OnInit {
   showSortDropdown: boolean = false;
 
   currentPage: number = 1;
-  itemsPerPage: number = 9;
+  itemsPerPage: number = 30;
   totalItems: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];
@@ -739,4 +739,11 @@ export class ShoppingComponent implements OnInit {
       this.disabledCardIds.add(centerId);
     }
   }
+  // Add this method
+resetFilters(): void {
+  this.stateFilter = 'all';
+  this.typeFilter = 'all';
+  this.leaseTypeFilter = 'all';    
+  this.applyFiltersAndSort();
+}
 }

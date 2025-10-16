@@ -68,6 +68,7 @@
           class="plus-icon reload"
           [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
           (click)="InsertAutomation(shopping.Id, 1); $event.stopPropagation()"
+          *ngIf="shopping.queue === 0"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -92,16 +93,17 @@
         </button>
 
         <div
-        (click)="$event.stopPropagation()"
-        class="plus-icon date score"
-        *ngIf="shopping.LastUpdateDate"
-      >
-        {{ shopping.LastUpdateDate | date }}
-        <span *ngIf="shopping.Source">
-          <span class="source">By </span>{{ getSourceDisplay(shopping.Source) }}
-        </span>
-      </div>
-      
+          (click)="$event.stopPropagation()"
+          class="plus-icon date score"
+          *ngIf="shopping.LastUpdateDate"
+        >
+          {{ shopping.LastUpdateDate | date }}
+          <span *ngIf="shopping.Source">
+            <span class="source">By </span
+            >{{ getSourceDisplay(shopping.Source) }}
+          </span>
+        </div>
+
         <button
           class="plus-icon score"
           [class.active]="scoringId === shopping.Id"
@@ -165,6 +167,23 @@
             />
           </svg>
         </div> -->
+        <div
+          (click)="$event.stopPropagation()"
+          *ngIf="shopping.queue"
+          class="automating"
+        >
+          <span *ngIf="shopping.queue > 0"
+            >{{ shopping.queue }} Centers Left to go</span
+          >
+          <span *ngIf="shopping.queue === -1">
+            Automation Is Running
+            <span class="stat-bars auto-stat" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span
+              ><span></span>
+            </span>
+          </span>
+        </div>
+
         <div
           (click)="openInfoPopup(shopping, infoModal); $event.stopPropagation()"
           *ngIf="shopping.Score !== null"
