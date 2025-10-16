@@ -4,6 +4,7 @@
   flex-direction: row;
   align-items: center;
   padding: 10px 5px;
+  padding-right: 10px !important;
   justify-content: space-between;
   z-index: 100;
   background-color: #fff;

@@ -654,7 +654,8 @@
 
               <div class="center-info">
                 <h3 class="center-name">{{ center.centerName }}</h3>
-                <p class="center-address">{{ center.centerAddress }},{{ center.centerCity }},{{ center.centerState }}</p>
+                <p class="center-address">{{ center.centerAddress }}{{ center.centerCity?' , '+center.centerCity:'' }}{{ center.centerState?' , '+center.centerState:'' }} {{ center.centerZibCode?' , '+center.centerZibCode:'' }}</p>
+                <p class="center-address">{{ center.centerCounty }} </p>
                  <div class="center-details">
                   <span
                     class="purchase-price"
@@ -680,7 +681,7 @@
                   class="property-details"
                   *ngIf="center.shoppingCenter?.places"
                 >
-                  <div class="detail-row">
+                  <div class="detail-row gap-2">
                     <!-- Building Size Range -->
                     <span
                       *ngIf="
@@ -696,12 +697,16 @@
                       *ngIf="
                         getMinMaxPrices(center.shoppingCenter.places) as prices
                       "
-                      class="price"
+                      class="price w-100"
                     >
-                      <ng-container *ngIf="prices.min > 0 || prices.max > 0">
-                        ${{ prices.min | number }} - ${{ prices.max | number }}
-                        <!-- <span *ngIf="center.shoppingCenter.places[0]?.leaseType">({{ center.shoppingCenter.places[0].leaseType }})</span> -->
+                    <ng-container *ngIf="prices.min > 0 || prices.max > 0">
+                      <ng-container *ngIf="prices.min === prices.max">
+                        ${{ prices.min | number }}
                       </ng-container>
+                      <ng-container *ngIf="prices.min !== prices.max">
+                        ${{ prices.min | number }} - ${{ prices.max | number }}
+                      </ng-container>
+                    </ng-container>
                     </span>
                   </div>
                 </div>

@@ -179,7 +179,7 @@
     </div>
     <!-- Emily avatar -->
     <div
-      *ngIf="!isChatbotRoute"
+      *ngIf="!isChatbotRoute &&!isNotificationsOpen"
       class="emily-avatar-container"
       (click)="toggleEmilySidebar()"
     >
