@@ -236,7 +236,10 @@ export class Landing2Component implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.shoppingId = params.get('shoppingId');
-      this.campaignId = params.get('campaignId');
+      this.campaignId = params.get('campaignId') ;
+      if(this.campaignId==='undefined'){
+        this.campaignId=null;
+      }
     });
     this.initializeParams();
   }
@@ -295,7 +298,10 @@ export class Landing2Component implements OnInit {
 
   private initializeParams(): void {
     this.activatedRoute.params.subscribe((params: any) => {
-      this.campaignId = params.campaignId;
+      this.campaignId = params.get('campaignId') ;
+      if(this.campaignId==='undefined'){
+        this.campaignId=null;
+      }
       this.PlaceId = params.id;
       this.ShoppingCenterId = params.shoppiongCenterId;
 
