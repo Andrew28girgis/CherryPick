@@ -1,5 +1,4 @@
 export interface Center {
-running: any
     Id: number
     CenterName: string
     CenterType: string
@@ -64,7 +63,8 @@ running: any
     Source?: string
     sizeRange:any
     scoreImage:any
-    queue:number
+    Queue:number
+Running: any
   }
  
   

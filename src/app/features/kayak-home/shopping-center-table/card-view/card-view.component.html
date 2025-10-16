@@ -68,7 +68,7 @@
           class="plus-icon reload"
           [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
           (click)="InsertAutomation(shopping.Id, 1); $event.stopPropagation()"
-          *ngIf="shopping.running !==0 ||shopping.running !==1 ||shopping.running !==2 " 
+          *ngIf="shopping.Running !==0 ||shopping.Running !==1 ||shopping.Running !==2 " 
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -169,13 +169,13 @@
         </div> -->
         <div
           (click)="$event.stopPropagation()"
-          *ngIf="shopping.running ===0 ||shopping.running ===1 ||shopping.running ===2" 
+          *ngIf="shopping.Running ===0 ||shopping.Running ===1 ||shopping.Running ===2" 
           class="automating"
         >
-          <span *ngIf="shopping.queue > 1"
-            >Queued to enriche: {{ shopping.queue }} to go</span
+          <span *ngIf="shopping.Queue > 1"
+            >Queued to enriche: {{ shopping.Queue }} to go</span
           >
-          <span *ngIf="shopping.queue === 1">
+          <span *ngIf="shopping.Queue === 1">
             Enriching
             <span class="stat-bars auto-stat" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span
