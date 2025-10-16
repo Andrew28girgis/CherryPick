@@ -186,13 +186,11 @@ export class NotificationsComponent
       this.scanForShowMap();
     });
 
-
     this.notificationService.openOverlay$.subscribe((notification) => {
       if (notification) {
-        this.loadHtmlInsideNewWindow(notification); 
+        this.loadHtmlInsideNewWindow(notification);
       }
     });
-  
 
     // old way of loading notifications every 2 seconds
     const poll = () => {
@@ -345,6 +343,10 @@ export class NotificationsComponent
         isFullyOpen: false,
       });
     }
+  }
+
+  getSCsDataFromJsons(flag: boolean): void {
+    (window as any).electronMessage.getSCsDataFromJsons(flag);
   }
 
   choose(choice: number, notification: any): void {
