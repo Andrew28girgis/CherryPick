@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component'; // Adjust path as needed
-import { ShoppingCenter } from 'src/app/shared/models/shopping';
+import { Place, ShoppingCenter } from 'src/app/shared/models/shopping';
 import { Router } from '@angular/router';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { environment } from 'src/environments/environment';
@@ -652,6 +652,34 @@ export class ShoppingComponent implements OnInit {
     this.activeDropdownId = null;
     document.removeEventListener('click', this.handleOutsideClick, true);
   }
- 
+  getMinMaxSizes(places: Place[]) {
+    if (!places?.length) return null;
+    
+    const sizes = places
+      .filter(p => p.buildingSizeSf)
+      .map(p => p.buildingSizeSf);
+      
+    if (!sizes.length) return null;
+    
+    return {
+      min: Math.min(...sizes),
+      max: Math.max(...sizes)
+    };
+  }
+  
+  getMinMaxPrices(places: Place[]) {
+    if (!places?.length) return null;
+    
+    const prices = places
+      .filter(p => p.price)
+      .map(p => p.price);
+      
+    if (!prices.length) return null;
+    
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices)
+    };
+  }
 
 }

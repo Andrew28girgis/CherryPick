@@ -619,14 +619,19 @@
                 </div>
 
                 <div class="property-details" *ngIf="center.shoppingCenter?.places">
-                  <div class="detail-row" *ngFor="let place of center.shoppingCenter.places">
-                    <!-- <span *ngIf="place.buildingSizeSf" class="building-size">
-                      {{ place.buildingSizeSf | number }} SF
-                    </span> -->
-                    <!-- <span *ngIf="place.price" class="price">
-                      ${{ place.price | number }}
-                      <span *ngIf="place.leaseType">({{ place.leaseType }})</span>
-                    </span> -->
+                  <div class="detail-row">
+                    <!-- Building Size Range -->
+                    <span *ngIf="getMinMaxSizes(center.shoppingCenter.places) as sizes" class="building-size">
+                      {{ sizes.min | number }} - {{ sizes.max | number }} SF
+                    </span>
+                    
+                    <!-- Price Range -->
+                    <span *ngIf="getMinMaxPrices(center.shoppingCenter.places) as prices" class="price">
+                      <ng-container *ngIf="prices.min > 0 || prices.max > 0">
+                        ${{ prices.min | number }} - ${{ prices.max | number }}
+                        <!-- <span *ngIf="center.shoppingCenter.places[0]?.leaseType">({{ center.shoppingCenter.places[0].leaseType }})</span> -->
+                      </ng-container>
+                    </span>
                   </div>
                 </div>
                 
