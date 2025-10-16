@@ -702,7 +702,7 @@ img[alt="logo"] {
 .cards-row {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: var(--Space-S-24);
+  gap: 40px;
   align-items: stretch;
 }
 
@@ -821,6 +821,26 @@ label {
 .card-badge span {
   white-space: nowrap;
   font-size: 14px;
+}
+.automating {
+  position: absolute;
+  z-index: 20;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: 40px;
+  background: #102e50;
+  color: var(--Colors-Primary-300);
+  border-radius: 24px;
+  top: -32px;
+  right: 12px;
+  left: unset;
+}
+.auto-stat{
+  color: var(--Colors-Primary-300) !important;
 }
 .delete-badge {
   background-color: #fdecea; /* very light red (almost white) */

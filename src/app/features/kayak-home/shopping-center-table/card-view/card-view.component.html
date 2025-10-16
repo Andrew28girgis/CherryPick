@@ -166,6 +166,22 @@
           </svg>
         </div> -->
         <div
+        (click)="$event.stopPropagation()"
+        *ngIf="shopping.queue"
+        class="automating"
+        
+      >
+        <span *ngIf="shopping.queue && shopping.queue!==0">{{ shopping.queue }} Centers Left to go</span>
+         <span *ngIf="shopping.queue===0"  >
+          Automation Is Running
+          <span class="stat-bars auto-stat" aria-hidden="true">
+            <span></span><span></span><span></span><span></span
+            ><span></span><span></span>
+          </span>
+      </span> 
+      </div>
+
+        <div
           (click)="openInfoPopup(shopping, infoModal); $event.stopPropagation()"
           *ngIf="shopping.Score !== null"
           class="card-badge"

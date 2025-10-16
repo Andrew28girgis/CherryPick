@@ -63,6 +63,7 @@ export interface Center {
     Source?: string
     sizeRange:any
     scoreImage:any
+    queue:number
   }
  
   

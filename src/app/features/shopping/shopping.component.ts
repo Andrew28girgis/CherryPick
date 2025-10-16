@@ -40,7 +40,7 @@ export class ShoppingComponent implements OnInit {
   showSortDropdown: boolean = false;
 
   currentPage: number = 1;
-  itemsPerPage: number = 9;
+  itemsPerPage: number = 30;
   totalItems: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];
