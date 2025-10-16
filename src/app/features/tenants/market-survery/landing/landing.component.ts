@@ -161,12 +161,15 @@ export class LandingComponent {
     Shoppingcenterid: number,
     PlaceId: number
   ): void {
+    if(this.campaignId==='undefined'){
+      this.campaignId=null;
+    }
     const body: any = {
       Name: 'GetBuyBoxOrganizationDetails',
       Params: {
         shoppingcenterid: +Shoppingcenterid,
         placeId: +PlaceId,
-        CampaignId: this.campaignId===undefined?null:this.campaignId, 
+        CampaignId: this.campaignId, 
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
