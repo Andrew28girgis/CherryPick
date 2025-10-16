@@ -6,6 +6,7 @@ import { ShoppingComponent } from './shopping.component';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [{ path: '', component: ShoppingComponent }];
 
@@ -16,6 +17,7 @@ const routes: Routes = [{ path: '', component: ShoppingComponent }];
     FormsModule,
     NgxSpinnerModule,
     NgxFileDropModule,
+    NgbDropdownModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],

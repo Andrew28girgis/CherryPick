@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component'; // Adjust path as needed
-import { ShoppingCenter } from 'src/app/shared/models/shopping';
+import { Place, ShoppingCenter } from 'src/app/shared/models/shopping';
 import { Router } from '@angular/router';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { environment } from 'src/environments/environment';
@@ -77,6 +77,11 @@ export class ShoppingComponent implements OnInit {
   openOrgMenuId: number | null = null;
   orgMenuPos: { top?: string; left?: string } = {};
   activeDropdownId: number | null = null;
+
+  stateFilter: string = 'all';
+  typeFilter: string = 'all';
+  leaseTypeFilter: string = 'all';
+  disabledCardIds: Set<number> = new Set();
 
   constructor(
     private placesService: PlacesService,
@@ -181,43 +186,27 @@ export class ShoppingComponent implements OnInit {
       });
     }
 
-    filtered.sort((a, b) => {
-      switch (this.sortBy) {
-        case 'name':
-          return (a.centerName || '').localeCompare(b.centerName || '');
-        case 'name-desc':
-          return (b.centerName || '').localeCompare(a.centerName || '');
-        case 'price-low':
-          const priceA = a.forSalePrice || a.forLeasePrice || 0;
-          const priceB = b.forSalePrice || b.forLeasePrice || 0;
-          return priceA - priceB;
-        case 'price-high':
-          const priceA2 = a.forSalePrice || a.forLeasePrice || 0;
-          const priceB2 = b.forSalePrice || b.forLeasePrice || 0;
-          return priceB2 - priceA2;
-        case 'size-small':
-          return (a.buildingSizeSf || 0) - (b.buildingSizeSf || 0);
-        case 'size-large':
-          return (b.buildingSizeSf || 0) - (a.buildingSizeSf || 0);
-        default:
-          return 0;
-      }
-    });
-
-    this.totalItems = filtered.length;
-    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = 1;
+    if (this.stateFilter !== 'all') {
+      filtered = filtered.filter(center => center.centerState === this.stateFilter);
     }
 
-    this.updateVisiblePages();
+    if (this.typeFilter !== 'all') {
+      filtered = filtered.filter(center => center.centerType === this.typeFilter);
+    }
 
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.filteredCenters = filtered.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
+    if (this.leaseTypeFilter !== 'all') {
+      filtered = filtered.filter(center => 
+        center.shoppingCenter?.places?.some(place => 
+          place.leaseType === this.leaseTypeFilter
+        )
+      );
+    }
+
+    // Store full filtered results before pagination
+    this.filteredCenters = [...filtered];
+    
+    // Then apply pagination
+    this.updatePagination();
   }
 
   onFilter(event: Event): void {
@@ -562,7 +551,7 @@ export class ShoppingComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+    this.viewOnMap(modalObject.latitude, modalObject.longitude);
   }
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
@@ -601,8 +590,8 @@ export class ShoppingComponent implements OnInit {
   viewOnStreet() {
     if (!this.General.modalObject) return;
 
-    const lat = Number.parseFloat(this.General.modalObject.Latitude);
-    const lng = Number.parseFloat(this.General.modalObject.Longitude);
+    const lat = Number.parseFloat(this.General.modalObject.latitude);
+    const lng = Number.parseFloat(this.General.modalObject.longitude);
 
     // Default values for heading and pitch if not provided
     const heading = this.General.modalObject.Heading || 165;
@@ -652,6 +641,102 @@ export class ShoppingComponent implements OnInit {
     this.activeDropdownId = null;
     document.removeEventListener('click', this.handleOutsideClick, true);
   }
- 
+  getMinMaxSizes(places: Place[]) {
+    if (!places?.length) return null;
+    
+    const sizes = places
+      .filter(p => p.buildingSizeSf)
+      .map(p => p.buildingSizeSf);
+      
+    if (!sizes.length) return null;
+    
+    return {
+      min: Math.min(...sizes),
+      max: Math.max(...sizes)
+    };
+  }
+  
+  getMinMaxPrices(places: Place[]) {
+    if (!places?.length) return null;
+    
+    const prices = places
+      .filter(p => p.price)
+      .map(p => p.price);
+      
+    if (!prices.length) return null;
+    
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices)
+    };
+  }
 
+  get availableStates(): string[] {
+    return [...new Set(this.centers.map(c => c.centerState))].filter(Boolean).sort();
+  }
+
+  get availableTypes(): string[] {
+    return [...new Set(this.centers.map(c => c.centerType))].filter(Boolean).sort();
+  }
+
+  get availableLeaseTypes(): string[] {
+    return [...new Set(
+      this.centers
+        .flatMap(c => c.shoppingCenter?.places || [])
+        .map(p => p.leaseType)
+    )].filter(Boolean).sort();
+  }
+
+   private updatePagination(): void {
+    this.totalItems = this.filteredCenters.length;
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = 1;
+    }
+  
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    
+    // Change this line - use filteredCenters instead of centers
+    this.filteredCenters = this.filteredCenters.slice(startIndex, endIndex);
+  }
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+  
+    // Always show first page
+    if (currentPage > 3) {
+      pages.push(1);
+      // Add ellipsis marker that won't be rendered as -1
+      if (currentPage > 4) {
+        pages.push(0); // Using 0 as ellipsis marker
+      }
+    }
+  
+     for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      pages.push(i);
+    }
+  
+     if (currentPage < totalPages - 2) {
+      if (currentPage < totalPages - 3) {
+        pages.push(0); // Using 0 as ellipsis marker
+      }
+      pages.push(totalPages);
+    }
+  
+    return pages;
+  }
+  
+
+   toggleCardDisabled(centerId: number, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.disabledCardIds.has(centerId)) {
+      this.disabledCardIds.delete(centerId);
+    } else {
+      this.disabledCardIds.add(centerId);
+    }
+  }
 }
