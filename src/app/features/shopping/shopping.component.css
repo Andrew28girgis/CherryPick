@@ -253,6 +253,7 @@
   gap: var(--Space-S-24);
   max-width: 1600px;
   margin: 0 auto;
+  margin-top: 10px;
 }
 
 .center-card {
@@ -1717,4 +1718,25 @@ tr.click-disabled td:last-child * {
   background-color: var(--Colors-Primary-light);
   border-color: var(--Colors-Primary-500);
   color: var(--Colors-Primary-500);
+}
+
+.automating {
+  position: absolute;
+  z-index: 20;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: 40px;
+  background: #102e50;
+  color: var(--Colors-Primary-300);
+  border-radius: 24px;
+  top: -32px;
+  right: 12px;
+  left: unset;
+}
+.auto-stat{
+  color: var(--Colors-Primary-300) !important;
 }

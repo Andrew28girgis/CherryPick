@@ -25,6 +25,8 @@ export interface ShoppingCenter {
   forLeasePrice?: number;
   centerZibCode: any;
   centerCounty: any;
+  Queue: number;
+  Running: any;
 }
 
 export interface ShoppingCenterarr {
