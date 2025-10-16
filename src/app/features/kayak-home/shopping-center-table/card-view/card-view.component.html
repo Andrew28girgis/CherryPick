@@ -169,13 +169,13 @@
         </div> -->
         <div
           (click)="$event.stopPropagation()"
-          *ngIf="shopping.queue"
+          *ngIf="shopping.queue >= 1"
           class="automating"
         >
-          <span *ngIf="shopping.queue > 0"
+          <span *ngIf="shopping.queue > 1"
             >{{ shopping.queue }} Centers Left to go</span
           >
-          <span *ngIf="shopping.queue === -1">
+          <span *ngIf="shopping.queue === 1">
             Automation Is Running
             <span class="stat-bars auto-stat" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span

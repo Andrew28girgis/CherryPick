@@ -1,4 +1,5 @@
 export interface Center {
+running: any
     Id: number
     CenterName: string
     CenterType: string
