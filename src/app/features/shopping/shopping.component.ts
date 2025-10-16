@@ -81,6 +81,7 @@ export class ShoppingComponent implements OnInit {
   stateFilter: string = 'all';
   typeFilter: string = 'all';
   leaseTypeFilter: string = 'all';
+  disabledCardIds: Set<number> = new Set();
 
   constructor(
     private placesService: PlacesService,
@@ -201,30 +202,10 @@ export class ShoppingComponent implements OnInit {
       );
     }
 
-    filtered.sort((a, b) => {
-      switch (this.sortBy) {
-        case 'name':
-          return (a.centerName || '').localeCompare(b.centerName || '');
-        case 'name-desc':
-          return (b.centerName || '').localeCompare(a.centerName || '');
-        case 'price-low':
-          const priceA = a.forSalePrice || a.forLeasePrice || 0;
-          const priceB = b.forSalePrice || b.forLeasePrice || 0;
-          return priceA - priceB;
-        case 'price-high':
-          const priceA2 = a.forSalePrice || a.forLeasePrice || 0;
-          const priceB2 = b.forSalePrice || b.forLeasePrice || 0;
-          return priceB2 - priceA2;
-        case 'size-small':
-          return (a.buildingSizeSf || 0) - (b.buildingSizeSf || 0);
-        case 'size-large':
-          return (b.buildingSizeSf || 0) - (a.buildingSizeSf || 0);
-        default:
-          return 0;
-      }
-    });
-
-    this.filteredCenters = filtered;
+    // Store full filtered results before pagination
+    this.filteredCenters = [...filtered];
+    
+    // Then apply pagination
     this.updatePagination();
   }
 
@@ -706,18 +687,56 @@ export class ShoppingComponent implements OnInit {
     )].filter(Boolean).sort();
   }
 
-  private updatePagination(): void {
+   private updatePagination(): void {
     this.totalItems = this.filteredCenters.length;
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     
     if (this.currentPage > this.totalPages) {
       this.currentPage = 1;
     }
-
+  
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.filteredCenters = this.filteredCenters.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
+    const endIndex = startIndex + this.itemsPerPage;
+    
+    // Change this line - use filteredCenters instead of centers
+    this.filteredCenters = this.filteredCenters.slice(startIndex, endIndex);
+  }
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+  
+    // Always show first page
+    if (currentPage > 3) {
+      pages.push(1);
+      // Add ellipsis marker that won't be rendered as -1
+      if (currentPage > 4) {
+        pages.push(0); // Using 0 as ellipsis marker
+      }
+    }
+  
+     for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      pages.push(i);
+    }
+  
+     if (currentPage < totalPages - 2) {
+      if (currentPage < totalPages - 3) {
+        pages.push(0); // Using 0 as ellipsis marker
+      }
+      pages.push(totalPages);
+    }
+  
+    return pages;
+  }
+  
+
+   toggleCardDisabled(centerId: number, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.disabledCardIds.has(centerId)) {
+      this.disabledCardIds.delete(centerId);
+    } else {
+      this.disabledCardIds.add(centerId);
+    }
   }
 }

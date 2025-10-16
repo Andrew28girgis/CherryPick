@@ -5,9 +5,9 @@ export interface ShoppingCenter {
   centerCity: string
   centerState: string
   mainImage: string
-  Latitude: number
-  Longitude: number
-  DocsLink: string
+  latitude: number
+  longitude: number
+  docsLink: string
   centerType: string
   category: string
   lastUpdateDate: Date

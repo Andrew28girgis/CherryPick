@@ -139,8 +139,8 @@
               </div>
             </div> -->
 
-            <h3 class="dropdown-header">State</h3>
-            <div class="px-3 mb-3">
+            <h3 class="dropdown-header"  *ngIf="availableStates.length">State</h3>
+            <div class="px-3 mb-3" *ngIf="availableStates.length">
               <select class="form-select" [(ngModel)]="stateFilter" (change)="onFilterChange()">
                 <option value="all">All States</option>
                 <option *ngFor="let state of availableStates" [value]="state">
@@ -149,8 +149,8 @@
               </select>
             </div>
 
-            <h3 class="dropdown-header">Property Type</h3>
-            <div class="px-3 mb-3">
+            <h3 class="dropdown-header" *ngIf="availableTypes.length">Property Type</h3>
+            <div class="px-3 mb-3"  *ngIf="availableTypes.length">
               <select class="form-select" [(ngModel)]="typeFilter" (change)="onFilterChange()">
                 <option value="all">All Types</option>
                 <option *ngFor="let type of availableTypes" [value]="type">
@@ -159,8 +159,8 @@
               </select>
             </div>
 
-            <h3 class="dropdown-header">Lease Type</h3>
-            <div class="px-3 mb-3">
+            <h3 class="dropdown-header"  *ngIf="availableLeaseTypes.length" >Lease Type</h3>
+            <div class="px-3 mb-3"  *ngIf="availableLeaseTypes.length" >
               <select class="form-select" [(ngModel)]="leaseTypeFilter" (change)="onFilterChange()">
                 <option value="all">All Lease Types</option>
                 <option *ngFor="let leaseType of availableLeaseTypes" [value]="leaseType">
@@ -508,13 +508,13 @@
                   </svg>
                 </button>
                 <div
-                  *ngIf="center.DocsLink"
+                  *ngIf="center.docsLink"
                   class="add-badge docs"
                   (click)="$event.stopPropagation()"
                 >
                   <a
                     class="info-value text-dark"
-                    [href]="center.DocsLink"
+                    [href]="center.docsLink"
                     target="_blank"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -884,64 +884,34 @@
           </table>
         </div>
 
-        <!-- Pagination -->
         <div class="pagination" *ngIf="totalItems > itemsPerPage">
-          <button
-            class="pagination-btn"
+          <button 
+            class="page-button prev"
             [disabled]="currentPage === 1"
             (click)="onPageChange(currentPage - 1)"
           >
             Previous
           </button>
-
-          <button
-            class="pagination-btn"
-            [class.active]="currentPage === 1"
-            (click)="onPageChange(1)"
-            *ngIf="shouldShowLeftDots()"
-          >
-            1
-          </button>
-
-          <span class="pagination-ellipsis" *ngIf="shouldShowLeftDots()"
-            >...</span
-          >
-
-          <button
-            *ngFor="let page of visiblePages"
-            class="pagination-btn"
-            [class.active]="currentPage === page"
-            (click)="onPageChange(page)"
-          >
-            {{ page }}
-          </button>
-
-          <span class="pagination-ellipsis" *ngIf="shouldShowRightDots()"
-            >...</span
-          >
-
-          <button
-            class="pagination-btn"
-            [class.active]="currentPage === totalPages"
-            (click)="onPageChange(totalPages)"
-            *ngIf="shouldShowRightDots()"
-          >
-            {{ totalPages }}
-          </button>
-
-          <button
-            class="pagination-btn"
+        
+          <div class="page-numbers">
+            <button 
+              *ngFor="let page of getPageNumbers()"
+              class="page-number"
+              [class.active]="currentPage === page"
+              [disabled]="page === 0"
+              (click)="onPageChange(page)"
+            >
+              {{ page === 0 ? '...' : page }}
+            </button>
+          </div>
+        
+          <button 
+            class="page-button next"
             [disabled]="currentPage === totalPages"
             (click)="onPageChange(currentPage + 1)"
           >
             Next
           </button>
-
-          <span class="pagination-info">
-            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
-            {{ Math.min(currentPage * itemsPerPage, totalItems) }} of
-            {{ totalItems }} items
-          </span>
         </div>
       </div>
     </div>
