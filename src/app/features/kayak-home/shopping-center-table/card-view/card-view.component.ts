@@ -649,6 +649,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   InsertAutomation(id: any, reload?: any) {
     if (reload) {
+      this.viewManagerService.loadShoppingCenters(this.CampaignId);
       this.rotatingKeys[id] = (this.rotatingKeys[id] || 0) + 1;
 
       setTimeout(() => {
