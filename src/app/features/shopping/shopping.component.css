@@ -249,14 +249,14 @@
 /* Grid Layout - exactly 3 columns */
 .centers-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: var(--Space-S-24);
   max-width: 1600px;
   margin: 0 auto;
 }
 
 .center-card {
-  background: transparent;
+  background: #fff;
   border-radius: var(--Radius-R-12);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -1618,6 +1618,7 @@ tr.click-disabled td:last-child * {
 
 .detail-row {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;

@@ -45,7 +45,10 @@ export class LandingComponent {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.shoppingId = params.get('shoppingId');
-      this.campaignId = params.get('campaignId');
+      this.campaignId = params.get('campaignId') ;
+      if(this.campaignId==='undefined'){
+        this.campaignId=null;
+      }
     });
     this.initializeParams();
     this.initializeDefaults();
@@ -53,13 +56,17 @@ export class LandingComponent {
 
   private initializeParams(): void {
     this.activatedRoute.params.subscribe((params: any) => {
-      this.campaignId = params.campaignId;
+      this.campaignId = params.campaignId ;
+      if(this.campaignId==='undefined'){
+        this.campaignId=null;
+      }
       this.PlaceId = params.id;
       this.ShoppingCenterId = params.shoppiongCenterId;
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
         this.GetPlaceDetails(0, this.ShoppingCenterId);
       } else {
+         
         this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, this.PlaceId);
 
         this.GetPlaceDetails(this.PlaceId, 0);
@@ -159,7 +166,7 @@ export class LandingComponent {
       Params: {
         shoppingcenterid: +Shoppingcenterid,
         placeId: +PlaceId,
-        CampaignId: this.campaignId,
+        CampaignId: this.campaignId===undefined?null:this.campaignId, 
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({

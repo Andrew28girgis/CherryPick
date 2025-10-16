@@ -190,7 +190,7 @@
                 </option>
               </select>
             </div>
-             <div class="px-3 mt-3 mb-3 d-flex justify-content-end">
+             <div class="px-3 mt-4 mb-3 d-flex justify-content-center">
               <button 
                 class="btn btn-secondary reset-btn" 
                 (click)="resetFilters(); $event.stopPropagation()"
@@ -489,7 +489,6 @@
             <div
               class="card-click-area"
               [class.click-disabled]="openMenuId === center.scId"
-              [routerLink]="['/landing', 0, center?.scId, center.campaignId]"
             >
               <div class="image-container">
                 <img
@@ -498,6 +497,7 @@
                   [alt]="center.centerName"
                   class="center-image"
                   (error)="center.mainImage = 'assets/Images/placeholder.png'"
+              [routerLink]="['/landing', 0, center?.scId, center.campaignId]"
                 />
                 <div
                   (click)="
@@ -654,8 +654,8 @@
 
               <div class="center-info">
                 <h3 class="center-name">{{ center.centerName }}</h3>
-                <p class="center-address">{{ center.centerAddress }}</p>
-                <div class="center-details">
+                <p class="center-address">{{ center.centerAddress }}+{{ center.centerCity }}+{{ center.centerState }}</p>
+                 <div class="center-details">
                   <span
                     class="purchase-price"
                     *ngIf="center.forSalePrice && center.forSalePrice > 0"
