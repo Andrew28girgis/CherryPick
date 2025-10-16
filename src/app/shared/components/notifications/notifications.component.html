@@ -339,9 +339,13 @@
               <div class="message-content">
                 <p
                   class="message-text"
-                  *ngIf="isAutomationLoading(item, i) &&item.message?.includes(
-                    'searching the web now for your request'
-                  ); else staticAutomation"
+                  *ngIf="
+                    isAutomationLoading(item, i) &&
+                      item.message?.includes(
+                        'searching the web now for your request'
+                      );
+                    else staticAutomation
+                  "
                 >
                   I am searching the web now for your request.
 
@@ -353,12 +357,15 @@
                     ><span></span><span></span>
                   </span>
                 </p>
-                <p  
+                <p
                   class="message-text"
-                  *ngIf="isAutomationLoading(item, i) &&item.message?.includes(
-                    'start scanning and analyzing the current page'
-                  )
-                ; else staticScannning"
+                  *ngIf="
+                    isAutomationLoading(item, i) &&
+                      item.message?.includes(
+                        'start scanning and analyzing the current page'
+                      );
+                    else staticScannning
+                  "
                 >
                   I will start scanning and analyzing the current page for you
                   <span class="stat-bars" aria-hidden="true">
@@ -407,27 +414,19 @@
                   >
                     I am searching the web now for your request
                   </p>
- 
                 </ng-template>
                 <ng-template #staticScannning>
-               
                   <p
-                  class="message-text"
-                  *ngIf="
-                    item.message?.includes(
-                      'I will start scanning and analyzing the current page for you'
-                    )
-                  "
-                >
-                  I will start scanning and analyzing the current page for you
-                </p>
- 
+                    class="message-text"
+                    *ngIf="
+                      item.message?.includes(
+                        'I will start scanning and analyzing the current page for you'
+                      )
+                    "
+                  >
+                    I will start scanning and analyzing the current page for you
+                  </p>
                 </ng-template>
-
-
-
-
-
 
                 <p
                   class="message-text"
@@ -437,11 +436,13 @@
                     !item.message?.includes(
                       'I am searching the web now for your request'
                     ) &&
-                    !item.message?.includes('Compiling them into a nice report')
-                    &&
-                    !item.message?.includes('scanning and analyzing the current ')
+                    !item.message?.includes(
+                      'Compiling them into a nice report'
+                    ) &&
+                    !item.message?.includes(
+                      'scanning and analyzing the current '
+                    )
                   "
-                
                 >
                   Search Result
                 </p>
@@ -452,10 +453,12 @@
                     !item.message?.includes(
                       'I am searching the web now for your request'
                     ) &&
-                    !item.message?.includes('Compiling them into a nice report')
-                    &&
-                    !item.message?.includes('scanning and analyzing the current ')
-
+                    !item.message?.includes(
+                      'Compiling them into a nice report'
+                    ) &&
+                    !item.message?.includes(
+                      'scanning and analyzing the current '
+                    )
                   "
                 >
                   <p class="message-text">Not Found Results</p>
@@ -474,10 +477,12 @@
                     !item.message?.includes(
                       'I am searching the web now for your request'
                     ) &&
-                    !item.message?.includes('Compiling them into a nice report')
-                    &&
-                    !item.message?.includes('scanning and analyzing the current ')
-
+                    !item.message?.includes(
+                      'Compiling them into a nice report'
+                    ) &&
+                    !item.message?.includes(
+                      'scanning and analyzing the current '
+                    )
                   "
                 >
                   {{ item.message }}
@@ -550,18 +555,19 @@
                   <button
                     *ngIf="item.notification?.notificationCategoryId === 4"
                     class="emily-btn"
-                    (click)="choose(1, item.notification)"
+                    (click)="getSCsDataFromJsons(true)"
                     [disabled]="isNotificationLoading(item.notification)"
                   >
                     Yes
                   </button>
-                  <!-- <button
-                      class="emily-btn"
-                      (click)="choose(0, item.notification)"
-                      [disabled]="isNotificationLoading(item.notification)"
-                    >
-                      No
-                    </button> -->
+                  <button
+                    *ngIf="item.notification?.notificationCategoryId === 4"
+                    class="emily-btn"
+                    (click)="getSCsDataFromJsons(false)"
+                    [disabled]="isNotificationLoading(item.notification)"
+                  >
+                    No
+                  </button>
                 </div>
                 <div class="choose" *ngIf="item.notification?.html">
                   <button
