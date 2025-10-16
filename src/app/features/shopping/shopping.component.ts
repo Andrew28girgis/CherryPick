@@ -187,24 +187,28 @@ export class ShoppingComponent implements OnInit {
     }
 
     if (this.stateFilter !== 'all') {
-      filtered = filtered.filter(center => center.centerState === this.stateFilter);
+      filtered = filtered.filter(
+        (center) => center.centerState === this.stateFilter
+      );
     }
 
     if (this.typeFilter !== 'all') {
-      filtered = filtered.filter(center => center.centerType === this.typeFilter);
+      filtered = filtered.filter(
+        (center) => center.centerType === this.typeFilter
+      );
     }
 
     if (this.leaseTypeFilter !== 'all') {
-      filtered = filtered.filter(center => 
-        center.shoppingCenter?.places?.some(place => 
-          place.leaseType === this.leaseTypeFilter
+      filtered = filtered.filter((center) =>
+        center.shoppingCenter?.places?.some(
+          (place) => place.leaseType === this.leaseTypeFilter
         )
       );
     }
 
     // Store full filtered results before pagination
     this.filteredCenters = [...filtered];
-    
+
     // Then apply pagination
     this.updatePagination();
   }
@@ -427,6 +431,7 @@ export class ShoppingComponent implements OnInit {
           this.showToast('Automation Started');
         } else {
           this.showToast('Automation is running again');
+          this.loadShoppingCenters();
         }
       },
     });
@@ -532,10 +537,10 @@ export class ShoppingComponent implements OnInit {
     this.placesService.GenericAPI(body).subscribe({
       next: () => {
         this.loadShoppingCenters();
-      }
+      },
     });
   }
-   getSourceDisplay(source: string): string {
+  getSourceDisplay(source: string): string {
     try {
       const url = new URL(source);
       let domain = url.hostname.replace(/^www\./, '');
@@ -606,36 +611,36 @@ export class ShoppingComponent implements OnInit {
       pitch
     );
   }
-  
-    openContactModal(center: any): void {
-      const modalRef = this.modalService.open(ContactBrokerComponent, {
-        size: 'lg',
-        centered: true,
+
+  openContactModal(center: any): void {
+    const modalRef = this.modalService.open(ContactBrokerComponent, {
+      size: 'lg',
+      centered: true,
+    });
+    modalRef.componentInstance.center = center;
+    modalRef.componentInstance.buyboxId = this.BuyBoxId;
+  }
+
+  toggleOrgMenu(id: number, event: MouseEvent) {
+    event.stopPropagation(); // prevents bubbling to document
+
+    if (this.openOrgMenuId === id) {
+      this.closeOrgMenu();
+    } else {
+      this.openOrgMenuId = id;
+      this.activeDropdownId = id;
+      setTimeout(() => {
+        document.addEventListener('click', this.handleOutsideClick, true);
       });
-      modalRef.componentInstance.center = center;
-      modalRef.componentInstance.buyboxId = this.BuyBoxId;
     }
-  
-    toggleOrgMenu(id: number, event: MouseEvent) {
-      event.stopPropagation(); // prevents bubbling to document
-  
-      if (this.openOrgMenuId === id) {
-        this.closeOrgMenu();
-      } else {
-        this.openOrgMenuId = id;
-        this.activeDropdownId = id;
-         setTimeout(() => {
-          document.addEventListener('click', this.handleOutsideClick, true);
-        });
-      }
-    }
-      // make sure to bind 'this' when declaring the handler
+  }
+  // make sure to bind 'this' when declaring the handler
   handleOutsideClick = (event: Event) => {
     const target = event.target as HTMLElement;
     if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
       this.closeOrgMenu();
     }
-  }
+  };
   closeOrgMenu() {
     this.openOrgMenuId = null;
     this.activeDropdownId = null;
@@ -643,61 +648,67 @@ export class ShoppingComponent implements OnInit {
   }
   getMinMaxSizes(places: Place[]) {
     if (!places?.length) return null;
-    
+
     const sizes = places
-      .filter(p => p.buildingSizeSf)
-      .map(p => p.buildingSizeSf);
-      
+      .filter((p) => p.buildingSizeSf)
+      .map((p) => p.buildingSizeSf);
+
     if (!sizes.length) return null;
-    
+
     return {
       min: Math.min(...sizes),
-      max: Math.max(...sizes)
+      max: Math.max(...sizes),
     };
   }
-  
+
   getMinMaxPrices(places: Place[]) {
     if (!places?.length) return null;
-    
-    const prices = places
-      .filter(p => p.price)
-      .map(p => p.price);
-      
+
+    const prices = places.filter((p) => p.price).map((p) => p.price);
+
     if (!prices.length) return null;
-    
+
     return {
       min: Math.min(...prices),
-      max: Math.max(...prices)
+      max: Math.max(...prices),
     };
   }
 
   get availableStates(): string[] {
-    return [...new Set(this.centers.map(c => c.centerState))].filter(Boolean).sort();
+    return [...new Set(this.centers.map((c) => c.centerState))]
+      .filter(Boolean)
+      .sort();
   }
 
   get availableTypes(): string[] {
-    return [...new Set(this.centers.map(c => c.centerType))].filter(Boolean).sort();
+    return [...new Set(this.centers.map((c) => c.centerType))]
+      .filter(Boolean)
+      .sort();
   }
 
   get availableLeaseTypes(): string[] {
-    return [...new Set(
-      this.centers
-        .flatMap(c => c.shoppingCenter?.places || [])
-        .map(p => p.leaseType)
-    )].filter(Boolean).sort();
+    return [
+      ...new Set(
+        this.centers
+          .flatMap((c) => c.shoppingCenter?.places || [])
+          .map((p) => p.leaseType)
+      ),
+    ]
+      .filter(Boolean)
+      .sort();
   }
 
-   private updatePagination(): void {
+  private updatePagination(): void {
     this.totalItems = this.filteredCenters.length;
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-    
+
     if (this.currentPage > this.totalPages) {
       this.currentPage = 1;
     }
-  
+
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    
+
     // Change this line - use filteredCenters instead of centers
     this.filteredCenters = this.filteredCenters.slice(startIndex, endIndex);
   }
@@ -705,7 +716,7 @@ export class ShoppingComponent implements OnInit {
     const pages: number[] = [];
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
-  
+
     // Always show first page
     if (currentPage > 3) {
       pages.push(1);
@@ -714,23 +725,26 @@ export class ShoppingComponent implements OnInit {
         pages.push(0); // Using 0 as ellipsis marker
       }
     }
-  
-     for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+
+    for (
+      let i = Math.max(1, currentPage - 2);
+      i <= Math.min(totalPages, currentPage + 2);
+      i++
+    ) {
       pages.push(i);
     }
-  
-     if (currentPage < totalPages - 2) {
+
+    if (currentPage < totalPages - 2) {
       if (currentPage < totalPages - 3) {
         pages.push(0); // Using 0 as ellipsis marker
       }
       pages.push(totalPages);
     }
-  
+
     return pages;
   }
-  
 
-   toggleCardDisabled(centerId: number, event: Event): void {
+  toggleCardDisabled(centerId: number, event: Event): void {
     event.preventDefault();
     event.stopPropagation();
     if (this.disabledCardIds.has(centerId)) {
@@ -740,10 +754,10 @@ export class ShoppingComponent implements OnInit {
     }
   }
   // Add this method
-resetFilters(): void {
-  this.stateFilter = 'all';
-  this.typeFilter = 'all';
-  this.leaseTypeFilter = 'all';    
-  this.applyFiltersAndSort();
-}
+  resetFilters(): void {
+    this.stateFilter = 'all';
+    this.typeFilter = 'all';
+    this.leaseTypeFilter = 'all';
+    this.applyFiltersAndSort();
+  }
 }
