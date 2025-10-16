@@ -739,4 +739,11 @@ export class ShoppingComponent implements OnInit {
       this.disabledCardIds.add(centerId);
     }
   }
+  // Add this method
+resetFilters(): void {
+  this.stateFilter = 'all';
+  this.typeFilter = 'all';
+  this.leaseTypeFilter = 'all';    
+  this.applyFiltersAndSort();
+}
 }

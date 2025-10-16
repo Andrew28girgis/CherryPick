@@ -142,6 +142,7 @@
             <h3 class="dropdown-header" *ngIf="availableStates.length">
               State
             </h3>
+            
             <div class="px-3 mb-3" *ngIf="availableStates.length">
               <select
                 class="form-select"
@@ -188,6 +189,14 @@
                   {{ leaseType }}
                 </option>
               </select>
+            </div>
+             <div class="px-3 mt-3 mb-3 d-flex justify-content-end">
+              <button 
+                class="btn btn-secondary reset-btn" 
+                (click)="resetFilters(); $event.stopPropagation()"
+              >
+                Reset Filters
+              </button>
             </div>
           </div>
         </div>
