@@ -1697,3 +1697,7 @@ tr.click-disabled td:last-child * {
   display: inline-flex;
   align-items: center;
 }
+.leased-by{
+   display: flex;
+    justify-content: space-between;
+}

@@ -551,7 +551,7 @@ export class ShoppingComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+    this.viewOnMap(modalObject.latitude, modalObject.longitude);
   }
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
@@ -590,8 +590,8 @@ export class ShoppingComponent implements OnInit {
   viewOnStreet() {
     if (!this.General.modalObject) return;
 
-    const lat = Number.parseFloat(this.General.modalObject.Latitude);
-    const lng = Number.parseFloat(this.General.modalObject.Longitude);
+    const lat = Number.parseFloat(this.General.modalObject.latitude);
+    const lng = Number.parseFloat(this.General.modalObject.longitude);
 
     // Default values for heading and pitch if not provided
     const heading = this.General.modalObject.Heading || 165;
