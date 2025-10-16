@@ -490,24 +490,28 @@
               class="card-click-area"
               [class.click-disabled]="openMenuId === center.scId"
             >
-            <div
-            (click)="$event.stopPropagation()"
-            *ngIf="center.Running ===0 ||center.Running ===1 ||center.Running ===2" 
-            class="automating"
-          >
-            <span *ngIf="center.Queue > 1"
-              >Queued to enriche: {{ center.Queue }} to go</span
-            >
-            <span *ngIf="center.Queue === 1">
-              Enriching
-              <span class="stat-bars auto-stat" aria-hidden="true">
-                <span></span><span></span><span></span><span></span><span></span
-                ><span></span>
-              </span>
-            </span>
-          </div>
+              <div
+                (click)="$event.stopPropagation()"
+                *ngIf="
+                  center.Running === 0 ||
+                  center.Running === 1 ||
+                  center.Running === 2
+                "
+                class="automating"
+              >
+                <span *ngIf="center.Queue >= 1"
+                  style="font-size: 13px;"
+                  >Queued: {{ center.Queue }} to go</span
+                >
+                <span *ngIf="center.Running === 0 && center.Queue < 1" style="font-size: 13px;">
+                  Enriching
+                  <span class="stat-bars auto-stat" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span
+                    ><span></span><span></span>
+                  </span>
+                </span>
+              </div>
               <div class="image-container">
-  
                 <img
                   loading="lazy"
                   [src]="center.mainImage || 'assets/Images/placeholder.png'"
@@ -521,7 +525,7 @@
                     center.campaignId
                   ]"
                 />
-              
+
                 <div
                   (click)="
                     openCampaignModal(campaignModal, center);
