@@ -82,6 +82,7 @@ export class ShoppingComponent implements OnInit {
   typeFilter: string = 'all';
   leaseTypeFilter: string = 'all';
   disabledCardIds: Set<number> = new Set();
+  private refreshInterval: any;
 
   constructor(
     private placesService: PlacesService,
@@ -96,6 +97,16 @@ export class ShoppingComponent implements OnInit {
     this.isLoading = true;
     this.loadShoppingCenters();
     this.contactID = localStorage.getItem('contactId');
+    this.refreshInterval = setInterval(() => {
+      this.loadShoppingCenters();
+    }, 30000); // 30 seconds
+  }
+
+    ngOnDestroy(): void {
+    // Clean up interval when component is destroyed
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   }
 
   loadShoppingCenters(): void {
