@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
 declare const google: any;
@@ -8,6 +8,8 @@ import { NearByType } from 'src/app/shared/models/nearBy';
 import { ShoppingCenterTenant } from 'src/app/shared/models/PlaceCo';
 import { OrgBranch } from 'src/app/shared/models/branches';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { Subscription, take } from 'rxjs';
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
@@ -34,25 +36,44 @@ export class LandingComponent {
   };
   categoryIcons: { [key: string]: string } = {};
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
+filteredCenters: any[] = [];
+centerIds: number[] = [];
+currentIndex = -1;
+private subscriptions = new Subscription();
 
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private viewManagerService: ViewManagerService,
+        private cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe((params) => {
-      this.shoppingId = params.get('shoppingId');
-      this.campaignId = params.get('campaignId') ;
-      if(this.campaignId==='undefined'){
-        this.campaignId=null;
-      }
-    });
-    this.initializeParams();
-    this.initializeDefaults();
-  }
+async ngOnInit(): Promise<void> {
+  this.activatedRoute.paramMap.subscribe(async (params) => {
+    this.shoppingId = params.get('shoppingId');
+    this.campaignId = params.get('campaignId');
+    if (this.campaignId === 'undefined') {
+      this.campaignId = null;
+    }
+
+    try {
+      await this.viewManagerService.loadShoppingCenters(this.campaignId);
+
+      this.viewManagerService.filteredCenters$.pipe(take(1)).subscribe((centers) => {
+        this.filteredCenters = centers || [];
+        this.rebuildSequence();
+        this.cdr.detectChanges();
+      });
+    } catch (error) {
+    }
+  });
+
+  this.initializeParams();
+  this.initializeDefaults();
+}
+
 
   private initializeParams(): void {
     this.activatedRoute.params.subscribe((params: any) => {
@@ -92,7 +113,6 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log('ddddddd',data.json);
         
         this.shoppingCenter = data.json?.[0] || null;
         this.initializeMap(
@@ -111,8 +131,8 @@ export class LandingComponent {
   initializestreetView(
     lat: number,
     lng: number,
-    heading?: number,
-    pitch?: number
+    heading: number=0,
+    pitch: number=0
   ) {
     const streetViewElement = document.getElementById('street-view');
     if (streetViewElement) {
@@ -176,7 +196,6 @@ export class LandingComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log(data.json);
         
         if (data.json) {
           this.OrganizationBranches = data.json[0];
@@ -308,4 +327,51 @@ export class LandingComponent {
       (c) => c.FirstName || c.LastName || c.Email
     );
   }
+  get hasPrev(): boolean {
+  return this.currentIndex > 0;
+}
+get hasNext(): boolean {
+  return this.currentIndex >= 0 && this.currentIndex < this.centerIds.length - 1;
+}
+private rebuildSequence(): void {
+  // Build an ordered array of IDs based on API response
+  this.centerIds = (this.filteredCenters || [])
+    .map(c => Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId))
+    .filter(id => !isNaN(id));
+
+  const currentIdNum = Number(this.ShoppingCenterId);
+  this.currentIndex = this.centerIds.indexOf(currentIdNum);
+
+}
+
+goToNext(): void {
+  // Check bounds
+  if (!this.hasNext) return;
+
+  // Get next centerId from ordered array
+  const nextId = this.centerIds[this.currentIndex + 1];
+
+
+  this.router.navigate([
+    '/landing',
+    this.PlaceId ?? 0,   
+    nextId,             
+    this.campaignId ?? 0 
+  ]);
+}
+
+goToPrevious(): void {
+  if (!this.hasPrev) return;
+
+  const prevId = this.centerIds[this.currentIndex - 1];
+
+  this.router.navigate([
+    '/landing',
+    this.PlaceId ?? 0,   
+    prevId,              
+    this.campaignId ?? 0 
+  ]);
+}
+
+
 }
