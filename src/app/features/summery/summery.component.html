@@ -78,6 +78,13 @@
              <app-tenant-card  [tenant]="tenant"></app-tenant-card>
          </ng-container>
       </div>
+      <div
+      *ngIf="!(filteredTenants && filteredTenants.length > 0)"
+      class="empty-tenants"
+    >
+      <h4>Tenants Will Appear Here!</h4>
+      <p>Create, Track, and Manage Tenants Here.</p>
+    </div>
    </div>
  
 

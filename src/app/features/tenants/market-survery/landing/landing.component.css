@@ -9,7 +9,7 @@
   flex-direction: column;
   justify-content: flex-end;
   height: 100%;
-  z-index: 10000;
+  z-index: 1000;
   position: relative;
 }
 
