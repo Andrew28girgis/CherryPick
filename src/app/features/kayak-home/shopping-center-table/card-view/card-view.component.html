@@ -168,21 +168,26 @@
           </svg>
         </div> -->
         <div
-          (click)="$event.stopPropagation()"
-          *ngIf="shopping.Running ===0 ||shopping.Running ===1 ||shopping.Running ===2" 
-          class="automating"
+        (click)="$event.stopPropagation()"
+        *ngIf="
+          shopping.Running === 0 ||
+          shopping.Running === 1 ||
+          shopping.Running === 2
+        "
+        class="automating"
+      >
+        <span *ngIf="shopping.Queue >= 1"
+          style="font-size: 13px;"
+          >Queued: {{ shopping.Queue }} to go</span
         >
-          <span *ngIf="shopping.Queue > 1"
-            >Queued to enriche: {{ shopping.Queue }} to go</span
-          >
-          <span *ngIf="shopping.Queue === 1">
-            Enriching
-            <span class="stat-bars auto-stat" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span
-              ><span></span>
-            </span>
+        <span *ngIf="shopping.Running === 0 && shopping.Queue < 1" style="font-size: 13px;">
+          Enriching
+          <span class="stat-bars auto-stat" aria-hidden="true">
+            <span></span><span></span><span></span><span></span
+            ><span></span><span></span>
           </span>
-        </div>
+        </span>
+      </div>
 
         <div
           (click)="openInfoPopup(shopping, infoModal); $event.stopPropagation()"

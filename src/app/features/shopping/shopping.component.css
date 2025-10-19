@@ -250,7 +250,7 @@
 .centers-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: var(--Space-S-24);
+  gap: 40px;
   max-width: 1600px;
   margin: 0 auto;
   margin-top: 20px;
