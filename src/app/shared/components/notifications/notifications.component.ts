@@ -193,36 +193,36 @@ export class NotificationsComponent
     });
 
     // old way of loading notifications every 2 seconds
-    // const poll = () => {
-    //   this.wasSticky = this.isAtBottom();
-    //   const prevLength = this.notificationService.notifications.length;
+    const poll = () => {
+      this.wasSticky = this.isAtBottom();
+      const prevLength = this.notificationService.notifications.length;
 
-    //   this.notificationService
-    //     .fetchUserNotifications(this.CampaignId)
-    //     .subscribe({
-    //       complete: () => {
-    //         const newLength = this.notificationService.notifications.length;
-    //         const diff = newLength - prevLength;
+      this.notificationService
+        .fetchUserNotifications(this.CampaignId)
+        .subscribe({
+          complete: () => {
+            const newLength = this.notificationService.notifications.length;
+            const diff = newLength - prevLength;
 
-    //         if (diff > 0) {
-    //           const newMessages = this.notificationService.notifications.slice(
-    //             -diff
-    //           );
-    //           this.checkForShoppingCentersReply(newMessages);
-    //           this.onNewMessagesArrived(diff);
-    //         }
+            if (diff > 0) {
+              const newMessages = this.notificationService.notifications.slice(
+                -diff
+              );
+              this.checkForShoppingCentersReply(newMessages);
+              this.onNewMessagesArrived(diff);
+            }
 
-    //         this.previousNotificationsLength = newLength;
-    //         this.sortNotificationsByDateAsc();
-    //         this.scanTrigger$.next();
+            this.previousNotificationsLength = newLength;
+            this.sortNotificationsByDateAsc();
+            this.scanTrigger$.next();
 
-    //         // ⏱️ Wait 2s AFTER finishing
-    //         setTimeout(poll, 2000);
-    //       },
-    //     });
-    // };
+            // ⏱️ Wait 2s AFTER finishing
+            setTimeout(poll, 2000);
+          },
+        });
+    };
 
-    // poll();
+    poll();
 
     /* the new way */
 
