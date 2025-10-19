@@ -495,6 +495,13 @@ export class ShoppingComponent implements OnInit {
   fileLeave(event: any): void {}
 
   uploadFile(file: File): void {
+    this.showToast(
+      'File uploaded successfully! Emily will process it and notify you when finished.'
+    );
+    console.log(
+      'File uploaded successfully! Emily will process it and notify you when finished.'
+    );
+
     this.isUploading = true;
     this.showFileDropArea = false;
 
@@ -508,18 +515,8 @@ export class ShoppingComponent implements OnInit {
 
         this.modalService.dismissAll();
 
-        if (
-          response &&
-          response.Message === 'The PDF has been uploaded successfully'
-        ) {
-          this.showToast(
-            'Emily is processing with the PDF and will Notify when finished in the notifications'
-          );
-        } else {
-          this.showToast(
-            'File uploaded successfully! Emily will process it and notify you when finished.'
-          );
-        }
+        this.showToast('The PDF has been uploaded successfully');
+        console.log('The PDF has been uploaded successfully.');
         // this.router.navigate(['/uploadOM', this.CampaignId], {
         //   state: { uploadResponse: response }
         // });

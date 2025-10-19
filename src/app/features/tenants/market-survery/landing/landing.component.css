@@ -897,5 +897,29 @@ li {
 }
 .cb{
   left: 30px;
-
+  
 }
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-btn-prev {
+  background-color: #6c757d; 
+}
+
+.nav-btn-next {
+  background-color: var(--Colors-Primary-500); 
+}
+

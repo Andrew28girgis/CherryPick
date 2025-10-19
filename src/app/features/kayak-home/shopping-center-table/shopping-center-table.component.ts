@@ -493,7 +493,8 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       : 0;
 
     this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
-
+    this.shoppingCenterService.loadShoppingCenters(campaignId);
+    this.cdr.detectChanges();
     if (this.tenantDropdownRef) {
       this.tenantDropdownRef.close();
     }
