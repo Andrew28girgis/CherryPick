@@ -36,10 +36,10 @@ export class LandingComponent {
   };
   categoryIcons: { [key: string]: string } = {};
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
-filteredCenters: any[] = [];
-centerIds: number[] = [];
-currentIndex = -1;
-private subscriptions = new Subscription();
+  filteredCenters: any[] = [];
+  centerIds: number[] = [];
+  currentIndex = -1;
+  private subscriptions = new Subscription();
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -47,39 +47,43 @@ private subscriptions = new Subscription();
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private viewManagerService: ViewManagerService,
-        private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
-async ngOnInit(): Promise<void> {
-  this.activatedRoute.paramMap.subscribe(async (params) => {
-    this.shoppingId = params.get('shoppingId');
-    this.campaignId = params.get('campaignId');
-    if (this.campaignId === 'undefined') {
-      this.campaignId = null;
-    }
+  async ngOnInit(): Promise<void> {
+    this.activatedRoute.paramMap.subscribe(async (params) => {
+      this.shoppingId = params.get('shoppingId');
+      this.campaignId = params.get('campaignId');
+      if (this.campaignId === 'undefined') {
+        this.campaignId = null;
+      }
 
-    try {
-      await this.viewManagerService.loadShoppingCenters(this.campaignId);
+      if (this.campaignId) {
+        try {
+          await this.viewManagerService.loadShoppingCenters(this.campaignId);
 
-      this.viewManagerService.filteredCenters$.pipe(take(1)).subscribe((centers) => {
-        this.filteredCenters = centers || [];
-        this.rebuildSequence();
-        this.cdr.detectChanges();
-      });
-    } catch (error) {
-    }
-  });
+          this.viewManagerService.filteredCenters$
+            .pipe(take(1))
+            .subscribe((centers) => {
+              this.filteredCenters = centers || [];
+              this.rebuildSequence();
+              this.cdr.detectChanges();
+            });
+        } catch (error) {}
+      } else {
+        this.loadShoppingCenters();
+      }
+    });
 
-  this.initializeParams();
-  this.initializeDefaults();
-}
-
+    this.initializeParams();
+    this.initializeDefaults();
+  }
 
   private initializeParams(): void {
     this.activatedRoute.params.subscribe((params: any) => {
-      this.campaignId = params.campaignId ;
-      if(this.campaignId==='undefined'){
-        this.campaignId=null;
+      this.campaignId = params.campaignId;
+      if (this.campaignId === 'undefined') {
+        this.campaignId = null;
       }
       this.PlaceId = params.id;
       this.ShoppingCenterId = params.shoppiongCenterId;
@@ -87,7 +91,6 @@ async ngOnInit(): Promise<void> {
         this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
         this.GetPlaceDetails(0, this.ShoppingCenterId);
       } else {
-         
         this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, this.PlaceId);
 
         this.GetPlaceDetails(this.PlaceId, 0);
@@ -113,7 +116,6 @@ async ngOnInit(): Promise<void> {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        
         this.shoppingCenter = data.json?.[0] || null;
         this.initializeMap(
           this.shoppingCenter.Latitude,
@@ -131,8 +133,8 @@ async ngOnInit(): Promise<void> {
   initializestreetView(
     lat: number,
     lng: number,
-    heading: number=0,
-    pitch: number=0
+    heading: number = 0,
+    pitch: number = 0
   ) {
     const streetViewElement = document.getElementById('street-view');
     if (streetViewElement) {
@@ -183,20 +185,19 @@ async ngOnInit(): Promise<void> {
     Shoppingcenterid: number,
     PlaceId: number
   ): void {
-    if(this.campaignId==='undefined'){
-      this.campaignId=null;
+    if (this.campaignId === 'undefined') {
+      this.campaignId = null;
     }
     const body: any = {
       Name: 'GetBuyBoxOrganizationDetails',
       Params: {
         shoppingcenterid: +Shoppingcenterid,
         placeId: +PlaceId,
-        CampaignId: this.campaignId, 
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        
         if (data.json) {
           this.OrganizationBranches = data.json[0];
         }
@@ -323,52 +324,85 @@ async ngOnInit(): Promise<void> {
   }
 
   hasContacts(): boolean {
-    return  this.shoppingCenter?.Contacts?.some(
+    return this.shoppingCenter?.Contacts?.some(
       (c) => c.FirstName || c.LastName || c.Email
     );
   }
   get hasPrev(): boolean {
-  return this.currentIndex > 0;
-}
-get hasNext(): boolean {
-  return this.currentIndex >= 0 && this.currentIndex < this.centerIds.length - 1;
-}
-private rebuildSequence(): void {
-  this.centerIds = (this.filteredCenters || [])
-    .map(c => Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId))
-    .filter(id => !isNaN(id));
+    return this.currentIndex > 0;
+  }
+  get hasNext(): boolean {
+    return (
+      this.currentIndex >= 0 && this.currentIndex < this.centerIds.length - 1
+    );
+  }
+  private rebuildSequence(): void {
+    this.centerIds = (this.filteredCenters || [])
+      .map((c) =>
+        Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId)
+      )
+      .filter((id) => !isNaN(id));
 
-  const currentIdNum = Number(this.ShoppingCenterId);
-  this.currentIndex = this.centerIds.indexOf(currentIdNum);
-
-}
+    const currentIdNum = Number(this.ShoppingCenterId);
+    this.currentIndex = this.centerIds.indexOf(currentIdNum);
+  }
 
 goToNext(): void {
-  if (!this.hasNext) return;
+  if (!this.centerIds?.length) return;
 
-  const nextId = this.centerIds[this.currentIndex + 1];
+  // If at the last index → go to the first one
+  const nextIndex =
+    this.currentIndex >= this.centerIds.length - 1 ? 0 : this.currentIndex + 1;
 
+  const nextId = this.centerIds[nextIndex];
+  console.log('nextId:', nextId);
+
+  this.currentIndex = nextIndex; 
 
   this.router.navigate([
     '/landing',
-    this.PlaceId ?? 0,   
-    nextId,             
-    this.campaignId ?? 0 
+    this.PlaceId,
+    nextId,
+    this.campaignId == null ? 'undefined' : this.campaignId,
   ]);
 }
 
 goToPrevious(): void {
-  if (!this.hasPrev) return;
+  if (!this.centerIds?.length) return;
 
-  const prevId = this.centerIds[this.currentIndex - 1];
+  const prevIndex =
+    this.currentIndex <= 0 ? this.centerIds.length - 1 : this.currentIndex - 1;
+
+  const prevId = this.centerIds[prevIndex];
+  console.log('prevId:', prevId);
+
+  this.currentIndex = prevIndex;
 
   this.router.navigate([
     '/landing',
-    this.PlaceId ?? 0,   
-    prevId,              
-    this.campaignId ?? 0 
+    this.PlaceId,
+    prevId,
+    this.campaignId == null ? 'undefined' : this.campaignId,
   ]);
 }
 
 
+  loadShoppingCenters(): void {
+    const params = {
+      Name: 'GetShoppingCenters',
+      Params: {},
+    };
+
+    this.PlacesService.GenericAPI(params).subscribe((response: any) => {
+      if (response && response.json) {
+        this.filteredCenters = response.json.map(
+          (center: any, index: number) => ({
+            ...center,
+            id: center.id || index + 1,
+          })
+        );
+        this.rebuildSequence();  
+      }
+    });
+  }
 }
