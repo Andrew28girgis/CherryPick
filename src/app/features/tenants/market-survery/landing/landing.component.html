@@ -3,7 +3,10 @@
   <i class="fa-solid fa-arrow-left goback mb-1" (click)="goBack()"></i>
   <div class="image-map-container">
     <div class="image-section">
-      <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
+      <section id="intro" 
+               [ngStyle]="{ background: getBackgroundImage()}"
+               [class.has-background]="getBackgroundImage()"
+               [class.no-background]="!getBackgroundImage()">
         <div class="intro-container wow fadeIn">
           <h1
             *ngIf="shoppingCenter?.CenterName"
@@ -192,18 +195,18 @@
         <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
           <div
             class="user-card-wrapper"
-            *ngIf="Manager.FirstName || Manager.LastName"
+            *ngIf="Manager.FirstName || Manager.LastName || Manager.Email"
           >
             <span class="card-badge" *ngIf="Manager.OrganizationName">
               {{ Manager.OrganizationName }}
             </span>
             <div class="user-card gap-2">
               <div class="org-logo placeholder">
-                {{ getInitials(Manager.FirstName, Manager.LastName) }}
+                {{ getInitials(Manager.FirstName, Manager.LastName) || getInitial(Manager.OrganizationName || 'N/A') }}
               </div>
 
               <div class="user-info">
-                <h3 class="user-name m-0">
+                <h3 class="user-name m-0" *ngIf="Manager.FirstName || Manager.LastName">
                   <span class="name">{{
                     Manager.FirstName + " " + Manager.LastName
                   }}</span>

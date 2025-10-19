@@ -223,12 +223,30 @@ li {
   font-size: 14px;
 }
 #intro {
-  height: 500px;
   background-size: cover;
   background-attachment: fixed;
   overflow: hidden;
   position: relative;
   border-radius: var(--Radius-R-20);
+}
+
+#intro.has-background {
+  height: 500px;
+  color: var(--Colors-Pure-White);
+}
+
+#intro.no-background {
+  height: fit-content;
+  min-height: auto;
+  padding: var(--Space-S-20);
+  color: var(--app-color);
+}
+#intro.no-background .intro-container {
+  justify-content: center;
+  align-items: center;
+}
+#intro.no-background:before {
+  background: #fff;
 }
 #intro:before {
   content: "";
@@ -247,7 +265,6 @@ li {
 }
 
 #intro h1 {
-  color: var(--Colors-Pure-White);
   font-size: 30px;
   font-weight: 600 !important;
   text-transform: uppercase;
@@ -256,7 +273,6 @@ li {
   color: #f82249;
 }
 #intro p {
-  color: #ebebeb;
   font-size: 16px;
   align-items: center;
   display: flex;

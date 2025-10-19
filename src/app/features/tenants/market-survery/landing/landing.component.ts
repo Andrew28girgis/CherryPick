@@ -92,6 +92,8 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
+        console.log('ddddddd',data.json);
+        
         this.shoppingCenter = data.json?.[0] || null;
         this.initializeMap(
           this.shoppingCenter.Latitude,
@@ -174,6 +176,8 @@ export class LandingComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
+        console.log(data.json);
+        
         if (data.json) {
           this.OrganizationBranches = data.json[0];
         }
@@ -300,7 +304,7 @@ export class LandingComponent {
   }
 
   hasContacts(): boolean {
-    return !!this.shoppingCenter?.Contacts?.some(
+    return  this.shoppingCenter?.Contacts?.some(
       (c) => c.FirstName || c.LastName || c.Email
     );
   }
