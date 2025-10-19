@@ -246,7 +246,7 @@
   font-size: 13px;
 }
 
-/* Grid Layout - exactly 3 columns */
+/* Grid Layout - exactly 2 columns */
 .centers-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
