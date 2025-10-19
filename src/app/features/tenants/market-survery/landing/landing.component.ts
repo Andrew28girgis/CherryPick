@@ -347,33 +347,45 @@ export class LandingComponent {
     this.currentIndex = this.centerIds.indexOf(currentIdNum);
   }
 
-  goToNext(): void {
-    // if (!this.hasNext) return;
+goToNext(): void {
+  if (!this.centerIds?.length) return;
 
-    const nextId = this.centerIds[this.currentIndex + 1];
-    console.log('nextId:', nextId);
+  // If at the last index → go to the first one
+  const nextIndex =
+    this.currentIndex >= this.centerIds.length - 1 ? 0 : this.currentIndex + 1;
 
-    this.router.navigate([
-      '/landing',
-      this.PlaceId  ,
-      nextId,
-      this.campaignId== null ? 'undefined' : this.campaignId,
-    ]);
-  }
+  const nextId = this.centerIds[nextIndex];
+  console.log('nextId:', nextId);
 
-  goToPrevious(): void {
-    // if (!this.hasPrev) return;
-    
-    const prevId = this.centerIds[this.currentIndex - 1];
-    console.log('prevId:', prevId);
+  this.currentIndex = nextIndex; 
 
-    this.router.navigate([
-      '/landing',
-      this.PlaceId ,
-      prevId,
-      this.campaignId== null ? 'undefined' : this.campaignId,
-    ]);
-  }
+  this.router.navigate([
+    '/landing',
+    this.PlaceId,
+    nextId,
+    this.campaignId == null ? 'undefined' : this.campaignId,
+  ]);
+}
+
+goToPrevious(): void {
+  if (!this.centerIds?.length) return;
+
+  const prevIndex =
+    this.currentIndex <= 0 ? this.centerIds.length - 1 : this.currentIndex - 1;
+
+  const prevId = this.centerIds[prevIndex];
+  console.log('prevId:', prevId);
+
+  this.currentIndex = prevIndex;
+
+  this.router.navigate([
+    '/landing',
+    this.PlaceId,
+    prevId,
+    this.campaignId == null ? 'undefined' : this.campaignId,
+  ]);
+}
+
 
   loadShoppingCenters(): void {
     const params = {
