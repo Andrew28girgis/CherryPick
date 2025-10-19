@@ -39,6 +39,8 @@ export class LandingComponent {
   filteredCenters: any[] = [];
   centerIds: number[] = [];
   currentIndex = -1;
+  nextName = '';
+  prevName = '';
   private subscriptions = new Subscription();
 
   constructor(
@@ -336,6 +338,16 @@ export class LandingComponent {
       this.currentIndex >= 0 && this.currentIndex < this.centerIds.length - 1
     );
   }
+
+  // Helper method to get center name by ID
+  private getCenterNameById(id: number): string {
+    const center = this.filteredCenters.find(
+      (c) =>
+        Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId) === id
+    );
+    return center?.CenterName || center?.centerName ||  'Unknown Center';
+  }
+
   private rebuildSequence(): void {
     this.centerIds = (this.filteredCenters || [])
       .map((c) =>
@@ -345,47 +357,72 @@ export class LandingComponent {
 
     const currentIdNum = Number(this.ShoppingCenterId);
     this.currentIndex = this.centerIds.indexOf(currentIdNum);
+
+    // Calculate next and previous names with circular navigation
+    if (this.centerIds.length > 0 && this.currentIndex >= 0) {
+      // Next index (circular)
+      const nextIndex =
+        this.currentIndex >= this.centerIds.length - 1
+          ? 0
+          : this.currentIndex + 1;
+      const nextId = this.centerIds[nextIndex];
+      this.nextName = this.getCenterNameById(nextId);
+
+      // Previous index (circular)
+      const prevIndex =
+        this.currentIndex <= 0
+          ? this.centerIds.length - 1
+          : this.currentIndex - 1;
+      const prevId = this.centerIds[prevIndex];
+      this.prevName = this.getCenterNameById(prevId);
+    } else {
+      this.nextName = '';
+      this.prevName = '';
+    }
   }
 
-goToNext(): void {
-  if (!this.centerIds?.length) return;
+  goToNext(): void {
+    if (!this.centerIds?.length) return;
 
-  // If at the last index → go to the first one
-  const nextIndex =
-    this.currentIndex >= this.centerIds.length - 1 ? 0 : this.currentIndex + 1;
+    // If at the last index → go to the first one
+    const nextIndex =
+      this.currentIndex >= this.centerIds.length - 1
+        ? 0
+        : this.currentIndex + 1;
 
-  const nextId = this.centerIds[nextIndex];
-  console.log('nextId:', nextId);
+    const nextId = this.centerIds[nextIndex];
+    console.log('nextId:', nextId);
 
-  this.currentIndex = nextIndex; 
+    this.currentIndex = nextIndex;
 
-  this.router.navigate([
-    '/landing',
-    this.PlaceId,
-    nextId,
-    this.campaignId == null ? 'undefined' : this.campaignId,
-  ]);
-}
+    this.router.navigate([
+      '/landing',
+      this.PlaceId,
+      nextId,
+      this.campaignId == null ? 'undefined' : this.campaignId,
+    ]);
+  }
 
-goToPrevious(): void {
-  if (!this.centerIds?.length) return;
+  goToPrevious(): void {
+    if (!this.centerIds?.length) return;
 
-  const prevIndex =
-    this.currentIndex <= 0 ? this.centerIds.length - 1 : this.currentIndex - 1;
+    const prevIndex =
+      this.currentIndex <= 0
+        ? this.centerIds.length - 1
+        : this.currentIndex - 1;
 
-  const prevId = this.centerIds[prevIndex];
-  console.log('prevId:', prevId);
+    const prevId = this.centerIds[prevIndex];
+    console.log('prevId:', prevId);
 
-  this.currentIndex = prevIndex;
+    this.currentIndex = prevIndex;
 
-  this.router.navigate([
-    '/landing',
-    this.PlaceId,
-    prevId,
-    this.campaignId == null ? 'undefined' : this.campaignId,
-  ]);
-}
-
+    this.router.navigate([
+      '/landing',
+      this.PlaceId,
+      prevId,
+      this.campaignId == null ? 'undefined' : this.campaignId,
+    ]);
+  }
 
   loadShoppingCenters(): void {
     const params = {
@@ -401,7 +438,7 @@ goToPrevious(): void {
             id: center.id || index + 1,
           })
         );
-        this.rebuildSequence();  
+        this.rebuildSequence();
       }
     });
   }
