@@ -102,7 +102,7 @@ export class ShoppingComponent implements OnInit {
     }, 30000); // 30 seconds
   }
 
-    ngOnDestroy(): void {
+  ngOnDestroy(): void {
     // Clean up interval when component is destroyed
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
