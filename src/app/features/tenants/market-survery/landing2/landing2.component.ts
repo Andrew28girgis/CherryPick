@@ -233,16 +233,18 @@ export class Landing2Component implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe((params) => {
-      this.shoppingId = params.get('shoppingId');
-      this.campaignId = params.get('campaignId') ;
-      if(this.campaignId==='undefined'){
-        this.campaignId=null;
-      }
-    });
-    this.initializeParams();
-  }
+ngOnInit(): void {
+  this.activatedRoute.params.subscribe((params: any) => {
+    this.shoppingId = params.shoppingId;
+    this.campaignId = params.campaignId;
+
+    if (this.campaignId === 'undefined') {
+      this.campaignId = null;
+    }
+  });
+
+  this.initializeParams();
+}
 
   formatNumber(num: number): string {
     return (num ?? 0).toLocaleString();
@@ -296,25 +298,29 @@ export class Landing2Component implements OnInit {
     ];
   }
 
-  private initializeParams(): void {
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.campaignId = params.get('campaignId') ;
-      if(this.campaignId==='undefined'){
-        this.campaignId=null;
-      }
-      this.PlaceId = params.id;
-      this.ShoppingCenterId = params.shoppiongCenterId;
+private initializeParams(): void {
+  this.activatedRoute.params.subscribe((params: any) => {
+    // ✅ Access params directly (no .get)
+    this.campaignId = params.campaignId;
+    if (this.campaignId === 'undefined') {
+      this.campaignId = null;
+    }
 
-      if (this.ShoppingCenterId != 0) {
-        this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
-        this.GetPlaceDetails(0, this.ShoppingCenterId);
-      } else {
-        this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, this.PlaceId);
-        this.GetPlaceDetails(this.PlaceId, 0);
-      }
-      this.GetPlaceCotenants();
-    });
-  }
+    this.PlaceId = params.id;
+    this.ShoppingCenterId = params.shoppiongCenterId;
+
+    if (this.ShoppingCenterId != 0) {
+      this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
+      this.GetPlaceDetails(0, this.ShoppingCenterId);
+    } else {
+      this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, this.PlaceId);
+      this.GetPlaceDetails(this.PlaceId, 0);
+    }
+
+    this.GetPlaceCotenants();
+  });
+}
+
 
   GetPlaceCotenants(): void {
     const body: any = {
