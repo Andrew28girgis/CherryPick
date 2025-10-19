@@ -1815,3 +1815,33 @@ tr.click-disabled td:last-child * {
     animation: none;
   }
 }
+
+.enriching-card {
+  position: relative;
+  overflow: visible;
+}
+
+.enriching-card::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(var(--Radius-R-12) + 3px);
+  background:
+    linear-gradient(90deg,  #e3cf9f 50%, transparent 50%) top / 20px 3px repeat-x,
+    linear-gradient(90deg,  #e3cf9f 50%, transparent 50%) bottom / 20px 3px repeat-x,
+    linear-gradient(0deg,  #e3cf9f 50%, transparent 50%) left / 3px 20px repeat-y,
+    linear-gradient(0deg,  #e3cf9f 50%, transparent 50%) right / 3px 20px repeat-y;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  animation: moveBorder 0.4s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes moveBorder {
+  0% {
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+  }
+  100% {
+    background-position: 20px 0, -20px 100%, 0 -20px, 100% 20px;
+  }
+} 
