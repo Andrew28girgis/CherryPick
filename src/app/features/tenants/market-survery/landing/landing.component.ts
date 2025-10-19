@@ -334,7 +334,6 @@ get hasNext(): boolean {
   return this.currentIndex >= 0 && this.currentIndex < this.centerIds.length - 1;
 }
 private rebuildSequence(): void {
-  // Build an ordered array of IDs based on API response
   this.centerIds = (this.filteredCenters || [])
     .map(c => Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId))
     .filter(id => !isNaN(id));
@@ -345,10 +344,8 @@ private rebuildSequence(): void {
 }
 
 goToNext(): void {
-  // Check bounds
   if (!this.hasNext) return;
 
-  // Get next centerId from ordered array
   const nextId = this.centerIds[this.currentIndex + 1];
 
 
