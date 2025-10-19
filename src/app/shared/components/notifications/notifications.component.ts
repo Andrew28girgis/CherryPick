@@ -26,7 +26,7 @@ import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { PolygonsComponent } from 'src/app/features/polygons/polygons.component';
-import { WebSocketService } from './../../../core/services/notification-signalr.service';
+// import { WebSocketService } from './../../../core/services/notification-signalr.service';
 
 type ChatFrom = 'user' | 'system' | 'ai';
 
@@ -133,7 +133,7 @@ export class NotificationsComponent
     private ngZone: NgZone,
     private modalService: NgbModal,
     private refreshService: RefreshService,
-    private webSocketService: WebSocketService
+    // private webSocketService: WebSocketService
   ) {}
 
   showScrollButton = false;
@@ -193,36 +193,36 @@ export class NotificationsComponent
     });
 
     // old way of loading notifications every 2 seconds
-    const poll = () => {
-      this.wasSticky = this.isAtBottom();
-      const prevLength = this.notificationService.notifications.length;
+    // const poll = () => {
+    //   this.wasSticky = this.isAtBottom();
+    //   const prevLength = this.notificationService.notifications.length;
 
-      this.notificationService
-        .fetchUserNotifications(this.CampaignId)
-        .subscribe({
-          complete: () => {
-            const newLength = this.notificationService.notifications.length;
-            const diff = newLength - prevLength;
+    //   this.notificationService
+    //     .fetchUserNotifications(this.CampaignId)
+    //     .subscribe({
+    //       complete: () => {
+    //         const newLength = this.notificationService.notifications.length;
+    //         const diff = newLength - prevLength;
 
-            if (diff > 0) {
-              const newMessages = this.notificationService.notifications.slice(
-                -diff
-              );
-              this.checkForShoppingCentersReply(newMessages);
-              this.onNewMessagesArrived(diff);
-            }
+    //         if (diff > 0) {
+    //           const newMessages = this.notificationService.notifications.slice(
+    //             -diff
+    //           );
+    //           this.checkForShoppingCentersReply(newMessages);
+    //           this.onNewMessagesArrived(diff);
+    //         }
 
-            this.previousNotificationsLength = newLength;
-            this.sortNotificationsByDateAsc();
-            this.scanTrigger$.next();
+    //         this.previousNotificationsLength = newLength;
+    //         this.sortNotificationsByDateAsc();
+    //         this.scanTrigger$.next();
 
-            // ⏱️ Wait 2s AFTER finishing
-            setTimeout(poll, 2000);
-          },
-        });
-    };
+    //         // ⏱️ Wait 2s AFTER finishing
+    //         setTimeout(poll, 2000);
+    //       },
+    //     });
+    // };
 
-    poll();
+    // poll();
 
     /* the new way */
 
