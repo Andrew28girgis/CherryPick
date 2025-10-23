@@ -625,7 +625,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         this.selectedCampaign = JSON.parse(
           response.json[0].campaignDetailsJSON
         );
-         
+
+        this.insertNotifcation(
+          `Let's update the '${campaign.CampaignName}' campaign details for '${campaign.OrganizationName}', i am preparing the campaign specs`
+        );
         this.placesService
           .sendmessages({
             Chat: `
@@ -643,5 +646,17 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         // this.notificationService.sendmessage('Edit this Campaign');
       },
     });
+  }
+  insertNotifcation(chat: string) {
+    const genericInput = {
+      Name: 'InsertNotificationFromAutomation',
+      Params: {
+        Message: chat,
+        HTML: null,
+        CampaignId: null,
+        NotificationCategoryId: 2,
+      },
+    };
+    this.placesService.GenericAPI(genericInput).subscribe({});
   }
 }
