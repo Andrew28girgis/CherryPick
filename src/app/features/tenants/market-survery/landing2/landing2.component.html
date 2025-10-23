@@ -1,15 +1,5 @@
-<div class="census-container">
-  <!-- Header Section -->
-  <div class="header-card">
-    <!-- <div class="location-info">
-          <h1 class="tract-name">{{ censusData.name }}</h1>
-          <div class="coordinates">
-            <span class="coord-item">
-              <i class="icon">📍</i>
-              {{ censusData.lat.toFixed(4) }}, {{ censusData.lon.toFixed(4) }}
-            </span>
-          </div>
-        </div> -->
+<div class="census-container" *ngIf="shoppingCenter?.Demographics"> 
+  <div class="header-card"> 
     <div class="key-stats">
       <div class="stat-item">
         <div class="stat-value">{{ formatNumber(censusData.population) }}</div>
