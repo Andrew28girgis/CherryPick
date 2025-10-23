@@ -678,16 +678,27 @@
   </div>
 
   <div class="modal-body">
-    <!-- Stepper -->
-    <div class="stepper mb-4">
-      <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
-      <div class="step-line"></div>
-      <div class="step" [class.active]="step === 'campaign'">
-        Campaign Details
-      </div>
-      <div class="step-line"></div>
-      <div class="step" [class.active]="step === 'polygon'">Locations</div>
-    </div>
+    <!-- Stepper + Finish button inline -->
+<div class="stepper-container d-flex justify-content-between align-items-center mb-4">
+  <!-- Stepper -->
+  <div class="stepper d-flex align-items-center">
+    <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
+    <div class="step-line"></div>
+    <div class="step" [class.active]="step === 'campaign'">Campaign Details</div>
+    <div class="step-line"></div>
+    <div class="step" [class.active]="step === 'polygon'">Locations</div>
+  </div>
+
+  <!-- Finish button -->
+  <button
+    *ngIf="step === 'polygon'"
+    class="btn btn-primary next-btn"
+    (click)="finish()"
+  >
+    Finish
+  </button>
+</div>
+
 
     <div
       *ngIf="TenantStepLoad"
@@ -818,14 +829,6 @@
         Next
       </button>
 
-      <!-- Finish -->
-      <button
-        *ngIf="step === 'polygon'"
-        class="btn btn-primary next-btn ms-auto"
-        (click)="finish()"
-      >
-        Finish
-      </button>
     </div>
   </div>
 </ng-template>
