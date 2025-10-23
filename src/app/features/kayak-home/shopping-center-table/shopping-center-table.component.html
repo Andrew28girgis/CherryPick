@@ -174,10 +174,10 @@
           </div>
         </ng-template>
       </div>
-      <div class="d-flex">
-        <div class="header-container">
+      <div class="d-flex responsive-div">
+        <div class="header-container responsive-div">
           <div class="search-section">
-            <div class="search-container" [class.expanded]="isSearchExpanded">
+            <div class="search-container" [class.expanded]="isSearchExpanded ||isMobile">
               <button class="search-icon-btn" (click)="toggleSearch()">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +204,7 @@
               </button>
               <input
                 #searchInput
-                *ngIf="isSearchExpanded"
+                *ngIf="isSearchExpanded ||isMobile"
                 type="text"
                 placeholder="Search Properties..."
                 class="search-input"

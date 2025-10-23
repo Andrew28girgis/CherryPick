@@ -342,9 +342,24 @@
 
 /* Mobile adjustments */
 @media screen and (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
   .add-btn {
     bottom: 90px;
     right: 20px;
+    --button-margin: 0;
+  }
+  .tenant-name span {
+    line-height: 0px !important;
+  }
+  .tenant-header {
+    flex-direction: column;
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 
@@ -355,15 +370,6 @@
 
 :host-context(.with-copilot.copilot-expanded) .add-btn {
   --button-margin: 380px;
-}
-
-/* Mobile adjustments */
-@media screen and (max-width: 768px) {
-  .add-btn {
-    bottom: 90px;
-    right: 20px;
-    --button-margin: 0;
-  }
 }
 
 /* Copilot states */
@@ -668,7 +674,7 @@
   display: flex;
   align-items: center;
   width: 44px;
-  transition: width .3s, background-color .3s, border-color .3s;
+  transition: width 0.3s, background-color 0.3s, border-color 0.3s;
   will-change: width;
   position: relative;
   overflow: hidden;
@@ -891,7 +897,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 22px;
-  border: none ;
+  border: none;
   display: flex;
   padding: var(--Space-S-12);
   align-items: center;
@@ -913,20 +919,23 @@
 
 @media (max-width: 768px) {
   .sort-menu,
+  .filter-menu,
   .view-menu {
-    right: -10px;
-    min-width: 140px;
+    left: 2vw;
   }
 
   .actions-container {
     gap: var(--Space-S-8);
+  }
+  .responsive-div{
+    width: 100%;
   }
 }
 
 /* Tenant Header Styles */
 .tenant-header {
   padding: 0;
-  align-items: center; 
+  align-items: center;
 }
 
 .tenant-logo {
@@ -1298,8 +1307,6 @@
     grid-template-columns: 1fr;
   }
 
-
-
   .website-cards-container {
     padding: 16px;
   }
@@ -1531,26 +1538,25 @@
   font-size: 16px;
   color: #fff;
   background-color: #102e50;
-  flex-shrink: 0; 
+  flex-shrink: 0;
   cursor: auto;
 }
 .delete-btn {
-  background-color: #f8d7da;    
-  border: 1px solid #f5c2c7;    
-  color: #dc3545;               
-   cursor: pointer;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+  color: #dc3545;
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
 .delete-btn:hover {
-  background-color: #f1aeb5;      
-  color: #fff; 
+  background-color: #f1aeb5;
+  color: #fff;
   border-color: #f1aeb5;
- }
-.delete-toast{
+}
+.delete-toast {
   background-color: #f8d7da;
-  color: #dc3545;     
-  border: none;   
-  border-left: 5px solid  #dc3545;
-
+  color: #dc3545;
+  border: none;
+  border-left: 5px solid #dc3545;
 }
