@@ -9,7 +9,7 @@
   flex-direction: column;
   justify-content: flex-end;
   height: 100%;
-  z-index: 1000;
+  z-index: 99 ;
   position: relative;
 }
 
@@ -650,6 +650,19 @@ li {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .responsive-cotenants{
+    gap: 30px;
+  }
+  .responsive-div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .responsive{
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
   .user-card {
     margin-bottom: 16px;
   }
@@ -923,3 +936,7 @@ li {
   background-color: var(--Colors-Primary-500); 
 }
 
+.responsive-div{
+  width: 100%;
+  jus
+}

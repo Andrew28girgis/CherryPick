@@ -1,6 +1,8 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div>
-  <div class="d-flex justify-content-between align-items-center my-3 px-3">
+  <div
+    class="d-flex justify-content-between align-items-center my-3 px-3 responsive"
+  >
     <div class="d-flex align-items-center">
       <i
         class="fa-solid fa-arrow-left goback mb-1 me-3"
@@ -8,18 +10,19 @@
         title="Go back"
         style="cursor: pointer"
       ></i>
-
+    </div>
+    <div class="responsive-div">
       <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
         <i class="fa-solid fa-chevron-left me-1"></i>
         Previous {{ prevName ? "to:  " + prevName : "" }}
       </button>
+
+      <button class="nav-btn nav-btn-next" (click)="goToNext()">
+        Next {{ nextName ? "to:  " + nextName : "" }}
+
+        <i class="fa-solid fa-chevron-right ms-1"></i>
+      </button>
     </div>
-
-    <button class="nav-btn nav-btn-next" (click)="goToNext()">
-      Next {{ nextName ? "to:  " + nextName : "" }}
-
-      <i class="fa-solid fa-chevron-right ms-1"></i>
-    </button>
   </div>
 
   <div class="image-map-container">
@@ -321,7 +324,7 @@
     </div>
    -->
 
-  <div class="row py-4">
+  <div class="row py-4 responsive-cotenants">
     <!-- very short -->
     <div class="col-md-6 position-relative" *ngIf="tenantGroups.onSite.length">
       <span class="card-badge cb">

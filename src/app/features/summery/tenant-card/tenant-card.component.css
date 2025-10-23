@@ -188,3 +188,9 @@
     background-color: var(--Colors-Primary-hover);
     color: var(--Colors-Pure-White);
   }
+
+  @media (max-width: 768px) {
+    ::ng-deep .offcanvas-panel-class {
+      width: 80% !important;
+    }
+  }  
