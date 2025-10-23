@@ -2,7 +2,7 @@ export interface Notification {
   id: number;
   message: string;
   userId: number;
-  isRead: number;
+  isRead: boolean;
   createdDate: string;
   userSubmissionId: number;
    json: any;

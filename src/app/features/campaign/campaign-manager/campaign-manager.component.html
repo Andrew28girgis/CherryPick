@@ -679,26 +679,31 @@
 
   <div class="modal-body">
     <!-- Stepper + Finish button inline -->
-<div class="stepper-container d-flex justify-content-between align-items-center mb-4">
-  <!-- Stepper -->
-  <div class="stepper d-flex align-items-center">
-    <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
-    <div class="step-line"></div>
-    <div class="step" [class.active]="step === 'campaign'">Campaign Details</div>
-    <div class="step-line"></div>
-    <div class="step" [class.active]="step === 'polygon'">Locations</div>
-  </div>
+    <div
+      class="stepper-container d-flex justify-content-between align-items-center mb-2 gap-2"
+    >
+      <!-- Stepper -->
+      <div class="stepper d-flex align-items-center">
+        <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
+        <div class="step-line"></div>
+        <div class="step" [class.active]="step === 'campaign'">
+          Campaign Details
+        </div>
+        <div class="step-line"></div>
+        <div class="step" [class.active]="step === 'polygon'">Locations</div>
+      </div>
 
-  <!-- Finish button -->
-  <button
-    *ngIf="step === 'polygon'"
-    class="btn btn-primary next-btn"
-    (click)="finish()"
-  >
-    Finish
-  </button>
-</div>
-
+      <!-- Finish button -->
+      <div>
+        <button
+          *ngIf="step === 'polygon'"
+          class="btn btn-primary next-btn"
+          (click)="finish()"
+        >
+          Finish
+        </button>
+      </div>
+    </div>
 
     <div
       *ngIf="TenantStepLoad"
@@ -752,44 +757,43 @@
     </div>
 
     <!-- Step 2: Campaign Details -->
- <div *ngIf="step === 'campaign'" class="campaign-step">
-  <!-- Left side: Campaign name -->
-  <div class="left">
-    <label for="campaignName" class="form-label">Campaign Name</label>
-    <input
-      id="campaignName"
-      type="text"
-      class="form-control"
-      [(ngModel)]="campaignName"
-      placeholder="Enter campaign name"
-    />
-  </div>
-
-  <!-- Right side: Campaign type -->
-  <div class="right">
-    <label class="form-label">Campaign Type</label>
-    <div class="type-options">
-      <div
-        class="type-option"
-        [class.active]="campaignType === 'standalone'"
-        (click)="campaignType = 'standalone'"
-      >
-        <i class="fa-solid fa-store"></i>
-        <span>Standalone Only</span>
+    <div *ngIf="step === 'campaign'" class="campaign-step">
+      <!-- Left side: Campaign name -->
+      <div class="left">
+        <label for="campaignName" class="form-label">Campaign Name</label>
+        <input
+          id="campaignName"
+          type="text"
+          class="form-control"
+          [(ngModel)]="campaignName"
+          placeholder="Enter campaign name"
+        />
       </div>
 
-      <div
-        class="type-option"
-        [class.active]="campaignType === 'standaloneShopping'"
-        (click)="campaignType = 'standaloneShopping'"
-      >
-        <i class="fa-solid fa-shop"></i>
-        <span>Standalone + Shopping Center</span>
+      <!-- Right side: Campaign type -->
+      <div class="right">
+        <label class="form-label">Campaign Type</label>
+        <div class="type-options">
+          <div
+            class="type-option"
+            [class.active]="campaignType === 'standalone'"
+            (click)="campaignType = 'standalone'"
+          >
+            <i class="fa-solid fa-store"></i>
+            <span>Standalone Only</span>
+          </div>
+
+          <div
+            class="type-option"
+            [class.active]="campaignType === 'standaloneShopping'"
+            (click)="campaignType = 'standaloneShopping'"
+          >
+            <i class="fa-solid fa-shop"></i>
+            <span>Standalone + Shopping Center</span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
 
     <!-- Step 3: Polygons -->
     <div *ngIf="step === 'polygon'">
@@ -798,8 +802,8 @@
         (saveLocationCriteria)="handleSave($event)"
       >
       </app-polygons>
-     </div>
-    <div class="d-flex justify-content-between mt-4">
+    </div>
+    <div class="d-flex justify-content-between mt-4 ">
       <!-- Previous button -->
       <button
         *ngIf="step !== 'tenant'"
@@ -828,7 +832,6 @@
       >
         Next
       </button>
-
     </div>
   </div>
 </ng-template>
@@ -844,7 +847,7 @@
       (click)="modal.dismiss('Cross click')"
     ></button>
   </div>
-  <div class="modal-body" style="height: fit-content !important;">
+  <div class="modal-body" style="height: fit-content !important">
     <form #tenantForm="ngForm">
       <div class="mb-3">
         <label for="name" class="form-label d-flex align-items-center gap-2">
