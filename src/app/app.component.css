@@ -38,19 +38,14 @@
   padding: 10px 40px 50px 40px;
 }
 
-
 .app-shell.with-sidebar {
   grid-template-columns: 96px minmax(0, 1fr);
 }
 
-
- 
-
 .app-shell.with-copilot.copilot-expanded.authenticated {
-  margin-right: min(380px, 40vw); 
+  margin-right: min(380px, 40vw);
 }
 
- 
 .app-shell.with-sidebar.with-copilot.copilot-expanded.authenticated:not(
     .chatbot-route
   ) {
@@ -79,6 +74,9 @@
   .app-shell.with-copilot.copilot-expanded.authenticated {
     margin-right: min(240px, 35vw);
   }
+  .app-shell.with-sidebar > .app-container {
+    padding: 10px 10px 50px 10px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -94,19 +92,15 @@
 }
 
 .app-shell.emily-chatbot {
-  grid-template-columns: minmax(
-    0,
-    1fr
-  );
-  margin-left: 0; 
+  grid-template-columns: minmax(0, 1fr);
+  margin-left: 0;
 }
 
 .app-shell.emily-chatbot > .app-container {
   grid-column: 1;
-  width: 100%; 
+  width: 100%;
   margin-left: 0;
 }
-
 
 .app-shell.chatbot-route {
   grid-template-columns: minmax(0, 1fr);

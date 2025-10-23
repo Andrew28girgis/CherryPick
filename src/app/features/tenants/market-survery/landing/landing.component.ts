@@ -345,7 +345,7 @@ export class LandingComponent {
       (c) =>
         Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId) === id
     );
-    return center?.CenterName || center?.centerName ||  'Unknown Center';
+    return center?.CenterName || center?.centerName || 'Unknown Center';
   }
 
   private rebuildSequence(): void {

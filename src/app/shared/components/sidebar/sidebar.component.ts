@@ -1,10 +1,16 @@
-import { Component, Input, ViewChild, OnInit, HostListener } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  OnInit,
+  HostListener,
+} from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { PlacesService } from 'src/app/core/services/places.service';
- import { filter } from 'rxjs/operators';
- type UserView = 'campaigns' | 'landlord';
+import { filter } from 'rxjs/operators';
+type UserView = 'campaigns' | 'landlord';
 
 @Component({
   selector: 'app-sidebar',
@@ -31,13 +37,14 @@ export class SidebarComponent implements OnInit {
   isNotificationsOpen = false;
   currentRoute = '';
   isDropdownOpen = false;
+  isMenuOpen = false;
 
   ngOnInit(): void {
     // Initialize with chat open
     this.isNotificationsOpen = true;
 
     // Subscribe to notification service to sync state
-    this.notificationService.chatOpen$.subscribe(isOpen => {
+    this.notificationService.chatOpen$.subscribe((isOpen) => {
       this.isNotificationsOpen = isOpen;
     });
 
@@ -53,19 +60,18 @@ export class SidebarComponent implements OnInit {
           this.showSidebar = !data['hideSidebar'];
         });
       });
-      this.router.events
+    this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
         const url = e.urlAfterRedirects || e.url;
         this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
-    
   }
 
   toggleEmilySidebar(): void {
     this.isNotificationsOpen = !this.isNotificationsOpen;
     this.notificationService.setChatOpen(this.isNotificationsOpen);
-    
+
     // If the notification panel is now open, reset the counter
     if (this.isNotificationsOpen) {
       this.notificationService.newNotificationsCount = 0;
@@ -107,7 +113,7 @@ export class SidebarComponent implements OnInit {
         this.saveSuccess = true;
         this.showToast('ChatGPT Key Has Been Added Successfully');
         this.modalService.dismissAll();
-      }
+      },
     });
   }
 
@@ -126,7 +132,7 @@ export class SidebarComponent implements OnInit {
       setTimeout(() => {
         toast.classList.remove('show');
       }, 5000);
-    } else { 
+    } else {
     }
   }
   GetUserAPIAIKey() {
@@ -137,7 +143,7 @@ export class SidebarComponent implements OnInit {
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.AIKey = res?.json[0]?.openAIKey || '';
-      }
+      },
     });
   }
 
@@ -154,8 +160,6 @@ export class SidebarComponent implements OnInit {
   //   this.router.navigate([newView]);
   // }
 
-
- 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -164,8 +168,19 @@ export class SidebarComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     const target = event.target as HTMLElement;
+    
+    // Check dropdown independently
     if (!target.closest('.dropdown')) {
       this.isDropdownOpen = false;
     }
+
+    // Check nav-group independently (but exclude the menu toggle button)
+    if (!target.closest('.nav-group') && !target.closest('.menu-toggle')) {
+      this.isMenuOpen = false;
+    }
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }

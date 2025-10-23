@@ -1137,7 +1137,7 @@
   display: block;
 }
 
- .campaign-step .form-control {
+.campaign-step .form-control {
   border: 1px solid #d1d5db;
   border-radius: 8px;
   padding: 0.6rem 0.9rem;
@@ -1151,7 +1151,7 @@
   box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
 }
 
- .campaign-step .type-options {
+.campaign-step .type-options {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -1192,9 +1192,6 @@
 .campaign-step .type-option.active i {
   color: var(--app-color);
 }
-
- 
-
 
 .next-btn {
   background: var(--Colors-Primary-500);
@@ -1506,4 +1503,17 @@
 .modal-body {
   height: 80vh;
   overflow-y: scroll;
+}
+
+@media (max-width: 768px) {
+  .campaign-manager-body {
+    overflow: visible;
+    width: auto;
+  }
+  .title-div {
+    justify-content: center;
+  }
+  .title::after {
+    width: auto ;
+  }
 }

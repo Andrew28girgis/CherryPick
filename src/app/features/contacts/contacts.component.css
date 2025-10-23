@@ -940,8 +940,7 @@
   }
   .add-new-btn {
     justify-content: center;
-    padding: 14px var(--Space-S-20);
-  }
+   }
   .contact-card {
     padding: 18px;
     gap: var(--Space-S-14);
@@ -1031,4 +1030,13 @@
   background-color: #102e50;
   flex-shrink: 0; /* keep logo fixed size */
   cursor: auto;
+}
+@media (max-width: 768px) {
+  
+  .title-div {
+    justify-content: center;
+  }
+  .title::after {
+    width: auto ;
+  }
 }

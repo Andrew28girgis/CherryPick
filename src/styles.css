@@ -319,15 +319,25 @@ a {
   gap: var(--Space-S-8);
   border-radius: var(--Radius-R-16);
   background: linear-gradient(81.88deg, #814818 0%, #e19f2e 100%);
-
   white-space: nowrap;
 }
 
 .g-button:hover {
   background: linear-gradient(81.88deg, #875731 0%, #eab861 100%);
-
-  }
-
+}
+.g-button-outline {
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  height: 48px;
+  padding: var(--Space-S-14) var(--Space-S-24);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Space-S-8);
+  border-radius: var(--Radius-R-16);
+  white-space: nowrap;
+}
 @media (max-width: 991px) {
   .info-window {
     width: 300px;
