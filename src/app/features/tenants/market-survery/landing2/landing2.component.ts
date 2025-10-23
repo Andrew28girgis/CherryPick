@@ -81,8 +81,14 @@ export class Landing2Component implements OnInit {
   };
 
   // Derived / memoized arrays for template use
-  raceItems: Array<{ label: string; count: number; percentage: number; color: string }> = [];
-  educationItems: Array<{ label: string; count: number; percentage: number }> = [];
+  raceItems: Array<{
+    label: string;
+    count: number;
+    percentage: number;
+    color: string;
+  }> = [];
+  educationItems: Array<{ label: string; count: number; percentage: number }> =
+    [];
   incomeItems: Array<{ label: string; count: number; percentage: number }> = [];
   ageItems: Array<{ group: string; count: number; percentage: number }> = [];
 
@@ -92,15 +98,63 @@ export class Landing2Component implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  private toNumber(n: any, fallback = 0): number {
-    const v = Number(n);
-    return Number.isFinite(v) ? v : fallback;
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe((params: any) => {
+      this.shoppingId = params.shoppingId;
+      this.campaignId = params.campaignId;
+
+      if (this.campaignId === 'undefined') {
+        this.campaignId = null;
+      }
+    });
+    this.initializeParams();
   }
 
-  private hydrateCensusFromApi(): void {
+  private initializeParams(): void {
+    this.activatedRoute.params.subscribe((params: any) => {
+      this.campaignId = params.campaignId;
+      if (this.campaignId === 'undefined') {
+        this.campaignId = null;
+      }
+
+      this.PlaceId = params.id;
+      this.ShoppingCenterId = params.shoppiongCenterId;
+
+      if (this.ShoppingCenterId != 0) {
+        this.GetPlaceDetails(0, this.ShoppingCenterId);
+      } else {
+        this.GetPlaceDetails(this.PlaceId, 0);
+      }
+    });
+  }
+
+  GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
+    const body: any = {
+      Name: 'GetShoppingCenterDetails',
+      Params: {
+        PlaceID: placeId,
+        shoppingcenterId: ShoppingcenterId,
+        CampaignId: this.campaignId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.shoppingCenter = data.json?.[0] || null;
+        console.log(`demo`);
+        console.log(this.shoppingCenter?.Demographics);
+        
+        
+        if (this.shoppingCenter?.Demographics) {
+          this.demographicsDetails();
+        }
+      },
+    });
+  }
+
+  private demographicsDetails(): void {
     const demoRaw = this.shoppingCenter?.Demographics;
     if (!demoRaw) return;
-
     let demo: any;
     try {
       demo =
@@ -233,18 +287,10 @@ export class Landing2Component implements OnInit {
     }
   }
 
-ngOnInit(): void {
-  this.activatedRoute.params.subscribe((params: any) => {
-    this.shoppingId = params.shoppingId;
-    this.campaignId = params.campaignId;
-
-    if (this.campaignId === 'undefined') {
-      this.campaignId = null;
-    }
-  });
-
-  this.initializeParams();
-}
+  private toNumber(n: any, fallback = 0): number {
+    const v = Number(n);
+    return Number.isFinite(v) ? v : fallback;
+  }
 
   formatNumber(num: number): string {
     return (num ?? 0).toLocaleString();
@@ -298,59 +344,10 @@ ngOnInit(): void {
     ];
   }
 
-private initializeParams(): void {
-  this.activatedRoute.params.subscribe((params: any) => {
-    // ✅ Access params directly (no .get)
-    this.campaignId = params.campaignId;
-    if (this.campaignId === 'undefined') {
-      this.campaignId = null;
-    }
-
-    this.PlaceId = params.id;
-    this.ShoppingCenterId = params.shoppiongCenterId;
-
-    if (this.ShoppingCenterId != 0) {
-      this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, 0);
-      this.GetPlaceDetails(0, this.ShoppingCenterId);
-    } else {
-      this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId, this.PlaceId);
-      this.GetPlaceDetails(this.PlaceId, 0);
-    }
-
-    this.GetPlaceCotenants();
-  });
-}
-
-
-  GetPlaceCotenants(): void {
-    const body: any = {
-      Name: 'GetPlaceCotenants',
-      Params: { ShoppingCenterId: this.ShoppingCenterId },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        const tenants: ShoppingCenterTenant[] = data.json || [];
-
-        this.tenantGroups = {
-          onSite: tenants
-            .filter((t) => t.Distance >= 0 && t.Distance < 100)
-            .sort((a, b) => a.Distance - b.Distance),
-          veryShort: tenants
-            .filter((t) => t.Distance >= 100 && t.Distance < 400)
-            .sort((a, b) => a.Distance - b.Distance),
-          walking: tenants
-            .filter((t) => t.Distance >= 400 && t.Distance < 800)
-            .sort((a, b) => a.Distance - b.Distance),
-          longer: tenants
-            .filter((t) => t.Distance >= 800 && t.Distance <= 1200)
-            .sort((a, b) => a.Distance - b.Distance),
-        };
-      },
-    });
-  }
-
-  GetBuyBoxOrganizationDetails(Shoppingcenterid: number, PlaceId: number): void {
+  GetBuyBoxOrganizationDetails(
+    Shoppingcenterid: number,
+    PlaceId: number
+  ): void {
     const body: any = {
       Name: 'GetBuyBoxOrganizationDetails',
       Params: {
@@ -364,65 +361,6 @@ private initializeParams(): void {
         if (data.json) {
           this.OrganizationBranches = data.json[0];
         }
-      },
-    });
-  }
-
-  GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
-    const body: any = {
-      Name: 'GetShoppingCenterDetails',
-      Params: {
-        PlaceID: placeId,
-        shoppingcenterId: ShoppingcenterId,
-        CampaignId: this.campaignId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.shoppingCenter = data.json?.[0] || null;
-        this.hydrateCensusFromApi();
-        if (this.shoppingCenter) {
-          this.initializeMap(this.shoppingCenter.Latitude, this.shoppingCenter.Longitude);
-        }
-        this.GetPlaceNearBy(this.PlaceId);
-      },
-    });
-  }
-
-  async initializeMap(lat: number, lon: number): Promise<any> {
-    const [{ Map }, { AdvancedMarkerElement }] = await Promise.all([
-      google.maps.importLibrary('maps'),
-      google.maps.importLibrary('marker'),
-    ]);
-
-    const position = { lat: lat || 0, lng: lon || 0 };
-    const map = new Map(document.getElementById('map') as HTMLElement, {
-      center: position,
-      zoom: 13,
-      mapId: '1234567890abcdef',
-    });
-    new AdvancedMarkerElement({
-      map,
-      position,
-      title: 'This is a marker!',
-    });
-
-    return map;
-  }
-
-  GetPlaceNearBy(placeId: number): void {
-    const body: any = {
-      Name: 'GetNearBuyRetails',
-      Params: {
-        PlaceID: placeId,
-        ShoppingCenterId: this.ShoppingCenterId,
-        CampaignId: this.campaignId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.NearByType = data.json;
       },
     });
   }
