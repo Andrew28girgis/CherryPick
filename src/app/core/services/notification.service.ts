@@ -37,6 +37,7 @@ export class NotificationService {
   }
 
   initNotifications(campaignId: any): void {
+    this.initChatState();
     const storedContactId = localStorage.getItem('contactId');
     if (storedContactId) {
       this.contactId = +storedContactId;
@@ -78,13 +79,13 @@ export class NotificationService {
     const previousIds = new Set(previousNotifications.map((n) => n.id));
     const newNotifications = this.notifications.filter(
       (notification) =>
-        !previousIds.has(notification.id) && notification.isRead === 0
+        !previousIds.has(notification.id) && notification.isRead === false
     );
 
     if (newNotifications.length > 0) {
       newNotifications.forEach((notification) => {
         if (
-          notification.isRead == 0 &&
+          notification.isRead == false &&
           notification.contextExtendPrompt &&
           notification.contextExtendPrompt.trim() !== '' &&
           notification.contextExtendPrompt.trim().toLowerCase() !== 'null'
@@ -110,7 +111,7 @@ export class NotificationService {
 
     this.placesService.GenericAPI(request).subscribe({
       next: () => {
-        notification.isRead = 1;
+        notification.isRead = true;
         this.updateNotificationCounts();
         this.newNotificationsCount = this.unreadCount;
       },
@@ -139,7 +140,7 @@ export class NotificationService {
 
   markAllAsRead(): void {
     const unreadNotifications = this.notifications.filter(
-      (n) => n.isRead === 0
+      (n) => n.isRead === false
     );
 
     unreadNotifications.forEach((notification) => {
@@ -154,8 +155,10 @@ export class NotificationService {
   }
 
   updateNotificationCounts(): void {
-    this.readCount = this.notifications.filter((n) => n.isRead === 1).length;
-    this.unreadCount = this.notifications.filter((n) => n.isRead === 0).length;
+    this.readCount = this.notifications.filter((n) => n.isRead === true).length;
+    this.unreadCount = this.notifications.filter(
+      (n) => n.isRead === false
+    ).length;
     this.newNotificationsCount = this.unreadCount;
   }
 
