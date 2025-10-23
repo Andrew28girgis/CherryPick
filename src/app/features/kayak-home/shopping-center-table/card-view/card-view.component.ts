@@ -99,6 +99,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   openStageId: number | null = null;
   dataReady = false;
   scoringId: number | null = null; // track the current shopping center being scored
+  isMobile!: boolean;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -111,6 +112,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.checkScreenSize();
     this.subscriptions.push(
       this.viewManagerService.loadingComplete$.subscribe((done) => {
         this.isLoading = !done; // show loader until both flags are satisfied
@@ -747,5 +749,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
     } catch {
       return source;
     }
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
   }
 }

@@ -451,6 +451,12 @@ img[alt="logo"] {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .tenant-name span {
+    line-height: 0px;
+  }
+  .score {
+    right: 13vw !important;
+  }
   .stage-select-container {
     flex-direction: column;
     align-items: flex-start;
@@ -695,7 +701,7 @@ img[alt="logo"] {
 
 @media screen and (max-width: 1024px) {
   .main-img {
-    height: 150px;
+    height: 230px;
   }
 }
 
@@ -839,7 +845,7 @@ label {
   right: 12px;
   left: unset;
 }
-.auto-stat{
+.auto-stat {
   color: var(--Colors-Primary-300) !important;
 }
 .delete-badge {
@@ -1413,7 +1419,7 @@ table tbody td {
   left: 16px;
 
   display: inline-block;
-  max-width: 240px;
+  max-width: 200px;
   width: max-content;
   overflow: hidden;
   white-space: nowrap;
@@ -1427,3 +1433,67 @@ table tbody td {
   font-weight: 700;
   margin: 0 4px;
 }
+
+.enriching-card {
+  position: relative;
+  overflow: visible;
+}
+
+.enriching-card::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #e3cf9f 50%, transparent 50%) top / 20px
+      3px repeat-x,
+    linear-gradient(90deg, #e3cf9f 50%, transparent 50%) bottom / 20px 3px
+      repeat-x,
+    linear-gradient(0deg, #e3cf9f 50%, transparent 50%) left / 3px 20px repeat-y,
+    linear-gradient(0deg, #e3cf9f 50%, transparent 50%) right / 3px 20px
+      repeat-y;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  animation: moveBorder 0.4s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes moveBorder {
+  0% {
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+  }
+  100% {
+    background-position: 20px 0, -20px 100%, 0 -20px, 100% 20px;
+  }
+}
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.shopping-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 14px 16px;
+  transition: all 0.3s ease;
+}
+
+.shopping-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.center-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  word-break: break-word;
+}
+
+ 
+ 

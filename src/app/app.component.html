@@ -20,7 +20,7 @@
   </div>
 
   <app-notifications
-    *ngIf="shouldShowNotifications"
+    *ngIf="shouldShowNotifications &&!isMobile"
     [campaignId]="campaignId"
     [isChatbotRoute]="isChatbotRoute"
     (overlayStateChange)="onOverlayStateChange($event)"

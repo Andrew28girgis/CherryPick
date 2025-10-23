@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import {
   Router,
   NavigationEnd,
@@ -33,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isCopilotFullyOpen = false;
   campaignId: any;
   private destroy$ = new Subject<void>();
+  isMobile!: boolean;
 
   constructor(
     private router: Router,
@@ -41,11 +42,19 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private notificationService: NotificationService
   ) {}
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
 
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
+  }
   ngOnInit(): void {
     this.initializeApiMode();
     this.setupRouteSubscriptions();
     this.setupNotificationSubscriptions();
+    this.checkScreenSize();
   }
 
   ngOnDestroy(): void {
