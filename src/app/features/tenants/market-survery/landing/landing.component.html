@@ -285,27 +285,158 @@
                   <th>Secondary Type</th>
                   <th>Source</th>
                   <th>Created Date</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody class="procpect-table-body">
-                <ng-container *ngFor="let place of shoppingCenter.Place">
-                  <tr>
-                    <td>{{ place.Suite }}</td>
-                    <td>
+                <tr *ngFor="let place of shoppingCenter?.Place">
+                  <td>
+                    <ng-container
+                      *ngIf="editingPlaceId !== place.Id; else suiteEdit"
+                    >
+                      {{ place.Suite }}
+                    </ng-container>
+                    <ng-template #suiteEdit>
+                      <input
+                        class="form-control form-control-sm"
+                        [(ngModel)]="editModel.Suite"
+                        placeholder="Suite"
+                      />
+                    </ng-template>
+                  </td>
+
+                  <td>
+                    <ng-container
+                      *ngIf="editingPlaceId !== place.Id; else leaseTypeEdit"
+                    >
                       {{ place.LeaseType }}
-                    </td>
-                    <td>
-                      <span *ngIf="place.Price"> ${{ place.Price }} </span>
-                    </td>
-                    <td *ngIf="place.BuildingSizeSf">
-                      {{ place.BuildingSizeSf | number }} SF
-                    </td>
-                    <td *ngIf="!place.BuildingSizeSf">On Request</td>
-                    <td>{{ place.SecondaryType }}</td>
-                    <td>{{ place.Source }}</td>
-                    <td>{{ place.CreateDate | date }}</td>
-                  </tr>
-                </ng-container>
+                    </ng-container>
+                    <ng-template #leaseTypeEdit>
+                      <input
+                        class="form-control form-control-sm"
+                        [(ngModel)]="editModel.LeaseType"
+                        placeholder="Lease Type"
+                      />
+                    </ng-template>
+                  </td>
+
+                  <td>
+                    <ng-container
+                      *ngIf="editingPlaceId !== place.Id; else priceEdit"
+                    >
+                      <span *ngIf="place.Price">
+                        {{
+                          place.Price | currency : "USD" : "symbol" : "1.0-0"
+                        }}
+                      </span>
+                    </ng-container>
+                    <ng-template #priceEdit>
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="editModel.Price"
+                        placeholder="Price"
+                      />
+                    </ng-template>
+                  </td>
+
+                  <td>
+                    <ng-container
+                      *ngIf="editingPlaceId !== place.Id; else sizeEdit"
+                    >
+                      <ng-container *ngIf="place.BuildingSizeSf; else noSize">
+                        {{ place.BuildingSizeSf | number : "1.0-0" }} SF
+                      </ng-container>
+                      <ng-template #noSize>On Request</ng-template>
+                    </ng-container>
+                    <ng-template #sizeEdit>
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="editModel.BuildingSizeSf"
+                        placeholder="Size (SF)"
+                      />
+                    </ng-template>
+                  </td>
+
+                  <td>
+                    <ng-container
+                      *ngIf="editingPlaceId !== place.Id; else secTypeEdit"
+                    >
+                      {{ place.SecondaryType }}
+                    </ng-container>
+                    <ng-template #secTypeEdit>
+                      <input
+                        class="form-control form-control-sm"
+                        [(ngModel)]="editModel.SecondaryType"
+                        placeholder="Secondary Type"
+                      />
+                    </ng-template>
+                  </td>
+
+                  <td>{{ place.Source }}</td>
+
+                  <td>{{ place.CreateDate | date : "mediumDate" }}</td>
+
+                  <td class="text-center">
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                      *ngIf="editingPlaceId !== place.Id; else editActions"
+                    >
+                      <i
+                        class="fa fa-edit text-primary"
+                        title="Edit"
+                        role="button"
+                        tabindex="0"
+                        style="cursor: pointer"
+                        (click)="startEdit(place)"
+                        (keydown.enter)="startEdit(place)"
+                        (keydown.space)="startEdit(place)"
+                      ></i>
+
+                      <i
+                        class="fa fa-trash text-danger ms-3"
+                        title="Delete"
+                        role="button"
+                        tabindex="0"
+                        style="cursor: pointer"
+                        (click)="DeletePlace(place.Id)"
+                        (keydown.enter)="DeletePlace(place.Id)"
+                        (keydown.space)="DeletePlace(place.Id)"
+                      ></i>
+                    </div>
+
+                    <ng-template #editActions>
+                      <div
+                        class="d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa fa-check text-success"
+                          title="Save"
+                          role="button"
+                          tabindex="0"
+                          style="cursor: pointer"
+                          (click)="saveEdit()"
+                          (keydown.enter)="saveEdit()"
+                          (keydown.space)="saveEdit()"
+                        ></i>
+
+                        <i
+                          class="fa fa-times text-secondary ms-3"
+                          title="Cancel"
+                          role="button"
+                          tabindex="0"
+                          style="cursor: pointer"
+                          (click)="cancelEdit()"
+                          (keydown.enter)="cancelEdit()"
+                          (keydown.space)="cancelEdit()"
+                        ></i>
+                      </div>
+                    </ng-template>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
