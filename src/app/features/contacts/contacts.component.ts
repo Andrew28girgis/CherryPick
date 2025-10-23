@@ -1,4 +1,10 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
@@ -55,7 +61,7 @@ export class ContactsComponent implements OnInit {
   // Sort properties
   sortBy: string = 'contacts';
   sortOptions = [
-    { value: 'contacts', label: 'Most Contacts' },  
+    { value: 'contacts', label: 'Most Contacts' },
     { value: 'alphabetical', label: 'Alphabetical' },
     { value: 'newest', label: 'Newest to Oldest' },
     { value: 'oldest', label: 'Oldest to Newest' },
@@ -68,9 +74,7 @@ export class ContactsComponent implements OnInit {
   tenantsOrgs: any;
   brokerOrgs: any;
 
-
-  
-  constructor(private http: HttpClient, private PlacesService: PlacesService) {
+  constructor(private PlacesService: PlacesService) {
     this.loadContacts();
     this.loadOrganizations();
   }
@@ -116,28 +120,28 @@ export class ContactsComponent implements OnInit {
 
   applyFiltersAndSort(): void {
     let orgs = [...this.organizations];
-  
+
     // 🔎 Search filter
     if (this.searchTerm) {
       const q = this.searchTerm.toLowerCase();
-      orgs = orgs.filter(org => (org.name || '').toLowerCase().includes(q));
+      orgs = orgs.filter((org) => (org.name || '').toLowerCase().includes(q));
     }
-  
+
     // 🟢 Role filter
     if (this.role === 'tenant') {
-      orgs = orgs.filter(org => org.stakeholderId === 2);
+      orgs = orgs.filter((org) => org.stakeholderId === 2);
     } else {
-      orgs = orgs.filter(org => org.stakeholderId !== 2);
+      orgs = orgs.filter((org) => org.stakeholderId !== 2);
     }
-  this.tenantsOrgs=orgs.filter(org => org.stakeholderId === 2).length;
-  this.brokerOrgs=orgs.filter(org => org.stakeholderId !== 2).length;
-   
+    this.tenantsOrgs = orgs.filter((org) => org.stakeholderId === 2).length;
+    this.brokerOrgs = orgs.filter((org) => org.stakeholderId !== 2).length;
+
     // 👥 Attach contacts to each org
-    const grouped = orgs.map(org => ({
+    const grouped = orgs.map((org) => ({
       ...org,
-      contacts: this.contacts.filter(c => c.organizationId === org.id),
+      contacts: this.contacts.filter((c) => c.organizationId === org.id),
     }));
-  
+
     // 🔀 Sort (including "most contacts")
     if (this.sortBy === 'contacts') {
       grouped.sort(
@@ -158,13 +162,12 @@ export class ContactsComponent implements OnInit {
         }
       });
     }
-  
+
     this.filteredContacts = grouped;
     this.totalItems = this.filteredContacts.length;
     this.updatePage(1);
   }
-  
-  
+
   updatePage(page: number): void {
     this.currentPage = page;
     const startIndex = (page - 1) * this.pageSize;
@@ -258,15 +261,13 @@ export class ContactsComponent implements OnInit {
         json: null,
       };
 
-      this.PlacesService.GenericAPI(params).subscribe(
-        (response: any) => {
-          if (response.error) {
-          } else {
-            this.loadContacts();
-            this.closeAddForm();
-          }
+      this.PlacesService.GenericAPI(params).subscribe((response: any) => {
+        if (response.error) {
+        } else {
+          this.loadContacts();
+          this.closeAddForm();
         }
-      );
+      });
     }
   }
 
@@ -289,56 +290,59 @@ export class ContactsComponent implements OnInit {
   onImageError(event: any) {
     event.target.src = 'assets/Images/placeholder.png';
   }
- 
+
   toggleSearch(input: HTMLInputElement): void {
     this.isSearchExpanded = !this.isSearchExpanded;
-  
+
     if (this.isSearchExpanded) {
-      const container = input.closest('.search-container') as HTMLElement | null;
-  
+      const container = input.closest(
+        '.search-container'
+      ) as HTMLElement | null;
+
       const focusNow = () => {
         input.focus({ preventScroll: true });
         // optional: input.select();
       };
-  
+
       // ensure we only focus once
       let done = false;
-      const once = () => { if (done) return; done = true; focusNow(); };
-  
+      const once = () => {
+        if (done) return;
+        done = true;
+        focusNow();
+      };
+
       // 1) after the transition finishes (most reliable)
-      if (container) container.addEventListener('transitionend', once, { once: true });
-  
+      if (container)
+        container.addEventListener('transitionend', once, { once: true });
+
       // 2) next-two-frames fallback (in case no transition fires)
       requestAnimationFrame(() => requestAnimationFrame(once));
-  
+
       // 3) final timeout fallback (iOS/Safari quirks)
       setTimeout(once, 300);
     } else {
       input.blur(); // collapse → hide keyboard on mobile
     }
   }
-  
-setRole(val: 'broker' | 'tenant') {
-  this.role = val;
-  this.applyFiltersAndSort();   // 🔥 refresh list after toggle
+
+  setRole(val: 'broker' | 'tenant') {
+    this.role = val;
+    this.applyFiltersAndSort(); // 🔥 refresh list after toggle
+  }
+
+  @ViewChild('contactsRow') contactsRow!: ElementRef<HTMLDivElement>;
+
+  scrollContacts(dir: 'left' | 'right') {
+    const container = this.contactsRow.nativeElement;
+    const delta = container.clientWidth * (dir === 'left' ? -0.9 : 0.9);
+    container.scrollBy({ left: delta, behavior: 'smooth' });
+  }
+
+  getInitials(name: string): string {
+    if (!name) return '';
+    const words = name.trim().split(' ');
+    if (words.length === 1) return words[0][0].toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
 }
-
-@ViewChild('contactsRow') contactsRow!: ElementRef<HTMLDivElement>;
-
-scrollContacts(dir: 'left' | 'right') {
-  const container = this.contactsRow.nativeElement;
-  const delta = container.clientWidth * (dir === 'left' ? -0.9 : 0.9);
-  container.scrollBy({ left: delta, behavior: 'smooth' });
-}
-
- 
-
-getInitials(name: string): string {
-  if (!name) return '';
-  const words = name.trim().split(' ');
-  if (words.length === 1) return words[0][0].toUpperCase();
-  return (words[0][0] + words[1][0]).toUpperCase();
-}
-
-}
-
