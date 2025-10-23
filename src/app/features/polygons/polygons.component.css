@@ -605,7 +605,6 @@
 
 @media (max-width: 768px) {
   .unified-search-container {
-    width: 350px;
     top: 0.5rem;
     left: 0.5rem;
   }
@@ -680,6 +679,14 @@
   .save-btn {
     padding: 12px 24px;
     font-size: 14px;
+  }
+}
+@media (max-width: 991px) {
+  .selected-container {
+    height: 0vh;
+    overflow-y: scroll;
+    padding: 5px;
+    margin-top: 5px;
   }
 }
 
