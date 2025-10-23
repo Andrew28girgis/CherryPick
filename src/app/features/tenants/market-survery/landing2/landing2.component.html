@@ -1,5 +1,5 @@
-<div class="census-container" *ngIf="shoppingCenter?.Demographics"> 
-  <div class="header-card"> 
+<div class="census-container" *ngIf="shoppingCenter?.Demographics">
+  <div class="header-card">
     <div class="key-stats">
       <div class="stat-item">
         <div class="stat-value">{{ formatNumber(censusData.population) }}</div>
@@ -119,44 +119,42 @@
       </div>
     </div>
 
-<!-- Housing Card -->
-<div class="card housing-card">
-  <div class="card-header">
-    <h2>Housing</h2>
-    <i class="header-icon">🏠</i>
-  </div>
-  <div class="card-content">
-    <div class="housing-overview">
-      <div class="housing-stat">
-        <div class="housing-value">
-          {{
-            censusData.housing.medianHomeValue > 0
-              ? formatCurrency(censusData.housing.medianHomeValue || 0)
-              : 'N/A'
-          }}
-        </div>
-        <div class="housing-label">Median Home Value</div>
+    <!-- Housing Card -->
+    <div class="card housing-card">
+      <div class="card-header">
+        <h2>Housing</h2>
+        <i class="header-icon">🏠</i>
       </div>
-      <div class="housing-stat">
-        <div class="housing-value">
-          {{ formatCurrency(censusData.housing.medianRent || 0) }}
+      <div class="card-content">
+        <div class="housing-overview">
+          <div class="housing-stat">
+            <div class="housing-value">
+              {{
+                censusData.housing.medianHomeValue > 0
+                  ? formatCurrency(censusData.housing.medianHomeValue || 0)
+                  : "N/A"
+              }}
+            </div>
+            <div class="housing-label">Median Home Value</div>
+          </div>
+          <div class="housing-stat">
+            <div class="housing-value">
+              {{ formatCurrency(censusData.housing.medianRent || 0) }}
+            </div>
+            <div class="housing-label">Median Rent</div>
+          </div>
         </div>
-        <div class="housing-label">Median Rent</div>
+
+        <div class="housing-breakdown">
+          <div class="units-info">
+            <span>
+              {{ censusData.housing.totalUnits || 0 }} total units •
+              {{ censusData.housing.vacantUnits || 0 }} vacant
+            </span>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="housing-breakdown">
-      <div class="units-info">
-        <span>
-          {{ censusData.housing.totalUnits || 0 }} total units •
-          {{ censusData.housing.vacantUnits || 0 }} vacant
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 
     <!-- Education Card -->
     <div class="card education-card">
@@ -241,7 +239,10 @@
       </div>
       <div class="card-content">
         <div class="age-breakdown">
-          <div class="age-item" *ngFor="let item of ageItems; trackBy: trackByLabel">
+          <div
+            class="age-item"
+            *ngFor="let item of ageItems; trackBy: trackByLabel"
+          >
             <div class="age-group">{{ item.group }}</div>
             <div class="age-bar">
               <div class="age-fill" [style.width.%]="item.percentage"></div>
