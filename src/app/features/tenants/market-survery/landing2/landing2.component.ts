@@ -1,11 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-declare const google: any;
+import { PlacesService } from 'src/app/core/services/places.service';
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
 import { NearByType } from 'src/app/shared/models/nearBy';
 import { ShoppingCenterTenant } from 'src/app/shared/models/PlaceCo';
 import { OrgBranch } from 'src/app/shared/models/branches';
-import { PlacesService } from 'src/app/core/services/places.service';
 import { Demographics } from 'src/app/shared/models/demographics';
 
 type LandingPlaceWithDemo = LandingPlace & {
@@ -18,475 +17,178 @@ type LandingPlaceWithDemo = LandingPlace & {
   styleUrls: ['./landing2.component.css'],
 })
 export class Landing2Component implements OnInit {
-  campaignId!: string | null;
-  shoppingCenter!: LandingPlaceWithDemo | null;
-  ShoppingCenterId!: number;
+  campaignId: string | null = null;
+  shoppingCenter: LandingPlaceWithDemo | null = null;
+  shoppingId: string | null = null;
+  ShoppingCenterId = 0;
+  PlaceId = 0;
   NearByType: NearByType[] = [];
-  PlaceId!: number;
-  OrganizationBranches!: OrgBranch | null;
-  shoppingId!: string | null;
+  OrganizationBranches: OrgBranch | null = null;
 
-  tenantGroups = {
-    onSite: [] as ShoppingCenterTenant[],
-    veryShort: [] as ShoppingCenterTenant[],
-    walking: [] as ShoppingCenterTenant[],
-    longer: [] as ShoppingCenterTenant[],
+  tenantGroups: Record<string, ShoppingCenterTenant[]> = {
+    onSite: [],
+    veryShort: [],
+    walking: [],
+    longer: [],
   };
 
-  // cached census data
   censusData: Demographics = {
-    name: '',
-    lat: 0,
-    lon: 0,
-    population: 0,
-    medianAge: 0,
-    households: 0,
-    avgHouseholdSize: 0,
-    medianIncome: 0,
-    perCapitaIncome: 0,
-    housing: {
-      medianRent: 0,
-      medianHomeValue: 0,
-      ownerOccupied: 0,
-      renterOccupied: 0,
-      totalUnits: 0,
-      occupiedUnits: 0,
-      vacantUnits: 0,
-    },
-    education: {
-      highSchool: 0,
-      bachelors: 0,
-      masters: 0,
-      doctorate: 0,
-    },
-    race: {
-      white: 0,
-      black: 0,
-      americanIndian: 0,
-      asian: 0,
-      pacificIslander: 0,
-      hispanic: 0,
-    },
-    incomeBrackets: {
-      Total: 0,
-      '<10k': 0,
-      '10-15k': 0,
-      '200k+': 0,
-    },
-    ageGroups: {
-      'Male 0-4': 0,
-      'Male 5-9': 0,
-      'Male 10-14': 0,
-    },
+    name: '', lat: 0, lon: 0, population: 0, medianAge: 0, households: 0,
+    avgHouseholdSize: 0, medianIncome: 0, perCapitaIncome: 0,
+    housing: { medianRent: 0, medianHomeValue: 0, ownerOccupied: 0, renterOccupied: 0, totalUnits: 0, occupiedUnits: 0, vacantUnits: 0 },
+    education: { highSchool: 0, bachelors: 0, masters: 0, doctorate: 0 },
+    race: { white: 0, black: 0, americanIndian: 0, asian: 0, pacificIslander: 0, hispanic: 0 },
+    incomeBrackets: { Total: 0, '<10k': 0, '10-15k': 0, '200k+': 0 },
+    ageGroups: {},
   };
 
-  // Derived / memoized arrays for template use
-  raceItems: Array<{
-    label: string;
-    count: number;
-    percentage: number;
-    color: string;
-  }> = [];
-  educationItems: Array<{ label: string; count: number; percentage: number }> =
-    [];
-  incomeItems: Array<{ label: string; count: number; percentage: number }> = [];
-  ageItems: Array<{ group: string; count: number; percentage: number }> = [];
-  private readonly incomeOrder: string[] = [
-    '<10k',
-    '10-15k',
-    '15-20k',
-    '20-25k',
-    '25-30k',
-    '30-35k',
-    '35-40k',
-    '40-45k',
-    '45-50k',
-    '50-60k',
-    '60-75k',
-    '75-100k',
-    '100-125k',
-    '125-150k',
-    '150-200k',
-    '200k+',
-    'Total',
+  raceItems: any[] = [];
+  educationItems: any[] = [];
+  incomeItems: any[] = [];
+  ageItems: any[] = [];
+
+  private readonly incomeOrder = [
+    '<10k','10-15k','15-20k','20-25k','25-30k','30-35k','35-40k','40-45k',
+    '45-50k','50-60k','60-75k','75-100k','100-125k','125-150k','150-200k','200k+','Total'
   ];
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private PlacesService: PlacesService,
+    private route: ActivatedRoute,
+    private places: PlacesService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.shoppingId = params.shoppingId;
-      this.campaignId = params.campaignId;
-
-      if (this.campaignId === 'undefined') {
-        this.campaignId = null;
-      }
-    });
-    this.initializeParams();
-  }
-
-  private initializeParams(): void {
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.campaignId = params.campaignId;
-      if (this.campaignId === 'undefined') {
-        this.campaignId = null;
-      }
-
-      this.PlaceId = params.id;
-      this.ShoppingCenterId = params.shoppiongCenterId;
-
-      if (this.ShoppingCenterId != 0) {
-        this.GetPlaceDetails(0, this.ShoppingCenterId);
-      } else {
-        this.GetPlaceDetails(this.PlaceId, 0);
-      }
+    this.route.params.subscribe((params: Record<string, any>) => {
+      this.shoppingId = params['shoppingId'];
+      this.campaignId = params['campaignId'] === 'undefined' ? null : params['campaignId'];
+      this.PlaceId = +params['id'] || 0;
+      this.ShoppingCenterId = +params['shoppiongCenterId'] || 0;
+      this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
     });
   }
 
-  GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
-    const body: any = {
+  private GetPlaceDetails(placeId: number, shoppingCenterId: number): void {
+    this.places.GenericAPI({
       Name: 'GetShoppingCenterDetails',
-      Params: {
-        PlaceID: placeId,
-        shoppingcenterId: ShoppingcenterId,
-        CampaignId: this.campaignId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.shoppingCenter = data.json?.[0] || null;
-        console.log(`demo`);
-        console.log(this.shoppingCenter?.Demographics);
-
-        if (this.shoppingCenter?.Demographics) {
-          this.demographicsDetails();
-        }
+      Params: { PlaceID: placeId, shoppingcenterId: shoppingCenterId, CampaignId: this.campaignId },
+    }).subscribe({
+      next: (res) => {
+        this.shoppingCenter = res.json?.[0] || null;
+        if (this.shoppingCenter?.Demographics) this.DemographicsDetails();
       },
     });
   }
 
-  private demographicsDetails(): void {
-    const demoRaw = this.shoppingCenter?.Demographics;
-    if (!demoRaw) return;
+  private DemographicsDetails(): void {
     let demo: any;
     try {
-      demo =
-        typeof demoRaw === 'string' ? JSON.parse(demoRaw as string) : demoRaw;
+      const raw = this.shoppingCenter?.Demographics;
+      demo = typeof raw === 'string' ? JSON.parse(raw) : raw;
     } catch (e) {
       console.error('Invalid Demographics JSON', e);
       return;
     }
 
-    const housing = demo.Housing ?? {};
-    const education = demo.Education ?? {};
-    const race = demo.Race ?? {};
-    const income = demo.IncomeBrackets ?? {};
-    const ages = demo.AgeGroups ?? {};
-    const employment = demo.Employment ?? {};
-    const commuting = demo.Commuting ?? {};
-
-    const num = (v: any, fb = 0) => {
-      const n = Number(v);
-      return Number.isFinite(n) ? n : fb;
-    };
-
-    const normalizedIncome: Record<string, number> = Object.keys(income).reduce(
-      (acc, k) => {
-        acc[k] = num(income[k], 0);
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
-    const normalizedAges: Record<string, number> = Object.keys(ages).reduce(
-      (acc, k) => {
-        acc[k] = num(ages[k], 0);
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+    const num = (v: any) => (Number.isFinite(+v) ? +v : 0);
+    const g = (o: any, k: string) => (o?.[k] ? num(o[k]) : 0);
 
     this.censusData = {
-      name: demo.Name ?? '',
-      lat: num(demo.Lat),
-      lon: num(demo.Lon),
-      population: num(demo.Population),
-      medianAge: num(demo.MedianAge),
-      households: num(demo.Households),
-      avgHouseholdSize: num(demo.AvgHouseholdSize),
-      medianIncome: num(demo.MedianIncome),
-      perCapitaIncome: num(demo.PerCapitaIncome),
-
+      name: demo['Name'] ?? '',
+      lat: num(demo['Lat']), lon: num(demo['Lon']),
+      population: num(demo['Population']), medianAge: num(demo['MedianAge']),
+      households: num(demo['Households']), avgHouseholdSize: num(demo['AvgHouseholdSize']),
+      medianIncome: num(demo['MedianIncome']), perCapitaIncome: num(demo['PerCapitaIncome']),
       housing: {
-        medianRent: num(housing.medianRent),
-        medianHomeValue: num(housing.medianHomeValue),
-        ownerOccupied: num(housing.ownerOccupied),
-        renterOccupied: num(housing.renterOccupied),
-        totalUnits: num(housing.totalUnits),
-        occupiedUnits: num(housing.occupiedUnits),
-        vacantUnits: num(housing.vacantUnits),
+        medianRent: g(demo['Housing'], 'medianRent'),
+        medianHomeValue: g(demo['Housing'], 'medianHomeValue'),
+        ownerOccupied: g(demo['Housing'], 'ownerOccupied'),
+        renterOccupied: g(demo['Housing'], 'renterOccupied'),
+        totalUnits: g(demo['Housing'], 'totalUnits'),
+        occupiedUnits: g(demo['Housing'], 'occupiedUnits'),
+        vacantUnits: g(demo['Housing'], 'vacantUnits'),
       },
-
       education: {
-        highSchool: num(education.highSchool),
-        bachelors: num(education.bachelors),
-        masters: num(education.masters),
-        doctorate: num(education.doctorate),
+        highSchool: g(demo['Education'], 'highSchool'),
+        bachelors: g(demo['Education'], 'bachelors'),
+        masters: g(demo['Education'], 'masters'),
+        doctorate: g(demo['Education'], 'doctorate'),
       },
-
       race: {
-        white: num(race.white),
-        black: num(race.black),
-        americanIndian: num(race.americanIndian),
-        asian: num(race.asian),
-        pacificIslander: num(race.pacificIslander),
-        hispanic: num(race.hispanic),
+        white: g(demo['Race'], 'white'),
+        black: g(demo['Race'], 'black'),
+        americanIndian: g(demo['Race'], 'americanIndian'),
+        asian: g(demo['Race'], 'asian'),
+        pacificIslander: g(demo['Race'], 'pacificIslander'),
+        hispanic: g(demo['Race'], 'hispanic'),
       },
-
-      incomeBrackets: {
-        Total: num(income.Total),
-        '<10k': num(income['<10k']),
-        '10-15k': num(income['10-15k']),
-        '200k+': num(income['200k+']),
-      },
-
-      ageGroups: normalizedAges as any,
+      incomeBrackets: demo['IncomeBrackets'] ?? {},
+      ageGroups: demo['AgeGroups'] ?? {},
+      employment: demo['Employment'] ?? {},
+      commuting: demo['Commuting'] ?? {},
     } as any;
 
-    // assign normalized income, employment & commuting
-    (this.censusData as any).incomeBrackets = normalizedIncome;
+    this.raceItems = this.mapRace();
+    this.educationItems = this.mapEducation();
+    this.incomeItems = this.mapIncome();
+    this.ageItems = this.mapAge();
 
-    (this.censusData as any).employment = {
-      employedTotal: num(employment.employedTotal),
-    };
-
-    (this.censusData as any).commuting = {
-      workersTotal: num(commuting.workersTotal),
-      driveAlone: num(commuting.driveAlone),
-      publicTransit: num(commuting.publicTransit),
-      avgCommuteMinutes: num(commuting.avgCommuteMinutes),
-    };
-
-    // --- Derived, stable arrays for template rendering ---
-    try {
-      this.raceItems = this.getRaceData();
-    } catch (err) {
-      this.raceItems = [];
-    }
-
-    try {
-      this.educationItems = this.getEducationData();
-    } catch (err) {
-      this.educationItems = [];
-    }
-
-    try {
-      this.incomeItems = this.getIncomeData();
-    } catch (err) {
-      this.incomeItems = [];
-    }
-
-    try {
-      this.ageItems = this.getAgeData();
-    } catch (err) {
-      this.ageItems = [];
-    }
-
-    // Ensure Angular updates the view immediately (if needed)
-    try {
-      this.cdr?.detectChanges();
-    } catch (e) {
-      // ignore if detectChanges throws in unusual environments
-    }
+    try { this.cdr.detectChanges(); } catch {}
   }
 
-  private toNumber(n: any, fallback = 0): number {
-    const v = Number(n);
-    return Number.isFinite(v) ? v : fallback;
-  }
+  formatNumber = (n: number) => (n ?? 0).toLocaleString();
+  formatCurrency = (a: number) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(a ?? 0);
+  private pct = (v: number, total: number) => (total ? Math.round((v / total) * 100) : 0);
 
-  formatNumber(num: number): string {
-    return (num ?? 0).toLocaleString();
-  }
-
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-    }).format(amount ?? 0);
-  }
-
-  getOwnershipPercentage(): number {
-    const { ownerOccupied, renterOccupied } =
-      this.censusData.housing || ({} as any);
-    const total = (ownerOccupied || 0) + (renterOccupied || 0);
-    return total ? Math.round((ownerOccupied / total) * 100) : 0;
-  }
-
-  getRenterPercentage(): number {
-    const { ownerOccupied, renterOccupied } =
-      this.censusData.housing || ({} as any);
-    const total = (ownerOccupied || 0) + (renterOccupied || 0);
-    return total ? Math.round((renterOccupied / total) * 100) : 0;
-  }
-
-  getEducationData() {
-    const edu = this.censusData.education;
-    const total =
-      edu.highSchool + edu.bachelors + edu.masters + edu.doctorate || 0;
-    const pct = (v: number) => (total ? Math.round((v / total) * 100) : 0);
-
+  private mapEducation() {
+    const e = this.censusData.education;
+    const total = e.highSchool + e.bachelors + e.masters + e.doctorate;
     return [
-      {
-        label: 'High School',
-        count: edu.highSchool,
-        percentage: pct(edu.highSchool),
-      },
-      {
-        label: "Bachelor's",
-        count: edu.bachelors,
-        percentage: pct(edu.bachelors),
-      },
-      { label: "Master's", count: edu.masters, percentage: pct(edu.masters) },
-      {
-        label: 'Doctorate',
-        count: edu.doctorate,
-        percentage: pct(edu.doctorate),
-      },
-    ];
+      { label: 'High School', count: e.highSchool },
+      { label: "Bachelor's", count: e.bachelors },
+      { label: "Master's", count: e.masters },
+      { label: 'Doctorate', count: e.doctorate },
+    ].map(i => ({ ...i, percentage: this.pct(i.count, total) }));
   }
 
-  getRaceData() {
-    const race = this.censusData.race;
-    const total =
-      (Object.values(race) as number[]).reduce((sum, val) => sum + val, 0) || 0;
-    const pct = (v: number) => (total ? Math.round((v / total) * 100) : 0);
-
-    const colors = [
-      '#D1D5DB',
-      '#111827',
-      '#10B981',
-      '#F59E0B',
-      '#8B5CF6',
-      '#14B8A6',
-    ];
-
-    return [
-      {
-        label: 'White',
-        count: race.white,
-        percentage: pct(race.white),
-        color: colors[0],
-      },
-      {
-        label: 'Black',
-        count: race.black,
-        percentage: pct(race.black),
-        color: colors[1],
-      },
-      {
-        label: 'Asian',
-        count: race.asian,
-        percentage: pct(race.asian),
-        color: colors[2],
-      },
-      {
-        label: 'Hispanic',
-        count: race.hispanic,
-        percentage: pct(race.hispanic),
-        color: colors[3],
-      },
-      {
-        label: 'American Indian',
-        count: race.americanIndian,
-        percentage: pct(race.americanIndian),
-        color: colors[4],
-      },
-      {
-        label: 'Pacific Islander',
-        count: race.pacificIslander,
-        percentage: pct(race.pacificIslander),
-        color: colors[5],
-      },
-    ];
+  private mapRace() {
+    const r = this.censusData.race;
+    const total = Object.values(r).reduce((a, b) => a + b, 0);
+    const keys = ['white','black','asian','hispanic','americanIndian','pacificIslander'];
+    const labels = ['White','Black','Asian','Hispanic','American Indian','Pacific Islander'];
+    const colors = ['#D1D5DB','#111827','#10B981','#F59E0B','#8B5CF6','#14B8A6'];
+    return keys.map((k, i) => ({
+      label: labels[i],
+      count: r[k as keyof typeof r],
+      percentage: this.pct(r[k as keyof typeof r], total),
+      color: colors[i],
+    }));
   }
 
-  getIncomeData() {
-    const income: Record<string, any> =
-      (this.censusData as any).incomeBrackets || {};
-
-    const explicitTotal = this.toNumber(income['Total'], 0);
-    const computedTotal = Object.entries(income)
+  private mapIncome() {
+    const inc = this.censusData.incomeBrackets as Record<string, any>;
+    const total = inc['Total'] || Object.values(inc).reduce((a, b) => a + (+b || 0), 0);
+    return Object.entries(inc)
       .filter(([k]) => k !== 'Total')
-      .reduce((s, [, v]) => s + this.toNumber(v, 0), 0);
-    const total = explicitTotal || computedTotal || 0;
-
-    type Item = {
-      label: string;
-      count: number;
-      percentage: number;
-      _key: string;
-    };
-
-    const items: Item[] = Object.keys(income)
-      .filter((k) => k !== 'Total')
-      .map((k) => {
-        const count = this.toNumber(income[k], 0);
-        const percentage = total ? Math.round((count / total) * 100) : 0;
-
-        const label =
-          k === '<10k'
-            ? 'Under $10k'
-            : k === '200k+'
-            ? '$200k+'
-            : k.includes('-')
-            ? `$${k.replace('-', ' - $')}`
-            : k;
-
-        return { label, count, percentage, _key: k };
-      });
-
-    items.sort((a, b) => {
-      const ia = this.incomeOrder.indexOf(a._key);
-      const ib = this.incomeOrder.indexOf(b._key);
-      return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
-    });
-
-    return items.map(({ _key, ...rest }) => rest);
+      .map(([k, v]) => ({
+        label: k === '<10k' ? 'Under $10k' : k === '200k+' ? '$200k+' : k.includes('-') ? `$${k.replace('-', ' - $')}` : k,
+        count: +v || 0,
+        percentage: this.pct(+v || 0, total),
+        _key: k,
+      }))
+      .sort((a, b) => this.incomeOrder.indexOf(a._key) - this.incomeOrder.indexOf(b._key))
+      .map(({ _key, ...rest }) => rest);
   }
 
-  getAgeData() {
-    const ages: Record<string, number> = this.censusData.ageGroups || {};
-    const entries = Object.entries(ages).map(([group, val]) => ({
-      group,
-      count: Number(val) || 0,
-    }));
-    const total = entries.reduce((s, e) => s + e.count, 0);
-
-    const startNum = (label: string) => {
-      const m = label.match(/(\d+)/);
-      return m ? parseInt(m[1], 10) : Number.MAX_SAFE_INTEGER;
-    };
-    entries.sort((a, b) => {
-      const sa = startNum(a.group),
-        sb = startNum(b.group);
-      return sa === sb ? a.group.localeCompare(b.group) : sa - sb;
-    });
-
-    return entries.map((e) => ({
-      group: e.group,
-      count: e.count,
-      percentage: total ? Math.round((e.count / total) * 100) : 0,
-    }));
+  private mapAge() {
+    const ages = this.censusData.ageGroups || {};
+    const arr = Object.entries(ages).map(([group, count]) => ({ group, count: +count || 0 }));
+    const total = arr.reduce((s, a) => s + a.count, 0);
+    return arr
+      .sort((a, b) => parseInt(a.group.match(/\d+/)?.[0] || '0') - parseInt(b.group.match(/\d+/)?.[0] || '0'))
+      .map(i => ({ ...i, percentage: this.pct(i.count, total) }));
   }
 
-  trackByLabel(index: number, item: any) {
-    return item?.label ?? item?.group ?? index;
-  }
+  trackByLabel = (_: number, item: any) => item?.label ?? item?.group ?? _;
 }

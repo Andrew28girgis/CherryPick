@@ -136,6 +136,79 @@ export class LandingComponent {
       },
     });
   }
+editingPlaceId: number | null = null;
+editModel: any = null;
+
+startEdit(place: any) {
+  this.editingPlaceId = place.Id;
+  this.editModel = {
+    Id: place.Id,
+    Suite: place.Suite ?? '',
+    LeaseType: place.LeaseType ?? '',
+    Price: place.Price ?? null,
+    BuildingSizeSf: place.BuildingSizeSf ?? null,
+    SecondaryType: place.SecondaryType ?? '',
+  };
+}
+
+cancelEdit() {
+  this.editingPlaceId = null;
+  this.editModel = null;
+}
+
+saveEdit() {
+  if (!this.editModel?.Id) return;
+  this.UpdatePlace({
+    Id: this.editModel.Id,
+    Suite: this.editModel.Suite,
+    LeaseType: this.editModel.LeaseType,
+    Price: this.editModel.Price,
+    BuildingSizeSf: this.editModel.BuildingSizeSf,
+    SecondaryType: this.editModel.SecondaryType,
+  });
+  this.cancelEdit();
+}
+
+// accessibility: support Enter/Space on icons
+onKeyActivate(evt: KeyboardEvent, action: () => void) {
+  const k = evt.key;
+  if (k === 'Enter' || k === ' ') {
+    evt.preventDefault();
+    action();
+  }
+}
+
+UpdatePlace(place: any): void {
+  const body = {
+    Name: 'UpdatePlace',
+    Params: {
+      SecondaryType: place.SecondaryType,
+      Suite: place.Suite,
+      BuildingSizeSf: place.BuildingSizeSf,
+      Price: place.Price,
+      LeaseType: place.LeaseType,
+      Id: place.Id,
+    },
+  };
+
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (res) => {
+      this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
+    },
+  });
+}
+
+DeletePlace(placeId: number): void {
+  const body = {
+    Name: 'DeletePlace',
+    Params: { Id: placeId },
+  };
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (res) => {
+      this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
+    },
+  });
+}
 
   initializestreetView(
     lat: number,
