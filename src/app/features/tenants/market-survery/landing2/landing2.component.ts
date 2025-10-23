@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 declare const google: any;
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
 import { NearByType } from 'src/app/shared/models/nearBy';
@@ -91,6 +91,25 @@ export class Landing2Component implements OnInit {
     [];
   incomeItems: Array<{ label: string; count: number; percentage: number }> = [];
   ageItems: Array<{ group: string; count: number; percentage: number }> = [];
+  private readonly incomeOrder: string[] = [
+    '<10k',
+    '10-15k',
+    '15-20k',
+    '20-25k',
+    '25-30k',
+    '30-35k',
+    '35-40k',
+    '40-45k',
+    '45-50k',
+    '50-60k',
+    '60-75k',
+    '75-100k',
+    '100-125k',
+    '125-150k',
+    '150-200k',
+    '200k+',
+    'Total',
+  ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -143,8 +162,7 @@ export class Landing2Component implements OnInit {
         this.shoppingCenter = data.json?.[0] || null;
         console.log(`demo`);
         console.log(this.shoppingCenter?.Demographics);
-        
-        
+
         if (this.shoppingCenter?.Demographics) {
           this.demographicsDetails();
         }
@@ -344,27 +362,6 @@ export class Landing2Component implements OnInit {
     ];
   }
 
-  GetBuyBoxOrganizationDetails(
-    Shoppingcenterid: number,
-    PlaceId: number
-  ): void {
-    const body: any = {
-      Name: 'GetBuyBoxOrganizationDetails',
-      Params: {
-        shoppingcenterid: +Shoppingcenterid,
-        placeId: +PlaceId,
-        CampaignId: this.campaignId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        if (data.json) {
-          this.OrganizationBranches = data.json[0];
-        }
-      },
-    });
-  }
-
   getRaceData() {
     const race = this.censusData.race;
     const total =
@@ -419,26 +416,6 @@ export class Landing2Component implements OnInit {
       },
     ];
   }
-
-  private readonly incomeOrder: string[] = [
-    '<10k',
-    '10-15k',
-    '15-20k',
-    '20-25k',
-    '25-30k',
-    '30-35k',
-    '35-40k',
-    '40-45k',
-    '45-50k',
-    '50-60k',
-    '60-75k',
-    '75-100k',
-    '100-125k',
-    '125-150k',
-    '150-200k',
-    '200k+',
-    'Total',
-  ];
 
   getIncomeData() {
     const income: Record<string, any> =
@@ -508,8 +485,7 @@ export class Landing2Component implements OnInit {
       percentage: total ? Math.round((e.count / total) * 100) : 0,
     }));
   }
-
-  // helper trackBy for ngFor
+  
   trackByLabel(index: number, item: any) {
     return item?.label ?? item?.group ?? index;
   }
