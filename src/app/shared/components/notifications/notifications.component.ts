@@ -132,9 +132,9 @@ export class NotificationsComponent
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: NgbModal,
-    private refreshService: RefreshService,
-    // private webSocketService: WebSocketService
-  ) {}
+    private refreshService: RefreshService
+  ) // private webSocketService: WebSocketService
+  {}
 
   showScrollButton = false;
   newNotificationsCount = 0;

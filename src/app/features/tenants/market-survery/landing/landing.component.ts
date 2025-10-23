@@ -119,14 +119,19 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenter = data.json?.[0] || null;
-        this.initializeMap(
-          this.shoppingCenter.Latitude,
-          this.shoppingCenter.Longitude
-        );
-        this.initializestreetView(
-          this.shoppingCenter.Latitude,
-          this.shoppingCenter.Longitude
-        );
+
+        if (this.shoppingCenter.Latitude && this.shoppingCenter.Longitude) {
+          
+          this.initializeMap(
+            this.shoppingCenter.Latitude,
+            this.shoppingCenter.Longitude
+          );
+          this.initializestreetView(
+            this.shoppingCenter.Latitude,
+            this.shoppingCenter.Longitude
+          );
+        }
+
         this.GetPlaceNearBy(this.PlaceId);
       },
     });
@@ -345,7 +350,7 @@ export class LandingComponent {
       (c) =>
         Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId) === id
     );
-    return center?.CenterName || center?.centerName ||  'Unknown Center';
+    return center?.CenterName || center?.centerName || 'Unknown Center';
   }
 
   private rebuildSequence(): void {

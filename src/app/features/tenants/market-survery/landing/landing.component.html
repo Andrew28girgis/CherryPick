@@ -584,7 +584,7 @@
     </div>
   </div>
 
-  <div class="map-section">
+  <div class="map-section" *ngIf="shoppingCenter.Latitude && this.shoppingCenter.Longitude">
     <div class="view-toggle">
       <button [class.active]="isMapView" (click)="isMapView = true">
         Map View
