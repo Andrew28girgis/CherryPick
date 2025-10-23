@@ -1084,7 +1084,6 @@
 }
 .stepper {
   display: flex;
-  width: 50%;
   align-items: center;
   justify-content: center;
   gap: 12px;
@@ -1516,4 +1515,31 @@
   .title::after {
     width: auto ;
   }
+  .stepper {
+    gap: 2px;   
+}
+.step {
+  font-size: 13px;
+  padding: 8px 12px;
+}
+.next-btn {
+    font-size: 14px;
+    padding: 8px 14px;
+}
+@media (max-width: 991px) {
+
+  .modal-dialog.modal-xl,
+  .modal.show .modal-dialog.modal-xl {
+    width: 80% !important;
+    max-width: 80% !important;
+    height: 100%;
+    margin: auto !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-dialog.modal-xl .modal-content {
+    border-radius: 0;        
+  }
+}
 }
