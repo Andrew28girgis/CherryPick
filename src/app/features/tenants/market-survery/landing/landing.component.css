@@ -658,6 +658,9 @@ li {
     flex-direction: row;
     align-items: center;
   }
+  .responsive-div button span{
+    display: none;
+  }
   .responsive{
     flex-direction: column;
     align-items: flex-start !important;
@@ -935,4 +938,8 @@ li {
 .nav-btn-next {
   background-color: var(--Colors-Primary-500); 
 }
-
+.responsive-div{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}

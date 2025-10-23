@@ -14,11 +14,17 @@
     <div class="responsive-div">
       <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
         <i class="fa-solid fa-chevron-left me-1"></i>
-        Previous {{ prevName ? "to:  " + prevName : "" }}
+        Previous
+        <span>
+          {{ prevName ? "to:  " + prevName : "" }}
+        </span>
       </button>
 
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
-        Next {{ nextName ? "to:  " + nextName : "" }}
+        Next
+        <span>
+          {{ nextName ? "to:  " + nextName : "" }}
+        </span>
 
         <i class="fa-solid fa-chevron-right ms-1"></i>
       </button>
@@ -587,7 +593,10 @@
     </div>
   </div>
 
-  <div class="map-section" *ngIf="shoppingCenter.Latitude && this.shoppingCenter.Longitude">
+  <div
+    class="map-section"
+    *ngIf="shoppingCenter.Latitude && this.shoppingCenter.Longitude"
+  >
     <div class="view-toggle">
       <button [class.active]="isMapView" (click)="isMapView = true">
         Map View
