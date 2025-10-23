@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-   border-bottom: 1px solid #d1d9e0;
+  border-bottom: 1px solid #d1d9e0;
   background: #f6f8fa;
 }
 
@@ -631,7 +631,7 @@
   background: #fff;
 }
 
-.hidden{
+.hidden {
   grid-template-columns: minmax(0, 1fr) !important;
 }
 
@@ -1172,7 +1172,106 @@
   animation-duration: 1020ms;
   animation-delay: 400ms;
 }
+.professional-loading-icon {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 1.2em;
+  color: #666666;
+  animation: professional-float-slow 4s ease-in-out infinite;
+}
 
+.professional-loading-icon i {
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+.search-loading-icon {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 1.2em;
+  color: var(--Colors-Primary-500);
+  animation: subtle-search-float 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.search-loading-icon i {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+.scanning-icon {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 1.2em;
+  /* Use a vibrant, action-oriented color like green or cyan */
+  color: #00bcd4;
+
+  /* Combine the two animations here */
+  animation: 
+    /* Rotation: slow, linear, continuous */ continuous-rotation 6s
+      linear infinite,
+    /* Pulse: quicker, smooth (ease-in-out), continuous */ scale-pulse 2s
+      ease-in-out infinite;
+
+  transform-origin: center;
+}
+/* 1. Continuous Rotation (The "Scanning" effect) */
+@keyframes continuous-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    /* Full slow rotation */
+    transform: rotate(360deg);
+  }
+}
+
+/* 2. Scale Pulse (The "Analyzing" effect) */
+@keyframes scale-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    /* Subtle breathing effect */
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+@keyframes subtle-search-float {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(2px, 1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-3px, -2px) rotate(-1deg);
+  }
+  75% {
+    transform: translate(-1px, 3px) rotate(0.5deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+}
+@keyframes professional-float-slow {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  20% {
+    transform: translate(1px, -2px) rotate(0.5deg);
+  }
+  40% {
+    transform: translate(-2px, 1px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(0px, -3px) rotate(1.5deg);
+  }
+  80% {
+    transform: translate(3px, -1px) rotate(-0.5deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+}
 @keyframes barPulse {
   0% {
     transform: scaleY(0.35);
@@ -1196,14 +1295,13 @@
   }
 }
 
-/* motion safety */
 @media (prefers-reduced-motion: reduce) {
   .stat-bars > span {
     animation: none;
   }
 }
 
- .segmented-scan {
+.segmented-scan {
   display: inline-flex;
   align-items: center;
   background: var(--Colors-Primary-light);
@@ -1218,9 +1316,9 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  border-radius: 24px;  
+  border-radius: 24px;
   overflow: hidden;
-}  
+}
 .segmented-scan .segment input[type="radio"] {
   position: absolute;
   opacity: 0;
@@ -1232,7 +1330,7 @@
   align-items: center;
   gap: 6px;
   padding: 0 12px;
-  height: 28px; 
+  height: 28px;
   border-radius: inherit;
   font-size: 10px;
   font-weight: 600;
@@ -1240,23 +1338,22 @@
   color: #6b7280;
   transition: background 0.2s ease, color 0.2s ease, transform 0.04s ease;
   cursor: pointer;
-}  
+}
 .segmented-scan .segment:hover .seg {
   background: rgba(0, 0, 0, 0.04);
   color: #1f2328;
-} 
+}
 .segmented-scan .segment:active .seg {
   transform: translateY(1px);
-} 
+}
 .segmented-scan .segment input[type="radio"]:checked + .seg {
   background: var(--Colors-Primary-400);
   color: var(--app-color);
- }  
+}
 .segmented-scan .segment input[type="radio"]:focus-visible + .seg {
-  outline: 2px solid #5c6bc0; 
+  outline: 2px solid #5c6bc0;
   outline-offset: 2px;
-}  
+}
 .segmented-scan .seg svg {
   display: inline-block;
-}  
- 
+}

@@ -436,7 +436,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (!this.selectedTenant) return;
 
     this.refreshService.requestPolygonSave(this.selectedTenant.id);
- 
   }
 
   private resetAddCampaignForm(): void {
@@ -469,21 +468,20 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.modalRef?.close();
           this.resetAddCampaignForm();
           this.getAllCampaigns();
-// console.log(response);
-console.log(response.campaign);
-const campaignDetails = JSON.stringify(response.campaign);
+          // console.log(response);
+          console.log(response.campaign);
+          const campaignDetails = JSON.stringify(response.campaign);
           this.placesService
-          .sendmessages({
-            Chat: `display the specs of this campaign: ${campaignDetails}`,
-            NeedToSaveIt: true,
-          })
-          .subscribe({
-            next: (res) => {
-              const notification = res.notification ;
-              this.notificationService.triggerOverlay(notification);
-      
-          }
-          });
+            .sendmessages({
+              Chat: `display the specs of this campaign: ${campaignDetails}`,
+              NeedToSaveIt: true,
+            })
+            .subscribe({
+              next: (res) => {
+                const notification = res.notification;
+                this.notificationService.triggerOverlay(notification);
+              },
+            });
         },
         error: (err) => {},
       });
@@ -627,13 +625,20 @@ const campaignDetails = JSON.stringify(response.campaign);
         this.selectedCampaign = JSON.parse(
           response.json[0].campaignDetailsJSON
         );
+         
         this.placesService
           .sendmessages({
-            Chat: `Edit this Campaign and Show the campaign specs, in a nice html representation and the user will start telling new the new specs for the campaign
-            Campaign ID: ${campaign.Id}
-            Campaign Json Details: ${response.json[0].campaignDetailsJSON} `,
+            Chat: `
+            Edit this Campaign and Show the campaign specs, in a nice html representation
+            Your purpose is to help the broker to complete the specs of the campaing named "${campaign.CampaignName}"
+            and it's id is "${campaign.Id}".
+            The campaign is for Tenant "${campaign.OrganizationName}"
+            to expand in these locations in the json below:
+            ${response.json[0].campaignDetailsJSON}
+            gather any more specs and details from the broker, also offer him to search for these specs online`,
             NeedToSaveIt: true,
           })
+
           .subscribe({});
         // this.notificationService.sendmessage('Edit this Campaign');
       },

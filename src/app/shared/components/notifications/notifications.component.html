@@ -349,13 +349,16 @@
                 >
                   I am searching the web now for your request.
 
+                  <span class="search-loading-icon" aria-hidden="true">
+                    <i class="fa fa-search"></i>
+                  </span>
                   <!-- <span class="loading-dots">
                     <span></span><span></span><span></span>
                   </span> -->
-                  <span class="stat-bars" aria-hidden="true">
+                  <!-- <span class="stat-bars" aria-hidden="true">
                     <span></span><span></span><span></span><span></span
                     ><span></span><span></span>
-                  </span>
+                  </span> -->
                 </p>
                 <p
                   class="message-text"
@@ -379,13 +382,13 @@
                   *ngIf="isCompilingReport(item, i); else staticCompiling"
                 >
                   Got some results, Compiling them into a nice report.
-                  <!-- <span class="loading-dots">
-                    <span></span><span></span><span></span>
-                  </span> -->
-                  <span class="stat-bars" aria-hidden="true">
+                  <span class="professional-loading-icon" aria-hidden="true">
+                    <i class="fa-regular fa-file" style="color: #baa26c"></i>
+                  </span>
+                  <!-- <span class="stat-bars" aria-hidden="true">
                     <span></span><span></span><span></span><span></span
                     ><span></span><span></span>
-                  </span>
+                  </span> -->
                 </p>
 
                 <ng-template #staticCompiling>
