@@ -75,10 +75,6 @@
   backdrop-filter: blur(50px);
 }
 
-.filter-btn:hover,
-.sort-btn:hover {
-  /* background: var(--Colors-Primary-500); */
-}
 
 .add-new-btn {
   white-space: nowrap;
