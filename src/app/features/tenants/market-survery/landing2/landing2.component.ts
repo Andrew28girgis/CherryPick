@@ -485,7 +485,7 @@ export class Landing2Component implements OnInit {
       percentage: total ? Math.round((e.count / total) * 100) : 0,
     }));
   }
-  
+
   trackByLabel(index: number, item: any) {
     return item?.label ?? item?.group ?? index;
   }
