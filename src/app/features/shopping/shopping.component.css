@@ -1831,7 +1831,7 @@ tr.click-disabled td:last-child * {
 
   .centers-grid {
     grid-template-columns: 1fr;
-    gap: var(--Space-S-16);
+    gap: 45px;
   }
 
    
