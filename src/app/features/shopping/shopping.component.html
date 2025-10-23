@@ -736,7 +736,15 @@
                       "
                       class="building-size"
                     >
+                    <span *ngIf="sizes.min!==sizes.max">
+
                       {{ sizes.min | number }} - {{ sizes.max | number }} SF
+                    </span>
+                    <span *ngIf="sizes.min===sizes.max">
+
+                      {{ sizes.min | number }} SF
+                    </span>
+
                     </span>
 
                     <!-- Price Range -->
