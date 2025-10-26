@@ -591,8 +591,22 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           response.json[0].campaignDetailsJSON
         );
         this.campaignlogo = campaign.logoUrl;
-
-        this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
+        this.placesService
+          .sendmessages({
+            Chat: `
+          Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
+          Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
+          The campaign name is "${campaign.CampaignName}"
+          Its ID is "${campaign.Id}"
+          The campaign belongs to the tenant "${campaign.OrganizationName}"
+          and aims to expand in the following locations from the JSON below:
+          ${response.json[0].campaignDetailsJSON}
+          Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
+`,
+            NeedToSaveIt: true,
+          })
+          .subscribe({});
+        // this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
       },
     });
   }
@@ -632,13 +646,15 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         this.placesService
           .sendmessages({
             Chat: `
-            Edit this Campaign and Show the campaign specs, in a nice html representation
-            Your purpose is to help the broker to complete the specs of the campaing named "${campaign.CampaignName}"
-            and it's id is "${campaign.Id}".
-            The campaign is for Tenant "${campaign.OrganizationName}"
-            to expand in these locations in the json below:
-            ${response.json[0].campaignDetailsJSON}
-            gather any more specs and details from the broker, also offer him to search for these specs online`,
+            Display and edit the campaign details. Show all available campaign specifications — do not omit or summarize any field.
+Present the full campaign specs in a clean, well-structured HTML layout suitable for the user to view and edit.
+
+The campaign’s name is "${campaign.CampaignName}" with ID "${campaign.Id}", created for Tenant "${campaign.OrganizationName}".
+The campaign aims to expand into the following locations (from the JSON below):
+${response.json[0].campaignDetailsJSON}
+
+Your goal is to assist the broker in reviewing and completing any missing campaign specifications.
+Encourage the broker to provide any missing details, and if needed, offer to search online for more campaign specs to complete the information.`,
             NeedToSaveIt: true,
           })
 

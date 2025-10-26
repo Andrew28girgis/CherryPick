@@ -1,0 +1,68 @@
+<div class="notif-container" (click)="$event.stopPropagation()">
+    <!-- Notification bell -->
+    <button class="notif-btn" (click)="toggleDropdown()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6 6 0 00-5-5.917V4a1 1 0 00-2 0v1.083A6 6 0 006 11v3c0 .217-.043.427-.126.621L4.5 17h5m5 0a3 3 0 11-6 0h6z"
+        />
+      </svg>
+      <span
+        class="badge"
+        *ngIf="unreadCount > 0"
+        [attr.aria-label]="unreadCount + ' unread notifications'"
+        >{{ unreadCount }}</span
+      >
+    </button>
+  
+    <!-- Dropdown -->
+    <div class="notif-dropdown" *ngIf="isOpen">
+      <div class="notif-header">
+        <h5>Notifications</h5>
+        <button
+          class="mark-all"
+          (click)="markAllAsRead()"
+          [disabled]="unreadCount === 0"
+        >
+          Mark all as read
+        </button>
+      </div>
+  
+      <ul class="notif-list" *ngIf="notifications.length; else noNotifs">
+        <li
+          *ngFor="let n of notifications; trackBy: trackById"
+          class="notif-item"
+          [class.unread]="!n.isRead"
+         >
+          <div class="notif-left" (click)="$event.stopPropagation()">
+            <div class="notif-message">{{ n.message }}</div>
+            <div class="notif-date">{{ n.createdDate | date: 'short' }}</div>
+      
+            <a
+              href="#"
+              class="mark-as-read"
+              *ngIf="!n.isRead"
+              (click)="$event.preventDefault(); $event.stopPropagation(); markNotificationAsRead(n)"
+              >Mark as read</a
+            >
+          </div>
+        </li>
+      </ul>
+      
+
+  
+      <ng-template #noNotifs>
+        <div class="empty">No notifications</div>
+      </ng-template>
+    </div>
+  </div>
+  

@@ -713,19 +713,25 @@ export class NotificationsComponent
 
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0;
-
-    const notificationItems: ChatItem[] = (
-      this.notificationService?.notifications ?? []
-    ).map((n) => ({
+  
+    // 🔹 Filter notifications to include only Emily chat messages
+    const emilyNotifications =
+      (this.notificationService?.notifications ?? []).filter(
+        (n) => n.isEmilyChat === true
+      );
+  
+    // 🔹 Map notifications to ChatItems
+    const notificationItems: ChatItem[] = emilyNotifications.map((n) => ({
       key: `n-${n.id}-${seqCounter++}`,
       from: this.mapCategoryToFrom(n.notificationCategoryId),
       message: n.message,
       created: new Date(n.createdDate),
       notification: n,
     }));
-
+  
+    // 🔹 Identify user messages (category 1 or boolean true)
     const userNotificationMessages = new Set(
-      (this.notificationService?.notifications ?? [])
+      emilyNotifications
         .filter(
           (n) =>
             n.notificationCategoryId === true ||
@@ -733,7 +739,8 @@ export class NotificationsComponent
         )
         .map((n) => n.message.trim()?.toLowerCase())
     );
-
+  
+    // 🔹 Map optimistic (local) user-sent messages
     const sentMessageItems: ChatItem[] = (this.sentMessages ?? [])
       .filter(
         (m) => !userNotificationMessages.has(m.message.trim()?.toLowerCase())
@@ -745,13 +752,15 @@ export class NotificationsComponent
         created: new Date(m.createdDate),
         userMsg: m,
       }));
-
+  
+    // 🔹 Merge and sort all items chronologically
     return [...notificationItems, ...sentMessageItems].sort((a, b) => {
       const diff = a.created.getTime() - b.created.getTime();
       if (diff !== 0) return diff;
       return a.key.localeCompare(b.key);
     });
   }
+  
 
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 

@@ -140,7 +140,7 @@ export class NotificationService {
 
   markAllAsRead(): void {
     const unreadNotifications = this.notifications.filter(
-      (n) => n.isRead === false
+      (n) => n.isRead === false &&n.isEmilyChat === true
     );
 
     unreadNotifications.forEach((notification) => {

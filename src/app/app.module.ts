@@ -32,6 +32,7 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
+import { NotificationsOnlyComponentComponent } from './shared/components/notifications-only-component/notifications-only-component.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { EditorModule } from 'primeng/editor';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
@@ -39,7 +40,7 @@ import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.com
 import { Landing2Component } from './features/tenants/market-survery/landing2/landing2.component';
 import { Tree2Component } from './features/tree2/tree2.component';
 import { FFlowModule, FConnectionContent } from '@foblex/flow';
-
+import { DatePipe } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,6 +55,7 @@ import { FFlowModule, FConnectionContent } from '@foblex/flow';
     AiUiHTMLComponent,
     Landing2Component,
     Tree2Component,
+    NotificationsOnlyComponentComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,6 +85,7 @@ import { FFlowModule, FConnectionContent } from '@foblex/flow';
     NotificationsComponent,
     FFlowModule,
     FConnectionContent,
+    DatePipe,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

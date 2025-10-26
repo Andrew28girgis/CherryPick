@@ -50,10 +50,11 @@
       </a>
     </div>
   </nav>
-
+  
   <!-- User and Emily avatars container -->
   <div class="right-controls">
     <!-- User avatar/profile menu -->
+    <app-notifications-only-component></app-notifications-only-component>
     <div *ngIf="!isChatbotRoute" class="avatar-container dropdown">
       <a class="avatar" role="button" (click)="toggleDropdown()">
         <svg
@@ -177,6 +178,7 @@
         </a>
       </div>
     </div>
+
     <!-- Hamburger Button -->
     <button
       class="menu-toggle"
