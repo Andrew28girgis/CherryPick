@@ -14,14 +14,15 @@
     <div class="responsive-div">
       <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
         <i class="fa-solid fa-chevron-left me-1"></i>
-        Previous
+        <span class="me-1">Previous</span>
         <span>
           {{ prevName ? "to:  " + prevName : "" }}
         </span>
       </button>
 
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
-        Next
+                <span class="me-1">Next</span>
+
         <span>
           {{ nextName ? "to:  " + nextName : "" }}
         </span>

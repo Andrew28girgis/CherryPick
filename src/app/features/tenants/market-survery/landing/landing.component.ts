@@ -121,7 +121,6 @@ export class LandingComponent {
         this.shoppingCenter = data.json?.[0] || null;
 
         if (this.shoppingCenter.Latitude && this.shoppingCenter.Longitude) {
-          
           this.initializeMap(
             this.shoppingCenter.Latitude,
             this.shoppingCenter.Longitude
@@ -136,79 +135,79 @@ export class LandingComponent {
       },
     });
   }
-editingPlaceId: number | null = null;
-editModel: any = null;
+  editingPlaceId: number | null = null;
+  editModel: any = null;
 
-startEdit(place: any) {
-  this.editingPlaceId = place.Id;
-  this.editModel = {
-    Id: place.Id,
-    Suite: place.Suite ?? '',
-    LeaseType: place.LeaseType ?? '',
-    Price: place.Price ?? null,
-    BuildingSizeSf: place.BuildingSizeSf ?? null,
-    SecondaryType: place.SecondaryType ?? '',
-  };
-}
-
-cancelEdit() {
-  this.editingPlaceId = null;
-  this.editModel = null;
-}
-
-saveEdit() {
-  if (!this.editModel?.Id) return;
-  this.UpdatePlace({
-    Id: this.editModel.Id,
-    Suite: this.editModel.Suite,
-    LeaseType: this.editModel.LeaseType,
-    Price: this.editModel.Price,
-    BuildingSizeSf: this.editModel.BuildingSizeSf,
-    SecondaryType: this.editModel.SecondaryType,
-  });
-  this.cancelEdit();
-}
-
-// accessibility: support Enter/Space on icons
-onKeyActivate(evt: KeyboardEvent, action: () => void) {
-  const k = evt.key;
-  if (k === 'Enter' || k === ' ') {
-    evt.preventDefault();
-    action();
-  }
-}
-
-UpdatePlace(place: any): void {
-  const body = {
-    Name: 'UpdatePlace',
-    Params: {
-      SecondaryType: place.SecondaryType,
-      Suite: place.Suite,
-      BuildingSizeSf: place.BuildingSizeSf,
-      Price: place.Price,
-      LeaseType: place.LeaseType,
+  startEdit(place: any) {
+    this.editingPlaceId = place.Id;
+    this.editModel = {
       Id: place.Id,
-    },
-  };
+      Suite: place.Suite ?? '',
+      LeaseType: place.LeaseType ?? '',
+      Price: place.Price ?? null,
+      BuildingSizeSf: place.BuildingSizeSf ?? null,
+      SecondaryType: place.SecondaryType ?? '',
+    };
+  }
 
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (res) => {
-      this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
-    },
-  });
-}
+  cancelEdit() {
+    this.editingPlaceId = null;
+    this.editModel = null;
+  }
 
-DeletePlace(placeId: number): void {
-  const body = {
-    Name: 'DeletePlace',
-    Params: { Id: placeId },
-  };
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (res) => {
-      this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
-    },
-  });
-}
+  saveEdit() {
+    if (!this.editModel?.Id) return;
+    this.UpdatePlace({
+      Id: this.editModel.Id,
+      Suite: this.editModel.Suite,
+      LeaseType: this.editModel.LeaseType,
+      Price: this.editModel.Price,
+      BuildingSizeSf: this.editModel.BuildingSizeSf,
+      SecondaryType: this.editModel.SecondaryType,
+    });
+    this.cancelEdit();
+  }
+
+  // accessibility: support Enter/Space on icons
+  onKeyActivate(evt: KeyboardEvent, action: () => void) {
+    const k = evt.key;
+    if (k === 'Enter' || k === ' ') {
+      evt.preventDefault();
+      action();
+    }
+  }
+
+  UpdatePlace(place: any): void {
+    const body = {
+      Name: 'UpdatePlace',
+      Params: {
+        SecondaryType: place.SecondaryType,
+        Suite: place.Suite,
+        BuildingSizeSf: place.BuildingSizeSf,
+        Price: place.Price,
+        LeaseType: place.LeaseType,
+        Id: place.Id,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res) => {
+        this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
+      },
+    });
+  }
+
+  DeletePlace(placeId: number): void {
+    const body = {
+      Name: 'DeletePlace',
+      Params: { Id: placeId },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res) => {
+        this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
+      },
+    });
+  }
 
   initializestreetView(
     lat: number,
@@ -420,8 +419,7 @@ DeletePlace(placeId: number): void {
   // Helper method to get center name by ID
   private getCenterNameById(id: number): string {
     const center = this.filteredCenters.find(
-      (c) =>
-        Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId) === id
+      (c) => Number(c.Id ?? c.scId) === id
     );
     return center?.CenterName || center?.centerName || 'Unknown Center';
   }
@@ -429,7 +427,7 @@ DeletePlace(placeId: number): void {
   private rebuildSequence(): void {
     this.centerIds = (this.filteredCenters || [])
       .map((c) =>
-        Number(c.Id ?? c.id ?? c.ShoppingCenterId ?? c.shoppingCenterId)
+        Number(c.Id ?? c.scId)
       )
       .filter((id) => !isNaN(id));
 
@@ -445,6 +443,7 @@ DeletePlace(placeId: number): void {
           : this.currentIndex + 1;
       const nextId = this.centerIds[nextIndex];
       this.nextName = this.getCenterNameById(nextId);
+      console.log('hhh', this.nextName);
 
       // Previous index (circular)
       const prevIndex =
@@ -453,6 +452,7 @@ DeletePlace(placeId: number): void {
           : this.currentIndex - 1;
       const prevId = this.centerIds[prevIndex];
       this.prevName = this.getCenterNameById(prevId);
+      console.log('ttt', this.prevName);
     } else {
       this.nextName = '';
       this.prevName = '';
