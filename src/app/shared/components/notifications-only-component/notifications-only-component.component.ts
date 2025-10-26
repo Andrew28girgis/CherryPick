@@ -93,16 +93,13 @@ export class NotificationsOnlyComponentComponent {
   }
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // If dropdown is closed, nothing to do
     if (!this.isOpen) return;
 
-    // If click is inside the component, keep it open
     const target = event.target as Node | null;
     if (target && this.hostRef.nativeElement.contains(target)) {
       return;
     }
 
-    // Click was outside -> close dropdown
     this.isOpen = false;
     this.cd.detectChanges();
   }
