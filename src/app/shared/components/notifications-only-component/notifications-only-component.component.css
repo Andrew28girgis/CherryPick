@@ -1,7 +1,8 @@
 :host {
   width: fit-content;
   align-items: center;
-  display: flex;}
+  display: flex;
+}
 .notif-container {
   position: relative;
   display: inline-block;
@@ -43,8 +44,6 @@
   z-index: 9999;
   padding: 8px 0;
 }
-
-
 
 .notif-dropdown::-webkit-scrollbar {
   height: 10px;
@@ -104,11 +103,11 @@
   gap: 8px;
 }
 
- .notif-item.unread {
+.notif-item.unread {
   background: #eef2ff;
 }
 
- .notif-left {
+.notif-left {
   flex: 1 1 auto;
   min-width: 0;
   cursor: default;
@@ -124,14 +123,14 @@
   color: #6b7280;
 }
 
- .notif-actions {
+.notif-actions {
   flex-shrink: 0;
   margin-left: 8px;
   display: flex;
   align-items: center;
 }
 
- .mark-as-read {
+.mark-as-read {
   color: #2563eb;
   text-decoration: none;
   font-size: 0.85rem;
@@ -144,7 +143,7 @@
   text-decoration: underline;
 }
 
- @media (max-width: 420px) {
+@media (max-width: 420px) {
   .notif-item {
     padding: 10px;
   }

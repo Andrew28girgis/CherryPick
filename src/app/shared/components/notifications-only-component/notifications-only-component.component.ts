@@ -1,5 +1,9 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  ChangeDetectorRef,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Notification } from 'src/app/shared/models/Notification';
@@ -7,8 +11,8 @@ import { Notification } from 'src/app/shared/models/Notification';
 @Component({
   selector: 'app-notifications-only-component',
   standalone: false,
-   templateUrl: './notifications-only-component.component.html',
-  styleUrl: './notifications-only-component.component.css'
+  templateUrl: './notifications-only-component.component.html',
+  styleUrl: './notifications-only-component.component.css',
 })
 export class NotificationsOnlyComponentComponent {
   notifications: Notification[] = [];
@@ -19,7 +23,8 @@ export class NotificationsOnlyComponentComponent {
   constructor(
     private notificationService: NotificationService,
     private placesService: PlacesService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private hostRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +40,6 @@ export class NotificationsOnlyComponentComponent {
     this.isOpen = !this.isOpen;
   }
 
-  /** Fetch notifications and filter */
   private refresh(): void {
     this.notificationService.fetchUserNotifications(undefined).subscribe({
       complete: () => this.applyFilter(),
@@ -52,11 +56,12 @@ export class NotificationsOnlyComponentComponent {
           new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
       );
 
-    this.unreadCount = this.notifications.filter((n) => !n.isRead &&n.isEmilyChat===false).length;
+    this.unreadCount = this.notifications.filter(
+      (n) => !n.isRead && n.isEmilyChat === false
+    ).length;
     this.cd.detectChanges();
   }
 
-  /** mark one as read */
   markNotificationAsRead(notification: Notification): void {
     const request = {
       Name: 'UpdateNotification',
@@ -73,16 +78,32 @@ export class NotificationsOnlyComponentComponent {
     });
   }
 
-  /** mark all as read */
   markAllAsRead(): void {
-    const unread = this.notifications.filter((n) => n.isRead === false &&n.isEmilyChat===false);
+    const unread = this.notifications.filter(
+      (n) => n.isRead === false && n.isEmilyChat === false
+    );
 
     unread.forEach((n) => {
-         this.markNotificationAsRead(n);
-     });
+      this.markNotificationAsRead(n);
+    });
   }
 
   trackById(_: number, n: Notification): number | string {
     return n.id;
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // If dropdown is closed, nothing to do
+    if (!this.isOpen) return;
+
+    // If click is inside the component, keep it open
+    const target = event.target as Node | null;
+    if (target && this.hostRef.nativeElement.contains(target)) {
+      return;
+    }
+
+    // Click was outside -> close dropdown
+    this.isOpen = false;
+    this.cd.detectChanges();
   }
 }
