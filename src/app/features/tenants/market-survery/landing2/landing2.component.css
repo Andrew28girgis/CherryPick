@@ -436,6 +436,24 @@
 .card button:hover {
   color: var(--Colors-Primary-hover);
 }
+.toggle-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.chev {
+  transform-origin: center;
+  transition: transform .22s ease;
+  fill: currentColor;
+}
+.toggle-btn[aria-expanded="true"] .chev {
+  transform: rotate(180deg);
+}
+
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
