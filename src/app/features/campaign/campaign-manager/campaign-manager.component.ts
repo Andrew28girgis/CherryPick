@@ -181,12 +181,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           const newCampaigns: ICampaign[] = response.json;
 
-          // update campaign list
-          this.campaigns = newCampaigns;
+           this.campaigns = newCampaigns;
           this.filteredCampaigns = newCampaigns;
 
-          // 👇 Build unique organization tabs
-          const orgMap = new Map<number, string>();
+           const orgMap = new Map<number, string>();
           newCampaigns.forEach((c) => {
             if (c.OrganizationId && c.OrganizationName) {
               orgMap.set(c.OrganizationId, c.OrganizationName);
