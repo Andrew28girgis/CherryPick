@@ -19,7 +19,12 @@
           {{ prevName ? "to:  " + prevName : "" }}
         </span>
       </button>
-
+      <div class="campaign-header-bar">
+        <span class="campaign-path">
+           {{ campaignName }} / {{ shoppingCenter.CenterName }}
+        </span>
+      </div>
+      
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
         <span class="me-1">Next</span>
 

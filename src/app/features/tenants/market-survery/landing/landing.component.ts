@@ -27,6 +27,7 @@ export class LandingComponent {
   OrgId!: number;
   shoppingId!: any;
   campaignId!: any;
+  campaignName!: string;
   isMapView = true;
   tenantGroups = {
     onSite: [] as ShoppingCenterTenant[],
@@ -543,6 +544,7 @@ export class LandingComponent {
       next: (res) => {
         console.log('API Response:', res.json);
         this.CampaignScores = res.json || []; 
+        this.campaignName=this.CampaignScores.filter(c=>c.campaignId==this.campaignId)[0]?.campaignName;
       },
       error: (err) => {
        },

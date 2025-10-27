@@ -9,7 +9,7 @@
   flex-direction: column;
   justify-content: flex-end;
   height: 100%;
-  z-index: 99 ;
+  z-index: 99;
   position: relative;
 }
 
@@ -650,18 +650,18 @@ li {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .responsive-cotenants{
+  .responsive-cotenants {
     gap: 30px;
   }
-  .responsive-div{
+  .responsive-div {
     display: flex;
     flex-direction: row;
     align-items: center;
   }
-  .responsive-div button span{
+  .responsive-div button span {
     display: none;
   }
-  .responsive{
+  .responsive {
     flex-direction: column;
     align-items: flex-start !important;
     gap: 10px;
@@ -703,7 +703,6 @@ li {
   cursor: auto;
 }
 
- 
 .contacts-wrapper {
   background: #ffffff;
   border-radius: 16px;
@@ -786,7 +785,7 @@ li {
 
 /* tenant category cards */
 .tenant-category-card {
-   background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 16px;
@@ -911,9 +910,8 @@ li {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-.cb{
+.cb {
   left: 30px;
-  
 }
 .nav-btn {
   display: inline-flex;
@@ -929,18 +927,20 @@ li {
   border: none;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 }
 
 .nav-btn-prev {
-  background-color: #6c757d; 
+  background-color: #6c757d;
 }
 
 .nav-btn-next {
-  background-color: var(--Colors-Primary-500); 
+  background-color: var(--Colors-Primary-500);
 }
-.responsive-div{
+.responsive-div {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
 }
 
@@ -950,7 +950,7 @@ li {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   margin: 20px 0 20px 0;
   border-radius: 24px;
- }
+}
 
 .campaign-title {
   font-size: 1.6rem;
@@ -1012,4 +1012,16 @@ li {
 
 .low-score {
   background-color: #dc3545; /* red */
+}
+.campaign-header-bar {
+  color: #000;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.campaign-path {
+  font-size: 20px;
+  font-weight: 300 !important;
+  letter-spacing: 0.3px;
 }
