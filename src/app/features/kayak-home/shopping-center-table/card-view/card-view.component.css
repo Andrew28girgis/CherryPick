@@ -41,7 +41,7 @@
   border: 1px solid #ced4da;
   border-radius: var(--Radius-R-4);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  z-index: 100;
+  z-index: 99;
   display: none;
 }
 

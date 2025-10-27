@@ -332,7 +332,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border: none;
   cursor: pointer;
-  z-index: 100;
+  z-index: 99;
   transition: all 0.3s ease;
 }
 

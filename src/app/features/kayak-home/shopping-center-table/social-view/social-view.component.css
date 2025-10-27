@@ -5,7 +5,7 @@
 /* Header Styles */
 .feed-header {
   top: 0;
-  z-index: 100;
+  z-index: 99;
   padding: var(--Space-S-16)   var(--Space-S-24) ;
    display: flex;
   justify-content: space-between;
