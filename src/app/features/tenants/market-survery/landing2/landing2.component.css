@@ -76,11 +76,16 @@
 /* ================= GRID & CARDS ================= */
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: start;       
+  grid-auto-rows: auto;
 }
 
 .card {
+  align-self: start;          
+  display: flex;
+  flex-direction: column;
   background: #fff;
   border-radius: 16px;
   padding: 25px;
@@ -436,24 +441,40 @@
 .card button:hover {
   color: var(--Colors-Primary-hover);
 }
-.toggle-btn {
-  background: transparent;
-  border: none;
-  padding: 4px;
-  display: inline-flex;
+.header-btn {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
+  border: none;
+  padding: 12px;
   cursor: pointer;
+  text-align: left;
 }
+
+.header-btn h2 {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1;
+}
+
 .chev {
+  width: 28px;
+  height: 28px;
   transform-origin: center;
   transition: transform .22s ease;
   fill: currentColor;
 }
-.toggle-btn[aria-expanded="true"] .chev {
+
+.header-btn[aria-expanded="true"] .chev {
   transform: rotate(180deg);
 }
 
+
+
+.card .card-content {
+  padding: 12px;
+}
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {

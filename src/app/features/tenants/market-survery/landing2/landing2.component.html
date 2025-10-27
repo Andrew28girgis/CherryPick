@@ -18,466 +18,331 @@
     </div>
   </div>
 
-  <!-- Main Grid -->
-  <div class="grid-container">
-    <!-- Demographics Card -->
-    <div class="card demographics-card">
-      <div class="card-header">
-        <h2>Demographics</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="demographics-content"
-          [attr.aria-expanded]="expandedPanels['demographics']"
-          (click)="togglePanel('demographics')"
-          title="Toggle Demographics"
-        >
-          <!-- simple chevron SVG -->
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
-      </div>
+<!-- Main Grid -->
+<div class="grid-container">
+  <!-- Demographics Card -->
+  <div class="card demographics-card">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="demographics-content"
+      [attr.aria-expanded]="expandedPanels['demographics']"
+      (click)="togglePanel('demographics')"
+      title="Toggle Demographics"
+    >
+      <h2>Demographics</h2>
+      <!-- bigger chevron -->
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
 
-      <div
-        id="demographics-content"
-        class="card-content"
-        *ngIf="expandedPanels['demographics']"
-      >
-        <div class="demo-stats">
-          <div class="demo-row">
-            <span>Name</span>
-            <span class="value">{{ censusData.name || "—" }}</span>
-          </div>
+    <div id="demographics-content" class="card-content" *ngIf="expandedPanels['demographics']">
+      <div class="demo-stats">
+        <div class="demo-row">
+          <span>Name</span>
+          <span class="value">{{ censusData.name || '—' }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Latitude</span>
-            <span class="value">{{ censusData.lat }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Latitude</span>
+          <span class="value">{{ censusData.lat }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Longitude</span>
-            <span class="value">{{ censusData.lon }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Longitude</span>
+          <span class="value">{{ censusData.lon }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Population</span>
-            <span class="value">{{
-              formatNumber(censusData.population || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Population</span>
+          <span class="value">{{ formatNumber(censusData.population || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Median Age</span>
-            <span class="value">{{ censusData.medianAge || 0 }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Median Age</span>
+          <span class="value">{{ censusData.medianAge || 0 }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Households</span>
-            <span class="value">{{
-              formatNumber(censusData.households || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Households</span>
+          <span class="value">{{ formatNumber(censusData.households || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Avg Household Size</span>
-            <span class="value">{{ censusData.avgHouseholdSize || 0 }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Avg Household Size</span>
+          <span class="value">{{ censusData.avgHouseholdSize || 0 }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Median Income</span>
-            <span class="value">{{
-              formatCurrency(censusData.medianIncome || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Median Income</span>
+          <span class="value">{{ formatCurrency(censusData.medianIncome || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Per Capita Income</span>
-            <span class="value">{{
-              formatCurrency(censusData.perCapitaIncome || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Per Capita Income</span>
+          <span class="value">{{ formatCurrency(censusData.perCapitaIncome || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Owner-Occupied</span>
-            <span class="value">{{
-              formatNumber(censusData.housing.ownerOccupied || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Owner-Occupied</span>
+          <span class="value">{{ formatNumber(censusData.housing.ownerOccupied || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Renter-Occupied</span>
-            <span class="value">{{
-              formatNumber(censusData.housing.renterOccupied || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Renter-Occupied</span>
+          <span class="value">{{ formatNumber(censusData.housing.renterOccupied || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Total Units</span>
-            <span class="value">{{
-              formatNumber(censusData.housing.totalUnits || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Total Units</span>
+          <span class="value">{{ formatNumber(censusData.housing.totalUnits || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Occupied Units</span>
-            <span class="value">{{
-              formatNumber(censusData.housing.occupiedUnits || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Occupied Units</span>
+          <span class="value">{{ formatNumber(censusData.housing.occupiedUnits || 0) }}</span>
+        </div>
 
-          <div class="demo-row">
-            <span>Vacant Units</span>
-            <span class="value">{{
-              formatNumber(censusData.housing.vacantUnits || 0)
-            }}</span>
-          </div>
+        <div class="demo-row">
+          <span>Vacant Units</span>
+          <span class="value">{{ formatNumber(censusData.housing.vacantUnits || 0) }}</span>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Housing Card -->
-    <div class="card housing-card">
-      <div class="card-header">
-        <h2>Housing</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="housing-content"
-          [attr.aria-expanded]="expandedPanels['housing']"
-          (click)="togglePanel('housing')"
-          title="Toggle Housing"
-        >
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
+  <!-- Housing Card -->
+  <div class="card housing-card">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="housing-content"
+      [attr.aria-expanded]="expandedPanels['housing']"
+      (click)="togglePanel('housing')"
+      title="Toggle Housing"
+    >
+      <h2>Housing</h2>
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+
+    <div id="housing-content" class="card-content" *ngIf="expandedPanels['housing']">
+      <div class="housing-overview">
+        <div class="housing-stat">
+          <div class="housing-value">
+            {{
+              censusData.housing.medianHomeValue > 0
+                ? formatCurrency(censusData.housing.medianHomeValue || 0)
+                : 'N/A'
+            }}
+          </div>
+          <div class="housing-label">Median Home Value</div>
+        </div>
+        <div class="housing-stat">
+          <div class="housing-value">
+            {{ formatCurrency(censusData.housing.medianRent || 0) }}
+          </div>
+          <div class="housing-label">Median Rent</div>
+        </div>
       </div>
 
-      <div
-        id="housing-content"
-        class="card-content"
-        *ngIf="expandedPanels['housing']"
-      >
-        <div class="housing-overview">
-          <div class="housing-stat">
-            <div class="housing-value">
-              {{
-                censusData.housing.medianHomeValue > 0
-                  ? formatCurrency(censusData.housing.medianHomeValue || 0)
-                  : "N/A"
-              }}
-            </div>
-            <div class="housing-label">Median Home Value</div>
-          </div>
-          <div class="housing-stat">
-            <div class="housing-value">
-              {{ formatCurrency(censusData.housing.medianRent || 0) }}
-            </div>
-            <div class="housing-label">Median Rent</div>
-          </div>
-        </div>
-
-        <div class="housing-breakdown">
-          <div class="units-info">
-            <span>
-              {{ censusData.housing.totalUnits || 0 }} total units •
-              {{ censusData.housing.vacantUnits || 0 }} vacant
-            </span>
-          </div>
+      <div class="housing-breakdown">
+        <div class="units-info">
+          <span>
+            {{ censusData.housing.totalUnits || 0 }} total units •
+            {{ censusData.housing.vacantUnits || 0 }} vacant
+          </span>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Education Card -->
-    <div class="card education-card">
-      <div class="card-header">
-        <h2>Education</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="education-content"
-          [attr.aria-expanded]="expandedPanels['education']"
-          (click)="togglePanel('education')"
-          title="Toggle Education"
-        >
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
-      </div>
+  <!-- Education Card -->
+  <div class="card education-card">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="education-content"
+      [attr.aria-expanded]="expandedPanels['education']"
+      (click)="togglePanel('education')"
+      title="Toggle Education"
+    >
+      <h2>Education</h2>
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
 
-      <div
-        id="education-content"
-        class="card-content"
-        *ngIf="expandedPanels['education']"
-      >
-        <div class="education-chart">
-          <div
-            class="edu-item"
-            *ngFor="let item of educationItems; trackBy: trackByLabel"
-          >
-            <div class="edu-bar">
-              <div class="edu-fill" [style.width.%]="item.percentage"></div>
-            </div>
-            <div class="edu-info">
-              <span class="edu-label">{{ item.label }}</span>
-              <span class="edu-value"
-                >{{ item.count }} ({{ item.percentage }}%)</span
-              >
-            </div>
+    <div id="education-content" class="card-content" *ngIf="expandedPanels['education']">
+      <div class="education-chart">
+        <div class="edu-item" *ngFor="let item of educationItems; trackBy: trackByLabel">
+          <div class="edu-bar">
+            <div class="edu-fill" [style.width.%]="item.percentage"></div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Race/Ethnicity Card -->
-    <div class="card race-card">
-      <div class="card-header">
-        <h2>Race &amp; Ethnicity</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="race-content"
-          [attr.aria-expanded]="expandedPanels['race']"
-          (click)="togglePanel('race')"
-          title="Toggle Race & Ethnicity"
-        >
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        id="race-content"
-        class="card-content"
-        *ngIf="expandedPanels['race']"
-      >
-        <div class="race-grid">
-          <div
-            class="race-item"
-            *ngFor="let item of raceItems; trackBy: trackByLabel"
-          >
-            <div class="race-color" [style.background-color]="item.color"></div>
-            <div class="race-info">
-              <div class="race-label">{{ item.label }}</div>
-              <div class="race-stats">
-                <span class="race-count">{{ formatNumber(item.count) }}</span>
-                <span class="race-percent">({{ item.percentage }}%)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Income Brackets Card -->
-    <div class="card income-card">
-      <div class="card-header">
-        <h2>Income Distribution</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="income-content"
-          [attr.aria-expanded]="expandedPanels['income']"
-          (click)="togglePanel('income')"
-          title="Toggle Income Distribution"
-        >
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        id="income-content"
-        class="card-content"
-        *ngIf="expandedPanels['income']"
-      >
-        <div class="income-bars">
-          <div
-            class="income-item"
-            *ngFor="let item of incomeItems; trackBy: trackByLabel"
-          >
-            <div class="income-label">{{ item.label }}</div>
-            <div class="income-bar">
-              <div class="income-fill" [style.width.%]="item.percentage"></div>
-            </div>
-            <div class="income-value">
-              {{ item.count }} ({{ item.percentage }}%)
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Age Groups Card -->
-    <div class="card age-card">
-      <div class="card-header">
-        <h2>Age Groups (Sample)</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="age-content"
-          [attr.aria-expanded]="expandedPanels['age']"
-          (click)="togglePanel('age')"
-          title="Toggle Age Groups"
-        >
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
-      </div>
-
-      <div id="age-content" class="card-content" *ngIf="expandedPanels['age']">
-        <div class="age-breakdown">
-          <div
-            class="age-item"
-            *ngFor="let item of ageItems; trackBy: trackByLabel"
-          >
-            <div class="age-group">{{ item.group }}</div>
-            <div class="age-bar">
-              <div class="age-fill" [style.width.%]="item.percentage"></div>
-            </div>
-            <div class="age-count">{{ item.count }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Employment Card -->
-    <div class="card employment-card" *ngIf="censusData.employment">
-      <div class="card-header">
-        <h2>Employment</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="employment-content"
-          [attr.aria-expanded]="expandedPanels['employment']"
-          (click)="togglePanel('employment')"
-          title="Toggle Employment"
-        >
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        id="employment-content"
-        class="card-content"
-        *ngIf="expandedPanels['employment']"
-      >
-        <div class="demo-stats">
-          <div class="demo-row">
-            <span>Total Employed</span>
-            <span class="value">{{
-              formatNumber(censusData.employment.employedTotal || 0)
-            }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Commuting Card -->
-    <div class="card commuting-card" *ngIf="censusData.commuting">
-      <div class="card-header">
-        <h2>Commuting</h2>
-        <button
-          class="toggle-btn"
-          type="button"
-          aria-controls="commuting-content"
-          [attr.aria-expanded]="expandedPanels['commuting']"
-          (click)="togglePanel('commuting')"
-          title="Toggle Commuting"
-        >
-          <svg
-            class="chev"
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          >
-            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        id="commuting-content"
-        class="card-content"
-        *ngIf="expandedPanels['commuting']"
-      >
-        <div class="demo-stats">
-          <div class="demo-row">
-            <span>Total Workers</span>
-            <span class="value">{{
-              formatNumber(censusData.commuting.workersTotal || 0)
-            }}</span>
-          </div>
-          <div class="demo-row">
-            <span>Drive Alone</span>
-            <span class="value">{{
-              formatNumber(censusData.commuting.driveAlone || 0)
-            }}</span>
-          </div>
-          <div class="demo-row">
-            <span>Public Transit</span>
-            <span class="value">{{
-              formatNumber(censusData.commuting.publicTransit || 0)
-            }}</span>
-          </div>
-          <div class="demo-row">
-            <span>Avg Commute (min)</span>
-            <span class="value">{{
-              censusData.commuting.avgCommuteMinutes || 0
-            }}</span>
+          <div class="edu-info">
+            <span class="edu-label">{{ item.label }}</span>
+            <span class="edu-value">{{ item.count }} ({{ item.percentage }}%)</span>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Race/Ethnicity Card -->
+  <div class="card race-card">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="race-content"
+      [attr.aria-expanded]="expandedPanels['race']"
+      (click)="togglePanel('race')"
+      title="Toggle Race & Ethnicity"
+    >
+      <h2>Race &amp; Ethnicity</h2>
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+
+    <div id="race-content" class="card-content" *ngIf="expandedPanels['race']">
+      <div class="race-grid">
+        <div class="race-item" *ngFor="let item of raceItems; trackBy: trackByLabel">
+          <div class="race-color" [style.background-color]="item.color"></div>
+          <div class="race-info">
+            <div class="race-label">{{ item.label }}</div>
+            <div class="race-stats">
+              <span class="race-count">{{ formatNumber(item.count) }}</span>
+              <span class="race-percent">({{ item.percentage }}%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Income Brackets Card -->
+  <div class="card income-card">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="income-content"
+      [attr.aria-expanded]="expandedPanels['income']"
+      (click)="togglePanel('income')"
+      title="Toggle Income Distribution"
+    >
+      <h2>Income Distribution</h2>
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+
+    <div id="income-content" class="card-content" *ngIf="expandedPanels['income']">
+      <div class="income-bars">
+        <div class="income-item" *ngFor="let item of incomeItems; trackBy: trackByLabel">
+          <div class="income-label">{{ item.label }}</div>
+          <div class="income-bar">
+            <div class="income-fill" [style.width.%]="item.percentage"></div>
+          </div>
+          <div class="income-value">{{ item.count }} ({{ item.percentage }}%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Age Groups Card -->
+  <div class="card age-card">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="age-content"
+      [attr.aria-expanded]="expandedPanels['age']"
+      (click)="togglePanel('age')"
+      title="Toggle Age Groups"
+    >
+      <h2>Age Groups (Sample)</h2>
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+
+    <div id="age-content" class="card-content" *ngIf="expandedPanels['age']">
+      <div class="age-breakdown">
+        <div class="age-item" *ngFor="let item of ageItems; trackBy: trackByLabel">
+          <div class="age-group">{{ item.group }}</div>
+          <div class="age-bar">
+            <div class="age-fill" [style.width.%]="item.percentage"></div>
+          </div>
+          <div class="age-count">{{ item.count }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Employment Card -->
+  <div class="card employment-card" *ngIf="censusData.employment">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="employment-content"
+      [attr.aria-expanded]="expandedPanels['employment']"
+      (click)="togglePanel('employment')"
+      title="Toggle Employment"
+    >
+      <h2>Employment</h2>
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+
+    <div id="employment-content" class="card-content" *ngIf="expandedPanels['employment']">
+      <div class="demo-stats">
+        <div class="demo-row">
+          <span>Total Employed</span>
+          <span class="value">{{ formatNumber(censusData.employment.employedTotal || 0) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Commuting Card -->
+  <div class="card commuting-card" *ngIf="censusData.commuting">
+    <button
+      class="card-header header-btn"
+      type="button"
+      aria-controls="commuting-content"
+      [attr.aria-expanded]="expandedPanels['commuting']"
+      (click)="togglePanel('commuting')"
+      title="Toggle Commuting"
+    >
+      <h2>Commuting</h2>
+      <svg class="chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+
+    <div id="commuting-content" class="card-content" *ngIf="expandedPanels['commuting']">
+      <div class="demo-stats">
+        <div class="demo-row">
+          <span>Total Workers</span>
+          <span class="value">{{ formatNumber(censusData.commuting.workersTotal || 0) }}</span>
+        </div>
+        <div class="demo-row">
+          <span>Drive Alone</span>
+          <span class="value">{{ formatNumber(censusData.commuting.driveAlone || 0) }}</span>
+        </div>
+        <div class="demo-row">
+          <span>Public Transit</span>
+          <span class="value">{{ formatNumber(censusData.commuting.publicTransit || 0) }}</span>
+        </div>
+        <div class="demo-row">
+          <span>Avg Commute (min)</span>
+          <span class="value">{{ censusData.commuting.avgCommuteMinutes || 0 }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
