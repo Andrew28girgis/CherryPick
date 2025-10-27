@@ -19,7 +19,7 @@
           {{ prevName ? "to:  " + prevName : "" }}
         </span>
       </button>
-      <div class="campaign-header-bar">
+      <div *ngIf="campaignName" class="campaign-header-bar">
         <span class="campaign-path">
            {{ campaignName }} / {{ shoppingCenter.CenterName }}
         </span>
