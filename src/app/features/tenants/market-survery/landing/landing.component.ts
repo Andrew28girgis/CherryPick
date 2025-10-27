@@ -99,6 +99,7 @@ export class LandingComponent {
       }
       this.GetPlaceCotenants();
     });
+    this.GetShoppingCenterCampaignScore();
   }
 
   private initializeDefaults(): void {
@@ -458,6 +459,7 @@ export class LandingComponent {
   }
 
   goToNext(): void {
+    this.GetShoppingCenterCampaignScore();
     if (!this.centerIds?.length) return;
 
     // If at the last index → go to the first one
@@ -480,6 +482,7 @@ export class LandingComponent {
   }
 
   goToPrevious(): void {
+    this.GetShoppingCenterCampaignScore();
     if (!this.centerIds?.length) return;
 
     const prevIndex =
@@ -517,5 +520,29 @@ export class LandingComponent {
         this.rebuildSequence();
       }
     });
+  }
+  isLink(value: string): boolean {
+    if (!value) return false;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+  GetShoppingCenterCampaignScore() {
+    console.log('fdfffffff', this.ShoppingCenterId);
+
+    const body: any = {
+      Name: 'GetShoppingCenterCampaignScore',
+      Params: {
+        ShoppingCenterId: this.ShoppingCenterId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res) => {
+console.log('ddddddddddddddddddddddd', res);
+    } 
+  })
   }
 }

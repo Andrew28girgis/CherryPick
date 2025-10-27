@@ -21,7 +21,7 @@
       </button>
 
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
-                <span class="me-1">Next</span>
+        <span class="me-1">Next</span>
 
         <span>
           {{ nextName ? "to:  " + nextName : "" }}
@@ -377,7 +377,20 @@
                     </ng-template>
                   </td>
 
-                  <td>{{ place.Source }}</td>
+                  <td>
+                    <ng-container *ngIf="isLink(place.Source); else plainText">
+                      <a
+                        [href]="place.Source"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {{ place.Source }}
+                      </a>
+                    </ng-container>
+                    <ng-template #plainText>
+                      {{ place.Source }}
+                    </ng-template>
+                  </td>
 
                   <td>{{ place.CreateDate | date : "mediumDate" }}</td>
 
