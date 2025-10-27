@@ -74,14 +74,15 @@ a {
 }
 
 .badge {
-  top: 10px;
-  left: 10px;
-  background-color: #ff0000;
-  border: 1px solid var(--Colors-Pure-White);
-  font-weight: 400;
-  border-radius: 10px;
-  padding: 5px 12px;
-  font-size: 13px;
+  position: absolute;
+  top: 0px;
+  right: 4px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  padding: 3px 6px;
+  font-size: 10px;
+  font-weight: 600;
 }
 
 .gm-style .gm-style-iw-c {
@@ -364,7 +365,6 @@ a {
   .gm-style .gm-style-iw-c {
     max-width: 100vw !important;
   }
-  
 }
 
 @media (max-width: 576px) {

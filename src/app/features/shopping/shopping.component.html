@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="actions-section">
-         <!-- <div class="dropdown" ngbDropdown>
+        <!-- <div class="dropdown" ngbDropdown>
           <button class="filter-btn" ngbDropdownToggle>
             <svg
               width="16"
@@ -306,21 +306,17 @@
       <!-- Filterations Section -->
       <div class="col-3">
         <div class="filters-panel">
-      
           <div class="filters-header">
             <div class="filters-title">Filter</div>
             <div class="filters-title clear-filterr" (click)="resetFilters()">
               Clear Filters
             </div>
           </div>
-      
+
           <!-- State Filter -->
           <div class="filter-block" *ngIf="availableStates.length">
             <div class="filter-block-title">State</div>
-            <label
-              class="filter-check"
-              *ngFor="let state of availableStates"
-            >
+            <label class="filter-check" *ngFor="let state of availableStates">
               <input
                 type="checkbox"
                 [value]="state"
@@ -330,27 +326,9 @@
               <span>{{ state }}</span>
             </label>
           </div>
-      
-          <!-- Property Type Filter -->
-          <div class="filter-block" *ngIf="availableTypes.length">
-            <div class="filter-block-title">Property Type</div>
-            <label
-              class="filter-check"
-              *ngFor="let type of availableTypes"
-            >
-              <input
-                type="checkbox"
-                [value]="type"
-                [(ngModel)]="typeSelections[type]"
-                (change)="onFilterChange()"
-              />
-              <span>{{ type }}</span>
-            </label>
-          </div>
-      
           <!-- Lease Type Filter -->
           <div class="filter-block" *ngIf="availableLeaseTypes.length">
-            <div class="filter-block-title">Lease Type</div>
+            <div class="filter-block-title">Deal Type</div>
             <label
               class="filter-check"
               *ngFor="let leaseType of availableLeaseTypes"
@@ -363,11 +341,23 @@
               />
               <span>{{ leaseType }}</span>
             </label>
-          </div> 
+          </div>
+          <!-- Property Type Filter -->
+          <div class="filter-block" *ngIf="availableTypes.length">
+            <div class="filter-block-title">Property Type</div>
+            <label class="filter-check" *ngFor="let type of availableTypes">
+              <input
+                type="checkbox"
+                [value]="type"
+                [(ngModel)]="typeSelections[type]"
+                (change)="onFilterChange()"
+              />
+              <span>{{ type }}</span>
+            </label>
+          </div>
         </div>
       </div>
-      
-      
+
       <div class="col-9">
         <!-- Shopping Centers Grid -->
         <div
@@ -628,15 +618,12 @@
                       "
                       class="building-size"
                     >
-                    <span *ngIf="sizes.min!==sizes.max">
-
-                      {{ sizes.min | number }} - {{ sizes.max | number }} SF
-                    </span>
-                    <span *ngIf="sizes.min===sizes.max">
-
-                      {{ sizes.min | number }} SF
-                    </span>
-
+                      <span *ngIf="sizes.min !== sizes.max">
+                        {{ sizes.min | number }} - {{ sizes.max | number }} SF
+                      </span>
+                      <span *ngIf="sizes.min === sizes.max">
+                        {{ sizes.min | number }} SF
+                      </span>
                     </span>
 
                     <!-- Price Range -->
