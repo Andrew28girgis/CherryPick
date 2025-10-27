@@ -15,11 +15,14 @@
       />
     </svg>
     <span
-      class="badge"
-      *ngIf="unreadCount > 0"
-      [attr.aria-label]="unreadCount + ' unread notifications'"
-      >{{ unreadCount }}</span
-    >
+    class="badge"
+    *ngIf="unreadCount > 0"
+    [attr.aria-label]="unreadCount + ' unread notifications'"
+  >
+    {{ unreadCount }}
+  </span>
+  
+  
   </button>
 
   <div class="notif-dropdown" *ngIf="isOpen">
