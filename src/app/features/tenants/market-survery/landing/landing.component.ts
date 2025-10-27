@@ -426,9 +426,7 @@ export class LandingComponent {
 
   private rebuildSequence(): void {
     this.centerIds = (this.filteredCenters || [])
-      .map((c) =>
-        Number(c.Id ?? c.scId)
-      )
+      .map((c) => Number(c.Id ?? c.scId))
       .filter((id) => !isNaN(id));
 
     const currentIdNum = Number(this.ShoppingCenterId);
