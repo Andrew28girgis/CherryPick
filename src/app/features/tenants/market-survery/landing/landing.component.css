@@ -944,3 +944,72 @@ li {
   width: 100%;
 }
 
+.campaign-section {
+  padding: 2rem;
+  background-color: #fff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  margin: 20px 0 20px 0;
+  border-radius: 24px;
+ }
+
+.campaign-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 1.5rem;
+}
+
+.campaign-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.campaign-card {
+  background-color: var(--Colors-Primary-300);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campaign-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.campaign-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.campaign-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.campaign-score {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  text-align: center;
+  min-width: 50px;
+}
+
+.high-score {
+  background-color: #28a745; /* green */
+}
+
+.medium-score {
+  background-color: #ffc107; /* yellow */
+  color: #222;
+}
+
+.low-score {
+  background-color: #dc3545; /* red */
+}

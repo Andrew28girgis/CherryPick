@@ -459,6 +459,36 @@
     </section>
   </div>
 
+  <div class="campaign-section" *ngIf="CampaignScores?.length">
+    <h2 class="campaign-title">Campaign Related</h2>
+
+    <div class="campaign-grid">
+      <ng-container *ngFor="let campaign of CampaignScores">
+        <div
+          class="campaign-card"
+          *ngIf="campaign.campaignName"
+        >
+          <div class="campaign-header">
+            <h3 class="campaign-name" *ngIf="campaign.campaignName">
+              {{ campaign.campaignName }}
+            </h3>
+            <span
+              class="campaign-score medium-score"
+              *ngIf="campaign.score"
+              [ngClass]="{
+                'high-score': campaign.score >= 75,
+                'medium-score': campaign.score >= 30 && campaign.score < 75,
+                'low-score': campaign.score < 30
+              }"
+            >
+              {{ campaign.score }}%
+            </span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
   <!-- <div class="main-section" *ngIf="ShoppingCenter?.SiteSelectionReason">
       <section id="hero">
         <ng-container>

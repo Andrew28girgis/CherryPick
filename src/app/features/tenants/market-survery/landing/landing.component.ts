@@ -42,6 +42,7 @@ export class LandingComponent {
   nextName = '';
   prevName = '';
   private subscriptions = new Subscription();
+  CampaignScores: any[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -531,18 +532,21 @@ export class LandingComponent {
     }
   }
   GetShoppingCenterCampaignScore() {
-    console.log('fdfffffff', this.ShoppingCenterId);
-
-    const body: any = {
+    const body = {
       Name: 'GetShoppingCenterCampaignScore',
       Params: {
         ShoppingCenterId: this.ShoppingCenterId,
       },
     };
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-console.log('ddddddddddddddddddddddd', res);
-    } 
-  })
+        console.log('API Response:', res.json);
+        this.CampaignScores = res.json || []; 
+      },
+      error: (err) => {
+       },
+    });
   }
+  
 }
