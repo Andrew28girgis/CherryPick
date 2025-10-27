@@ -461,7 +461,6 @@ export class LandingComponent {
   }
 
   goToNext(): void {
-    this.GetShoppingCenterCampaignScore();
     if (!this.centerIds?.length) return;
 
     // If at the last index → go to the first one
@@ -481,10 +480,10 @@ export class LandingComponent {
       nextId,
       this.campaignId == null ? 'undefined' : this.campaignId,
     ]);
+    this.GetShoppingCenterCampaignScore(nextId);
   }
 
   goToPrevious(): void {
-    this.GetShoppingCenterCampaignScore();
     if (!this.centerIds?.length) return;
 
     const prevIndex =
@@ -503,6 +502,7 @@ export class LandingComponent {
       prevId,
       this.campaignId == null ? 'undefined' : this.campaignId,
     ]);
+    this.GetShoppingCenterCampaignScore(prevId);
   }
 
   loadShoppingCenters(): void {
@@ -532,23 +532,23 @@ export class LandingComponent {
       return false;
     }
   }
-  GetShoppingCenterCampaignScore() {
+  GetShoppingCenterCampaignScore(Id?: number) {
     const body = {
       Name: 'GetShoppingCenterCampaignScore',
       Params: {
-        ShoppingCenterId: this.ShoppingCenterId,
+        ShoppingCenterId:Id?Id: this.ShoppingCenterId,
       },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
         console.log('API Response:', res.json);
-        this.CampaignScores = res.json || []; 
-        this.campaignName=this.CampaignScores.filter(c=>c.campaignId==this.campaignId)[0]?.campaignName;
+        this.CampaignScores = res.json || [];
+        this.campaignName = this.CampaignScores.filter(
+          (c) => c.campaignId == this.campaignId
+        )[0]?.campaignName;
       },
-      error: (err) => {
-       },
+      error: (err) => {},
     });
   }
-  
 }
