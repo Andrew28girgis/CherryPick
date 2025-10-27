@@ -326,24 +326,9 @@
               <span>{{ state }}</span>
             </label>
           </div>
-
-          <!-- Property Type Filter -->
-          <div class="filter-block" *ngIf="availableTypes.length">
-            <div class="filter-block-title">Property Type</div>
-            <label class="filter-check" *ngFor="let type of availableTypes">
-              <input
-                type="checkbox"
-                [value]="type"
-                [(ngModel)]="typeSelections[type]"
-                (change)="onFilterChange()"
-              />
-              <span>{{ type }}</span>
-            </label>
-          </div>
-
           <!-- Lease Type Filter -->
           <div class="filter-block" *ngIf="availableLeaseTypes.length">
-            <div class="filter-block-title">Lease Type</div>
+            <div class="filter-block-title">Deal Type</div>
             <label
               class="filter-check"
               *ngFor="let leaseType of availableLeaseTypes"
@@ -355,6 +340,19 @@
                 (change)="onFilterChange()"
               />
               <span>{{ leaseType }}</span>
+            </label>
+          </div>
+          <!-- Property Type Filter -->
+          <div class="filter-block" *ngIf="availableTypes.length">
+            <div class="filter-block-title">Property Type</div>
+            <label class="filter-check" *ngFor="let type of availableTypes">
+              <input
+                type="checkbox"
+                [value]="type"
+                [(ngModel)]="typeSelections[type]"
+                (change)="onFilterChange()"
+              />
+              <span>{{ type }}</span>
             </label>
           </div>
         </div>
