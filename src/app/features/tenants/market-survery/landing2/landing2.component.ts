@@ -33,11 +33,33 @@ export class Landing2Component implements OnInit {
   };
 
   censusData: Demographics = {
-    name: '', lat: 0, lon: 0, population: 0, medianAge: 0, households: 0,
-    avgHouseholdSize: 0, medianIncome: 0, perCapitaIncome: 0,
-    housing: { medianRent: 0, medianHomeValue: 0, ownerOccupied: 0, renterOccupied: 0, totalUnits: 0, occupiedUnits: 0, vacantUnits: 0 },
+    name: '',
+    lat: 0,
+    lon: 0,
+    population: 0,
+    medianAge: 0,
+    households: 0,
+    avgHouseholdSize: 0,
+    medianIncome: 0,
+    perCapitaIncome: 0,
+    housing: {
+      medianRent: 0,
+      medianHomeValue: 0,
+      ownerOccupied: 0,
+      renterOccupied: 0,
+      totalUnits: 0,
+      occupiedUnits: 0,
+      vacantUnits: 0,
+    },
     education: { highSchool: 0, bachelors: 0, masters: 0, doctorate: 0 },
-    race: { white: 0, black: 0, americanIndian: 0, asian: 0, pacificIslander: 0, hispanic: 0 },
+    race: {
+      white: 0,
+      black: 0,
+      americanIndian: 0,
+      asian: 0,
+      pacificIslander: 0,
+      hispanic: 0,
+    },
     incomeBrackets: { Total: 0, '<10k': 0, '10-15k': 0, '200k+': 0 },
     ageGroups: {},
   };
@@ -48,9 +70,34 @@ export class Landing2Component implements OnInit {
   ageItems: any[] = [];
 
   private readonly incomeOrder = [
-    '<10k','10-15k','15-20k','20-25k','25-30k','30-35k','35-40k','40-45k',
-    '45-50k','50-60k','60-75k','75-100k','100-125k','125-150k','150-200k','200k+','Total'
+    '<10k',
+    '10-15k',
+    '15-20k',
+    '20-25k',
+    '25-30k',
+    '30-35k',
+    '35-40k',
+    '40-45k',
+    '45-50k',
+    '50-60k',
+    '60-75k',
+    '75-100k',
+    '100-125k',
+    '125-150k',
+    '150-200k',
+    '200k+',
+    'Total',
   ];
+  expandedPanels: Record<string, boolean> = {
+    demographics: false,
+    housing: false,
+    education: false,
+    race: false,
+    income: false,
+    age: false,
+    employment: false,
+    commuting: false,
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -61,7 +108,8 @@ export class Landing2Component implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: Record<string, any>) => {
       this.shoppingId = params['shoppingId'];
-      this.campaignId = params['campaignId'] === 'undefined' ? null : params['campaignId'];
+      this.campaignId =
+        params['campaignId'] === 'undefined' ? null : params['campaignId'];
       this.PlaceId = +params['id'] || 0;
       this.ShoppingCenterId = +params['shoppiongCenterId'] || 0;
       this.GetPlaceDetails(this.PlaceId, this.ShoppingCenterId);
@@ -69,15 +117,21 @@ export class Landing2Component implements OnInit {
   }
 
   private GetPlaceDetails(placeId: number, shoppingCenterId: number): void {
-    this.places.GenericAPI({
-      Name: 'GetShoppingCenterDetails',
-      Params: { PlaceID: placeId, shoppingcenterId: shoppingCenterId, CampaignId: this.campaignId },
-    }).subscribe({
-      next: (res) => {
-        this.shoppingCenter = res.json?.[0] || null;
-        if (this.shoppingCenter?.Demographics) this.DemographicsDetails();
-      },
-    });
+    this.places
+      .GenericAPI({
+        Name: 'GetShoppingCenterDetails',
+        Params: {
+          PlaceID: placeId,
+          shoppingcenterId: shoppingCenterId,
+          CampaignId: this.campaignId,
+        },
+      })
+      .subscribe({
+        next: (res) => {
+          this.shoppingCenter = res.json?.[0] || null;
+          if (this.shoppingCenter?.Demographics) this.DemographicsDetails();
+        },
+      });
   }
 
   private DemographicsDetails(): void {
@@ -95,10 +149,14 @@ export class Landing2Component implements OnInit {
 
     this.censusData = {
       name: demo['Name'] ?? '',
-      lat: num(demo['Lat']), lon: num(demo['Lon']),
-      population: num(demo['Population']), medianAge: num(demo['MedianAge']),
-      households: num(demo['Households']), avgHouseholdSize: num(demo['AvgHouseholdSize']),
-      medianIncome: num(demo['MedianIncome']), perCapitaIncome: num(demo['PerCapitaIncome']),
+      lat: num(demo['Lat']),
+      lon: num(demo['Lon']),
+      population: num(demo['Population']),
+      medianAge: num(demo['MedianAge']),
+      households: num(demo['Households']),
+      avgHouseholdSize: num(demo['AvgHouseholdSize']),
+      medianIncome: num(demo['MedianIncome']),
+      perCapitaIncome: num(demo['PerCapitaIncome']),
       housing: {
         medianRent: g(demo['Housing'], 'medianRent'),
         medianHomeValue: g(demo['Housing'], 'medianHomeValue'),
@@ -133,13 +191,20 @@ export class Landing2Component implements OnInit {
     this.incomeItems = this.mapIncome();
     this.ageItems = this.mapAge();
 
-    try { this.cdr.detectChanges(); } catch {}
+    try {
+      this.cdr.detectChanges();
+    } catch {}
   }
 
   formatNumber = (n: number) => (n ?? 0).toLocaleString();
   formatCurrency = (a: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(a ?? 0);
-  private pct = (v: number, total: number) => (total ? Math.round((v / total) * 100) : 0);
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+    }).format(a ?? 0);
+  private pct = (v: number, total: number) =>
+    total ? Math.round((v / total) * 100) : 0;
 
   private mapEducation() {
     const e = this.censusData.education;
@@ -149,15 +214,36 @@ export class Landing2Component implements OnInit {
       { label: "Bachelor's", count: e.bachelors },
       { label: "Master's", count: e.masters },
       { label: 'Doctorate', count: e.doctorate },
-    ].map(i => ({ ...i, percentage: this.pct(i.count, total) }));
+    ].map((i) => ({ ...i, percentage: this.pct(i.count, total) }));
   }
 
   private mapRace() {
     const r = this.censusData.race;
     const total = Object.values(r).reduce((a, b) => a + b, 0);
-    const keys = ['white','black','asian','hispanic','americanIndian','pacificIslander'];
-    const labels = ['White','Black','Asian','Hispanic','American Indian','Pacific Islander'];
-    const colors = ['#D1D5DB','#111827','#10B981','#F59E0B','#8B5CF6','#14B8A6'];
+    const keys = [
+      'white',
+      'black',
+      'asian',
+      'hispanic',
+      'americanIndian',
+      'pacificIslander',
+    ];
+    const labels = [
+      'White',
+      'Black',
+      'Asian',
+      'Hispanic',
+      'American Indian',
+      'Pacific Islander',
+    ];
+    const colors = [
+      '#D1D5DB',
+      '#111827',
+      '#10B981',
+      '#F59E0B',
+      '#8B5CF6',
+      '#14B8A6',
+    ];
     return keys.map((k, i) => ({
       label: labels[i],
       count: r[k as keyof typeof r],
@@ -168,26 +254,47 @@ export class Landing2Component implements OnInit {
 
   private mapIncome() {
     const inc = this.censusData.incomeBrackets as Record<string, any>;
-    const total = inc['Total'] || Object.values(inc).reduce((a, b) => a + (+b || 0), 0);
+    const total =
+      inc['Total'] || Object.values(inc).reduce((a, b) => a + (+b || 0), 0);
     return Object.entries(inc)
       .filter(([k]) => k !== 'Total')
       .map(([k, v]) => ({
-        label: k === '<10k' ? 'Under $10k' : k === '200k+' ? '$200k+' : k.includes('-') ? `$${k.replace('-', ' - $')}` : k,
+        label:
+          k === '<10k'
+            ? 'Under $10k'
+            : k === '200k+'
+            ? '$200k+'
+            : k.includes('-')
+            ? `$${k.replace('-', ' - $')}`
+            : k,
         count: +v || 0,
         percentage: this.pct(+v || 0, total),
         _key: k,
       }))
-      .sort((a, b) => this.incomeOrder.indexOf(a._key) - this.incomeOrder.indexOf(b._key))
+      .sort(
+        (a, b) =>
+          this.incomeOrder.indexOf(a._key) - this.incomeOrder.indexOf(b._key)
+      )
       .map(({ _key, ...rest }) => rest);
   }
 
   private mapAge() {
     const ages = this.censusData.ageGroups || {};
-    const arr = Object.entries(ages).map(([group, count]) => ({ group, count: +count || 0 }));
+    const arr = Object.entries(ages).map(([group, count]) => ({
+      group,
+      count: +count || 0,
+    }));
     const total = arr.reduce((s, a) => s + a.count, 0);
     return arr
-      .sort((a, b) => parseInt(a.group.match(/\d+/)?.[0] || '0') - parseInt(b.group.match(/\d+/)?.[0] || '0'))
-      .map(i => ({ ...i, percentage: this.pct(i.count, total) }));
+      .sort(
+        (a, b) =>
+          parseInt(a.group.match(/\d+/)?.[0] || '0') -
+          parseInt(b.group.match(/\d+/)?.[0] || '0')
+      )
+      .map((i) => ({ ...i, percentage: this.pct(i.count, total) }));
+  }
+  togglePanel(key: string) {
+    this.expandedPanels[key] = !this.expandedPanels[key];
   }
 
   trackByLabel = (_: number, item: any) => item?.label ?? item?.group ?? _;

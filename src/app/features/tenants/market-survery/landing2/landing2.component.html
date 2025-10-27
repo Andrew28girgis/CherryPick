@@ -24,9 +24,32 @@
     <div class="card demographics-card">
       <div class="card-header">
         <h2>Demographics</h2>
-        <i class="header-icon">👥</i>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="demographics-content"
+          [attr.aria-expanded]="expandedPanels['demographics']"
+          (click)="togglePanel('demographics')"
+          title="Toggle Demographics"
+        >
+          <!-- simple chevron SVG -->
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div
+        id="demographics-content"
+        class="card-content"
+        *ngIf="expandedPanels['demographics']"
+      >
         <div class="demo-stats">
           <div class="demo-row">
             <span>Name</span>
@@ -123,9 +146,31 @@
     <div class="card housing-card">
       <div class="card-header">
         <h2>Housing</h2>
-        <i class="header-icon">🏠</i>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="housing-content"
+          [attr.aria-expanded]="expandedPanels['housing']"
+          (click)="togglePanel('housing')"
+          title="Toggle Housing"
+        >
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div
+        id="housing-content"
+        class="card-content"
+        *ngIf="expandedPanels['housing']"
+      >
         <div class="housing-overview">
           <div class="housing-stat">
             <div class="housing-value">
@@ -160,9 +205,31 @@
     <div class="card education-card">
       <div class="card-header">
         <h2>Education</h2>
-        <i class="header-icon">🎓</i>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="education-content"
+          [attr.aria-expanded]="expandedPanels['education']"
+          (click)="togglePanel('education')"
+          title="Toggle Education"
+        >
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div
+        id="education-content"
+        class="card-content"
+        *ngIf="expandedPanels['education']"
+      >
         <div class="education-chart">
           <div
             class="edu-item"
@@ -185,10 +252,32 @@
     <!-- Race/Ethnicity Card -->
     <div class="card race-card">
       <div class="card-header">
-        <h2>Race & Ethnicity</h2>
-        <i class="header-icon">🌍</i>
+        <h2>Race &amp; Ethnicity</h2>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="race-content"
+          [attr.aria-expanded]="expandedPanels['race']"
+          (click)="togglePanel('race')"
+          title="Toggle Race & Ethnicity"
+        >
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div
+        id="race-content"
+        class="card-content"
+        *ngIf="expandedPanels['race']"
+      >
         <div class="race-grid">
           <div
             class="race-item"
@@ -211,9 +300,31 @@
     <div class="card income-card">
       <div class="card-header">
         <h2>Income Distribution</h2>
-        <i class="header-icon">💰</i>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="income-content"
+          [attr.aria-expanded]="expandedPanels['income']"
+          (click)="togglePanel('income')"
+          title="Toggle Income Distribution"
+        >
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div
+        id="income-content"
+        class="card-content"
+        *ngIf="expandedPanels['income']"
+      >
         <div class="income-bars">
           <div
             class="income-item"
@@ -235,9 +346,27 @@
     <div class="card age-card">
       <div class="card-header">
         <h2>Age Groups (Sample)</h2>
-        <i class="header-icon">👶</i>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="age-content"
+          [attr.aria-expanded]="expandedPanels['age']"
+          (click)="togglePanel('age')"
+          title="Toggle Age Groups"
+        >
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div id="age-content" class="card-content" *ngIf="expandedPanels['age']">
         <div class="age-breakdown">
           <div
             class="age-item"
@@ -252,13 +381,36 @@
         </div>
       </div>
     </div>
+
     <!-- Employment Card -->
     <div class="card employment-card" *ngIf="censusData.employment">
       <div class="card-header">
         <h2>Employment</h2>
-        <i class="header-icon">💼</i>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="employment-content"
+          [attr.aria-expanded]="expandedPanels['employment']"
+          (click)="togglePanel('employment')"
+          title="Toggle Employment"
+        >
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div
+        id="employment-content"
+        class="card-content"
+        *ngIf="expandedPanels['employment']"
+      >
         <div class="demo-stats">
           <div class="demo-row">
             <span>Total Employed</span>
@@ -269,13 +421,36 @@
         </div>
       </div>
     </div>
+
     <!-- Commuting Card -->
     <div class="card commuting-card" *ngIf="censusData.commuting">
       <div class="card-header">
         <h2>Commuting</h2>
-        <i class="header-icon">🚌</i>
+        <button
+          class="toggle-btn"
+          type="button"
+          aria-controls="commuting-content"
+          [attr.aria-expanded]="expandedPanels['commuting']"
+          (click)="togglePanel('commuting')"
+          title="Toggle Commuting"
+        >
+          <svg
+            class="chev"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          >
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+          </svg>
+        </button>
       </div>
-      <div class="card-content">
+
+      <div
+        id="commuting-content"
+        class="card-content"
+        *ngIf="expandedPanels['commuting']"
+      >
         <div class="demo-stats">
           <div class="demo-row">
             <span>Total Workers</span>
