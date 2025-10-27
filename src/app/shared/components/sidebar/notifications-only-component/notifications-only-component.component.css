@@ -13,7 +13,7 @@
   border: none;
   cursor: pointer;
   position: relative;
-  padding: 7px 4px 4px 4px ;
+  padding: 7px 4px 4px 4px;
   display: flex;
   align-items: center;
 }
@@ -113,7 +113,7 @@
   cursor: default;
 }
 .notif-message {
-  color: var( --app-color);
+  color: var(--app-color);
   font-weight: 300;
   margin-bottom: 4px;
   word-break: break-word;

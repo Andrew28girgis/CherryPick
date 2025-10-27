@@ -1549,7 +1549,6 @@
 .organization-tabs-container {
   display: flex;
   gap: 10px;
-  border-bottom: 1px solid #ddd;
   overflow-x: scroll;
 }
 
