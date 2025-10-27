@@ -319,12 +319,12 @@ a {
   align-items: center;
   gap: var(--Space-S-8);
   border-radius: var(--Radius-R-16);
-  background: linear-gradient(81.88deg, #814818 0%, #e19f2e 100%);
+  background: var(--Colors-Primary-500);
   white-space: nowrap;
 }
 
 .g-button:hover {
-  background: linear-gradient(81.88deg, #875731 0%, #eab861 100%);
+  background: var(--Colors-Primary-hover);
 }
 .g-button-outline {
   border: none;
