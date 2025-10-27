@@ -99,7 +99,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 12px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c0c2c6;
   gap: 8px;
 }
 
@@ -113,8 +113,8 @@
   cursor: default;
 }
 .notif-message {
-  color: #111827;
-  font-weight: 500;
+  color: var( --app-color);
+  font-weight: 300;
   margin-bottom: 4px;
   word-break: break-word;
 }

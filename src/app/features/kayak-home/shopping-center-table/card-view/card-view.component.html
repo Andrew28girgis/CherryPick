@@ -39,10 +39,11 @@
     </div>
   </div>
   <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
+    
+    <!-- *ngIf="shopping.MainImage || shopping.scoreImage" -->
     <div
       class="cardResponsive"
       [class.click-disabled]="openMenuId === shopping.Id"
-      *ngIf="shopping.MainImage || shopping.scoreImage"
       [ngClass]="{
         'enriching-card': shopping.Running === 0 && shopping.Queue < 1,
         'queued-card':
@@ -723,7 +724,7 @@
   </ng-container>
 </div>
 
-<div *ngIf="hasUnscoredCenters && !isMobile">
+<!-- <div *ngIf="hasUnscoredCenters && !isMobile">
   <h3 class="split-heading">
     <span>Emily is working on scoring these Sites </span>
     <span class="stat-bars" aria-hidden="true">
@@ -743,19 +744,7 @@
         <th>Category</th>
 
         <th>Size Range</th>
-        <!-- <th *ngIf="hasAnyStages">Stage Name</th> -->
-        <!-- *ngIf="placesRepresentative" -->
-        <!-- <th > -->
-        <!-- <ng-container >
-          <th
-            *ngFor="
-              let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
-             "
-          >
-           </th>
-        </ng-container> -->
-        <!-- </th> -->
-        <!-- <th>Actions</th> -->
+       
       </tr>
     </thead>
     <tbody class=" ">
@@ -770,54 +759,7 @@
               }"
               class="d-flex flex-column"
             >
-              <!-- <div
-            (click)="deleteCenter(shopping.Id); $event.stopPropagation()"
-            class="card-badge delete-badge"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M21 5.98001C17.67 5.65001 14.32 5.48001 10.98 5.48001C9 5.48001 7.02 5.58001 5.04 5.78001L3 5.98001"
-                stroke="#292D32"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M8.5 4.97L8.72 3.66C8.88 2.71 9 2 10.69 2H13.31C15 2 15.13 2.75 15.28 3.67L15.5 4.97"
-                stroke="#292D32"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M18.85 9.14001L18.2 19.21C18.09 20.78 18 22 15.21 22H8.78999C5.99999 22 5.90999 20.78 5.79999 19.21L5.14999 9.14001"
-                stroke="#292D32"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M10.33 16.5H13.66"
-                stroke="#292D32"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M9.5 12.5H14.5"
-                stroke="#292D32"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>    -->
+ 
               <div class="d-flex flex-row justify-content-between">
                 <span
                   class="table-text"
@@ -889,8 +831,7 @@
                         </svg>
                       </button>
 
-                      <!-- DROPDOWN -->
-                      <div
+                       <div
                         class="menu-dropdown"
                         *ngIf="openMenuId === shopping.Id"
                       >
@@ -1073,170 +1014,15 @@
               <ng-template #single> {{ sr | number }} SF </ng-template>
             </div>
           </td>
-          <!-- <td *ngIf="shoppingCenter.stageName">
-          <div #dropdownRef class="custom-dropdown">
-            <div
-              class="selected-option"
-              (click)="toggleDropdown(shoppingCenter, $event)"
-            >
-              {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-              >
-                <path
-                  d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
-                  fill="#161017"
-                />
-              </svg>
-            </div>
-            <div
-              class="dropdown-options"
-              [class.show]="shoppingCenter.isDropdownOpen"
-            >
-              <div
-                *ngFor="let stage of KanbanStages"
-                class="dropdown-item"
-                [class.active]="stage.id === shoppingCenter.kanbanStageId"
-                (click)="
-                  selectStage(
-                    shoppingCenter.MarketSurveyId,
-                    stage.id,
-                    shoppingCenter,
-                    $event
-                  )
-                "
-              >
-                {{ stage.stageName }}
-              </div>
-            </div>
-          </div>
-          <p class="table-text ShoppingCenterStage mb-1">
-            {{ shoppingCenter.stageName }}
-          </p>
-        </td> -->
-          <!-- *ngIf="placesRepresentative" -->
-          <!-- <td>
-            <ng-container *ngIf="shopping.ShoppingCenter?.ManagerOrganization">
-              <div>
-                <div
-                  class="d-flex align-items-center justify-content-between table-div"
-                >
-                  <img loading="lazy" 
-                  class="logo"
-                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                    shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID
-                  }}"
-                  [title]="
-                    shoppingCenter.ShoppingCenter.ManagerOrganization[0]
-                      .Name
-                  "
-                  alt=""
-                />
-                  <div class="table-text">
-                    {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
-                  </div>
-
-                  trigger
-                  <div
-                  class="org-info-trigger"
-                  (click)="toggleOrgMenu($event, shoppingCenter.Id)"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M11.9999 16.3299C9.60992 16.3299 7.66992 14.3899 7.66992 11.9999C7.66992 9.60992 9.60992 7.66992 11.9999 7.66992C14.3899 7.66992 16.3299 9.60992 16.3299 11.9999C16.3299 14.3899 14.3899 16.3299 11.9999 16.3299ZM11.9999 9.16992C10.4399 9.16992 9.16992 10.4399 9.16992 11.9999C9.16992 13.5599 10.4399 14.8299 11.9999 14.8299C13.5599 14.8299 14.8299 13.5599 14.8299 11.9999C14.8299 10.4399 13.5599 9.16992 11.9999 9.16992Z"
-                      fill="#292D32"
-                    />
-                    <path
-                      d="M12.0001 21.02C8.24008 21.02 4.69008 18.82 2.25008 15C1.19008 13.35 1.19008 10.66 2.25008 8.99998C4.70008 5.17998 8.25008 2.97998 12.0001 2.97998C15.7501 2.97998 19.3001 5.17998 21.7401 8.99998C22.8001 10.65 22.8001 13.34 21.7401 15C19.3001 18.82 15.7501 21.02 12.0001 21.02ZM12.0001 4.47998C8.77008 4.47998 5.68008 6.41998 3.52008 9.80998C2.77008 10.98 2.77008 13.02 3.52008 14.19C5.68008 17.58 8.77008 19.52 12.0001 19.52C15.2301 19.52 18.3201 17.58 20.4801 14.19C21.2301 13.02 21.2301 10.98 20.4801 9.80998C18.3201 6.41998 15.2301 4.47998 12.0001 4.47998Z"
-                      fill="#292D32"
-                    />
-                  </svg>
-                </div>
-                </div>
-
-               org-mini-item <div
-                  class="org-mini-menu"
-                  *ngIf="openOrgMenuId === shoppingCenter.Id"
-                  [ngStyle]="orgMenuPos"
-                  (click)="$event.stopPropagation()"
-                >
-                  <div
-                    *ngFor="
-                      let org of shopping.ShoppingCenter.ManagerOrganization;
-                      let i = index
-                    "
-                    class="org-mini-item"
-                  >
-                    <p class="name">
-                      {{ org.Firstname | titlecase }}
-                      {{ org.LastName | titlecase }}
-                    </p>
-                    <p class="small">{{ org.CellPhone }}</p>
-                    <p class="small">{{ org.Email }}</p>
-                    <div
-                      class="divider"
-                      *ngIf="
-                        i <
-                        shopping.ShoppingCenter.ManagerOrganization.length - 1
-                      "
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </td> -->
-
-          <!-- <td *ngIf="shoppingCenters[0].ShoppingCenter">
-          <ng-container
-            *ngIf="
-              shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
-              else emptyTd
-            "
-          >
-            <ng-container
-              *ngFor="
-                let item of shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
-                let i = index;
-                trackBy: trackByIndex
-              "
-            >
-              <div class="d-flex align-items-center justify-content-center">
-                <img loading="lazy" 
-                  class="logo"
-                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                    item.RelationOrganizationId
-                  }}"
-                  [title]="item.RelationOrganizationName"
-                  alt=""
-                />
-                <span>{{ item.RelationOrganizationName }}</span>
-                <div
-                  class="d-flex align-items-center justify-content-center"
-                >
-                  <span class="ms-2 table-text"> </span>
-                </div>
-              </div>
-            </ng-container>
-          </ng-container>
-        </td> -->
+         
           <ng-template #emptyTd> </ng-template>
         </tr>
       </ng-container>
     </tbody>
   </table>
-</div>
+</div> -->
 
-<div *ngIf="hasUnscoredCenters && isMobile" class="card-container">
+<!-- <div *ngIf="hasUnscoredCenters && isMobile" class="card-container">
   <h3 class="split-heading">
     <span
       >Emily is working on scoring these Sites
@@ -1277,7 +1063,7 @@
       </button>
     </div>
   </ng-container>
-</div>
+</div> -->
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700"></div>

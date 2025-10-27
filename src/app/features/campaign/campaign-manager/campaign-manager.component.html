@@ -3,7 +3,28 @@
 <div class="campaign-manager-container container-fluid">
   <div class="title-div">
     <h2 class="title">Campaigns</h2>
+
   </div>
+  <!-- Organization Tabs -->
+<div *ngIf="filteredCampaigns?.length" class="organization-tabs-container mb-4">
+  <div
+    class="organization-tab"
+    [class.active]="selectedOrganizationId === 'all'"
+    (click)="filterByOrganization('all')"
+  >
+    All
+  </div>
+
+  <div
+    class="organization-tab"
+    *ngFor="let org of organizations"
+    [class.active]="selectedOrganizationId === org.id"
+    (click)="filterByOrganization(org.id)"
+  >
+    {{ org.name }}
+  </div>
+</div>
+
   <div
     class="w-100 d-flex align-items-center justify-content-end"
     style="padding-bottom: 21px"

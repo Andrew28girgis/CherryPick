@@ -94,6 +94,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   @ViewChild('campaignDetails') campaignDetailsTpl!: TemplateRef<any>;
   @ViewChild('addCampaign', { static: true }) addCampaignTpl!: TemplateRef<any>;
   selectedCampaign!: CampaignSpecs;
+  organizations: { id: number; name: string }[] = [];
+  selectedOrganizationId: number | 'all' = 'all';
 
   constructor(
     private placesService: PlacesService,
@@ -179,22 +181,29 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           const newCampaigns: ICampaign[] = response.json;
 
-          // Compare with existing campaigns
-          newCampaigns.forEach((newCamp) => {
-            const oldCamp = this.campaigns.find((c) => c.Id === newCamp.Id);
-            if (oldCamp && oldCamp.Sites !== newCamp.Sites) {
-              this.markChanged(newCamp);
+          // update campaign list
+          this.campaigns = newCampaigns;
+          this.filteredCampaigns = newCampaigns;
+
+          // 👇 Build unique organization tabs
+          const orgMap = new Map<number, string>();
+          newCampaigns.forEach((c) => {
+            if (c.OrganizationId && c.OrganizationName) {
+              orgMap.set(c.OrganizationId, c.OrganizationName);
             }
           });
 
-          this.campaigns = newCampaigns;
-          this.filteredCampaigns = newCampaigns;
+          this.organizations = Array.from(orgMap, ([id, name]) => ({
+            id,
+            name,
+          }));
+
+          this.getKanbanTemplateStages();
         } else {
           this.campaigns = [];
           this.filteredCampaigns = [];
+          this.organizations = [];
         }
-
-        this.getKanbanTemplateStages();
       },
     });
 
@@ -674,5 +683,15 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       },
     };
     this.placesService.GenericAPI(genericInput).subscribe({});
+  }
+  filterByOrganization(orgId: number | 'all'): void {
+    this.selectedOrganizationId = orgId;
+    if (orgId === 'all') {
+      this.filteredCampaigns = this.campaigns;
+    } else {
+      this.filteredCampaigns = this.campaigns.filter(
+        (c) => c.OrganizationId === orgId
+      );
+    }
   }
 }

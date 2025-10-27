@@ -1553,3 +1553,31 @@
 
 
 
+.organization-tabs-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.organization-tab {
+  padding: 8px 16px;
+  background: var(--Colors-Primary-300);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+  color: var(--Colors-Primary-500);
+}
+
+.organization-tab:hover {
+  background: var(--Colors-Primary-400);
+}
+
+.organization-tab.active {
+  background: var(--Colors-Primary-500);
+  color: #fff;
+  font-weight: 600;
+ }

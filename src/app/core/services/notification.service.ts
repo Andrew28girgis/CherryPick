@@ -105,7 +105,7 @@ export class NotificationService {
     const request = {
       Name: 'UpdateNotification',
       Params: {
-        NotificationId: notification.id,
+        NotificationId: notification.isEmilyChat?notification.id:null,
       },
     };
 

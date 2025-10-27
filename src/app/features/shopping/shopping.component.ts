@@ -60,6 +60,9 @@ export class ShoppingComponent implements OnInit {
     { value: 'size-small', label: 'Size Small to Large' },
     { value: 'size-large', label: 'Size Large to Small' },
   ];
+  stateSelections: { [key: string]: boolean } = {};
+  typeSelections: { [key: string]: boolean } = {};
+  leaseTypeSelections: { [key: string]: boolean } = {};
 
   isLoading: boolean = true;
   openMenuId: number | null = null;
@@ -99,7 +102,14 @@ export class ShoppingComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     // this.refreshInterval = setInterval(() => {
     //   this.loadShoppingCenters();
-    // }, 30000); 
+    // }, 30000);
+    setTimeout(() => {
+      this.availableStates.forEach((s) => (this.stateSelections[s] = false));
+      this.availableTypes.forEach((t) => (this.typeSelections[t] = false));
+      this.availableLeaseTypes.forEach(
+        (l) => (this.leaseTypeSelections[l] = false)
+      );
+    }, 500);
   }
 
   ngOnDestroy(): void {
@@ -155,6 +165,16 @@ export class ShoppingComponent implements OnInit {
   }
 
   applyFiltersAndSort(): void {
+    const selectedStates = Object.keys(this.stateSelections).filter(
+      (s) => this.stateSelections[s]
+    );
+    const selectedTypes = Object.keys(this.typeSelections).filter(
+      (t) => this.typeSelections[t]
+    );
+    const selectedLeaseTypes = Object.keys(this.leaseTypeSelections).filter(
+      (l) => this.leaseTypeSelections[l]
+    );
+
     let filtered = [...this.centers];
 
     if (this.searchTerm && this.searchTerm.trim()) {
@@ -197,22 +217,22 @@ export class ShoppingComponent implements OnInit {
       });
     }
 
-    if (this.stateFilter !== 'all') {
-      filtered = filtered.filter(
-        (center) => center.centerState === this.stateFilter
-      );
-    }
-
-    if (this.typeFilter !== 'all') {
-      filtered = filtered.filter(
-        (center) => center.centerType === this.typeFilter
-      );
-    }
-
-    if (this.leaseTypeFilter !== 'all') {
+    if (selectedStates.length > 0) {
       filtered = filtered.filter((center) =>
-        center.shoppingCenter?.places?.some(
-          (place) => place.leaseType === this.leaseTypeFilter
+        selectedStates.includes(center.centerState)
+      );
+    }
+
+    if (selectedTypes.length > 0) {
+      filtered = filtered.filter((center) =>
+        selectedTypes.includes(center.centerType)
+      );
+    }
+
+    if (selectedLeaseTypes.length > 0) {
+      filtered = filtered.filter((center) =>
+        center.shoppingCenter?.places?.some((place) =>
+          selectedLeaseTypes.includes(place.leaseType)
         )
       );
     }
@@ -761,11 +781,11 @@ export class ShoppingComponent implements OnInit {
       this.disabledCardIds.add(centerId);
     }
   }
-  // Add this method
   resetFilters(): void {
-    this.stateFilter = 'all';
-    this.typeFilter = 'all';
-    this.leaseTypeFilter = 'all';
+    Object.keys(this.stateSelections).forEach(k => (this.stateSelections[k] = false));
+    Object.keys(this.typeSelections).forEach(k => (this.typeSelections[k] = false));
+    Object.keys(this.leaseTypeSelections).forEach(k => (this.leaseTypeSelections[k] = false));
     this.applyFiltersAndSort();
   }
+  
 }

@@ -75,7 +75,6 @@
   backdrop-filter: blur(50px);
 }
 
-
 .add-new-btn {
   white-space: nowrap;
   border: none;
@@ -249,7 +248,6 @@
   gap: 40px;
   max-width: 1600px;
   margin: 0 auto;
-  margin-top: 20px;
 }
 
 .center-card {
@@ -1833,8 +1831,6 @@ tr.click-disabled td:last-child * {
     grid-template-columns: 1fr;
     gap: 45px;
   }
-
-   
 
   .pagination {
     flex-wrap: wrap;

@@ -39,8 +39,7 @@
         </div>
       </div>
       <div class="actions-section">
-        <!-- Filter Dropdown -->
-        <div class="dropdown" ngbDropdown>
+         <!-- <div class="dropdown" ngbDropdown>
           <button class="filter-btn" ngbDropdownToggle>
             <svg
               width="16"
@@ -57,87 +56,7 @@
             <span> Filter </span>
           </button>
           <div class="dropdown-menu" ngbDropdownMenu>
-            <!-- <h3 class="dropdown-header">Share Status</h3>
-            <div class="radio-group px-3">
-              <div class="form-check">
-                <input
-                  type="radio"
-                  class="form-check-input"
-                  id="all"
-                  name="share"
-                  value="all"
-                  [(ngModel)]="shareFilter"
-                  (change)="onFilterChange()"
-                />
-                <label class="form-check-label" for="all">All</label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="radio"
-                  class="form-check-input"
-                  id="shared"
-                  name="share"
-                  value="shared"
-                  [(ngModel)]="shareFilter"
-                  (change)="onFilterChange()"
-                />
-                <label class="form-check-label" for="shared">Shared</label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="radio"
-                  class="form-check-input"
-                  id="not-shared"
-                  name="share"
-                  value="not-shared"
-                  [(ngModel)]="shareFilter"
-                  (change)="onFilterChange()"
-                />
-                <label class="form-check-label" for="not-shared"
-                  >Not Shared</label
-                >
-              </div>
-            </div> -->
-
-            <!-- <h3 class="dropdown-header mt-3">Price</h3>
-            <div class="px-3 mb-3">
-              <div class="input-group input-group-sm">
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="From"
-                  [(ngModel)]="priceFrom"
-                  (input)="onFilterChange()"
-                />
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="To"
-                  [(ngModel)]="priceTo"
-                  (input)="onFilterChange()"
-                />
-              </div>
-            </div> -->
-
-            <!-- <h3 class="dropdown-header">Building Size (SF)</h3>
-            <div class="px-3 mb-3">
-              <div class="input-group input-group-sm">
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="From"
-                  [(ngModel)]="sizeFrom"
-                  (input)="onFilterChange()"
-                />
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="To"
-                  [(ngModel)]="sizeTo"
-                  (input)="onFilterChange()"
-                />
-              </div>
-            </div> -->
+     
 
             <h3 class="dropdown-header" *ngIf="availableStates.length">
               State
@@ -199,7 +118,7 @@
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Sort Dropdown -->
         <!-- <div class="dropdown" ngbDropdown>
@@ -385,98 +304,85 @@
 
     <div class="row">
       <!-- Filterations Section -->
-      <!-- <div class="col-3">
+      <div class="col-3">
         <div class="filters-panel">
+      
           <div class="filters-header">
             <div class="filters-title">Filter</div>
-            <div class="filters-title clear-filterr">Clear Filters</div>
+            <div class="filters-title clear-filterr" (click)="resetFilters()">
+              Clear Filters
+            </div>
           </div>
-
-          <div class="filter-block">
-            <div class="filter-block-title">Project Status</div>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>On Track</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>At Risk</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Off Track</span>
-            </label>
-          </div>
-
-          <div class="filter-block">
-            <div class="filter-block-title">Project Type</div>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>QSR</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Medical</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Industrial</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Retail</span>
+      
+          <!-- State Filter -->
+          <div class="filter-block" *ngIf="availableStates.length">
+            <div class="filter-block-title">State</div>
+            <label
+              class="filter-check"
+              *ngFor="let state of availableStates"
+            >
+              <input
+                type="checkbox"
+                [value]="state"
+                [(ngModel)]="stateSelections[state]"
+                (change)="onFilterChange()"
+              />
+              <span>{{ state }}</span>
             </label>
           </div>
-
-          <div class="filter-block">
-            <div class="filter-block-title">Client</div>
-            <input
-              type="text"
-              class="filter-input"
-              placeholder="Client Name ..."
-            />
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Osmow's</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Scooters</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Buffalo Burger</span>
+      
+          <!-- Property Type Filter -->
+          <div class="filter-block" *ngIf="availableTypes.length">
+            <div class="filter-block-title">Property Type</div>
+            <label
+              class="filter-check"
+              *ngFor="let type of availableTypes"
+            >
+              <input
+                type="checkbox"
+                [value]="type"
+                [(ngModel)]="typeSelections[type]"
+                (change)="onFilterChange()"
+              />
+              <span>{{ type }}</span>
             </label>
           </div>
-
-          <div class="filter-block">
-            <div class="filter-block-title">Broker</div>
-            <input
-              type="text"
-              class="filter-input"
-              placeholder="Broker Name ..."
-            />
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Ibrahim Mohamed</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Sarah Selim</span>
-            </label>
-            <label class="filter-check">
-              <input type="checkbox" />
-              <span>Omar Khaled</span>
+      
+          <!-- Lease Type Filter -->
+          <div class="filter-block" *ngIf="availableLeaseTypes.length">
+            <div class="filter-block-title">Lease Type</div>
+            <label
+              class="filter-check"
+              *ngFor="let leaseType of availableLeaseTypes"
+            >
+              <input
+                type="checkbox"
+                [value]="leaseType"
+                [(ngModel)]="leaseTypeSelections[leaseType]"
+                (change)="onFilterChange()"
+              />
+              <span>{{ leaseType }}</span>
             </label>
           </div>
-
+      
+          <!-- Buttons -->
           <div class="filters-actions">
-            <button type="button" class="btn-base btn-cancel">Clear</button>
-            <button type="button" class="btn-base btn-filter">Filter</button>
+            <button type="button" class="btn-base btn-cancel" (click)="resetFilters()">
+              Clear
+            </button>
+            <!-- <button
+              type="button"
+              class="btn-base btn-filter"
+              (click)="onFilterChange()"
+            >
+              Filter
+            </button> -->
           </div>
         </div>
-      </div> -->
-      <div class="col-12">
+      </div>
+      
+      
+      <div class="col-9">
         <!-- Shopping Centers Grid -->
         <div
           class="centers-grid"
