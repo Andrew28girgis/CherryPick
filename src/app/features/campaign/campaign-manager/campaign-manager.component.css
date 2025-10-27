@@ -104,23 +104,26 @@
   overflow: auto;
 }
 
+.organization-tabs-container::-webkit-scrollbar,
 .campaign-manager-body::-webkit-scrollbar {
   height: 10px;
 }
 
+.organization-tabs-container::-webkit-scrollbar-track,
 .campaign-manager-body::-webkit-scrollbar-track {
   background: transparent;
 }
 
+.organization-tabs-container::-webkit-scrollbar-thumb,
 .campaign-manager-body::-webkit-scrollbar-thumb {
   background: var(--Colors-Primary-500);
   border-radius: 10px;
 }
 
+.organization-tabs-container::-webkit-scrollbar-thumb:hover,
 .campaign-manager-body::-webkit-scrollbar-thumb:hover {
   background: var(--Colors-Primary-hover);
 }
-
 .search-campaign-container {
   width: 432px;
   height: 48px;
@@ -1513,53 +1516,41 @@
     justify-content: center;
   }
   .title::after {
-    width: auto ;
+    width: auto;
   }
   .stepper {
-    gap: 2px;   
-}
-.step {
-  font-size: 13px;
-  padding: 8px 12px;
-}
-.next-btn {
+    gap: 2px;
+  }
+  .step {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  .next-btn {
     font-size: 14px;
     padding: 8px 14px;
-}
-@media (max-width: 991px) {
-
-  .modal-dialog.modal-xl,
-  .modal.show .modal-dialog.modal-xl {
-    width: 80% !important;
-    max-width: 80% !important;
-    height: 100%;
-    margin: auto !important;
-    align-items: center;
-    justify-content: center;
   }
+  @media (max-width: 991px) {
+    .modal-dialog.modal-xl,
+    .modal.show .modal-dialog.modal-xl {
+      width: 80% !important;
+      max-width: 80% !important;
+      height: 100%;
+      margin: auto !important;
+      align-items: center;
+      justify-content: center;
+    }
 
-  .modal-dialog.modal-xl .modal-content {
-    border-radius: 0;        
+    .modal-dialog.modal-xl .modal-content {
+      border-radius: 0;
+    }
   }
 }
-}
-
-
-
-
-
-
-
-
-
 
 .organization-tabs-container {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
   border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  overflow-x: scroll;
 }
 
 .organization-tab {
@@ -1570,6 +1561,7 @@
   transition: all 0.2s ease-in-out;
   font-weight: 500;
   color: var(--Colors-Primary-500);
+  white-space: nowrap;
 }
 
 .organization-tab:hover {
@@ -1580,4 +1572,4 @@
   background: var(--Colors-Primary-500);
   color: #fff;
   font-weight: 600;
- }
+}

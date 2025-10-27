@@ -3,34 +3,14 @@
 <div class="campaign-manager-container container-fluid">
   <div class="title-div">
     <h2 class="title">Campaigns</h2>
-
   </div>
-  <!-- Organization Tabs -->
-<div *ngIf="filteredCampaigns?.length" class="organization-tabs-container mb-4">
-  <div
-    class="organization-tab"
-    [class.active]="selectedOrganizationId === 'all'"
-    (click)="filterByOrganization('all')"
-  >
-    All
-  </div>
-
-  <div
-    class="organization-tab"
-    *ngFor="let org of organizations"
-    [class.active]="selectedOrganizationId === org.id"
-    (click)="filterByOrganization(org.id)"
-  >
-    {{ org.name }}
-  </div>
-</div>
 
   <div
     class="w-100 d-flex align-items-center justify-content-end"
     style="padding-bottom: 21px"
   >
     <div
-      class="d-flex align-items-center gap-3 toggle-cont"
+      class="d-flex align-items-center gap-3 toggle-cont justify-content-between w-100"
       *ngIf="!hideViewToggles"
     >
       <div class="view-toggle" *ngIf="0">
@@ -79,6 +59,29 @@
             <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
         </button>
+      </div>
+
+      <!-- Organization Tabs -->
+      <div
+        *ngIf="filteredCampaigns?.length"
+        class="organization-tabs-container"
+      >
+        <div
+          class="organization-tab"
+          [class.active]="selectedOrganizationId === 'all'"
+          (click)="filterByOrganization('all')"
+        >
+          All
+        </div>
+
+        <div
+          class="organization-tab"
+          *ngFor="let org of organizations"
+          [class.active]="selectedOrganizationId === org.id"
+          (click)="filterByOrganization(org.id)"
+        >
+          {{ org.name }}
+        </div>
       </div>
       <button class="g-button" (click)="openAddCampaign(addCampaign)">
         <svg
@@ -824,7 +827,7 @@
       >
       </app-polygons>
     </div>
-    <div class="d-flex justify-content-between mt-4 ">
+    <div class="d-flex justify-content-between mt-4">
       <!-- Previous button -->
       <button
         *ngIf="step !== 'tenant'"
@@ -1132,6 +1135,3 @@
     </section>
   </div>
 </ng-template>
-
-
-
