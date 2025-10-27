@@ -32,7 +32,7 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
-import { NotificationsOnlyComponentComponent } from './shared/components/notifications-only-component/notifications-only-component.component';
+import { NotificationsOnlyComponentComponent } from './shared/components/sidebar/notifications-only-component/notifications-only-component.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { EditorModule } from 'primeng/editor';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
