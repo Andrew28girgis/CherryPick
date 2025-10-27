@@ -363,21 +363,7 @@
               />
               <span>{{ leaseType }}</span>
             </label>
-          </div>
-      
-          <!-- Buttons -->
-          <div class="filters-actions">
-            <button type="button" class="btn-base btn-cancel" (click)="resetFilters()">
-              Clear
-            </button>
-            <!-- <button
-              type="button"
-              class="btn-base btn-filter"
-              (click)="onFilterChange()"
-            >
-              Filter
-            </button> -->
-          </div>
+          </div> 
         </div>
       </div>
       
@@ -1041,9 +1027,9 @@
       >
         <!-- Logo + name -->
         <div class="campaign-header">
-          <ng-container *ngIf="campaign.logoUrl; else logoPlaceholder">
+          <ng-container *ngIf="campaign.LogoUrl; else logoPlaceholder">
             <img
-              [src]="campaign.logoUrl"
+              [src]="campaign.LogoUrl"
               class="campaign-logo"
               crossorigin="anonymous"
             />

@@ -94,7 +94,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   @ViewChild('campaignDetails') campaignDetailsTpl!: TemplateRef<any>;
   @ViewChild('addCampaign', { static: true }) addCampaignTpl!: TemplateRef<any>;
   selectedCampaign!: CampaignSpecs;
-  organizations: { id: number; name: string }[] = [];
+  organizations: { id: number; name: string ;logo:string}[] = [];
   selectedOrganizationId: number | 'all' = 'all';
 
   constructor(
@@ -184,16 +184,17 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
            this.campaigns = newCampaigns;
           this.filteredCampaigns = newCampaigns;
 
-           const orgMap = new Map<number, string>();
-          newCampaigns.forEach((c) => {
+           const orgMap = new Map<number, { name: string, logoUrl: string }>();
+           newCampaigns.forEach((c) => {
             if (c.OrganizationId && c.OrganizationName) {
-              orgMap.set(c.OrganizationId, c.OrganizationName);
+              orgMap.set(c.OrganizationId, { name: c.OrganizationName, logoUrl: c.LogoUrl });
             }
           });
 
-          this.organizations = Array.from(orgMap, ([id, name]) => ({
+          this.organizations = Array.from(orgMap, ([id, org]) => ({
             id,
-            name,
+            name: org.name,
+            logo: org.logoUrl,
           }));
 
           this.getKanbanTemplateStages();

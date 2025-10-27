@@ -1549,7 +1549,6 @@
 .organization-tabs-container {
   display: flex;
   gap: 10px;
-  border-bottom: 1px solid #ddd;
   overflow-x: scroll;
 }
 
@@ -1562,6 +1561,10 @@
   font-weight: 500;
   color: var(--Colors-Primary-500);
   white-space: nowrap;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .organization-tab:hover {
@@ -1572,4 +1575,9 @@
   background: var(--Colors-Primary-500);
   color: #fff;
   font-weight: 600;
+}
+.org-c-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
 }

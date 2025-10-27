@@ -80,6 +80,25 @@
           [class.active]="selectedOrganizationId === org.id"
           (click)="filterByOrganization(org.id)"
         >
+          <!-- <img
+            *ngIf="org.logo; else logoPlaceholder"
+            [src]="org.logo"
+            class="org-c-logo"
+          /> -->
+
+          <ng-container *ngIf="org.logo; else logoPlaceholder">
+            <img
+              [src]="org.logo"
+              class="org-c-logo"
+              #logoImg
+              crossorigin="anonymous"
+            />
+          </ng-container>
+          <ng-template #logoPlaceholder>
+            <div class="org-logo org-c-logo placeholder">
+              {{ getInitials(org.name) }}
+            </div>
+          </ng-template>
           {{ org.name }}
         </div>
       </div>
@@ -317,9 +336,9 @@
                 "
               >
                 <!-- Logo or placeholder -->
-                <ng-container *ngIf="campaign.logoUrl; else logoPlaceholder">
+                <ng-container *ngIf="campaign.LogoUrl; else logoPlaceholder">
                   <img
-                    [src]="campaign.logoUrl"
+                    [src]="campaign.LogoUrl"
                     class="org-logo"
                     #logoImg
                     crossorigin="anonymous"
