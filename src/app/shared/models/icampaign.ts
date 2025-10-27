@@ -5,7 +5,7 @@ export interface ICampaign {
   OrganizationName: string;
   CampaignName: string;
   CreatedDate: string;
-  logoUrl: string;
+  LogoUrl: string;
   MailsSent: number;
   Submissions?: Submission[];
   Sites: number;
