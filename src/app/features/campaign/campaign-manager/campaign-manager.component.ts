@@ -6,10 +6,6 @@ import {
   HostListener,
   OnDestroy,
   Input,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-  ChangeDetectorRef,
   ViewChild,
 } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
