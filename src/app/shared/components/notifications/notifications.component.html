@@ -153,7 +153,7 @@
 
         <!-- Wrapper: fills column height, content scrolls, button stays visible -->
         <div *ngIf="isOverlayMode || showingMap" class="container-overlay-btn">
-          <div #contentToDownload class="overlay-content">
+          <div #contentToDownload class="overlay-content p-0">
             <div *ngIf="overlayHtml" [innerHTML]="overlayHtml"></div>
             <!-- <app-polygons *ngIf="showingMap"></app-polygons> -->
           </div>
@@ -472,10 +472,8 @@
                     Try Again
                   </button>
                 </div>
-                
-                <div>
 
-                </div>
+                <div></div>
 
                 <p
                   class="message-text"

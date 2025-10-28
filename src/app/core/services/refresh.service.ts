@@ -6,7 +6,9 @@ import { Subject } from 'rxjs';
 })
 export class RefreshService {
   private refreshOrganizationsSource = new Subject<void>();
+  private refreshUserPagesSource = new Subject<void>();
   refreshOrganizations$ = this.refreshOrganizationsSource.asObservable();
+  refreshUserPages$ = this.refreshUserPagesSource.asObservable();
 
   triggerRefreshOrganizations(): void {
     this.refreshOrganizationsSource.next();
@@ -23,5 +25,11 @@ export class RefreshService {
 
   sendPolygonSavedData(data: string): void {
     this.polygonSavedDataSource.next(data);
+  }
+  
+
+
+  triggerUserPagesRefresh() {
+    this.refreshUserPagesSource.next();
   }
 }

@@ -44,6 +44,7 @@ export class LandingComponent {
   prevName = '';
   private subscriptions = new Subscription();
   CampaignScores: any[] = [];
+  scoringId: number | null = null;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -536,7 +537,7 @@ export class LandingComponent {
     const body = {
       Name: 'GetShoppingCenterCampaignScore',
       Params: {
-        ShoppingCenterId:Id?Id: this.ShoppingCenterId,
+        ShoppingCenterId: Id ? Id : this.ShoppingCenterId,
       },
     };
 
@@ -549,6 +550,68 @@ export class LandingComponent {
         )[0]?.campaignName;
       },
       error: (err) => {},
+    });
+  }
+  getscore(campaign: any) {
+    if (!campaign.Score) {
+      this.scoringId = campaign.campaignId;
+    }
+    this.PlacesService.GetScore(
+      campaign.campaignId,
+      this.ShoppingCenterId
+    ).subscribe({
+      next: (response) => {
+        this.scoringId = null;
+        this.viewManagerService.loadShoppingCenters(this.ShoppingCenterId);
+        if (!response) {
+          this.showToast(`Shopping center has already been scored`);
+        } else {
+          this.showToast(`Shopping center  scored successfully`);
+        }
+      },
+      error: () => {
+        this.scoringId = null; // also stop loader if error happens
+      },
+    });
+  }
+  showToast(message: string) {
+    const toast = document.getElementById('customToastsuccess');
+    const toastMessage = document.getElementById('toastMessagesuccess');
+    if (toast && toastMessage) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    } else {
+    }
+  }
+  viewSpecs(campaign: any) {
+    this.showToast(
+      `Campaign ${campaign.campaignName} specs are being fetched...`
+    );
+
+    const body: any = {
+      Name: 'GetCampaignDetailsJSON',
+      Params: { CampaignId: campaign.campaignId },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        this.PlacesService.sendmessages({
+          Chat: `
+          Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
+          Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
+          The campaign name is "${campaign.campaignName}"
+          Its ID is "${campaign.campaignId}"
+          and aims to expand in the following locations from the JSON below:
+          ${response.json[0].campaignDetailsJSON}
+          Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
+`,
+          //The campaign belongs to the tenant "${campaign.OrganizationName}"
+          NeedToSaveIt: true,
+        }).subscribe({});
+      },
     });
   }
 }

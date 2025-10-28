@@ -55,7 +55,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     return this._viewMode;
   }
   private _viewMode: 'card' | 'table' = 'card';
-
+  selectedTenants: any[] = [];
   userBuyBoxes: { id: number; name: string }[] = [];
   selectedBuyBoxId = 0;
   campaigns: ICampaign[] = [];
@@ -94,8 +94,15 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   @ViewChild('campaignDetails') campaignDetailsTpl!: TemplateRef<any>;
   @ViewChild('addCampaign', { static: true }) addCampaignTpl!: TemplateRef<any>;
   selectedCampaign!: CampaignSpecs;
-  organizations: { id: number; name: string ;logo:string}[] = [];
+  organizations: { id: number; name: string; logo: string }[] = [];
   selectedOrganizationId: number | 'all' = 'all';
+  tenantSearch = '';
+  cotenants: any[] = [];
+  complementaryTenants: any[] = [];
+  conflictingTenants: any[] = [];
+  searchTimeout: any;
+  MinUnitSize: number | null = null;
+  MaxUnitSize: number | null = null;
 
   constructor(
     private placesService: PlacesService,
@@ -181,13 +188,16 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           const newCampaigns: ICampaign[] = response.json;
 
-           this.campaigns = newCampaigns;
+          this.campaigns = newCampaigns;
           this.filteredCampaigns = newCampaigns;
 
-           const orgMap = new Map<number, { name: string, logoUrl: string }>();
-           newCampaigns.forEach((c) => {
+          const orgMap = new Map<number, { name: string; logoUrl: string }>();
+          newCampaigns.forEach((c) => {
             if (c.OrganizationId && c.OrganizationName) {
-              orgMap.set(c.OrganizationId, { name: c.OrganizationName, logoUrl: c.LogoUrl });
+              orgMap.set(c.OrganizationId, {
+                name: c.OrganizationName,
+                logoUrl: c.LogoUrl,
+              });
             }
           });
 
@@ -417,6 +427,17 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
     // Step 2: Campaign → Polygon
     if (this.step === 'campaign') {
+      this.saveSelectedTenants();
+      // const campaignData = {
+      //   name: this.campaignName,
+      //   type: this.campaignType,
+      //   minSize: this.MinUnitSize,
+      //   maxSize: this.MaxUnitSize,
+      //   complementaryTenants: this.complementaryTenants,
+      //   conflictingTenants: this.conflictingTenants,
+      // };
+      // console.log('Campaign step data:', campaignData);
+  
       if (!this.campaignName || !this.campaignType) return;
       this.step = 'polygon';
       this.polygonsStep = true;
@@ -452,6 +473,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.campaignType = '';
     this.polygonsStep = false;
     this.step = 'tenant';
+    this.selectedTenants = [];
+    this.cotenants = [];
+    this.complementaryTenants = [];
+    this.conflictingTenants = [];
+    this.tenantSearch = '';
   }
 
   handleSave(locationData: any) {
@@ -692,5 +718,103 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         (c) => c.OrganizationId === orgId
       );
     }
+  }
+
+  onTenantSearchChange(value: string) {
+    this.tenantSearch = value;
+
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+
+    if (value.length < 3) {
+      this.cotenants = [];
+      return;
+    }
+    this.searchTimeout = setTimeout(() => {
+      const body = {
+        Name: 'GetOrgByName',
+        Params: { OrgName: value },
+      };
+
+      this.placesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          const data = res.json || [];
+          this.cotenants = data.map((t: any) => ({
+            name: t.name,
+            logoURL: t.logoURL,
+            id: t.id,
+          }));
+        },
+        error: (err) => console.error('Error loading tenants', err),
+      });
+    }, 300);
+  }
+
+  addComplementary(tenant: any) {
+    const isAlreadyComplementary = this.complementaryTenants.some(
+      (t) => t.name === tenant.name
+    );
+    const isAlreadyConflicting = this.conflictingTenants.some(
+      (t) => t.name === tenant.name
+    );
+
+    if (isAlreadyComplementary) {
+      this.complementaryTenants = this.complementaryTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+      return;
+    }
+
+    if (isAlreadyConflicting) {
+      this.conflictingTenants = this.conflictingTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+    }
+
+    this.complementaryTenants.push(tenant);
+  }
+
+  addConflicting(tenant: any) {
+    const isAlreadyConflicting = this.conflictingTenants.some(
+      (t) => t.name === tenant.name
+    );
+    const isAlreadyComplementary = this.complementaryTenants.some(
+      (t) => t.name === tenant.name
+    );
+
+    if (isAlreadyConflicting) {
+      this.conflictingTenants = this.conflictingTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+      return;
+    }
+
+    if (isAlreadyComplementary) {
+      this.complementaryTenants = this.complementaryTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+    }
+
+    this.conflictingTenants.push(tenant);
+  }
+
+  isSelected(tenant: any, type: 'complementary' | 'conflicting'): boolean {
+    if (type === 'complementary') {
+      return this.complementaryTenants.some((t) => t.name === tenant.name);
+    }
+    return this.conflictingTenants.some((t) => t.name === tenant.name);
+  }
+  saveSelectedTenants() {
+    this.selectedTenants = [
+      ...this.complementaryTenants.map((t) => ({
+        id: t.id,
+        type: 5, // Complementary ID
+      })),
+      ...this.conflictingTenants.map((t) => ({
+        id: t.id,
+        type: 6, // Conflicting ID
+      })),
+    ];
+
+    console.log('Selected tenants payload:', this.selectedTenants);
   }
 }

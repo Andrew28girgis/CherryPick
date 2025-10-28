@@ -183,7 +183,7 @@
   justify-content: center;
   padding: var(--Space-S-48) var(--Space-S-24);
   text-align: center;
-} 
+}
 
 .error-icon,
 .empty-icon {
@@ -258,4 +258,8 @@
     align-items: flex-start;
     gap: var(--Space-S-8);
   }
+}
+
+.modal-body {
+  padding: 0;
 }
