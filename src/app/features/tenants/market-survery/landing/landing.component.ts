@@ -536,7 +536,7 @@ export class LandingComponent {
     const body = {
       Name: 'GetShoppingCenterCampaignScore',
       Params: {
-        ShoppingCenterId:Id?Id: this.ShoppingCenterId,
+        ShoppingCenterId: Id ? Id : this.ShoppingCenterId,
       },
     };
 
