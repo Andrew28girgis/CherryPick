@@ -283,7 +283,7 @@
               <div class="menu-dropdown" *ngIf="openMenuId === campaign.Id">
                 <button
                   class="menu-item"
-                  (click)="viewSpecs(campaign); closeMenu()"
+                  (click)="viewSpecsNew(campaign); closeMenu()"
                 >
                   View Specs
                 </button>
@@ -894,6 +894,27 @@
               'conflicting-border': isSelected(tenant, 'conflicting')
             }"
           >
+            <div
+              class="card-badge"
+              [ngClass]="{
+                'complementary-badge': isSelected(tenant, 'complementary'),
+                'conflicting-badge': isSelected(tenant, 'conflicting')
+              }"
+            >
+              <span
+                class="complementary"
+                *ngIf="isSelected(tenant, 'complementary')"
+              >
+                Complementary
+              </span>
+              <span
+                class="conflicting"
+                *ngIf="isSelected(tenant, 'conflicting')"
+              >
+                Conflicting
+              </span>
+            </div>
+
             <div>
               <img
                 *ngIf="tenant.logoURL"
@@ -1068,13 +1089,13 @@
   </div>
 </ng-template>
 
-<ng-template #campaignDetails let-modal>
+<ng-template #campaignDetailsModal let-modal>
   <!-- Modal Header -->
   <div class="modal-header">
     <div class="d-flex align-items-center flex-row gap-2">
-      <ng-container *ngIf="campaignlogo; else logoPlaceholder">
+      <ng-container *ngIf="campaignLogo; else logoPlaceholder">
         <img
-          [src]="campaignlogo"
+          [src]="campaignLogo"
           class="tenant-logo"
           style="width: 50px; height: 50px"
           crossorigin="anonymous"
@@ -1082,11 +1103,11 @@
       </ng-container>
       <ng-template #logoPlaceholder>
         <div class="tenant-logo placeholder">
-          {{ getInitials(selectedCampaign.campaignName || "") }}
+          {{ getInitials(selectedCampaignDetails?.CampaignName || "") }}
         </div>
       </ng-template>
       <h4 class="modal-title">
-        {{ selectedCampaign.campaignName ?? "Campaign" }}
+        {{ selectedCampaignDetails?.CampaignName ?? "Campaign" }}
       </h4>
     </div>
     <button class="btn btn-primary btn-custom" (click)="modal.close()">
@@ -1096,153 +1117,103 @@
 
   <!-- Modal Body -->
   <div class="modal-body popup-body">
-    <!-- Client Info -->
-    <section *ngIf="selectedCampaign?.client">
-      <h5>Client Info</h5>
+    <!-- Basic Info -->
+    <section>
+      <h5>Campaign Info</h5>
       <div class="pills-container">
-        <span *ngIf="selectedCampaign.client?.clientName" class="data-pill">
-          Name: {{ selectedCampaign.client?.clientName }}
-        </span>
-        <span *ngIf="selectedCampaign.client?.company" class="data-pill">
-          Company: {{ selectedCampaign.client?.company }}
-        </span>
-      </div>
-    </section>
-
-    <!-- Site Details -->
-    <section
-      *ngIf="
-        selectedCampaign?.siteType ||
-        selectedCampaign?.secondaryType ||
-        selectedCampaign?.placementType
-      "
-    >
-      <h5>Site Details</h5>
-
-      <!-- Site Type -->
-      <div *ngIf="selectedCampaign?.siteType">
-        <div class="pill-label">Type:</div>
-        <div class="pills-container">
-          <ng-container
-            *ngFor="let type of getArrayFromValue(selectedCampaign?.siteType)"
-          >
-            <span class="data-pill">{{ type }}</span>
-          </ng-container>
-        </div>
-      </div>
-
-      <!-- Secondary Type -->
-      <div *ngIf="selectedCampaign?.secondaryType">
-        <div class="pill-label">Secondary:</div>
-        <div class="pills-container">
-          <ng-container
-            *ngFor="
-              let sec of getArrayFromValue(selectedCampaign?.secondaryType)
-            "
-          >
-            <span class="data-pill">{{ sec }}</span>
-          </ng-container>
-        </div>
-      </div>
-
-      <!-- Placement Type -->
-      <div *ngIf="selectedCampaign?.placementType">
-        <div class="pill-label">Placement:</div>
-        <div class="pills-container">
-          <ng-container
-            *ngFor="
-              let place of getArrayFromValue(selectedCampaign?.placementType)
-            "
-          >
-            <span class="data-pill">{{ place }}</span>
-          </ng-container>
-        </div>
-      </div>
-    </section>
-
-    <!-- Financials -->
-    <section *ngIf="selectedCampaign?.financialCriteria">
-      <h5>Financials</h5>
-      <div class="pills-container">
-        <span
-          *ngIf="
-            selectedCampaign.financialCriteria?.budgetMin !== undefined &&
-            selectedCampaign.financialCriteria?.budgetMax
-          "
-          class="data-pill"
+        <span class="data-pill"
+          >Created:
+          {{ selectedCampaignDetails?.CreatedDate | date : "medium" }}</span
         >
-          Budget:
-          {{ selectedCampaign.financialCriteria?.budgetMin | currency }} –
-          {{ selectedCampaign.financialCriteria?.budgetMax | currency }}
-        </span>
-        <span
-          *ngIf="selectedCampaign.financialCriteria?.leaseRateMaxPerSqFt"
-          class="data-pill"
+        <span class="data-pill"
+          >Organization: {{ selectedCampaignDetails?.OrganizationName }}</span
         >
-          Lease Rate Max:
-          {{ selectedCampaign.financialCriteria?.leaseRateMaxPerSqFt }}/sqft
-        </span>
-        <span
-          *ngIf="
-            selectedCampaign.financialCriteria?.purchasePreferred !== undefined
-          "
-          class="data-pill"
-        >
-          Purchase Preferred:
-          {{
-            selectedCampaign.financialCriteria?.purchasePreferred ? "Yes" : "No"
-          }}
-        </span>
-        <span
-          *ngIf="
-            selectedCampaign.financialCriteria?.leasePreferred !== undefined
-          "
-          class="data-pill"
-        >
-          Lease Preferred:
-          {{
-            selectedCampaign.financialCriteria?.leasePreferred ? "Yes" : "No"
-          }}
-        </span>
-      </div>
-    </section>
-
-    <!-- Timing -->
-    <section *ngIf="selectedCampaign?.timing">
-      <h5>Timing</h5>
-      <div class="pills-container">
-        <span *ngIf="selectedCampaign.timing?.requiredBy" class="data-pill">
-          Required By: {{ selectedCampaign.timing?.requiredBy }}
-        </span>
-        <span
-          *ngIf="selectedCampaign.timing?.leaseTermYears !== undefined"
-          class="data-pill"
-        >
-          Lease Term: {{ selectedCampaign.timing?.leaseTermYears }} years
-        </span>
       </div>
     </section>
 
     <!-- Locations -->
-    <section *ngIf="selectedCampaign?.locationCriteria?.locations?.length">
-      <div class="d-flex align-items-center justify-content-between mb-2">
-        <h5 class="m-0">Locations</h5>
-        <span
-          *ngIf="selectedCampaign.locationCriteria?.country"
-          class="data-pill country"
-        >
-          Country: {{ selectedCampaign.locationCriteria?.country }}
-        </span>
+    <section *ngIf="selectedCampaignDetails?.Locations?.length">
+      <h5>Locations</h5>
+      <div class="pills-container">
+        <ng-container *ngFor="let loc of selectedCampaignDetails.Locations">
+          <span *ngIf="loc.CityName ||loc.State" class="data-pill">
+            {{ loc.CityName ? loc.CityName + "," : "" }}
+            {{ loc.State ? loc.State : "" }}
+          </span>
+        </ng-container>
       </div>
+    </section>
+
+    <!-- Relations -->
+    <section *ngIf="selectedCampaignDetails?.Relations?.length">
+      <h5>Relations</h5>
       <div class="pills-container">
         <span
-          *ngFor="let loc of selectedCampaign.locationCriteria?.locations"
+          *ngFor="let r of selectedCampaignDetails.Relations"
           class="data-pill"
+          [ngClass]="{
+            'complementary-pill': r.RelationType === 'complementary',
+            'conflict-pill': r.RelationType === 'conflict'
+          }"
         >
-          {{ loc.city }}, {{ loc.state }}
-          <span *ngIf="loc.neighborhoodName">({{ loc.neighborhoodName }})</span>
+          {{ r.RelationOrganizationName }} ({{ r.RelationType }})
         </span>
       </div>
     </section>
+
+    <!-- Raw JSON at the bottom -->
+    <section *ngIf="parsedCampaignDetails?.length" class="border-top pt-3">
+      <h5>Campaign Details</h5>
+    
+      <div class="key-value-list">
+        <ng-container *ngFor="let entry of parsedCampaignDetails">
+          <div class="key-value-item">
+            <div class="key">{{ entry.key }}:</div>
+            <div class="value">
+              <!-- Handle arrays -->
+              <ng-container *ngIf="isArray(entry.value); else nonArray">
+                <div class="nested">
+                  <ng-container *ngFor="let item of entry.value">
+                    <ng-container *ngIf="isObject(item); else simpleItem">
+                      <div class="nested">
+                        <ng-container
+                          *ngFor="let sub of getKeyValuePairs(item)"
+                        >
+                          <div class="key-value-item">
+                            <div class="key">{{ sub.key }}:</div>
+                            <div class="value">{{ sub.value }}</div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-template #simpleItem>
+                      <div class="value">{{ item }}</div>
+                    </ng-template>
+                  </ng-container>
+                </div>
+              </ng-container>
+    
+              <!-- Non-array -->
+              <ng-template #nonArray>
+                <ng-container *ngIf="isObject(entry.value); else simpleValue">
+                  <div class="nested">
+                    <ng-container
+                      *ngFor="let sub of getKeyValuePairs(entry.value)"
+                    >
+                      <div class="key-value-item">
+                        <div class="key">{{ sub.key }}:</div>
+                        <div class="value">{{ sub.value }}</div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-container>
+                <ng-template #simpleValue>{{ entry.value }}</ng-template>
+              </ng-template>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </section>
+    
   </div>
 </ng-template>

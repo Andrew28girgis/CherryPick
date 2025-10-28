@@ -40,8 +40,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   tempTenant: any;
   tempTenantId: any;
   specs: any;
-  campaignlogo: any;
-  @Input() set viewMode(value: 'card' | 'table') {
+  CampaignDetailsJSON: any;
+   @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
       localStorage.setItem('campaignViewMode', value);
@@ -99,6 +99,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   searchTimeout: any;
   MinUnitSize!: number;
   MaxUnitSize!: number;
+  selectedCampaignDetails: any = null;
+  campaignLogo: string = '';
+  @ViewChild('campaignDetailsModal') campaignDetailsModal!: TemplateRef<any>;
+  parsedCampaignDetails: { key: string; value: any }[] = [];
 
   constructor(
     private placesService: PlacesService,
@@ -492,6 +496,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       .CreateCampaign(
         this.campaignName,
         this.selectedTenant.id,
+        this.selectedTenant.name,
         isStandalone,
         campaignLocations,
         this.MinUnitSize,
@@ -501,16 +506,17 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.modalRef?.close();
-          this.resetAddCampaignForm();
           this.getAllCampaigns();
 
           console.log('CreateCampaign response:', response);
           const campaignDetails = JSON.stringify(response.campaign);
 
           // trigger Emily chat / assistant display
+          console.log('sdsaaaaaaaaaaaaaaaa', this.selectedTenants);
+          const selectedTenantsInfo = JSON.stringify(this.selectedTenants);
           this.placesService
             .sendmessages({
-              Chat: `display the specs of this campaign: ${campaignDetails}`,
+              Chat: `display the specs of this campaign and skip any id: ${campaignDetails}, Organization Name: ${this.selectedTenant.name} and here is the organization Relations Data get from them the names and types and skip the Ids ${selectedTenantsInfo}`,
               NeedToSaveIt: true,
             })
             .subscribe({
@@ -519,6 +525,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
                 this.notificationService.triggerOverlay(notification);
               },
             });
+          this.resetAddCampaignForm();
         },
         error: (err) => {
           console.error('CreateCampaign error:', err);
@@ -618,37 +625,66 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       this.closeMenu();
     }
   }
-  viewSpecs(campaign: any) {
-    const body: any = {
-      Name: 'GetCampaignDetailsJSON',
-      Params: { CampaignId: campaign.Id },
-    };
+//   viewSpecs(campaign: any) {
+//     const body: any = {
+//       Name: 'GetCampaignDetailsJSON',
+//       Params: { CampaignId: campaign.Id },
+//     };
 
-    this.placesService.GenericAPI(body).subscribe({
-      next: (response) => {
-        this.selectedCampaign = JSON.parse(
-          response.json[0].campaignDetailsJSON
-        );
-        this.campaignlogo = campaign.logoUrl;
-        this.placesService
-          .sendmessages({
-            Chat: `
-          Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
-          Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
-          The campaign name is "${campaign.CampaignName}"
-          Its ID is "${campaign.Id}"
-          The campaign belongs to the tenant "${campaign.OrganizationName}"
-          and aims to expand in the following locations from the JSON below:
-          ${response.json[0].campaignDetailsJSON}
-          Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
-`,
-            NeedToSaveIt: true,
-          })
-          .subscribe({});
-        // this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
-      },
-    });
-  }
+//     this.placesService.GenericAPI(body).subscribe({
+//       next: (response) => {
+//         this.selectedCampaign = JSON.parse(
+//           response.json[0].campaignDetailsJSON
+//         );
+//         this.campaignlogo = campaign.logoUrl;
+//         this.placesService
+//           .sendmessages({
+//             Chat: `
+//           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
+//           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
+//           The campaign name is "${campaign.CampaignName}"
+//           Its ID is "${campaign.Id}"
+//           The campaign belongs to the tenant "${campaign.OrganizationName}"
+//           and aims to expand in the following locations from the JSON below:
+//           ${response.json[0].campaignDetailsJSON}
+//           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
+// `,
+//             NeedToSaveIt: true,
+//           })
+//           .subscribe({});
+//         // this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
+//       },
+//     });
+//   }
+
+viewSpecsNew(campaign: any) {
+  const body: any = {
+    Name: 'GetCampaignFullDetails',
+    Params: { CampaignId: campaign.Id },
+  };
+
+  this.placesService.GenericAPI(body).subscribe({
+    next: (response) => {
+      const data = response.json;
+      this.selectedCampaignDetails = data;
+      this.campaignLogo = data.LogoURL;
+
+      try {
+        const parsed = JSON.parse(data.CampaignDetailsJSON);
+        this.parsedCampaignDetails = this.getKeyValuePairs(parsed);
+      } catch {
+        this.parsedCampaignDetails = [];
+      }
+
+      this.modalService.open(this.campaignDetailsModal, {
+        size: 'lg',
+        centered: true,
+        scrollable: true,
+      });
+    },
+  });
+}
+
   deleteCampaign(campaignId: number) {
     const body: any = {
       Name: 'DeleteCampaign',
@@ -813,14 +849,43 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       ...this.complementaryTenants.map((t) => ({
         RelationOrgId: t.id,
         RetailRelationCategoryId: 5, // Complementary ID
+        RetailRelationCategoryName: 'complmentary', // Complementary ID
+        relationOrgName: t.name,
       })),
 
       ...this.conflictingTenants.map((t) => ({
         RelationOrgId: t.id,
         RetailRelationCategoryId: 6, // Conflicting ID
+        RetailRelationCategoryName: 'conflicting', // Complementary ID
+        relationOrgName: t.name,
       })),
     ];
 
     console.log('Selected tenants payload:', this.selectedTenants);
   }
+  getKeyValuePairs(obj: any): { key: string; value: any }[] {
+    if (!obj || typeof obj !== 'object') return [];
+  
+    return Object.entries(obj)
+      .filter(([_, value]) => this.hasValue(value))
+      .map(([key, value]) => ({ key, value }));
+  }
+  
+  hasValue(value: any): boolean {
+    if (value === null || value === undefined) return false;
+    if (Array.isArray(value)) return value.some((v) => this.hasValue(v));
+    if (typeof value === 'object') return Object.keys(value).length > 0;
+    if (typeof value === 'string') return value.trim() !== '';
+    return true;
+  }
+  
+  isObject(value: any): boolean {
+    return value && typeof value === 'object' && !Array.isArray(value);
+  }
+  
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+  
+  
 }

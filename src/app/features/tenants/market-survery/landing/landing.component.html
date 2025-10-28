@@ -513,7 +513,7 @@
           
             
           </div>
-          <button class="icon-btn" (click)="viewSpecs(campaign)">
+          <button class="icon-btn" (click)="viewSpecsNew(campaign)">
             <i class="fa fa-eye"></i>
           </button>
         </div>
@@ -850,3 +850,132 @@
 </ng-template>
 
 <app-landing2></app-landing2>
+
+<ng-template #campaignDetailsModal let-modal>
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <div class="d-flex align-items-center flex-row gap-2">
+      <ng-container *ngIf="campaignLogo; else logoPlaceholder">
+        <img
+          [src]="campaignLogo"
+          class="tenant-logo"
+          style="width: 50px; height: 50px"
+          crossorigin="anonymous"
+        />
+      </ng-container>
+      <ng-template #logoPlaceholder>
+        <div class="tenant-logo placeholder">
+          {{ getInitials2(selectedCampaignDetails?.CampaignName || "") }}
+        </div>
+      </ng-template>
+      <h4 class="modal-title">
+        {{ selectedCampaignDetails?.CampaignName ?? "Campaign" }}
+      </h4>
+    </div>
+    <button class="btn btn-primary btn-custom" (click)="modal.close()">
+      X
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body popup-body">
+    <!-- Basic Info -->
+    <section>
+      <h5>Campaign Info</h5>
+      <div class="pills-container">
+        <span class="data-pill"
+          >Created:
+          {{ selectedCampaignDetails?.CreatedDate | date : "medium" }}</span
+        >
+        <span class="data-pill"
+          >Organization: {{ selectedCampaignDetails?.OrganizationName }}</span
+        >
+      </div>
+    </section>
+
+    <!-- Locations -->
+    <section *ngIf="selectedCampaignDetails?.Locations?.length">
+      <h5>Locations</h5>
+      <div class="pills-container">
+        <ng-container *ngFor="let loc of selectedCampaignDetails.Locations">
+          <span *ngIf="loc.CityName ||loc.State" class="data-pill">
+            {{ loc.CityName ? loc.CityName + "," : "" }}
+            {{ loc.State ? loc.State : "" }}
+          </span>
+        </ng-container>
+      </div>
+    </section>
+
+    <!-- Relations -->
+    <section *ngIf="selectedCampaignDetails?.Relations?.length">
+      <h5>Relations</h5>
+      <div class="pills-container">
+        <span
+          *ngFor="let r of selectedCampaignDetails.Relations"
+          class="data-pill"
+          [ngClass]="{
+            'complementary-pill': r.RelationType === 'complementary',
+            'conflict-pill': r.RelationType === 'conflict'
+          }"
+        >
+          {{ r.RelationOrganizationName }} ({{ r.RelationType }})
+        </span>
+      </div>
+    </section>
+
+    <!-- Raw JSON at the bottom -->
+    <section *ngIf="parsedCampaignDetails?.length" class="border-top pt-3">
+      <h5>Campaign Details</h5>
+    
+      <div class="key-value-list">
+        <ng-container *ngFor="let entry of parsedCampaignDetails">
+          <div class="key-value-item">
+            <div class="key">{{ entry.key }}:</div>
+            <div class="value">
+              <!-- Handle arrays -->
+              <ng-container *ngIf="isArray(entry.value); else nonArray">
+                <div class="nested">
+                  <ng-container *ngFor="let item of entry.value">
+                    <ng-container *ngIf="isObject(item); else simpleItem">
+                      <div class="nested">
+                        <ng-container
+                          *ngFor="let sub of getKeyValuePairs(item)"
+                        >
+                          <div class="key-value-item">
+                            <div class="key">{{ sub.key }}:</div>
+                            <div class="value">{{ sub.value }}</div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-template #simpleItem>
+                      <div class="value">{{ item }}</div>
+                    </ng-template>
+                  </ng-container>
+                </div>
+              </ng-container>
+    
+              <!-- Non-array -->
+              <ng-template #nonArray>
+                <ng-container *ngIf="isObject(entry.value); else simpleValue">
+                  <div class="nested">
+                    <ng-container
+                      *ngFor="let sub of getKeyValuePairs(entry.value)"
+                    >
+                      <div class="key-value-item">
+                        <div class="key">{{ sub.key }}:</div>
+                        <div class="value">{{ sub.value }}</div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-container>
+                <ng-template #simpleValue>{{ entry.value }}</ng-template>
+              </ng-template>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </section>
+    
+  </div>
+</ng-template>
