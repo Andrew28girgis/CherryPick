@@ -409,6 +409,7 @@ export class PlacesService {
   public CreateCampaign(
     CampaignName: string,
     OrganizationId: number,
+    name: string,
     IsStandAlone: boolean,
     CampaignLocations: any[],
     MinUnitSize: number,
@@ -418,13 +419,13 @@ export class PlacesService {
     const body = {
       CampaignName,
       OrganizationId,
+      name,
       IsStandAlone,
       CampaignLocations,
       MinUnitSize,
       MaxUnitSize,
       OrganizationRelationsDTO,
     };
-
 
     return this.http.post<any>(
       `${environment.api}/Campaign/CreateCampaign`,
