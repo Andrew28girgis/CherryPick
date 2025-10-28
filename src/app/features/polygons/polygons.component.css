@@ -602,6 +602,20 @@
   padding-top: 0;
   padding-bottom: 0;
 }
+/* map-placed control styling */
+.gm-map-control {
+  margin-top: 8px;
+  display: inline-block;
+  background: rgba(255,255,255,0.95);
+  padding: 4px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  z-index: 1000;
+}
+.map-control-container .draw-controls .btn {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+}
 
 @media (max-width: 768px) {
   .unified-search-container {

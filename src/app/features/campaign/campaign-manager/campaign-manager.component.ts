@@ -454,46 +454,54 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.step = 'tenant';
   }
 
-  handleSave(locationData: any) {
-    const isStandalone = this.campaignType === 'standalone';
-    const campaignLocations = locationData.locationCriteria.locations.map(
-      (loc: any) => ({
-        State: loc.state,
-        City: loc.city,
-        NeighborhoodId: loc.neighborhoodId,
-      })
-    );
+handleSave(locationData: any) {
+  const isStandalone = this.campaignType === 'standalone';
 
-    this.placesService
-      .CreateCampaign(
-        this.campaignName,
-        locationData.organizationId,
-        isStandalone,
-        campaignLocations
-      )
-      .subscribe({
-        next: (response) => {
-          this.modalRef?.close();
-          this.resetAddCampaignForm();
-          this.getAllCampaigns();
-          // console.log(response);
-          console.log(response.campaign);
-          const campaignDetails = JSON.stringify(response.campaign);
-          this.placesService
-            .sendmessages({
-              Chat: `display the specs of this campaign: ${campaignDetails}`,
-              NeedToSaveIt: true,
-            })
-            .subscribe({
-              next: (res) => {
-                const notification = res.notification;
-                this.notificationService.triggerOverlay(notification);
-              },
-            });
-        },
-        error: (err) => {},
-      });
-  }
+  const campaignLocations = locationData.locationCriteria.locations.map(
+    (loc: any) => ({
+      State: loc.state ?? '',
+      City: loc.city,
+      NeighborhoodId: loc.neighborhoodId ?? loc.polygonId ?? null, 
+    })
+  );
+
+  console.log('✅ campaignLocations to send:', campaignLocations);
+
+  this.placesService
+    .CreateCampaign(
+      this.campaignName,
+      this.selectedTenant.id,
+      isStandalone,
+      campaignLocations
+    )
+    .subscribe({
+      next: (response) => {
+        this.modalRef?.close();
+        this.resetAddCampaignForm();
+        this.getAllCampaigns();
+
+        console.log('CreateCampaign response:', response);
+        const campaignDetails = JSON.stringify(response.campaign);
+
+        // trigger Emily chat / assistant display
+        this.placesService
+          .sendmessages({
+            Chat: `display the specs of this campaign: ${campaignDetails}`,
+            NeedToSaveIt: true,
+          })
+          .subscribe({
+            next: (res) => {
+              const notification = res.notification;
+              this.notificationService.triggerOverlay(notification);
+            },
+          });
+      },
+      error: (err) => {
+        console.error('CreateCampaign error:', err);
+      },
+    });
+}
+
 
   protected addNewTenant() {
     const prevTenantId = this.selectedTenant?.id;
