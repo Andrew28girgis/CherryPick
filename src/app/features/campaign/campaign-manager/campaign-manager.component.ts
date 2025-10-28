@@ -101,8 +101,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   complementaryTenants: any[] = [];
   conflictingTenants: any[] = [];
   searchTimeout: any;
-  MinUnitSize: number | null = null;
-  MaxUnitSize: number | null = null;
+  MinUnitSize!: number;
+  MaxUnitSize!: number;
 
   constructor(
     private placesService: PlacesService,
@@ -437,7 +437,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       //   conflictingTenants: this.conflictingTenants,
       // };
       // console.log('Campaign step data:', campaignData);
-  
+
       if (!this.campaignName || !this.campaignType) return;
       this.step = 'polygon';
       this.polygonsStep = true;
@@ -480,54 +480,55 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.tenantSearch = '';
   }
 
-handleSave(locationData: any) {
-  const isStandalone = this.campaignType === 'standalone';
+  handleSave(locationData: any) {
+    const isStandalone = this.campaignType === 'standalone';
 
-  const campaignLocations = locationData.locationCriteria.locations.map(
-    (loc: any) => ({
-      State: loc.state ?? '',
-      City: loc.city,
-      NeighborhoodId: loc.neighborhoodId ?? loc.polygonId ?? null, 
-    })
-  );
+    const campaignLocations = locationData.locationCriteria.locations.map(
+      (loc: any) => ({
+        State: loc.state ?? '',
+        City: loc.city,
+        NeighborhoodId: loc.neighborhoodId ?? loc.polygonId ?? null,
+      })
+    );
 
-  console.log('✅ campaignLocations to send:', campaignLocations);
+    console.log('✅ campaignLocations to send:', campaignLocations);
+    this.placesService
+      .CreateCampaign(
+        this.campaignName,
+        this.selectedTenant.id,
+        isStandalone,
+        campaignLocations,
+        this.MinUnitSize,
+        this.MaxUnitSize,
+        this.selectedTenants
+      )
+      .subscribe({
+        next: (response) => {
+          this.modalRef?.close();
+          this.resetAddCampaignForm();
+          this.getAllCampaigns();
 
-  this.placesService
-    .CreateCampaign(
-      this.campaignName,
-      this.selectedTenant.id,
-      isStandalone,
-      campaignLocations
-    )
-    .subscribe({
-      next: (response) => {
-        this.modalRef?.close();
-        this.resetAddCampaignForm();
-        this.getAllCampaigns();
+          console.log('CreateCampaign response:', response);
+          const campaignDetails = JSON.stringify(response.campaign);
 
-        console.log('CreateCampaign response:', response);
-        const campaignDetails = JSON.stringify(response.campaign);
-
-        // trigger Emily chat / assistant display
-        this.placesService
-          .sendmessages({
-            Chat: `display the specs of this campaign: ${campaignDetails}`,
-            NeedToSaveIt: true,
-          })
-          .subscribe({
-            next: (res) => {
-              const notification = res.notification;
-              this.notificationService.triggerOverlay(notification);
-            },
-          });
-      },
-      error: (err) => {
-        console.error('CreateCampaign error:', err);
-      },
-    });
-}
-
+          // trigger Emily chat / assistant display
+          this.placesService
+            .sendmessages({
+              Chat: `display the specs of this campaign: ${campaignDetails}`,
+              NeedToSaveIt: true,
+            })
+            .subscribe({
+              next: (res) => {
+                const notification = res.notification;
+                this.notificationService.triggerOverlay(notification);
+              },
+            });
+        },
+        error: (err) => {
+          console.error('CreateCampaign error:', err);
+        },
+      });
+  }
 
   protected addNewTenant() {
     const prevTenantId = this.selectedTenant?.id;
@@ -814,12 +815,13 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
   saveSelectedTenants() {
     this.selectedTenants = [
       ...this.complementaryTenants.map((t) => ({
-        id: t.id,
-        type: 5, // Complementary ID
+        RelationOrgId: t.id,
+        RetailRelationCategoryId: 5, // Complementary ID
       })),
+
       ...this.conflictingTenants.map((t) => ({
-        id: t.id,
-        type: 6, // Conflicting ID
+        RelationOrgId: t.id,
+        RetailRelationCategoryId: 6, // Conflicting ID
       })),
     ];
 
