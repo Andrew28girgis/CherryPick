@@ -16,7 +16,6 @@
           aria-label="Location search input"
         />
 
-        <!-- Custom Dropdown Container -->
         <div
           class="dropdown-container mt-1"
           *ngIf="showSuggestions"
@@ -123,123 +122,95 @@
             </button>
           </div>
         </div>
-
-        <!-- <div
-          class="d-flex align-items-center justify-content-center mt-2"
-          *ngIf="selectedItems.length"
-        >
-          <button
-            class="save-btn"
-            type="button"
-            (click)="onSaveLocationCriteria()"
-            aria-label="Save all selected location criteria"
-          >
-            Done
-          </button>
-        </div> -->
       </div>
     </div>
 
-<div class="col-lg-9 col-12">
-  <div class="pb-3 flex-grow-1 d-flex">
-    <div class="map-wrapper flex-grow-1 position-relative">
-      <div #mapContainer class="map-container w-100 h-100">
-        <div
-          #drawControls
-          class="map-control-container"
-          aria-hidden="false"
-        >
-          <div class="draw-controls">
-            <div class="map-draw-control d-inline-flex align-items-center">
-              <!-- Draw Button -->
-              <button
-                type="button"
-                class="btn btn-draw d-inline-flex align-items-center"
-                (click)="startDrawPolygon(); $event.stopPropagation()"
-                [disabled]="drawingActive"
-                [class.active]="drawingActive"
-                [attr.aria-pressed]="drawingActive ? 'true' : 'false'"
-                [attr.title]="
-                  drawingActive
-                    ? 'Drawing mode enabled — click to stop'
-                    : 'Start drawing a polygon'
-                "
-                aria-label="Toggle draw polygon mode"
-              >
-                <span class="btn-icon" aria-hidden="true">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    focusable="false"
+    <div class="col-lg-9 col-12">
+      <div class="pb-3 flex-grow-1 d-flex">
+        <div class="map-wrapper flex-grow-1 position-relative">
+          <div #mapContainer class="map-container w-100 h-100">
+            <div
+              #drawControls
+              class="map-control-container"
+              aria-hidden="false"
+            >
+              <div class="draw-controls">
+                <div class="map-draw-control d-inline-flex align-items-center">
+                  <button
+                    type="button"
+                    class="btn btn-draw d-inline-flex align-items-center"
+                    (click)="startDrawPolygon(); $event.stopPropagation()"
+                    [class.active]="drawingActive"
+                    [attr.aria-pressed]="drawingActive ? 'true' : 'false'"
+                    [attr.title]="
+                      drawingActive
+                        ? 'Drawing mode enabled — click to stop'
+                        : 'Start drawing a polygon'
+                    "
+                    aria-label="Toggle draw polygon mode"
                   >
-                    <path
-                      d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1 1 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </span>
+                    <span class="btn-icon" aria-hidden="true">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        focusable="false"
+                      >
+                        <path
+                          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1 1 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
 
-                <span class="btn-text ms-2">Draw polygon</span>
+                    <span class="btn-text ms-2">
+                      {{ drawingActive ? 'Drawing…' : 'Draw polygon' }}
+                    </span>
+                  </button>
+                </div>
 
-                <span
-                  *ngIf="drawingActive"
-                  class="btn-spinner ms-2"
-                  aria-hidden="true"
+                <div *ngIf="currentDrawingPolygon" class="ms-2 mb-2">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm d-inline-block"
+                    style="width: 180px"
+                    [(ngModel)]="PolygonName"
+                    placeholder="Enter polygon name..."
+                  />
+                </div>
+
+                <button
+                  *ngIf="currentDrawingPolygon"
+                  type="button"
+                  class="btn btn-success btn-sm ms-2"
+                  (click)="savePolygon(); $event.stopPropagation()"
+                  aria-label="Save polygon"
                 >
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                </span>
-              </button>
+                  Save polygon
+                </button>
+
+                <!-- Cancel Button -->
+                <button
+                  *ngIf="currentDrawingPolygon"
+                  type="button"
+                  class="btn btn-danger btn-sm ms-2"
+                  (click)="cancelDrawing(); $event.stopPropagation()"
+                  aria-label="Cancel drawing"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-
-            <!-- ✅ Polygon Name Input (only shows after drawing) -->
-            <div *ngIf="currentDrawingPolygon" class="ms-2 mb-2">
-              <input
-                type="text"
-                class="form-control form-control-sm d-inline-block"
-                style="width: 180px"
-                [(ngModel)]="PolygonName"
-                placeholder="Enter polygon name..."
-              />
-            </div>
-
-            <!-- Save Polygon Button -->
-            <button
-              *ngIf="currentDrawingPolygon"
-              type="button"
-              class="btn btn-success btn-sm ms-2"
-              (click)="savePolygon(); $event.stopPropagation()"
-              aria-label="Save polygon"
-            >
-              Save polygon
-            </button>
-
-            <!-- Cancel Button -->
-            <button
-              *ngIf="currentDrawingPolygon"
-              type="button"
-              class="btn btn-danger btn-sm ms-2"
-              (click)="cancelDrawing(); $event.stopPropagation()"
-              aria-label="Cancel drawing"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
   </div>
 </div>
