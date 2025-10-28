@@ -59,11 +59,9 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Output() saveLocationCriteria = new EventEmitter<any>();
 
-  // ----------------------- NEW: view child for map control -----------------------
   @ViewChild('drawControls', { static: false })
   private drawControlsRef!: ElementRef<HTMLDivElement>;
 
-  // ----------------------- NEW: drawing & control bookkeeping -----------------------
   private drawingManager?: google.maps.drawing.DrawingManager | null;
   private overlayCompleteListener?: google.maps.MapsEventListener | null;
   currentDrawingPolygon?: google.maps.Polygon | null;
@@ -73,7 +71,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   selectedTenantId?: number;
   PolygonName: string = '';
   savedPolygonId?: number | null = null;
-locationDataVar:any
+  locationDataVar: any;
 
   constructor(
     private mapDrawingService: MapDrawingService,
@@ -130,7 +128,6 @@ locationDataVar:any
     this.mapDrawingService.clearDrawnLists?.();
     (this.mapDrawingService as any)?.completelyRemoveExplorePolygon?.();
 
-    // ----------------------- NEW: cleanup draw-controls and DrawingManager -----------------------
     this.removeDrawControlsFromMap();
     this.cleanupDrawingManager();
   }
@@ -246,15 +243,13 @@ locationDataVar:any
     });
 
     const locationCriteria = {
-      organizationId: tenantId, // ✅ include the id explicitly
+      organizationId: tenantId,
       locationCriteria: { locations },
     };
-    locationCriteria.locationCriteria?.locations?.length?this.saveLocationCriteria.emit(locationCriteria):this.saveLocationCriteria.emit(this.locationDataVar)
-
- 
+    locationCriteria.locationCriteria?.locations?.length
+      ? this.saveLocationCriteria.emit(locationCriteria)
+      : this.saveLocationCriteria.emit(this.locationDataVar);
   }
-
-   
 
   private areItemsEquivalent(a: SearchItem, b: SearchItem) {
     if (a.type !== b.type) return false;
@@ -287,7 +282,6 @@ locationDataVar:any
   }
 
   private normalizeApiResponse(record: any): SearchItem | null {
-    // returns trimmed string or null if incoming value is null/undefined/empty-after-trim
     const asNullable = (v: any): string | null => {
       if (v == null) return null;
       const s = String(v).trim();
@@ -296,7 +290,6 @@ locationDataVar:any
 
     if (!record) return null;
 
-    // Neighborhood (Id present)
     if (record?.Id != null) {
       const name = asNullable(record.Name);
       const city = asNullable(record.City);
@@ -305,7 +298,6 @@ locationDataVar:any
       return {
         type: 'neighborhood',
         id: Number(record.Id),
-        // keep nulls as null; build label only when parts exist
         name:
           [name, city && `— ${city}`, state && `, ${state}`]
             .filter(Boolean)
@@ -316,7 +308,6 @@ locationDataVar:any
       };
     }
 
-    // City
     if (record?.City != null) {
       const city = asNullable(record.City);
       const state = asNullable(record.StateCode ?? record.StateName);
@@ -330,7 +321,6 @@ locationDataVar:any
       };
     }
 
-    // State
     if (record?.StateName != null || record?.StateCode != null) {
       const stateName = asNullable(record.StateName ?? record.StateCode);
       const code = asNullable(record.StateCode);
@@ -343,7 +333,6 @@ locationDataVar:any
       };
     }
 
-    // Fallback name
     if (record?.name || record?.Name) {
       const name = asNullable(record?.name ?? record?.Name);
       return { type: 'neighborhood', name: name, raw: record };
@@ -428,7 +417,6 @@ locationDataVar:any
     return `chk-${item.type}-${item.id ?? namePart}`;
   }
 
-  // ----------------------- NEW: DrawingManager initialization -----------------------
   private initLocalDrawingManager() {
     if (!this.map) {
       console.error(
@@ -458,7 +446,6 @@ locationDataVar:any
 
     this.drawingManager.setMap(this.map);
 
-    // overlaycomplete fires when a polygon is finished
     this.overlayCompleteListener = google.maps.event.addListener(
       this.drawingManager,
       'overlaycomplete',
@@ -467,7 +454,6 @@ locationDataVar:any
     );
   }
 
-  // ----------------------- NEW: cleanup DrawingManager/listeners -----------------------
   private cleanupDrawingManager() {
     try {
       if (this.overlayCompleteListener) {
@@ -483,16 +469,13 @@ locationDataVar:any
     }
   }
 
-  // ----------------------- NEW: start drawing flow -----------------------
   public startDrawPolygon() {
     if (!this.map) {
-      console.error('Map not ready — cannot draw polygon');
       return;
     }
     this.initLocalDrawingManager();
     if (!this.drawingManager) return;
 
-    // clear any existing temp polygon
     if (this.currentDrawingPolygon) {
       try {
         this.currentDrawingPolygon.setMap(null);
@@ -506,11 +489,9 @@ locationDataVar:any
     this.changeDetector.markForCheck();
   }
 
-  // ----------------------- NEW: overlay complete handler -----------------------
   private onOverlayComplete(event: google.maps.drawing.OverlayCompleteEvent) {
     if (event.type !== google.maps.drawing.OverlayType.POLYGON) return;
 
-    // remove previous if exists
     if (this.currentDrawingPolygon) {
       try {
         this.currentDrawingPolygon.setMap(null);
@@ -523,14 +504,11 @@ locationDataVar:any
     this.currentDrawingPolygon = polygon;
     polygon.setEditable(true);
 
-    // capture initial coords
     this.updateCurrentPolygonCoords();
 
-    // stop further drawing
     if (this.drawingManager) this.drawingManager.setDrawingMode(null);
     this.drawingActive = false;
 
-    // update coords on edits
     const path = polygon.getPath();
     path.addListener('set_at', () => this.updateCurrentPolygonCoords());
     path.addListener('insert_at', () => this.updateCurrentPolygonCoords());
@@ -539,7 +517,6 @@ locationDataVar:any
     this.changeDetector.markForCheck();
   }
 
-  // ----------------------- NEW: update coords -----------------------
   private updateCurrentPolygonCoords() {
     if (!this.currentDrawingPolygon) {
       this.currentPolygonCoords = [];
@@ -556,35 +533,31 @@ locationDataVar:any
     this.changeDetector.markForCheck();
   }
 
-  // ----------------------- NEW: cancel drawing -----------------------
-public cancelDrawing() {
-  if (this.currentDrawingPolygon) {
-    try { this.currentDrawingPolygon.setMap(null); } catch {}
-    this.currentDrawingPolygon = undefined;
-    this.currentPolygonCoords = [];
+  public cancelDrawing() {
+    if (this.currentDrawingPolygon) {
+      try {
+        this.currentDrawingPolygon.setMap(null);
+      } catch {}
+      this.currentDrawingPolygon = undefined;
+      this.currentPolygonCoords = [];
+    }
+
+    this.savedPolygonId = null;
+
+    if (this.drawingManager) this.drawingManager.setDrawingMode(null);
+    this.drawingActive = false;
+    this.changeDetector.markForCheck();
   }
 
-  // 🔁 Reset any saved polygon ID in case user cancels mid-way
-  this.savedPolygonId = null;
-
-  if (this.drawingManager) this.drawingManager.setDrawingMode(null);
-  this.drawingActive = false;
-  this.changeDetector.markForCheck();
-}
-
-
-  // ----------------------- helper: build GeoJSON Feature string -----------------------
   private buildPolygonGeoJsonString(): string | null {
     if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3)
       return null;
 
-    // convert to [lng, lat] pairs
     const ring: [number, number][] = this.currentPolygonCoords.map((p) => [
       p.lng,
       p.lat,
     ]);
 
-    // close the ring if necessary
     const first = ring[0];
     const last = ring[ring.length - 1];
     if (first[0] !== last[0] || first[1] !== last[1]) {
@@ -599,7 +572,6 @@ public cancelDrawing() {
       },
       properties: {
         createdAt: new Date().toISOString(),
-        // add other metadata if you want (e.g. createdBy, name)
       },
     };
 
@@ -610,114 +582,73 @@ public cancelDrawing() {
       return null;
     }
   }
-  private getPolygonCenter(
-    coords: google.maps.LatLngLiteral[]
-  ): google.maps.LatLngLiteral {
-    let lat = 0,
-      lng = 0;
-    coords.forEach((p) => {
-      lat += p.lat;
-      lng += p.lng;
-    });
-    const len = coords.length || 1;
-    return { lat: lat / len, lng: lng / len };
-  }
 
-public async savePolygon() {
-  if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
-    console.warn('Need at least 3 polygon vertices to save.');
-    return;
-  }
+  public async savePolygon() {
+    if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
+      console.warn('Need at least 3 polygon vertices to save.');
+      return;
+    }
 
-  const geoJsonStr = this.buildPolygonGeoJsonString();
-  if (!geoJsonStr) return;
+    const geoJsonStr = this.buildPolygonGeoJsonString();
+    if (!geoJsonStr) {
+      return;
+    }
 
-  if (!this.PolygonName?.trim()) {
-    alert('Please enter a name for the polygon before saving.');
-    return;
-  }
+    if (!this.PolygonName?.trim()) {
+      alert('Please enter a name for the polygon before saving.');
+      return;
+    }
 
-  const center = this.getPolygonCenter(this.currentPolygonCoords);
-  const geocoder = new google.maps.Geocoder();
+    let city = '';
+    let state = '';
 
-  const loc = await new Promise<{ city: string; state: string }>((resolve) => {
-    geocoder.geocode({ location: center }, (results, status) => {
-      if (status === 'OK' && results?.length) {
-        let city = '';
-        let state = '';
-        for (const r of results) {
-          for (const comp of r.address_components) {
-            if (
-              comp.types.includes('locality') ||
-              comp.types.includes('postal_town')
-            )
-              city ||= comp.long_name;
-            if (comp.types.includes('administrative_area_level_1'))
-              state ||= comp.long_name;
+    const payload = {
+      city: city || '',
+      state: state || '',
+      json: geoJsonStr,
+      name: this.PolygonName.trim(),
+    };
+
+
+    try {
+      this.spinner.show();
+    } catch {}
+
+    this.placesService
+      .BetaGenericAPI({ Name: 'AddPolygon', Params: payload })
+      .subscribe({
+        next: (res: any) => {
+          try {
+            this.spinner.hide();
+          } catch {}
+
+          const polygonId = res?.json?.[0]?.id ?? null;
+
+          if (!polygonId) {
+            console.warn('Polygon saved but no ID returned from API.');
+            return;
           }
-        }
-        resolve({ city, state });
-      } else {
-        resolve({ city: '', state: '' });
-      }
-    });
-  });
 
-  const payload = {
-    city: loc.city || '',
-    state: loc.state || '',
-    json: geoJsonStr,
-    name: this.PolygonName.trim(),
-  };
+          const locations = [
+            {
+              state: state || '',
+              city: city || '',
+              neighborhoodId: null,
+              polygonId: polygonId,
+            },
+          ];
 
-  console.log('📤 Sending AddPolygon payload:', payload);
-  try { this.spinner.show(); } catch {}
+          const locationData = {
+            organizationId: this.selectedTenantId ?? 0,
+            locationCriteria: { locations },
+            polygonId,
+          };
 
-  this.placesService
-    .BetaGenericAPI({ Name: 'AddPolygon', Params: payload })
-    .subscribe({
-      next: (res: any) => {
-        try { this.spinner.hide(); } catch {}
+          this.locationDataVar = locationData;
 
-        const polygonId = res?.json?.[0]?.id ?? null;
-        console.log('✅ AddPolygon success, polygonId =', polygonId);
-
-        if (!polygonId) {
-          console.warn('Polygon saved but no ID returned from API.');
-          return;
-        }
-
-
-        // ✅ Emit polygon info, not call CreateCampaign
-        const locations = [{
-          state: loc.state || '',
-          city: loc.city || '',
-          neighborhoodId: null,
-          polygonId: polygonId,
-        }];
-
-        const locationData = {
-          organizationId: this.selectedTenantId ?? 0,
-          locationCriteria: { locations },
-          polygonId,
-        };
-
-        console.log('📤 Emitting locationData:', locationData);
-        // this.saveLocationCriteria.emit(locationData);
-        this.locationDataVar=locationData
-        this.changeDetector.markForCheck();
-      },
-      error: (err) => {
-        try { this.spinner.hide(); } catch {}
-        console.error('❌ AddPolygon error:', err);
-      },
-    });
-}
-
-
-
-  public getPolygonAsLngLatTuples(): [number, number][] {
-    return this.currentPolygonCoords.map((c) => [c.lng, c.lat]);
+          this.changeDetector.markForCheck();
+        },
+      });
   }
 
   private addDrawControlsToMap() {
@@ -738,7 +669,6 @@ public async savePolygon() {
     }
   }
 
-  // ----------------------- NEW: remove control from map -----------------------
   private removeDrawControlsFromMap() {
     try {
       if (
