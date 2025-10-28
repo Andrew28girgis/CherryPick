@@ -6,10 +6,6 @@ import {
   HostListener,
   OnDestroy,
   Input,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-  ChangeDetectorRef,
   ViewChild,
 } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -55,7 +51,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     return this._viewMode;
   }
   private _viewMode: 'card' | 'table' = 'card';
-
+  selectedTenants: any[] = [];
   userBuyBoxes: { id: number; name: string }[] = [];
   selectedBuyBoxId = 0;
   campaigns: ICampaign[] = [];
@@ -94,8 +90,15 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   @ViewChild('campaignDetails') campaignDetailsTpl!: TemplateRef<any>;
   @ViewChild('addCampaign', { static: true }) addCampaignTpl!: TemplateRef<any>;
   selectedCampaign!: CampaignSpecs;
-  organizations: { id: number; name: string ;logo:string}[] = [];
+  organizations: { id: number; name: string; logo: string }[] = [];
   selectedOrganizationId: number | 'all' = 'all';
+  tenantSearch = '';
+  cotenants: any[] = [];
+  complementaryTenants: any[] = [];
+  conflictingTenants: any[] = [];
+  searchTimeout: any;
+  MinUnitSize!: number;
+  MaxUnitSize!: number;
 
   constructor(
     private placesService: PlacesService,
@@ -181,13 +184,16 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           const newCampaigns: ICampaign[] = response.json;
 
-           this.campaigns = newCampaigns;
+          this.campaigns = newCampaigns;
           this.filteredCampaigns = newCampaigns;
 
-           const orgMap = new Map<number, { name: string, logoUrl: string }>();
-           newCampaigns.forEach((c) => {
+          const orgMap = new Map<number, { name: string; logoUrl: string }>();
+          newCampaigns.forEach((c) => {
             if (c.OrganizationId && c.OrganizationName) {
-              orgMap.set(c.OrganizationId, { name: c.OrganizationName, logoUrl: c.LogoUrl });
+              orgMap.set(c.OrganizationId, {
+                name: c.OrganizationName,
+                logoUrl: c.LogoUrl,
+              });
             }
           });
 
@@ -417,6 +423,17 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
     // Step 2: Campaign → Polygon
     if (this.step === 'campaign') {
+      this.saveSelectedTenants();
+      // const campaignData = {
+      //   name: this.campaignName,
+      //   type: this.campaignType,
+      //   minSize: this.MinUnitSize,
+      //   maxSize: this.MaxUnitSize,
+      //   complementaryTenants: this.complementaryTenants,
+      //   conflictingTenants: this.conflictingTenants,
+      // };
+      // console.log('Campaign step data:', campaignData);
+
       if (!this.campaignName || !this.campaignType) return;
       this.step = 'polygon';
       this.polygonsStep = true;
@@ -452,33 +469,45 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.campaignType = '';
     this.polygonsStep = false;
     this.step = 'tenant';
+    this.selectedTenants = [];
+    this.cotenants = [];
+    this.complementaryTenants = [];
+    this.conflictingTenants = [];
+    this.tenantSearch = '';
   }
 
   handleSave(locationData: any) {
     const isStandalone = this.campaignType === 'standalone';
+
     const campaignLocations = locationData.locationCriteria.locations.map(
       (loc: any) => ({
-        State: loc.state,
+        State: loc.state ?? '',
         City: loc.city,
-        NeighborhoodId: loc.neighborhoodId,
+        NeighborhoodId: loc.neighborhoodId ?? loc.polygonId ?? null,
       })
     );
 
+    console.log('✅ campaignLocations to send:', campaignLocations);
     this.placesService
       .CreateCampaign(
         this.campaignName,
-        locationData.organizationId,
+        this.selectedTenant.id,
         isStandalone,
-        campaignLocations
+        campaignLocations,
+        this.MinUnitSize,
+        this.MaxUnitSize,
+        this.selectedTenants
       )
       .subscribe({
         next: (response) => {
           this.modalRef?.close();
           this.resetAddCampaignForm();
           this.getAllCampaigns();
-          // console.log(response);
-          console.log(response.campaign);
+
+          console.log('CreateCampaign response:', response);
           const campaignDetails = JSON.stringify(response.campaign);
+
+          // trigger Emily chat / assistant display
           this.placesService
             .sendmessages({
               Chat: `display the specs of this campaign: ${campaignDetails}`,
@@ -491,7 +520,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
               },
             });
         },
-        error: (err) => {},
+        error: (err) => {
+          console.error('CreateCampaign error:', err);
+        },
       });
   }
 
@@ -692,5 +723,104 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         (c) => c.OrganizationId === orgId
       );
     }
+  }
+
+  onTenantSearchChange(value: string) {
+    this.tenantSearch = value;
+
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+
+    if (value.length < 3) {
+      this.cotenants = [];
+      return;
+    }
+    this.searchTimeout = setTimeout(() => {
+      const body = {
+        Name: 'GetOrgByName',
+        Params: { OrgName: value },
+      };
+
+      this.placesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          const data = res.json || [];
+          this.cotenants = data.map((t: any) => ({
+            name: t.name,
+            logoURL: t.logoURL,
+            id: t.id,
+          }));
+        },
+        error: (err) => console.error('Error loading tenants', err),
+      });
+    }, 300);
+  }
+
+  addComplementary(tenant: any) {
+    const isAlreadyComplementary = this.complementaryTenants.some(
+      (t) => t.name === tenant.name
+    );
+    const isAlreadyConflicting = this.conflictingTenants.some(
+      (t) => t.name === tenant.name
+    );
+
+    if (isAlreadyComplementary) {
+      this.complementaryTenants = this.complementaryTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+      return;
+    }
+
+    if (isAlreadyConflicting) {
+      this.conflictingTenants = this.conflictingTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+    }
+
+    this.complementaryTenants.push(tenant);
+  }
+
+  addConflicting(tenant: any) {
+    const isAlreadyConflicting = this.conflictingTenants.some(
+      (t) => t.name === tenant.name
+    );
+    const isAlreadyComplementary = this.complementaryTenants.some(
+      (t) => t.name === tenant.name
+    );
+
+    if (isAlreadyConflicting) {
+      this.conflictingTenants = this.conflictingTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+      return;
+    }
+
+    if (isAlreadyComplementary) {
+      this.complementaryTenants = this.complementaryTenants.filter(
+        (t) => t.name !== tenant.name
+      );
+    }
+
+    this.conflictingTenants.push(tenant);
+  }
+
+  isSelected(tenant: any, type: 'complementary' | 'conflicting'): boolean {
+    if (type === 'complementary') {
+      return this.complementaryTenants.some((t) => t.name === tenant.name);
+    }
+    return this.conflictingTenants.some((t) => t.name === tenant.name);
+  }
+  saveSelectedTenants() {
+    this.selectedTenants = [
+      ...this.complementaryTenants.map((t) => ({
+        RelationOrgId: t.id,
+        RetailRelationCategoryId: 5, // Complementary ID
+      })),
+
+      ...this.conflictingTenants.map((t) => ({
+        RelationOrgId: t.id,
+        RetailRelationCategoryId: 6, // Conflicting ID
+      })),
+    ];
+
+    console.log('Selected tenants payload:', this.selectedTenants);
   }
 }

@@ -8,6 +8,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -41,7 +42,7 @@ export interface SearchItem {
   styleUrls: ['./polygons.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PolygonsComponent implements AfterViewInit, OnDestroy {
+export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('mapContainer', { static: false })
   private mapElement!: ElementRef<HTMLDivElement>;
   private map!: google.maps.Map;
@@ -57,6 +58,20 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Output() saveLocationCriteria = new EventEmitter<any>();
+
+  @ViewChild('drawControls', { static: false })
+  private drawControlsRef!: ElementRef<HTMLDivElement>;
+
+  private drawingManager?: google.maps.drawing.DrawingManager | null;
+  private overlayCompleteListener?: google.maps.MapsEventListener | null;
+  currentDrawingPolygon?: google.maps.Polygon | null;
+  currentPolygonCoords: google.maps.LatLngLiteral[] = [];
+  drawingActive = false;
+  private drawControlsAddedToMap = false;
+  selectedTenantId?: number;
+  PolygonName: string = '';
+  savedPolygonId?: number | null = null;
+  locationDataVar: any;
 
   constructor(
     private mapDrawingService: MapDrawingService,
@@ -90,6 +105,16 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       this.onSaveLocationCriteria(tenantName);
     });
   }
+  ngOnInit(): void {
+    const tryAttach = () => {
+      if (this.map && this.drawControlsRef?.nativeElement) {
+        this.addDrawControlsToMap();
+      } else {
+        setTimeout(tryAttach, 100);
+      }
+    };
+    tryAttach();
+  }
 
   ngAfterViewInit(): void {
     this.map = this.mapDrawingService.initializeMap(this.mapElement);
@@ -102,6 +127,9 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
     this.destroy$.complete();
     this.mapDrawingService.clearDrawnLists?.();
     (this.mapDrawingService as any)?.completelyRemoveExplorePolygon?.();
+
+    this.removeDrawControlsFromMap();
+    this.cleanupDrawingManager();
   }
 
   onSearchInput(event: Event) {
@@ -213,21 +241,15 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
         neighborhoodName: isNeighborhood ? it.name ?? raw?.Name ?? null : null,
       };
     });
-  
+
     const locationCriteria = {
-      organizationId: tenantId, // ✅ include the id explicitly
+      organizationId: tenantId,
       locationCriteria: { locations },
     };
-  
-    this.saveLocationCriteria.emit(locationCriteria);
+    locationCriteria.locationCriteria?.locations?.length
+      ? this.saveLocationCriteria.emit(locationCriteria)
+      : this.saveLocationCriteria.emit(this.locationDataVar);
   }
-  
-  
-  
-  public triggerSave(campaignData: any) {
-    this.onSaveLocationCriteria(campaignData);
-  }
-  
 
   private areItemsEquivalent(a: SearchItem, b: SearchItem) {
     if (a.type !== b.type) return false;
@@ -260,7 +282,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
   }
 
   private normalizeApiResponse(record: any): SearchItem | null {
-    // returns trimmed string or null if incoming value is null/undefined/empty-after-trim
     const asNullable = (v: any): string | null => {
       if (v == null) return null;
       const s = String(v).trim();
@@ -269,7 +290,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
 
     if (!record) return null;
 
-    // Neighborhood (Id present)
     if (record?.Id != null) {
       const name = asNullable(record.Name);
       const city = asNullable(record.City);
@@ -278,7 +298,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       return {
         type: 'neighborhood',
         id: Number(record.Id),
-        // keep nulls as null; build label only when parts exist
         name:
           [name, city && `— ${city}`, state && `, ${state}`]
             .filter(Boolean)
@@ -289,7 +308,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       };
     }
 
-    // City
     if (record?.City != null) {
       const city = asNullable(record.City);
       const state = asNullable(record.StateCode ?? record.StateName);
@@ -303,7 +321,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       };
     }
 
-    // State
     if (record?.StateName != null || record?.StateCode != null) {
       const stateName = asNullable(record.StateName ?? record.StateCode);
       const code = asNullable(record.StateCode);
@@ -316,7 +333,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       };
     }
 
-    // Fallback name
     if (record?.name || record?.Name) {
       const name = asNullable(record?.name ?? record?.Name);
       return { type: 'neighborhood', name: name, raw: record };
@@ -399,5 +415,276 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy {
       .replace(/\s+/g, '_')
       .replace(/[^a-zA-Z0-9_\-:]/g, '');
     return `chk-${item.type}-${item.id ?? namePart}`;
+  }
+
+  private initLocalDrawingManager() {
+    if (!this.map) {
+      console.error(
+        'initLocalDrawingManager called before map initialization.'
+      );
+      return;
+    }
+    if (this.drawingManager) return;
+    if (!('drawing' in google.maps)) {
+      console.error(
+        'Google Maps drawing library not loaded. Include &libraries=drawing in script URL.'
+      );
+      return;
+    }
+
+    this.drawingManager = new google.maps.drawing.DrawingManager({
+      drawingMode: null,
+      drawingControl: false,
+      polygonOptions: {
+        editable: true,
+        draggable: false,
+        clickable: true,
+        fillOpacity: 0.15,
+        strokeWeight: 2,
+      } as google.maps.PolygonOptions,
+    });
+
+    this.drawingManager.setMap(this.map);
+
+    this.overlayCompleteListener = google.maps.event.addListener(
+      this.drawingManager,
+      'overlaycomplete',
+      (event: google.maps.drawing.OverlayCompleteEvent) =>
+        this.onOverlayComplete(event)
+    );
+  }
+
+  private cleanupDrawingManager() {
+    try {
+      if (this.overlayCompleteListener) {
+        google.maps.event.removeListener(this.overlayCompleteListener);
+        this.overlayCompleteListener = null;
+      }
+      if (this.drawingManager) {
+        this.drawingManager.setMap(null);
+        this.drawingManager = undefined;
+      }
+    } catch (err) {
+      console.warn('Error cleaning drawing manager', err);
+    }
+  }
+
+  public startDrawPolygon() {
+    if (!this.map) {
+      return;
+    }
+    this.initLocalDrawingManager();
+    if (!this.drawingManager) return;
+
+    if (this.currentDrawingPolygon) {
+      try {
+        this.currentDrawingPolygon.setMap(null);
+      } catch {}
+      this.currentDrawingPolygon = undefined;
+      this.currentPolygonCoords = [];
+    }
+
+    this.drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    this.drawingActive = true;
+    this.changeDetector.markForCheck();
+  }
+
+  private onOverlayComplete(event: google.maps.drawing.OverlayCompleteEvent) {
+    if (event.type !== google.maps.drawing.OverlayType.POLYGON) return;
+
+    if (this.currentDrawingPolygon) {
+      try {
+        this.currentDrawingPolygon.setMap(null);
+      } catch {}
+      this.currentDrawingPolygon = undefined;
+      this.currentPolygonCoords = [];
+    }
+
+    const polygon = event.overlay as google.maps.Polygon;
+    this.currentDrawingPolygon = polygon;
+    polygon.setEditable(true);
+
+    this.updateCurrentPolygonCoords();
+
+    if (this.drawingManager) this.drawingManager.setDrawingMode(null);
+    this.drawingActive = false;
+
+    const path = polygon.getPath();
+    path.addListener('set_at', () => this.updateCurrentPolygonCoords());
+    path.addListener('insert_at', () => this.updateCurrentPolygonCoords());
+    path.addListener('remove_at', () => this.updateCurrentPolygonCoords());
+
+    this.changeDetector.markForCheck();
+  }
+
+  private updateCurrentPolygonCoords() {
+    if (!this.currentDrawingPolygon) {
+      this.currentPolygonCoords = [];
+      this.changeDetector.markForCheck();
+      return;
+    }
+    const path = this.currentDrawingPolygon.getPath();
+    const coords: google.maps.LatLngLiteral[] = [];
+    for (let i = 0; i < path.getLength(); i++) {
+      const latLng = path.getAt(i);
+      coords.push({ lat: latLng.lat(), lng: latLng.lng() });
+    }
+    this.currentPolygonCoords = coords;
+    this.changeDetector.markForCheck();
+  }
+
+  public cancelDrawing() {
+    if (this.currentDrawingPolygon) {
+      try {
+        this.currentDrawingPolygon.setMap(null);
+      } catch {}
+      this.currentDrawingPolygon = undefined;
+      this.currentPolygonCoords = [];
+    }
+
+    this.savedPolygonId = null;
+
+    if (this.drawingManager) this.drawingManager.setDrawingMode(null);
+    this.drawingActive = false;
+    this.changeDetector.markForCheck();
+  }
+
+  private buildPolygonGeoJsonString(): string | null {
+    if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3)
+      return null;
+
+    const ring: [number, number][] = this.currentPolygonCoords.map((p) => [
+      p.lng,
+      p.lat,
+    ]);
+
+    const first = ring[0];
+    const last = ring[ring.length - 1];
+    if (first[0] !== last[0] || first[1] !== last[1]) {
+      ring.push([first[0], first[1]]);
+    }
+
+    const feature = {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [ring],
+      },
+      properties: {
+        createdAt: new Date().toISOString(),
+      },
+    };
+
+    try {
+      return JSON.stringify(feature);
+    } catch (err) {
+      console.error('Failed to stringify GeoJSON', err);
+      return null;
+    }
+  }
+
+  public async savePolygon() {
+    if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
+      console.warn('Need at least 3 polygon vertices to save.');
+      return;
+    }
+
+    const geoJsonStr = this.buildPolygonGeoJsonString();
+    if (!geoJsonStr) {
+      return;
+    }
+
+    if (!this.PolygonName?.trim()) {
+      alert('Please enter a name for the polygon before saving.');
+      return;
+    }
+
+    let city = '';
+    let state = '';
+
+    const payload = {
+      city: city || '',
+      state: state || '',
+      json: geoJsonStr,
+      name: this.PolygonName.trim(),
+    };
+
+
+    try {
+      this.spinner.show();
+    } catch {}
+
+    this.placesService
+      .BetaGenericAPI({ Name: 'AddPolygon', Params: payload })
+      .subscribe({
+        next: (res: any) => {
+          try {
+            this.spinner.hide();
+          } catch {}
+
+          const polygonId = res?.json?.[0]?.id ?? null;
+
+          if (!polygonId) {
+            console.warn('Polygon saved but no ID returned from API.');
+            return;
+          }
+
+          const locations = [
+            {
+              state: state || '',
+              city: city || '',
+              neighborhoodId: null,
+              polygonId: polygonId,
+            },
+          ];
+
+          const locationData = {
+            organizationId: this.selectedTenantId ?? 0,
+            locationCriteria: { locations },
+            polygonId,
+          };
+
+          this.locationDataVar = locationData;
+
+          this.changeDetector.markForCheck();
+        },
+      });
+  }
+
+  private addDrawControlsToMap() {
+    try {
+      if (
+        !this.map ||
+        !this.drawControlsRef?.nativeElement ||
+        this.drawControlsAddedToMap
+      )
+        return;
+      const posArray =
+        this.map.controls[google.maps.ControlPosition.TOP_CENTER];
+      posArray.push(this.drawControlsRef.nativeElement);
+      this.drawControlsAddedToMap = true;
+      this.drawControlsRef.nativeElement.classList.add('gm-map-control');
+    } catch (err) {
+      console.warn('Could not add draw controls to map', err);
+    }
+  }
+
+  private removeDrawControlsFromMap() {
+    try {
+      if (
+        !this.map ||
+        !this.drawControlsRef?.nativeElement ||
+        !this.drawControlsAddedToMap
+      )
+        return;
+      const posArray =
+        this.map.controls[google.maps.ControlPosition.TOP_CENTER];
+      const arr = posArray.getArray();
+      const idx = arr.indexOf(this.drawControlsRef.nativeElement);
+      if (idx >= 0) posArray.removeAt(idx);
+      this.drawControlsAddedToMap = false;
+    } catch (err) {
+      console.warn('Could not remove draw controls from map', err);
+    }
   }
 }

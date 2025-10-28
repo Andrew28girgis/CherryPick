@@ -27,9 +27,7 @@
           </div>
 
           <div *ngIf="stateCityResults.length">
-            <div class="px-2 py-1 fw-bold">
-              State, City
-            </div>
+            <div class="px-2 py-1 fw-bold">State, City</div>
             <ul class="custom-dropdown-list">
               <li
                 *ngFor="let item of stateCityResults"
@@ -58,9 +56,7 @@
           </div>
 
           <div *ngIf="neighborhoodResults.length" class="mt-2">
-            <div class="px-2 py-1 fw-bold">
-              Neighborhood
-            </div>
+            <div class="px-2 py-1 fw-bold">Neighborhood</div>
             <ul class="custom-dropdown-list">
               <li
                 *ngFor="let item of neighborhoodResults"
@@ -95,36 +91,38 @@
             No results
           </div>
         </div>
-<div class="selected-container">
 
-  <div
-    class="selected-item gap-2 d-flex align-items-center mt-2"
-    *ngFor="let selectedItem of selectedItems"
-  >
-    <span class="me-2 flex-grow-1">{{ getItemLabel(selectedItem) }}</span>
+        <div class="selected-container">
+          <div
+            class="selected-item gap-2 d-flex align-items-center mt-2"
+            *ngFor="let selectedItem of selectedItems"
+          >
+            <span class="me-2 flex-grow-1">{{
+              getItemLabel(selectedItem)
+            }}</span>
 
-    <button
-      class="view-btn"
-      type="button"
-      (click)="viewSelectedItem(selectedItem)"
-      [attr.aria-label]="
-        'View ' + getItemLabel(selectedItem) + ' on the map'
-      "
-      *ngIf="selectedItem.id"
-    >
-      View
-    </button>
+            <button
+              class="view-btn"
+              type="button"
+              (click)="viewSelectedItem(selectedItem)"
+              [attr.aria-label]="
+                'View ' + getItemLabel(selectedItem) + ' on the map'
+              "
+              *ngIf="selectedItem.id"
+            >
+              View
+            </button>
 
-    <button
-      class="x-bt btn btn-sm btn-outline-secondary border-0 rounded-circle"
-      type="button"
-      (click)="removeSelectedItem(selectedItem)"
-      [attr.aria-label]="'Remove ' + getItemLabel(selectedItem)"
-    >
-      <span style="font-size: 1.2em; line-height: 1"> x </span>
-    </button>
-  </div>
-</div>
+            <button
+              class="x-bt btn btn-sm btn-outline-secondary border-0 rounded-circle"
+              type="button"
+              (click)="removeSelectedItem(selectedItem)"
+              [attr.aria-label]="'Remove ' + getItemLabel(selectedItem)"
+            >
+              <span style="font-size: 1.2em; line-height: 1"> x </span>
+            </button>
+          </div>
+        </div>
 
         <!-- <div
           class="d-flex align-items-center justify-content-center mt-2"
@@ -142,13 +140,106 @@
       </div>
     </div>
 
-    <!-- Map Container -->
-    <div class="col-lg-9 col-12">
-      <div class="pb-3 flex-grow-1 d-flex">
-        <div class="map-wrapper flex-grow-1 position-relative">
-          <div #mapContainer class="map-container w-100 h-100"></div>
+<div class="col-lg-9 col-12">
+  <div class="pb-3 flex-grow-1 d-flex">
+    <div class="map-wrapper flex-grow-1 position-relative">
+      <div #mapContainer class="map-container w-100 h-100">
+        <div
+          #drawControls
+          class="map-control-container"
+          aria-hidden="false"
+        >
+          <div class="draw-controls">
+            <div class="map-draw-control d-inline-flex align-items-center">
+              <!-- Draw Button -->
+              <button
+                type="button"
+                class="btn btn-draw d-inline-flex align-items-center"
+                (click)="startDrawPolygon(); $event.stopPropagation()"
+                [disabled]="drawingActive"
+                [class.active]="drawingActive"
+                [attr.aria-pressed]="drawingActive ? 'true' : 'false'"
+                [attr.title]="
+                  drawingActive
+                    ? 'Drawing mode enabled — click to stop'
+                    : 'Start drawing a polygon'
+                "
+                aria-label="Toggle draw polygon mode"
+              >
+                <span class="btn-icon" aria-hidden="true">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    focusable="false"
+                  >
+                    <path
+                      d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1 1 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+
+                <span class="btn-text ms-2">Draw polygon</span>
+
+                <span
+                  *ngIf="drawingActive"
+                  class="btn-spinner ms-2"
+                  aria-hidden="true"
+                >
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                </span>
+              </button>
+            </div>
+
+            <!-- ✅ Polygon Name Input (only shows after drawing) -->
+            <div *ngIf="currentDrawingPolygon" class="ms-2 mb-2">
+              <input
+                type="text"
+                class="form-control form-control-sm d-inline-block"
+                style="width: 180px"
+                [(ngModel)]="PolygonName"
+                placeholder="Enter polygon name..."
+              />
+            </div>
+
+            <!-- Save Polygon Button -->
+            <button
+              *ngIf="currentDrawingPolygon"
+              type="button"
+              class="btn btn-success btn-sm ms-2"
+              (click)="savePolygon(); $event.stopPropagation()"
+              aria-label="Save polygon"
+            >
+              Save polygon
+            </button>
+
+            <!-- Cancel Button -->
+            <button
+              *ngIf="currentDrawingPolygon"
+              type="button"
+              class="btn btn-danger btn-sm ms-2"
+              (click)="cancelDrawing(); $event.stopPropagation()"
+              aria-label="Cancel drawing"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   </div>
 </div>

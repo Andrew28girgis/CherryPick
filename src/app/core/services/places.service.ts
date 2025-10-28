@@ -405,19 +405,27 @@ export class PlacesService {
       campaignIdScore
     );
   }
+
   public CreateCampaign(
     CampaignName: string,
     OrganizationId: number,
     IsStandAlone: boolean,
-    CampaignLocations: any[]
+    CampaignLocations: any[],
+    MinUnitSize: number,
+    MaxUnitSize: number,
+    OrganizationRelationsDTO?: any
   ) {
     const body = {
       CampaignName,
       OrganizationId,
       IsStandAlone,
-      CampaignLocations
+      CampaignLocations,
+      MinUnitSize,
+      MaxUnitSize,
+      OrganizationRelationsDTO,
     };
-  
+
+
     return this.http.post<any>(
       `${environment.api}/Campaign/CreateCampaign`,
       body

@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { RefreshService } from 'src/app/core/services/refresh.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface UserPage {
-  pageName: string;
-  date: string;
+  title: string;
+  createdDate: string;
+  html: any;
 }
 
 // type ViewMode = "table" | "cards" | "timeline" | "list"
@@ -22,12 +26,22 @@ export class UserPagesComponent implements OnInit {
   loading = false;
   error: string | null = null;
   currentView: ViewMode = 'cards';
-
-  constructor(private placeService: PlacesService) {}
+  @ViewChild('HtmlModal', { static: true }) HtmlModal!: TemplateRef<any>;
+  modalRef: any;
+  htmlContent: SafeHtml | null = null;
+  constructor(
+    private placeService: PlacesService,
+    private refreshService: RefreshService,
+    private modalService: NgbModal,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
-    this.loadFakeData();
-    // this.getUserPages()
+    // this.loadFakeData();
+    this.getUserPages();
+    this.refreshService.refreshUserPages$.subscribe(() => {
+      this.getUserPages();
+    });
   }
 
   switchView(view: ViewMode): void {
@@ -35,16 +49,16 @@ export class UserPagesComponent implements OnInit {
   }
 
   loadFakeData(): void {
-    this.userPages = [
-      { pageName: 'Home Page', date: '2024-01-15T10:30:00Z' },
-      { pageName: 'About Us', date: '2024-01-14T14:22:00Z' },
-      { pageName: 'Contact Form', date: '2024-01-13T09:15:00Z' },
-      { pageName: 'Product Catalog', date: '2024-01-12T16:45:00Z' },
-      { pageName: 'User Dashboard', date: '2024-01-11T11:20:00Z' },
-      { pageName: 'Settings Page', date: '2024-01-10T13:30:00Z' },
-      { pageName: 'Privacy Policy', date: '2024-01-09T08:45:00Z' },
-      { pageName: 'Terms of Service', date: '2024-01-08T15:10:00Z' },
-    ];
+    // this.userPages = [
+    //   { pageName: 'Home Page', date: '2024-01-15T10:30:00Z' },
+    //   { pageName: 'About Us', date: '2024-01-14T14:22:00Z' },
+    //   { pageName: 'Contact Form', date: '2024-01-13T09:15:00Z' },
+    //   { pageName: 'Product Catalog', date: '2024-01-12T16:45:00Z' },
+    //   { pageName: 'User Dashboard', date: '2024-01-11T11:20:00Z' },
+    //   { pageName: 'Settings Page', date: '2024-01-10T13:30:00Z' },
+    //   { pageName: 'Privacy Policy', date: '2024-01-09T08:45:00Z' },
+    //   { pageName: 'Terms of Service', date: '2024-01-08T15:10:00Z' },
+    // ];
     this.loading = false;
   }
 
@@ -58,8 +72,10 @@ export class UserPagesComponent implements OnInit {
     };
 
     this.placeService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.userPages = data.pages || data.result || data || [];
+      next: (res) => {
+        this.userPages = res.json;
+        console.log(this.userPages);
+
         this.loading = false;
       },
       error: (error: any) => {
@@ -84,5 +100,38 @@ export class UserPagesComponent implements OnInit {
 
   retry(): void {
     this.getUserPages();
+  }
+  view(rawHtml: string): void {
+    // Extract <style> content
+    const styleMatch = rawHtml.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+    let scopedHtml = rawHtml;
+
+    if (styleMatch) {
+      const originalStyle = styleMatch[1];
+
+      // Scope all selectors to .preview-wrapper
+      const scopedStyle = originalStyle
+        .split('}')
+        .map((rule) => {
+          const [selectors, body] = rule.split('{');
+          if (!selectors || !body) return '';
+          return `.preview-wrapper ${selectors.trim()} {${body}}`;
+        })
+        .join(' ');
+
+      // Replace <style> in HTML with the new scoped one
+      scopedHtml = rawHtml.replace(
+        styleMatch[0],
+        `<style>${scopedStyle}</style>`
+      );
+    }
+
+    // Now sanitize the modified HTML
+    this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(scopedHtml);
+
+    this.modalRef = this.modalService.open(this.HtmlModal, {
+      size: 'lg',
+      scrollable: true,
+    });
   }
 }

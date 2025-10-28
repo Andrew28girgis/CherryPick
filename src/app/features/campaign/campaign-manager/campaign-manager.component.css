@@ -376,7 +376,7 @@
 
   background: var(--Colors-Card-Background);
   backdrop-filter: blur(20px);
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
 }
 
@@ -556,7 +556,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--Colors-Primary-500);
+  background-color: #16a34a;
 }
 
 .campaign-privacy-text {
@@ -577,9 +577,9 @@
   width: 36px;
   height: 36px;
 
-  border: 2px solid var(--Colors-diffrent);
+  border: 2px solid var(--Colors-Primary-500);
   border-radius: 50%;
-  color: var(--Colors-diffrent);
+  color: var(--Colors-Primary-500);
   background: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -587,9 +587,8 @@
 }
 
 .inbox:hover {
-  background-color: var(--Colors-diffrent);
-  color: white;
-  transform: scale(1.05);
+  background-color: var(--Colors-Primary-300);
+  color: var(--Colors-Primary-500);
 }
 
 .sites-info {
@@ -1121,7 +1120,7 @@
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1rem;
   margin-top: 1rem;
 }
 
@@ -1155,11 +1154,12 @@
 
 .campaign-step .type-options {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.75rem;
 }
 
 .campaign-step .type-option {
+  width: fit-content;
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -1484,7 +1484,7 @@
   border-top: 1px solid #e5e7eb;
   background: #fafafa;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   border-radius: 0 0 8px 8px;
 }
 
@@ -1503,7 +1503,7 @@
 }
 
 .modal-body {
-  height: 80vh;
+  height: 70vh;
   overflow-y: scroll;
 }
 
@@ -1580,4 +1580,122 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
+}
+
+.cotenant-selection {
+  width: 100%;
+}
+.cotenant-search {
+  width: 400px;
+}
+
+.cotenant-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.cotenant-card {
+  display: flex;
+  /* width: 180px; */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.cotenant-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.cotenant-logo-placeholder {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  color: #aaa;
+  font-size: 24px;
+}
+
+.cotenant-name {
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.cotenant-buttons button {
+  width: 100%;
+  margin-bottom: 5px;
+}
+.complementary-border {
+  border: 2px solid #28a745 !important;
+  box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
+}
+
+.conflicting-border {
+  border: 2px solid #dc3545 !important;
+  box-shadow: 0 0 8px rgba(220, 53, 69, 0.3);
+}
+/* Container */
+.view-toggle {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9fafb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Toggle Buttons */
+.toggle-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280; /* neutral gray */
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #eef2f6;
+  color: #374151;
+}
+
+/* Active state */
+.toggle-btn.active {
+  background-color: var(--Colors-Primary-500);
+  color: #fff;
+}
+
+.toggle-btn:first-child {
+  border-right: 1px solid #d0d7de;
+}
+
+.toggle-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.toggle-btn.active:hover {
+  background-color: var(--Colors-Primary-hover);
 }

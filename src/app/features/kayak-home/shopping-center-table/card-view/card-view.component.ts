@@ -98,7 +98,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   openMenuId: number | null = null;
   openStageId: number | null = null;
   dataReady = false;
-  scoringId: number | null = null; // track the current shopping center being scored
+  scoringId: number | null = null;
   isMobile!: boolean;
 
   constructor(

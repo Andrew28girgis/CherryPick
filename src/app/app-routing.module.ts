@@ -136,7 +136,7 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard, AuthGuardService],
   },
   {
-    path: 'user-pages',
+    path: 'artifacts',
     component: UserPagesComponent,
     canActivate: [AuthGuardService],
   },

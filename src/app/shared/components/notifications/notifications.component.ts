@@ -132,9 +132,8 @@ export class NotificationsComponent
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: NgbModal,
-    private refreshService: RefreshService
-  ) // private webSocketService: WebSocketService
-  {}
+    private refreshService: RefreshService // private webSocketService: WebSocketService
+  ) {}
 
   showScrollButton = false;
   newNotificationsCount = 0;
@@ -713,13 +712,12 @@ export class NotificationsComponent
 
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0;
-  
+
     // 🔹 Filter notifications to include only Emily chat messages
-    const emilyNotifications =
-      (this.notificationService?.notifications ?? []).filter(
-        (n) => n.isEmilyChat === true
-      );
-  
+    const emilyNotifications = (
+      this.notificationService?.notifications ?? []
+    ).filter((n) => n.isEmilyChat === true);
+
     // 🔹 Map notifications to ChatItems
     const notificationItems: ChatItem[] = emilyNotifications.map((n) => ({
       key: `n-${n.id}-${seqCounter++}`,
@@ -728,7 +726,7 @@ export class NotificationsComponent
       created: new Date(n.createdDate),
       notification: n,
     }));
-  
+
     // 🔹 Identify user messages (category 1 or boolean true)
     const userNotificationMessages = new Set(
       emilyNotifications
@@ -739,7 +737,7 @@ export class NotificationsComponent
         )
         .map((n) => n.message.trim()?.toLowerCase())
     );
-  
+
     // 🔹 Map optimistic (local) user-sent messages
     const sentMessageItems: ChatItem[] = (this.sentMessages ?? [])
       .filter(
@@ -752,7 +750,7 @@ export class NotificationsComponent
         created: new Date(m.createdDate),
         userMsg: m,
       }));
-  
+
     // 🔹 Merge and sort all items chronologically
     return [...notificationItems, ...sentMessageItems].sort((a, b) => {
       const diff = a.created.getTime() - b.created.getTime();
@@ -760,7 +758,6 @@ export class NotificationsComponent
       return a.key.localeCompare(b.key);
     });
   }
-  
 
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 
@@ -909,7 +906,9 @@ export class NotificationsComponent
     } else {
       this.isOverlayMode = true;
       this.showingMap = false;
-      this.overlayHtml = notification.html;
+      this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(
+        notification.html
+      );
     }
 
     this.selectedNotification = notification;
@@ -1019,6 +1018,8 @@ export class NotificationsComponent
 
         this.isSaving = false;
         this.pdfTitle = ''; // reset
+        this.refreshService.triggerUserPagesRefresh();
+        this.closeOverlayContent();
       },
     });
   }
