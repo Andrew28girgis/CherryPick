@@ -981,6 +981,10 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     this.isEditing = false;
   }
   removeRelation(index: number) {
-    this.editableCampaign.Relations[index].IsAdded = false;
+    const relation = this.editableCampaign.Relations[index];
+    
+    // Toggle IsAdded between true and false
+    relation.IsAdded = relation.IsAdded === false ? true : false;
   }
+  
 }
