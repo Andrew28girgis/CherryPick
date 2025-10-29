@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
 declare const google: any;
@@ -596,85 +601,83 @@ export class LandingComponent {
     } else {
     }
   }
-//   viewSpecs(campaign: any) {
-//     this.showToast(
-//       `Campaign ${campaign.campaignName} specs are being fetched...`
-//     );
+  //   viewSpecs(campaign: any) {
+  //     this.showToast(
+  //       `Campaign ${campaign.campaignName} specs are being fetched...`
+  //     );
 
-//     const body: any = {
-//       Name: 'GetCampaignDetailsJSON',
-//       Params: { CampaignId: campaign.campaignId },
-//     };
+  //     const body: any = {
+  //       Name: 'GetCampaignDetailsJSON',
+  //       Params: { CampaignId: campaign.campaignId },
+  //     };
 
-//     this.PlacesService.GenericAPI(body).subscribe({
-//       next: (response) => {
-//         this.PlacesService.sendmessages({
-//           Chat: `
-//           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
-//           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
-//           The campaign name is "${campaign.campaignName}"
-//           Its ID is "${campaign.campaignId}"
-//           and aims to expand in the following locations from the JSON below:
-//           ${response.json[0].campaignDetailsJSON}
-//           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
-// `,
-//           //The campaign belongs to the tenant "${campaign.OrganizationName}"
-//           NeedToSaveIt: true,
-//         }).subscribe({});
-//       },
-//     });
-//   }
-viewSpecsNew(campaign: any) {
-  const body: any = {
-    Name: 'GetCampaignFullDetails',
-    Params: { CampaignId: campaign.campaignId },
-  };
+  //     this.PlacesService.GenericAPI(body).subscribe({
+  //       next: (response) => {
+  //         this.PlacesService.sendmessages({
+  //           Chat: `
+  //           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
+  //           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
+  //           The campaign name is "${campaign.campaignName}"
+  //           Its ID is "${campaign.campaignId}"
+  //           and aims to expand in the following locations from the JSON below:
+  //           ${response.json[0].campaignDetailsJSON}
+  //           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
+  // `,
+  //           //The campaign belongs to the tenant "${campaign.OrganizationName}"
+  //           NeedToSaveIt: true,
+  //         }).subscribe({});
+  //       },
+  //     });
+  //   }
+  viewSpecsNew(campaign: any) {
+    const body: any = {
+      Name: 'GetCampaignFullDetails',
+      Params: { CampaignId: campaign.campaignId },
+    };
 
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (response) => {
-      const data = response.json;
-      this.selectedCampaignDetails = data;
-      this.campaignLogo = data.LogoURL;
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        const data = response.json;
+        this.selectedCampaignDetails = data;
+        this.campaignLogo = data.LogoURL;
 
-      try {
-        const parsed = JSON.parse(data.CampaignDetailsJSON);
-        this.parsedCampaignDetails = this.getKeyValuePairs(parsed);
-      } catch {
-        this.parsedCampaignDetails = [];
-      }
+        try {
+          const parsed = JSON.parse(data.CampaignDetailsJSON);
+          this.parsedCampaignDetails = this.getKeyValuePairs(parsed);
+        } catch {
+          this.parsedCampaignDetails = [];
+        }
 
-      this.modalService.open(this.campaignDetailsModal, {
-        size: 'lg',
-        centered: true,
-        scrollable: true,
-      });
-    },
-  });
-}
+        this.modalService.open(this.campaignDetailsModal, {
+          size: 'lg',
+          centered: true,
+          scrollable: true,
+        });
+      },
+    });
+  }
 
-getKeyValuePairs(obj: any): { key: string; value: any }[] {
-  if (!obj || typeof obj !== 'object') return [];
+  getKeyValuePairs(obj: any): { key: string; value: any }[] {
+    if (!obj || typeof obj !== 'object') return [];
 
-  return Object.entries(obj)
-    .filter(([_, value]) => this.hasValue(value))
-    .map(([key, value]) => ({ key, value }));
-}
+    return Object.entries(obj)
+      .filter(([_, value]) => this.hasValue(value))
+      .map(([key, value]) => ({ key, value }));
+  }
 
-hasValue(value: any): boolean {
-  if (value === null || value === undefined) return false;
-  if (Array.isArray(value)) return value.some((v) => this.hasValue(v));
-  if (typeof value === 'object') return Object.keys(value).length > 0;
-  if (typeof value === 'string') return value.trim() !== '';
-  return true;
-}
+  hasValue(value: any): boolean {
+    if (value === null || value === undefined) return false;
+    if (Array.isArray(value)) return value.some((v) => this.hasValue(v));
+    if (typeof value === 'object') return Object.keys(value).length > 0;
+    if (typeof value === 'string') return value.trim() !== '';
+    return true;
+  }
 
-isObject(value: any): boolean {
-  return value && typeof value === 'object' && !Array.isArray(value);
-}
+  isObject(value: any): boolean {
+    return value && typeof value === 'object' && !Array.isArray(value);
+  }
 
-isArray(value: any): boolean {
-  return Array.isArray(value);
-}
-
-
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
 }

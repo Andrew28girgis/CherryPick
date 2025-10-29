@@ -26,10 +26,10 @@
       </button>
       <div *ngIf="campaignName" class="campaign-header-bar">
         <span class="campaign-path">
-           {{ campaignName }} / {{ shoppingCenter.CenterName }}
+          {{ campaignName }} / {{ shoppingCenter.CenterName }}
         </span>
       </div>
-      
+
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
         <span class="me-1">Next</span>
 
@@ -230,56 +230,55 @@
     </div>
   </div>
   <div
-    class="contacts-wrapper d-flex justify-content-between gap-4 flex-column py-2"
+    class="contacts-wrapper d-flex justify-content-between gap-2 flex-column py-2"
     *ngIf="hasContacts()"
   >
-    <div>
-      <div class="contact-container">
-        <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
-          <div
-            class="user-card-wrapper"
-            *ngIf="Manager.FirstName || Manager.LastName || Manager.Email"
-          >
-            <span class="card-badge" *ngIf="Manager.OrganizationName">
-              {{ Manager.OrganizationName }}
-            </span>
-            <div class="user-card gap-2">
-              <div class="org-logo placeholder">
-                {{
-                  getInitials(Manager.FirstName, Manager.LastName) ||
-                    getInitial(Manager.OrganizationName || "N/A")
-                }}
-              </div>
+    <h2 class="main-heading">Contacts</h2>
+    <div class="contact-container">
+      <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
+        <div
+          class="user-card-wrapper"
+          *ngIf="Manager.FirstName || Manager.LastName || Manager.Email"
+        >
+          <span class="card-badge" *ngIf="Manager.OrganizationName">
+            {{ Manager.OrganizationName }}
+          </span>
+          <div class="user-card gap-2">
+            <div class="org-logo placeholder">
+              {{
+                getInitials(Manager.FirstName, Manager.LastName) ||
+                  getInitial(Manager.OrganizationName || "N/A")
+              }}
+            </div>
 
-              <div class="user-info">
-                <h3
-                  class="user-name m-0"
-                  *ngIf="Manager.FirstName || Manager.LastName"
-                >
-                  <span class="name">{{
-                    Manager.FirstName + " " + Manager.LastName
-                  }}</span>
-                </h3>
-                <p
-                  class="user-email email-link"
-                  *ngIf="Manager.Email"
-                  [attr.data-email]="Manager.Email"
-                >
-                  <i class="fa-regular fa-envelope"></i>
-                  {{ Manager.Email }}
-                </p>
-              </div>
+            <div class="user-info">
+              <h3
+                class="user-name m-0"
+                *ngIf="Manager.FirstName || Manager.LastName"
+              >
+                <span class="name">{{
+                  Manager.FirstName + " " + Manager.LastName
+                }}</span>
+              </h3>
+              <p
+                class="user-email email-link"
+                *ngIf="Manager.Email"
+                [attr.data-email]="Manager.Email"
+              >
+                <i class="fa-regular fa-envelope"></i>
+                {{ Manager.Email }}
+              </p>
             </div>
           </div>
-        </ng-container>
-      </div>
+        </div>
+      </ng-container>
     </div>
   </div>
   <div
     class="main-section"
     *ngIf="shoppingCenter && shoppingCenter.Place.length > 0"
   >
-    <section id="hero">
+    <section>
       <ng-container>
         <div class="col-md-12">
           <div class="d-flex justify-content-between">
@@ -474,10 +473,7 @@
 
     <div class="campaign-grid">
       <ng-container *ngFor="let campaign of CampaignScores">
-        <div
-          class="campaign-card"
-          *ngIf="campaign.campaignName"
-        >
+        <div class="campaign-card" *ngIf="campaign.campaignName">
           <div class="campaign-header">
             <h3 class="campaign-name" *ngIf="campaign.campaignName">
               {{ campaign.campaignName }}
@@ -493,25 +489,23 @@
             >
               {{ campaign.score }}%
             </span>
-            
+
             <div *ngIf="!campaign.score">
               <button
-              class="plus-icon score"
-              [class.active]="scoringId === campaign.Id"
-              (click)="getscore(campaign); $event.stopPropagation()"
-             >
-              <span *ngIf="scoringId !== campaign.campaignId">Get Score</span>
-              <span *ngIf="scoringId === campaign.campaignId">
-                Getting Score
-                <span class="stat-bars" aria-hidden="true">
-                  <span></span><span></span><span></span><span></span><span></span
-                  ><span></span>
+                class="plus-icon score"
+                [class.active]="scoringId === campaign.Id"
+                (click)="getscore(campaign); $event.stopPropagation()"
+              >
+                <span *ngIf="scoringId !== campaign.campaignId">Get Score</span>
+                <span *ngIf="scoringId === campaign.campaignId">
+                  Getting Score
+                  <span class="stat-bars" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span
+                    ><span></span><span></span>
+                  </span>
                 </span>
-              </span>
-            </button>
+              </button>
             </div>
-          
-            
           </div>
           <button class="icon-btn" (click)="viewSpecsNew(campaign)">
             <i class="fa fa-eye"></i>
@@ -898,7 +892,7 @@
       <h5>Locations</h5>
       <div class="pills-container">
         <ng-container *ngFor="let loc of selectedCampaignDetails.Locations">
-          <span *ngIf="loc.CityName ||loc.State" class="data-pill">
+          <span *ngIf="loc.CityName || loc.State" class="data-pill">
             {{ loc.CityName ? loc.CityName + "," : "" }}
             {{ loc.State ? loc.State : "" }}
           </span>
@@ -926,7 +920,7 @@
     <!-- Raw JSON at the bottom -->
     <section *ngIf="parsedCampaignDetails?.length" class="border-top pt-3">
       <h5>Campaign Details</h5>
-    
+
       <div class="key-value-list">
         <ng-container *ngFor="let entry of parsedCampaignDetails">
           <div class="key-value-item">
@@ -954,7 +948,7 @@
                   </ng-container>
                 </div>
               </ng-container>
-    
+
               <!-- Non-array -->
               <ng-template #nonArray>
                 <ng-container *ngIf="isObject(entry.value); else simpleValue">
@@ -976,6 +970,5 @@
         </ng-container>
       </div>
     </section>
-    
   </div>
 </ng-template>
