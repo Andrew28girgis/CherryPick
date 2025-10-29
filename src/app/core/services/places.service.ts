@@ -432,4 +432,31 @@ export class PlacesService {
       body
     );
   }
+
+  public UpdateCampaign(
+    CampaignName: string,
+    OrganizationId: number,
+    name: string,
+    IsStandAlone: boolean,
+    CampaignLocations: any[],
+    MinUnitSize: number,
+    MaxUnitSize: number,
+    OrganizationRelationsDTO: any[]
+  ) {
+    const body = {
+      CampaignName,
+      OrganizationId,
+      name,
+      IsStandAlone,
+      CampaignLocations,
+      MinUnitSize,
+      MaxUnitSize,
+      OrganizationRelationsDTO,
+    };
+
+    return this.http.post<any>(
+      `${environment.api}/Campaign/UpdateCampaign`,
+      body
+    );
+  }
 }
