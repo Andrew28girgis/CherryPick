@@ -1069,7 +1069,7 @@ li {
 }
 
 .campaign-path {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 300 !important;
   letter-spacing: 0.3px;
 }
@@ -1338,7 +1338,7 @@ li {
   font-size: 20px;
   cursor: auto;
 }
- 
+
 .pills-container {
   display: flex;
   flex-wrap: wrap;
@@ -1400,4 +1400,11 @@ li {
 }
 .fa-edit {
   color: var(--Colors-Primary-500);
+}
+.campaign-n {
+  color: #baa26c;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 10px;
 }

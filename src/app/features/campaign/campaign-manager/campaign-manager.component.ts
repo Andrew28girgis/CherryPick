@@ -623,7 +623,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   closeMenu() {
     this.openMenuId = null;
     this.openOptionsId = null;
-
   }
   @HostListener('document:click', ['$event'])
   onDocumentClick(_event: MouseEvent) {
@@ -700,7 +699,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.isEditing = false;
           this.editableCampaign = {}; // optional: clear data
         });
-        
       },
     });
   }
@@ -871,6 +869,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         RetailRelationCategoryId: 5, // Complementary ID
         RetailRelationCategoryName: 'complmentary', // Complementary ID
         relationOrgName: t.name,
+        IsAdded: true,
       })),
 
       ...this.conflictingTenants.map((t) => ({
@@ -878,6 +877,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         RetailRelationCategoryId: 6, // Conflicting ID
         RetailRelationCategoryName: 'conflicting', // Complementary ID
         relationOrgName: t.name,
+        IsAdded: true,
       })),
     ];
 
@@ -929,6 +929,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         RetailRelationCategoryName:
           r.RelationType === 'complementary' ? 'complmentary' : 'conflicting',
         relationOrgName: r.RelationOrganizationName,
+        IsAdded: (r.IsAdded===true||r.IsAdded === undefined ) ? true : r.IsAdded,
       })
     );
 
@@ -977,9 +978,13 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
           console.error('Update failed:', err);
         },
       });
-      this.isEditing = false; 
+    this.isEditing = false;
   }
   removeRelation(index: number) {
-    this.editableCampaign.Relations.splice(index, 1);
+    const relation = this.editableCampaign.Relations[index];
+    
+    // Toggle IsAdded between true and false
+    relation.IsAdded = relation.IsAdded === false ? true : false;
   }
+  
 }
