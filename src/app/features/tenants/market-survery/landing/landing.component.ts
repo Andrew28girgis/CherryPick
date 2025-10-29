@@ -15,6 +15,9 @@ import { OrgBranch } from 'src/app/shared/models/branches';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
@@ -55,6 +58,7 @@ export class LandingComponent {
   @ViewChild('campaignDetailsModal') campaignDetailsModal!: TemplateRef<any>;
   parsedCampaignDetails: { key: string; value: any }[] = [];
   currentGalleryData: any;
+  currentMainImage: string = '';
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -62,7 +66,8 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private viewManagerService: ViewManagerService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -161,6 +166,8 @@ export class LandingComponent {
       Price: place.Price ?? null,
       BuildingSizeSf: place.BuildingSizeSf ?? null,
       SecondaryType: place.SecondaryType ?? '',
+      Source: place.Source ?? '', 
+
     };
   }
 
@@ -178,6 +185,8 @@ export class LandingComponent {
       Price: this.editModel.Price,
       BuildingSizeSf: this.editModel.BuildingSizeSf,
       SecondaryType: this.editModel.SecondaryType,
+      Source: this.editModel.Source, 
+
     });
     this.cancelEdit();
   }
@@ -200,6 +209,7 @@ export class LandingComponent {
         BuildingSizeSf: place.BuildingSizeSf,
         Price: place.Price,
         LeaseType: place.LeaseType,
+        Source: place.Source,   
         Id: place.Id,
       },
     };
@@ -353,10 +363,40 @@ export class LandingComponent {
   }
 
   openGallery(modalObject: any) {
-    console.log(modalObject);
-    
-    this.currentGalleryData = modalObject.Images? modalObject.Images.split(',') :[] ;
-    this.modalService.open(this.galleryModal, { size: 'xl', centered: true ,});
+    this.currentGalleryData = modalObject.Images
+      ? modalObject.Images.split(',')
+      : [];
+
+    // Track current main image
+    this.currentMainImage = modalObject.MainImage || '';
+
+    this.modalService.open(this.galleryModal, {
+      size: 'xl',
+      centered: true,
+      fullscreen: 'lg',
+    });
+  }
+
+  selectMainImage(imageUrl: string): void {
+    if (!this.ShoppingCenterId || !imageUrl) return;
+
+    const encodedImage = encodeURIComponent(imageUrl);
+    const apiUrl = `${environment.api}/ShoppingCenter/UpdateMainImage?shoppingCenterId=${this.ShoppingCenterId}&newMainImage=${encodedImage}`;
+
+    this.http.post(apiUrl, {}).subscribe({
+      next: (res: any) => {
+        if (res === true || res?.json === true) {
+          this.showToast('Main image updated successfully!');
+          this.shoppingCenter.MainImage = imageUrl;
+          this.currentMainImage = imageUrl; // highlight new star
+        } else {
+          this.showToast('This image is already set as main or failed.');
+        }
+      },
+      error: () => {
+        this.showToast('Failed to update main image.');
+      },
+    });
   }
 
   async viewOnMap(lat: number, lng: number) {
