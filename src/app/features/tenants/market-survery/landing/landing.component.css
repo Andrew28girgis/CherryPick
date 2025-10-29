@@ -517,7 +517,6 @@ li {
 }
 .gallery-modal-body {
   overflow: hidden !important;
-  background: none !important;
   padding: 0;
 }
 
@@ -529,6 +528,7 @@ li {
   align-items: center;
 }
 
+
 .gallery-image-container {
   position: relative;
   display: flex;
@@ -537,34 +537,78 @@ li {
 }
 
 .gallery-image {
-  width: 800px;
-  height: 500px;
-  object-fit: cover;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  max-width: 70vw;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
+  margin: auto;
+  display: block;
+  position: relative;
+  z-index: 10;
 }
 
+/* ⭐ Star overlay */
 .star-overlay {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 26px;
+  top: 15px;
+  right: 20px;
+  font-size: 30px;
   color: gold;
   cursor: pointer;
-  z-index: 10;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-  transition: transform 0.2s ease;
+  z-index: 5000 !important;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 .star-overlay:hover {
   transform: scale(1.2);
+  opacity: 0.9;
 }
 
-.modal-content {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 3rem;
+  height: 3rem;
+  background-size: 100% 100%;
+  opacity: 1;
+  z-index: 9999 !important;
 }
 
+/* white SVG arrows */
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0L1.25 4l4 4V0z'/%3E%3C/svg%3E");
+}
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l4 4-4 4V0z'/%3E%3C/svg%3E");
+}
+
+/* make click zones wide */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 10%;
+  z-index: 9999 !important;
+}
+
+.custom-carousel .carousel-indicators {
+  bottom: 10px !important; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999 !important;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.custom-carousel .carousel-indicators [data-bs-target] {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.custom-carousel .carousel-indicators .active {
+  background-color: gold !important;
+}
 .manager-name .name + .name {
   margin-left: 6px;
 }
