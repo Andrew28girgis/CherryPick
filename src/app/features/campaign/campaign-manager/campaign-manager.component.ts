@@ -87,6 +87,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   private createTenantModalRef?: NgbModalRef;
   private logoInterval: any;
   openMenuId: number | null = null;
+  openOptionsId: number | null = null;
   @ViewChild('campaignDetails') campaignDetailsTpl!: TemplateRef<any>;
   @ViewChild('addCampaign', { static: true }) addCampaignTpl!: TemplateRef<any>;
   selectedCampaign!: CampaignSpecs;
@@ -616,10 +617,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   toggleMenu(scId: number, event: MouseEvent) {
     event.stopPropagation();
     this.openMenuId = this.openMenuId === scId ? null : scId;
+    this.openOptionsId = this.openOptionsId === scId ? null : scId;
   }
 
   closeMenu() {
     this.openMenuId = null;
+    this.openOptionsId = null;
+
   }
   @HostListener('document:click', ['$event'])
   onDocumentClick(_event: MouseEvent) {
@@ -659,7 +663,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   //     });
   //   }
 
-  viewSpecsNew(campaign: any) {
+  viewSpecsNew(campaign: any, edit?: boolean) {
     const body: any = {
       Name: 'GetCampaignFullDetails',
       Params: { CampaignId: campaign.Id },
@@ -684,12 +688,19 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         } catch {
           this.parsedCampaignDetails = [];
         }
-
-        this.modalService.open(this.campaignDetailsModal, {
+        if (edit) {
+          this.startEdit();
+        }
+        const modalRef = this.modalService.open(this.campaignDetailsModal, {
           size: 'lg',
           centered: true,
           scrollable: true,
         });
+        modalRef.result.finally(() => {
+          this.isEditing = false;
+          this.editableCampaign = {}; // optional: clear data
+        });
+        
       },
     });
   }
@@ -966,5 +977,9 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
           console.error('Update failed:', err);
         },
       });
+      this.isEditing = false; 
+  }
+  removeRelation(index: number) {
+    this.editableCampaign.Relations.splice(index, 1);
   }
 }

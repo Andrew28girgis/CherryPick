@@ -1784,8 +1784,8 @@
   flex-direction: row;
   display: flex;
 }
-.form-select{
-height: fit-content;
+.form-select {
+  height: fit-content;
 }
 .relation-row {
   display: flex;
@@ -1804,7 +1804,7 @@ height: fit-content;
   color: #333;
   white-space: pre-wrap;
   overflow: hidden;
- }
+}
 
 .relation-select {
   flex-shrink: 0;
@@ -1822,4 +1822,22 @@ height: fit-content;
 .relation-select:focus {
   border-color: #007bff;
   outline: none;
+}
+
+.save-btnc {
+  border-radius: 6px !important;
+}
+.save-btnc:hover {
+  background: var(--Colors-Primary-hover);
+}
+.save-btnc:active {
+  background: var(--Colors-Primary-hover);
+}
+.relation-delete-btn {
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+.opened-menu {
+  z-index: 4;
 }
