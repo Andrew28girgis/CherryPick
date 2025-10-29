@@ -498,7 +498,6 @@ li {
   align-items: center;
 }
 
-
 .gallery-image-container {
   position: relative;
   display: flex;
@@ -507,9 +506,6 @@ li {
 }
 
 .gallery-image {
-  max-width: 70vw;
-  max-height: 70vh;
-  object-fit: contain;
   border-radius: 8px;
   margin: auto;
   display: block;
@@ -534,6 +530,7 @@ li {
   opacity: 0.9;
 }
 
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   width: 3rem;
@@ -543,23 +540,24 @@ li {
   z-index: 9999 !important;
 }
 
-/* white SVG arrows */
-.carousel-control-prev-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0L1.25 4l4 4V0z'/%3E%3C/svg%3E");
-}
-.carousel-control-next-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l4 4-4 4V0z'/%3E%3C/svg%3E");
-}
-
-/* make click zones wide */
+/* Styling for prev and next buttons */
 .carousel-control-prev,
 .carousel-control-next {
-  width: 10%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 9999 !important;
+  width: 10%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
+/* Styling for the indicators */
 .custom-carousel .carousel-indicators {
-  bottom: 10px !important; 
+  bottom: 10px !important;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999 !important;
@@ -579,6 +577,7 @@ li {
 .custom-carousel .carousel-indicators .active {
   background-color: gold !important;
 }
+
 .manager-name .name + .name {
   margin-left: 6px;
 }
@@ -1356,12 +1355,7 @@ li {
   font-size: 20px;
   cursor: auto;
 }
-
-.modal-body {
-  height: 70vh;
-  overflow-y: scroll;
-}
-
+ 
 .pills-container {
   display: flex;
   flex-wrap: wrap;
