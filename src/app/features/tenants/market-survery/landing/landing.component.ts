@@ -395,34 +395,34 @@ export class LandingComponent {
       },
     });
   }
-  deleteImage(imageUrl: string): void {
-    if (!this.ShoppingCenterId || !imageUrl) return;
+deleteImage(imageUrl: string): void {
+  if (!this.ShoppingCenterId || !imageUrl) return;
 
-    const encodedImage = encodeURIComponent(imageUrl);
+  const encodedImage = encodeURIComponent(imageUrl);
 
-    const apiUrl = `${environment.api}/ShoppingCenter/DeleteImageAsync?shoppingCenterId=${this.ShoppingCenterId}&imageToDelete=${encodedImage}`;
+  const apiUrl = `${environment.api}/ShoppingCenter/DeleteImage?shoppingCenterId=${this.ShoppingCenterId}&imageToDelete=${encodedImage}`;
 
-    this.http.post(apiUrl, {}).subscribe({
-      next: (res: any) => {
-        if (res === true || res?.json === true) {
-          this.showToast('Image deleted successfully!');
-
-          this.currentGalleryData = this.currentGalleryData.filter(
-            (img: string) => img !== imageUrl
-          );
-
-          if (this.currentMainImage === imageUrl) {
-            this.currentMainImage = '';
-          }
-        } else {
-          this.showToast('Failed to delete image.');
+  this.http.post(apiUrl, {}).subscribe({
+    next: (res: any) => {
+      if (res === true || res?.json === true) {
+        this.showToast('Image deleted successfully!');
+        this.currentGalleryData = this.currentGalleryData.filter(
+          (img: string) => img !== imageUrl
+        );
+        if (this.currentMainImage === imageUrl) {
+          this.currentMainImage = ''; 
         }
-      },
-      error: () => {
-        this.showToast('Error while deleting the image.');
-      },
-    });
-  }
+      } else {
+        this.showToast('Failed to delete image.');
+      }
+    },
+    error: (err) => {
+      console.error('Error occurred:', err); // Log the error to the console
+      this.showToast('Error while deleting the image.');
+    },
+  });
+}
+
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;

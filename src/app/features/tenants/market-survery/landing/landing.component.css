@@ -329,18 +329,6 @@ li {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   z-index: 999;
 }
-.custom-carousel .carousel-indicators {
-  position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.custom-carousel .carousel-indicators li {
-  background-color: black;
-}
-.custom-carousel .carousel-indicators .active {
-  background-color: #333; /* slightly different shade or keep it black as well */
-}
 .modal-content {
   background: transparent !important;
   box-shadow: none !important;
@@ -511,21 +499,39 @@ li {
   display: block;
   position: relative;
   z-index: 10;
+  height: 500px;
+  max-width: 700px;
 }
 
-/* ⭐ Star overlay */
 .star-overlay {
   position: absolute;
   top: 15px;
-  right: 20px;
-  font-size: 30px;
+  right: 10px;
+  font-size: 25px;
   color: gold;
   cursor: pointer;
   z-index: 5000 !important;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
+
 .star-overlay:hover {
+  transform: scale(1.2);
+  opacity: 0.9;
+}
+
+.delete-overlay {
+  position: absolute;
+  top: 15px;
+  right: 50px;
+  font-size: 25px;
+  color: red;
+  cursor: pointer;
+  z-index: 5000 !important;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.delete-overlay:hover {
   transform: scale(1.2);
   opacity: 0.9;
 }
@@ -540,7 +546,6 @@ li {
   z-index: 9999 !important;
 }
 
-/* Styling for prev and next buttons */
 .carousel-control-prev,
 .carousel-control-next {
   position: absolute;
@@ -555,28 +560,6 @@ li {
   cursor: pointer;
 }
 
-/* Styling for the indicators */
-.custom-carousel .carousel-indicators {
-  bottom: 10px !important;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999 !important;
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-}
-
-.custom-carousel .carousel-indicators [data-bs-target] {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  opacity: 1;
-  transition: all 0.3s ease;
-}
-
-.custom-carousel .carousel-indicators .active {
-  background-color: gold !important;
-}
 
 .manager-name .name + .name {
   margin-left: 6px;
