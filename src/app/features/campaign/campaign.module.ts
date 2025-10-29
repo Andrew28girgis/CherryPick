@@ -18,6 +18,7 @@ import { ButtonModule } from 'primeng/button';
 import { AddNewCampaignComponent } from './add-new-campaign/add-new-campaign.component';
 import { AddCampaignPopupComponent } from './add-campaign-popup/add-campaign-popup.component';
 import { PolygonsComponent } from '../polygons/polygons.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
  @NgModule({
   declarations: [
     CampaignDrawingComponent,
@@ -40,6 +41,7 @@ import { PolygonsComponent } from '../polygons/polygons.component';
     AutoCompleteModule,
     ButtonModule,
     PolygonsComponent,
+    NgbDropdownModule,
   ],
   exports: [
     CampaignDrawingComponent,

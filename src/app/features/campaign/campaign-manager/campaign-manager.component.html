@@ -553,17 +553,14 @@
                       style="display: flex; align-items: center"
                     >
                       {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-                      <div
-                        class="menu-wrapper"
-                        (click)="$event.stopPropagation()"
-                        [ngClass]="{
-                          'opened-menu': openOptionsId === campaign.Id
-                        }"
-                      >
+                      <!-- Bootstrap Dropdown -->
+                      <div ngbDropdown container="body" class="dropdown">
                         <button
-                          class="menu-btn"
-                          (click)="toggleMenu(campaign.Id, $event)"
+                          class="btn btn-light btn-sm"
+                          ngbDropdownToggle
+                          (click)="$event.stopPropagation()"
                         >
+                          <!-- Three Dots Icon -->
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
@@ -587,32 +584,28 @@
                           </svg>
                         </button>
 
-                        <!-- DROPDOWN -->
-                        <div
-                          class="menu-dropdown"
-                          style="top: 5vh; right: -12vw; z-index: 1"
-                          *ngIf="openMenuId === campaign.Id"
-                        >
+                        <div ngbDropdownMenu>
                           <button
-                            class="menu-item"
-                            (click)="viewSpecsNew(campaign); closeMenu()"
+                            ngbDropdownItem
+                            (click)="viewSpecsNew(campaign)"
                           >
                             View Specs
                           </button>
                           <button
-                            class="menu-item"
-                            (click)="deleteCampaign(campaign.Id); closeMenu()"
-                          >
-                            Delete Campaign
-                          </button>
-                          <button
-                            class="menu-item"
-                            (click)="viewSpecsNew(campaign, true); closeMenu()"
+                            ngbDropdownItem
+                            (click)="viewSpecsNew(campaign, true)"
                           >
                             Edit Campaign
                           </button>
+                          <button
+                            ngbDropdownItem
+                            (click)="deleteCampaign(campaign.Id)"
+                          >
+                            Delete Campaign
+                          </button>
                         </div>
                       </div>
+
                       <div
                         class="campaign-privacy"
                         [ngClass]="{
@@ -1426,7 +1419,7 @@
   </div>
 
   <!-- Modal Footer -->
-  <div class="modal-footer">
+  <div class="modal-footer justify-content-end">
     <button *ngIf="!isEditing" class="btn btn-secondary" (click)="startEdit()">
       Edit
     </button>
