@@ -50,7 +50,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   get viewMode(): 'card' | 'table' {
     return this._viewMode;
   }
-  private _viewMode: 'card' | 'table' = 'card';
+  private _viewMode: 'table' | 'card' = 'table';
   selectedTenants: any[] = [];
   userBuyBoxes: { id: number; name: string }[] = [];
   selectedBuyBoxId = 0;
@@ -929,6 +929,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     }));
 
     const body = {
+      CampaignId: updated.CampaignId,
       CampaignName: updated.CampaignName,
       OrganizationId: updated.OrganizationId,
       name: updated.OrganizationName,
@@ -943,6 +944,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
 
     this.placesService
       .UpdateCampaign(
+        body.CampaignId,
         body.CampaignName,
         body.OrganizationId,
         body.name,
@@ -957,6 +959,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
           console.log('Campaign updated:', res);
           this.selectedCampaignDetails = updated;
           this.isEditing = false;
+          this.getAllCampaigns();
           this.modalService.dismissAll();
         },
         error: (err) => {

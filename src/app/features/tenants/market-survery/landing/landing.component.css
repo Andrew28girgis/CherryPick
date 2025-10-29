@@ -928,6 +928,7 @@ li {
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: fit-content;
+  white-space: nowrap;
 }
 
 .nav-btn-prev {
@@ -1270,7 +1271,6 @@ li {
 .btn-custom:hover {
   background: var(--Colors-Primary-hover);
 }
-
 
 .tenant-logo {
   width: 64px;

@@ -434,6 +434,7 @@ export class PlacesService {
   }
 
   public UpdateCampaign(
+    Id:number,
     CampaignName: string,
     OrganizationId: number,
     name: string,
@@ -444,6 +445,7 @@ export class PlacesService {
     OrganizationRelationsDTO: any[]
   ) {
     const body = {
+      Id,
       CampaignName,
       OrganizationId,
       name,
