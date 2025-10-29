@@ -585,7 +585,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public async savePolygon() {
     if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
-      console.warn('Need at least 3 polygon vertices to save.');
       return;
     }
 
@@ -625,7 +624,6 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
           const polygonId = res?.json?.[0]?.id ?? null;
 
           if (!polygonId) {
-            console.warn('Polygon saved but no ID returned from API.');
             return;
           }
 
