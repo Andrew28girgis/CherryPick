@@ -25,14 +25,17 @@
         </span> -->
       </button>
       <div *ngIf="campaignName" class="campaign-header-bar">
-        <span class="campaign-path">
-          {{ campaignName }} / {{ shoppingCenter.CenterName }}
+        <span class="campaign-path"  >
+          <span class="campaign-n">
+            {{ campaignName }}
+          </span>
+          / {{ shoppingCenter.CenterName }}
         </span>
       </div>
 
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
         <span class="me-1">Next</span>
-<!-- 
+        <!-- 
         <span>
           {{ nextName ? "to:  " + nextName : "" }}
         </span> -->
@@ -424,7 +427,7 @@
                       *ngIf="editingPlaceId !== place.Id; else editActions"
                     >
                       <i
-                        class="fa fa-edit "
+                        class="fa fa-edit"
                         title="Edit"
                         role="button"
                         tabindex="0"
@@ -840,8 +843,8 @@
     <div class="carousel-wrapper position-relative">
       <ngb-carousel
         class="custom-carousel"
-        [showNavigationIndicators]="true"
         [showNavigationArrows]="true"
+        [showNavigationIndicators]="false"
         [pauseOnHover]="true"
         [interval]="0"
       >
@@ -849,41 +852,57 @@
           ngbSlide
           *ngFor="let img of currentGalleryData; let i = index"
         >
-          <div class="gallery-image-container">
-            <i
-              class="star-overlay"
-              [ngClass]="{
-                'fa-solid fa-star': currentMainImage === img,
-                'fa-regular fa-star': currentMainImage !== img
-              }"
-              (click)="selectMainImage(img)"
-              title="Set as main image"
-            ></i>
-            
-            <img
-              [src]="img"
-              alt="Gallery image"
-              class="gallery-image"
-              loading="lazy"
-            />
-          </div>
+<div class="gallery-image-container">
+  <i
+    class="star-overlay"
+    [ngClass]="{
+      'fa-solid fa-star': currentMainImage === img,
+      'fa-regular fa-star': currentMainImage !== img
+    }"
+    (click)="selectMainImage(img)"
+    title="Set as main image"
+  ></i>
+
+<i
+  class="delete-overlay fa-regular fa-trash-can"
+  (click)="deleteImage(img)"
+  title="Delete Image"
+></i>
+
+
+  <!-- The image itself -->
+  <img
+    [src]="img"
+    alt="Gallery image"
+    class="gallery-image"
+    loading="lazy"
+  />
+</div>
+
         </ng-template>
-        <!-- Prev and Next arrows (SVG inserted directly here) -->
         <div class="carousel-control-prev" role="button" data-bs-target="#carouselExample" data-bs-slide="prev">
           <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 8 8">
             <path d="M5.25 0L1.25 4l4 4V0z"/>
           </svg>
         </div>
-        <div class="carousel-control-next" role="button" data-bs-target="#carouselExample" data-bs-slide="next">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 8 8">
-            <path d="M2.75 0l4 4-4 4V0z"/>
+        <div
+          class="carousel-control-next"
+          role="button"
+          data-bs-target="#carouselExample"
+          data-bs-slide="next"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="black"
+            viewBox="0 0 8 8"
+          >
+            <path d="M2.75 0l4 4-4 4V0z" />
           </svg>
         </div>
       </ngb-carousel>
     </div>
   </div>
 </ng-template>
-
 
 <app-landing2></app-landing2>
 

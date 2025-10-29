@@ -1355,6 +1355,7 @@
               [(ngModel)]="r.RelationType"
               class="relation-select"
               [disabled]="r.IsAdded === false"
+              [disabled]="r.IsAdded === false"
             >
               <option value="complementary">complementary</option>
               <option value="conflict">conflict</option>
@@ -1365,6 +1366,7 @@
               type="button"
               class="btn btn-outline-danger btn-sm relation-delete-btn"
               (click)="removeRelation(i)"
+              [disabled]="r.IsAdded === false"
             >
               <i class="fa-solid fa-trash"></i>
             </button>
