@@ -1181,7 +1181,7 @@
       <h5>Campaign Info</h5>
 
       <!-- Campaign Name -->
-      <div class="form-group sec mb-2  grop">
+      <div class="form-group sec mb-2 grop">
         <label style="width: 150px">Campaign Name:</label>
         <ng-container *ngIf="!isEditing; else editName">
           <div>{{ selectedCampaignDetails?.CampaignName }}</div>
@@ -1199,9 +1199,9 @@
       <!-- Organization -->
       <div
         *ngIf="selectedCampaignDetails?.OrganizationName"
-        class="form-group sec mb-2  grop"
+        class="form-group sec mb-2 grop"
       >
-      <label style="width: 150px">Organization:</label>
+        <label style="width: 150px">Organization:</label>
         <ng-container *ngIf="!isEditing; else editOrg">
           <div>{{ selectedCampaignDetails?.OrganizationName }}</div>
         </ng-container>
