@@ -218,9 +218,9 @@
 
           <div class="position-relative gallerry-btn">
                 <button
-                  *ngIf="placeImage && placeImage.length > 0"
+                  *ngIf="shoppingCenter.Images"
                   class="view-gallery"
-                  (click)="openGallery()"
+                  (click)="openGallery(shoppingCenter)"
                 >
                   <i class="fa-regular fa-images me-2"></i>View Gallery
                 </button>
@@ -827,14 +827,14 @@
 </ng-template>
 
 <ng-template #galleryModal let-modal>
-  <div class="modal-body p-0">
+  <div class="modal-body p-0" style="overflow-y: unset;">
     <div class="carousel-wrapper position-relative">
       <ngb-carousel
         class="custom-carousel"
         [showNavigationIndicators]="true"
         [showNavigationArrows]="true"
       >
-        <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
+        <ng-template ngbSlide *ngFor="let img of currentGalleryData; let i = index">
           <div class="text-center">
             <img
               loading="lazy"

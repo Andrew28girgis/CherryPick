@@ -10,6 +10,7 @@ export class LandingPlace {
   Place: place[] = [];
   Longitude!: number;
   Latitude!: number;
+  Images!: string;
 }
 export interface place {
   Id: number;
