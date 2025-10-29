@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
 declare const google: any;
@@ -10,6 +15,9 @@ import { OrgBranch } from 'src/app/shared/models/branches';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
@@ -50,6 +58,7 @@ export class LandingComponent {
   @ViewChild('campaignDetailsModal') campaignDetailsModal!: TemplateRef<any>;
   parsedCampaignDetails: { key: string; value: any }[] = [];
   currentGalleryData: any;
+  currentMainImage: string = '';
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -57,7 +66,8 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private viewManagerService: ViewManagerService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -156,6 +166,8 @@ export class LandingComponent {
       Price: place.Price ?? null,
       BuildingSizeSf: place.BuildingSizeSf ?? null,
       SecondaryType: place.SecondaryType ?? '',
+      Source: place.Source ?? '', 
+
     };
   }
 
@@ -173,6 +185,8 @@ export class LandingComponent {
       Price: this.editModel.Price,
       BuildingSizeSf: this.editModel.BuildingSizeSf,
       SecondaryType: this.editModel.SecondaryType,
+      Source: this.editModel.Source, 
+
     });
     this.cancelEdit();
   }
@@ -195,6 +209,7 @@ export class LandingComponent {
         BuildingSizeSf: place.BuildingSizeSf,
         Price: place.Price,
         LeaseType: place.LeaseType,
+        Source: place.Source,   
         Id: place.Id,
       },
     };
@@ -348,10 +363,40 @@ export class LandingComponent {
   }
 
   openGallery(modalObject: any) {
-    console.log(modalObject);
-    
-    this.currentGalleryData = modalObject.Images? modalObject.Images.split(',') :[] ;
-    this.modalService.open(this.galleryModal, { size: 'xl', centered: true ,});
+    this.currentGalleryData = modalObject.Images
+      ? modalObject.Images.split(',')
+      : [];
+
+    // Track current main image
+    this.currentMainImage = modalObject.MainImage || '';
+
+    this.modalService.open(this.galleryModal, {
+      size: 'xl',
+      centered: true,
+      fullscreen: 'lg',
+    });
+  }
+
+  selectMainImage(imageUrl: string): void {
+    if (!this.ShoppingCenterId || !imageUrl) return;
+
+    const encodedImage = encodeURIComponent(imageUrl);
+    const apiUrl = `${environment.api}/ShoppingCenter/UpdateMainImage?shoppingCenterId=${this.ShoppingCenterId}&newMainImage=${encodedImage}`;
+
+    this.http.post(apiUrl, {}).subscribe({
+      next: (res: any) => {
+        if (res === true || res?.json === true) {
+          this.showToast('Main image updated successfully!');
+          this.shoppingCenter.MainImage = imageUrl;
+          this.currentMainImage = imageUrl; // highlight new star
+        } else {
+          this.showToast('This image is already set as main or failed.');
+        }
+      },
+      error: () => {
+        this.showToast('Failed to update main image.');
+      },
+    });
   }
 
   async viewOnMap(lat: number, lng: number) {
@@ -600,85 +645,83 @@ export class LandingComponent {
     } else {
     }
   }
-//   viewSpecs(campaign: any) {
-//     this.showToast(
-//       `Campaign ${campaign.campaignName} specs are being fetched...`
-//     );
+  //   viewSpecs(campaign: any) {
+  //     this.showToast(
+  //       `Campaign ${campaign.campaignName} specs are being fetched...`
+  //     );
 
-//     const body: any = {
-//       Name: 'GetCampaignDetailsJSON',
-//       Params: { CampaignId: campaign.campaignId },
-//     };
+  //     const body: any = {
+  //       Name: 'GetCampaignDetailsJSON',
+  //       Params: { CampaignId: campaign.campaignId },
+  //     };
 
-//     this.PlacesService.GenericAPI(body).subscribe({
-//       next: (response) => {
-//         this.PlacesService.sendmessages({
-//           Chat: `
-//           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
-//           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
-//           The campaign name is "${campaign.campaignName}"
-//           Its ID is "${campaign.campaignId}"
-//           and aims to expand in the following locations from the JSON below:
-//           ${response.json[0].campaignDetailsJSON}
-//           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
-// `,
-//           //The campaign belongs to the tenant "${campaign.OrganizationName}"
-//           NeedToSaveIt: true,
-//         }).subscribe({});
-//       },
-//     });
-//   }
-viewSpecsNew(campaign: any) {
-  const body: any = {
-    Name: 'GetCampaignFullDetails',
-    Params: { CampaignId: campaign.campaignId },
-  };
+  //     this.PlacesService.GenericAPI(body).subscribe({
+  //       next: (response) => {
+  //         this.PlacesService.sendmessages({
+  //           Chat: `
+  //           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
+  //           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
+  //           The campaign name is "${campaign.campaignName}"
+  //           Its ID is "${campaign.campaignId}"
+  //           and aims to expand in the following locations from the JSON below:
+  //           ${response.json[0].campaignDetailsJSON}
+  //           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
+  // `,
+  //           //The campaign belongs to the tenant "${campaign.OrganizationName}"
+  //           NeedToSaveIt: true,
+  //         }).subscribe({});
+  //       },
+  //     });
+  //   }
+  viewSpecsNew(campaign: any) {
+    const body: any = {
+      Name: 'GetCampaignFullDetails',
+      Params: { CampaignId: campaign.campaignId },
+    };
 
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (response) => {
-      const data = response.json;
-      this.selectedCampaignDetails = data;
-      this.campaignLogo = data.LogoURL;
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        const data = response.json;
+        this.selectedCampaignDetails = data;
+        this.campaignLogo = data.LogoURL;
 
-      try {
-        const parsed = JSON.parse(data.CampaignDetailsJSON);
-        this.parsedCampaignDetails = this.getKeyValuePairs(parsed);
-      } catch {
-        this.parsedCampaignDetails = [];
-      }
+        try {
+          const parsed = JSON.parse(data.CampaignDetailsJSON);
+          this.parsedCampaignDetails = this.getKeyValuePairs(parsed);
+        } catch {
+          this.parsedCampaignDetails = [];
+        }
 
-      this.modalService.open(this.campaignDetailsModal, {
-        size: 'lg',
-        centered: true,
-        scrollable: true,
-      });
-    },
-  });
-}
+        this.modalService.open(this.campaignDetailsModal, {
+          size: 'lg',
+          centered: true,
+          scrollable: true,
+        });
+      },
+    });
+  }
 
-getKeyValuePairs(obj: any): { key: string; value: any }[] {
-  if (!obj || typeof obj !== 'object') return [];
+  getKeyValuePairs(obj: any): { key: string; value: any }[] {
+    if (!obj || typeof obj !== 'object') return [];
 
-  return Object.entries(obj)
-    .filter(([_, value]) => this.hasValue(value))
-    .map(([key, value]) => ({ key, value }));
-}
+    return Object.entries(obj)
+      .filter(([_, value]) => this.hasValue(value))
+      .map(([key, value]) => ({ key, value }));
+  }
 
-hasValue(value: any): boolean {
-  if (value === null || value === undefined) return false;
-  if (Array.isArray(value)) return value.some((v) => this.hasValue(v));
-  if (typeof value === 'object') return Object.keys(value).length > 0;
-  if (typeof value === 'string') return value.trim() !== '';
-  return true;
-}
+  hasValue(value: any): boolean {
+    if (value === null || value === undefined) return false;
+    if (Array.isArray(value)) return value.some((v) => this.hasValue(v));
+    if (typeof value === 'object') return Object.keys(value).length > 0;
+    if (typeof value === 'string') return value.trim() !== '';
+    return true;
+  }
 
-isObject(value: any): boolean {
-  return value && typeof value === 'object' && !Array.isArray(value);
-}
+  isObject(value: any): boolean {
+    return value && typeof value === 'object' && !Array.isArray(value);
+  }
 
-isArray(value: any): boolean {
-  return Array.isArray(value);
-}
-
-
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
 }
