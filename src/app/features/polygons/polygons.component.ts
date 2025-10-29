@@ -22,6 +22,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { GenericMapService } from 'src/app/core/services/generic-map.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { RefreshService } from 'src/app/core/services/refresh.service';
+import { HttpClient } from '@angular/common/http';
 
 type SearchType = 'state' | 'city' | 'neighborhood';
 export interface SearchItem {
@@ -80,7 +81,8 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
     private genericMapService: GenericMapService,
     private spinner: NgxSpinnerService,
     private changeDetector: ChangeDetectorRef,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private http: HttpClient
   ) {
     // Autocomplete pipeline with automatic unsubscribe on destroy
     this.searchInput$
@@ -583,71 +585,81 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-  public async savePolygon() {
-    if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
-      return;
-    }
-
-    const geoJsonStr = this.buildPolygonGeoJsonString();
-    if (!geoJsonStr) {
-      return;
-    }
-
-    if (!this.PolygonName?.trim()) {
-      alert('Please enter a name for the polygon before saving.');
-      return;
-    }
-
-    let city = '';
-    let state = '';
-
-    const payload = {
-      city: city || '',
-      state: state || '',
-      json: geoJsonStr,
-      name: this.PolygonName.trim(),
-    };
-
-
-    try {
-      this.spinner.show();
-    } catch {}
-
-    this.placesService
-      .BetaGenericAPI({ Name: 'AddPolygon', Params: payload })
-      .subscribe({
-        next: (res: any) => {
-          try {
-            this.spinner.hide();
-          } catch {}
-
-          const polygonId = res?.json?.[0]?.id ?? null;
-
-          if (!polygonId) {
-            return;
-          }
-
-          const locations = [
-            {
-              state: state || '',
-              city: city || '',
-              neighborhoodId: null,
-              polygonId: polygonId,
-            },
-          ];
-
-          const locationData = {
-            organizationId: this.selectedTenantId ?? 0,
-            locationCriteria: { locations },
-            polygonId,
-          };
-
-          this.locationDataVar = locationData;
-
-          this.changeDetector.markForCheck();
-        },
-      });
+public async savePolygon() {
+  if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
+    return;
   }
+
+  const geoJsonStr = this.buildPolygonGeoJsonString();
+  if (!geoJsonStr) {
+    return;
+  }
+
+  if (!this.PolygonName?.trim()) {
+    alert('Please enter a name for the polygon before saving.');
+    return;
+  }
+
+  const centroid = this.calculateCentroid(this.currentPolygonCoords);
+
+  this.getCityAndState(centroid.lat, centroid.lng).subscribe({
+    next: (response) => {
+      const city = response?.city || '';
+      const state = response?.stateCode || ''; 
+
+      const payload = {
+        city: city || '',
+        state: state || '',  
+        json: geoJsonStr,
+        name: this.PolygonName.trim(),
+      };
+
+      try {
+        this.spinner.show();
+      } catch {}
+
+      this.placesService
+        .BetaGenericAPI({ Name: 'AddPolygon', Params: payload })
+        .subscribe({
+          next: (res: any) => {
+            try {
+              this.spinner.hide();
+            } catch {}
+
+            const polygonId = res?.json?.[0]?.id ?? null;
+
+            if (!polygonId) {
+              return;
+            }
+
+            const locations = [
+              {
+                state: state || '',  
+                city: city || '',
+                neighborhoodId: null,
+                polygonId: polygonId,
+              },
+            ];
+
+            const locationData = {
+              organizationId: this.selectedTenantId ?? 0,
+              locationCriteria: { locations },
+              polygonId,
+            };
+
+            this.locationDataVar = locationData;
+
+            this.changeDetector.markForCheck();
+          },
+        });
+    },
+    error: (err) => {
+      console.error('Error fetching city and state:', err);
+    },
+  });
+}
+
+
 
   private addDrawControlsToMap() {
     try {
@@ -685,4 +697,29 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
       console.warn('Could not remove draw controls from map', err);
     }
   }
+
+  private calculateCentroid(coords: google.maps.LatLngLiteral[]): google.maps.LatLngLiteral {
+  let latSum = 0;
+  let lngSum = 0;
+  const numPoints = coords.length;
+
+  coords.forEach((coord) => {
+    latSum += coord.lat;
+    lngSum += coord.lng;
+  });
+
+  return {
+    lat: latSum / numPoints,
+    lng: lngSum / numPoints,
+  };
+}
+private getCityAndState(lat: number, lng: number): Observable<any> {
+  const url = `${environment.API_URL}/Geocode/GetCityAndState`;
+  const params = {
+    latitude: lat.toString(),
+    longitude: lng.toString(),
+  };
+  
+  return this.http.get<any>(url, { params });
+}
 }
