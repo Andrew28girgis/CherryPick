@@ -25,8 +25,8 @@
         </span> -->
       </button>
       <div *ngIf="campaignName" class="campaign-header-bar">
-        <span class="campaign-path"  >
-          <span class="campaign-n">
+        <span class="campaign-path">
+          <span class="campaign-n" (click)="goBack()">
             {{ campaignName }}
           </span>
           / {{ shoppingCenter.CenterName }}
@@ -852,37 +852,44 @@
           ngbSlide
           *ngFor="let img of currentGalleryData; let i = index"
         >
-<div class="gallery-image-container">
-  <i
-    class="star-overlay"
-    [ngClass]="{
-      'fa-solid fa-star': currentMainImage === img,
-      'fa-regular fa-star': currentMainImage !== img
-    }"
-    (click)="selectMainImage(img)"
-    title="Set as main image"
-  ></i>
+          <div class="gallery-image-container">
+            <i
+              class="star-overlay"
+              [ngClass]="{
+                'fa-solid fa-star': currentMainImage === img,
+                'fa-regular fa-star': currentMainImage !== img
+              }"
+              (click)="selectMainImage(img)"
+              title="Set as main image"
+            ></i>
 
-<i
-  class="delete-overlay fa-regular fa-trash-can"
-  (click)="deleteImage(img)"
-  title="Delete Image"
-></i>
+            <i
+              class="delete-overlay fa-regular fa-trash-can"
+              (click)="deleteImage(img)"
+              title="Delete Image"
+            ></i>
 
-
-  <!-- The image itself -->
-  <img
-    [src]="img"
-    alt="Gallery image"
-    class="gallery-image"
-    loading="lazy"
-  />
-</div>
-
+            <!-- The image itself -->
+            <img
+              [src]="img"
+              alt="Gallery image"
+              class="gallery-image"
+              loading="lazy"
+            />
+          </div>
         </ng-template>
-        <div class="carousel-control-prev" role="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 8 8">
-            <path d="M5.25 0L1.25 4l4 4V0z"/>
+        <div
+          class="carousel-control-prev"
+          role="button"
+          data-bs-target="#carouselExample"
+          data-bs-slide="prev"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="black"
+            viewBox="0 0 8 8"
+          >
+            <path d="M5.25 0L1.25 4l4 4V0z" />
           </svg>
         </div>
         <div
