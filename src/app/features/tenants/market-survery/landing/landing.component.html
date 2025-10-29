@@ -837,30 +837,29 @@
 
 <ng-template #galleryModal let-modal>
   <div class="modal-body p-0 gallery-modal-body">
-    <div class="carousel-wrapper">
+    <div class="carousel-wrapper position-relative">
       <ngb-carousel
         class="custom-carousel"
         [showNavigationIndicators]="true"
         [showNavigationArrows]="true"
+        [pauseOnHover]="true"
+        [interval]="0"
       >
         <ng-template
           ngbSlide
           *ngFor="let img of currentGalleryData; let i = index"
         >
           <div class="gallery-image-container">
-            <!-- ⭐ Star overlay -->
             <i
-              class="fa"
+              class="star-overlay"
               [ngClass]="{
-                'fa-star': currentMainImage === img,
-                'fa-star-o': currentMainImage !== img
+                'fa-solid fa-star': currentMainImage === img,
+                'fa-regular fa-star': currentMainImage !== img
               }"
               (click)="selectMainImage(img)"
-              class="star-overlay"
               title="Set as main image"
             ></i>
 
-            <!-- 🖼️ Uniform image -->
             <img
               [src]="img"
               alt="Gallery image"

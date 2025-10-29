@@ -373,7 +373,6 @@ export class LandingComponent {
     this.modalService.open(this.galleryModal, {
       size: 'xl',
       centered: true,
-      fullscreen: 'lg',
     });
   }
 
@@ -388,7 +387,7 @@ export class LandingComponent {
         if (res === true || res?.json === true) {
           this.showToast('Main image updated successfully!');
           this.shoppingCenter.MainImage = imageUrl;
-          this.currentMainImage = imageUrl; // highlight new star
+          this.currentMainImage = imageUrl; 
         } else {
           this.showToast('This image is already set as main or failed.');
         }
