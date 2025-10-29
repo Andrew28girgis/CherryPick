@@ -166,8 +166,7 @@ export class LandingComponent {
       Price: place.Price ?? null,
       BuildingSizeSf: place.BuildingSizeSf ?? null,
       SecondaryType: place.SecondaryType ?? '',
-      Source: place.Source ?? '', 
-
+      Source: place.Source ?? '',
     };
   }
 
@@ -185,8 +184,7 @@ export class LandingComponent {
       Price: this.editModel.Price,
       BuildingSizeSf: this.editModel.BuildingSizeSf,
       SecondaryType: this.editModel.SecondaryType,
-      Source: this.editModel.Source, 
-
+      Source: this.editModel.Source,
     });
     this.cancelEdit();
   }
@@ -209,7 +207,7 @@ export class LandingComponent {
         BuildingSizeSf: place.BuildingSizeSf,
         Price: place.Price,
         LeaseType: place.LeaseType,
-        Source: place.Source,   
+        Source: place.Source,
         Id: place.Id,
       },
     };
@@ -387,13 +385,41 @@ export class LandingComponent {
         if (res === true || res?.json === true) {
           this.showToast('Main image updated successfully!');
           this.shoppingCenter.MainImage = imageUrl;
-          this.currentMainImage = imageUrl; 
+          this.currentMainImage = imageUrl;
         } else {
           this.showToast('This image is already set as main or failed.');
         }
       },
       error: () => {
         this.showToast('Failed to update main image.');
+      },
+    });
+  }
+  deleteImage(imageUrl: string): void {
+    if (!this.ShoppingCenterId || !imageUrl) return;
+
+    const encodedImage = encodeURIComponent(imageUrl);
+
+    const apiUrl = `${environment.api}/ShoppingCenter/DeleteImageAsync?shoppingCenterId=${this.ShoppingCenterId}&imageToDelete=${encodedImage}`;
+
+    this.http.post(apiUrl, {}).subscribe({
+      next: (res: any) => {
+        if (res === true || res?.json === true) {
+          this.showToast('Image deleted successfully!');
+
+          this.currentGalleryData = this.currentGalleryData.filter(
+            (img: string) => img !== imageUrl
+          );
+
+          if (this.currentMainImage === imageUrl) {
+            this.currentMainImage = '';
+          }
+        } else {
+          this.showToast('Failed to delete image.');
+        }
+      },
+      error: () => {
+        this.showToast('Error while deleting the image.');
       },
     });
   }

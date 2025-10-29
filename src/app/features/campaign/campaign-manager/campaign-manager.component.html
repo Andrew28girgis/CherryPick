@@ -1341,23 +1341,32 @@
           *ngFor="let r of editableCampaign.Relations; let i = index"
           class="relation-row"
         >
-          <span class="relation-label">
+          <span
+            class="relation-label"
+            [ngClass]="{ 'deleted-relation': !r.IsAdded }"
+          >
             {{ r.RelationOrganizationName }} ({{ r.RelationType }})
           </span>
 
-          <div class="d-flex gap-2 flex-column-reverse align-items-end">
-            <select [(ngModel)]="r.RelationType" class="relation-select">
+          <div class="d-flex align-items-center gap-2">
+            <select
+              [(ngModel)]="r.RelationType"
+              class="relation-select"
+              [disabled]="r.IsAdded===false"
+            >
               <option value="complementary">complementary</option>
               <option value="conflict">conflict</option>
             </select>
 
+            <!-- Delete Button (mark as deleted) -->
             <button
               type="button"
               class="btn btn-outline-danger btn-sm relation-delete-btn"
               (click)="removeRelation(i)"
+              [disabled]="r.IsAdded===false"
             >
-              <i class="fa-solid fa-trash"></i>
-            </button>
+            <i class="fa-solid fa-trash"></i>
+          </button>
           </div>
         </div>
       </div>
