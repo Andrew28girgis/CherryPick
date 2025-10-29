@@ -6,23 +6,23 @@
 </div>
 <div>
   <div
-    class="d-flex justify-content-between align-items-center my-3 px-3 responsive"
+    class="d-flex justify-content-between align-items-center my-1 responsive"
   >
-    <div class="d-flex align-items-center">
+    <!-- <div class="d-flex align-items-center">
       <i
         class="fa-solid fa-arrow-left goback mb-1 me-3"
         (click)="goBack()"
         title="Go back"
         style="cursor: pointer"
       ></i>
-    </div>
+    </div> -->
     <div class="responsive-div">
       <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
         <i class="fa-solid fa-chevron-left me-1"></i>
         <span class="me-1">Previous</span>
-        <span>
+        <!-- <span>
           {{ prevName ? "to:  " + prevName : "" }}
-        </span>
+        </span> -->
       </button>
       <div *ngIf="campaignName" class="campaign-header-bar">
         <span class="campaign-path">
@@ -32,10 +32,10 @@
 
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
         <span class="me-1">Next</span>
-
+<!-- 
         <span>
           {{ nextName ? "to:  " + nextName : "" }}
-        </span>
+        </span> -->
 
         <i class="fa-solid fa-chevron-right ms-1"></i>
       </button>
@@ -230,56 +230,55 @@
     </div>
   </div>
   <div
-    class="contacts-wrapper d-flex justify-content-between gap-4 flex-column py-2"
+    class="contacts-wrapper d-flex justify-content-between gap-2 flex-column py-2"
     *ngIf="hasContacts()"
   >
-    <div>
-      <div class="contact-container">
-        <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
-          <div
-            class="user-card-wrapper"
-            *ngIf="Manager.FirstName || Manager.LastName || Manager.Email"
-          >
-            <span class="card-badge" *ngIf="Manager.OrganizationName">
-              {{ Manager.OrganizationName }}
-            </span>
-            <div class="user-card gap-2">
-              <div class="org-logo placeholder">
-                {{
-                  getInitials(Manager.FirstName, Manager.LastName) ||
-                    getInitial(Manager.OrganizationName || "N/A")
-                }}
-              </div>
+    <h2 class="main-heading">Contacts</h2>
+    <div class="contact-container">
+      <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
+        <div
+          class="user-card-wrapper"
+          *ngIf="Manager.FirstName || Manager.LastName || Manager.Email"
+        >
+          <span class="card-badge" *ngIf="Manager.OrganizationName">
+            {{ Manager.OrganizationName }}
+          </span>
+          <div class="user-card gap-2">
+            <div class="org-logo placeholder">
+              {{
+                getInitials(Manager.FirstName, Manager.LastName) ||
+                  getInitial(Manager.OrganizationName || "N/A")
+              }}
+            </div>
 
-              <div class="user-info">
-                <h3
-                  class="user-name m-0"
-                  *ngIf="Manager.FirstName || Manager.LastName"
-                >
-                  <span class="name">{{
-                    Manager.FirstName + " " + Manager.LastName
-                  }}</span>
-                </h3>
-                <p
-                  class="user-email email-link"
-                  *ngIf="Manager.Email"
-                  [attr.data-email]="Manager.Email"
-                >
-                  <i class="fa-regular fa-envelope"></i>
-                  {{ Manager.Email }}
-                </p>
-              </div>
+            <div class="user-info">
+              <h3
+                class="user-name m-0"
+                *ngIf="Manager.FirstName || Manager.LastName"
+              >
+                <span class="name">{{
+                  Manager.FirstName + " " + Manager.LastName
+                }}</span>
+              </h3>
+              <p
+                class="user-email email-link"
+                *ngIf="Manager.Email"
+                [attr.data-email]="Manager.Email"
+              >
+                <i class="fa-regular fa-envelope"></i>
+                {{ Manager.Email }}
+              </p>
             </div>
           </div>
-        </ng-container>
-      </div>
+        </div>
+      </ng-container>
     </div>
   </div>
   <div
-    class="main-section"
+    class="contacts-wrapper"
     *ngIf="shoppingCenter && shoppingCenter.Place.length > 0"
   >
-    <section id="hero">
+    <section>
       <ng-container>
         <div class="col-md-12">
           <div class="d-flex justify-content-between">
@@ -425,7 +424,7 @@
                       *ngIf="editingPlaceId !== place.Id; else editActions"
                     >
                       <i
-                        class="fa fa-edit text-primary"
+                        class="fa fa-edit "
                         title="Edit"
                         role="button"
                         tabindex="0"

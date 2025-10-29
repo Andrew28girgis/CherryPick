@@ -7,7 +7,7 @@
 
   <div
     class="w-100 d-flex align-items-center justify-content-end"
-    style="padding-bottom: 21px"
+    style="padding-block: 21px;"
   >
     <div
       class="d-flex align-items-center gap-3 toggle-cont justify-content-between w-100"
@@ -293,12 +293,12 @@
                 >
                   Delete Campaign
                 </button>
-                <!-- <button
+                <button
                   class="menu-item"
-                  (click)="editCampaign(campaign); closeMenu()"
+                  (click)="viewSpecsNew(campaign); closeMenu()"
                 >
                   Edit Campaign
-                </button> -->
+                </button>
               </div>
             </div>
             <div
@@ -517,7 +517,7 @@
         <table class="table align-middle">
           <thead>
             <tr>
-              <th class="col-name">Campaign Name</th>
+              <th class="col-name">Name</th>
               <th class="col-emily">Emily</th>
               <th class="col-sites">Sites</th>
               <th class="col-submissions">Submissions</th>
@@ -553,57 +553,65 @@
                       style="display: flex; align-items: center"
                     >
                       {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-                      <button
-                        class="menu-btn"
-                        (click)="toggleMenu(campaign.Id, $event)"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                        >
-                          <path
-                            d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
-                            fill="#18171F"
-                            stroke="#18171F"
-                          />
-                          <path
-                            d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
-                            fill="#18171F"
-                          />
-                          <path
-                            d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
-                            fill="#18171F"
-                          />
-                        </svg>
-                      </button>
-
-                      <!-- DROPDOWN -->
                       <div
-                        class="menu-dropdown"
-                        style="top: 20vh; right: 44vw;z-index: 1;"
-                        *ngIf="openMenuId === campaign.Id"
+                        class="menu-wrapper"
+                        (click)="$event.stopPropagation()"
+                        [ngClass]="{
+                          'opened-menu': openOptionsId === campaign.Id
+                        }"
                       >
                         <button
-                          class="menu-item"
-                          (click)="viewSpecsNew(campaign); closeMenu()"
+                          class="menu-btn"
+                          (click)="toggleMenu(campaign.Id, $event)"
                         >
-                          View Specs
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                          >
+                            <path
+                              d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
+                              fill="#18171F"
+                              stroke="#18171F"
+                            />
+                            <path
+                              d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
+                              fill="#18171F"
+                            />
+                            <path
+                              d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
+                              fill="#18171F"
+                            />
+                          </svg>
                         </button>
-                        <button
-                          class="menu-item"
-                          (click)="deleteCampaign(campaign.Id); closeMenu()"
+
+                        <!-- DROPDOWN -->
+                        <div
+                          class="menu-dropdown"
+                          style="top: 5vh; right: -12vw; z-index: 1"
+                          *ngIf="openMenuId === campaign.Id"
                         >
-                          Delete Campaign
-                        </button>
-                        <!-- <button
-                          class="menu-item"
-                          (click)="editCampaign(campaign); closeMenu()"
-                        >
-                          Edit Campaign
-                        </button> -->
+                          <button
+                            class="menu-item"
+                            (click)="viewSpecsNew(campaign); closeMenu()"
+                          >
+                            View Specs
+                          </button>
+                          <button
+                            class="menu-item"
+                            (click)="deleteCampaign(campaign.Id); closeMenu()"
+                          >
+                            Delete Campaign
+                          </button>
+                          <button
+                            class="menu-item"
+                            (click)="viewSpecsNew(campaign, true); closeMenu()"
+                          >
+                            Edit Campaign
+                          </button>
+                        </div>
                       </div>
                       <div
                         class="campaign-privacy"
@@ -1344,10 +1352,20 @@
             {{ r.RelationOrganizationName }} ({{ r.RelationType }})
           </span>
 
-          <select [(ngModel)]="r.RelationType" class="relation-select">
-            <option value="complementary">complementary</option>
-            <option value="conflict">conflict</option>
-          </select>
+          <div class="d-flex gap-2 flex-column-reverse align-items-end">
+            <select [(ngModel)]="r.RelationType" class="relation-select">
+              <option value="complementary">complementary</option>
+              <option value="conflict">conflict</option>
+            </select>
+
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm relation-delete-btn"
+              (click)="removeRelation(i)"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -1412,7 +1430,7 @@
     <button *ngIf="!isEditing" class="btn btn-secondary" (click)="startEdit()">
       Edit
     </button>
-    <button *ngIf="isEditing" class="btn btn-primary" (click)="saveEdit()">
+    <button *ngIf="isEditing" class="g-button save-btnc" (click)="saveEdit()">
       Save
     </button>
     <button

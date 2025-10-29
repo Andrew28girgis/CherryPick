@@ -28,35 +28,6 @@
 .main-heading {
   font-size: 25px;
   padding: 5px 0;
-  font-weight: 600;
-}
-#hero h1 {
-  margin: 0 0 10px 0;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 35px;
-  color: black;
-}
-#hero h2 {
-  font-size: 18px;
-}
-#hero .btn-get-started {
-  font-weight: 500;
-  font-size: 16px;
-  letter-spacing: 1px;
-  display: inline-block;
-  padding: 10px 30px;
-  border-radius: 50px;
-  transition: 0.5s;
-  color: #3498db;
-  border: 2px solid #3498db;
-}
-#hero .btn-get-started:hover {
-  background: #3498db;
-  color: var(--Colors-Pure-White);
-}
-#hero .animated {
-  animation: up-down 2s ease-in-out infinite alternate-reverse both;
 }
 .table {
   border: 1px solid #dfdfdf;
@@ -78,7 +49,6 @@
 .main-section {
   margin: var(--Space-S-20) 0 var(--Space-S-20) 0;
   padding: var(--Space-S-20);
-
   border-radius: var(--Radius-R-20);
   background: var(--Colors-Card-Background);
   backdrop-filter: blur(20px);
@@ -1117,7 +1087,7 @@ li {
 }
 
 .campaign-path {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 300 !important;
   letter-spacing: 0.3px;
 }
@@ -1450,4 +1420,7 @@ li {
 .value {
   color: #555;
   word-break: break-word;
+}
+.fa-edit {
+  color: var(--Colors-Primary-500);
 }
