@@ -1043,7 +1043,7 @@ li {
 }
 
 .campaign-path {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 300 !important;
   letter-spacing: 0.3px;
 }
@@ -1376,4 +1376,7 @@ li {
 .value {
   color: #555;
   word-break: break-word;
+}
+.fa-edit {
+  color: var(--Colors-Primary-500);
 }

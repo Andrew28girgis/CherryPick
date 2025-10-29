@@ -6,23 +6,23 @@
 </div>
 <div>
   <div
-    class="d-flex justify-content-between align-items-center my-3 px-3 responsive"
+    class="d-flex justify-content-between align-items-center my-1 responsive"
   >
-    <div class="d-flex align-items-center">
+    <!-- <div class="d-flex align-items-center">
       <i
         class="fa-solid fa-arrow-left goback mb-1 me-3"
         (click)="goBack()"
         title="Go back"
         style="cursor: pointer"
       ></i>
-    </div>
+    </div> -->
     <div class="responsive-div">
       <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
         <i class="fa-solid fa-chevron-left me-1"></i>
         <span class="me-1">Previous</span>
-        <span>
+        <!-- <span>
           {{ prevName ? "to:  " + prevName : "" }}
-        </span>
+        </span> -->
       </button>
       <div *ngIf="campaignName" class="campaign-header-bar">
         <span class="campaign-path">
@@ -32,10 +32,10 @@
 
       <button class="nav-btn nav-btn-next" (click)="goToNext()">
         <span class="me-1">Next</span>
-
+<!-- 
         <span>
           {{ nextName ? "to:  " + nextName : "" }}
-        </span>
+        </span> -->
 
         <i class="fa-solid fa-chevron-right ms-1"></i>
       </button>
@@ -275,7 +275,7 @@
     </div>
   </div>
   <div
-    class="main-section"
+    class="contacts-wrapper"
     *ngIf="shoppingCenter && shoppingCenter.Place.length > 0"
   >
     <section>
@@ -424,7 +424,7 @@
                       *ngIf="editingPlaceId !== place.Id; else editActions"
                     >
                       <i
-                        class="fa fa-edit text-primary"
+                        class="fa fa-edit "
                         title="Edit"
                         role="button"
                         tabindex="0"
