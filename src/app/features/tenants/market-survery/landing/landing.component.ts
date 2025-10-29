@@ -54,6 +54,7 @@ export class LandingComponent {
   campaignLogo: string = '';
   @ViewChild('campaignDetailsModal') campaignDetailsModal!: TemplateRef<any>;
   parsedCampaignDetails: { key: string; value: any }[] = [];
+  currentGalleryData: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -351,8 +352,11 @@ export class LandingComponent {
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
-  openGallery() {
-    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
+  openGallery(modalObject: any) {
+    console.log(modalObject);
+    
+    this.currentGalleryData = modalObject.Images? modalObject.Images.split(',') :[] ;
+    this.modalService.open(this.galleryModal, { size: 'xl', centered: true ,});
   }
 
   async viewOnMap(lat: number, lng: number) {

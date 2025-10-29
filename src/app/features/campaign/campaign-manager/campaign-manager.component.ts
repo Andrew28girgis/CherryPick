@@ -41,7 +41,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   tempTenantId: any;
   specs: any;
   CampaignDetailsJSON: any;
-   @Input() set viewMode(value: 'card' | 'table') {
+  @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
       localStorage.setItem('campaignViewMode', value);
@@ -103,6 +103,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   campaignLogo: string = '';
   @ViewChild('campaignDetailsModal') campaignDetailsModal!: TemplateRef<any>;
   parsedCampaignDetails: { key: string; value: any }[] = [];
+  isEditing = false;
+  editableCampaign: any = {};
 
   constructor(
     private placesService: PlacesService,
@@ -625,65 +627,72 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       this.closeMenu();
     }
   }
-//   viewSpecs(campaign: any) {
-//     const body: any = {
-//       Name: 'GetCampaignDetailsJSON',
-//       Params: { CampaignId: campaign.Id },
-//     };
+  //   viewSpecs(campaign: any) {
+  //     const body: any = {
+  //       Name: 'GetCampaignDetailsJSON',
+  //       Params: { CampaignId: campaign.Id },
+  //     };
 
-//     this.placesService.GenericAPI(body).subscribe({
-//       next: (response) => {
-//         this.selectedCampaign = JSON.parse(
-//           response.json[0].campaignDetailsJSON
-//         );
-//         this.campaignlogo = campaign.logoUrl;
-//         this.placesService
-//           .sendmessages({
-//             Chat: `
-//           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
-//           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
-//           The campaign name is "${campaign.CampaignName}"
-//           Its ID is "${campaign.Id}"
-//           The campaign belongs to the tenant "${campaign.OrganizationName}"
-//           and aims to expand in the following locations from the JSON below:
-//           ${response.json[0].campaignDetailsJSON}
-//           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
-// `,
-//             NeedToSaveIt: true,
-//           })
-//           .subscribe({});
-//         // this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
-//       },
-//     });
-//   }
+  //     this.placesService.GenericAPI(body).subscribe({
+  //       next: (response) => {
+  //         this.selectedCampaign = JSON.parse(
+  //           response.json[0].campaignDetailsJSON
+  //         );
+  //         this.campaignlogo = campaign.logoUrl;
+  //         this.placesService
+  //           .sendmessages({
+  //             Chat: `
+  //           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
+  //           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
+  //           The campaign name is "${campaign.CampaignName}"
+  //           Its ID is "${campaign.Id}"
+  //           The campaign belongs to the tenant "${campaign.OrganizationName}"
+  //           and aims to expand in the following locations from the JSON below:
+  //           ${response.json[0].campaignDetailsJSON}
+  //           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
+  // `,
+  //             NeedToSaveIt: true,
+  //           })
+  //           .subscribe({});
+  //         // this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
+  //       },
+  //     });
+  //   }
 
-viewSpecsNew(campaign: any) {
-  const body: any = {
-    Name: 'GetCampaignFullDetails',
-    Params: { CampaignId: campaign.Id },
-  };
+  viewSpecsNew(campaign: any) {
+    const body: any = {
+      Name: 'GetCampaignFullDetails',
+      Params: { CampaignId: campaign.Id },
+    };
 
-  this.placesService.GenericAPI(body).subscribe({
-    next: (response) => {
-      const data = response.json;
-      this.selectedCampaignDetails = data;
-      this.campaignLogo = data.LogoURL;
+    this.placesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        const data = response.json;
+        this.selectedCampaignDetails = data;
+        this.campaignLogo = data.LogoURL;
 
-      try {
-        const parsed = JSON.parse(data.CampaignDetailsJSON);
-        this.parsedCampaignDetails = this.getKeyValuePairs(parsed);
-      } catch {
-        this.parsedCampaignDetails = [];
-      }
+        // Parse CampaignDetailsJSON to bring hidden fields like IsStandAlone
+        try {
+          const parsed = JSON.parse(data.CampaignDetailsJSON);
+          this.parsedCampaignDetails = this.getKeyValuePairs(parsed);
 
-      this.modalService.open(this.campaignDetailsModal, {
-        size: 'lg',
-        centered: true,
-        scrollable: true,
-      });
-    },
-  });
-}
+          // ✅ Merge any missing fields into selectedCampaignDetails
+          this.selectedCampaignDetails = {
+            ...data,
+            ...parsed,
+          };
+        } catch {
+          this.parsedCampaignDetails = [];
+        }
+
+        this.modalService.open(this.campaignDetailsModal, {
+          size: 'lg',
+          centered: true,
+          scrollable: true,
+        });
+      },
+    });
+  }
 
   deleteCampaign(campaignId: number) {
     const body: any = {
@@ -865,12 +874,12 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
   }
   getKeyValuePairs(obj: any): { key: string; value: any }[] {
     if (!obj || typeof obj !== 'object') return [];
-  
+
     return Object.entries(obj)
       .filter(([_, value]) => this.hasValue(value))
       .map(([key, value]) => ({ key, value }));
   }
-  
+
   hasValue(value: any): boolean {
     if (value === null || value === undefined) return false;
     if (Array.isArray(value)) return value.some((v) => this.hasValue(v));
@@ -878,14 +887,81 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     if (typeof value === 'string') return value.trim() !== '';
     return true;
   }
-  
+
   isObject(value: any): boolean {
     return value && typeof value === 'object' && !Array.isArray(value);
   }
-  
+
   isArray(value: any): boolean {
     return Array.isArray(value);
   }
-  
-  
+  startEdit() {
+    this.isEditing = true;
+    this.editableCampaign = JSON.parse(
+      JSON.stringify(this.selectedCampaignDetails)
+    );
+  }
+
+  cancelEdit() {
+    this.isEditing = false;
+    this.editableCampaign = {};
+  }
+
+  saveEdit() {
+    const updated = this.editableCampaign;
+
+    // 🔧 Convert Relations into the expected DTO shape
+    const organizationRelationsDTO = (updated.Relations || []).map(
+      (r: any) => ({
+        RelationOrgId: r.RelationOrgId ?? r.RelationOrgId ?? null,
+        RetailRelationCategoryId: r.RelationType === 'complementary' ? 5 : 6,
+        RetailRelationCategoryName:
+          r.RelationType === 'complementary' ? 'complmentary' : 'conflicting',
+        relationOrgName: r.RelationOrganizationName,
+      })
+    );
+
+    // 🔧 Convert Locations into expected format
+    const campaignLocations = (updated.Locations || []).map((loc: any) => ({
+      State: loc.State,
+      City: loc.CityName,
+      NeighborhoodId: null,
+    }));
+
+    const body = {
+      CampaignName: updated.CampaignName,
+      OrganizationId: updated.OrganizationId,
+      name: updated.OrganizationName,
+      IsStandAlone: updated.IsStandAlone,
+      CampaignLocations: campaignLocations,
+      MinUnitSize: updated.MinUnitSize,
+      MaxUnitSize: updated.MaxUnitSize,
+      OrganizationRelationsDTO: organizationRelationsDTO,
+    };
+
+    console.log('Update body:', body); // Debug payload
+
+    this.placesService
+      .UpdateCampaign(
+        body.CampaignName,
+        body.OrganizationId,
+        body.name,
+        body.IsStandAlone,
+        body.CampaignLocations,
+        body.MinUnitSize,
+        body.MaxUnitSize,
+        body.OrganizationRelationsDTO
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Campaign updated:', res);
+          this.selectedCampaignDetails = updated;
+          this.isEditing = false;
+          this.modalService.dismissAll();
+        },
+        error: (err) => {
+          console.error('Update failed:', err);
+        },
+      });
+  }
 }

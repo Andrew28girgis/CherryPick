@@ -1781,4 +1781,46 @@
   word-break: break-word;
 }
 
+.sec {
+  flex-direction: row;
+  display: flex;
+}
+.form-select{
+height: fit-content;
+}
+.relation-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: #f8f9fa;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
 
+.relation-label {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #333;
+  white-space: pre-wrap;
+  overflow: hidden;
+ }
+
+.relation-select {
+  flex-shrink: 0;
+  width: 160px;
+  height: 30px;
+  padding: 2px 6px;
+  font-size: 0.85rem;
+  border-radius: 24px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.relation-select:focus {
+  border-color: #007bff;
+  outline: none;
+}
