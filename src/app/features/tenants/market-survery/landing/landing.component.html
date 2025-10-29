@@ -859,7 +859,7 @@
               (click)="selectMainImage(img)"
               title="Set as main image"
             ></i>
-
+            
             <img
               [src]="img"
               alt="Gallery image"
@@ -868,10 +868,22 @@
             />
           </div>
         </ng-template>
+        <!-- Prev and Next arrows (SVG inserted directly here) -->
+        <div class="carousel-control-prev" role="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 8 8">
+            <path d="M5.25 0L1.25 4l4 4V0z"/>
+          </svg>
+        </div>
+        <div class="carousel-control-next" role="button" data-bs-target="#carouselExample" data-bs-slide="next">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 8 8">
+            <path d="M2.75 0l4 4-4 4V0z"/>
+          </svg>
+        </div>
       </ngb-carousel>
     </div>
   </div>
 </ng-template>
+
 
 <app-landing2></app-landing2>
 
