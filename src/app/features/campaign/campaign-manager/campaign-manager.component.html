@@ -1181,7 +1181,7 @@
       <h5>Campaign Info</h5>
 
       <!-- Campaign Name -->
-      <div class="form-group sec mb-2">
+      <div class="form-group sec mb-2 justify-content-between grop">
         <label>Campaign Name:</label>
         <ng-container *ngIf="!isEditing; else editName">
           <div>{{ selectedCampaignDetails?.CampaignName }}</div>
@@ -1191,6 +1191,7 @@
             type="text"
             [(ngModel)]="editableCampaign.CampaignName"
             class="form-control form-control-sm"
+            style="width: 400px"
           />
         </ng-template>
       </div>
@@ -1198,7 +1199,7 @@
       <!-- Organization -->
       <div
         *ngIf="selectedCampaignDetails?.OrganizationName"
-        class="form-group sec mb-2"
+        class="form-group sec mb-2 justify-content-between grop"
       >
         <label>Organization:</label>
         <ng-container *ngIf="!isEditing; else editOrg">
@@ -1209,6 +1210,7 @@
             type="text"
             [(ngModel)]="editableCampaign.OrganizationName"
             class="form-control form-control-sm"
+            style="width: 400px"
           />
         </ng-template>
       </div>
@@ -1353,6 +1355,7 @@
               [(ngModel)]="r.RelationType"
               class="relation-select"
               [disabled]="r.IsAdded === false"
+              [disabled]="r.IsAdded === false"
             >
               <option value="complementary">complementary</option>
               <option value="conflict">conflict</option>
@@ -1365,6 +1368,8 @@
               (click)="removeRelation(i)"
               [disabled]="r.IsAdded === false"
             >
+              <i class="fa-solid fa-trash"></i>
+            </button>
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
