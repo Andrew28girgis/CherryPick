@@ -59,6 +59,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Output() saveLocationCriteria = new EventEmitter<any>();
+  @Input() locations: any[] = [];
 
   @ViewChild('drawControls', { static: false })
   private drawControlsRef!: ElementRef<HTMLDivElement>;
@@ -73,6 +74,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   PolygonName: string = '';
   savedPolygonId?: number | null = null;
   locationDataVar: any;
+  campaignLocationsList: any;
 
   constructor(
     private mapDrawingService: MapDrawingService,
@@ -116,7 +118,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
       }
     };
     tryAttach();
-  }
+   }
 
   ngAfterViewInit(): void {
     this.map = this.mapDrawingService.initializeMap(this.mapElement);
@@ -585,81 +587,21 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-public async savePolygon() {
-  if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
-    return;
+  public async savePolygon() {
+    if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
+      return;
+    }
+
+    const geoJsonStr = this.buildPolygonGeoJsonString();
+    if (!geoJsonStr) {
+      return;
+    }
+
+    if (!this.PolygonName?.trim()) {
+      alert('Please enter a name for the polygon before saving.');
+      return;
+    }
   }
-
-  const geoJsonStr = this.buildPolygonGeoJsonString();
-  if (!geoJsonStr) {
-    return;
-  }
-
-  if (!this.PolygonName?.trim()) {
-    alert('Please enter a name for the polygon before saving.');
-    return;
-  }
-
-  const centroid = this.calculateCentroid(this.currentPolygonCoords);
-
-  this.getCityAndState(centroid.lat, centroid.lng).subscribe({
-    next: (response) => {
-      const city = response?.city || '';
-      const state = response?.stateCode || ''; 
-
-      const payload = {
-        city: city || '',
-        state: state || '',  
-        json: geoJsonStr,
-        name: this.PolygonName.trim(),
-      };
-
-      try {
-        this.spinner.show();
-      } catch {}
-
-      this.placesService
-        .BetaGenericAPI({ Name: 'AddPolygon', Params: payload })
-        .subscribe({
-          next: (res: any) => {
-            try {
-              this.spinner.hide();
-            } catch {}
-
-            const polygonId = res?.json?.[0]?.id ?? null;
-
-            if (!polygonId) {
-              return;
-            }
-
-            const locations = [
-              {
-                state: state || '',  
-                city: city || '',
-                neighborhoodId: null,
-                polygonId: polygonId,
-              },
-            ];
-
-            const locationData = {
-              organizationId: this.selectedTenantId ?? 0,
-              locationCriteria: { locations },
-              polygonId,
-            };
-
-            this.locationDataVar = locationData;
-
-            this.changeDetector.markForCheck();
-          },
-        });
-    },
-    error: (err) => {
-      console.error('Error fetching city and state:', err);
-    },
-  });
-}
-
-
 
   private addDrawControlsToMap() {
     try {
@@ -698,28 +640,21 @@ public async savePolygon() {
     }
   }
 
-  private calculateCentroid(coords: google.maps.LatLngLiteral[]): google.maps.LatLngLiteral {
-  let latSum = 0;
-  let lngSum = 0;
-  const numPoints = coords.length;
+  private calculateCentroid(
+    coords: google.maps.LatLngLiteral[]
+  ): google.maps.LatLngLiteral {
+    let latSum = 0;
+    let lngSum = 0;
+    const numPoints = coords.length;
 
-  coords.forEach((coord) => {
-    latSum += coord.lat;
-    lngSum += coord.lng;
-  });
+    coords.forEach((coord) => {
+      latSum += coord.lat;
+      lngSum += coord.lng;
+    });
 
-  return {
-    lat: latSum / numPoints,
-    lng: lngSum / numPoints,
-  };
-}
-private getCityAndState(lat: number, lng: number): Observable<any> {
-  const url = `${environment.API_URL}/Geocode/GetCityAndState`;
-  const params = {
-    latitude: lat.toString(),
-    longitude: lng.toString(),
-  };
-  
-  return this.http.get<any>(url, { params });
-}
+    return {
+      lat: latSum / numPoints,
+      lng: lngSum / numPoints,
+    };
+  }
 }

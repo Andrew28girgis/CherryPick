@@ -45,7 +45,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   campaignRelations: any;
   IsStandAlone: any;
   locationsDefault: any;
-  @Input() set viewMode(value: 'card' | 'table') {
+   @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
       localStorage.setItem('campaignViewMode', value);
@@ -115,6 +115,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   parsedCampaignDetails: { key: string; value: any }[] = [];
   isEditing = false;
   editableCampaign: any = {};
+  campaignLocationsList: any[] = []; // New array to hold transformed campaign locations
 
   constructor(
     private placesService: PlacesService,
@@ -458,16 +459,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.IsStandAlone = this.selectedCampaignDetails?.IsStandAlone || false;
     this.MinUnitSize = this.selectedCampaignDetails?.MinUnitSize || 0;
     this.MaxUnitSize = this.selectedCampaignDetails?.MaxUnitSize || 0;
-
-    // Fetch the selected tenant by OrganizationId
-
     this.selectedTenant = this.getSelectedTenantByOrganizationId(
       this.selectedCampaignDetails?.OrganizationId
     );
-    // this.selectTenant(this.selectedTenant);
-    console.log('vvvvvvvvvvvvvvvvvvv', this.selectedTenant);
 
-    // Safely filter Relations: make sure Relations is not undefined or null
     this.complementaryTenantsDefault =
       this.selectedCampaignDetails?.Relations?.filter(
         (r: any) => r.RelationType === 'complementary'
@@ -486,17 +481,25 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         relation: 'conflicting',
       })),
     ];
-    console.log('dffffffffffffffffffffffffff', this.allTenants);
+    this.campaignLocationsList  = (this.selectedCampaignDetails?.Locations || []).map((location :any) => {
+      return {
+        type: 'neighborhood',
+        id: location.NeighborhoodId, 
+        name: `${location.City}, ${location.State}`, 
+        state: location.State,
+        city: location.City,
+        raw: location,  
+      };
+    });
+      
+  //  this.polygonsComponentRef?.setInitialLocations(this.campaignLocationsList );
 
-    console.log('vvvvvvvvvvvvvvvvvvv', this.complementaryTenants);
-    console.log('vvvvvvvvvvvvvvvvvvv', this.conflictingTenants);
-
-    // Pre-fill locations if available
+  
     this.campaignLocations = [
-      ...(this.selectedCampaignDetails?.CampaignLocations || []),
+      ...(this.selectedCampaignDetails?.Locations || []),
     ];
 
-    this.step = 'tenant'; // Adjust step if needed (step 1: select tenant, step 2: campaign details)
+    this.step = 'tenant';
   }
   getSelectedTenantByOrganizationId(organizationId: number) {
     // Ensure tenants are populated before searching for the selected tenant
@@ -580,7 +583,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (editing) {
       this.updatecampaign(campaignLocations);
     }
-    console.log('✅ campaignLocations to send:', campaignLocations);
     if (!editing) {
       this.placesService
         .CreateCampaign(
@@ -598,11 +600,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
             this.modalRef?.close();
             this.getAllCampaigns();
 
-            console.log('CreateCampaign response:', response);
             const campaignDetails = JSON.stringify(response.campaign);
-
-            // trigger Emily chat / assistant display
-            console.log('sdsaaaaaaaaaaaaaaaa', this.selectedTenants);
             const selectedTenantsInfo = JSON.stringify(this.selectedTenants);
             this.placesService
               .sendmessages({
@@ -688,8 +686,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           // select previous selected  teannt before creation
           // this.selectedTenant = this.tenants.find((t) => t.id === this.tempTenantId);
 
-          // stop polling once logo exists
-          if (tenant.logoUrl) {
+           if (tenant.logoUrl) {
             clearInterval(this.logoInterval);
             this.logoInterval = null;
           }
@@ -779,7 +776,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         });
         modalRef.result.finally(() => {
           this.isEditing = false;
-          this.editableCampaign = {}; // optional: clear data
+          this.editableCampaign = {}; 
         });
       },
     });
@@ -795,24 +792,21 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       next: (response) => {
         const data = response.json;
 
-        // Store campaign details
-        this.selectedCampaignDetails = data;
+         this.selectedCampaignDetails = data;
         this.campaignLogo = data.LogoURL;
 
-        // Parse CampaignDetailsJSON to bring hidden fields like IsStandAlone, MinUnitSize, MaxUnitSize, Locations, Relations
-        try {
+         try {
           const parsed = JSON.parse(data.CampaignDetailsJSON);
           this.selectedCampaignDetails = {
             ...data,
-            ...parsed, // Merge parsed campaign details
+            ...parsed, 
           };
         } catch (error) {
           console.error('Error parsing CampaignDetailsJSON', error);
           this.parsedCampaignDetails = [];
         }
 
-        // Fetch the tenants if not already populated (this can be optimized if tenants are already available)
-        if (this.tenants.length === 0) {
+         if (this.tenants.length === 0) {
           this.getAllActiveOrganizations(
             () => {
               this.openEditCampaignModal(this.editCampaignTpl, edit);
@@ -822,8 +816,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
             }
           );
         } else {
-          // If tenants are already available, proceed directly
-          this.openEditCampaignModal(this.editCampaignTpl, edit);
+           this.openEditCampaignModal(this.editCampaignTpl, edit);
         }
       },
       error: (err) => {
@@ -962,13 +955,6 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       this.complementaryTenants.push(tenant);
       if (this.isEditing) {
         this.complementaryTenantsDefault.push(tenant);
-        console.log(
-          'complementaryTenantsDefault',
-          tenant,
-          this.complementaryTenantsDefault,
-          '5555555555',
-          this.allTenants
-        );
       }
     }
 
@@ -1024,13 +1010,6 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       this.conflictingTenants.push(tenant);
       if (this.isEditing) {
         this.conflictingTenantsDefault.push(tenant);
-        console.log(
-          'conflictingTenantsDefault',
-          tenant,
-          this.conflictingTenantsDefault,
-          '5555555555',
-          this.allTenants
-        );
       }
     }
 
@@ -1107,8 +1086,6 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         IsAdded: true,
       })),
     ];
-
-    console.log('Selected tenants payload:', this.selectedTenants);
   }
   getKeyValuePairs(obj: any): { key: string; value: any }[] {
     if (!obj || typeof obj !== 'object') return [];
@@ -1177,8 +1154,6 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       OrganizationRelationsDTO: organizationRelationsDTO,
     };
 
-    console.log('Update body:', body); // Debug payload
-
     this.placesService
       .UpdateCampaign(
         body.CampaignId,
@@ -1193,7 +1168,6 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       )
       .subscribe({
         next: (res) => {
-          console.log('Campaign updated:', res);
           this.selectedCampaignDetails = updated;
           this.isEditing = false;
           this.getAllCampaigns();
@@ -1209,12 +1183,11 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
   removeRelation(index: number) {
     const relation = this.editableCampaign.Relations[index];
 
-    // Toggle IsAdded between true and false
-    relation.IsAdded = relation.IsAdded === false ? true : false;
+     relation.IsAdded = relation.IsAdded === false ? true : false;
   }
   updatecampaign(campaignLocations: any) {
-    this.selectedCampaignDetails?.CampaignLocations;
-    campaignLocations.push(...this.selectedCampaignDetails?.CampaignLocations);
+    campaignLocations.push(...this.selectedCampaignDetails?.Locations);
+
     const isStandalone = this.campaignType === 'standalone';
     this.allTenants = [
       ...this.complementaryTenantsDefault.map((tenant) => ({
@@ -1240,7 +1213,6 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       )
       .subscribe({
         next: (res) => {
-          console.log('Campaign updated:', res);
           this.isEditing = false;
           this.getAllCampaigns();
           this.modalService.dismissAll();

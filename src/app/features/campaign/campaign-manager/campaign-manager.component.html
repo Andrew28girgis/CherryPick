@@ -295,7 +295,7 @@
                 </button>
                 <button
                   class="menu-item"
-                  (click)="viewSpecsNew(campaign); closeMenu()"
+                  (click)="viewSpecsNew(campaign, true); closeMenu()"
                 >
                   Edit Campaign
                 </button>
@@ -984,14 +984,14 @@
             <div class="cotenant-buttons">
               <button
                 class="btn btn-success btn-sm"
-                (click)="addComplementary(tenant,true)"
+                (click)="addComplementary(tenant, true)"
               >
                 Complementary
               </button>
 
               <button
                 class="btn btn-danger btn-sm"
-                (click)="addConflicting(tenant,true)"
+                (click)="addConflicting(tenant, true)"
               >
                 Conflicting
               </button>
@@ -1668,13 +1668,13 @@
               <div class="cotenant-buttons">
                 <button
                   class="btn btn-success btn-sm"
-                  (click)="addComplementary(tenant,true)"
+                  (click)="addComplementary(tenant, true)"
                 >
                   Complementary
                 </button>
                 <button
                   class="btn btn-danger btn-sm"
-                  (click)="addConflicting(tenant,true)"
+                  (click)="addConflicting(tenant, true)"
                 >
                   Conflicting
                 </button>
@@ -1720,7 +1720,9 @@
                   <i class="fa-solid fa-store"></i>
                 </div>
                 <div class="cotenant-info">
-                  <span class="cotenant-name">{{ tenant.RelationOrganizationName }}</span>
+                  <span class="cotenant-name">{{
+                    tenant.RelationOrganizationName
+                  }}</span>
                 </div>
               </div>
               <div class="cotenant-buttons">
@@ -1747,7 +1749,8 @@
     <div *ngIf="step === 'polygon'">
       <app-polygons
         *ngIf="polygonsStep"
-        (saveLocationCriteria)="handleSave($event,true)"
+        (saveLocationCriteria)="handleSave($event, true)"
+        [locations]="campaignLocations"
       ></app-polygons>
     </div>
   </div>
