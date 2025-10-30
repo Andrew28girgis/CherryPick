@@ -59,6 +59,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Output() saveLocationCriteria = new EventEmitter<any>();
+  @Input() campaignId!: number;
 
   @ViewChild('drawControls', { static: false })
   private drawControlsRef!: ElementRef<HTMLDivElement>;
@@ -73,7 +74,8 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   PolygonName: string = '';
   savedPolygonId?: number | null = null;
   locationDataVar: any;
-
+  defaultLocations: any;
+  djdjjd: any;
   constructor(
     private mapDrawingService: MapDrawingService,
     private campaignDrawingService: CampaignDrawingService,
@@ -108,6 +110,10 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
     });
   }
   ngOnInit(): void {
+    if (this.campaignId) {
+      this.getLocations();
+      this.changeDetector.detectChanges();
+    }
     const tryAttach = () => {
       if (this.map && this.drawControlsRef?.nativeElement) {
         this.addDrawControlsToMap();
@@ -163,15 +169,23 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   isSelected(item: SearchItem) {
     return this.selectedItems.some((s) => this.areItemsEquivalent(s, item));
   }
+  getItemLabel(item?: any): string {
+    console.log('item', item);
 
-  getItemLabel(item?: SearchItem): string {
     if (!item) return '';
     if (item.type === 'neighborhood') return item.name ?? '';
+    if (item.neighborhood) return item.neighborhood ?? '';
     if (item.type === 'city')
       return (
         item.name ?? `${item.city ?? ''}${item.state ? ', ' + item.state : ''}`
       );
+    if (item.CityName)
+      return (
+        item.name ??
+        `${item.CityName ?? ''}${item.State ? ', ' + item.State : ''}`
+      );
     if (item.type === 'state') return item.name ?? item.code ?? '';
+    if (item.State) return item.State ?? '';
     return item.name ?? '';
   }
 
@@ -217,6 +231,10 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   removeSelectedItem(item: SearchItem) {
+    console.log('selectedItems before removal', this.selectedItems);
+    this.selectedItems = this.selectedItems.filter((x) => x.id !== item.id);
+    console.log('selectedItems after removal', this.selectedItems);
+
     const key = this.getItemKey(item);
     const mapFeatureId = this.mapFeatureIdByItemKey.get(key);
     if (mapFeatureId != null) {
@@ -233,6 +251,9 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   onSaveLocationCriteria(tenantId: number) {
+    this.selectedItems = [...this.selectedItems];
+    console.log('ttttttttttttttttttttttt', this.selectedItems);
+
     const locations = this.selectedItems.map((it) => {
       const raw = it.raw ?? {};
       const isNeighborhood = it.type === 'neighborhood';
@@ -243,6 +264,7 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
         neighborhoodName: isNeighborhood ? it.name ?? raw?.Name ?? null : null,
       };
     });
+    console.log('locationslocationslocationslocationslocations', locations);
 
     const locationCriteria = {
       organizationId: tenantId,
@@ -251,6 +273,10 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
     locationCriteria.locationCriteria?.locations?.length
       ? this.saveLocationCriteria.emit(locationCriteria)
       : this.saveLocationCriteria.emit(this.locationDataVar);
+    console.log(
+      'locationCriterialocationCriterialocationCriterialocationCriteria',
+      locationCriteria
+    );
   }
 
   private areItemsEquivalent(a: SearchItem, b: SearchItem) {
@@ -585,81 +611,21 @@ export class PolygonsComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-public async savePolygon() {
-  if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
-    return;
+  public async savePolygon() {
+    if (!this.currentPolygonCoords || this.currentPolygonCoords.length < 3) {
+      return;
+    }
+
+    const geoJsonStr = this.buildPolygonGeoJsonString();
+    if (!geoJsonStr) {
+      return;
+    }
+
+    if (!this.PolygonName?.trim()) {
+      alert('Please enter a name for the polygon before saving.');
+      return;
+    }
   }
-
-  const geoJsonStr = this.buildPolygonGeoJsonString();
-  if (!geoJsonStr) {
-    return;
-  }
-
-  if (!this.PolygonName?.trim()) {
-    alert('Please enter a name for the polygon before saving.');
-    return;
-  }
-
-  const centroid = this.calculateCentroid(this.currentPolygonCoords);
-
-  this.getCityAndState(centroid.lat, centroid.lng).subscribe({
-    next: (response) => {
-      const city = response?.city || '';
-      const state = response?.stateCode || ''; 
-
-      const payload = {
-        city: city || '',
-        state: state || '',  
-        json: geoJsonStr,
-        name: this.PolygonName.trim(),
-      };
-
-      try {
-        this.spinner.show();
-      } catch {}
-
-      this.placesService
-        .BetaGenericAPI({ Name: 'AddPolygon', Params: payload })
-        .subscribe({
-          next: (res: any) => {
-            try {
-              this.spinner.hide();
-            } catch {}
-
-            const polygonId = res?.json?.[0]?.id ?? null;
-
-            if (!polygonId) {
-              return;
-            }
-
-            const locations = [
-              {
-                state: state || '',  
-                city: city || '',
-                neighborhoodId: null,
-                polygonId: polygonId,
-              },
-            ];
-
-            const locationData = {
-              organizationId: this.selectedTenantId ?? 0,
-              locationCriteria: { locations },
-              polygonId,
-            };
-
-            this.locationDataVar = locationData;
-
-            this.changeDetector.markForCheck();
-          },
-        });
-    },
-    error: (err) => {
-      console.error('Error fetching city and state:', err);
-    },
-  });
-}
-
-
 
   private addDrawControlsToMap() {
     try {
@@ -698,28 +664,47 @@ public async savePolygon() {
     }
   }
 
-  private calculateCentroid(coords: google.maps.LatLngLiteral[]): google.maps.LatLngLiteral {
-  let latSum = 0;
-  let lngSum = 0;
-  const numPoints = coords.length;
+  private calculateCentroid(
+    coords: google.maps.LatLngLiteral[]
+  ): google.maps.LatLngLiteral {
+    let latSum = 0;
+    let lngSum = 0;
+    const numPoints = coords.length;
 
-  coords.forEach((coord) => {
-    latSum += coord.lat;
-    lngSum += coord.lng;
-  });
+    coords.forEach((coord) => {
+      latSum += coord.lat;
+      lngSum += coord.lng;
+    });
 
-  return {
-    lat: latSum / numPoints,
-    lng: lngSum / numPoints,
-  };
-}
-private getCityAndState(lat: number, lng: number): Observable<any> {
-  const url = `${environment.API_URL}/Geocode/GetCityAndState`;
-  const params = {
-    latitude: lat.toString(),
-    longitude: lng.toString(),
-  };
-  
-  return this.http.get<any>(url, { params });
-}
+    return {
+      lat: latSum / numPoints,
+      lng: lngSum / numPoints,
+    };
+  }
+  getLocations() {
+    const body: any = {
+      Name: 'GetCampaignFullDetails',
+      Params: { CampaignId: this.campaignId },
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res) => {
+        this.defaultLocations = res.json.Locations.map((loc: any) => ({
+          id: Date.now() + Math.floor(Math.random() * 10000),
+          name: loc.CityName
+            ? `${loc.CityName}, ${loc.State}`
+            : loc.State || 'Unknown',
+          state: loc.State, // 👈 lowercase
+          city: loc.CityName, // 👈 lowercase
+          type: loc.CityName ? 'city' : 'state',
+          isDefault: true,
+        }));
+
+        this.selectedItems.push(...this.defaultLocations);
+        console.log('ddddddddddddddddd', this.selectedItems);
+        console.log('ffffffffffffffffff', this.defaultLocations);
+        this.changeDetector.detectChanges();
+
+      },
+    });
+  }
 }

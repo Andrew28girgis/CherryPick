@@ -283,7 +283,7 @@
               <div class="menu-dropdown" *ngIf="openMenuId === campaign.Id">
                 <button
                   class="menu-item"
-                  (click)="viewSpecsNew(campaign); closeMenu()"
+                  (click)="viewSpecs(campaign); closeMenu()"
                 >
                   View Specs
                 </button>
@@ -295,7 +295,7 @@
                 </button>
                 <button
                   class="menu-item"
-                  (click)="viewSpecsNew(campaign); closeMenu()"
+                  (click)="viewSpecsNew(campaign, true); closeMenu()"
                 >
                   Edit Campaign
                 </button>
@@ -585,10 +585,7 @@
                         </button>
 
                         <div ngbDropdownMenu>
-                          <button
-                            ngbDropdownItem
-                            (click)="viewSpecsNew(campaign)"
-                          >
+                          <button ngbDropdownItem (click)="viewSpecs(campaign)">
                             View Specs
                           </button>
                           <button
@@ -987,14 +984,14 @@
             <div class="cotenant-buttons">
               <button
                 class="btn btn-success btn-sm"
-                (click)="addComplementary(tenant)"
+                (click)="addComplementary(tenant, true)"
               >
                 Complementary
               </button>
 
               <button
                 class="btn btn-danger btn-sm"
-                (click)="addConflicting(tenant)"
+                (click)="addConflicting(tenant, true)"
               >
                 Conflicting
               </button>
@@ -1444,6 +1441,343 @@
       (click)="cancelEdit()"
     >
       Cancel
+    </button>
+  </div>
+</ng-template>
+<ng-template #editCampaign let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0">Edit Campaign</h4>
+
+    <div class="selected-tenant-header mx-3" *ngIf="selectedTenant">
+      <ng-container *ngIf="selectedTenant.logoUrl; else logoPlaceholder">
+        <img
+          [src]="selectedTenant.logoUrl"
+          class="tenant-logop"
+          crossorigin="anonymous"
+        />
+      </ng-container>
+      <ng-template #logoPlaceholder>
+        <div class="tenant-logop placeholder">
+          {{ getInitials(selectedTenant.name) }}
+        </div>
+      </ng-template>
+
+      <span class="tenant-name">
+        {{ selectedTenant?.name }}
+      </span>
+    </div>
+
+    <button
+      type="button"
+      class="btn-close d-flex align-items-center justify-content-center"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Stepper + Finish button inline -->
+    <div
+      class="stepper-container d-flex justify-content-between align-items-center mb-2 gap-2"
+    >
+      <div class="stepper d-flex align-items-center">
+        <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
+        <div class="step-line"></div>
+        <div class="step" [class.active]="step === 'campaign'">
+          Campaign Details
+        </div>
+        <div class="step-line"></div>
+        <div class="step" [class.active]="step === 'polygon'">Locations</div>
+      </div>
+
+      <div>
+        <button
+          *ngIf="step === 'polygon'"
+          class="btn btn-primary next-btn"
+          (click)="finish()"
+        >
+          Finish
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div
+      *ngIf="TenantStepLoad"
+      class="d-flex justify-content-center align-items-center p-5"
+    >
+      <div class="spinner-border custom-spinner" role="status">
+        <span class="visually-hidden">Loading tenants...</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Select Tenant -->
+    <div *ngIf="!TenantStepLoad && step === 'tenant'">
+      <div class="tenant-cards-grid">
+        <div
+          *ngFor="let tenant of tenants"
+          class="tenant-card"
+          [class.selected]="selectedTenant.id === tenant.id"
+          (click)="selectTenant(tenant)"
+        >
+          <div class="tenant-header">
+            <ng-container *ngIf="tenant.logoUrl; else logoPlaceholder">
+              <img
+                [src]="tenant.logoUrl"
+                class="tenant-logo"
+                crossorigin="anonymous"
+              />
+            </ng-container>
+            <ng-template #logoPlaceholder>
+              <div class="tenant-logo placeholder">
+                {{ getInitials(tenant.name) }}
+              </div>
+            </ng-template>
+            <h3 class="tenant-name">{{ tenant.name }}</h3>
+          </div>
+
+          <div class="tenant-check" *ngIf="selectedTenant.id === tenant.id">
+            ✓
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Campaign Details -->
+    <div *ngIf="step === 'campaign'" class="campaign-step">
+      <div class="left">
+        <label for="campaignName" class="form-label">Campaign Name</label>
+        <input
+          id="campaignName"
+          type="text"
+          class="form-control"
+          [(ngModel)]="campaignName"
+          placeholder="Enter campaign name"
+        />
+      </div>
+
+      <div class="right">
+        <label class="form-label">Campaign Type</label>
+        <div class="type-options">
+          <div
+            class="type-option"
+            [class.active]="IsStandAlone === true"
+            (click)="IsStandAlone = true"
+          >
+            <i class="fa-solid fa-store"></i>
+            <span>Standalone Only</span>
+          </div>
+          <div
+            class="type-option"
+            [class.active]="IsStandAlone === false"
+            (click)="IsStandAlone = false"
+          >
+            <i class="fa-solid fa-shop"></i>
+            <span>Standalone + Shopping Center</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-size-section">
+        <label class="form-label">Unit Size Range (sq ft)</label>
+        <div class="d-flex gap-3">
+          <div class="flex-grow-1">
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Min Unit Size"
+              [(ngModel)]="MinUnitSize"
+              min="0"
+            />
+          </div>
+
+          <div class="flex-grow-1">
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Max Unit Size"
+              [(ngModel)]="MaxUnitSize"
+              [min]="MinUnitSize || 0"
+            />
+          </div>
+        </div>
+
+        <div
+          class="text-danger mt-1"
+          *ngIf="MaxUnitSize && MinUnitSize && MaxUnitSize < MinUnitSize"
+        >
+          Max unit size cannot be smaller than min unit size.
+        </div>
+      </div>
+      <!-- Tenant Search and Selection -->
+      <div class="cotenant-selection">
+        <label for="tenantSearch" class="form-label"
+          >Search Complementary and Conflicting Tenants</label
+        >
+        <input
+          type="text"
+          class="form-control cotenant-search"
+          placeholder="Search tenants..."
+          [(ngModel)]="tenantSearch"
+          (ngModelChange)="onTenantSearchChange($event)"
+        />
+        <div class="contenats-wrapper">
+          <div *ngIf="cotenants.length > 0" class="cotenant-cards">
+            <div
+              class="cotenant-card"
+              *ngFor="let tenant of cotenants"
+              [ngClass]="{
+                'complementary-border': isSelected(tenant, 'complementary'),
+                'conflicting-border': isSelected(tenant, 'conflicting')
+              }"
+            >
+              <div
+                class="card-badge"
+                [ngClass]="{
+                  'complementary-badge': isSelected(tenant, 'complementary'),
+                  'conflicting-badge': isSelected(tenant, 'conflicting')
+                }"
+              >
+                <span
+                  class="complementary"
+                  *ngIf="isSelected(tenant, 'complementary')"
+                  >Complementary</span
+                >
+                <span
+                  class="conflicting"
+                  *ngIf="isSelected(tenant, 'conflicting')"
+                  >Conflicting</span
+                >
+              </div>
+              <div>
+                <img
+                  *ngIf="tenant.logoURL"
+                  [src]="tenant.logoURL"
+                  alt="{{ tenant.name }}"
+                  class="cotenant-logo"
+                />
+                <div *ngIf="!tenant.logoURL" class="cotenant-logo-placeholder">
+                  <i class="fa-solid fa-store"></i>
+                </div>
+                <div class="cotenant-info">
+                  <span class="cotenant-name">{{ tenant.name }}</span>
+                </div>
+              </div>
+              <div class="cotenant-buttons">
+                <button
+                  class="btn btn-success btn-sm"
+                  (click)="addComplementary(tenant, true)"
+                >
+                  Complementary
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="addConflicting(tenant, true)"
+                >
+                  Conflicting
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="allTenants.length > 0" class="cotenant-cards">
+            <div
+              class="cotenant-card"
+              *ngFor="let tenant of allTenants"
+              [ngClass]="{
+                'complementary-border': isSelected2(tenant, 'complementary'),
+                'conflicting-border': isSelected2(tenant, 'conflicting')
+              }"
+            >
+              <div
+                class="card-badge"
+                [ngClass]="{
+                  'complementary-badge': isSelected2(tenant, 'complementary'),
+                  'conflicting-badge': isSelected2(tenant, 'conflicting')
+                }"
+              >
+                <span
+                  class="complementary"
+                  *ngIf="isSelected2(tenant, 'complementary')"
+                  >Complementary</span
+                >
+                <span
+                  class="conflicting"
+                  *ngIf="isSelected2(tenant, 'conflicting')"
+                  >Conflicting</span
+                >
+              </div>
+              <div>
+                <img
+                  *ngIf="tenant.logoURL"
+                  [src]="tenant.logoURL"
+                  alt="{{ tenant.name }}"
+                  class="cotenant-logo"
+                />
+                <div *ngIf="!tenant.logoURL" class="cotenant-logo-placeholder">
+                  <i class="fa-solid fa-store"></i>
+                </div>
+                <div class="cotenant-info">
+                  <span class="cotenant-name">{{
+                    tenant.RelationOrganizationName
+                  }}</span>
+                </div>
+              </div>
+              <div class="cotenant-buttons">
+                <button
+                  class="btn btn-success btn-sm"
+                  (click)="addComplementary(tenant)"
+                >
+                  Complementary
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="addConflicting(tenant)"
+                >
+                  Conflicting
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Locations -->
+    <div *ngIf="step === 'polygon'">
+      <app-polygons
+        *ngIf="polygonsStep"
+        (saveLocationCriteria)="handleSave($event, true)"
+        [campaignId]="campaignId"
+      ></app-polygons>
+    </div>
+  </div>
+
+  <div class="modal-footer modal-nav-footer">
+    <button
+      *ngIf="step !== 'tenant'"
+      class="btn btn-outline-secondary back-btn"
+      (click)="prevStep()"
+    >
+      Previous
+    </button>
+    <button
+      *ngIf="step === 'tenant'"
+      class="btn btn-primary next-btn ms-auto"
+      [disabled]="!selectedTenant"
+      (click)="nextStep()"
+    >
+      Next
+    </button>
+    <button
+      *ngIf="step === 'campaign'"
+      class="btn btn-primary next-btn ms-auto"
+      [disabled]="!campaignName"
+      (click)="nextStep()"
+    >
+      Next
     </button>
   </div>
 </ng-template>
