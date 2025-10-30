@@ -1,8 +1,3 @@
-.container {
-  padding: 0;
-  gap: var(--Space-S-24);
-  overflow-y: auto; /* Make only this container scroll */
-}
 .intro-container {
   padding: 0 40px 34px 40px;
   display: flex;
@@ -536,7 +531,6 @@ li {
   opacity: 0.9;
 }
 
-
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   width: 3rem;
@@ -559,7 +553,6 @@ li {
   justify-content: center;
   cursor: pointer;
 }
-
 
 .manager-name .name + .name {
   margin-left: 6px;
