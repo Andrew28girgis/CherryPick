@@ -91,7 +91,7 @@
           </div>
         </div>
 
-        <div class="selected-container">
+        <div class="selected-container"  *ngIf="selectedItems.length > 0">
           <div
             class="selected-item gap-2 d-flex align-items-center mt-2"
             *ngFor="let selectedItem of selectedItems"
@@ -121,6 +121,9 @@
               <span style="font-size: 1.2em; line-height: 1"> x </span>
             </button>
           </div>
+
+
+         
         </div>
       </div>
     </div>

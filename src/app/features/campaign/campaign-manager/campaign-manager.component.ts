@@ -45,7 +45,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   campaignRelations: any;
   IsStandAlone: any;
   locationsDefault: any;
-   @Input() set viewMode(value: 'card' | 'table') {
+  campaignId: any;
+  @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
       localStorage.setItem('campaignViewMode', value);
@@ -115,7 +116,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   parsedCampaignDetails: { key: string; value: any }[] = [];
   isEditing = false;
   editableCampaign: any = {};
-  campaignLocationsList: any[] = []; // New array to hold transformed campaign locations
+  campaignLocationsList: any[] = []; 
 
   constructor(
     private placesService: PlacesService,
@@ -412,6 +413,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   openAddCampaign(content: TemplateRef<any>) {
     this.TenantStepLoad = true;
     this.selectedTenant = null;
+    this.MaxUnitSize = NaN;
+    this.MinUnitSize = NaN;
+    this.campaignType = '';
+    this.campaignName = '';
+    this.tenantSearch = '';
+    this.cotenants=[];
     this.step = 'tenant';
     this.polygonsStep = false;
     this.modalRef = this.modalService.open(content, { size: 'xl' });
@@ -481,19 +488,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         relation: 'conflicting',
       })),
     ];
-    this.campaignLocationsList  = (this.selectedCampaignDetails?.Locations || []).map((location :any) => {
-      return {
-        type: 'neighborhood',
-        id: location.NeighborhoodId, 
-        name: `${location.City}, ${location.State}`, 
-        state: location.State,
-        city: location.City,
-        raw: location,  
-      };
-    });
-      
-  //  this.polygonsComponentRef?.setInitialLocations(this.campaignLocationsList );
-  
+
     this.campaignLocations = [
       ...(this.selectedCampaignDetails?.Locations || []),
     ];
@@ -685,7 +680,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           // select previous selected  teannt before creation
           // this.selectedTenant = this.tenants.find((t) => t.id === this.tempTenantId);
 
-           if (tenant.logoUrl) {
+          if (tenant.logoUrl) {
             clearInterval(this.logoInterval);
             this.logoInterval = null;
           }
@@ -775,13 +770,14 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         });
         modalRef.result.finally(() => {
           this.isEditing = false;
-          this.editableCampaign = {}; 
+          this.editableCampaign = {};
         });
       },
     });
   }
 
   viewSpecsNew(campaign: any, edit: boolean = false) {
+    this.campaignId = campaign.Id;
     const body: any = {
       Name: 'GetCampaignFullDetails',
       Params: { CampaignId: campaign.Id },
@@ -791,21 +787,21 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       next: (response) => {
         const data = response.json;
 
-         this.selectedCampaignDetails = data;
+        this.selectedCampaignDetails = data;
         this.campaignLogo = data.LogoURL;
 
-         try {
+        try {
           const parsed = JSON.parse(data.CampaignDetailsJSON);
           this.selectedCampaignDetails = {
             ...data,
-            ...parsed, 
+            ...parsed,
           };
         } catch (error) {
           console.error('Error parsing CampaignDetailsJSON', error);
           this.parsedCampaignDetails = [];
         }
 
-         if (this.tenants.length === 0) {
+        if (this.tenants.length === 0) {
           this.getAllActiveOrganizations(
             () => {
               this.openEditCampaignModal(this.editCampaignTpl, edit);
@@ -815,7 +811,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
             }
           );
         } else {
-           this.openEditCampaignModal(this.editCampaignTpl, edit);
+          this.openEditCampaignModal(this.editCampaignTpl, edit);
         }
       },
       error: (err) => {
@@ -1182,11 +1178,9 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
   removeRelation(index: number) {
     const relation = this.editableCampaign.Relations[index];
 
-     relation.IsAdded = relation.IsAdded === false ? true : false;
+    relation.IsAdded = relation.IsAdded === false ? true : false;
   }
   updatecampaign(campaignLocations: any) {
-    campaignLocations.push(...this.selectedCampaignDetails?.Locations);
-
     const isStandalone = this.campaignType === 'standalone';
     this.allTenants = [
       ...this.complementaryTenantsDefault.map((tenant) => ({

@@ -1750,7 +1750,7 @@
       <app-polygons
         *ngIf="polygonsStep"
         (saveLocationCriteria)="handleSave($event, true)"
-        [locations]="campaignLocations"
+        [campaignId]="campaignId"
       ></app-polygons>
     </div>
   </div>
