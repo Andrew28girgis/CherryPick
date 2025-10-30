@@ -493,7 +493,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     });
       
   //  this.polygonsComponentRef?.setInitialLocations(this.campaignLocationsList );
-
   
     this.campaignLocations = [
       ...(this.selectedCampaignDetails?.Locations || []),
