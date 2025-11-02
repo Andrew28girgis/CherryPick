@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
 declare const google: any;
@@ -17,6 +12,7 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-landing',
@@ -45,7 +41,7 @@ export class LandingComponent {
   };
   categoryIcons: { [key: string]: string } = {};
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
-  filteredCenters: any[] = [];
+  filteredCenters = signal<any[]>([]);
   centerIds: number[] = [];
   currentIndex = -1;
   nextName = '';
@@ -57,8 +53,8 @@ export class LandingComponent {
   campaignLogo: string = '';
   @ViewChild('campaignDetailsModal') campaignDetailsModal!: TemplateRef<any>;
   parsedCampaignDetails: { key: string; value: any }[] = [];
-  currentGalleryData: any;
-  currentMainImage: string = '';
+  currentGalleryData = signal<string[]>([]);
+  currentMainImage = signal<string>('');
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -66,7 +62,6 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private viewManagerService: ViewManagerService,
-    private cdr: ChangeDetectorRef,
     private http: HttpClient
   ) {}
 
@@ -85,9 +80,8 @@ export class LandingComponent {
           this.viewManagerService.filteredCenters$
             .pipe(take(1))
             .subscribe((centers) => {
-              this.filteredCenters = centers || [];
+              this.filteredCenters.set(centers || []);
               this.rebuildSequence();
-              this.cdr.detectChanges();
             });
         } catch (error) {}
       } else {
@@ -361,12 +355,9 @@ export class LandingComponent {
   }
 
   openGallery(modalObject: any) {
-    this.currentGalleryData = modalObject.Images
-      ? modalObject.Images.split(',')
-      : [];
-
-    // Track current main image
-    this.currentMainImage = modalObject.MainImage || '';
+    const images = modalObject.Images ? modalObject.Images.split(',') : [];
+    this.currentGalleryData.set(images);
+    this.currentMainImage.set(modalObject.MainImage || '');
 
     this.modalService.open(this.galleryModal, {
       size: 'xl',
@@ -385,7 +376,7 @@ export class LandingComponent {
         if (res === true || res?.json === true) {
           this.showToast('Main image updated successfully!');
           this.shoppingCenter.MainImage = imageUrl;
-          this.currentMainImage = imageUrl;
+          this.currentMainImage.set(imageUrl);
         } else {
           this.showToast('This image is already set as main or failed.');
         }
@@ -395,29 +386,30 @@ export class LandingComponent {
       },
     });
   }
+
   deleteImage(imageUrl: string): void {
     if (!this.ShoppingCenterId || !imageUrl) return;
 
     const encodedImage = encodeURIComponent(imageUrl);
-
     const apiUrl = `${environment.api}/ShoppingCenter/DeleteImage?shoppingCenterId=${this.ShoppingCenterId}&imageToDelete=${encodedImage}`;
 
     this.http.post(apiUrl, {}).subscribe({
       next: (res: any) => {
         if (res === true || res?.json === true) {
           this.showToast('Image deleted successfully!');
-          this.currentGalleryData = this.currentGalleryData.filter(
-            (img: string) => img !== imageUrl
+
+          this.currentGalleryData.update((images) =>
+            images.filter((img) => img !== imageUrl)
           );
-          if (this.currentMainImage === imageUrl) {
-            this.currentMainImage = '';
+
+          if (this.currentMainImage() === imageUrl) {
+            this.currentMainImage.set('');
           }
         } else {
           this.showToast('Failed to delete image.');
         }
       },
       error: (err) => {
-        console.error('Error occurred:', err); // Log the error to the console
         this.showToast('Error while deleting the image.');
       },
     });
@@ -503,16 +495,15 @@ export class LandingComponent {
     );
   }
 
-  // Helper method to get center name by ID
   private getCenterNameById(id: number): string {
-    const center = this.filteredCenters.find(
-      (c) => Number(c.Id ?? c.scId) === id
-    );
+    const centers = this.filteredCenters();
+    const center = centers.find((c) => Number(c.Id ?? c.scId) === id);
     return center?.CenterName || center?.centerName || 'Unknown Center';
   }
 
   private rebuildSequence(): void {
-    this.centerIds = (this.filteredCenters || [])
+    const centers = this.filteredCenters();
+    this.centerIds = centers
       .map((c) => Number(c.Id ?? c.scId))
       .filter((id) => !isNaN(id));
 
@@ -528,7 +519,6 @@ export class LandingComponent {
           : this.currentIndex + 1;
       const nextId = this.centerIds[nextIndex];
       this.nextName = this.getCenterNameById(nextId);
-      console.log('hhh', this.nextName);
 
       // Previous index (circular)
       const prevIndex =
@@ -537,7 +527,6 @@ export class LandingComponent {
           : this.currentIndex - 1;
       const prevId = this.centerIds[prevIndex];
       this.prevName = this.getCenterNameById(prevId);
-      console.log('ttt', this.prevName);
     } else {
       this.nextName = '';
       this.prevName = '';
@@ -554,8 +543,6 @@ export class LandingComponent {
         : this.currentIndex + 1;
 
     const nextId = this.centerIds[nextIndex];
-    console.log('nextId:', nextId);
-
     this.currentIndex = nextIndex;
 
     this.router.navigate([
@@ -576,8 +563,6 @@ export class LandingComponent {
         : this.currentIndex - 1;
 
     const prevId = this.centerIds[prevIndex];
-    console.log('prevId:', prevId);
-
     this.currentIndex = prevIndex;
 
     this.router.navigate([
@@ -597,11 +582,11 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(params).subscribe((response: any) => {
       if (response && response.json) {
-        this.filteredCenters = response.json.map(
-          (center: any, index: number) => ({
+        this.filteredCenters.set(
+          response.json.map((center: any, index: number) => ({
             ...center,
             id: center.id || index + 1,
-          })
+          }))
         );
         this.rebuildSequence();
       }
@@ -626,7 +611,6 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        console.log('API Response:', res.json);
         this.CampaignScores = res.json || [];
         this.campaignName = this.CampaignScores.filter(
           (c) => c.campaignId == this.campaignId
