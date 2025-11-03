@@ -24,6 +24,7 @@ import { ContactsComponent } from './features/contacts/contacts.component';
 import { PolygonsComponent } from './features/polygons/polygons.component';
 import { Tree2Component } from './features/tree2/tree2.component';
 import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component';
+import { NotificationViewComponent } from './shared/components/notifications/notification-view/notification-view.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,8 @@ const routes: Routes = [
     component: PolygonsComponent,
     data: { hideHeader: true },
   },
+
+  { path: 'notification-view/:id', component: NotificationViewComponent },
   {
     path: 'accounts-link',
     loadChildren: () =>

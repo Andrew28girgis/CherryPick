@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-end align-items-center mb-2 gap-2 mx-3">
+  <!-- Title input -->
+  <input
+    type="text"
+    [(ngModel)]="titleName"
+    placeholder="Enter Title"
+    class="form-control"
+    style="width: 350px"
+  />
+
+  <!-- Save Title -->
+  <button class="btn btn-success title-btn" (click)="saveTitleInNotification()">
+    Save Title
+  </button>
+</div>
+<div class="container-fluid">
+  <div [innerHTML]="htmlData"></div>
+</div>
+
+<!-- Toast (alert) -->
+<div class="save-toast" *ngIf="showSaveToast">Saved successfully</div>
