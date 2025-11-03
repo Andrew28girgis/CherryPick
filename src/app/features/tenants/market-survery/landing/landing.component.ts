@@ -395,11 +395,11 @@ export class LandingComponent {
       },
     });
   }
+
   deleteImage(imageUrl: string): void {
     if (!this.ShoppingCenterId || !imageUrl) return;
 
     const encodedImage = encodeURIComponent(imageUrl);
-
     const apiUrl = `${environment.api}/ShoppingCenter/DeleteImage?shoppingCenterId=${this.ShoppingCenterId}&imageToDelete=${encodedImage}`;
 
     this.http.post(apiUrl, {}).subscribe({

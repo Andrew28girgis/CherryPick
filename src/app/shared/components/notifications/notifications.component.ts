@@ -1269,4 +1269,15 @@ export class NotificationsComponent
       }
     });
   }
+  
+  clearEmilyChat() {
+    const request = {
+      Name: 'DeleteEmilyChat',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(request).subscribe({
+      next: (response: any) => {},
+    });
+  }
 }
