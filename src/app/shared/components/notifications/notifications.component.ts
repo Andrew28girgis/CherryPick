@@ -1269,7 +1269,7 @@ export class NotificationsComponent
       }
     });
   }
-  
+
   clearEmilyChat() {
     const request = {
       Name: 'DeleteEmilyChat',
@@ -1277,7 +1277,21 @@ export class NotificationsComponent
     };
 
     this.placesService.GenericAPI(request).subscribe({
-      next: (response: any) => {},
+      next: (response: any) => {
+        // Remove Emily chat messages from the shared notifications array
+        if (Array.isArray(this.notificationService.notifications)) {
+          this.notificationService.notifications =
+            this.notificationService.notifications.filter(
+              (n) => !n.isEmilyChat
+            );
+        }
+
+        // Clear optimistic/local sent messages as well
+        this.sentMessages = [];
+
+        this.cdRef.detectChanges();
+        this.scrollToBottom();
+      },
     });
   }
 }

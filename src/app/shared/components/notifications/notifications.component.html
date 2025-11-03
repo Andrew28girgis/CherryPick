@@ -206,7 +206,6 @@
               alt="Emily"
             />
             <h3 class="sidebar-title">Emily</h3>
-            
           </div>
           <!-- <div
             *ngIf="electronSideBar"
@@ -250,13 +249,14 @@
           </div> -->
           <div style="display: flex; gap: 6px; align-items: center">
             <!-- Close (closes chat panel AND ensures overlay off) -->
-              <button 
-             class="g-button"
+            <button
+              class="g-button"
               [ngClass]="{ 'close-route': isChatbotRoute }"
+              style="height: 10px"
               (click)="clearEmilyChat()"
               aria-label="Close"
             >
-              clear
+              Clear
             </button>
             <button
               class="close-button"
