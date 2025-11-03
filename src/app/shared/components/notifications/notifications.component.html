@@ -206,7 +206,6 @@
               alt="Emily"
             />
             <h3 class="sidebar-title">Emily</h3>
-            
           </div>
           <!-- <div
             *ngIf="electronSideBar"
@@ -250,8 +249,8 @@
           </div> -->
           <div style="display: flex; gap: 6px; align-items: center">
             <!-- Close (closes chat panel AND ensures overlay off) -->
-              <button 
-             class="g-button"
+            <button
+              class="g-button"
               [ngClass]="{ 'close-route': isChatbotRoute }"
               (click)="clearEmilyChat()"
               aria-label="Close"
@@ -586,7 +585,7 @@
                 <div class="choose" *ngIf="item.notification?.html">
                   <button
                     class="emily-btn"
-                    (click)="loadHtmlInsideNewWindow(item.notification!)"
+                    (click)="loadNotificationViewComponent(item.notification!)"
                   >
                     View
                   </button>
