@@ -187,7 +187,7 @@ export class NotificationsComponent
 
     this.notificationService.openOverlay$.subscribe((notification) => {
       if (notification) {
-        this.loadHtmlInsideNewWindow(notification);
+        this.loadNotificationViewComponent(notification);
       }
     });
 
@@ -898,10 +898,10 @@ export class NotificationsComponent
     return (taskId === 2 || taskId === 3) && !isEnd;
   }
 
-  loadHtmlInsideNewWindow(notification: Notification): void {
+  loadNotificationViewComponent(notification: Notification): void {
     if (this.electronSideBar) {
-      (window as any).electronMessage.loadHtmlInsideNewWindow(
-        notification.html
+      (window as any).electronMessage.loadNotificationViewComponent(
+        notification.id
       );
     } else {
       this.isOverlayMode = true;
