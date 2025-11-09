@@ -49,16 +49,7 @@ export class UserPagesComponent implements OnInit {
   }
 
   loadFakeData(): void {
-    // this.userPages = [
-    //   { pageName: 'Home Page', date: '2024-01-15T10:30:00Z' },
-    //   { pageName: 'About Us', date: '2024-01-14T14:22:00Z' },
-    //   { pageName: 'Contact Form', date: '2024-01-13T09:15:00Z' },
-    //   { pageName: 'Product Catalog', date: '2024-01-12T16:45:00Z' },
-    //   { pageName: 'User Dashboard', date: '2024-01-11T11:20:00Z' },
-    //   { pageName: 'Settings Page', date: '2024-01-10T13:30:00Z' },
-    //   { pageName: 'Privacy Policy', date: '2024-01-09T08:45:00Z' },
-    //   { pageName: 'Terms of Service', date: '2024-01-08T15:10:00Z' },
-    // ];
+ 
     this.loading = false;
   }
 

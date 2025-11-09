@@ -1914,13 +1914,13 @@ tr.click-disabled td:last-child * {
 }
 
 .toggle-btn.active {
-  background-color: var(--Colors-Primary-500, #704e73);
+  background-color: var(--Colors-Primary-500);
   color: #fff;
   box-shadow: 0 2px 6px rgba(112, 78, 115, 0.25);
 }
 
 .toggle-btn.active:hover {
-  background-color: var(--Colors-Primary-hover, #8b5f8d);
+  background-color: var(--Colors-Primary-hover);
 }
 
 .toggle-btn i {
