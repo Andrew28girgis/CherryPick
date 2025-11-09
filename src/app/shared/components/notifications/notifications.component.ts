@@ -1023,11 +1023,13 @@ export class NotificationsComponent
       },
     });
   }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isChatbotRoute']?.currentValue === true) {
       this.isOpen = true;
     }
   }
+
   showprompt(message: any) {
     this.currentMessage = message;
 
@@ -1041,6 +1043,7 @@ export class NotificationsComponent
     const body: any = { Chat: message };
     this.placesService.sendmessages(body).subscribe({});
   }
+
   isAutomationLoading(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
@@ -1115,6 +1118,7 @@ export class NotificationsComponent
     this.newNotificationsCount += count;
     this.showScrollButton = true;
   }
+
   isCompilingReport(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
@@ -1278,7 +1282,6 @@ export class NotificationsComponent
 
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
-        // Remove Emily chat messages from the shared notifications array
         if (Array.isArray(this.notificationService.notifications)) {
           this.notificationService.notifications =
             this.notificationService.notifications.filter(
@@ -1286,9 +1289,7 @@ export class NotificationsComponent
             );
         }
 
-        // Clear optimistic/local sent messages as well
         this.sentMessages = [];
-
         this.cdRef.detectChanges();
         this.scrollToBottom();
       },
