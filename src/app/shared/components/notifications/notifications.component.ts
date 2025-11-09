@@ -1231,8 +1231,7 @@ export class NotificationsComponent
     if (!Array.isArray(newOnes) || !newOnes.length) return;
 
     const list = this.notificationService.notifications ?? [];
-    let added = 0;
-
+    let added = 0
     for (const n of newOnes) {
       const key = this.idKey(n);
       if (this.knownIds.has(key)) continue;
@@ -1240,21 +1239,17 @@ export class NotificationsComponent
       list.push(n);
       added++;
     }
-
     if (!added) return;
-
     list.sort(
       (a, b) =>
         new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
     );
-
     if (this.wasSticky) {
       this.cdRef.detectChanges();
       requestAnimationFrame(() => this.scrollToBottomNow());
     } else {
       this.onNewMessagesArrived(added);
     }
-
     this.scanTrigger$.next();
     this.hideTyping();
     this.awaitingResponse = false;
@@ -1263,7 +1258,6 @@ export class NotificationsComponent
   scrollToBottom(): void {
     const el = this.messagesContainer?.nativeElement as HTMLElement | undefined;
     if (!el) return;
-
     this.cdRef.detectChanges();
     requestAnimationFrame(() => {
       el.scrollTop = el.scrollHeight;
@@ -1281,14 +1275,13 @@ export class NotificationsComponent
     };
 
     this.placesService.GenericAPI(request).subscribe({
-      next: (response: any) => {
+      next: () => {
         if (Array.isArray(this.notificationService.notifications)) {
           this.notificationService.notifications =
             this.notificationService.notifications.filter(
               (n) => !n.isEmilyChat
             );
         }
-
         this.sentMessages = [];
         this.cdRef.detectChanges();
         this.scrollToBottom();

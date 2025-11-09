@@ -156,6 +156,40 @@
             </div>
           </div>
         </div> -->
+
+        <div class="view-toggle">
+          <button
+            class="toggle-btn"
+            (click)="viewMode = 'grid'"
+            [class.active]="viewMode === 'grid'"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-layout-grid-icon lucide-layout-grid"
+            >
+              <rect width="7" height="7" x="3" y="3" rx="1" />
+              <rect width="7" height="7" x="14" y="3" rx="1" />
+              <rect width="7" height="7" x="14" y="14" rx="1" />
+              <rect width="7" height="7" x="3" y="14" rx="1" />
+            </svg>
+          </button>
+          <!-- <button  class="toggle-btn"(click)="viewMode = 'table'" [class.active]="viewMode === 'table'">Table</button> -->
+          <button
+            class="toggle-btn"
+            (click)="switchView('map')"
+            [class.active]="viewMode === 'map'"
+          >
+            <i class="fa-solid fa-map-location-dot"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -357,6 +391,19 @@
               <span>{{ type }}</span>
             </label>
           </div>
+
+          <div class="filter-block" *ngIf="sources.length">
+            <div class="filter-block-title">Sources</div>
+            <label class="filter-check" *ngFor="let source of sources">
+              <input
+                type="checkbox"
+                [value]="source"
+                [(ngModel)]="sourceSelections[source]"
+                (change)="onFilterChange()"
+              />
+              <span>{{ source }}</span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -368,7 +415,7 @@
         >
           <div
             class="center-card"
-            *ngFor="let center of filteredCenters; trackBy: trackByCenterId"
+            *ngFor="let center of filteredCenters(); trackBy: trackByCenterId"
             [ngClass]="{
               'enriching-card': center.Running === 0 && center.Queue < 1,
               'queued-card':
@@ -610,7 +657,7 @@
 
                 <div
                   class="property-details"
-                  *ngIf="center.shoppingCenter?.places"
+                  *ngIf="center.shoppingCenter.places"
                 >
                   <div class="detail-row gap-2">
                     <!-- Building Size Range -->
@@ -822,7 +869,7 @@
 
             <tbody>
               <tr
-                *ngFor="let center of filteredCenters"
+                *ngFor="let center of filteredCenters()"
                 [class.click-disabled]="openMenuId === center.scId"
               >
                 <!-- Thumb -->
@@ -939,6 +986,13 @@
               </tr>
             </tbody>
           </table>
+        </div>
+        <!-- ===================== Map View ===================== -->
+        <div
+          class="map-view-container"
+          [hidden]="viewMode !== 'map' || isLoading"
+        >
+          <div id="shoppingMap" class="custom-map"></div>
         </div>
 
         <div class="pagination" *ngIf="totalItems > itemsPerPage">
