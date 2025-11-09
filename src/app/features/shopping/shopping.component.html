@@ -357,6 +357,20 @@
               <span>{{ type }}</span>
             </label>
           </div>
+
+
+          <div class="filter-block" *ngIf="availableTypes.length">
+            <div class="filter-block-title">Sources</div>
+            <label class="filter-check" *ngFor="let source of sources">
+              <input
+                type="checkbox"
+                [value]="source"
+                [(ngModel)]="sourceSelections[source]"
+                (change)="onFilterChange()"
+              />
+              <span>{{ source}}</span>
+            </label>
+          </div>
         </div>
       </div>
 

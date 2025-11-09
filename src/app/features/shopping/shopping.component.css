@@ -1019,6 +1019,7 @@ tr.click-disabled td:last-child * {
   color: #1f2937;
 }
 .filter-check input[type="checkbox"] {
+  flex: 0 0 24px;  
   appearance: none;
   margin: 0;
   cursor: pointer;

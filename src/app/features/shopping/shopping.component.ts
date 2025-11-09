@@ -62,6 +62,7 @@ export class ShoppingComponent implements OnInit {
   ];
   stateSelections: { [key: string]: boolean } = {};
   typeSelections: { [key: string]: boolean } = {};
+  sourceSelections: { [key: string]: boolean } = {};
   leaseTypeSelections: { [key: string]: boolean } = {};
 
   isLoading: boolean = true;
@@ -106,6 +107,7 @@ export class ShoppingComponent implements OnInit {
     setTimeout(() => {
       this.availableStates.forEach((s) => (this.stateSelections[s] = false));
       this.availableTypes.forEach((t) => (this.typeSelections[t] = false));
+      this.sources.forEach((s) => (this.sourceSelections[s] = false));
       this.availableLeaseTypes.forEach(
         (l) => (this.leaseTypeSelections[l] = false)
       );
@@ -174,6 +176,10 @@ export class ShoppingComponent implements OnInit {
     const selectedLeaseTypes = Object.keys(this.leaseTypeSelections).filter(
       (l) => this.leaseTypeSelections[l]
     );
+    const selectedSources = Object.keys(this.sourceSelections).filter(
+      (s) => this.sourceSelections[s]
+    );
+
 
     let filtered = [...this.centers];
 
@@ -226,6 +232,11 @@ export class ShoppingComponent implements OnInit {
     if (selectedTypes.length > 0) {
       filtered = filtered.filter((center) =>
         selectedTypes.includes(center.centerType)
+      );
+    }
+    if (selectedSources.length > 0) {
+      filtered = filtered.filter((center) =>
+        selectedSources.includes(center.source)
       );
     }
 
@@ -713,6 +724,11 @@ export class ShoppingComponent implements OnInit {
       .filter(Boolean)
       .sort();
   }
+  get sources(): string[] {
+    return [...new Set(this.centers.map((c) => this.getSourceDisplay(c.source)))]
+      .filter(Boolean)
+      .sort();
+  }
 
   get availableLeaseTypes(): string[] {
     return [
@@ -785,7 +801,8 @@ export class ShoppingComponent implements OnInit {
     Object.keys(this.stateSelections).forEach(k => (this.stateSelections[k] = false));
     Object.keys(this.typeSelections).forEach(k => (this.typeSelections[k] = false));
     Object.keys(this.leaseTypeSelections).forEach(k => (this.leaseTypeSelections[k] = false));
+    Object.keys(this.sourceSelections).forEach((s) => (this.sourceSelections[s] = false));
     this.applyFiltersAndSort();
   }
-  
+ 
 }
