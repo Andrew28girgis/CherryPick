@@ -17,8 +17,9 @@ import { environment } from 'src/environments/environment';
 import { NgxFileDropEntry } from 'ngx-file-drop';
 import { General } from 'src/app/shared/models/domain';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
-import { Center } from 'src/app/shared/models/shoppingCenters';
 import { ContactBrokerComponent } from '../kayak-home/shopping-center-table/contact-broker/contact-broker.component';
+import { MapsService } from 'src/app/core/services/maps.service';
+import { signal, effect } from '@angular/core';
 
 @Component({
   selector: 'app-shopping',
@@ -35,7 +36,7 @@ export class ShoppingComponent implements OnInit {
   private modalRef?: NgbModalRef;
   searchTerm: string = '';
   centers: ShoppingCenter[] = [];
-  filteredCenters: ShoppingCenter[] = [];
+  filteredCenters = signal<ShoppingCenter[]>([]);
   showFilterDropdown: boolean = false;
   showSortDropdown: boolean = false;
 
@@ -67,7 +68,7 @@ export class ShoppingComponent implements OnInit {
 
   isLoading: boolean = true;
   openMenuId: number | null = null;
-  viewMode: 'grid' | 'table' = 'grid'; // default
+  viewMode: 'grid' | 'table' | 'map' = 'grid';
   campaigns: ICampaign[] = [];
   selectedCampaign!: ICampaign;
   currentCenter!: number;
@@ -94,7 +95,8 @@ export class ShoppingComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private router: Router,
-    private viewManagerService: ViewManagerService
+    private viewManagerService: ViewManagerService,
+    private mapsService: MapsService
   ) {}
 
   ngOnInit(): void {
@@ -115,10 +117,11 @@ export class ShoppingComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // Clean up interval when component is destroyed
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
     }
+    if (this.refreshInterval) clearInterval(this.refreshInterval);
+    this.mapsService.clearMarkers();
   }
 
   loadShoppingCenters(): void {
@@ -143,7 +146,7 @@ export class ShoppingComponent implements OnInit {
 
   processImageUrl(imageUrl: string): string {
     if (!imageUrl) {
-      return '/placeholder.svg?height=200&width=300';
+      return 'assets/Images/placeholder.png';
     }
 
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
@@ -179,7 +182,6 @@ export class ShoppingComponent implements OnInit {
     const selectedSources = Object.keys(this.sourceSelections).filter(
       (s) => this.sourceSelections[s]
     );
-
 
     let filtered = [...this.centers];
 
@@ -235,10 +237,14 @@ export class ShoppingComponent implements OnInit {
       );
     }
     if (selectedSources.length > 0) {
-      filtered = filtered.filter((center) =>
-        selectedSources.includes(center.source)
-      );
+      filtered = filtered.filter((center) => {
+        const normalizedSource = this.getSourceDisplay(center.source)
+          ?.toLowerCase()
+          .trim();
+        return selectedSources.includes(normalizedSource);
+      });
     }
+    
 
     if (selectedLeaseTypes.length > 0) {
       filtered = filtered.filter((center) =>
@@ -248,8 +254,10 @@ export class ShoppingComponent implements OnInit {
       );
     }
 
-    // Store full filtered results before pagination
-    this.filteredCenters = [...filtered];
+    this.filteredCenters.set(filtered);
+    if (this.map && this.viewMode === 'map') {
+      this.updateMarkersOnMap();
+    }
 
     // Then apply pagination
     this.updatePagination();
@@ -456,7 +464,7 @@ export class ShoppingComponent implements OnInit {
     });
   }
   trackByCenterId(index: number, center: any): number {
-    return center?.id || index;
+    return center?.scId || index;
   }
   InsertAutomation(id: any, reload?: any) {
     if (reload) {
@@ -725,9 +733,11 @@ export class ShoppingComponent implements OnInit {
       .sort();
   }
   get sources(): string[] {
-    return [...new Set(this.centers.map((c) => this.getSourceDisplay(c.source)))]
-      .filter(Boolean)
-      .sort();
+    const normalized = this.centers
+      .map((c) => this.getSourceDisplay(c.source)?.toLowerCase().trim())
+      .filter((s): s is string => !!s);
+
+    return [...new Set(normalized)].sort();
   }
 
   get availableLeaseTypes(): string[] {
@@ -743,7 +753,9 @@ export class ShoppingComponent implements OnInit {
   }
 
   private updatePagination(): void {
-    this.totalItems = this.filteredCenters.length;
+    const all = this.filteredCenters(); // read signal value
+
+    this.totalItems = all.length;
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
 
     if (this.currentPage > this.totalPages) {
@@ -754,7 +766,7 @@ export class ShoppingComponent implements OnInit {
     const endIndex = startIndex + this.itemsPerPage;
 
     // Change this line - use filteredCenters instead of centers
-    this.filteredCenters = this.filteredCenters.slice(startIndex, endIndex);
+    this.filteredCenters.set(all.slice(startIndex, endIndex));
   }
   getPageNumbers(): number[] {
     const pages: number[] = [];
@@ -798,11 +810,118 @@ export class ShoppingComponent implements OnInit {
     }
   }
   resetFilters(): void {
-    Object.keys(this.stateSelections).forEach(k => (this.stateSelections[k] = false));
-    Object.keys(this.typeSelections).forEach(k => (this.typeSelections[k] = false));
-    Object.keys(this.leaseTypeSelections).forEach(k => (this.leaseTypeSelections[k] = false));
-    Object.keys(this.sourceSelections).forEach((s) => (this.sourceSelections[s] = false));
+    Object.keys(this.stateSelections).forEach(
+      (k) => (this.stateSelections[k] = false)
+    );
+    Object.keys(this.typeSelections).forEach(
+      (k) => (this.typeSelections[k] = false)
+    );
+    Object.keys(this.leaseTypeSelections).forEach(
+      (k) => (this.leaseTypeSelections[k] = false)
+    );
+    Object.keys(this.sourceSelections).forEach(
+      (s) => (this.sourceSelections[s] = false)
+    );
     this.applyFiltersAndSort();
   }
- 
+  async initMapView(): Promise<void> {
+    const mapElement = document.getElementById('shoppingMap') as HTMLElement;
+    if (!mapElement) return;
+
+    const config = this.mapsService.getDefaultMapConfig();
+    this.map = this.mapsService.createMap(mapElement, config);
+
+    // Center map on first result (optional)
+    const first = this.filteredCenters()[0];
+    if (first) {
+      const lat = Number(first.latitude || first.latitude);
+      const lng = Number(first.longitude || first.longitude);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        this.map.setCenter({ lat, lng });
+      }
+    }
+  }
+
+  addMapMarkers(): void {
+    if (!this.map || !this.filteredCenters?.length) return;
+
+    this.filteredCenters().forEach((center) => {
+      if (!center.latitude && !center.latitude) return;
+
+      const position = {
+        lat: Number(center.latitude || center.latitude),
+        lng: Number(center.longitude || center.longitude),
+      };
+
+      const marker = new google.maps.Marker({
+        position,
+        map: this.map,
+        title: center.centerName,
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="font-size:14px;line-height:1.4;">
+            <strong>${center.centerName}</strong><br/>
+            ${center.centerAddress || ''}<br/>
+            ${center.centerCity || ''}, ${center.centerState || ''}
+          </div>
+        `,
+      });
+
+      marker.addListener('click', () => {
+        infoWindow.open(this.map, marker);
+      });
+    });
+  }
+  ngOnChanges(): void {
+    if (this.viewMode === 'map') {
+      setTimeout(() => this.initMapView(), 200);
+    }
+  }
+
+  switchView(mode: 'grid' | 'table' | 'map') {
+    this.viewMode = mode;
+
+    if (mode === 'map') {
+      // Give Angular time to render the <div id="shoppingMap">
+      setTimeout(async () => {
+        if (!this.map) {
+          await this.initMapView(); // Only create map once
+        }
+        // Re-render markers after map is ready
+        this.updateMarkersOnMap();
+      }, 200);
+    }
+  }
+
+  mapEffect = effect(() => {
+    // Skip if map not ready or not in map mode
+    if (!this.map || this.viewMode !== 'map') return;
+
+    // Wait a tick to ensure DOM + Google API ready
+    queueMicrotask(() => this.updateMarkersOnMap());
+  });
+
+  updateMarkersOnMap(): void {
+    if (!this.map) return;
+    const centers = this.filteredCenters();
+    this.mapsService.clearMarkers();
+
+    centers.forEach((center) => {
+      if (!center.latitude && !center.latitude) return;
+      const markerData = {
+        ...center,
+        Latitude: center.latitude ?? center.latitude,
+        Longitude: center.longitude ?? center.longitude,
+        MainImage: center.mainImage,
+        CenterName: center.centerName,
+        CenterAddress: center.centerAddress,
+        CenterCity: center.centerCity,
+        CenterState: center.centerState,
+        ShoppingCenter: { Places: center.shoppingCenter?.places ?? [] },
+      };
+      this.mapsService.createMarker(this.map, markerData, 'Shopping Center');
+    });
+  }
 }
