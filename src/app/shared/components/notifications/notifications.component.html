@@ -163,7 +163,8 @@
             *ngIf="
               selectedNotification &&
               (+selectedNotification.taskId === 2 ||
-                +selectedNotification.taskId === 3) &&
+                +selectedNotification.taskId === 3 ||
+                +selectedNotification.taskId === 4) &&
               +selectedNotification.isEndInsertion === 0
             "
           >
@@ -171,7 +172,8 @@
               *ngIf="
                 selectedNotification &&
                 (+selectedNotification.taskId === 2 ||
-                  +selectedNotification.taskId === 3) &&
+                  +selectedNotification.taskId === 3 ||
+                  +selectedNotification.taskId === 4) &&
                 +selectedNotification.isEndInsertion === 0
               "
               class="btn save-btn"
