@@ -134,3 +134,13 @@
 .app-shell.chatbot-route:not(.overlay-active) > .app-container {
   width: 100%;
 }
+
+
+/* override emily chatbot classes so the app take full width  */
+.app-shell {
+  margin-right: 0 !important;
+}
+
+.app-shell > .app-container {
+  width: 100% !important;
+}
