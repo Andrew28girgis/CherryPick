@@ -13,9 +13,18 @@
           All
         </button>
         <button
+          (click)="changeFilter('pending')"
+          [class.active]="filterStatus === 'pending'"
+          class="pending-button"
+          *ngIf="getPendingPagesCount() > 0"
+        >
+          Pending
+        </button>
+        <button
           (click)="changeFilter('successed')"
           [class.active]="filterStatus === 'successed'"
           class="successed-btn"
+          *ngIf="getsuccessedPagesCount() > 0"
         >
           Successed
         </button>
@@ -23,6 +32,7 @@
           (click)="changeFilter('failed')"
           [class.active]="filterStatus === 'failed'"
           class="failed-btn"
+          *ngIf="getfailedPagesCount() > 0"
         >
           Failed
         </button>
@@ -81,29 +91,33 @@
 
   <!-- CARD VIEW -->
   <div class="card-grid" *ngIf="viewMode === 'card'">
-    <div
-      class="scan-card"
-      *ngFor="let item of filteredPages"
-      [ngClass]="{
+    <ng-container *ngFor="let item of filteredPages">
+      <div
+        class="scan-card"
+        [ngClass]="{
         success: item.status === 'successed',
-        failed: item.status === 'failed'
+        failed: item.status === 'failed',
+        pending: item.status === 'pending',
       }"
-    >
-      <div class="url" (click)="openLink(item.sourceURL)">
-        <a [href]="item.sourceURL" target="_blank">
-          {{ item.sourceURL }}
-        </a>
+        *ngIf="item.sourceURL"
+      >
+        <div class="url" (click)="openLink(item.sourceURL)">
+          <a [href]="item.sourceURL" target="_blank">
+            {{ item.sourceURL }}
+          </a>
+        </div>
+        <div class="status">
+          <span
+            [ngClass]="{
+        ok: item.status === 'successed',
+        failed: item.status === 'failed',
+        pending: item.status === 'pending',
+      }"
+            >{{ item.status }}</span
+          >
+        </div>
       </div>
-      <div class="status">
-        <span
-          [ngClass]="{
-            ok: item.status === 'successed',
-            failed: item.status === 'failed'
-          }"
-          >{{ item.status }}</span
-        >
-      </div>
-    </div>
+    </ng-container>
   </div>
 
   <!-- TABLE VIEW -->
@@ -116,25 +130,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let item of filteredPages"
-          [ngClass]="{
-            success: item.status === 'successed',
-            failed: item.status === 'failed'
-          }"
-        >
-          <td>
-            <a [href]="item.sourceURL" target="_blank">{{ item.sourceURL }}</a>
-          </td>
-          <td>
-            <span
-              class="status-badge"
-              [class.success]="item.status === 'successed'"
-              [class.failed]="item.status === 'failed'"
-              >{{ item.status }}</span
-            >
-          </td>
-        </tr>
+        <ng-container *ngFor="let item of filteredPages">
+          <tr
+            [ngClass]="{
+              success: item.status === 'successed',
+              failed: item.status === 'failed'
+            }"
+            *ngIf="item.sourceURL"
+          >
+            <td>
+              <a [href]="item.sourceURL" target="_blank">{{
+                item.sourceURL
+              }}</a>
+            </td>
+            <td>
+              <span
+                class="status-badge"
+                [class.success]="item.status === 'successed'"
+                [class.failed]="item.status === 'failed'"
+                >{{ item.status }}</span
+              >
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>
