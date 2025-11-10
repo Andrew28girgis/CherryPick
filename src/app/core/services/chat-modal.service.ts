@@ -76,7 +76,6 @@ export class ChatModalService {
     this.ref = this.modal.open(FloatingChatNotificationsComponent, {
       backdrop: true,
       container: 'body',
-      size: 'sm',
       windowClass: 'chat-notif-modal-window',
       modalDialogClass: 'chat-notif-modal-dialog dynamic-position',
       scrollable: true,
@@ -109,6 +108,11 @@ export class ChatModalService {
     this.ref.closed.subscribe(() => (this.ref = undefined));
     this.ref.dismissed.subscribe(() => (this.ref = undefined));
   }
+  public getPositionRelativeToFab(): { top: number; left: number } | null {
+  if (!this.fabEl) return null;
+  return this.calculatePosition(this.fabEl);
+}
+
   public getPositionForAnchor(
   anchor: HTMLElement,
   opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}

@@ -92,6 +92,7 @@ export class FloatingChatNotificationsComponent
   isNotificationsOpen = false;
 
   electronSideBar = false;
+  @ViewChild('overlayModal') overlayModal!: TemplateRef<any>;
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
@@ -267,6 +268,15 @@ export class FloatingChatNotificationsComponent
 
   closePopup(): void {
     this.activeModal.close();
+  }
+    openOverlayModal(notification: any) {
+    this.overlayHtml = notification.html;
+
+    this.modalService.open(this.overlayModal, {
+      size: 'xl',
+      centered: true,
+      keyboard: true,
+    });
   }
 
   @HostListener('document:click', ['$event'])
@@ -485,7 +495,7 @@ export class FloatingChatNotificationsComponent
     if (this.shoppingCenterId) body.ShoppingCenterId = this.shoppingCenterId;
     if (this.organizationId) body.OrganizationId = this.organizationId;
     if (this.contactId) body.ContactId = this.contactId;
-  
+
     this.placesService.sendmessages(body).subscribe({
       next: () => {
         this.lastUserMessageId = Math.max(
