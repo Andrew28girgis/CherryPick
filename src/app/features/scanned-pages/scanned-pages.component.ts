@@ -15,22 +15,18 @@ interface ScanResult {
   templateUrl: './scanned-pages.component.html',
   styleUrls: ['./scanned-pages.component.css'],
 })
-export class ScannedPagesComponent implements OnInit, AfterViewInit {
+export class ScannedPagesComponent implements OnInit {
   scannedPages: ScanResult[] = [];
   filteredPages: ScanResult[] = [];
-  viewMode: 'table' | 'card'  = 'table';
+  viewMode: 'table' | 'card' = 'table';
   filterStatus: 'all' | 'successed' | 'failed' = 'all';
 
-  constructor(private placeService: PlacesService, private chatModal: ChatModalService) {}
+  constructor(private placeService: PlacesService) {}
 
   ngOnInit(): void {
     this.getScannedPages();
   }
- ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.chatModal.openForButton();
-    }, 0);
-  }
+
   getScannedPages(): void {
     const body: any = { Name: 'GetScanPage', Params: {} };
     this.placeService.GenericAPI(body).subscribe({
@@ -41,7 +37,7 @@ export class ScannedPagesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  toggleView(mode: 'table' | 'card' ) {
+  toggleView(mode: 'table' | 'card') {
     this.viewMode = mode;
   }
 
