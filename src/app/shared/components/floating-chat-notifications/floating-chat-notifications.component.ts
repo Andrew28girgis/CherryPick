@@ -269,7 +269,7 @@ export class FloatingChatNotificationsComponent
   closePopup(): void {
     this.activeModal.close();
   }
-    openOverlayModal(notification: any) {
+  openOverlayModal(notification: any) {
     this.overlayHtml = notification.html;
 
     this.modalService.open(this.overlayModal, {
@@ -851,44 +851,41 @@ export class FloatingChatNotificationsComponent
 
     this.selectedNotification = notification;
   }
-  async downloadPDF(): Promise<void> {
-    if (!this.contentToDownload) {
-      return;
-    }
+async downloadPDF(container?: HTMLElement): Promise<void> {
+  const containerEl =
+    container ?? this.contentToDownload?.nativeElement;
 
-    const container = this.contentToDownload.nativeElement as HTMLElement;
+  if (!containerEl) {
+    console.error('Content container not found');
+    return;
+  }
 
-    // 1) Fix cross-origin images
-    const imgs = Array.from(
-      container.querySelectorAll('img')
-    ) as HTMLImageElement[];
-    await Promise.all(
-      imgs.map(async (img) => {
-        try {
-          if (
-            /^https?:\/\//.test(img.src) &&
-            !img.src.startsWith(window.location.origin)
-          ) {
-            img.src = await this.toDataURL(img.src);
-          }
-        } catch (err) {}
-      })
-    );
+  this.isGeneratingPdf = true;
 
-    // 2) File name
-    const filename = `Emily-Report-${Date.now()}.pdf`;
+  const imgs = Array.from(containerEl.querySelectorAll('img')) as HTMLImageElement[];
+  await Promise.all(
+    imgs.map(async (img) => {
+      try {
+        if (
+          /^https?:\/\//.test(img.src) &&
+          !img.src.startsWith(window.location.origin)
+        ) {
+          img.src = await this.toDataURL(img.src);
+        }
+      } catch (err) {
+        console.warn('Could not process image:', img.src, err);
+      }
+    })
+  );
 
-    // 3) Options
-    const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
-    const jsPDFOpts: any = {
-      unit: 'pt',
-      format: 'a4',
-      orientation: 'portrait',
-    };
+  const filename = `${this.pdfTitle?.trim() || 'Emily-Report'}-${Date.now()}.pdf`;
 
-    // 4) Generate
+  const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
+  const jsPDFOpts: any = { unit: 'pt', format: 'a4', orientation: 'portrait' };
+
+  try {
     await html2pdf()
-      .from(container)
+      .from(containerEl)
       .set({
         filename,
         margin: 15,
@@ -898,7 +895,11 @@ export class FloatingChatNotificationsComponent
         pagebreak: { mode: ['css', 'legacy'] },
       })
       .save();
+  } finally {
+    this.isGeneratingPdf = false;
   }
+}
+
 
   private async toDataURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
