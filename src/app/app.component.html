@@ -19,13 +19,13 @@
     </ng-template>
   </div>
 
-  <app-notifications
+  <!-- <app-notifications
     *ngIf="shouldShowNotifications && !isMobile"
     [campaignId]="campaignId"
     [isChatbotRoute]="isChatbotRoute"
     (overlayStateChange)="onOverlayStateChange($event)"
     (sidebarStateChange)="onCopilotStateChange($event)"
-  ></app-notifications>
+  ></app-notifications> -->
 
   <app-floating-chat
     *ngIf="isAuthenticated"
