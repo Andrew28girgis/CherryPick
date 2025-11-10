@@ -1,0 +1,141 @@
+<div class="scanned-pages-container">
+  <div class="header">
+    <div class="title-div">
+      <h2 class="title">Scanned Pages</h2>
+    </div>
+
+    <div class="controls">
+      <div class="status-filter">
+        <button
+          (click)="changeFilter('all')"
+          [class.active]="filterStatus === 'all'"
+        >
+          All
+        </button>
+        <button
+          (click)="changeFilter('successed')"
+          [class.active]="filterStatus === 'successed'"
+          class="successed-btn"
+        >
+          Successed
+        </button>
+        <button
+          (click)="changeFilter('failed')"
+          [class.active]="filterStatus === 'failed'"
+          class="failed-btn"
+        >
+          Failed
+        </button>
+      </div>
+
+      <div class="view-toggle">
+        <button
+          class="toggle-btn"
+          (click)="toggleView('card')"
+          [class.active]="viewMode === 'card'"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-layout-grid-icon lucide-layout-grid"
+          >
+            <rect width="7" height="7" x="3" y="3" rx="1" />
+            <rect width="7" height="7" x="14" y="3" rx="1" />
+            <rect width="7" height="7" x="14" y="14" rx="1" />
+            <rect width="7" height="7" x="3" y="14" rx="1" />
+          </svg>
+        </button>
+        <button
+          class="toggle-btn"
+          (click)="toggleView('table')"
+          [class.active]="viewMode === 'table'"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-table-properties-icon lucide-table-properties"
+          >
+            <path d="M15 3v18" />
+            <rect width="18" height="18" x="3" y="3" rx="2" />
+            <path d="M21 9H3" />
+            <path d="M21 15H3" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD VIEW -->
+  <div class="card-grid" *ngIf="viewMode === 'card'">
+    <div
+      class="scan-card"
+      *ngFor="let item of filteredPages"
+      [ngClass]="{
+        success: item.status === 'successed',
+        failed: item.status === 'failed'
+      }"
+    >
+      <div class="url" (click)="openLink(item.sourceURL)">
+        <a [href]="item.sourceURL" target="_blank">
+          {{ item.sourceURL }}
+        </a>
+      </div>
+      <div class="status">
+        <span
+          [ngClass]="{
+            ok: item.status === 'successed',
+            failed: item.status === 'failed'
+          }"
+          >{{ item.status }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE VIEW -->
+  <div class="table-wrap" *ngIf="viewMode === 'table'">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Source URL</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let item of filteredPages"
+          [ngClass]="{
+            success: item.status === 'successed',
+            failed: item.status === 'failed'
+          }"
+        >
+          <td>
+            <a [href]="item.sourceURL" target="_blank">{{ item.sourceURL }}</a>
+          </td>
+          <td>
+            <span
+              class="status-badge"
+              [class.success]="item.status === 'successed'"
+              [class.failed]="item.status === 'failed'"
+              >{{ item.status }}</span
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

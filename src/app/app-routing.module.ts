@@ -25,8 +25,9 @@ import { PolygonsComponent } from './features/polygons/polygons.component';
 import { Tree2Component } from './features/tree2/tree2.component';
 import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component';
 import { NotificationViewComponent } from './shared/components/notifications/notification-view/notification-view.component';
+import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.component';
 
-const routes: Routes = [
+ const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
@@ -141,6 +142,11 @@ const routes: Routes = [
   {
     path: 'artifacts',
     component: UserPagesComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'sources',
+    component: ScannedPagesComponent,
     canActivate: [AuthGuardService],
   },
   {
