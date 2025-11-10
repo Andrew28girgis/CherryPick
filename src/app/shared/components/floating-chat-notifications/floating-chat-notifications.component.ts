@@ -26,6 +26,7 @@ import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 // import { WebSocketService } from './../../../core/services/notification-signalr.service';
 
@@ -123,7 +124,11 @@ export class FloatingChatNotificationsComponent
   scanEnabled: boolean = true;
   private wsConnected = false;
   private knownIds = new Set<string | number>();
-
+  campaignId: any;
+  shoppingCenterId: any;
+  organizationId: any;
+  contactId: any;
+  conversationId: any;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -134,7 +139,8 @@ export class FloatingChatNotificationsComponent
     private ngZone: NgZone,
     private modalService: NgbModal,
     public activeModal: NgbActiveModal,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private chatModal: ChatModalService
   ) {}
 
   showScrollButton = false;
@@ -143,6 +149,7 @@ export class FloatingChatNotificationsComponent
   scrollThreshold = 100;
   private chatOpenSub?: Subscription;
   public isOverlayhtml = false;
+  private subs: Subscription[] = [];
 
   ngOnInit(): void {
     if (this.router.url.includes('chatbot')) {
@@ -233,6 +240,20 @@ export class FloatingChatNotificationsComponent
       this.isOverlayhtml = open;
       if (!open) this.overlayHtml = '';
     });
+
+    this.subs.push(
+      this.chatModal.campaignId$.subscribe((id) => (this.campaignId = id)),
+      this.chatModal.shoppingCenterId$.subscribe(
+        (id) => (this.shoppingCenterId = id)
+      ),
+      this.chatModal.organizationId$.subscribe(
+        (id) => (this.organizationId = id)
+      ),
+      this.chatModal.contactId$.subscribe((id) => (this.contactId = id)),
+      this.chatModal.conversationId$.subscribe(
+        (id) => (this.conversationId = id)
+      )
+    );
   }
 
   ngOnDestroy(): void {
@@ -456,7 +477,15 @@ export class FloatingChatNotificationsComponent
     this.scrollAfterRender();
     this.showTyping();
 
-    const body: any = { Chat: text };
+    const body: any = {
+      Chat: text,
+      ConversationId: this.conversationId,
+    };
+    if (this.campaignId) body.CampaignId = this.campaignId;
+    if (this.shoppingCenterId) body.ShoppingCenterId = this.shoppingCenterId;
+    if (this.organizationId) body.OrganizationId = this.organizationId;
+    if (this.contactId) body.ContactId = this.contactId;
+  
     this.placesService.sendmessages(body).subscribe({
       next: () => {
         this.lastUserMessageId = Math.max(
@@ -616,7 +645,7 @@ export class FloatingChatNotificationsComponent
     const emilyNotifications = (
       this.notificationService?.notifications ?? []
     ).filter((n) => n.isEmilyChat === true);
-    
+
     // 🔹 Map notifications to ChatItems
     const notificationItems: ChatItem[] = emilyNotifications.map((n) => ({
       key: `n-${n.id}-${seqCounter++}`,

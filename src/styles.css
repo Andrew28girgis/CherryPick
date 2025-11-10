@@ -346,20 +346,6 @@ a {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="%23000"><path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"></path></svg>');
 }
 
-.chat-notif-modal-dialog {
-  position: fixed !important;
-  width: 420px;
-  height: 560px;
-  display: flex;
-  flex-direction: column;
-  pointer-events: auto;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
 .dynamic-position {
   transform: scale(0.95);
   opacity: 0;
@@ -372,7 +358,6 @@ a {
     opacity: 1;
   }
 }
-
 
 @media (max-width: 991px) {
   .info-window {

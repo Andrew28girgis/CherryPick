@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 interface ScanResult {
   sourceURL: string;
@@ -17,7 +18,7 @@ interface ScanResult {
 export class ScannedPagesComponent implements OnInit {
   scannedPages: ScanResult[] = [];
   filteredPages: ScanResult[] = [];
-  viewMode: 'table' | 'card'  = 'table';
+  viewMode: 'table' | 'card' = 'table';
   filterStatus: 'all' | 'successed' | 'failed' = 'all';
 
   constructor(private placeService: PlacesService) {}
@@ -36,7 +37,7 @@ export class ScannedPagesComponent implements OnInit {
     });
   }
 
-  toggleView(mode: 'table' | 'card' ) {
+  toggleView(mode: 'table' | 'card') {
     this.viewMode = mode;
   }
 

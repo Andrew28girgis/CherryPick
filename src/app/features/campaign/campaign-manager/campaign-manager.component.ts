@@ -24,6 +24,7 @@ import { RefreshService } from 'src/app/core/services/refresh.service';
 import { Tenant } from 'src/app/shared/models/tenant';
 import { PolygonsComponent } from '../../polygons/polygons.component';
 import { CampaignSpecs } from 'src/app/shared/models/campaignSpecs';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 @Component({
   selector: 'app-campaign-manager',
   templateUrl: './campaign-manager.component.html',
@@ -116,7 +117,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   parsedCampaignDetails: { key: string; value: any }[] = [];
   isEditing = false;
   editableCampaign: any = {};
-  campaignLocationsList: any[] = []; 
+  campaignLocationsList: any[] = [];
 
   constructor(
     private placesService: PlacesService,
@@ -125,7 +126,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     private emilyService: EmilyService,
     private router: Router,
     private refreshService: RefreshService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private chatModal: ChatModalService,
   ) {}
 
   ngOnInit(): void {
@@ -418,7 +420,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.campaignType = '';
     this.campaignName = '';
     this.tenantSearch = '';
-    this.cotenants=[];
+    this.cotenants = [];
     this.step = 'tenant';
     this.polygonsStep = false;
     this.modalRef = this.modalService.open(content, { size: 'xl' });
@@ -1214,5 +1216,12 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
           console.error('Update failed:', err);
         },
       });
+  }
+  editWithEMily(campaign: any): void {
+    const body: any = { Chat: 'edit campaign with emily',CampaignId: campaign.Id, ConversationId: 1 };
+    this.placesService.sendmessages(body).subscribe({});
+    this.chatModal.openForButton();
+    this.chatModal.setCampaignId(campaign.Id, 1);
+ 
   }
 }
