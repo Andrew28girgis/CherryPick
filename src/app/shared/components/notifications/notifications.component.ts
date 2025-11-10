@@ -1231,7 +1231,7 @@ export class NotificationsComponent
     if (!Array.isArray(newOnes) || !newOnes.length) return;
 
     const list = this.notificationService.notifications ?? [];
-    let added = 0
+    let added = 0;
     for (const n of newOnes) {
       const key = this.idKey(n);
       if (this.knownIds.has(key)) continue;
