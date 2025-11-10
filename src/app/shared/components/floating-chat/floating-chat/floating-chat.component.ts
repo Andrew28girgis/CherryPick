@@ -46,25 +46,23 @@ export class FloatingChatComponent implements AfterViewInit, OnDestroy {
     this.wasDragged = true;
   }
 
-  onDragMoved(e: CdkDragMove): void {
-    if (this.chatModal.isOpen()) {
-      const rect = this.fabBtn.nativeElement.getBoundingClientRect();
-      const { top, left } = (this.chatModal as any).calculatePosition(rect);
-      this.chatModal.updatePosition(top, left);
-    }
+onDragMoved(e: CdkDragMove): void {
+  if (this.chatModal.isOpen()) {
+    const { top, left } = this.chatModal.getPositionForAnchor(this.fabBtn.nativeElement);
+    this.chatModal.updatePosition(top, left);
   }
+}
 
-  onDragEnd(e: CdkDragEnd): void {
-    this.dragPos = e.source.getFreeDragPosition();
-    localStorage.setItem(POS_KEY, JSON.stringify(this.dragPos));
-    setTimeout(() => (this.wasDragged = false), 150);
+onDragEnd(e: CdkDragEnd): void {
+  this.dragPos = e.source.getFreeDragPosition();
+  localStorage.setItem(POS_KEY, JSON.stringify(this.dragPos));
+  setTimeout(() => (this.wasDragged = false), 150);
 
-    if (this.chatModal.isOpen()) {
-      const rect = this.fabBtn.nativeElement.getBoundingClientRect();
-      const { top, left } = (this.chatModal as any).calculatePosition(rect);
-      this.chatModal.updatePosition(top, left);
-    }
+  if (this.chatModal.isOpen()) {
+    const { top, left } = this.chatModal.getPositionForAnchor(this.fabBtn.nativeElement);
+    this.chatModal.updatePosition(top, left);
   }
+}
 
   open(): void {
     if (this.hidden || this.wasDragged) return;

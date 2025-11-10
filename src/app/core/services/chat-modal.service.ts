@@ -98,6 +98,13 @@ export class ChatModalService {
     this.ref.closed.subscribe(() => (this.ref = undefined));
     this.ref.dismissed.subscribe(() => (this.ref = undefined));
   }
+  public getPositionForAnchor(
+  anchor: HTMLElement,
+  opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
+): { top: number; left: number } {
+  return this.calculatePosition(anchor, opts);
+}
+
 
   updatePosition(top: number, left: number): void {
     const dialog = document.querySelector('.dynamic-position') as HTMLElement;
