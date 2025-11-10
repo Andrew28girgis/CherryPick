@@ -54,15 +54,44 @@ onDragMoved(e: CdkDragMove): void {
 }
 
 onDragEnd(e: CdkDragEnd): void {
-  this.dragPos = e.source.getFreeDragPosition();
-  localStorage.setItem(POS_KEY, JSON.stringify(this.dragPos));
+  const pos = e.source.getFreeDragPosition();
+  const fabEl = this.fabBtn.nativeElement;
+  const rect = fabEl.getBoundingClientRect();
+
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const margin = 8; // keep some breathing space from edges
+
+  let x = pos.x;
+  let y = pos.y;
+
+  // Clamp left and right
+  if (rect.left < margin) x += margin - rect.left;
+  if (rect.right > vw - margin) x -= rect.right - (vw - margin);
+
+  // Clamp top and bottom
+  if (rect.top < margin) y += margin - rect.top;
+  if (rect.bottom > vh - margin) y -= rect.bottom - (vh - margin);
+
+  // Apply smooth correction transition
+  fabEl.style.transition = 'transform 0.15s ease-out';
+  requestAnimationFrame(() => {
+    this.dragPos = { x, y };
+    e.source._dragRef.setFreeDragPosition(this.dragPos);
+    localStorage.setItem(POS_KEY, JSON.stringify(this.dragPos));
+
+    // Remove transition after animation
+    setTimeout(() => (fabEl.style.transition = ''), 200);
+  });
+
   setTimeout(() => (this.wasDragged = false), 150);
 
   if (this.chatModal.isOpen()) {
-    const { top, left } = this.chatModal.getPositionForAnchor(this.fabBtn.nativeElement);
+    const { top, left } = this.chatModal.getPositionForAnchor(fabEl);
     this.chatModal.updatePosition(top, left);
   }
 }
+
 
   open(): void {
     if (this.hidden || this.wasDragged) return;
