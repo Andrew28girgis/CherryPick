@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 interface ScanResult {
   sourceURL: string;
@@ -14,18 +15,22 @@ interface ScanResult {
   templateUrl: './scanned-pages.component.html',
   styleUrls: ['./scanned-pages.component.css'],
 })
-export class ScannedPagesComponent implements OnInit {
+export class ScannedPagesComponent implements OnInit, AfterViewInit {
   scannedPages: ScanResult[] = [];
   filteredPages: ScanResult[] = [];
   viewMode: 'table' | 'card'  = 'table';
   filterStatus: 'all' | 'successed' | 'failed' = 'all';
 
-  constructor(private placeService: PlacesService) {}
+  constructor(private placeService: PlacesService, private chatModal: ChatModalService) {}
 
   ngOnInit(): void {
     this.getScannedPages();
   }
-
+ ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.chatModal.openForButton();
+    }, 0);
+  }
   getScannedPages(): void {
     const body: any = { Name: 'GetScanPage', Params: {} };
     this.placeService.GenericAPI(body).subscribe({

@@ -5,15 +5,19 @@ import { FloatingChatNotificationsComponent } from '../../shared/components/floa
 @Injectable({ providedIn: 'root' })
 export class ChatModalService {
   private ref?: NgbModalRef;
+  fab: any = null;
 
   constructor(private modal: NgbModal) {}
 
+  setposition(fab: HTMLElement | null) {
+    this.fab = fab;
+  }
   openForButton(
-    buttonEl: HTMLElement,
+    buttonEl: HTMLElement=this.fab,
     campaignId?: any,
     opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
   ) {
-    const { popupWidth = 420, popupHeight = 560, margin = 12 } = opts;
+    const { popupWidth = 360, popupHeight = 560, margin = 24  } = opts;
     const rect = buttonEl.getBoundingClientRect();
 
     const viewportWidth = window.innerWidth;
@@ -63,7 +67,8 @@ export class ChatModalService {
       keyboard: true,
     });
 
-    const cmp = this.ref.componentInstance as FloatingChatNotificationsComponent;
+    const cmp = this.ref
+      .componentInstance as FloatingChatNotificationsComponent;
     cmp.CampaignId = options.campaignId;
 
     // Reposition modal after render

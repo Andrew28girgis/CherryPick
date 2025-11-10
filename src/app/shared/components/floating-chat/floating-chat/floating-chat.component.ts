@@ -2,10 +2,12 @@ import {
   Component,
   Input,
   OnDestroy,
+  OnInit,
   ElementRef,
   ViewChild,
+  AfterViewInit,
 } from '@angular/core';
-import { CdkDragMove,CdkDragEnd} from '@angular/cdk/drag-drop';
+import { CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Subscription } from 'rxjs';
@@ -18,7 +20,7 @@ const POS_KEY = 'floating_chat_fab_pos_v1';
   templateUrl: './floating-chat.component.html',
   styleUrls: ['./floating-chat.component.css'],
 })
-export class FloatingChatComponent implements OnDestroy {
+export class FloatingChatComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() campaignId?: any;
   @Input() hidden = false;
   @ViewChild('fabBtn') fabBtn!: ElementRef<HTMLDivElement>;
@@ -28,7 +30,16 @@ export class FloatingChatComponent implements OnDestroy {
   private sub?: Subscription;
   private wasDragged = false;
 
-  constructor( private chatModal: ChatModalService,private notificationService: NotificationService ) { }
+  constructor(
+    private chatModal: ChatModalService,
+    private notificationService: NotificationService
+  ) {}
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.chatModal.setposition(this.fabBtn.nativeElement);
+  }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -38,58 +49,27 @@ export class FloatingChatComponent implements OnDestroy {
     this.wasDragged = true;
   }
 
-private calculateModalPosition(): { top: number; left: number } {
-  const rect = this.fabBtn.nativeElement.getBoundingClientRect();
-  const popupWidth = 420;
-  const popupHeight = 560;
-  const margin = 12;
-
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
-  let left: number;
-  let top: number;
-
-  // Decide which side to open on
-  if (rect.right + popupWidth + margin < viewportWidth) {
-    left = rect.right + margin;
-  } else {
-    left = rect.left - popupWidth - margin;
+  onDragMoved(e: CdkDragMove): void {
+    if (this.chatModal.isOpen()) {
+      const rect = this.fabBtn.nativeElement.getBoundingClientRect();
+      const pos = this.calculateModalPosition(rect);
+      this.chatModal.updatePosition(pos.top, pos.left);
+    }
   }
 
-  // Center vertically
-  top = rect.top + rect.height / 2 - popupHeight / 2;
+  onDragEnd(e: CdkDragEnd): void {
+    this.dragPos = e.source.getFreeDragPosition();
+    localStorage.setItem(POS_KEY, JSON.stringify(this.dragPos));
+    setTimeout(() => (this.wasDragged = false), 150);
 
-  // Keep inside viewport
-  if (top + popupHeight > viewportHeight) {
-    top = viewportHeight - popupHeight - margin;
+    if (this.chatModal.isOpen()) {
+      const rect = this.fabBtn.nativeElement.getBoundingClientRect();
+      const pos = this.calculateModalPosition(rect);
+      this.chatModal.updatePosition(pos.top, pos.left);
+    }
   }
-  if (top < margin) {
-    top = margin;
-  }
 
-  return { top, left };
-}
-
-onDragMoved(e: CdkDragMove): void {
-  if (this.chatModal.isOpen()) {
-    const pos = this.calculateModalPosition();
-    this.chatModal.updatePosition(pos.top, pos.left);
-  }
-}
-
-onDragEnd(e: CdkDragEnd): void {
-  this.dragPos = e.source.getFreeDragPosition();
-  localStorage.setItem(POS_KEY, JSON.stringify(this.dragPos));
-  setTimeout(() => (this.wasDragged = false), 150);
-
-  if (this.chatModal.isOpen()) {
-    const pos = this.calculateModalPosition();
-    this.chatModal.updatePosition(pos.top, pos.left);
-  }
-}
-
-open(): void {
+  open(): void {
     if (this.hidden || this.wasDragged) return;
     this.chatModal.openForButton(this.fabBtn.nativeElement, this.campaignId);
 
@@ -98,5 +78,22 @@ open(): void {
     }
   }
 
+  private calculateModalPosition(rect: DOMRect): { top: number; left: number } {
+    const popupWidth = 420;
+    const popupHeight = 560;
+    const margin = 12;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
 
+    let left =
+      rect.right + popupWidth + margin < vw
+        ? rect.right + margin
+        : rect.left - popupWidth - margin;
+
+    let top = rect.top + rect.height / 2 - popupHeight / 2;
+    if (top + popupHeight > vh) top = vh - popupHeight - margin;
+    if (top < margin) top = margin;
+
+    return { top, left };
+  }
 }
