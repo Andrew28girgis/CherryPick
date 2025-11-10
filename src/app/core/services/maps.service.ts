@@ -155,7 +155,7 @@ export class MapsService {
 
   private shoopingCenterPopup(markerData: any): string {
     console.log('Marker Data:', markerData);
-    console.log('Main Image URL:', markerData.MainImage);  
+    console.log('Main Image URL:', markerData.MainImage);
     const managerOrgs =
       markerData.ShoppingCenter?.ManagerOrganization?.map((org: any) => {
         if (org.Firstname && org.LastName) {
@@ -180,42 +180,110 @@ export class MapsService {
       }).join('') || '';
 
     return `
-      <div class="info-window">
-        <div class="main-img">
-          <img src="${markerData.MainImage}" alt="Main Image">
-          <span class="close-btn">&times;</span>
+      <div style="
+        width: 260px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        font-family: 'Inter', sans-serif;
+        color: #111827;
+        transition: all 0.2s ease-in-out;
+      ">
+        <!-- Top Image -->
+        <div style="
+          position: relative;
+          width: 100%;
+          height: 140px;
+          overflow: hidden;
+          border-bottom: 1px solid #f0f0f0;
+        ">
+          <img 
+            src="${markerData.MainImage? markerData.MainImage : 'assets/Images/placeholder.png'}" 
+            alt="Main Image"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              transition: transform 0.3s ease;
+            "
+            onmouseover="this.style.transform='scale(1.05)'"
+            onmouseout="this.style.transform='scale(1)'"
+          />
+          <span style="
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0 6px;
+            border-radius: 50%;
+            line-height: 22px;
+          " class="close-btn">&times;</span>
         </div>
-        <div class="content-wrap">
+    
+        <!-- Content Section -->
+        <div style="padding: 12px 14px;">
           ${
             markerData.CenterName
-              ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
+              ? `<p style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: #111827;
+                  margin: 0 0 4px 0;
+                  text-transform: uppercase;
+                ">
+                  ${markerData.CenterName}
+                </p>`
               : ''
           }
-          <p class="address-content"> 
+    
+          <p style="
+            font-size: 13px;
+            color: #4b5563;
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+          ">
             ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
       markerData.CenterState
     }
           </p>
+    
           ${
             this.getShoppingCenterUnitSize(markerData)
-              ? `<p class="address-content">${this.getShoppingCenterUnitSize(
-                  markerData
-                )}</p>`
+              ? `<p style="
+                  font-size: 13px;
+                  color: #374151;
+                  margin: 0 0 8px 0;
+                  line-height: 1.4;
+                ">
+                  ${this.getShoppingCenterUnitSize(markerData)}
+                </p>`
               : ''
           }
-  
+    
           ${
             this.getPlacesRepresentative() !== false &&
             markerData.ShoppingCenter?.ManagerOrganization &&
             markerData.ShoppingCenter?.ManagerOrganization[0]
               ? `
-                <div class="d-flex align-items-center">
-                  <b>${
-                    markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''
-                  }</b>
+                <div style="
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                  margin-top: 10px;
+                ">
+                  <b style="font-size: 13px; color: #111827;">
+                    ${
+                      markerData.ShoppingCenter.ManagerOrganization[0]?.Name ||
+                      ''
+                    }
+                  </b>
                   <img
-                    class="logo ms-2"
-                    style="width:40px"
+                    style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;"
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${
                       markerData.ShoppingCenter.ManagerOrganization[0]?.ID || ''
                     }"
@@ -224,34 +292,25 @@ export class MapsService {
                       ''
                     }"
                   />
-                </div>
-              `
+                </div>`
               : ''
           }
-          
-    ${
-      managerOrgs && this.getPlacesRepresentative() !== false
-        ? `<div class="py-2">${managerOrgs}</div>`
-        : ''
-    }
-          
-    
         </div>
       </div>
     `;
   }
 
-//   <div class="buttons-wrap">
-//   <button id="view-details-${
-//     markerData.ShoppingCenter?.Places
-//       ? markerData.ShoppingCenter.Places[0]?.Id
-//       : markerData.Id
-//   }" class="view-details-card">View Details
-//     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-//       <path d="..." fill="#fff"></path>
-//     </svg>
-//   </button>
-// </div>
+  //   <div class="buttons-wrap">
+  //   <button id="view-details-${
+  //     markerData.ShoppingCenter?.Places
+  //       ? markerData.ShoppingCenter.Places[0]?.Id
+  //       : markerData.Id
+  //   }" class="view-details-card">View Details
+  //     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+  //       <path d="..." fill="#fff"></path>
+  //     </svg>
+  //   </button>
+  // </div>
   private standAlonerPopup(markerData: any): string {
     return `  
       <div class="info-window">
@@ -279,18 +338,17 @@ export class MapsService {
       </div>
     `;
   }
-//   <div class="buttons-wrap">
-//   <button id="view-details-${
-//     markerData.Id
-//   }" class="view-details-card">View Details
-//     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-//       <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
-//       <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
-//       <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#fff"/>
-//     </svg>
-//   </button>
-// </div>
-  
+  //   <div class="buttons-wrap">
+  //   <button id="view-details-${
+  //     markerData.Id
+  //   }" class="view-details-card">View Details
+  //     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
+  //       <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
+  //       <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#fff"/>
+  //     </svg>
+  //   </button>
+  // </div>
 
   private currentlyOpenInfoWindow: any | null = null;
 
