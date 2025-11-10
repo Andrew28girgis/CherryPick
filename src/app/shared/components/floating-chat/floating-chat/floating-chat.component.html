@@ -2,9 +2,10 @@
   #fabBtn
   id="floating-chat-fab"
   cdkDrag
+  cdkDragBoundary="body"
   [cdkDragFreeDragPosition]="dragPos"
   (cdkDragStarted)="onDragStart()"
-  (cdkDragMoved)="onDragMoved($event)" 
+  (cdkDragMoved)="onDragMoved($event)"
   (cdkDragEnded)="onDragEnd($event)"
   class="floating-chat-fab"
   role="button"
@@ -15,4 +16,3 @@
   <img src="assets/Images/bot.png" alt="Chat" width="26" height="26" />
   <span class="badge" *ngIf="unread > 0">{{ unread }}</span>
 </div>
-

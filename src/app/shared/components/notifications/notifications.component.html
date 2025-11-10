@@ -352,7 +352,7 @@
                   class="message-text"
                   *ngIf="
                     isAutomationLoading(item, i) &&
-                      item.message?.includes(
+                      item.message.includes(
                         'searching the web now for your request'
                       );
                     else staticAutomation
@@ -375,7 +375,7 @@
                   class="message-text"
                   *ngIf="
                     isAutomationLoading(item, i) &&
-                      item.message?.includes(
+                      item.message.includes(
                         'start scanning and analyzing the current page'
                       );
                     else staticScannning
@@ -405,7 +405,7 @@
                 <ng-template #staticCompiling>
                   <p
                     *ngIf="
-                      item.message?.includes(
+                      item.message.includes(
                         'Compiling them into a nice report'
                       )
                     "
@@ -421,7 +421,7 @@
                   <p
                     class="message-text"
                     *ngIf="
-                      item.message?.includes(
+                      item.message.includes(
                         'I am searching the web now for your request'
                       )
                     "
@@ -433,7 +433,7 @@
                   <p
                     class="message-text"
                     *ngIf="
-                      item.message?.includes(
+                      item.message.includes(
                         'I will start scanning and analyzing the current page for you'
                       )
                     "
@@ -447,13 +447,13 @@
                   *ngIf="
                     item.from === 'ai' &&
                     item.notification?.html &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'I am searching the web now for your request'
                     ) &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'Compiling them into a nice report'
                     ) &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'scanning and analyzing the current '
                     )
                   "
@@ -464,13 +464,13 @@
                   *ngIf="
                     item.from === 'ai' &&
                     !item.notification?.html &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'I am searching the web now for your request'
                     ) &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'Compiling them into a nice report'
                     ) &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'scanning and analyzing the current '
                     )
                   "
@@ -490,13 +490,13 @@
                   class="message-text"
                   *ngIf="
                     item.from !== 'ai' &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'I am searching the web now for your request'
                     ) &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'Compiling them into a nice report'
                     ) &&
-                    !item.message?.includes(
+                    !item.message.includes(
                       'scanning and analyzing the current '
                     )
                   "
@@ -508,7 +508,7 @@
                   <button
                     *ngIf="
                       item.from === 'system' &&
-                      item.message?.toLowerCase()?.includes('show map')
+                      item.message.toLowerCase().includes('show map')
                     "
                     class="icon-btn"
                     style="
