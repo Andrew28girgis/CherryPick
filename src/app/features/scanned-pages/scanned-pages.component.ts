@@ -31,7 +31,13 @@ export class ScannedPagesComponent implements OnInit {
     const body: any = { Name: 'GetScanPage', Params: {} };
     this.placeService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.scannedPages = res?.json || [];
+        const allPages = res?.json || [];
+        const uniquePages = allPages.filter(
+          (page: ScanResult, index: number, self: ScanResult[]) =>
+            index === self.findIndex((p) => p.sourceURL === page.sourceURL)
+        );
+
+        this.scannedPages = uniquePages;
         this.applyStatusFilter();
       },
     });
@@ -67,7 +73,11 @@ export class ScannedPagesComponent implements OnInit {
       .length;
   }
 
-  openLink(url: string) {
-    window.open(url, '_blank');
+ 
+  hasMultipleStatuses(): boolean {
+    const statuses = new Set(
+      this.scannedPages.filter((p) => !!p.sourceURL).map((p) => p.status)
+    );
+    return statuses.size > 1;
   }
 }

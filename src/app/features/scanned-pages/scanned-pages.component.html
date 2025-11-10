@@ -5,7 +5,7 @@
     </div>
 
     <div class="controls">
-      <div class="status-filter">
+      <div *ngIf="hasMultipleStatuses()" class="status-filter">
         <button
           (click)="changeFilter('all')"
           [class.active]="filterStatus === 'all'"
@@ -101,7 +101,7 @@
       }"
         *ngIf="item.sourceURL"
       >
-        <div class="url" (click)="openLink(item.sourceURL)">
+        <div class="url">
           <a [href]="item.sourceURL" target="_blank">
             {{ item.sourceURL }}
           </a>
