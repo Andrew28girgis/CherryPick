@@ -41,6 +41,8 @@ import { Landing2Component } from './features/tenants/market-survery/landing2/la
 import { Tree2Component } from './features/tree2/tree2.component';
 import { FFlowModule, FConnectionContent } from '@foblex/flow';
 import { DatePipe } from '@angular/common';
+import { FloatingChatComponent } from './shared/components/floating-chat/floating-chat/floating-chat.component';
+import { FloatingChatNotificationsComponent } from './shared/components/floating-chat-notifications/floating-chat-notifications.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,6 +58,7 @@ import { DatePipe } from '@angular/common';
     Landing2Component,
     Tree2Component,
     NotificationsOnlyComponentComponent,
+    FloatingChatComponent,
   ],
   imports: [
     BrowserModule,

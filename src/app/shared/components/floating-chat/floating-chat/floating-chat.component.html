@@ -1,0 +1,18 @@
+<div
+  #fabBtn
+  id="floating-chat-fab"
+  cdkDrag
+  [cdkDragFreeDragPosition]="dragPos"
+  (cdkDragStarted)="onDragStart()"
+  (cdkDragMoved)="onDragMoved($event)" 
+  (cdkDragEnded)="onDragEnd($event)"
+  class="floating-chat-fab"
+  role="button"
+  aria-label="Open chat"
+  tabindex="0"
+  (click)="open()"
+>
+  <img src="assets/Images/bot.png" alt="Chat" width="26" height="26" />
+  <span class="badge" *ngIf="unread > 0">{{ unread }}</span>
+</div>
+

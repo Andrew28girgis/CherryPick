@@ -20,10 +20,15 @@
   </div>
 
   <app-notifications
-    *ngIf="shouldShowNotifications &&!isMobile"
+    *ngIf="shouldShowNotifications && !isMobile"
     [campaignId]="campaignId"
     [isChatbotRoute]="isChatbotRoute"
     (overlayStateChange)="onOverlayStateChange($event)"
     (sidebarStateChange)="onCopilotStateChange($event)"
   ></app-notifications>
+
+  <app-floating-chat
+    *ngIf="isAuthenticated"
+    [campaignId]="campaignId"
+  ></app-floating-chat>
 </div>

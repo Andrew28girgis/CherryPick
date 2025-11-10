@@ -1,0 +1,46 @@
+.floating-chat-fab {
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  z-index: 99999;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+.floating-chat-fab img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.floating-chat-fab .badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+}
+
+.floating-chat-fab.hidden {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .floating-chat-fab {
+    width: 52px;
+    height: 52px;
+    right: 16px;
+    bottom: 16px;
+  }
+}

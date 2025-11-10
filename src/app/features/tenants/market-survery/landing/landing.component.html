@@ -55,7 +55,7 @@
       >
         <div class="intro-container wow fadeIn">
           <h1
-            *ngIf="shoppingCenter?.CenterName"
+            *ngIf="shoppingCenter.CenterName"
             class="mb-2 pb-0"
             [innerHTML]="shoppingCenter.CenterName | titlecase"
           ></h1>
@@ -146,7 +146,7 @@
             <!-- <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p> -->
 
             <div class="d-flex">
-              <div class="pe-2" *ngIf="shoppingCenter?.DocsLink">
+              <div class="pe-2" *ngIf="shoppingCenter.DocsLink">
                 <div>
                   <svg
                     width="24"
@@ -181,7 +181,7 @@
                   >
                 </div>
               </div>
-              <div class="pe-2" *ngIf="shoppingCenter?.SitePlan">
+              <div class="pe-2" *ngIf="shoppingCenter.SitePlan">
                 <div>
                   <svg
                     width="24"
@@ -302,7 +302,7 @@
                 </tr>
               </thead>
               <tbody class="procpect-table-body">
-                <tr *ngFor="let place of shoppingCenter?.Place">
+                <tr *ngFor="let place of shoppingCenter.Place">
                   <td>
                     <ng-container
                       *ngIf="editingPlaceId !== place.Id; else suiteEdit"
@@ -486,7 +486,7 @@
     </section>
   </div>
 
-  <div class="campaign-section" *ngIf="CampaignScores?.length">
+  <div class="campaign-section" *ngIf="CampaignScores.length">
     <h2 class="main-heading">Campaigns Info</h2>
 
     <div class="campaign-grid">
@@ -987,7 +987,7 @@
     </section>
 
     <!-- Raw JSON at the bottom -->
-    <section *ngIf="parsedCampaignDetails?.length" class="border-top pt-3">
+    <section *ngIf="parsedCampaignDetails.length" class="border-top pt-3">
       <h5>Campaign Details</h5>
 
       <div class="key-value-list">
