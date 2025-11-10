@@ -927,7 +927,7 @@ export class ShoppingComponent implements OnInit {
   }
   editWithEMily(center: any): void {
     const body: any = {
-      Chat: 'edit campaign with emily',
+      Chat: 'edit shopping center with emily',
       ShoppingCenterId: center.scId,
       ConversationId: 2,
     };
