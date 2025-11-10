@@ -2,10 +2,9 @@ import {
   Component,
   Input,
   OnDestroy,
-  OnInit,
+  AfterViewInit,
   ElementRef,
   ViewChild,
-  AfterViewInit,
 } from '@angular/core';
 import { CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
@@ -20,7 +19,7 @@ const POS_KEY = 'floating_chat_fab_pos_v1';
   templateUrl: './floating-chat.component.html',
   styleUrls: ['./floating-chat.component.css'],
 })
-export class FloatingChatComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FloatingChatComponent implements AfterViewInit, OnDestroy {
   @Input() campaignId?: any;
   @Input() hidden = false;
   @ViewChild('fabBtn') fabBtn!: ElementRef<HTMLDivElement>;
@@ -35,10 +34,8 @@ export class FloatingChatComponent implements OnInit, AfterViewInit, OnDestroy {
     private notificationService: NotificationService
   ) {}
 
-  ngOnInit(): void {}
-
   ngAfterViewInit(): void {
-    this.chatModal.setposition(this.fabBtn.nativeElement);
+    this.chatModal.setFabElement(this.fabBtn.nativeElement);
   }
 
   ngOnDestroy(): void {
@@ -52,8 +49,8 @@ export class FloatingChatComponent implements OnInit, AfterViewInit, OnDestroy {
   onDragMoved(e: CdkDragMove): void {
     if (this.chatModal.isOpen()) {
       const rect = this.fabBtn.nativeElement.getBoundingClientRect();
-      const pos = this.calculateModalPosition(rect);
-      this.chatModal.updatePosition(pos.top, pos.left);
+      const { top, left } = (this.chatModal as any).calculatePosition(rect);
+      this.chatModal.updatePosition(top, left);
     }
   }
 
@@ -64,36 +61,14 @@ export class FloatingChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.chatModal.isOpen()) {
       const rect = this.fabBtn.nativeElement.getBoundingClientRect();
-      const pos = this.calculateModalPosition(rect);
-      this.chatModal.updatePosition(pos.top, pos.left);
+      const { top, left } = (this.chatModal as any).calculatePosition(rect);
+      this.chatModal.updatePosition(top, left);
     }
   }
 
   open(): void {
     if (this.hidden || this.wasDragged) return;
     this.chatModal.openForButton(this.fabBtn.nativeElement, this.campaignId);
-
-    if ((this.notificationService as any).setUnreadCount) {
-      (this.notificationService as any).setUnreadCount(0);
-    }
-  }
-
-  private calculateModalPosition(rect: DOMRect): { top: number; left: number } {
-    const popupWidth = 420;
-    const popupHeight = 560;
-    const margin = 12;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    let left =
-      rect.right + popupWidth + margin < vw
-        ? rect.right + margin
-        : rect.left - popupWidth - margin;
-
-    let top = rect.top + rect.height / 2 - popupHeight / 2;
-    if (top + popupHeight > vh) top = vh - popupHeight - margin;
-    if (top < margin) top = margin;
-
-    return { top, left };
+    (this.notificationService as any).setUnreadCount?.(0);
   }
 }
