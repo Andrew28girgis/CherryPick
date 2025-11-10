@@ -107,6 +107,7 @@ export class FloatingChatNotificationsComponent
   pdfTitle = '';
   isGeneratingPdf = false;
 
+private overlayModalRef: any; 
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
   public selectedNotification: Notification | null = null;
@@ -141,7 +142,8 @@ export class FloatingChatNotificationsComponent
     private modalService: NgbModal,
     public activeModal: NgbActiveModal,
     private refreshService: RefreshService,
-    private chatModal: ChatModalService
+    private chatModal: ChatModalService,
+
   ) {}
 
   showScrollButton = false;
@@ -269,15 +271,16 @@ export class FloatingChatNotificationsComponent
   closePopup(): void {
     this.activeModal.close();
   }
-  openOverlayModal(notification: any) {
-    this.overlayHtml = notification.html;
+openOverlayModal(notification: any) {
+  this.selectedNotification = notification;
+  this.overlayHtml = notification.html;
 
-    this.modalService.open(this.overlayModal, {
-      size: 'xl',
-      centered: true,
-      keyboard: true,
-    });
-  }
+  this.overlayModalRef = this.modalService.open(this.overlayModal, {
+    size: 'xl',
+    centered: true,
+    keyboard: true,
+  });
+}
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
@@ -933,35 +936,44 @@ async downloadPDF(container?: HTMLElement): Promise<void> {
     this.downloadPDF();
   }
 
-  saveTitleInNotification(): void {
-    this.isSaving = true;
+ saveTitleInNotification(): void {
+  this.isSaving = true;
+  const request = {
+    Name: 'SetTitleInNotification',
+    Params: {
+      Id: this.selectedNotification?.id,
+      Title: this.pdfTitle.trim(),
+    },
+  };
 
-    const request = {
-      Name: 'SetTitleInNotification',
-      Params: {
-        Id: this.selectedNotification?.id,
-        Title: this.pdfTitle.trim(),
-      },
-    };
+  this.placesService.GenericAPI(request).subscribe({
+    next: () => {
+      (this.selectedNotification as any).title = this.pdfTitle.trim();
 
-    this.placesService.GenericAPI(request).subscribe({
-      next: () => {
-        (this.selectedNotification as any).title = this.pdfTitle.trim();
-
-        this.showSaveToast = true;
+      this.showSaveToast = true;
+      this.cdRef.detectChanges();
+      setTimeout(() => {
+        this.showSaveToast = false;
         this.cdRef.detectChanges();
-        setTimeout(() => {
-          this.showSaveToast = false;
-          this.cdRef.detectChanges();
-        }, 2500);
+      }, 2500);
 
-        this.isSaving = false;
-        this.pdfTitle = ''; // reset
-        this.refreshService.triggerUserPagesRefresh();
-        this.closeOverlayContent();
-      },
-    });
-  }
+      this.isSaving = false;
+      this.pdfTitle = '';
+      this.refreshService.triggerUserPagesRefresh();
+
+      if (this.overlayModalRef) {
+        this.overlayModalRef.close();
+        this.overlayModalRef = null; 
+      }
+
+      this.closeOverlayContent();
+    },
+    error: () => {
+      this.isSaving = false;
+    },
+  });
+}
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isChatbotRoute']?.currentValue === true) {
       this.isOpen = true;

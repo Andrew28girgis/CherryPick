@@ -571,3 +571,21 @@
   align-items: center;
   justify-content: space-between;
 }
+.title-btn {
+  background: var(--Colors-Primary-500);
+  border: none;
+}
+.title-btn:hover {
+  background: var(--Colors-Primary-hover);
+  color: white;
+}
+
+.save-pdf-btn {
+  border-color: var(--Colors-Primary-500);
+  color: var(--Colors-Primary-500);
+}
+
+.save-pdf-btn:hover {
+  background: var(--Colors-Primary-500);
+  color: white;
+}
