@@ -89,45 +89,9 @@ onDragEnd(e: CdkDragEnd): void {
   }
 }
 
-  open(): void {
+open(): void {
     if (this.hidden || this.wasDragged) return;
-
-    const rect = this.fabBtn.nativeElement.getBoundingClientRect();
-    const popupWidth = 420; 
-    const popupHeight = 560; 
-    const margin = 12;
-
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-
-    let left: number;
-    let top: number;
-
-    // --- 🧭 Decide side dynamically ---
-    if (rect.right + popupWidth + margin < viewportWidth) {
-      // Enough space on the right → show popup on right
-      left = rect.right + margin;
-    } else {
-      // Otherwise show on left
-      left = rect.left - popupWidth - margin;
-    }
-
-    // Center vertically relative to the button
-    top = rect.top + rect.height / 2 - popupHeight / 2;
-
-    // Keep popup fully inside viewport vertically
-    if (top + popupHeight > viewportHeight) {
-      top = viewportHeight - popupHeight - margin;
-    }
-    if (top < margin) {
-      top = margin;
-    }
-
-    this.chatModal.open({
-      campaignId: this.campaignId,
-      top,
-      left,
-    });
+    this.chatModal.openForButton(this.fabBtn.nativeElement, this.campaignId);
 
     if ((this.notificationService as any).setUnreadCount) {
       (this.notificationService as any).setUnreadCount(0);
