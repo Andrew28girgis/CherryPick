@@ -433,16 +433,32 @@
   </div>
 
   <div class="modal-body p-0">
-    <!-- Move your overlay section content here -->
     <section class="overlay-left-modal">
+      <!-- ✅ Added contentToDownload reference here -->
       <div #contentToDownload class="overlay-content p-0">
         <div *ngIf="overlayHtml" [innerHTML]="overlayHtml"></div>
       </div>
 
-      <div class="d-flex justify-content-end p-2">
+      <div class="d-flex justify-content-end p-2 gap-2">
+        <input
+          type="text"
+          [(ngModel)]="pdfTitle"
+          placeholder="Enter Title"
+          class="form-control form-control-sm"
+          style="width: 180px"
+        />
+
+        <button
+          class="btn btn-sm btn-success title-btn"
+          (click)="saveTitleInNotification()"
+        >
+          Save Title
+        </button>
+
         <button
           class="btn btn-sm btn-outline-primary"
-          (click)="downloadPDF()"
+          (click)="downloadPDF(contentToDownload)"
+          *ngIf="overlayHtml && !isGeneratingPdf"
           [disabled]="isGeneratingPdf"
         >
           📄 Save PDF
