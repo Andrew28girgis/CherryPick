@@ -20,6 +20,7 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../kayak-home/shopping-center-table/contact-broker/contact-broker.component';
 import { MapsService } from 'src/app/core/services/maps.service';
 import { signal, effect } from '@angular/core';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 @Component({
   selector: 'app-shopping',
@@ -96,7 +97,8 @@ export class ShoppingComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router,
     private viewManagerService: ViewManagerService,
-    private mapsService: MapsService
+    private mapsService: MapsService,
+    private chatModal: ChatModalService
   ) {}
 
   ngOnInit(): void {
@@ -244,7 +246,6 @@ export class ShoppingComponent implements OnInit {
         return selectedSources.includes(normalizedSource);
       });
     }
-    
 
     if (selectedLeaseTypes.length > 0) {
       filtered = filtered.filter((center) =>
@@ -923,5 +924,15 @@ export class ShoppingComponent implements OnInit {
       };
       this.mapsService.createMarker(this.map, markerData, 'Shopping Center');
     });
+  }
+  editWithEMily(center: any): void {
+    const body: any = {
+      Chat: 'edit campaign with emily',
+      ShoppingCenterId: center.scId,
+      ConversationId: 2,
+    };
+    this.placesService.sendmessages(body).subscribe({});
+    this.chatModal.openForButton();
+    this.chatModal.setShoppingCenterId(center.scId, 2);
   }
 }

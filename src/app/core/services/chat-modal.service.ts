@@ -1,12 +1,22 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FloatingChatNotificationsComponent } from '../../shared/components/floating-chat-notifications/floating-chat-notifications.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ChatModalService {
   private ref?: NgbModalRef;
   private fabEl: HTMLElement | null = null;
-
+  private campaignIdSource = new BehaviorSubject<any>(null);
+  private shoppingCenterIdSource = new BehaviorSubject<any>(null);
+  private organizationIdSource = new BehaviorSubject<any>(null);
+  private contactIdSource = new BehaviorSubject<any>(null);
+  private conversationIdSource = new BehaviorSubject<any>(null);
+  campaignId$ = this.campaignIdSource.asObservable();
+  shoppingCenterId$ = this.shoppingCenterIdSource.asObservable();
+  organizationId$ = this.organizationIdSource.asObservable();
+  contactId$ = this.contactIdSource.asObservable();
+  conversationId$ = this.conversationIdSource.asObservable();
   constructor(private modal: NgbModal) {}
 
   setFabElement(el: HTMLElement): void {
@@ -46,7 +56,7 @@ export class ChatModalService {
     const anchor = buttonEl ?? this.fabEl;
     if (!anchor) {
       console.warn('ChatModalService: No anchor element for positioning');
-      this.open({ campaignId }); 
+      this.open({ campaignId });
       return;
     }
 
@@ -71,10 +81,11 @@ export class ChatModalService {
       modalDialogClass: 'chat-notif-modal-dialog dynamic-position',
       scrollable: true,
       keyboard: true,
-      animation: false, 
+      animation: false,
     });
 
-    const cmp = this.ref.componentInstance as FloatingChatNotificationsComponent;
+    const cmp = this.ref
+      .componentInstance as FloatingChatNotificationsComponent;
     cmp.CampaignId = options.campaignId;
 
     const dialog = document.querySelector('.dynamic-position') as HTMLElement;
@@ -114,5 +125,36 @@ export class ChatModalService {
 
   isOpen(): boolean {
     return !!this.ref;
+  }
+
+  setCampaignId(campaignId: any, conversationId: any): void {
+    this.clearAll();
+    this.campaignIdSource.next(campaignId);
+    this.conversationIdSource.next(conversationId);
+  }
+
+  setShoppingCenterId(shoppingCenterId: any, conversationId: any): void {
+    this.clearAll();
+    this.shoppingCenterIdSource.next(shoppingCenterId);
+    this.conversationIdSource.next(conversationId);
+  }
+
+  setOrganizationId(organizationId: any, conversationId: any): void {
+    this.clearAll();
+    this.organizationIdSource.next(organizationId);
+    this.conversationIdSource.next(conversationId);
+  }
+
+  setContactId(contactId: any, conversationId: any): void {
+    this.clearAll();
+    this.contactIdSource.next(contactId);
+    this.conversationIdSource.next(conversationId);
+  }
+  clearAll(): void {
+    this.campaignIdSource.next(null);
+    this.shoppingCenterIdSource.next(null);
+    this.organizationIdSource.next(null);
+    this.contactIdSource.next(null);
+    this.conversationIdSource.next(null);
   }
 }
