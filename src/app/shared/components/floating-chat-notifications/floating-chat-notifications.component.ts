@@ -551,7 +551,7 @@ export class FloatingChatNotificationsComponent
         // cancel turn
         this.awaitingResponse = false;
         this.preSendIds.clear();
-        this.pendingSentText = '';
+        this.pendingSentText = '';``
         this.shownForIds.clear();
       },
     });
@@ -604,10 +604,16 @@ export class FloatingChatNotificationsComponent
   }
 
   private scanAndOpenOverlayForHtml(): void {
+    console.log('not awaiting ');
+    
     if (!this.awaitingResponse) return;
+    console.log(' awaiting ');
 
     const list = this.notificationService?.notifications ?? [];
+    console.log(' 2 ');
+
     if (!Array.isArray(list) || list.length === 0) return;
+    console.log(' 1');
 
     const idKeyOf = (n: Notification) =>
       typeof n.id === 'number' ? n.id : String(n.id);
@@ -618,25 +624,30 @@ export class FloatingChatNotificationsComponent
       !this.preSendIds.has(idKeyOf(n));
     const matchesPendingText = (n: Notification) =>
       (n.message ?? '').trim() === this.pendingSentText.trim();
+    console.log(' 3 ');
 
     // 1) Find user echo
     const userEcho = list.find(
       (n) => isUser(n) && isNewSinceSend(n) && matchesPendingText(n)
     );
     if (!userEcho) return;
+    console.log(' 4 ');
 
     // 2) Find candidate system notification with HTML
     const candidate = list.find(
       (n) => isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)
     );
     if (!candidate) return;
+    console.log(' 5 ');
 
     const candId = idKeyOf(candidate);
     if (this.shownForIds.has(candId)) return;
+    console.log(' 6 ');
 
     const htmlStr = this.htmlToString(candidate.html).trim();
     if (!htmlStr) return;
 
+    console.log(' 7');
     // Mark shown and stop typing dots
     this.shownForIds.add(candId);
     this.awaitingResponse = false;
