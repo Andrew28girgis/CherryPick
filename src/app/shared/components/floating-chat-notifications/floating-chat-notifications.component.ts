@@ -489,14 +489,41 @@ export class FloatingChatNotificationsComponent
     this.scrollAfterRender();
     this.showTyping();
 
+    const lastNotification =
+      this.notificationService?.notifications[
+        this.notificationService.notifications.length - 2
+      ];
     const body: any = {
       Chat: text,
-      ConversationId: this.conversationId,
+      ConversationId: this.conversationId
+        ? this.conversationId
+        : lastNotification.emilyConversationCategoryId,
     };
-    if (this.campaignId) body.CampaignId = this.campaignId;
-    if (this.shoppingCenterId) body.ShoppingCenterId = this.shoppingCenterId;
-    if (this.organizationId) body.OrganizationId = this.organizationId;
-    if (this.contactId) body.ContactId = this.contactId;
+    console.log('lastNotificatio mmmmmmn', lastNotification);
+
+    if (
+      this.campaignId ||
+      this.shoppingCenterId ||
+      this.organizationId ||
+      this.contactId
+    ) {
+      if (this.campaignId) body.CampaignId = this.campaignId;
+      if (this.shoppingCenterId) body.ShoppingCenterId = this.shoppingCenterId;
+      if (this.organizationId) body.OrganizationId = this.organizationId;
+      if (this.contactId) body.ContactId = this.contactId;
+    } else {
+      console.log('elssssssssssss');
+      if (lastNotification?.campaignId)
+        body.CampaignId = lastNotification.campaignId;
+      if (lastNotification?.shoppingCenterId)
+        body.ShoppingCenterId = lastNotification.shoppingCenterId;
+      if (lastNotification?.organizationId)
+        body.OrganizationId = lastNotification.organizationId;
+      if (lastNotification?.contactId)
+        body.ContactId = lastNotification.contactId;
+      if (lastNotification?.sourceUrl)
+        body.SourceUrl = lastNotification.sourceUrl;
+    }
 
     this.placesService.sendmessages(body).subscribe({
       next: () => {

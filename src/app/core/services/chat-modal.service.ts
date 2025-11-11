@@ -32,16 +32,13 @@ export class ChatModalService {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // --- Decide which side to open on ---
     const openOnRight = rect.right + popupWidth + margin < vw;
     const left = openOnRight
       ? rect.right + margin
-      : rect.left - popupWidth - margin / 2; // tighter margin on left side
+      : rect.left - popupWidth - margin / 2; 
 
-    // --- Center vertically relative to icon ---
     let top = rect.top + rect.height / 2 - popupHeight / 2;
 
-    // --- Keep inside viewport ---
     if (top + popupHeight > vh) top = vh - popupHeight - margin;
     if (top < margin) top = margin;
 
@@ -108,10 +105,6 @@ export class ChatModalService {
     this.ref.closed.subscribe(() => (this.ref = undefined));
     this.ref.dismissed.subscribe(() => (this.ref = undefined));
   }
-  public getPositionRelativeToFab(): { top: number; left: number } | null {
-  if (!this.fabEl) return null;
-  return this.calculatePosition(this.fabEl);
-}
 
   public getPositionForAnchor(
   anchor: HTMLElement,

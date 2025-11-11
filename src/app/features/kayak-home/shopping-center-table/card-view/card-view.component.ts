@@ -26,6 +26,7 @@ import { Subscription, combineLatest } from 'rxjs';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { Email } from 'src/app/shared/models/email';
 import { AddContactComponent } from '../add-contact/add-contact.component';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 @Component({
   selector: 'app-card-view',
@@ -108,7 +109,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    private viewManagerService: ViewManagerService
+    private viewManagerService: ViewManagerService,
+    private chatModal: ChatModalService
   ) {}
 
   ngOnInit(): void {
@@ -756,5 +758,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
+  }
+  editWithEMily(center: any): void {
+    const body: any = {
+      Chat: 'edit shopping center with emily',
+      ShoppingCenterId: center.Id,
+      ConversationId: 2,
+    };
+    this.placesService.sendmessages(body).subscribe({});
+    this.chatModal.openForButton();
+    this.chatModal.setShoppingCenterId(center.Id, 2);
   }
 }

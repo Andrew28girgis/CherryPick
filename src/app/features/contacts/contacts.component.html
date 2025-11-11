@@ -218,28 +218,40 @@
 
     <!-- Organization Cards -->
     <div class="organization-grid">
-      <details
-        class="organization-card"
+      <div
+        class="organization-card-wrapper"
         *ngFor="let org of paginatedContacts"
-        [attr.aria-label]="'Organization ' + org.name"
       >
-        <!-- Clickable summary (opens/closes) -->
-        <summary
-          [ngClass]="{ 'org-hover': org.contacts.length > 0 }"
-          class="org-summary"
-          aria-controls="contacts-panel"
+        <div
+          (click)="editWithEMily(org)"
+          class="emily-button"
+          aria-label="Ask Emily about contact"
         >
-          <!-- Floating contact-count badge -->
-          <span
-            *ngIf="org.contacts.length > 0"
-            class="card-badge"
-            aria-label="Contact count"
+          <span class="emily-dot"></span>
+          Ask Emily About Contact
+        </div>
+        <details
+          class="organization-card"
+          [attr.aria-label]="'Organization ' + org.name"
+        >
+          <!-- Clickable summary (opens/closes) -->
+          <summary
+            [ngClass]="{ 'org-hover': org.contacts.length > 0 }"
+            class="org-summary"
+            aria-controls="contacts-panel"
           >
-            <span class="badge-dot"></span>
-            {{ org.contacts.length }} Contacts
-          </span>
-          <div class="tenant-card">
-            <!-- <img
+            <!-- Floating contact-count badge -->
+            <span
+              *ngIf="org.contacts.length > 0"
+              class="card-badge"
+              aria-label="Contact count"
+            >
+              <span class="badge-dot"></span>
+              {{ org.contacts.length }} Contacts
+            </span>
+
+            <div class="tenant-card">
+              <!-- <img
               loading="lazy"
               class="logo ms-2"
               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -249,66 +261,58 @@
               alt=""
               (error)="onImageError($event)"
             /> -->
-            <div class="org-logo placeholder">
-              {{ getInitials(org.name) }}
+              <div class="org-logo placeholder">
+                {{ getInitials(org.name) }}
+              </div>
+              <h2 class="organization-title mb-0">{{ org.name }}</h2>
             </div>
-            <h2 class="organization-title mb-0">{{ org.name }}</h2>
-          </div>
 
-          <!-- chevron -->
+            <!-- chevron -->
+            <div
+              *ngIf="org.contacts.length > 0"
+              class="org-chevron"
+              aria-hidden="true"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#777199"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </summary>
+
+          <!-- Expandable contacts panel (display via CSS; no logic changed) -->
           <div
             *ngIf="org.contacts.length > 0"
-            class="org-chevron"
-            aria-hidden="true"
+            class="contacts-panel"
+            id="contacts-panel"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#777199"
-              stroke-width="2"
-            >
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </div>
-        </summary>
-
-        <!-- Expandable contacts panel (display via CSS; no logic changed) -->
-        <div
-          *ngIf="org.contacts.length > 0"
-          class="contacts-panel"
-          id="contacts-panel"
-        >
-          <div
-            class="row w-100"
-            #contactsRow
-             *ngIf="org.contacts.length > 0"
-          >
-            <div class="col-md-4" *ngFor="let contact of org.contacts">
-              <div
-                class="contact-card"
-                 [class.flipped]="contact.flipped"
-              >
-                <div class="flip-inner">
-                  <!-- Front -->
-                  <div class="flip-front flex-row d-flex">
-                    <div>
-                      <h3 class="contact-name">
-                        {{ contact.firstName }} {{ contact.lastName }}
-                      </h3>
-                      <div class="contact-title" *ngIf="contact.jobTitle">
-                        {{ contact.jobTitle }}
-                      </div>
-                      <div class="contact-item" *ngIf="contact.email">
-                        <span class="value">{{ contact.email }}</span>
+            <div class="row w-100" #contactsRow *ngIf="org.contacts.length > 0">
+              <div class="col-md-4" *ngFor="let contact of org.contacts">
+                <div class="contact-card" [class.flipped]="contact.flipped">
+                  <div class="flip-inner">
+                    <!-- Front -->
+                    <div class="flip-front flex-row d-flex">
+                      <div>
+                        <h3 class="contact-name">
+                          {{ contact.firstName }} {{ contact.lastName }}
+                        </h3>
+                        <div class="contact-title" *ngIf="contact.jobTitle">
+                          {{ contact.jobTitle }}
+                        </div>
+                        <div class="contact-item" *ngIf="contact.email">
+                          <span class="value">{{ contact.email }}</span>
+                        </div>
                       </div>
                     </div>
-                 
-                  </div>
 
-                  <!-- Back -->
-                  <!-- <div class="flip-back">
+                    <!-- Back -->
+                    <!-- <div class="flip-back">
                     <div class="contact-title" *ngIf="contact.jobTitle">
                       {{ contact.jobTitle }}
                     </div>
@@ -322,24 +326,25 @@
                       >
                     </div>
                   </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- No contacts fallback -->
+            <div class="w-100" *ngIf="org.contacts.length === 0">
+              <div class="contact-card empty">
+                <div class="contact-info">
+                  <h3 class="contact-name">No contacts available</h3>
+                  <p class="contact-title">
+                    You can add a new contact using the button above.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- No contacts fallback -->
-          <div class="w-100" *ngIf="org.contacts.length === 0">
-            <div class="contact-card empty">
-              <div class="contact-info">
-                <h3 class="contact-name">No contacts available</h3>
-                <p class="contact-title">
-                  You can add a new contact using the button above.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </details>
+        </details>
+      </div>
     </div>
 
     <!-- Pagination (unchanged logic) -->
