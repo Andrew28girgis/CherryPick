@@ -5,14 +5,19 @@ export interface Notification {
   isRead: boolean;
   createdDate: string;
   userSubmissionId: number;
-   json: any;
+  json: any;
   campaignId: number;
+  shoppingCenterId: any;
+  contactId: number;
+  organizationId: number;
+  emilyConversationCategoryId: number;
+  sourceUrl:any;
   loaded: boolean;
   html: any;
-  notificationCategoryId:any;
-  contextExtendPrompt:any;
-  taskId:any;
-  isEndInsertion:any
-  ispolygon:boolean
-  isEmilyChat:boolean
+  notificationCategoryId: any;
+  contextExtendPrompt: any;
+  taskId: any;
+  isEndInsertion: any;
+  ispolygon: boolean;
+  isEmilyChat: boolean;
 }
