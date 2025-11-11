@@ -9,7 +9,6 @@
   flex-direction: column;
   background: #fff;
   border-right: 1px solid #e5e7eb;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
   transition: width 0.3s ease;
   overflow: visible; /* <-- allow dropdowns to overflow */
 }
