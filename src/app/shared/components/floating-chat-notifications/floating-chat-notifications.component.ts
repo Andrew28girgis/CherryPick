@@ -653,6 +653,7 @@ export class FloatingChatNotificationsComponent
     // Ensure overlay visible
     if (!this.isOpen) {
       this.isOpen = true;
+      this.openOverlayModal(this.selectedNotification);
       this.notificationService.setChatOpen(true);
     }
     if (!this.isOverlayMode) {
