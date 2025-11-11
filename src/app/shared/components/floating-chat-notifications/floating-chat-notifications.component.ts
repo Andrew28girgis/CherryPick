@@ -660,15 +660,15 @@ export class FloatingChatNotificationsComponent
     this.currentHtmlSourceId = candidate.id as any;
     this.currentHtmlCache = htmlStr;
     this.setOverlayHtmlFromApi(htmlStr);
+    this.openOverlayModal(this.selectedNotification);
+    console.log(' 8');
 
     // Ensure overlay visible
     console.log(' 5 ');
 
     if (!this.isOpen) {
-    console.log(' 6 ');
 
       this.isOpen = true;
-      this.openOverlayModal(this.selectedNotification);
       this.notificationService.setChatOpen(true);
     }
     if (!this.isOverlayMode) {
