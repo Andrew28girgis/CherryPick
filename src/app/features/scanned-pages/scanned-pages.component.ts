@@ -19,7 +19,7 @@ export class ScannedPagesComponent implements OnInit {
   scannedPages: ScanResult[] = [];
   filteredPages: ScanResult[] = [];
   viewMode: 'table' | 'card' = 'table';
-  filterStatus: 'all' | 'successed' | 'failed' = 'all';
+  filterStatus: 'all' | 'successed' | 'failed' | 'pending' = 'all';
 
   constructor(private placeService: PlacesService) {}
 
@@ -31,7 +31,13 @@ export class ScannedPagesComponent implements OnInit {
     const body: any = { Name: 'GetScanPage', Params: {} };
     this.placeService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.scannedPages = res?.json || [];
+        const allPages = res?.json || [];
+        const uniquePages = allPages.filter(
+          (page: ScanResult, index: number, self: ScanResult[]) =>
+            index === self.findIndex((p) => p.sourceURL === page.sourceURL)
+        );
+
+        this.scannedPages = uniquePages;
         this.applyStatusFilter();
       },
     });
@@ -41,7 +47,7 @@ export class ScannedPagesComponent implements OnInit {
     this.viewMode = mode;
   }
 
-  changeFilter(status: 'all' | 'successed' | 'failed') {
+  changeFilter(status: 'all' | 'successed' | 'failed' | 'pending') {
     this.filterStatus = status;
     this.applyStatusFilter();
   }
@@ -52,8 +58,26 @@ export class ScannedPagesComponent implements OnInit {
         ? this.scannedPages
         : this.scannedPages.filter((p) => p.status === this.filterStatus);
   }
+  getsuccessedPagesCount(): number {
+    return this.scannedPages.filter(
+      (p) => p.status === 'successed' && p.sourceURL
+    ).length;
+  }
+  getPendingPagesCount(): number {
+    return this.scannedPages.filter(
+      (p) => p.status === 'pending' && p.sourceURL
+    ).length;
+  }
+  getfailedPagesCount(): number {
+    return this.scannedPages.filter((p) => p.status === 'failed' && p.sourceURL)
+      .length;
+  }
 
-  openLink(url: string) {
-    window.open(url, '_blank');
+ 
+  hasMultipleStatuses(): boolean {
+    const statuses = new Set(
+      this.scannedPages.filter((p) => !!p.sourceURL).map((p) => p.status)
+    );
+    return statuses.size > 1;
   }
 }
