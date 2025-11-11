@@ -426,6 +426,14 @@
             }"
           >
             <div
+              (click)="editWithEMily(center)"
+              class="emily-button"
+              aria-label="Ask Emily about organization"
+            >
+              <span class="emily-dot"></span>
+              Ask Emily About Center
+            </div>
+            <div
               class="card-click-area"
               [class.click-disabled]="openMenuId === center.scId"
             >
@@ -615,12 +623,6 @@
                       >
                         Delete Center
                       </button>
-                      <button
-                      class="menu-item"
-                      (click)="editWithEMily(center); closeMenu()"
-                    >
-                      Edit Center with emily
-                    </button>
                     </div>
                   </div>
                   <div

@@ -234,6 +234,15 @@
           [class.click-disabled]="openMenuId === campaign.Id"
           [class.changed]="campaign.changed"
         >
+        
+        <div
+        (click)="editWithEMily(campaign)"
+        class="emily-button"
+        aria-label="Ask Emily about campaign"
+      >
+        <span class="emily-dot"></span>
+        Ask Emily About Campaign
+      </div>
           <div class="card-overlay">
             <div class="menu-wrapper" (click)="$event.stopPropagation()">
               <button
@@ -283,12 +292,12 @@
                 >
                   Edit Campaign
                 </button>
-                <button
+                <!-- <button
                   class="menu-item"
                   (click)="editWithEMily(campaign); closeMenu()"
                 >
                   Edit Campaign with emily
-                </button>
+                </button> -->
               </div>
             </div>
             <div

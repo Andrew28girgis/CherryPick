@@ -12,6 +12,7 @@ import {
   OrganizationWithContacts,
 } from 'src/app/shared/models/contacts';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 @Component({
   selector: 'app-contacts',
@@ -74,7 +75,10 @@ export class ContactsComponent implements OnInit {
   tenantsOrgs: any;
   brokerOrgs: any;
 
-  constructor(private PlacesService: PlacesService) {
+  constructor(
+    private PlacesService: PlacesService,
+    private chatModal: ChatModalService
+  ) {
     this.loadContacts();
     this.loadOrganizations();
   }
@@ -344,5 +348,17 @@ export class ContactsComponent implements OnInit {
     const words = name.trim().split(' ');
     if (words.length === 1) return words[0][0].toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
+  }
+  editWithEMily(org: any): void {
+    console.log('fgffffff');
+    
+    const body: any = {
+      Chat: 'edit Orgnaization with emily',
+      OrganizationId: org.id,
+      ConversationId: 4,
+    };
+    this.PlacesService.sendmessages(body).subscribe({});
+    this.chatModal.openForButton();
+    this.chatModal.setOrganizationId(org.id, 4);
   }
 }
