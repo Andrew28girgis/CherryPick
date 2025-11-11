@@ -16,12 +16,6 @@
   animation: popIn 0.2s forwards;
 }
 
-@keyframes popIn {
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
 
 .floating-chat-wrapper {
   display: flex;
@@ -44,7 +38,7 @@
   background-color: var(--Colors-Primary-500);
   border-radius: 4px;
 }
-.sidebar-header {
+.floating-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,7 +55,7 @@
   gap: 8px;
 }
 
-.sidebar-title {
+.floating-title {
   font-size: 0.95rem;
   font-weight: 600;
   color: #374151;
@@ -73,25 +67,19 @@
   display: block;
 }
 
-.g-button,
-.close-button {
+.g-button{
   background-color: var(--Colors-Primary-500);
   color: #fff;
   cursor: pointer;
   font-size: 0.8rem;
   transition: color 0.15s ease-in-out;
 }
-.close-button {
-  border-radius: 50%;
-  border-color: transparent;
-}
 
-.g-button:hover,
-.close-button:hover {
+.g-button:hover{
   color: #e0e0e0;
 }
 
-.overlay-right {
+.notifications-overlay {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -220,185 +208,6 @@
   font-size: 0.85rem;
   color: #9ca3af;
 }
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 480px) {
-  .sidebar-header {
-    padding: 8px 12px;
-  }
-
-  .sidebar-title {
-    font-size: 0.85rem;
-  }
-
-  .chat-messages-container {
-    padding: 12px;
-  }
-}
-
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) translateY(40px);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05) translateY(-10px);
-  }
-  70% {
-    transform: scale(0.9) translateY(5px);
-  }
-  100% {
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes pulseCount {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@keyframes typing-bounce {
-  0%,
-  80%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  40% {
-    transform: translateY(-4px);
-    opacity: 1;
-  }
-}
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes bounce {
-  0%,
-  80%,
-  100% {
-    transform: scale(0.6);
-    opacity: 0.4;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-/* 1. Continuous Rotation (The "Scanning" effect) */
-@keyframes continuous-rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    /* Full slow rotation */
-    transform: rotate(360deg);
-  }
-}
-
-/* 2. Scale Pulse (The "Analyzing" effect) */
-@keyframes scale-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    /* Subtle breathing effect */
-    transform: scale(1.1);
-    opacity: 1;
-  }
-}
-@keyframes subtle-search-float {
-  0% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  25% {
-    transform: translate(2px, 1px) rotate(1deg);
-  }
-  50% {
-    transform: translate(-3px, -2px) rotate(-1deg);
-  }
-  75% {
-    transform: translate(-1px, 3px) rotate(0.5deg);
-  }
-  100% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-}
-@keyframes professional-float-slow {
-  0% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  20% {
-    transform: translate(1px, -2px) rotate(0.5deg);
-  }
-  40% {
-    transform: translate(-2px, 1px) rotate(-1deg);
-  }
-  60% {
-    transform: translate(0px, -3px) rotate(1.5deg);
-  }
-  80% {
-    transform: translate(3px, -1px) rotate(-0.5deg);
-  }
-  100% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-}
-@keyframes barPulse {
-  0% {
-    transform: scaleY(0.35);
-    opacity: 0.6;
-  }
-  25% {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scaleY(0.5);
-    opacity: 0.8;
-  }
-  75% {
-    transform: scaleY(0.9);
-    opacity: 0.95;
-  }
-  100% {
-    transform: scaleY(0.35);
-    opacity: 0.6;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stat-bars > span {
-    animation: none;
-  }
-}
-
 /* micro bar-chart loader */
 .stat-bars {
   display: inline-flex;
@@ -563,9 +372,7 @@
   padding: 6px 10px;
   font-size: 0.9rem;
   font-weight: bold;
-
 }
-
 .choose{
   display: flex;
   align-items: center;
@@ -588,4 +395,191 @@
 .save-pdf-btn:hover {
   background: var(--Colors-Primary-500);
   color: white;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(40px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-10px);
+  }
+  70% {
+    transform: scale(0.9) translateY(5px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pulseCount {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes typing-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* 1. Continuous Rotation (The "Scanning" effect) */
+@keyframes continuous-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    /* Full slow rotation */
+    transform: rotate(360deg);
+  }
+}
+
+/* 2. Scale Pulse (The "Analyzing" effect) */
+@keyframes scale-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    /* Subtle breathing effect */
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+@keyframes subtle-search-float {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(2px, 1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-3px, -2px) rotate(-1deg);
+  }
+  75% {
+    transform: translate(-1px, 3px) rotate(0.5deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+}
+@keyframes professional-float-slow {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  20% {
+    transform: translate(1px, -2px) rotate(0.5deg);
+  }
+  40% {
+    transform: translate(-2px, 1px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(0px, -3px) rotate(1.5deg);
+  }
+  80% {
+    transform: translate(3px, -1px) rotate(-0.5deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+}
+@keyframes barPulse {
+  0% {
+    transform: scaleY(0.35);
+    opacity: 0.6;
+  }
+  25% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleY(0.5);
+    opacity: 0.8;
+  }
+  75% {
+    transform: scaleY(0.9);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scaleY(0.35);
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-bars > span {
+    animation: none;
+  }
+}
+
+@keyframes popIn {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-header {
+    padding: 8px 12px;
+  }
+
+  .sidebar-title {
+    font-size: 0.85rem;
+  }
+
+  .chat-messages-container {
+    padding: 12px;
+  }
 }
