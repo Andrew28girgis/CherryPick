@@ -34,6 +34,8 @@ export class AppComponent implements OnInit, OnDestroy {
   campaignId: any;
   private destroy$ = new Subject<void>();
   isMobile!: boolean;
+  sidebarCollapsed = false;
+  shouldShowSidebar = true;
 
   constructor(
     private router: Router,
@@ -66,15 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.authService.isLoggedInToday();
   }
 
-  get shouldShowSidebar(): boolean {
-    return (
-      (this.isAuthenticated &&
-        !this.hideSidebar &&
-        !this.showingTransition &&
-        !this.isEmilyChatBot) ||
-      this.isChatbotRoute
-    );
-  }
+ 
 
   get shouldShowNotifications(): boolean {
     return (
@@ -192,5 +186,9 @@ export class AppComponent implements OnInit, OnDestroy {
       currentRoute = currentRoute.firstChild;
     }
     this.campaignId = currentRoute;
+  }
+
+  onSidebarCollapseChange(collapsed: boolean) {
+    this.sidebarCollapsed = collapsed;
   }
 }

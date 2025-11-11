@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   ElementRef,
   HostListener,
-  Input,
 } from '@angular/core';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -20,7 +19,6 @@ export class NotificationsOnlyComponentComponent {
   unreadCount = 0;
   isOpen = false;
   private pollId: any;
-  @Input() isSidebarCollapsed = false;
 
   constructor(
     private notificationService: NotificationService,
@@ -105,7 +103,4 @@ export class NotificationsOnlyComponentComponent {
     this.isOpen = false;
     this.cd.detectChanges();
   }
- 
-  
 }
-
