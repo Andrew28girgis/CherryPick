@@ -22,10 +22,8 @@
 
 .app-shell {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
-  z-index: 5;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 }
 
 .app-shell > .app-container {
@@ -36,6 +34,12 @@
 
 .app-shell.with-sidebar > .app-container {
   padding: 10px 40px 50px 40px;
+
+  transition: margin-left 0.3s ease;
+  margin-left: 260px;
+}
+.app-shell.with-sidebar.sidebar-collapsed > .app-container {
+  margin-left: 80px;
 }
 
 .app-shell.with-sidebar {
@@ -75,7 +79,7 @@
     margin-right: min(240px, 35vw);
   }
   .app-shell.with-sidebar > .app-container {
-    padding: 10px 12px 50px 10px;
+    margin-left: 0;
   }
   .app-shell.with-copilot.copilot-expanded.authenticated {
     margin-right: 0 !important;
@@ -134,7 +138,6 @@
 .app-shell.chatbot-route:not(.overlay-active) > .app-container {
   width: 100%;
 }
-
 
 /* override emily chatbot classes so the app take full width  */
 .app-shell {
