@@ -107,7 +107,7 @@ export class FloatingChatNotificationsComponent
   pdfTitle = '';
   isGeneratingPdf = false;
 
-private overlayModalRef: any; 
+  private overlayModalRef: any;
   private currentHtmlSourceId: number | null = null;
   private currentHtmlCache = ''; // last html string we showed
   public selectedNotification: Notification | null = null;
@@ -142,8 +142,7 @@ private overlayModalRef: any;
     private modalService: NgbModal,
     public activeModal: NgbActiveModal,
     private refreshService: RefreshService,
-    private chatModal: ChatModalService,
-
+    private chatModal: ChatModalService
   ) {}
 
   showScrollButton = false;
@@ -271,16 +270,16 @@ private overlayModalRef: any;
   closePopup(): void {
     this.activeModal.close();
   }
-openOverlayModal(notification: any) {
-  this.selectedNotification = notification;
-  this.overlayHtml = notification.html;
+  openOverlayModal(notification: any) {
+    this.selectedNotification = notification;
+    this.overlayHtml = notification.html;
 
-  this.overlayModalRef = this.modalService.open(this.overlayModal, {
-    size: 'xl',
-    centered: true,
-    keyboard: true,
-  });
-}
+    this.overlayModalRef = this.modalService.open(this.overlayModal, {
+      size: 'xl',
+      centered: true,
+      keyboard: true,
+    });
+  }
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
@@ -854,55 +853,61 @@ openOverlayModal(notification: any) {
 
     this.selectedNotification = notification;
   }
-async downloadPDF(container?: HTMLElement): Promise<void> {
-  const containerEl =
-    container ?? this.contentToDownload?.nativeElement;
+  async downloadPDF(container?: HTMLElement): Promise<void> {
+    const containerEl = container ?? this.contentToDownload?.nativeElement;
 
-  if (!containerEl) {
-    console.error('Content container not found');
-    return;
-  }
+    if (!containerEl) {
+      console.error('Content container not found');
+      return;
+    }
 
-  this.isGeneratingPdf = true;
+    this.isGeneratingPdf = true;
 
-  const imgs = Array.from(containerEl.querySelectorAll('img')) as HTMLImageElement[];
-  await Promise.all(
-    imgs.map(async (img) => {
-      try {
-        if (
-          /^https?:\/\//.test(img.src) &&
-          !img.src.startsWith(window.location.origin)
-        ) {
-          img.src = await this.toDataURL(img.src);
+    const imgs = Array.from(
+      containerEl.querySelectorAll('img')
+    ) as HTMLImageElement[];
+    await Promise.all(
+      imgs.map(async (img) => {
+        try {
+          if (
+            /^https?:\/\//.test(img.src) &&
+            !img.src.startsWith(window.location.origin)
+          ) {
+            img.src = await this.toDataURL(img.src);
+          }
+        } catch (err) {
+          console.warn('Could not process image:', img.src, err);
         }
-      } catch (err) {
-        console.warn('Could not process image:', img.src, err);
-      }
-    })
-  );
-
-  const filename = `${this.pdfTitle?.trim() || 'Emily-Report'}-${Date.now()}.pdf`;
-
-  const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
-  const jsPDFOpts: any = { unit: 'pt', format: 'a4', orientation: 'portrait' };
-
-  try {
-    await html2pdf()
-      .from(containerEl)
-      .set({
-        filename,
-        margin: 15,
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: h2cOpts,
-        jsPDF: jsPDFOpts,
-        pagebreak: { mode: ['css', 'legacy'] },
       })
-      .save();
-  } finally {
-    this.isGeneratingPdf = false;
-  }
-}
+    );
 
+    const filename = `${
+      this.pdfTitle?.trim() || 'Emily-Report'
+    }-${Date.now()}.pdf`;
+
+    const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
+    const jsPDFOpts: any = {
+      unit: 'pt',
+      format: 'a4',
+      orientation: 'portrait',
+    };
+
+    try {
+      await html2pdf()
+        .from(containerEl)
+        .set({
+          filename,
+          margin: 15,
+          image: { type: 'jpeg', quality: 1 },
+          html2canvas: h2cOpts,
+          jsPDF: jsPDFOpts,
+          pagebreak: { mode: ['css', 'legacy'] },
+        })
+        .save();
+    } finally {
+      this.isGeneratingPdf = false;
+    }
+  }
 
   private async toDataURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -936,43 +941,43 @@ async downloadPDF(container?: HTMLElement): Promise<void> {
     this.downloadPDF();
   }
 
- saveTitleInNotification(): void {
-  this.isSaving = true;
-  const request = {
-    Name: 'SetTitleInNotification',
-    Params: {
-      Id: this.selectedNotification?.id,
-      Title: this.pdfTitle.trim(),
-    },
-  };
+  saveTitleInNotification(): void {
+    this.isSaving = true;
+    const request = {
+      Name: 'SetTitleInNotification',
+      Params: {
+        Id: this.selectedNotification?.id,
+        Title: this.pdfTitle.trim(),
+      },
+    };
 
-  this.placesService.GenericAPI(request).subscribe({
-    next: () => {
-      (this.selectedNotification as any).title = this.pdfTitle.trim();
+    this.placesService.GenericAPI(request).subscribe({
+      next: () => {
+        (this.selectedNotification as any).title = this.pdfTitle.trim();
 
-      this.showSaveToast = true;
-      this.cdRef.detectChanges();
-      setTimeout(() => {
-        this.showSaveToast = false;
+        this.showSaveToast = true;
         this.cdRef.detectChanges();
-      }, 2500);
+        setTimeout(() => {
+          this.showSaveToast = false;
+          this.cdRef.detectChanges();
+        }, 2500);
 
-      this.isSaving = false;
-      this.pdfTitle = '';
-      this.refreshService.triggerUserPagesRefresh();
+        this.isSaving = false;
+        this.pdfTitle = '';
+        this.refreshService.triggerUserPagesRefresh();
 
-      if (this.overlayModalRef) {
-        this.overlayModalRef.close();
-        this.overlayModalRef = null; 
-      }
+        if (this.overlayModalRef) {
+          this.overlayModalRef.close();
+          this.overlayModalRef = null;
+        }
 
-      this.closeOverlayContent();
-    },
-    error: () => {
-      this.isSaving = false;
-    },
-  });
-}
+        this.closeOverlayContent();
+      },
+      error: () => {
+        this.isSaving = false;
+      },
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isChatbotRoute']?.currentValue === true) {
