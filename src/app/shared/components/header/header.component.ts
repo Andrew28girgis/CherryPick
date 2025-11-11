@@ -1,57 +1,49 @@
 import {
   Component,
+  Input,
   ViewChild,
   OnInit,
   HostListener,
-  Input,
-  Output,
-  EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { filter } from 'rxjs/operators';
-
 type UserView = 'campaigns' | 'landlord';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css',
 })
-export class SidebarComponent implements OnInit {
+export class HeaderComponent {
   isChatbotRoute!: boolean;
-
   constructor(
-    private notificationService: NotificationService,
+    public notificationService: NotificationService,
     private placesService: PlacesService,
-    private router: Router,
+    public router: Router,
     private modalService: NgbModal,
     private route: ActivatedRoute
   ) {}
-
   currentView: UserView = 'campaigns';
   showSidebar = true;
 
   @ViewChild('addAIKeyTypes') addAIKeyTypes!: any;
-  AIKey = '';
-  isSaving = false;
-  saveSuccess = false;
+  AIKey: string = '';
+  isSaving: boolean = false;
+  saveSuccess: boolean = false;
   errorMessage: string | null = null;
   isNotificationsOpen = false;
   currentRoute = '';
   isDropdownOpen = false;
-  @Input() isCollapsed = false; // receive collapse state from parent
-  @Output() collapseChange = new EventEmitter<boolean>(); // notify parent on toggle
-
-  isMobile = false;
+  isMenuOpen = false;
 
   ngOnInit(): void {
-    this.checkScreenSize();
-
+    // Initialize with chat open
     this.isNotificationsOpen = true;
 
+    // Subscribe to notification service to sync state
     this.notificationService.chatOpen$.subscribe((isOpen) => {
       this.isNotificationsOpen = isOpen;
     });
@@ -68,7 +60,6 @@ export class SidebarComponent implements OnInit {
           this.showSidebar = !data['hideSidebar'];
         });
       });
-
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
@@ -77,28 +68,11 @@ export class SidebarComponent implements OnInit {
       });
   }
 
-  @HostListener('window:resize')
-  onResize() {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth <= 768;
-  }
-  toggleCollapse() {
-    if (this.isMobile) {
-      // For mobile, we use overlay style, so toggle body class
-      document.body.classList.toggle('sidebar-open');
-    } else {
-      this.isCollapsed = !this.isCollapsed;
-      this.collapseChange.emit(this.isCollapsed);
-    }
-  }
-
   toggleEmilySidebar(): void {
     this.isNotificationsOpen = !this.isNotificationsOpen;
     this.notificationService.setChatOpen(this.isNotificationsOpen);
 
+    // If the notification panel is now open, reset the counter
     if (this.isNotificationsOpen) {
       this.notificationService.newNotificationsCount = 0;
     }
@@ -121,7 +95,7 @@ export class SidebarComponent implements OnInit {
 
   SetGPTAPIKey(): void {
     if (!this.AIKey) {
-      this.errorMessage = 'Please enter a ChatGPT Key';
+      this.errorMessage = 'Please enter an ChatGPT Key';
       return;
     }
 
@@ -149,7 +123,6 @@ export class SidebarComponent implements OnInit {
     this.errorMessage = null;
     this.AIKey = '';
   }
-
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -159,9 +132,9 @@ export class SidebarComponent implements OnInit {
       setTimeout(() => {
         toast.classList.remove('show');
       }, 5000);
+    } else {
     }
   }
-
   GetUserAPIAIKey() {
     const body = {
       Name: 'GetUserAPIAIKey',
@@ -180,16 +153,34 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  // switchView(): void {
+  //   const newView: UserView =
+  //     this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
+  //   this.userViewService.switchView(newView);
+  //   this.router.navigate([newView]);
+  // }
+
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  // Close dropdown if clicked outside
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     const target = event.target as HTMLElement;
 
+    // Check dropdown independently
     if (!target.closest('.dropdown')) {
       this.isDropdownOpen = false;
     }
+
+    // Check nav-group independently (but exclude the menu toggle button)
+    if (!target.closest('.nav-group') && !target.closest('.menu-toggle')) {
+      this.isMenuOpen = false;
+    }
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }

@@ -1,8 +1,8 @@
 <div class="notif-container" (click)="$event.stopPropagation()">
   <button class="notif-btn" (click)="toggleDropdown()">
     <svg
-      width="24"
-      height="24"
+      width="27"
+      height="27"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -22,12 +22,10 @@
     {{ unreadCount }}
   </span>
   
-  <span *ngIf="!isSidebarCollapsed" class="nav-label">Notifications</span>
-
+  
   </button>
 
-  <div class="notif-dropdown"     [class.collapsed]="isSidebarCollapsed"
-  *ngIf="isOpen">
+  <div class="notif-dropdown" *ngIf="isOpen">
     <div class="notif-header">
       <h5>Notifications</h5>
       <button

@@ -1,6 +1,13 @@
-<div class="app-shell" [ngClass]="appShellClasses">
-  <app-sidebar *ngIf="shouldShowSidebar"></app-sidebar>
-  <div class="app-container">
+<div
+  class="app-shell"
+  [class.with-sidebar]="shouldShowSidebar && isAuthenticated"
+  [class.sidebar-collapsed]="sidebarCollapsed"
+>
+  <app-sidebar
+    *ngIf="shouldShowSidebar &&isAuthenticated"
+    [isCollapsed]="sidebarCollapsed"
+    (collapseChange)="onSidebarCollapseChange($event)"
+  ></app-sidebar>  <div class="app-container">
     <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
       <div class="main-content-area">
         <div
