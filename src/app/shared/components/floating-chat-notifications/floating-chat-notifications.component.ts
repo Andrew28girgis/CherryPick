@@ -260,13 +260,6 @@ export class FloatingChatNotificationsComponent
       return;
     }
 
-    fabEl.style.position = 'fixed';
-    fabEl.style.top = '16px';
-    fabEl.style.right = '24px';
-    fabEl.style.left = 'auto';
-    fabEl.style.bottom = 'auto';
-    fabEl.style.zIndex = '100001';
-    fabEl.style.transition = 'all 0.3s ease';
 
     const chatDialog = document.querySelector(
       '.dynamic-position'
@@ -275,10 +268,10 @@ export class FloatingChatNotificationsComponent
 
     const chatWidth = 420;
     const margin = 16;
-    const top = 80;
-    const left = window.innerWidth - chatWidth - margin;
-    chatDialog.style.top = `${top}px`;
-    chatDialog.style.left = `${left}px`;
+    // const top = 80;
+    // const left = window.innerWidth - chatWidth - margin;
+    // chatDialog.style.top = `${top}px`;
+    // chatDialog.style.left = `${left}px`;
 
     const chatRect = chatDialog.getBoundingClientRect();
     const detailsPanel = document.createElement('div');
@@ -324,6 +317,7 @@ export class FloatingChatNotificationsComponent
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
+
     const target = event.target as HTMLElement | null;
     const chatButton =
       this.elementRef.nativeElement.querySelector('.chat-button');
@@ -342,6 +336,8 @@ export class FloatingChatNotificationsComponent
     ) {
       this.notificationService.setChatOpen(false);
       this.isOpen = false;
+      this.closeAll();
+
     }
   }
 
@@ -1168,6 +1164,7 @@ export class FloatingChatNotificationsComponent
         requestAnimationFrame(() => this.scrollToBottomNow());
       });
     }
+  
     // recompute for the next cycle
     this.wasSticky = this.isAtBottom();
   }
@@ -1436,7 +1433,7 @@ export class FloatingChatNotificationsComponent
         this.previousNotificationsLength =
           this.notificationService.notificationsnew.length;
         this.sortNotificationsByDateAsc();
-        this.scrollToBottom();
+        // this.scrollToBottom();
         this.scanTrigger$.next();
       });
   }
@@ -1453,7 +1450,7 @@ export class FloatingChatNotificationsComponent
         this.previousNotificationsLength =
           this.notificationService.notifications.length;
         this.sortNotificationsByDateAsc();
-        this.scrollToBottom();
+        // this.scrollToBottom();
 
         if (
           !this.notificationSourceUrl &&
