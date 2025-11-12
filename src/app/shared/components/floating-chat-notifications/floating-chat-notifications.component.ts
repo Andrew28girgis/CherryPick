@@ -235,15 +235,88 @@ export class FloatingChatNotificationsComponent
     this.mo?.disconnect();
     this.ro?.disconnect();
   }
+openOverlayModal(notification: any) {
+  this.loadNotificationViewComponent(notification);
 
-  openOverlayModal(notification: any) {
-    // just open the modal — don't set overlayHtml here
-    this.overlayModalRef = this.modalService.open(this.overlayModal, {
-      size: 'xl',
-      centered: true,
-      keyboard: true,
-    });
+  const fabEl = this.chatModal['fabEl'] as HTMLElement;
+  if (!fabEl) {
+    console.warn('Floating chat button not found');
+    return;
   }
+
+  const existingPanel = document.querySelector('.chat-details-panel');
+  if (existingPanel) {
+    existingPanel.remove();
+    fabEl.style.top = '';
+    fabEl.style.right = '';
+    fabEl.style.left = '';
+    fabEl.style.bottom = '';
+    fabEl.style.position = 'fixed';
+    fabEl.style.transform = '';
+    return;
+  }
+
+  fabEl.style.position = 'fixed';
+  fabEl.style.top = '16px';
+  fabEl.style.right = '24px';
+  fabEl.style.left = 'auto';
+  fabEl.style.bottom = 'auto';
+  fabEl.style.zIndex = '100001';
+  fabEl.style.transition = 'all 0.3s ease';
+
+  const chatDialog = document.querySelector('.dynamic-position') as HTMLElement;
+  if (!chatDialog) return;
+
+  const chatWidth = 420;
+  const margin = 16;
+  const top = 80; 
+  const left = window.innerWidth - chatWidth - margin;
+  chatDialog.style.top = `${top}px`;
+  chatDialog.style.left = `${left}px`;
+
+  const chatRect = chatDialog.getBoundingClientRect();
+  const detailsPanel = document.createElement('div');
+  detailsPanel.classList.add('chat-details-panel');
+  detailsPanel.innerHTML = `
+    <div class="chat-details-header">
+      <h4>Details</h4>
+      <button class="chat-details-close">×</button>
+    </div>
+    <div class="chat-details-body">${this.overlayHtml || ''}</div>
+  `;
+
+  detailsPanel.style.position = 'fixed';
+  detailsPanel.style.top = `${chatRect.top}px`;
+  detailsPanel.style.left = `${16}px`;
+  detailsPanel.style.width = `${chatRect.left - 32}px`;
+  detailsPanel.style.height = `${chatRect.height}px`;
+  detailsPanel.style.background = '#fff';
+  detailsPanel.style.borderRadius = '8px';
+  detailsPanel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+  detailsPanel.style.overflowY = 'auto';
+  detailsPanel.style.zIndex = '100000';
+  detailsPanel.style.animation = 'popIn 0.25s ease forwards';
+
+  const closeOverlay = () => {
+    detailsPanel.remove();
+    fabEl.style.top = '';
+    fabEl.style.right = '';
+    fabEl.style.left = '';
+    fabEl.style.bottom = '';
+    fabEl.style.position = 'fixed';
+    fabEl.style.transition = '';
+  };
+
+  detailsPanel
+    .querySelector('.chat-details-close')
+    ?.addEventListener('click', closeOverlay);
+
+  fabEl.addEventListener('click', closeOverlay, { once: true });
+
+  document.body.appendChild(detailsPanel);
+}
+
+
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
