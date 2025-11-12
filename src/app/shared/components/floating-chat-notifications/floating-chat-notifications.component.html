@@ -263,7 +263,7 @@
               <button
                 *ngIf="item.notification?.html"
                 class="view-details"
-                (click)="openOverlayModal(item.notification!)"
+                (click)="loadNotificationViewComponent(item.notification!)"
               >
                 View
               </button>

@@ -887,11 +887,7 @@ export class FloatingChatNotificationsComponent
         notification.id
       );
     } else {
-      this.isOverlayMode = true;
-      this.showingMap = false;
-      this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(
-        notification.html
-      );
+     this.openOverlayModal(notification);
     }
 
     this.selectedNotification = notification;
