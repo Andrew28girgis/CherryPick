@@ -19,5 +19,5 @@ export interface Notification {
   taskId: any;
   isEndInsertion: any;
   ispolygon: boolean;
-  isEmilyChat: any;
+  isEmilyChat: boolean;
 }

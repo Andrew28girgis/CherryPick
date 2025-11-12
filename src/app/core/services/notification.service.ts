@@ -93,7 +93,7 @@ export class NotificationService {
       tap((response: any) => {
         const previousNotificationsnew = [...this.notificationsnew];
         this.notificationsnew = ((response.json || []) as Notification[])
-        .filter(n => n.isEmilyChat === 1);
+        .filter(n => n.isEmilyChat === true);
           this.sortNotificationsByDate();
 
         if (this.isChatOpen) {
