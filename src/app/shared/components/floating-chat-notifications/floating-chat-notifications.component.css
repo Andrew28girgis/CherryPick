@@ -118,6 +118,7 @@
   font-size: 0.93rem;
   word-break: break-word;
   animation: fadeInUp 0.25s ease-in-out;
+  max-width: 70%;
 }
 
 .message-bubble.ai {
@@ -180,7 +181,7 @@
 }
 
 .composer-send-btn {
-  background: #d1b266;
+  background: var(--Colors-Primary-500);
   color: #fff;
   border: none;
   border-radius: 50%;
