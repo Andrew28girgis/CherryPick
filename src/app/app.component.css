@@ -39,7 +39,9 @@
   width: 100%;
 }
 
-
+.right-panel{
+  padding: 18px 40px;
+}
 
 .app-shell.chatbot-route {
   grid-template-columns: minmax(0, 1fr);
