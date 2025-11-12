@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { PlacesService } from './core/services/places.service';
 import { AuthService } from './core/services/auth.service';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationStart,
+  Router,
+} from '@angular/router';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,16 +20,21 @@ export class AppComponent implements OnInit {
   isEmilyChatBot = false;
   hideSidebar = false;
   showingTransition = false;
-  overlayActive = false; 
-  campaignId: any; 
+  overlayActive = false;
+  campaignId: any;
   shouldShowSidebar = true;
+  private destroy$ = new Subject<void>();
+
   constructor(
     private placeService: PlacesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.initializeApiMode();
+    this.setupRouteSubscriptions();
   }
 
   private initializeApiMode(): void {
@@ -30,7 +42,7 @@ export class AppComponent implements OnInit {
     if (apiMode && JSON.parse(apiMode)) {
       this.placeService.setAppMode('api');
     }
-  } 
+  }
 
   get isAuthenticated(): boolean {
     return this.authService.isLoggedInToday();
@@ -46,4 +58,70 @@ export class AppComponent implements OnInit {
     };
   }
 
+  private setupRouteSubscriptions(): void {
+    this.router.events
+      .pipe(
+        filter(
+          (event): event is NavigationEnd => event instanceof NavigationEnd
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: NavigationEnd) => {
+        this.handleNavigationEnd(event);
+        this.updateRouteData();
+      });
+
+    this.router.events
+      .pipe(
+        filter(
+          (event): event is NavigationStart => event instanceof NavigationStart
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: NavigationStart) => {
+        this.handleNavigationStart(event);
+      });
+  }
+
+  private handleNavigationEnd(event: NavigationEnd): void {
+    const url = event.urlAfterRedirects || event.url;
+    const onEmilyChatRoute =
+      url === '/emily-chatsbot' || url.startsWith('/emily-chatsbot/');
+    this.isChatbotRoute = onEmilyChatRoute;
+    this.isEmilyChatBot = this.router.url.includes('chatbot');
+    this.setCampaignIdFromRoute();
+  }
+
+  private handleNavigationStart(event: NavigationStart): void {
+    const isTransitionRoute =
+      event.url === '/campaigns' || event.url === '/summary';
+    const fromLoginRoute = this.router.url === '/login';
+
+    if (isTransitionRoute && fromLoginRoute) {
+      this.showingTransition = true;
+      setTimeout(() => {
+        this.showingTransition = false;
+      }, 0);
+    }
+  }
+
+  private updateRouteData(): void {
+    let currentRoute = this.activatedRoute;
+    while (currentRoute.firstChild) {
+      currentRoute = currentRoute.firstChild;
+    }
+
+    currentRoute.data.pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      this.hideSidebar = data['hideSidebar'] === true;
+      this.isMarketSurveyRoute = data['isMarketSurveyRoute'] === true;
+    });
+  }
+
+  private setCampaignIdFromRoute(): void {
+    let currentRoute = this.activatedRoute;
+    while (currentRoute.firstChild) {
+      currentRoute = currentRoute.firstChild;
+    }
+    this.campaignId = currentRoute;
+  }
 }

@@ -165,58 +165,19 @@ export class FloatingChatNotificationsComponent
       setTimeout(() => this.scrollToBottom(), 0);
     }
 
+    // Handle route changes
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
         const url = e.urlAfterRedirects || e.url;
         this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
-      this.notificationService
-      .fetchUserNotificaetionsSpecific(   this.campaignId,
-        this.shoppingCenterId,
-        this.organizationId,
-        this.notificationSourceUrl)
-      .subscribe(() => {
-        this.previousNotificationsLength =
-          this.notificationService.notificationsnew.length;
-        this.sortNotificationsByDateAsc();
-        this.scrollToBottom();
-      });
 
+    // Initial fetch (decides whether to fetch specific or general notifications)
+    this.fetchNotifications();
+    this.startPolling(2000);
 
-       const poll = () => {
-        this.wasSticky = this.isAtBottom();
-        const prevLength = this.notificationService.notificationsnew.length;
-
-        this.notificationService
-          .fetchUserNotificaetionsSpecific(
-            this.campaignId,
-            this.shoppingCenterId,
-            this.organizationId,
-            this.notificationSourceUrl
-          )
-          .subscribe({
-            complete: () => {
-              const newLength = this.notificationService.notificationsnew.length;
-              const diff = newLength - prevLength;
-
-              if (diff > 0) {
-                const newMessages =
-                  this.notificationService.notificationsnew.slice(-diff);
-                this.checkForShoppingCentersReply(newMessages);
-                this.onNewMessagesArrived(diff);
-              }
-
-              this.previousNotificationsLength = newLength;
-              this.sortNotificationsByDateAsc();
-              this.scanTrigger$.next();
-
-              setTimeout(poll, 2000);
-            },
-          });
-      };
-      poll();
- 
+    // Set up reactive UI listeners
     this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(() => {
       this.scanAndOpenOverlayForHtml();
       this.scanForShowMap();
@@ -539,7 +500,7 @@ openOverlayModal(notification: any) {
 
     // === TURN START (ID SNAPSHOT) ===
     this.preSendIds.clear();
-    for (const n of this.notificationService?.notifications ?? []) {
+    for (const n of this.notificationService?.notificationsnew ?? []) {
       const idKey = typeof n.id === 'number' ? n.id : String(n.id);
       this.preSendIds.add(idKey);
     }
@@ -572,7 +533,7 @@ openOverlayModal(notification: any) {
     this.showTyping();
 
     const lastNotification =
-      this.notificationService?.notifications[
+      this.notificationService?.notificationsnew[
         this.notificationService.notificationsnew.length - 2
       ];
     const body: any = {
@@ -694,7 +655,7 @@ openOverlayModal(notification: any) {
     if (!this.awaitingResponse) return;
     console.log(' awaiting ');
 
-    const list = this.notificationService?.notifications ?? [];
+    const list = this.notificationService?.notificationsnew ?? [];
     console.log(' 2 ');
 
     if (!Array.isArray(list) || list.length === 0) return;
@@ -780,7 +741,7 @@ openOverlayModal(notification: any) {
 
     // 🔹 Filter notifications to include only Emily chat messages
     const emilyNotifications = (
-      this.notificationService?.notifications ?? []
+      this.notificationService?.notificationsnew ?? []
     ).filter((n) => n.isEmilyChat === true);
 
     // 🔹 Map notifications to ChatItems
@@ -827,7 +788,7 @@ openOverlayModal(notification: any) {
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 
   private sortNotificationsByDateAsc(): void {
-    const arr = this.notificationService?.notifications;
+    const arr = this.notificationService?.notificationsnew;
     if (!Array.isArray(arr)) return;
     arr.sort(
       (a, b) =>
@@ -1255,7 +1216,7 @@ openOverlayModal(notification: any) {
     this.cdRef.detectChanges();
   }
   private scanForShowMap(): void {
-    const list = this.notificationService?.notifications ?? [];
+    const list = this.notificationService?.notificationsnew ?? [];
     if (!Array.isArray(list) || list.length === 0) return;
 
     for (const n of list) {
@@ -1380,7 +1341,14 @@ openOverlayModal(notification: any) {
   clearEmilyChat() {
     const request = {
       Name: 'DeleteEmilyChat',
-      Params: {},
+      Params: {
+        CampaignId: this.campaignId??null,
+        ShoppingCenterId: this.shoppingCenterId??null,
+        OrganizationId: this.organizationId??null,
+        SourceUrl: this.notificationSourceUrl?this.notificationSourceUrl:this.notificationService.notifications[
+          this.notificationService.notifications.length - 1
+        ].sourceUrl??null,
+      },
     };
 
     this.placesService.GenericAPI(request).subscribe({
@@ -1427,5 +1395,94 @@ openOverlayModal(notification: any) {
         overlayActive: false,
       });
     }
+  }
+  private fetchNotifications(): void {
+    // Main mode: always prefer specific notifications
+    if (
+      this.notificationSourceUrl ||
+      this.notificationService.notificationsnew.length > 0
+    ) {
+      this.fetchSpecificNotifications();
+    } else {
+      // Only go general when we have no conversation yet
+      this.fetchGeneralNotifications();
+    }
+  }
+
+  private fetchSpecificNotifications(): void {
+    if (
+      this.campaignId||
+      this.shoppingCenterId||
+      this.organizationId||
+      this.contactId
+    ) {
+      this.notificationSourceUrl = null;
+    }
+    this.notificationService
+      .fetchUserNotificaetionsSpecific(
+        this.campaignId,
+        this.shoppingCenterId,
+        this.organizationId,
+        this.notificationSourceUrl
+      )
+      .subscribe(() => {
+        // Filter only Emily chat messages
+        this.notificationService.notificationsnew =
+          this.notificationService.notificationsnew.filter(
+            (n) => n.isEmilyChat === true
+          );
+
+        this.previousNotificationsLength =
+          this.notificationService.notificationsnew.length;
+        this.sortNotificationsByDateAsc();
+        this.scrollToBottom();
+        this.scanTrigger$.next();
+      });
+  }
+
+  private fetchGeneralNotifications(): void {
+    this.notificationService
+      .fetchUserNotifications(this.CampaignId)
+      .subscribe(() => {
+        this.notificationService.notifications =
+          this.notificationService.notifications.filter(
+            (n) => n.isEmilyChat === true
+          );
+
+        this.previousNotificationsLength =
+          this.notificationService.notifications.length;
+        this.sortNotificationsByDateAsc();
+        this.scrollToBottom();
+
+        if (
+          !this.notificationSourceUrl &&
+          this.notificationService.notifications.length > 0
+        ) {
+          const last =
+            this.notificationService.notifications[
+              this.notificationService.notifications.length - 1
+            ];
+          this.notificationSourceUrl = last.sourceUrl;
+          this.conversationId = last.emilyConversationCategoryId;
+
+          // ✅ Once we have a valid conversation, immediately switch to specific fetch
+          this.fetchSpecificNotifications();
+        }
+
+        this.scanTrigger$.next();
+      });
+  }
+
+  private startPolling(intervalMs: number): void {
+    const poll = () => {
+      this.wasSticky = this.isAtBottom();
+
+      // Always call main unified method
+      this.fetchNotifications();
+
+      setTimeout(poll, intervalMs);
+    };
+
+    poll();
   }
 }

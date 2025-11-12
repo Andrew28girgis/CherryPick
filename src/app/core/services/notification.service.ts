@@ -91,9 +91,10 @@ export class NotificationService {
 
     return this.placesService.GenericAPI(request).pipe(
       tap((response: any) => {
-        const previousNotificationsnew = [...this.notifications];
-        this.notificationsnew = (response.json || []) as Notification[];
-        this.sortNotificationsByDate();
+        const previousNotificationsnew = [...this.notificationsnew];
+        this.notificationsnew = ((response.json || []) as Notification[])
+        .filter(n => n.isEmilyChat === true);
+          this.sortNotificationsByDate();
 
         if (this.isChatOpen) {
           this.handleNewMessagesWhileChatOpen(previousNotificationsnew);
