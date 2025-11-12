@@ -270,17 +270,14 @@ export class FloatingChatNotificationsComponent
   closePopup(): void {
     this.activeModal.close();
   }
-  openOverlayModal(notification: any) {
-    this.selectedNotification = notification;
-    this.overlayHtml = notification.html;
-
-    this.overlayModalRef = this.modalService.open(this.overlayModal, {
-      size: 'xl',
-      centered: true,
-      keyboard: true,
-    });
-  }
-
+openOverlayModal(notification: any) {
+  // just open the modal — don't set overlayHtml here
+  this.overlayModalRef = this.modalService.open(this.overlayModal, {
+    size: 'xl',
+    centered: true,
+    keyboard: true,
+  });
+}
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
@@ -664,8 +661,6 @@ export class FloatingChatNotificationsComponent
     console.log(' 8');
 
     // Ensure overlay visible
-    console.log(' 5 ');
-
     if (!this.isOpen) {
 
       this.isOpen = true;
@@ -881,21 +876,43 @@ export class FloatingChatNotificationsComponent
     return (taskId === 2 || taskId === 3) && !isEnd;
   }
 
-  loadNotificationViewComponent(notification: Notification): void {
-    if (this.electronSideBar) {
-      (window as any).electronMessage.loadNotificationViewComponent(
-        notification.id
-      );
-    } else {
-      this.isOverlayMode = true;
-      this.showingMap = false;
-      this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(
-        notification.html
-      );
-    }
-
-    this.selectedNotification = notification;
+loadNotificationViewComponent(notification: Notification): void {
+  if (this.electronSideBar) {
+    (window as any).electronMessage.loadNotificationViewComponent(notification.id);
+    return;
   }
+
+  this.isOverlayMode = true;
+  this.showingMap = false;
+
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = notification.html || '';
+
+  // Extract and activate <style> and <link> tags
+  const styleTags = tempDiv.querySelectorAll('style');
+  styleTags.forEach((styleEl) => {
+    const style = document.createElement('style');
+    style.textContent = styleEl.textContent;
+    document.head.appendChild(style);
+    styleEl.remove();
+  });
+
+  const linkTags = tempDiv.querySelectorAll('link[rel="stylesheet"]');
+  linkTags.forEach((linkEl) => {
+    const href = linkEl.getAttribute('href');
+    if (href) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    }
+    linkEl.remove();
+  });
+
+  this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(tempDiv.innerHTML);
+  this.selectedNotification = notification;
+}
+
   async downloadPDF(container?: HTMLElement): Promise<void> {
     const containerEl = container ?? this.contentToDownload?.nativeElement;
 
