@@ -995,7 +995,7 @@
 }
 
 .tenant-card:hover {
-  border-color: var(--Colors-Primary-400);
+  border-color: var(--Colors-Primary-light);
   transform: translateY(-2px);
 }
 
@@ -1543,7 +1543,7 @@
 }
 
 .organization-tab:hover {
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-light);
 }
 
 .organization-tab.active {

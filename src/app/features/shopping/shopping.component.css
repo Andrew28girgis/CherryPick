@@ -1240,7 +1240,7 @@ tr.click-disabled td:last-child * {
 }
 
 .campaign-card:hover {
-  border-color: var(--Colors-Primary-400);
+  border-color: var(--Colors-Primary-light);
   transform: translateY(-2px);
 }
 
@@ -1490,9 +1490,9 @@ tr.click-disabled td:last-child * {
   transition: background 0.2s ease, transform 0.1s ease;
 }
 .date {
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-light);
   color: var(--app-color);
-  top: 10px;
+  top: 20px;
   left: 10px;
 
   display: inline-block;
@@ -1565,7 +1565,7 @@ tr.click-disabled td:last-child * {
 
 .info-badge {
   background-color: var(--app-color);
-  color: var(--Colors-Primary-500);
+  color: var(--Colors-Primary-light);
   padding: 8px 16px;
   border-radius: 24px;
   border: none;

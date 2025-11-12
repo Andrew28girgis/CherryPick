@@ -1347,7 +1347,7 @@
   transform: translateY(1px);
 }
 .segmented-scan .segment input[type="radio"]:checked + .seg {
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-light);
   color: var(--app-color);
 }
 .segmented-scan .segment input[type="radio"]:focus-visible + .seg {

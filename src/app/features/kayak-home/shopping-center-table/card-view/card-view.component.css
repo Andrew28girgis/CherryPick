@@ -1258,12 +1258,12 @@ table tbody td {
 }
 
 .score:hover {
-  background: var(--Colors-Primary-400) !important;
+  background: var(--Colors-Primary-light) !important;
   cursor: pointer;
 }
 
 .score.active {
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-light);
 }
 
 /* spin animation */
@@ -1413,7 +1413,7 @@ table tbody td {
 }
 
 .date {
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-light);
   color: var(--app-color);
   bottom: 16px;
   left: 16px;
