@@ -32,82 +32,14 @@
   min-width: 0;
 }
 
-.app-shell.with-sidebar > .app-container {
-  padding: 10px 40px 50px 40px;
 
-  transition: margin-left 0.3s ease;
-  margin-left: 260px;
-}
-.app-shell.with-sidebar.sidebar-collapsed > .app-container {
-  margin-left: 80px;
-}
-
-.app-shell.with-sidebar {
-  grid-template-columns: 96px minmax(0, 1fr);
-}
-
-.app-shell.with-copilot.copilot-expanded.authenticated {
-  margin-right: min(380px, 40vw);
-}
-
-.app-shell.with-sidebar.with-copilot.copilot-expanded.authenticated:not(
-    .chatbot-route
-  ) {
-  grid-template-columns: 96px minmax(0, 1fr);
-  margin-right: min(381px, 40vw);
-}
 
 .app-container {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
 }
 
-@media (max-width: 1200px) {
-  .app-shell.with-copilot.copilot-expanded.authenticated {
-    margin-right: min(320px, 35vw) !important;
-  }
-}
 
-@media (max-width: 992px) {
-  .app-shell.with-copilot.copilot-expanded.authenticated {
-    margin-right: min(280px, 30vw);
-  }
-}
-
-@media (max-width: 768px) {
-  .app-shell.with-copilot.copilot-expanded.authenticated {
-    margin-right: min(240px, 35vw);
-  }
-  .app-shell.with-sidebar > .app-container {
-    margin-left: 0;
-  }
-  .app-shell.with-copilot.copilot-expanded.authenticated {
-    margin-right: 0 !important;
-  }
-}
-
-@media (max-width: 576px) {
-  .app-shell.with-copilot.copilot-expanded.authenticated {
-    margin-right: min(200px, 40vw);
-  }
-}
-
-@media (max-width: 480px) {
-  .app-shell.with-copilot.copilot-expanded {
-    margin-right: min(180px, 60vw);
-  }
-}
-
-.app-shell.emily-chatbot {
-  grid-template-columns: minmax(0, 1fr);
-  margin-left: 0;
-}
-
-.app-shell.emily-chatbot > .app-container {
-  grid-column: 1;
-  width: 100%;
-  margin-left: 0;
-}
 
 .app-shell.chatbot-route {
   grid-template-columns: minmax(0, 1fr);
@@ -139,11 +71,3 @@
   width: 100%;
 }
 
-/* override emily chatbot classes so the app take full width  */
-.app-shell {
-  margin-right: 0 !important;
-}
-
-.app-shell > .app-container {
-  width: 100% !important;
-}

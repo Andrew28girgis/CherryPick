@@ -1553,8 +1553,7 @@
 }
 
 .organization-tab {
-  padding: 8px 16px;
-  background: var(--Colors-Primary-300);
+  padding: 8px 16px; 
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;

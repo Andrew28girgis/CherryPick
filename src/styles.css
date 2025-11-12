@@ -4,7 +4,7 @@
 :root {
   --app-color: #14303a;
   --app-font: "Poppins", sans-serif;
-  --Colors-Primary-500: #baa26c;
+  --Colors-Primary-500: #0d151f;
   --Colors-Primary-400: #e7dabc;
   --Colors-Primary-300: #f1e9d7;
   --Colors-Primary-hover: #baa36d;
@@ -309,23 +309,25 @@ a {
 }
 
 .g-button {
+  background: #b5d4f4;
+  padding: var(--Space-S-12) var(--Space-S-24);
+  color: var(--Colors-Primary-500);
+  border-radius: 25px;
+  font-weight: 500;
   border: none;
   cursor: pointer;
-  color: #fff;
   display: flex;
-  height: 40px;
-  padding: var(--Space-S-14) var(--Space-S-24);
   justify-content: center;
   align-items: center;
   gap: var(--Space-S-8);
-  border-radius: var(--Radius-R-16);
-  background: var(--Colors-Primary-500);
   white-space: nowrap;
 }
 
 .g-button:hover {
-  background: var(--Colors-Primary-hover);
+  color: #fff;
+  background: var(--Colors-Primary-500);
 }
+
 .g-button-outline {
   border: none;
   cursor: pointer;
