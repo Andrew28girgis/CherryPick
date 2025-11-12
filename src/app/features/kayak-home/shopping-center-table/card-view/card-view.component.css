@@ -109,6 +109,7 @@ img[alt="logo"] {
 }
 
 .cardResponsive {
+  position: relative;
   background: #fff;
   color: var(--app-color);
   cursor: pointer;
@@ -974,7 +975,7 @@ table tbody td {
   padding-left: 5px;
   gap: 12px;
   color: var(--Colors-Primary-500); /* accent color */
-} 
+}
 /* full cover white surface */
 .score-placeholder {
   position: absolute;
@@ -1287,7 +1288,7 @@ table tbody td {
 }
 .card-click-area.click-disabled {
   pointer-events: none;
-} 
+}
 .opened-menu,
 .opened-stage {
   z-index: 4;
@@ -1377,9 +1378,9 @@ table tbody td {
 }
 
 .emily-button {
-  margin: 10px;
-  display: inline-flex;
-  width: fit-content;
+  position: absolute;
+  top: -25px;
+  right: 20px;
   align-items: center;
   gap: 6px;
   background-color: #f4f3ff;
@@ -1414,5 +1415,4 @@ table tbody td {
 }
 .stat-bars > span {
   background: var(--app-color);
-
 }

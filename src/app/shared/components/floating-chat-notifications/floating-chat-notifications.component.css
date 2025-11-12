@@ -610,6 +610,7 @@
 .clear-button{
   background-color: #ff3333 !important;
   color: #fff !important;
+  outline: none !important;
 }
 .clear-button:hover{
   background-color: #ff1a1a !important;

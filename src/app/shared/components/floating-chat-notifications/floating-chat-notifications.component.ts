@@ -131,6 +131,8 @@ export class FloatingChatNotificationsComponent
   organizationId: any;
   contactId: any;
   conversationId: any;
+  newNotificationGetter!: boolean;
+  notificationSourceUrl: any;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -140,7 +142,7 @@ export class FloatingChatNotificationsComponent
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: NgbModal,
-     private refreshService: RefreshService,
+    private refreshService: RefreshService,
     private chatModal: ChatModalService
   ) {}
 
@@ -169,45 +171,52 @@ export class FloatingChatNotificationsComponent
         const url = e.urlAfterRedirects || e.url;
         this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
-
-    this.notificationService
-      .fetchUserNotifications(this.CampaignId)
+      this.notificationService
+      .fetchUserNotificaetionsSpecific(   this.campaignId,
+        this.shoppingCenterId,
+        this.organizationId,
+        this.notificationSourceUrl)
       .subscribe(() => {
         this.previousNotificationsLength =
-          this.notificationService.notifications.length;
+          this.notificationService.notificationsnew.length;
         this.sortNotificationsByDateAsc();
         this.scrollToBottom();
       });
 
-    const poll = () => {
-      this.wasSticky = this.isAtBottom();
-      const prevLength = this.notificationService.notifications.length;
 
-      this.notificationService
-        .fetchUserNotifications(this.CampaignId)
-        .subscribe({
-          complete: () => {
-            const newLength = this.notificationService.notifications.length;
-            const diff = newLength - prevLength;
+       const poll = () => {
+        this.wasSticky = this.isAtBottom();
+        const prevLength = this.notificationService.notificationsnew.length;
 
-            if (diff > 0) {
-              const newMessages = this.notificationService.notifications.slice(
-                -diff
-              );
-              this.checkForShoppingCentersReply(newMessages);
-              this.onNewMessagesArrived(diff);
-            }
+        this.notificationService
+          .fetchUserNotificaetionsSpecific(
+            this.campaignId,
+            this.shoppingCenterId,
+            this.organizationId,
+            this.notificationSourceUrl
+          )
+          .subscribe({
+            complete: () => {
+              const newLength = this.notificationService.notificationsnew.length;
+              const diff = newLength - prevLength;
 
-            this.previousNotificationsLength = newLength;
-            this.sortNotificationsByDateAsc();
-            this.scanTrigger$.next();
+              if (diff > 0) {
+                const newMessages =
+                  this.notificationService.notificationsnew.slice(-diff);
+                this.checkForShoppingCentersReply(newMessages);
+                this.onNewMessagesArrived(diff);
+              }
 
-            setTimeout(poll, 2000);
-          },
-        });
-    };
-    poll();
+              this.previousNotificationsLength = newLength;
+              this.sortNotificationsByDateAsc();
+              this.scanTrigger$.next();
 
+              setTimeout(poll, 2000);
+            },
+          });
+      };
+      poll();
+ 
     this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(() => {
       this.scanAndOpenOverlayForHtml();
       this.scanForShowMap();
@@ -265,15 +274,15 @@ export class FloatingChatNotificationsComponent
     this.mo?.disconnect();
     this.ro?.disconnect();
   }
- 
-openOverlayModal(notification: any) {
-  // just open the modal — don't set overlayHtml here
-  this.overlayModalRef = this.modalService.open(this.overlayModal, {
-    size: 'xl',
-    centered: true,
-    keyboard: true,
-  });
-}
+
+  openOverlayModal(notification: any) {
+    // just open the modal — don't set overlayHtml here
+    this.overlayModalRef = this.modalService.open(this.overlayModal, {
+      size: 'xl',
+      centered: true,
+      keyboard: true,
+    });
+  }
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
@@ -471,7 +480,7 @@ openOverlayModal(notification: any) {
       isTemp: true,
     };
 
-    this.notificationService.notifications.push(optimisticMsg as any);
+    this.notificationService.notificationsnew.push(optimisticMsg as any);
 
     this.sentMessages.push({
       message: text,
@@ -484,7 +493,7 @@ openOverlayModal(notification: any) {
 
     const lastNotification =
       this.notificationService?.notifications[
-        this.notificationService.notifications.length - 2
+        this.notificationService.notificationsnew.length - 2
       ];
     const body: any = {
       Chat: text,
@@ -500,6 +509,7 @@ openOverlayModal(notification: any) {
       this.organizationId ||
       this.contactId
     ) {
+      this.newNotificationGetter = true;
       if (this.campaignId) body.CampaignId = this.campaignId;
       if (this.shoppingCenterId) body.ShoppingCenterId = this.shoppingCenterId;
       if (this.organizationId) body.OrganizationId = this.organizationId;
@@ -516,6 +526,7 @@ openOverlayModal(notification: any) {
         body.ContactId = lastNotification.contactId;
       if (lastNotification?.sourceUrl)
         body.SourceUrl = lastNotification.sourceUrl;
+      this.notificationSourceUrl = lastNotification.sourceUrl;
     }
 
     this.placesService.sendmessages(body).subscribe({
@@ -544,7 +555,8 @@ openOverlayModal(notification: any) {
         // cancel turn
         this.awaitingResponse = false;
         this.preSendIds.clear();
-        this.pendingSentText = '';``
+        this.pendingSentText = '';
+        ``;
         this.shownForIds.clear();
       },
     });
@@ -598,7 +610,7 @@ openOverlayModal(notification: any) {
 
   private scanAndOpenOverlayForHtml(): void {
     console.log('not awaiting ');
-    
+
     if (!this.awaitingResponse) return;
     console.log(' awaiting ');
 
@@ -658,7 +670,6 @@ openOverlayModal(notification: any) {
 
     // Ensure overlay visible
     if (!this.isOpen) {
-
       this.isOpen = true;
       this.notificationService.setChatOpen(true);
     }
@@ -872,42 +883,46 @@ openOverlayModal(notification: any) {
     return (taskId === 2 || taskId === 3) && !isEnd;
   }
 
-loadNotificationViewComponent(notification: Notification): void {
-  if (this.electronSideBar) {
-    (window as any).electronMessage.loadNotificationViewComponent(notification.id);
-    return;
-  }
-
-  this.isOverlayMode = true;
-  this.showingMap = false;
-
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = notification.html || '';
-
-  // Extract and activate <style> and <link> tags
-  const styleTags = tempDiv.querySelectorAll('style');
-  styleTags.forEach((styleEl) => {
-    const style = document.createElement('style');
-    style.textContent = styleEl.textContent;
-    document.head.appendChild(style);
-    styleEl.remove();
-  });
-
-  const linkTags = tempDiv.querySelectorAll('link[rel="stylesheet"]');
-  linkTags.forEach((linkEl) => {
-    const href = linkEl.getAttribute('href');
-    if (href) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      document.head.appendChild(link);
+  loadNotificationViewComponent(notification: Notification): void {
+    if (this.electronSideBar) {
+      (window as any).electronMessage.loadNotificationViewComponent(
+        notification.id
+      );
+      return;
     }
-    linkEl.remove();
-  });
 
-  this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(tempDiv.innerHTML);
-  this.selectedNotification = notification;
-}
+    this.isOverlayMode = true;
+    this.showingMap = false;
+
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = notification.html || '';
+
+    // Extract and activate <style> and <link> tags
+    const styleTags = tempDiv.querySelectorAll('style');
+    styleTags.forEach((styleEl) => {
+      const style = document.createElement('style');
+      style.textContent = styleEl.textContent;
+      document.head.appendChild(style);
+      styleEl.remove();
+    });
+
+    const linkTags = tempDiv.querySelectorAll('link[rel="stylesheet"]');
+    linkTags.forEach((linkEl) => {
+      const href = linkEl.getAttribute('href');
+      if (href) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        document.head.appendChild(link);
+      }
+      linkEl.remove();
+    });
+
+    this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(
+      tempDiv.innerHTML
+    );
+    this.selectedNotification = notification;
+  }
 
   async downloadPDF(container?: HTMLElement): Promise<void> {
     const containerEl = container ?? this.contentToDownload?.nativeElement;
@@ -1238,7 +1253,7 @@ loadNotificationViewComponent(notification: Notification): void {
   private ingestNotifications(newOnes: Notification[]): void {
     if (!Array.isArray(newOnes) || !newOnes.length) return;
 
-    const list = this.notificationService.notifications ?? [];
+    const list = this.notificationService.notificationsnew ?? [];
     let added = 0;
 
     for (const n of newOnes) {
@@ -1291,9 +1306,9 @@ loadNotificationViewComponent(notification: Notification): void {
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
         // Remove Emily chat messages from the shared notifications array
-        if (Array.isArray(this.notificationService.notifications)) {
-          this.notificationService.notifications =
-            this.notificationService.notifications.filter(
+        if (Array.isArray(this.notificationService.notificationsnew)) {
+          this.notificationService.notificationsnew =
+            this.notificationService.notificationsnew.filter(
               (n) => !n.isEmilyChat
             );
         }
@@ -1333,5 +1348,4 @@ loadNotificationViewComponent(notification: Notification): void {
       });
     }
   }
-
 }

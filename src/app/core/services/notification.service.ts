@@ -10,6 +10,7 @@ import { BehaviorSubject, tap, catchError, of, Subject } from 'rxjs';
 export class NotificationService {
   contactId = 0;
   notifications: Notification[] = [];
+  notificationsnew: Notification[] = [];
   dropdownVisible = false;
   unreadCount = 0;
   readCount = 0;
@@ -72,6 +73,40 @@ export class NotificationService {
       })
     );
   }
+  fetchUserNotificaetionsSpecific(
+    campaignId: any,
+    shoppingCenterId: any,
+    organizationId: any,
+    sourceUrl: any
+  ) {
+    const request = {
+      Name: 'EmilyChat',
+      Params: {
+        CampaignID: campaignId ?? null,
+        OrganizationId: organizationId ?? null,
+        ShoppingCenterId: shoppingCenterId ?? null,
+        SourceUrl: sourceUrl ?? null,
+      },
+    };
+
+    return this.placesService.GenericAPI(request).pipe(
+      tap((response: any) => {
+        const previousNotificationsnew = [...this.notifications];
+        this.notificationsnew = (response.json || []) as Notification[];
+        this.sortNotificationsByDate();
+
+        if (this.isChatOpen) {
+          this.handleNewMessagesWhileChatOpen(previousNotificationsnew);
+        }
+
+        this.updateNotificationCounts();
+        this.newNotificationsCount = this.unreadCount;
+      }),
+      catchError((err) => {
+        return of(null); // prevent breaking the stream
+      })
+    );
+  }
 
   private handleNewMessagesWhileChatOpen(
     previousNotifications: Notification[]
@@ -105,7 +140,7 @@ export class NotificationService {
     const request = {
       Name: 'UpdateNotification',
       Params: {
-        NotificationId: notification.isEmilyChat?notification.id:null,
+        NotificationId: notification.isEmilyChat ? notification.id : null,
       },
     };
 
@@ -140,7 +175,7 @@ export class NotificationService {
 
   markAllAsRead(): void {
     const unreadNotifications = this.notifications.filter(
-      (n) => n.isRead === false &&n.isEmilyChat === true
+      (n) => n.isRead === false && n.isEmilyChat === true
     );
 
     unreadNotifications.forEach((notification) => {
