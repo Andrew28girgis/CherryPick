@@ -171,11 +171,13 @@ export class FloatingChatNotificationsComponent
         const url = e.urlAfterRedirects || e.url;
         this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
-      this.notificationService
-      .fetchUserNotificaetionsSpecific(   this.campaignId,
+    this.notificationService
+      .fetchUserNotificaetionsSpecific(
+        this.campaignId,
         this.shoppingCenterId,
         this.organizationId,
-        this.notificationSourceUrl)
+        this.notificationSourceUrl
+      )
       .subscribe(() => {
         this.previousNotificationsLength =
           this.notificationService.notificationsnew.length;
@@ -183,40 +185,49 @@ export class FloatingChatNotificationsComponent
         this.scrollToBottom();
       });
 
+      if(this.notificationService.notificationsnew.length!=0){
+if( this.campaignId ||this.shoppingCenterId|| this.organizationId|| this.contactId){
+  this.notificationSourceUrl=null
+}
+    const poll = () => {
+      this.wasSticky = this.isAtBottom();
+      const prevLength = this.notificationService.notificationsnew.length;
 
-       const poll = () => {
-        this.wasSticky = this.isAtBottom();
-        const prevLength = this.notificationService.notificationsnew.length;
+      this.notificationService
+        .fetchUserNotificaetionsSpecific(
+          this.campaignId,
+          this.shoppingCenterId,
+          this.organizationId,
+          this.notificationSourceUrl
+        )
+        .subscribe({
+          complete: () => {
+            const newLength = this.notificationService.notificationsnew.length;
+            const diff = newLength - prevLength;
 
-        this.notificationService
-          .fetchUserNotificaetionsSpecific(
-            this.campaignId,
-            this.shoppingCenterId,
-            this.organizationId,
-            this.notificationSourceUrl
-          )
-          .subscribe({
-            complete: () => {
-              const newLength = this.notificationService.notificationsnew.length;
-              const diff = newLength - prevLength;
+            if (diff > 0) {
+              const newMessages =
+                this.notificationService.notificationsnew.slice(-diff);
+              this.checkForShoppingCentersReply(newMessages);
+              this.onNewMessagesArrived(diff);
+            }
 
-              if (diff > 0) {
-                const newMessages =
-                  this.notificationService.notificationsnew.slice(-diff);
-                this.checkForShoppingCentersReply(newMessages);
-                this.onNewMessagesArrived(diff);
-              }
+            this.previousNotificationsLength = newLength;
+            this.sortNotificationsByDateAsc();
+            this.scanTrigger$.next();
 
-              this.previousNotificationsLength = newLength;
-              this.sortNotificationsByDateAsc();
-              this.scanTrigger$.next();
+            setTimeout(poll, 2000);
+          },
+        });
+    };
 
-              setTimeout(poll, 2000);
-            },
-          });
-      };
-      poll();
- 
+    poll();
+      }
+      else {
+this.notificationSourceUrl=this.notificationService.notifications[this.notificationService.notifications.length-1].sourceUrl;
+this.conversationId=this.notificationService.notifications[this.notificationService.notifications.length-1].emilyConversationCategoryId;
+      }
+
     this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(() => {
       this.scanAndOpenOverlayForHtml();
       this.scanForShowMap();
@@ -1300,7 +1311,12 @@ export class FloatingChatNotificationsComponent
   clearEmilyChat() {
     const request = {
       Name: 'DeleteEmilyChat',
-      Params: {},
+      Params: {
+        CampaignId: this.campaignId,
+        ShoppingCenterId: this.shoppingCenterId,
+        OrganizationId: this.organizationId,
+        SourceUrl: this.notificationSourceUrl,
+      },
     };
 
     this.placesService.GenericAPI(request).subscribe({
