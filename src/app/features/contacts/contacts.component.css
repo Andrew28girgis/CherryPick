@@ -157,7 +157,7 @@
   box-sizing: border-box;
   gap: 12px;
   overflow-x: auto;
-  padding: 12px 0;
+  padding: 30px 0;
 }
 .organization-card .row.w-100 > .col-md-4 {
   padding-left: 0 !important;
@@ -862,8 +862,6 @@
   font-size: 14px;
 }
 
- 
-
 /* ===========================
       RESPONSIVE
       =========================== */
@@ -1018,7 +1016,6 @@
   cursor: auto;
 }
 @media (max-width: 768px) {
- 
   .organization-card {
     width: 90vw !important;
   }
@@ -1045,6 +1042,11 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   z-index: 10;
+}
+.contact-btne {
+  font-size: 9px;
+  white-space: nowrap;
+  right: 20px;
 }
 
 .emily-button:hover {

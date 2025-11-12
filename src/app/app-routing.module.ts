@@ -26,6 +26,7 @@ import { Tree2Component } from './features/tree2/tree2.component';
 import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component';
 import { NotificationViewComponent } from './shared/components/notifications/notification-view/notification-view.component';
 import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.component';
+import { FloatingChatNotificationsComponent } from './shared/components/floating-chat-notifications/floating-chat-notifications.component';
 
  const routes: Routes = [
   {
@@ -288,7 +289,7 @@ import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.co
   },
   {
     path: 'chatbot',
-    component: NotificationsComponent,
+    component: FloatingChatNotificationsComponent,
   },
   { path: 'emily-chatsbot', component: NotificationsComponent },
   {

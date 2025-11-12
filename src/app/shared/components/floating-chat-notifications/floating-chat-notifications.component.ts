@@ -140,8 +140,7 @@ export class FloatingChatNotificationsComponent
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: NgbModal,
-    public activeModal: NgbActiveModal,
-    private refreshService: RefreshService,
+     private refreshService: RefreshService,
     private chatModal: ChatModalService
   ) {}
 
@@ -266,10 +265,7 @@ export class FloatingChatNotificationsComponent
     this.mo?.disconnect();
     this.ro?.disconnect();
   }
-
-  closePopup(): void {
-    this.activeModal.close();
-  }
+ 
 openOverlayModal(notification: any) {
   // just open the modal — don't set overlayHtml here
   this.overlayModalRef = this.modalService.open(this.overlayModal, {

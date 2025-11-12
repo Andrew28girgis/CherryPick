@@ -518,6 +518,15 @@
                       {{ campaign.CampaignName }} /
                       {{ campaign.OrganizationName }}
                     </div>
+                      
+        <div
+        (click)="editWithEMily(campaign)"
+        class="emily-button emily-button-table"
+        aria-label="Ask Emily about campaign"
+      >
+        <span class="emily-dot"></span>
+        Ask Emily About Campaign
+      </div>
                     <div
                       class="date justify-content-between gap-1 w-100"
                       style="display: flex; align-items: center"

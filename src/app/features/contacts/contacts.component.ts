@@ -350,10 +350,9 @@ export class ContactsComponent implements OnInit {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   editWithEMily(org: any): void {
-    console.log('fgffffff');
-    
+     
     const body: any = {
-      Chat: 'edit Orgnaization with emily',
+      Chat: 'edit this Orgnaization with emily',
       OrganizationId: org.id,
       ConversationId: 4,
     };
@@ -361,4 +360,17 @@ export class ContactsComponent implements OnInit {
     this.chatModal.openForButton();
     this.chatModal.setOrganizationId(org.id, 4);
   }
+  editContactWithEMily(contact: any): void {
+     
+    const body: any = {
+      Chat: 'edit this Contact with emily',
+      OrganizationId: contact.id,
+      ConversationId: 5,
+    };
+    this.PlacesService.sendmessages(body).subscribe({});
+    this.chatModal.openForButton();
+    this.chatModal.setOrganizationId(contact.id, 5);
+  }
+
+  
 }

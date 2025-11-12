@@ -707,7 +707,7 @@ img[alt="logo"] {
 
 .cards-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
   gap: 40px;
   align-items: stretch;
 }
@@ -1125,7 +1125,7 @@ table tbody td {
 }
 
 .plus-icon:hover {
-  background: #f1e9d7;
+  background: var(--Colors-Primary-200);
 }
 
 .actions-cell {
@@ -1167,7 +1167,7 @@ table tbody td {
   right: 16px;
 }
 .score {
-  background: var(--Colors-Primary-300);
+  background: var(--Colors-Primary-light);
   color: var(--app-color);
   width: fit-content;
   position: absolute;
@@ -1183,7 +1183,7 @@ table tbody td {
 }
 
 .score:hover {
-  background: var(--Colors-Primary-light) !important;
+  background: var(--Colors-Primary-200) !important;
   cursor: pointer;
 }
 
@@ -1411,4 +1411,8 @@ table tbody td {
   border-radius: 50%;
   background-color: currentColor;
   display: inline-block;
+}
+.stat-bars > span {
+  background: var(--app-color);
+
 }
