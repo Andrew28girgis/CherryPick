@@ -1194,27 +1194,7 @@ tr.click-disabled td:last-child * {
     padding: 12px 14px;
     font-size: 14px;
   }
-}
-
-.title {
-  font-size: 27px;
-  font-weight: 600;
-  color: var(--app-color);
-  margin: 10px 0;
-}
-.title-div {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-}
-.title::after {
-  content: "";
-  display: block;
-  width: 70%; /* adjust line length */
-  height: 2px; /* line thickness */
-  background-color: var(--Colors-Primary-500); /* line color */
-  margin-top: 6px; /* space between text and line */
-}
+} 
 .add-badge {
   position: absolute;
   bottom: 12px;
@@ -1777,12 +1757,7 @@ tr.click-disabled td:last-child * {
   }
 }
 @media (max-width: 768px) {
-  .title-div {
-    justify-content: center;
-  }
-  .title::after {
-    width: auto;
-  }
+ 
   .g-button {
     width: 48px;
     height: 48px;

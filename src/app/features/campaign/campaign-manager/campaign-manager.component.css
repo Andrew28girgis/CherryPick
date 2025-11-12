@@ -960,25 +960,6 @@
   cursor: pointer;
 }
 
-.title {
-  font-size: 27px;
-  font-weight: 600;
-  color: var(--app-color);
-  margin: 10px 0;
-}
-.title-div {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-}
-.title::after {
-  content: "";
-  display: block;
-  width: 70%;
-  height: 2px;
-  background-color: var(--Colors-Primary-500);
-  margin-top: 6px;
-}
 .org-logo {
   width: 56px;
   height: 56px;
@@ -1512,12 +1493,7 @@
     overflow: visible;
     width: auto;
   }
-  .title-div {
-    justify-content: center;
-  }
-  .title::after {
-    width: auto;
-  }
+ 
   .stepper {
     gap: 2px;
   }
