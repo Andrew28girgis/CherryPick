@@ -2,10 +2,10 @@
 @import "primeng/resources/primeng.css";
 
 :root {
-  --app-color: #14303a;
   --app-font: "Poppins", sans-serif;
+  --app-color: #252c35;
   --Colors-Primary-500: #252c35;
-  --Colors-Primary-400: #3d444c ;
+  --Colors-Primary-400: #3d444c;
   --Colors-Primary-300: #868a8f;
   --Colors-Primary-200: #cfd0d2;
   --Colors-Primary-hover: #000;
@@ -436,7 +436,7 @@ a {
 }
 
 .title {
-  font-size: 27px;
+  font-size: 22px;
   font-weight: 600;
   color: var(--app-color);
   margin: 10px 0;

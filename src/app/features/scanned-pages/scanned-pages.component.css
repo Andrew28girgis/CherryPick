@@ -207,7 +207,7 @@
 }
 
 .table a {
-  color: #2563eb;
+  color: var(--Colors-Primary-500);
   text-decoration: none;
   word-break: break-all;
   font-weight: 500;
