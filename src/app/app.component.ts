@@ -13,8 +13,8 @@ export class AppComponent implements OnInit {
   isEmilyChatBot = false;
   hideSidebar = false;
   showingTransition = false;
-  overlayActive = false; 
-  campaignId: any; 
+  overlayActive = false;
+  campaignId: any;
   shouldShowSidebar = true;
   constructor(
     private placeService: PlacesService,
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
     if (apiMode && JSON.parse(apiMode)) {
       this.placeService.setAppMode('api');
     }
-  } 
+  }
 
   get isAuthenticated(): boolean {
     return this.authService.isLoggedInToday();
@@ -45,5 +45,4 @@ export class AppComponent implements OnInit {
       'overlay-active': this.overlayActive,
     };
   }
-
 }
