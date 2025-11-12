@@ -177,26 +177,7 @@
   background-color: #e2e6ea;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
-
-.title {
-  font-size: 27px;
-  font-weight: 600;
-  color: var(--app-color);
-  margin: 10px 0;
-}
-.title-div {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-}
-.title::after {
-  content: "";
-  display: block;
-  width: 70%; /* adjust line length */
-  height: 2px; /* line thickness */
-  background-color: var(--Colors-Primary-500); /* line color */
-  margin-top: 6px; /* space between text and line */
-}
+ 
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -216,13 +197,7 @@
 }
 
 @media (max-width: 768px) {
-  
-  .title-div {
-    justify-content: center;
-  }
-  .title::after {
-    width: auto ;
-  }
+ 
   .offcanvas-panel-class {
     width: 80% !important;
   }

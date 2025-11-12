@@ -862,28 +862,7 @@
   font-size: 14px;
 }
 
-/* ===========================
-      PAGE TITLE (kept)
-      =========================== */
-.title {
-  font-size: 27px;
-  font-weight: 600;
-  color: var(--app-color);
-  margin: 10px 0;
-}
-.title-div {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-}
-.title::after {
-  content: "";
-  display: block;
-  width: 70%;
-  height: 2px;
-  background-color: var(--Colors-Primary-500);
-  margin-top: 6px;
-}
+ 
 
 /* ===========================
       RESPONSIVE
@@ -1039,12 +1018,7 @@
   cursor: auto;
 }
 @media (max-width: 768px) {
-  .title-div {
-    justify-content: center;
-  }
-  .title::after {
-    width: auto;
-  }
+ 
   .organization-card {
     width: 90vw !important;
   }
