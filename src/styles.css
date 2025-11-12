@@ -1,8 +1,7 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
-:root {
-  --app-color: #14303a;
+:root { 
   --app-font: "Poppins", sans-serif;
   --Colors-Primary-500: #252c35;
   --Colors-Primary-400: #3d444c ;
@@ -435,7 +434,7 @@ a {
 }
 
 .title {
-  font-size: 27px;
+  font-size: 22px;
   font-weight: 600;
   color: var(--app-color);
   margin: 10px 0;

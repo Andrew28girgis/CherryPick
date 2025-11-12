@@ -1721,7 +1721,6 @@
 .json-block {
   background: #fff;
   color: var(--Colors-Primary-500);
-  font-family: monospace;
   padding: 10px;
   border-radius: 6px;
   white-space: pre-wrap;
@@ -1732,7 +1731,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: monospace;
   font-size: 13px;
   background: #f9f9f9;
   border-radius: 6px;
