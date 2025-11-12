@@ -1370,9 +1370,7 @@ export class FloatingChatNotificationsComponent
       this.closeSide();
     } else {
       this.closeOverlayContent();
-      this.overlayModalRef.close();
-      this.notificationService.setChatOpen(false);
-      this.isOpen = false;
+   
     }
     this.closeOverlayContent();
 
