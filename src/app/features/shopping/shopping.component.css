@@ -1240,7 +1240,7 @@ tr.click-disabled td:last-child * {
 }
 
 .campaign-card:hover {
-  border-color: var(--Colors-Primary-400);
+  border-color: var(--Colors-Primary-light);
   transform: translateY(-2px);
 }
 
@@ -1490,9 +1490,9 @@ tr.click-disabled td:last-child * {
   transition: background 0.2s ease, transform 0.1s ease;
 }
 .date {
-  background: var(--Colors-Primary-400);
+  background: var(--Colors-Primary-light);
   color: var(--app-color);
-  top: 10px;
+  top: 20px;
   left: 10px;
 
   display: inline-block;
@@ -1565,7 +1565,7 @@ tr.click-disabled td:last-child * {
 
 .info-badge {
   background-color: var(--app-color);
-  color: var(--Colors-Primary-500);
+  color: var(--Colors-Primary-light);
   padding: 8px 16px;
   border-radius: 24px;
   border: none;
@@ -1641,7 +1641,7 @@ tr.click-disabled td:last-child * {
   width: fit-content;
   height: 40px;
   background: #102e50;
-  color: var(--Colors-Primary-300);
+  color: var(--Colors-Primary-light);
   border-radius: 24px;
   top: -32px;
   left: 19px;
@@ -1649,81 +1649,7 @@ tr.click-disabled td:last-child * {
 .auto-stat {
   color: var(--Colors-Primary-300) !important;
 }
-
-/* micro bar-chart loader */
-.stat-bars {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 3px;
-  width: 36px;
-  height: 16px;
-  margin-left: 10px;
-}
-
-.stat-bars > span {
-  width: 4px;
-  height: 40%;
-  background: var(--Colors-Primary-500);
-  border-radius: 2px;
-  transform-origin: bottom;
-  animation: barPulse 1s ease-in-out infinite;
-  opacity: 0.9;
-}
-
-.stat-bars > span:nth-child(1) {
-  animation-duration: 900ms;
-  animation-delay: 0ms;
-}
-.stat-bars > span:nth-child(2) {
-  animation-duration: 1050ms;
-  animation-delay: 80ms;
-}
-.stat-bars > span:nth-child(3) {
-  animation-duration: 950ms;
-  animation-delay: 160ms;
-}
-.stat-bars > span:nth-child(4) {
-  animation-duration: 1100ms;
-  animation-delay: 240ms;
-}
-.stat-bars > span:nth-child(5) {
-  animation-duration: 980ms;
-  animation-delay: 320ms;
-}
-.stat-bars > span:nth-child(6) {
-  animation-duration: 1020ms;
-  animation-delay: 400ms;
-}
-
-@keyframes barPulse {
-  0% {
-    transform: scaleY(0.35);
-    opacity: 0.6;
-  }
-  25% {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scaleY(0.5);
-    opacity: 0.8;
-  }
-  75% {
-    transform: scaleY(0.9);
-    opacity: 0.95;
-  }
-  100% {
-    transform: scaleY(0.35);
-    opacity: 0.6;
-  }
-}
-
-/* motion safety */
-@media (prefers-reduced-motion: reduce) {
-  .stat-bars > span {
-    animation: none;
-  }
-}
+  
 
 .enriching-card {
   position: relative;
