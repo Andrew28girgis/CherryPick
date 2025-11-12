@@ -839,7 +839,7 @@ label {
   width: fit-content;
   height: 40px;
   background: #102e50;
-  color: var(--Colors-Primary-300);
+  color: var(--Colors-Primary-light);
   border-radius: 24px;
   top: -32px;
   right: 12px;
@@ -974,82 +974,7 @@ table tbody td {
   padding-left: 5px;
   gap: 12px;
   color: var(--Colors-Primary-500); /* accent color */
-}
-/* micro bar-chart loader */
-.stat-bars {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 3px;
-  width: 36px;
-  height: 16px;
-  margin-left: 10px;
-}
-
-.stat-bars > span {
-  width: 4px;
-  height: 40%;
-  background: var(--Colors-Primary-500);
-  border-radius: 2px;
-  transform-origin: bottom;
-  animation: barPulse 1s ease-in-out infinite;
-  opacity: 0.9;
-}
-
-.stat-bars > span:nth-child(1) {
-  animation-duration: 900ms;
-  animation-delay: 0ms;
-}
-.stat-bars > span:nth-child(2) {
-  animation-duration: 1050ms;
-  animation-delay: 80ms;
-}
-.stat-bars > span:nth-child(3) {
-  animation-duration: 950ms;
-  animation-delay: 160ms;
-}
-.stat-bars > span:nth-child(4) {
-  animation-duration: 1100ms;
-  animation-delay: 240ms;
-}
-.stat-bars > span:nth-child(5) {
-  animation-duration: 980ms;
-  animation-delay: 320ms;
-}
-.stat-bars > span:nth-child(6) {
-  animation-duration: 1020ms;
-  animation-delay: 400ms;
-}
-
-@keyframes barPulse {
-  0% {
-    transform: scaleY(0.35);
-    opacity: 0.6;
-  }
-  25% {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scaleY(0.5);
-    opacity: 0.8;
-  }
-  75% {
-    transform: scaleY(0.9);
-    opacity: 0.95;
-  }
-  100% {
-    transform: scaleY(0.35);
-    opacity: 0.6;
-  }
-}
-
-/* motion safety */
-@media (prefers-reduced-motion: reduce) {
-  .stat-bars > span {
-    animation: none;
-  }
-}
-
+} 
 /* full cover white surface */
 .score-placeholder {
   position: absolute;
@@ -1362,51 +1287,7 @@ table tbody td {
 }
 .card-click-area.click-disabled {
   pointer-events: none;
-}
-/* micro bar-chart loader */
-.stat-bars {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 3px;
-  width: 36px;
-  height: 16px;
-  margin-left: 10px;
-}
-
-.stat-bars > span {
-  width: 4px;
-  height: 40%;
-  background: var(--Colors-Primary-500);
-  border-radius: 2px;
-  transform-origin: bottom;
-  animation: barPulse 1s ease-in-out infinite;
-  opacity: 0.9;
-}
-
-.stat-bars > span:nth-child(1) {
-  animation-duration: 900ms;
-  animation-delay: 0ms;
-}
-.stat-bars > span:nth-child(2) {
-  animation-duration: 1050ms;
-  animation-delay: 80ms;
-}
-.stat-bars > span:nth-child(3) {
-  animation-duration: 950ms;
-  animation-delay: 160ms;
-}
-.stat-bars > span:nth-child(4) {
-  animation-duration: 1100ms;
-  animation-delay: 240ms;
-}
-.stat-bars > span:nth-child(5) {
-  animation-duration: 980ms;
-  animation-delay: 320ms;
-}
-.stat-bars > span:nth-child(6) {
-  animation-duration: 1020ms;
-  animation-delay: 400ms;
-}
+} 
 .opened-menu,
 .opened-stage {
   z-index: 4;
