@@ -236,7 +236,6 @@ export class FloatingChatNotificationsComponent
     this.ro?.disconnect();
   }
 openOverlayModal(notification: any) {
-  // 1️⃣ Prepare HTML content
   this.loadNotificationViewComponent(notification);
 
   const fabEl = this.chatModal['fabEl'] as HTMLElement;
@@ -245,7 +244,6 @@ openOverlayModal(notification: any) {
     return;
   }
 
-  // 2️⃣ Toggle: if already open, close and restore FAB
   const existingPanel = document.querySelector('.chat-details-panel');
   if (existingPanel) {
     existingPanel.remove();
@@ -254,11 +252,10 @@ openOverlayModal(notification: any) {
     fabEl.style.left = '';
     fabEl.style.bottom = '';
     fabEl.style.position = 'fixed';
-    fabEl.style.transform = ''; // reset
+    fabEl.style.transform = '';
     return;
   }
 
-  // 3️⃣ Move FAB to the top-right corner (visible, clickable)
   fabEl.style.position = 'fixed';
   fabEl.style.top = '16px';
   fabEl.style.right = '24px';
@@ -267,18 +264,16 @@ openOverlayModal(notification: any) {
   fabEl.style.zIndex = '100001';
   fabEl.style.transition = 'all 0.3s ease';
 
-  // 4️⃣ Position the chat modal beside the FAB (vertically aligned)
   const chatDialog = document.querySelector('.dynamic-position') as HTMLElement;
   if (!chatDialog) return;
 
   const chatWidth = 420;
   const margin = 16;
-  const top = 80; // just below FAB
+  const top = 80; 
   const left = window.innerWidth - chatWidth - margin;
   chatDialog.style.top = `${top}px`;
   chatDialog.style.left = `${left}px`;
 
-  // 5️⃣ Create details panel beside chat (to the LEFT)
   const chatRect = chatDialog.getBoundingClientRect();
   const detailsPanel = document.createElement('div');
   detailsPanel.classList.add('chat-details-panel');
@@ -302,7 +297,6 @@ openOverlayModal(notification: any) {
   detailsPanel.style.zIndex = '100000';
   detailsPanel.style.animation = 'popIn 0.25s ease forwards';
 
-  // 6️⃣ Add close behavior
   const closeOverlay = () => {
     detailsPanel.remove();
     fabEl.style.top = '';
@@ -317,7 +311,6 @@ openOverlayModal(notification: any) {
     .querySelector('.chat-details-close')
     ?.addEventListener('click', closeOverlay);
 
-  // Clicking FAB closes the overlay too
   fabEl.addEventListener('click', closeOverlay, { once: true });
 
   document.body.appendChild(detailsPanel);
