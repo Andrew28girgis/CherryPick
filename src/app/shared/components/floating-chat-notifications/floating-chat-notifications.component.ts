@@ -239,161 +239,88 @@ export class FloatingChatNotificationsComponent
     this.mo?.disconnect();
     this.ro?.disconnect();
   }
-openOverlayModal(notification: any) {
-  // 1️⃣ Load notification HTML
-  this.loadNotificationViewComponent(notification);
-  this.selectedNotification = notification;
+  openOverlayModal(notification: any) {
+    this.loadNotificationViewComponent(notification);
 
-  const fabEl = this.chatModal['fabEl'] as HTMLElement;
-  if (!fabEl) return;
+    const fabEl = this.chatModal['fabEl'] as HTMLElement;
+    if (!fabEl) {
+      console.warn('Floating chat button not found');
+      return;
+    }
 
-  // 2️⃣ Toggle overlay (close if already open)
-  const existingPanel = document.querySelector('.chat-details-panel');
-  if (existingPanel) {
-    existingPanel.remove();
-    this.chatModal.enableFabDrag(); // ✅ re-enable dragging when closed
-    return;
-  }
+    const existingPanel = document.querySelector('.chat-details-panel');
+    if (existingPanel) {
+      existingPanel.remove();
+      fabEl.style.top = '';
+      fabEl.style.right = '';
+      fabEl.style.left = '';
+      fabEl.style.bottom = '';
+      fabEl.style.position = 'fixed';
+      fabEl.style.transform = '';
+      return;
+    }
 
-  // 🔒 3️⃣ Disable dragging completely while overlay is open
-  this.chatModal.disableFabDrag();
+    fabEl.style.position = 'fixed';
+    fabEl.style.top = '16px';
+    fabEl.style.right = '24px';
+    fabEl.style.left = 'auto';
+    fabEl.style.bottom = 'auto';
+    fabEl.style.zIndex = '100001';
+    fabEl.style.transition = 'all 0.3s ease';
 
-  const chatDialog = document.querySelector('.dynamic-position') as HTMLElement;
-  if (!chatDialog) return;
-  const chatRect = chatDialog.getBoundingClientRect();
-  const fabRect = fabEl.getBoundingClientRect();
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const margin = 24;
+    const chatDialog = document.querySelector(
+      '.dynamic-position'
+    ) as HTMLElement;
+    if (!chatDialog) return;
 
-  // 4️⃣ Detect available space and determine which side to move chat
-  const leftSpace = chatRect.left - margin;
-  const rightSpace = vw - chatRect.right - margin;
-  const overlayMinWidth = 400; // min overlay space
+    const chatWidth = 420;
+    const margin = 16;
+    const top = 80;
+    const left = window.innerWidth - chatWidth - margin;
+    chatDialog.style.top = `${top}px`;
+    chatDialog.style.left = `${left}px`;
 
-  let moveToSide: 'left' | 'right';
-
-  if (leftSpace >= overlayMinWidth && rightSpace >= overlayMinWidth) {
-    // both sides okay, pick the side with more space for overlay
-    moveToSide = leftSpace < rightSpace ? 'right' : 'left';
-  } else if (leftSpace >= overlayMinWidth) {
-    moveToSide = 'right';
-  } else if (rightSpace >= overlayMinWidth) {
-    moveToSide = 'left';
-  } else {
-    // not enough space on either side, default to right
-    moveToSide = 'right';
-  }
-
-  // 5️⃣ Animate chat modal and FAB to chosen side
-  const chatWidth = chatRect.width;
-  const chatHeight = chatRect.height;
-  const targetTop = vh / 2 - chatHeight / 2;
-
-  chatDialog.style.transition = 'left 0.3s ease, top 0.3s ease';
-  fabEl.style.transition = 'left 0.3s ease, top 0.3s ease';
-
-  if (moveToSide === 'right') {
-    // move chat modal to right side
-    const chatLeft = vw - chatWidth - margin;
-    chatDialog.style.left = `${chatLeft}px`;
-    chatDialog.style.top = `${targetTop}px`;
-
-    // place FAB slightly to left of modal
-    fabEl.style.left = `${chatLeft - fabRect.width - 12}px`;
-    fabEl.style.top = `${targetTop + chatHeight / 2 - fabRect.height / 2}px`;
-  } else {
-    // move chat modal to left side
-    const chatLeft = margin;
-    chatDialog.style.left = `${chatLeft}px`;
-    chatDialog.style.top = `${targetTop}px`;
-
-    // place FAB slightly to right of modal
-    fabEl.style.left = `${chatLeft + chatWidth + 12}px`;
-    fabEl.style.top = `${targetTop + chatHeight / 2 - fabRect.height / 2}px`;
-  }
-
-  // 6️⃣ Build overlay content
-  const panel = document.createElement('div');
-  panel.classList.add('chat-details-panel');
-  panel.innerHTML = `
-    <div class="modal-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-      <h4 class="modal-title mb-0">Details</h4>
-      <div class="d-flex align-items-center gap-2">
-        <input
-          type="text"
-          id="pdfTitleInput"
-          value="${this.pdfTitle || ''}"
-          placeholder="Enter Title"
-          class="form-control form-control-sm"
-          style="width: 180px"
-        />
-        <button id="saveTitleBtn" class="btn btn-sm btn-success title-btn">Save Title</button>
-        <button id="savePdfBtn" class="btn btn-sm btn-outline-primary save-pdf-btn">📄 Save PDF</button>
-        <button type="button" class="btn-close" aria-label="Close" id="closeOverlayBtn"></button>
-      </div>
+    const chatRect = chatDialog.getBoundingClientRect();
+    const detailsPanel = document.createElement('div');
+    detailsPanel.classList.add('chat-details-panel');
+    detailsPanel.innerHTML = `
+    <div class="chat-details-header">
+      <h4>Details</h4>
+      <button class="chat-details-close">×</button>
     </div>
-    <div class="modal-body p-0">
-      <section class="overlay-left-modal">
-        <div id="contentToDownload" class="overlay-content p-0">
-          <div>${this.overlayHtml || ''}</div>
-        </div>
-      </section>
-      <div class="save-div" id="saveDiv"></div>
-    </div>
+    <div class="chat-details-body">${this.overlayHtml || ''}</div>
   `;
 
-  // 7️⃣ Position overlay opposite to chat modal
-  const newChatRect = chatDialog.getBoundingClientRect();
+    detailsPanel.style.position = 'fixed';
+    detailsPanel.style.top = `${chatRect.top}px`;
+    detailsPanel.style.left = `${16}px`;
+    detailsPanel.style.width = `${chatRect.left - 32}px`;
+    detailsPanel.style.height = `${chatRect.height}px`;
+    detailsPanel.style.background = '#fff';
+    detailsPanel.style.borderRadius = '8px';
+    detailsPanel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+    detailsPanel.style.overflowY = 'auto';
+    detailsPanel.style.zIndex = '100000';
+    detailsPanel.style.animation = 'popIn 0.25s ease forwards';
 
-  panel.style.position = 'fixed';
-  panel.style.top = `${newChatRect.top}px`;
-  panel.style.height = `${newChatRect.height}px`;
-  panel.style.background = '#fff';
-  panel.style.borderRadius = '8px';
-  panel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
-  panel.style.overflowY = 'auto';
-  panel.style.zIndex = '100000';
-  panel.style.animation = 'popIn 0.25s ease forwards';
+    const closeOverlay = () => {
+      detailsPanel.remove();
+      fabEl.style.top = '';
+      fabEl.style.right = '';
+      fabEl.style.left = '';
+      fabEl.style.bottom = '';
+      fabEl.style.position = 'fixed';
+      fabEl.style.transition = '';
+    };
 
-  if (moveToSide === 'right') {
-    // Chat is on right → overlay on left
-    panel.style.left = `${margin}px`;
-    panel.style.width = `${newChatRect.left - margin * 2}px`;
-  } else {
-    // Chat is on left → overlay on right
-    panel.style.left = `${newChatRect.right + margin}px`;
-    panel.style.width = `${vw - newChatRect.right - margin * 2}px`;
+    detailsPanel
+      .querySelector('.chat-details-close')
+      ?.addEventListener('click', closeOverlay);
+
+    fabEl.addEventListener('click', closeOverlay, { once: true });
+
+    document.body.appendChild(detailsPanel);
   }
-
-  document.body.appendChild(panel);
-
-  // 8️⃣ Hook up overlay buttons
-  const input = panel.querySelector('#pdfTitleInput') as HTMLInputElement;
-  const saveTitleBtn = panel.querySelector('#saveTitleBtn') as HTMLButtonElement;
-  const savePdfBtn = panel.querySelector('#savePdfBtn') as HTMLButtonElement;
-  const closeBtn = panel.querySelector('#closeOverlayBtn') as HTMLButtonElement;
-
-  saveTitleBtn.addEventListener('click', () => {
-    this.pdfTitle = input.value.trim();
-    if (!this.pdfTitle) return alert('Please enter a title.');
-    this.saveTitleInNotification();
-  });
-
-  savePdfBtn.addEventListener('click', () => {
-    const container = panel.querySelector('#contentToDownload') as HTMLElement;
-    this.downloadPDF(container);
-  });
-
-  // 9️⃣ Close overlay → remove and re-enable drag
-  const closeOverlay = () => {
-    panel.remove();
-    this.chatModal.enableFabDrag(); // ✅ enable dragging again
-  };
-
-  closeBtn.addEventListener('click', closeOverlay);
-  fabEl.addEventListener('click', closeOverlay, { once: true });
-}
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
@@ -813,7 +740,7 @@ openOverlayModal(notification: any) {
     // 🔹 Filter notifications to include only Emily chat messages
     const emilyNotifications = (
       this.notificationService?.notificationsnew ?? []
-    ).filter((n) => n.isEmilyChat === true);
+    ).filter((n) => n.isEmilyChat === true && n.emilyConversationCategoryId);
 
     // 🔹 Map notifications to ChatItems
     const notificationItems: ChatItem[] = emilyNotifications.map((n) => ({
@@ -1413,12 +1340,14 @@ openOverlayModal(notification: any) {
     const request = {
       Name: 'DeleteEmilyChat',
       Params: {
-        CampaignId: this.campaignId??null,
-        ShoppingCenterId: this.shoppingCenterId??null,
-        OrganizationId: this.organizationId??null,
-        SourceUrl: this.notificationSourceUrl?this.notificationSourceUrl:this.notificationService.notifications[
-          this.notificationService.notifications.length - 1
-        ].sourceUrl??null,
+        CampaignId: this.campaignId ?? null,
+        ShoppingCenterId: this.shoppingCenterId ?? null,
+        OrganizationId: this.organizationId ?? null,
+        SourceUrl: this.notificationSourceUrl
+          ? this.notificationSourceUrl
+          : this.notificationService.notifications[
+              this.notificationService.notifications.length - 1
+            ].sourceUrl ?? null,
       },
     };
 
@@ -1445,6 +1374,7 @@ openOverlayModal(notification: any) {
       this.closeSide();
     } else {
       this.closeOverlayContent();
+   
     }
     this.closeOverlayContent();
 
@@ -1482,9 +1412,9 @@ openOverlayModal(notification: any) {
 
   private fetchSpecificNotifications(): void {
     if (
-      this.campaignId||
-      this.shoppingCenterId||
-      this.organizationId||
+      this.campaignId ||
+      this.shoppingCenterId ||
+      this.organizationId ||
       this.contactId
     ) {
       this.notificationSourceUrl = null;
