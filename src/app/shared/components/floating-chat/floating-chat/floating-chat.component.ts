@@ -92,7 +92,9 @@ export class FloatingChatComponent implements AfterViewInit {
   open(): void {
     if (this.hidden || this.wasDragged) return;
     this.chatModal.openForButton(this.fabBtn.nativeElement, this.campaignId);
-    if (typeof (this.notificationService as any).setUnreadCount === 'function') {
+    if (
+      typeof (this.notificationService as any).setUnreadCount === 'function'
+    ) {
       (this.notificationService as any).setUnreadCount(0);
     }
   }
