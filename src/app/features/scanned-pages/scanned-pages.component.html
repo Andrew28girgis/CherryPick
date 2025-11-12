@@ -38,7 +38,7 @@
         </button>
       </div>
 
-      <div class="view-toggle">
+      <!-- <div class="view-toggle">
         <button
           class="toggle-btn"
           (click)="toggleView('card')"
@@ -85,12 +85,12 @@
             <path d="M21 15H3" />
           </svg>
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 
   <!-- CARD VIEW -->
-  <div class="card-grid" *ngIf="viewMode === 'card'">
+  <!-- <div class="card-grid" *ngIf="viewMode === 'card'">
     <ng-container *ngFor="let item of filteredPages">
       <div
         class="scan-card"
@@ -118,7 +118,7 @@
         </div>
       </div>
     </ng-container>
-  </div>
+  </div> -->
 
   <!-- TABLE VIEW -->
   <div class="table-wrap" *ngIf="viewMode === 'table'">

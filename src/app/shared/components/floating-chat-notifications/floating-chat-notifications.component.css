@@ -600,19 +600,19 @@
 
 .close-button:hover {
   background: var(--Colors-Primary-hover);
-  transform: scale(1.05);
-}
+ }
 
-.close-button:active {
-  transform: scale(0.95);
-}
+ 
 
 .close-button svg {
   pointer-events: none; /* let clicks pass through to button */
 }
+
 .clear-button{
-  background-color: #ff6666 !important;
+  background-color: #ff3333 !important;
+  color: #fff !important;
 }
-.clear-button{
-  background-color: #ff6666 !important;
+.clear-button:hover{
+  background-color: #ff1a1a !important;
+  color: #fff !important;
 }
