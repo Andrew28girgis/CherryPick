@@ -225,10 +225,10 @@
         <div
           (click)="editWithEMily(org)"
           class="emily-button"
-          aria-label="Ask Emily about contact"
+          aria-label="Ask Emily about Organization"
         >
           <span class="emily-dot"></span>
-          Ask Emily About Contact
+          Ask Emily About Organization
         </div>
         <details
           class="organization-card"
@@ -294,7 +294,16 @@
           >
             <div class="row w-100" #contactsRow *ngIf="org.contacts.length > 0">
               <div class="col-md-4" *ngFor="let contact of org.contacts">
+                
                 <div class="contact-card" [class.flipped]="contact.flipped">
+                  <div
+                (click)="editContactWithEMily(contact)"
+                class="emily-button contact-btne"
+                aria-label="Ask Emily about contact"
+              >
+                <span class="emily-dot"></span>
+                Ask Emily About Contact
+              </div>
                   <div class="flip-inner">
                     <!-- Front -->
                     <div class="flip-front flex-row d-flex">
