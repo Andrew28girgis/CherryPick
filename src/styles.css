@@ -1,10 +1,10 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
-:root { 
+:root {
   --app-font: "Poppins", sans-serif;
   --Colors-Primary-500: #252c35;
-  --Colors-Primary-400: #3d444c ;
+  --Colors-Primary-400: #3d444c;
   --Colors-Primary-300: #868a8f;
   --Colors-Primary-hover: #000;
   --Colors-Primary-light: #e7e8e9;
