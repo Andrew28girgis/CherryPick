@@ -129,7 +129,9 @@ export class NotificationService {
           const token = localStorage.getItem('token') || '';
           (window as any).electronMessage.startChatAutmation(
             notification.contextExtendPrompt,
-            token
+            token,
+            notification.sourceUrl || '',
+            notification.emilyConversationCategoryId || 0
           );
         }
         this.markNotificationAsRead(notification);

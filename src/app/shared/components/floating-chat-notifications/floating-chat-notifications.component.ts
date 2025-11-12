@@ -736,7 +736,7 @@ export class FloatingChatNotificationsComponent
     // 🔹 Filter notifications to include only Emily chat messages
     const emilyNotifications = (
       this.notificationService?.notificationsnew ?? []
-    ).filter((n) => n.isEmilyChat === true);
+    ).filter((n) => n.isEmilyChat === true && n.emilyConversationCategoryId);
 
     // 🔹 Map notifications to ChatItems
     const notificationItems: ChatItem[] = emilyNotifications.map((n) => ({
@@ -1370,6 +1370,7 @@ export class FloatingChatNotificationsComponent
       this.closeSide();
     } else {
       this.closeOverlayContent();
+   
     }
     this.closeOverlayContent();
 
