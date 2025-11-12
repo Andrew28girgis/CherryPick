@@ -19,7 +19,7 @@ export class ScannedPagesComponent implements OnInit {
   scannedPages: ScanResult[] = [];
   filteredPages: ScanResult[] = [];
   viewMode: 'table' | 'card' = 'table';
-  filterStatus: 'all' | 'successed' | 'failed' | 'pending' = 'all';
+  filterStatus: 'all' | 'completed' | 'running' | 'pending'='all';
 
   constructor(private placeService: PlacesService) {}
 
@@ -47,8 +47,8 @@ export class ScannedPagesComponent implements OnInit {
     this.viewMode = mode;
   }
 
-  changeFilter(status: 'all' | 'successed' | 'failed' | 'pending') {
-    this.filterStatus = status;
+  changeFilter(status: 'all' | 'completed' | 'running' | 'pending') {
+     this.filterStatus = status;
     this.applyStatusFilter();
   }
 
@@ -58,9 +58,9 @@ export class ScannedPagesComponent implements OnInit {
         ? this.scannedPages
         : this.scannedPages.filter((p) => p.status === this.filterStatus);
   }
-  getsuccessedPagesCount(): number {
+  getcompletedPagesCount(): number {
     return this.scannedPages.filter(
-      (p) => p.status === 'successed' && p.sourceURL
+      (p) => p.status === 'completed' && p.sourceURL
     ).length;
   }
   getPendingPagesCount(): number {
@@ -68,8 +68,8 @@ export class ScannedPagesComponent implements OnInit {
       (p) => p.status === 'pending' && p.sourceURL
     ).length;
   }
-  getfailedPagesCount(): number {
-    return this.scannedPages.filter((p) => p.status === 'failed' && p.sourceURL)
+  getrunningPagesCount(): number {
+    return this.scannedPages.filter((p) => p.status === 'running' && p.sourceURL)
       .length;
   }
 

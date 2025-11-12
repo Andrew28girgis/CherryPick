@@ -21,24 +21,24 @@
           Pending
         </button>
         <button
-          (click)="changeFilter('successed')"
-          [class.active]="filterStatus === 'successed'"
-          class="successed-btn"
-          *ngIf="getsuccessedPagesCount() > 0"
+          (click)="changeFilter('completed')"
+          [class.active]="filterStatus === 'completed'"
+          class="completed-btn"
+          *ngIf="getcompletedPagesCount() > 0"
         >
-          Successed
+        Completed
         </button>
         <button
-          (click)="changeFilter('failed')"
-          [class.active]="filterStatus === 'failed'"
-          class="failed-btn"
-          *ngIf="getfailedPagesCount() > 0"
+          (click)="changeFilter('running')"
+          [class.active]="filterStatus === 'running'"
+          class="running-btn"
+          *ngIf="getrunningPagesCount() > 0"
         >
-          Failed
+        Running
         </button>
       </div>
 
-      <div class="view-toggle">
+      <!-- <div class="view-toggle">
         <button
           class="toggle-btn"
           (click)="toggleView('card')"
@@ -85,18 +85,18 @@
             <path d="M21 15H3" />
           </svg>
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 
   <!-- CARD VIEW -->
-  <div class="card-grid" *ngIf="viewMode === 'card'">
+  <!-- <div class="card-grid" *ngIf="viewMode === 'card'">
     <ng-container *ngFor="let item of filteredPages">
       <div
         class="scan-card"
         [ngClass]="{
-        success: item.status === 'successed',
-        failed: item.status === 'failed',
+        success: item.status === 'completed',
+        running: item.status === 'running',
         pending: item.status === 'pending',
       }"
         *ngIf="item.sourceURL"
@@ -109,8 +109,8 @@
         <div class="status">
           <span
             [ngClass]="{
-        ok: item.status === 'successed',
-        failed: item.status === 'failed',
+        ok: item.status === 'completed',
+        running: item.status === 'running',
         pending: item.status === 'pending',
       }"
             >{{ item.status }}</span
@@ -118,7 +118,7 @@
         </div>
       </div>
     </ng-container>
-  </div>
+  </div> -->
 
   <!-- TABLE VIEW -->
   <div class="table-wrap" *ngIf="viewMode === 'table'">
@@ -133,8 +133,8 @@
         <ng-container *ngFor="let item of filteredPages">
           <tr
             [ngClass]="{
-              success: item.status === 'successed',
-              failed: item.status === 'failed'
+              complete: item.status === 'completed',
+              running: item.status === 'running'
             }"
             *ngIf="item.sourceURL"
           >
@@ -146,8 +146,8 @@
             <td>
               <span
                 class="status-badge"
-                [class.success]="item.status === 'successed'"
-                [class.failed]="item.status === 'failed'"
+                [class.success]="item.status === 'completed'"
+                [class.running]="item.status === 'running'"
                 >{{ item.status }}</span
               >
             </td>

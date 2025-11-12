@@ -61,7 +61,23 @@
             [class.active]="viewMode === 'table'"
             (click)="toggleView('table')"
           >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table-properties-icon lucide-table-properties"><path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M21 9H3"/><path d="M21 15H3"/></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-table-properties-icon lucide-table-properties"
+            >
+              <path d="M15 3v18" />
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+              <path d="M21 9H3" />
+              <path d="M21 15H3" />
+            </svg>
           </button>
           <button
             class="toggle-btn"
@@ -86,7 +102,7 @@
             </svg>
           </button>
         </div>
-        <button class="g-button" (click)="openAddCampaign(addCampaign)"> 
+        <button class="g-button" (click)="openAddCampaign(addCampaign)">
           <span>Add Campaign</span>
         </button>
       </div>
@@ -205,15 +221,14 @@
           [class.click-disabled]="openMenuId === campaign.Id"
           [class.changed]="campaign.changed"
         >
-        
-        <div
-        (click)="editWithEMily(campaign)"
-        class="emily-button"
-        aria-label="Ask Emily about campaign"
-      >
-        <span class="emily-dot"></span>
-        Ask Emily About Campaign
-      </div>
+          <div
+            (click)="editWithEMily(campaign)"
+            class="emily-button"
+            aria-label=" Emily  "
+          >
+            <span class="emily-dot"></span>
+            Emily
+          </div>
           <div class="card-overlay">
             <div class="menu-wrapper" (click)="$event.stopPropagation()">
               <button
@@ -518,15 +533,15 @@
                       {{ campaign.CampaignName }} /
                       {{ campaign.OrganizationName }}
                     </div>
-                      
-        <div
-        (click)="editWithEMily(campaign)"
-        class="emily-button emily-button-table"
-        aria-label="Ask Emily about campaign"
-      >
-        <span class="emily-dot"></span>
-        Ask Emily About Campaign
-      </div>
+
+                    <div
+                      (click)="editWithEMily(campaign)"
+                      class="emily-button emily-button-table"
+                      aria-label=" Emily  "
+                    >
+                      <span class="emily-dot"></span>
+                      Emily
+                    </div>
                     <div
                       class="date justify-content-between gap-1 w-100"
                       style="display: flex; align-items: center"
