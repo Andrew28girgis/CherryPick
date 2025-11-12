@@ -582,3 +582,37 @@
 .emily-btn-danger:hover:not(:disabled) {
   background-color: #e0352b;
 }
+
+.close-button {
+  background: var(--Colors-Primary-500);
+  border: none;
+  border-radius: 50%; /* circular button */
+  width: 25px;
+  height: 25px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  color: #fff; /* icon color */
+  transition: background 0.25s, transform 0.2s;
+}
+
+.close-button:hover {
+  background: var(--Colors-Primary-hover);
+  transform: scale(1.05);
+}
+
+.close-button:active {
+  transform: scale(0.95);
+}
+
+.close-button svg {
+  pointer-events: none; /* let clicks pass through to button */
+}
+.clear-button{
+  background-color: #ff6666 !important;
+}
+.clear-button{
+  background-color: #ff6666 !important;
+}

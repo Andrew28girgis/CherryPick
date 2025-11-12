@@ -1306,4 +1306,32 @@ loadNotificationViewComponent(notification: Notification): void {
       },
     });
   }
+  closeAll(): void {
+    if (this.electronSideBar) {
+      this.closeSide();
+    } else {
+      this.closeOverlayContent();
+    }
+    this.closeOverlayContent();
+
+    if (this.isOverlayMode) {
+      this.isOverlayMode = false;
+      this.showingMap = false;
+      this.isOverlayhtml = false;
+      this.overlayHtml = '';
+
+      this.notificationService.setMapOpen(false);
+      this.notificationService.setOverlayWide(false);
+      this.notificationService.setHtmlOpen(false);
+
+      this.overlayStateChange.emit(false);
+      this.sidebarStateChange.emit({
+        isOpen: this.isOpen,
+        isFullyOpen: this.isOpen,
+        type: 'overlay',
+        overlayActive: false,
+      });
+    }
+  }
+
 }
