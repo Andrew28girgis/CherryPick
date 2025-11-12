@@ -1,8 +1,8 @@
 <div class="row mx-0">
-  <div class="col-2">
+  <div class="col-2" *ngIf="!isEmilyChatBot">
     <app-sidebar *ngIf="shouldShowSidebar && isAuthenticated"></app-sidebar>
   </div>
-  <div class="col-10 right-panel">
+  <div class="col-10 right-panel" [ngClass]="{'col-12 p-0': isEmilyChatBot}">
     <div class="app-container">
       <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
         <div class="main-content-area">
@@ -23,8 +23,16 @@
     </div>
 
     <app-floating-chat
-      *ngIf="isAuthenticated"
+      *ngIf="isAuthenticated &&!isEmilyChatBot"
       [campaignId]="campaignId"
     ></app-floating-chat>
   </div>
 </div>
+
+<!-- <app-notifications
+    *ngIf="shouldShowNotifications && !isMobile"
+    [campaignId]="campaignId"
+    [isChatbotRoute]="isChatbotRoute"
+    (overlayStateChange)="onOverlayStateChange($event)"
+    (sidebarStateChange)="onCopilotStateChange($event)"
+  ></app-notifications> -->
