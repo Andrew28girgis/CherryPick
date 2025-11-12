@@ -4,11 +4,11 @@
 :root {
   --app-color: #14303a;
   --app-font: "Poppins", sans-serif;
-  --Colors-Primary-500: #0d151f;
-  --Colors-Primary-400: #e7dabc;
-  --Colors-Primary-300: #f1e9d7;
-  --Colors-Primary-hover: #baa36d;
-  --Colors-Primary-light: #f5f0e4;
+  --Colors-Primary-500: #252c35;
+  --Colors-Primary-400: #3d444c ;
+  --Colors-Primary-300: #868a8f;
+  --Colors-Primary-hover: #000;
+  --Colors-Primary-light: #e7e8e9;
   --Colors-diffrent: #fffdf6;
   --Colors-Card-Background: #fff;
   --Colors-Pure-White: rgba(255, 255, 255, 1);

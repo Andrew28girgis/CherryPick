@@ -87,10 +87,9 @@
   position: relative;
 }
 
-/* .nav-item:hover {
-  background: var(--Colors-Primary-light);
-  color: var(--Colors-Primary-hover);
-} */
+.nav-item:hover {
+   color: var(--Colors-Primary-hover);
+}
 
 .nav-item.active {
   font-weight: 600;
@@ -271,9 +270,7 @@
   font-size: 14px;
   font-weight: 500;
 }
-.nav-label:hover {
-  color: #485363;
-}
+
 
 .fancy-title {
   font-weight: 600;
