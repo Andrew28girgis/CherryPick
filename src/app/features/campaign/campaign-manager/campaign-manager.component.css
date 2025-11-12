@@ -390,9 +390,7 @@
 
 .table-inner {
   border-radius: var(--Radius-R-20);
-  background: var(--Colors-Card-Background);
-  backdrop-filter: blur(20px);
-  padding: var(--Space-S-20);
+  background: var(--Colors-Card-Background); 
 }
 
 .table thead th {
