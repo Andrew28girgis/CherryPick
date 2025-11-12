@@ -185,48 +185,100 @@ export class FloatingChatNotificationsComponent
         this.scrollToBottom();
       });
 
-      if(this.notificationService.notificationsnew.length!=0){
-if( this.campaignId ||this.shoppingCenterId|| this.organizationId|| this.contactId){
-  this.notificationSourceUrl=null
-}
-    const poll = () => {
-      this.wasSticky = this.isAtBottom();
-      const prevLength = this.notificationService.notificationsnew.length;
+    if (this.notificationService.notificationsnew.length != 0) {
+      if (
+        this.campaignId ||
+        this.shoppingCenterId ||
+        this.organizationId ||
+        this.contactId
+      ) {
+        this.notificationSourceUrl = null;
+      }
+      const poll = () => {
+        this.wasSticky = this.isAtBottom();
+        const prevLength = this.notificationService.notificationsnew.length;
 
+        this.notificationService
+          .fetchUserNotificaetionsSpecific(
+            this.campaignId,
+            this.shoppingCenterId,
+            this.organizationId,
+            this.notificationSourceUrl
+          )
+          .subscribe({
+            complete: () => {
+              const newLength =
+                this.notificationService.notificationsnew.length;
+              const diff = newLength - prevLength;
+
+              if (diff > 0) {
+                const newMessages =
+                  this.notificationService.notificationsnew.slice(-diff);
+                this.checkForShoppingCentersReply(newMessages);
+                this.onNewMessagesArrived(diff);
+              }
+
+              this.previousNotificationsLength = newLength;
+              this.sortNotificationsByDateAsc();
+              this.scanTrigger$.next();
+
+              setTimeout(poll, 2000);
+            },
+          });
+      };
+
+      poll();
+    } else {
       this.notificationService
-        .fetchUserNotificaetionsSpecific(
-          this.campaignId,
-          this.shoppingCenterId,
-          this.organizationId,
-          this.notificationSourceUrl
-        )
-        .subscribe({
-          complete: () => {
-            const newLength = this.notificationService.notificationsnew.length;
-            const diff = newLength - prevLength;
-
-            if (diff > 0) {
-              const newMessages =
-                this.notificationService.notificationsnew.slice(-diff);
-              this.checkForShoppingCentersReply(newMessages);
-              this.onNewMessagesArrived(diff);
-            }
-
-            this.previousNotificationsLength = newLength;
-            this.sortNotificationsByDateAsc();
-            this.scanTrigger$.next();
-
-            setTimeout(poll, 2000);
-          },
+        .fetchUserNotifications(this.CampaignId)
+        .subscribe(() => {
+          this.previousNotificationsLength =
+            this.notificationService.notifications.length;
+          this.sortNotificationsByDateAsc();
+          this.scrollToBottom();
         });
-    };
 
-    poll();
-      }
-      else {
-this.notificationSourceUrl=this.notificationService.notifications[this.notificationService.notifications.length-1].sourceUrl;
-this.conversationId=this.notificationService.notifications[this.notificationService.notifications.length-1].emilyConversationCategoryId;
-      }
+      const poll = () => {
+        this.wasSticky = this.isAtBottom();
+        const prevLength = this.notificationService.notifications.length;
+
+        this.notificationService
+          .fetchUserNotifications(this.CampaignId)
+          .subscribe({
+            complete: () => {
+              const newLength = this.notificationService.notifications.length;
+              const diff = newLength - prevLength;
+
+              if (diff > 0) {
+                const newMessages =
+                  this.notificationService.notifications.slice(-diff);
+                this.checkForShoppingCentersReply(newMessages);
+                this.onNewMessagesArrived(diff);
+              }
+
+              this.previousNotificationsLength = newLength;
+              this.sortNotificationsByDateAsc();
+              this.scanTrigger$.next();
+if(!this.notificationSourceUrl){
+  this.notificationSourceUrl =
+  this.notificationService.notifications[
+    this.notificationService.notifications.length - 1
+  ].sourceUrl;
+this.conversationId =
+  this.notificationService.notifications[
+    this.notificationService.notifications.length - 1
+  ].emilyConversationCategoryId;
+  if(this.notificationSourceUrl)return;
+}
+             
+              setTimeout(poll, 2000);
+            },
+          });
+      };
+      poll();
+
+     
+    }
 
     this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(() => {
       this.scanAndOpenOverlayForHtml();
