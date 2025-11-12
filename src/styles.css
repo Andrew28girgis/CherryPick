@@ -533,7 +533,11 @@ a {
   padding: 16px;
 }
 
-
+#floating-chat-fab[cdkDragDisabled] {
+  cursor: not-allowed;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
 @keyframes barPulse {
   0% {
     transform: scaleY(0.35);

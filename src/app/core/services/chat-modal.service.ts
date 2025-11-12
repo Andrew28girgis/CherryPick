@@ -23,27 +23,45 @@ export class ChatModalService {
     this.fabEl = el;
   }
 
-  private calculatePosition(
-    anchor: HTMLElement,
-    opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
-  ): { top: number; left: number } {
-    const { popupWidth = 360, popupHeight = 560, margin = 24 } = opts;
-    const rect = anchor.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+private calculatePosition(
+  anchor: HTMLElement,
+  opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
+): { top: number; left: number } {
+  const { popupWidth = 360, popupHeight = 560, margin = 24 } = opts;
 
-    const openOnRight = rect.right + popupWidth + margin < vw;
-    const left = openOnRight
-      ? rect.right + margin
-      : rect.left - popupWidth - margin / 2; 
+  const rect = anchor.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
 
-    let top = rect.top + rect.height / 2 - popupHeight / 2;
+  const gap = 12; // space between the chat button and chat modal
 
-    if (top + popupHeight > vh) top = vh - popupHeight - margin;
-    if (top < margin) top = margin;
+  // Prefer opening to the right of the FAB if there’s space
+  const openOnRight = rect.right + popupWidth + margin < vw;
+  const left = openOnRight
+    ? rect.right + margin
+    : Math.max(margin, rect.left - popupWidth - margin / 2);
 
-    return { top, left };
+  // Position the modal directly below the FAB
+  let top = rect.bottom + gap;
+
+  // Ensure it stays inside the viewport vertically
+  if (top + popupHeight > vh - margin) {
+    top = vh - popupHeight - margin;
   }
+
+  // Prevent it from going off the top
+  if (top < margin) {
+    top = margin;
+  }
+
+  // If the FAB is very low, prefer aligning it upwards
+  if (rect.bottom > vh - popupHeight - margin) {
+    top = Math.max(margin, rect.top - popupHeight - gap);
+  }
+
+  return { top, left };
+}
+
 
   openForButton(
     buttonEl?: HTMLElement,
@@ -105,7 +123,19 @@ export class ChatModalService {
     this.ref.closed.subscribe(() => (this.ref = undefined));
     this.ref.dismissed.subscribe(() => (this.ref = undefined));
   }
+disableFabDrag(): void {
+  if (this.fabEl) {
+    this.fabEl.setAttribute('cdkDragDisabled', 'true');
+    this.fabEl.style.pointerEvents = 'none';
+  }
+}
 
+enableFabDrag(): void {
+  if (this.fabEl) {
+    this.fabEl.removeAttribute('cdkDragDisabled');
+    this.fabEl.style.pointerEvents = 'auto';
+  }
+}
   public getPositionForAnchor(
   anchor: HTMLElement,
   opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
@@ -113,14 +143,14 @@ export class ChatModalService {
   return this.calculatePosition(anchor, opts);
 }
 
-
-  updatePosition(top: number, left: number): void {
-    const dialog = document.querySelector('.dynamic-position') as HTMLElement;
-    if (dialog) {
-      dialog.style.left = `${left}px`;
-      dialog.style.top = `${top}px`;
-    }
+updatePosition(top: number, left: number): void {
+  const dialog = document.querySelector('.dynamic-position') as HTMLElement;
+  if (dialog) {
+    dialog.style.transition = 'top 0.1s linear, left 0.1s linear';
+    dialog.style.left = `${left}px`;
+    dialog.style.top = `${top}px`;
   }
+}
 
   close(): void {
     this.ref?.close();
