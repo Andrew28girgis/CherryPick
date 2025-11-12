@@ -65,7 +65,7 @@ export class FloatingChatComponent implements AfterViewInit {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const margin = 8;
-    let x = pos.x;
+    let x = 0;
     let y = pos.y;
     if (rect.left < margin) x += margin - rect.left;
     if (rect.right > vw - margin) x -= rect.right - (vw - margin);
