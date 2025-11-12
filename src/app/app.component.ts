@@ -1,8 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil, filter } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { PlacesService } from './core/services/places.service';
 import { AuthService } from './core/services/auth.service';
-import { NotificationService } from './core/services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +15,7 @@ export class AppComponent implements OnInit {
   showingTransition = false;
   overlayActive = false; 
   campaignId: any; 
-
+  shouldShowSidebar = true;
   constructor(
     private placeService: PlacesService,
     private authService: AuthService
@@ -36,6 +34,16 @@ export class AppComponent implements OnInit {
 
   get isAuthenticated(): boolean {
     return this.authService.isLoggedInToday();
+  }
+
+  get appShellClasses(): { [key: string]: boolean } {
+    return {
+      'with-sidebar': this.shouldShowSidebar,
+      'emily-chatbot': this.isEmilyChatBot,
+      'chatbot-route': this.isChatbotRoute,
+      authenticated: this.isAuthenticated,
+      'overlay-active': this.overlayActive,
+    };
   }
 
 }
