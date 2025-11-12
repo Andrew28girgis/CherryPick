@@ -2,10 +2,10 @@
 @import "primeng/resources/primeng.css";
 
 :root {
+  --app-color: #14303a;
   --app-font: "Poppins", sans-serif;
-  --app-color: #252c35;
   --Colors-Primary-500: #252c35;
-  --Colors-Primary-400: #3d444c;
+  --Colors-Primary-400: #3d444c ;
   --Colors-Primary-300: #868a8f;
   --Colors-Primary-200: #cfd0d2;
   --Colors-Primary-hover: #000;
@@ -436,7 +436,7 @@ a {
 }
 
 .title {
-  font-size: 22px;
+  font-size: 27px;
   font-weight: 600;
   color: var(--app-color);
   margin: 10px 0;
@@ -499,6 +499,45 @@ a {
   animation-duration: 1020ms;
   animation-delay: 400ms;
 }
+.chat-details-panel {
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f6f6f6;
+  border-bottom: 1px solid #ddd;
+}
+
+.chat-details-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.chat-details-close {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.chat-details-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
 
 @keyframes barPulse {
   0% {
