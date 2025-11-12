@@ -1,6 +1,6 @@
 <div class="row mx-0">
-  <div class="col-2">
-    <app-sidebar *ngIf="isAuthenticated"></app-sidebar>
+  <div class="col-2"  *ngIf="!isEmilyChatBot">
+    <app-sidebar *ngIf="shouldShowSidebar && isAuthenticated"></app-sidebar>
   </div>
   <div class="col-10 right-panel" [ngClass]="{ 'col-12 p-0': isEmilyChatBot }">
     <div class="app-container">
