@@ -598,6 +598,7 @@
  }
 
 .clear-button{
+  padding: 5px 10px;
   background-color: #ff3333 !important;
   color: #fff !important;
   outline: none !important;
