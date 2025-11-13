@@ -59,8 +59,7 @@ export {};
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './floating-chat-notifications.component.html',
   styleUrls: ['./floating-chat-notifications.component.css'],
-  encapsulation: ViewEncapsulation.None, // 👈 add this
-})
+ })
 export class FloatingChatNotificationsComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
@@ -149,8 +148,7 @@ export class FloatingChatNotificationsComponent
     private modalService: NgbModal,
     private refreshService: RefreshService,
     private chatModal: ChatModalService,
-    public activeModal: NgbActiveModal          // <-- ADD THIS
-
+ 
   ) {}
 
   showScrollButton = false;
@@ -1491,7 +1489,7 @@ handleDocumentClick(event: MouseEvent): void {
   }
 closeAll(): void {
   try {
-    this.activeModal.close();  // <-- closes the actual modal
+    // this.activeModal.close();  // <-- closes the actual modal
   } catch {}
 
   // clean overlays

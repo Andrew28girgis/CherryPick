@@ -55,7 +55,10 @@ export class LandingComponent {
   parsedCampaignDetails: { key: string; value: any }[] = [];
   currentGalleryData = signal<string[]>([]);
   currentMainImage = signal<string>('');
-
+  infoData: any = null;
+  conclusion: any;
+  score: any;
+  isLoadingInfo = false;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -731,5 +734,29 @@ export class LandingComponent {
 
   isArray(value: any): boolean {
     return Array.isArray(value);
+  }
+  openInfoPopup(campaign: any, content: TemplateRef<any>): void {
+    this.isLoadingInfo = true;
+    this.infoData = null;
+
+    const body = {
+      Name: 'GetScoreRationale',
+      Params: { MSSCId: campaign.marketSurveyShoppingCenterId },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.infoData = res.json[0].scoreRationale || null;
+        this.score = res.json[0].score || null;
+        this.conclusion = res.json[0].conclusion || null;
+
+        this.isLoadingInfo = false;
+        this.modalService.open(content, {
+          size: 'xl',
+          backdrop: true,
+          centered: true,
+        });
+      },
+    });
   }
 }
