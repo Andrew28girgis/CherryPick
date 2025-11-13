@@ -273,8 +273,8 @@
   color: #fff !important;
 }
 .completed-btn.active {
-  background-color: #dcfce7; /* light green background */
-  color: #166534;    
+  background-color: #166534 !important; /* light green background */
+  color: #dcfce7 !important;    
 }
 .pending-button.active {
   background-color: #6b7280 !important;
