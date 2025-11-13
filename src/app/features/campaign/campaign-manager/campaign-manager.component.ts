@@ -1218,7 +1218,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       });
   }
   editWithEMily(campaign: any): void {
-    const body: any = { Chat: 'edit this Campaign with emily',CampaignId: campaign.Id, ConversationId: 1 };
+    const body: any = { Chat: 'Please provide any additional information available about this camopaign.',CampaignId: campaign.Id, ConversationId: 1 };
     this.placesService.sendmessages(body).subscribe({});
     this.chatModal.openForButton();
     this.chatModal.setCampaignId(campaign.Id, 1);

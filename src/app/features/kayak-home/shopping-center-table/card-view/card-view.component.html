@@ -116,21 +116,6 @@
           </span>
         </div>
 
-        <button
-          class="plus-icon score"
-          [class.active]="scoringId === shopping.Id"
-          (click)="getscore(shopping); $event.stopPropagation()"
-          *ngIf="!shopping.Score && shopping.Score !== 0"
-        >
-          <span *ngIf="scoringId !== shopping.Id">Get Score</span>
-          <span *ngIf="scoringId === shopping.Id">
-            Getting Score
-            <span class="stat-bars" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span
-              ><span></span>
-            </span>
-          </span>
-        </button>
         <div
           (click)="$event.stopPropagation()"
           *ngIf="
@@ -167,6 +152,22 @@
           [attr.aria-label]="shopping.Score"
         >
           <span>{{ shopping.Score }} %</span>
+        </div>
+        <div  *ngIf="!shopping.Score">
+          <button 
+          class="score-badge"
+            [class.active]="scoringId === shopping.Id"
+            (click)="getscore(shopping); $event.stopPropagation()"
+          >
+            <span *ngIf="scoringId !== shopping.Id">Get Score</span>
+            <span *ngIf="scoringId === shopping.Id">
+              Getting Score
+              <span class="stat-bars" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span
+                ><span></span>
+              </span>
+            </span>
+          </button>
         </div>
 
         <!--  White div with Score -->
@@ -394,7 +395,6 @@
           </div>
 
           <div>
-             
             <div *ngIf="getSentMails(shopping).length > 0" class="mt-2">
               <ng-container *ngIf="getSentMails(shopping) as mails">
                 <div *ngIf="shopping.lastOutgoingEmail">
@@ -542,7 +542,7 @@
               height="30"
               class="mx-1"
             />
-            <span class="MangerORG"> {{ shopping?.ManagerORG || "—" }}</span>
+            <span class="MangerORG me-1"> {{ shopping?.ManagerORG || "—" }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

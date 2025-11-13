@@ -2,30 +2,6 @@
   <div class="title-div">
     <h2 class="title">Organizations</h2>
   </div>
-
-  <!-- Skeleton Loading State -->
-  <div class="skeleton-container" *ngIf="isLoading">
-    <div class="skeleton-grid">
-      <div class="skeleton-org-card" *ngFor="let i of [1, 2, 3, 4]">
-        <div class="skeleton-org-header d-flex align-items-center mb-3">
-          <div class="skeleton-org-logo"></div>
-          <div class="skeleton-org-title"></div>
-        </div>
-        <div class="row w-100">
-          <div class="col-md-4" *ngFor="let j of [1, 2, 3]">
-            <div class="skeleton-contact-card p-3">
-              <div class="skeleton-contact-name"></div>
-              <div class="skeleton-contact-title"></div>
-              <div class="skeleton-contact-detail"></div>
-              <div class="skeleton-contact-detail short"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Real Content -->
   <div *ngIf="!isLoading">
     <!-- Header Section (unchanged logic) -->
     <div class="header-container d-flex justify-content-between w-100">
@@ -222,49 +198,32 @@
         class="organization-card-wrapper"
         *ngFor="let org of paginatedContacts"
       >
-        <div
-          (click)="editWithEMily(org)"
-          class="emily-button"
-          aria-label="  Emily  "
-        >
-          <span class="emily-dot"></span>
-          Emily
-        </div>
         <details
           class="organization-card"
           [attr.aria-label]="'Organization ' + org.name"
         >
-          <!-- Clickable summary (opens/closes) -->
           <summary
             [ngClass]="{ 'org-hover': org.contacts.length > 0 }"
             class="org-summary"
             aria-controls="contacts-panel"
           >
-            <!-- Floating contact-count badge -->
             <span
               *ngIf="org.contacts.length > 0"
               class="card-badge"
               aria-label="Contact count"
             >
-              <span class="badge-dot"></span>
               {{ org.contacts.length }} Contacts
             </span>
 
             <div class="tenant-card">
-              <!-- <img
-              loading="lazy"
-              class="logo ms-2"
-              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                org.id
-              }}"
-              [title]="org.name"
-              alt=""
-              (error)="onImageError($event)"
-            /> -->
-              <div class="org-logo placeholder">
-                {{ getInitials(org.name) }}
-              </div>
               <h2 class="organization-title mb-0">{{ org.name }}</h2>
+              <div
+                (click)="editWithEMily(org); $event.stopPropagation()"
+                class="emily-button"
+                aria-label="  Emily  "
+              >
+                Ask Emily
+              </div>
             </div>
 
             <!-- chevron -->
@@ -295,14 +254,6 @@
             <div class="row w-100" #contactsRow *ngIf="org.contacts.length > 0">
               <div class="col-md-4" *ngFor="let contact of org.contacts">
                 <div class="contact-card" [class.flipped]="contact.flipped">
-                  <!-- <div
-                    (click)="editContactWithEMily(contact)"
-                    class="emily-button contact-btne"
-                    aria-label="  Emily  "
-                  >
-                    <span class="emily-dot"></span>
-                    Emily
-                  </div> -->
                   <div class="flip-inner">
                     <!-- Front -->
                     <div class="flip-front flex-row d-flex">
@@ -318,22 +269,6 @@
                         </div>
                       </div>
                     </div>
-
-                    <!-- Back -->
-                    <!-- <div class="flip-back">
-                    <div class="contact-title" *ngIf="contact.jobTitle">
-                      {{ contact.jobTitle }}
-                    </div>
-                    <div class="contact-item" *ngIf="contact.email">
-                      <span class="value">{{ contact.email }}</span>
-                    </div>
-                    <div class="contact-item" *ngIf="contact.cellPhone">
-                      <span
-                        >Phone:
-                        <span class="value">{{ contact.cellPhone }}</span></span
-                      >
-                    </div>
-                  </div> -->
                   </div>
                 </div>
               </div>

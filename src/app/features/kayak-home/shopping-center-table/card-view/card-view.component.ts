@@ -761,7 +761,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
   editWithEMily(center: any): void {
     const body: any = {
-      Chat: 'edit this Shopping Center with emily',
+      Chat: 'Please provide any additional information available about this shopping center.',
       ShoppingCenterId: center.Id,
       ConversationId: 2,
     };

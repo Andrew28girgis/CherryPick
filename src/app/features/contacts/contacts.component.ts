@@ -352,7 +352,7 @@ export class ContactsComponent implements OnInit {
   editWithEMily(org: any): void {
      
     const body: any = {
-      Chat: 'edit this Orgnaization with emily',
+      Chat: 'Please provide any additional information available about this organization.',
       OrganizationId: org.id,
       ConversationId: 4,
     };

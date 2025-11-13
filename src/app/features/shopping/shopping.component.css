@@ -4,8 +4,7 @@
 
 .header-container {
   align-items: center;
-  gap: var(--Space-S-12);
-  padding-top: var(--Space-S-24);
+  gap: 1rem;
   padding-bottom: 21px;
 }
 
@@ -1194,7 +1193,7 @@ tr.click-disabled td:last-child * {
     padding: 12px 14px;
     font-size: 14px;
   }
-} 
+}
 .add-badge {
   position: absolute;
   bottom: 12px;
@@ -1649,7 +1648,6 @@ tr.click-disabled td:last-child * {
 .auto-stat {
   color: var(--Colors-Primary-300) !important;
 }
-  
 
 .enriching-card {
   position: relative;
@@ -1683,7 +1681,6 @@ tr.click-disabled td:last-child * {
   }
 }
 @media (max-width: 768px) {
- 
   .g-button {
     width: 48px;
     height: 48px;
@@ -1841,29 +1838,20 @@ tr.click-disabled td:last-child * {
 }
 
 .emily-button {
-  position: absolute;
-  top: -17px;
-  right: 45px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #f4f3ff;
-  color: #4b3df0;
-  border: 1px solid #d4d1ff;
   border-radius: 14px;
   font-size: 0.85rem;
-  font-weight: 500;
-  padding: 5px 12px;
+  color: #0075ef;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   z-index: 10;
 }
 
 .emily-button:hover {
-  background-color: #4b3df0;
-  border: 1px solid #4b3df0;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(75, 61, 240, 0.3);
+  text-decoration: underline;
 }
 
 .emily-button:active {

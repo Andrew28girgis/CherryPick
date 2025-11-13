@@ -329,24 +329,10 @@
   padding-top: var(--Space-S-24);
   padding-bottom: 18px;
 }
-.search-container {
-  display: flex;
-  align-items: center;
-  width: 44px;
-  transition: width 0.3s, background-color 0.3s, border-color 0.3s;
-  will-change: width;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--Colors-Primary-500, #6d133b);
-  border-radius: 22px;
-  background: transparent;
-}
 .search-icon-btn {
   background: transparent;
   border: none;
   cursor: pointer;
-  width: 44px;
-  height: 44px;
   min-width: 44px;
   display: flex;
   align-items: center;
@@ -441,15 +427,13 @@
 }
 
 .sort-btn {
-  width: 44px;
-  height: 44px;
   position: relative;
   z-index: 1;
   background: transparent;
-  border: 1px solid var(--Colors-Primary-500, #6d133b);
   border-radius: 22px;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: none;
   display: flex;
   padding: var(--Space-S-12);
   align-items: center;
@@ -1025,35 +1009,21 @@
     align-items: center !important;
   }
 }
-.emily-button {
-  position: absolute;
-  top: -17px;
-  right: 27px;
+.emily-button { 
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #f4f3ff;
-  color: #4b3df0;
-  border: 1px solid #d4d1ff;
   border-radius: 14px;
   font-size: 0.85rem;
-  font-weight: 500;
-  padding: 5px 12px;
+  color: #0075ef;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   z-index: 10;
-}
-.contact-btne {
-  font-size: 9px;
-  white-space: nowrap;
-  right: 20px;
-}
+} 
 
 .emily-button:hover {
-  background-color: #4b3df0;
-  border: 1px solid #4b3df0;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(75, 61, 240, 0.3);
+  text-decoration: underline;
 }
 
 .emily-button:active {
