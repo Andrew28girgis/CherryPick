@@ -1040,19 +1040,31 @@ li {
   padding: 0.2rem 1rem;
   text-align: center;
   min-width: 50px;
+  cursor: pointer;
+}
+.campaign-score:hover {
+  opacity: 0.9;
 }
 
 .high-score {
   background-color: #28a745;
 }
-
+.high-score:hover {
+  background-color: #218838;
+}
 .medium-score {
   background-color: #ffc107;
   color: #222;
 }
+.medium-score:hover {
+  background-color: #efb508;
+}
 
 .low-score {
   background-color: #dc3545;
+}
+.low-score:hover {
+  background-color: #c82333;
 }
 .campaign-header-bar {
   color: #000;
@@ -1329,7 +1341,7 @@ li {
   color: var(--Colors-Primary-500);
 }
 .campaign-n {
-  color: #baa26c;
+  color: var(--Colors-Primary-500);
   text-decoration: underline;
   font-weight: bold;
   cursor: pointer;
