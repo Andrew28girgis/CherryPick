@@ -1455,17 +1455,16 @@ export class FloatingChatNotificationsComponent
   }
 
   clearEmilyChat() {
-    const request = {
+    if(!this.campaignId && !this.shoppingCenterId && !this.organizationId ){
+
+    }
+     const request = {
       Name: 'DeleteEmilyChat',
       Params: {
         CampaignId: this.campaignId ?? null,
         ShoppingCenterId: this.shoppingCenterId ?? null,
         OrganizationId: this.organizationId ?? null,
-        SourceUrl: this.notificationSourceUrl
-          ? this.notificationSourceUrl
-          : this.notificationService.notifications[
-              this.notificationService.notifications.length - 1
-            ].sourceUrl ?? null,
+        SourceUrl: this.notificationSourceUrl ?? null,
       },
     };
 
