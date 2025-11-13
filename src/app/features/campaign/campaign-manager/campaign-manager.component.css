@@ -1041,6 +1041,14 @@
 .created-date {
   color: #616161;
 }
+.dropdown-toggle {
+  background: transparent;
+  border: none;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+
 @keyframes card-bounce {
   0% {
     transform: scale(1);
