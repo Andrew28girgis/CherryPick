@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RefreshService } from 'src/app/core/services/refresh.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-notification-view',
@@ -15,7 +16,7 @@ import { RefreshService } from 'src/app/core/services/refresh.service';
 })
 export class NotificationViewComponent implements OnInit {
   notificationViewId!: number;
-  htmlData: string = '';
+  htmlData: SafeHtml = '';
   titleName: string = '';
   public showSaveToast = false;
   public isSaving = false;
@@ -24,7 +25,8 @@ export class NotificationViewComponent implements OnInit {
     private placesService: PlacesService,
     private spinner: NgxSpinnerService,
     private cdRef: ChangeDetectorRef,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -48,7 +50,9 @@ export class NotificationViewComponent implements OnInit {
     this.placesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json) {
-          this.htmlData = data.json[0].html;
+          this.htmlData = this.sanitizer.bypassSecurityTrustHtml(
+            data.json[0].html
+          );
           console.log(this.htmlData);
 
           this.spinner.hide();
