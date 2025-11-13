@@ -9,7 +9,7 @@
     <button (click)="retry()" class="retry-btn">Try Again</button>
   </div>
 
-  <div *ngIf="!loading && !error && currentView === 'cards'" class="cards-view">
+  <div *ngIf="!loading && !error" class="cards-view mt-2">
     <div class="cards-grid">
       <div *ngFor="let page of userPages" class="page-card">
         <div class="card-header">
@@ -23,19 +23,6 @@
               View
             </button>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="!loading && !error && currentView === 'list'" class="list-view">
-    <div class="list-container">
-      <div *ngFor="let page of userPages" class="list-item">
-        <div class="list-content">
-          <span class="list-name">{{ page.title }}</span>
-          <span class="list-date">{{ formatDate(page.createdDate) }}</span>
-        </div>
-        <div class="list-actions">
-          <button class="list-action">⋯</button>
         </div>
       </div>
     </div>

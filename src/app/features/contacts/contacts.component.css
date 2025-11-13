@@ -1,38 +1,24 @@
-/* ===========================
-    ORGANIZATION GRID (GRID LAYOUT)
-    =========================== */
+
 .organization-grid {
   display: grid;
-  /* single column by default (gives contacts strip max width). 
-        To switch to multi-column cards, uncomment the next line: */
-  /* grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); */
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-  /* grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); */
-
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));  
   gap: var(--Space-S-24);
   width: -webkit-fill-available;
-  align-items: start; /* <--- important: cards align to top, not stretch */
-}
-
-/* ===========================
-      ORGANIZATION CARD (DETAILS)
-      - expandable card with grid
-      =========================== */
+  align-items: start; 
+} 
 .organization-card {
-  position: relative; /* for the floating badge */
+  position: relative;  
   display: grid;
-  grid-template-rows: auto auto; /* summary + (optional) panel */
+  grid-template-rows: auto auto;  
   border-radius: var(--Radius-R-20);
   border: 2px solid #e4e3eb;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(20px);
   overflow: visible;
-}
-
-/* clickable header row inside <summary> */
+} 
 .org-summary {
   display: grid;
-  grid-template-columns: 1fr auto; /* left content + chevron on the right */
+  grid-template-columns: 1fr auto; 
   align-items: center;
   gap: var(--Space-S-32);
   padding: var(--Space-S-32);
@@ -41,16 +27,13 @@
 }
 .org-summary::-webkit-details-marker {
   display: none;
-} /* remove default arrow */
+} 
 .org-summary.org-hover:hover {
   background: rgba(0, 0, 0, 0.02);
-}
-
+} 
 .org-hover {
   cursor: pointer;
-}
-
-/* chevron button look */
+} 
 .org-chevron {
   display: inline-flex;
   align-items: center;
@@ -69,9 +52,7 @@
 .org-chevron:hover {
   background: #fff;
   border-color: rgba(0, 0, 0, 0.12);
-}
-
-/* expandable contacts panel area */
+} 
 .contacts-panel {
   padding: 0 var(--Space-S-32) var(--Space-S-32) var(--Space-S-32);
   border-top: 1px dashed rgba(0, 0, 0, 0.06);
@@ -79,61 +60,25 @@
 .organization-card:not([open]) .contacts-panel {
   display: none;
 }
-
-/* ===========================
-      FLOATING CONTACT COUNT BADGE
-      =========================== */
+ 
 .card-badge {
   position: absolute;
   top: 0;
   left: 16px;
   transform: translateY(-40%);
   z-index: 2;
-  pointer-events: none;
-
+  pointer-events: none; 
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
   border-radius: 999px;
-  background: #102e50; /* navy */
+  background: #102e50;  
   color: #fff;
-  box-shadow: 0 6px 18px rgba(109, 19, 59, 0.15);
-
+  box-shadow: 0 6px 18px rgba(109, 19, 59, 0.15); 
   font-size: 12px;
-  font-weight: 600;
-  /* animation: floatUpDown 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite; */
-}
-.badge-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--Colors-Primary-500);
-}
-@keyframes floatUpDown {
-  0%,
-  100% {
-    transform: translateY(-40%);
-  }
-  50% {
-    transform: translateY(-55%);
-  }
-}
-
-/* ===========================
-      LEFT BLOCK (LOGO + NAME)
-      =========================== */
-.logo {
-  width: 150px;
-  height: 150px;
-  margin: 0 !important;
-}
-.tenant-card {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--Space-S-20);
-}
+  font-weight: 600; 
+}    
 .organization-title {
   color: var(--Body-Heading, #161017);
   text-align: center;
@@ -141,24 +86,7 @@
   font-weight: 600;
   line-height: 32px;
   text-align: start;
-}
-
-/* ===========================
-      CONTACT CHIP / CARD INSIDE PANEL
-      - horizontal grid scroller
-      =========================== */
-.organization-card .row.w-100 {
-  display: flex !important
-  ;
-  flex-direction: row;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  width: 100%;
-  box-sizing: border-box;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 30px 0;
-}
+}  
 .organization-card .row.w-100 > .col-md-4 {
   padding-left: 0 !important;
   padding-right: 0 !important;
@@ -173,28 +101,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-  padding: 20px;
-
+  gap: 4px; 
   border-radius: 12px;
   border: 1px solid var(--Body-Border, #f8e9ef);
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-}
-
-/* optional: slim scrollbar */
-.organization-card .row.w-100::-webkit-scrollbar {
-  height: 8px;
-}
-.organization-card .row.w-100::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-}
-
-/* ===========================
-      NO CONTACTS STATE
-      =========================== */
+}  
 .contact-card.empty {
   justify-content: center;
   align-items: center;
@@ -205,11 +118,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--Space-S-8);
-}
-
-/* contact card container */
-.contact-card {
-  /* auto-size to content but never overflow its parent */
+} 
+.contact-card { 
   display: inline-grid; /* lets faces overlap and still size to content */
   grid-auto-rows: auto;
   perspective: 1000px;
@@ -218,110 +128,23 @@
   block-size: auto; /* height grows with content */
   cursor: pointer;
   position: relative;
-}
-
-/* stack the two faces in the same grid cell so the tallest side defines height */
+} 
 .contact-card .flip-inner {
   display: grid;
   transition: transform 0.6s;
   transform-style: preserve-3d;
-}
-.contact-card .flip-front,
-.contact-card .flip-back {
-  grid-area: 1 / 1; /* overlap */
-  backface-visibility: hidden;
-  border-radius: 12px;
-  border: 1px solid var(--Body-Border, #f8e9ef);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  padding: 16px;
-  /* allow content to define size */
-  inline-size: max-content;
-  max-inline-size: 100%;
-}
-.contact-card.flipped .flip-inner {
-  transform: rotateY(180deg);
-}
-
-/* flip */
-.contact-card.flipped .flip-inner {
-  transform: rotateY(180deg);
-}
-.contact-card .flip-back {
-  transform: rotateY(180deg);
-}
-
-.flip-back {
-  transform: rotateY(180deg);
-  align-items: flex-start;
-  gap: 4px;
-}
-
-/* contact name on front */
+} 
 .contact-name {
   font-size: 14px;
   font-weight: 600;
   color: var(--Body-Heading, #161017);
   margin: 0;
-}
-
-/* subtle info indicator */
-.info-indicator {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--Colors-Primary-light, #f0d2e0);
-  color: var(--Colors-Primary-500, #6d133b);
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-/* back side details */
+} 
 .contact-title {
   font-size: 13px;
   font-weight: 600;
   color: var(--blue-300);
-}
-.contact-item {
-  font-size: 13px;
-  color: #777199;
-}
-.contact-item .value {
-  color: var(--Colors-Primary-500);
-  font-weight: 500;
-}
-
-/* ===========================
-      CONTACT TEXT STYLES (kept)
-      =========================== */
-
-.contact-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--Space-S-4);
-}
-.contact-item .label,
-.contact-item .value {
-  color: #777199;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 30px;
-}
-.contact-item a.value {
-  color: var(--Colors-Primary-500);
-  text-decoration: none;
-}
-.contact-item a.value:hover {
-  text-decoration: underline;
-}
-
-/* ===========================
-      HEADER / SEARCH / SORT (kept)
-      =========================== */
+}   
 .header-container {
   display: flex;
   align-items: center;
@@ -329,24 +152,11 @@
   padding-top: var(--Space-S-24);
   padding-bottom: 18px;
 }
-.search-container {
-  display: flex;
-  align-items: center;
-  width: 44px;
-  transition: width 0.3s, background-color 0.3s, border-color 0.3s;
-  will-change: width;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--Colors-Primary-500, #6d133b);
-  border-radius: 22px;
-  background: transparent;
-}
+
 .search-icon-btn {
   background: transparent;
   border: none;
   cursor: pointer;
-  width: 44px;
-  height: 44px;
   min-width: 44px;
   display: flex;
   align-items: center;
@@ -370,86 +180,20 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.search-container.expanded {
-  width: 300px;
-  background: white;
-}
-.search-container.expanded .search-input {
-  opacity: 1;
-  visibility: visible;
-  padding: 0 12px;
-}
-.search-input::placeholder {
-  color: var(--Colors-Neutral-500);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.search-container.expanded .search-input::placeholder {
-  opacity: 1;
-}
-.search-icon {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.3s ease;
-}
-.search-container.expanded .search-icon {
-  transform: scale(0.9);
-}
-
+}  
 .actions-container {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-.action-btn,
-.custom-select {
-  display: flex;
-  padding: 0 var(--Space-S-8);
-  align-items: center;
-  gap: var(--Space-S-4);
-  height: 36px;
-  background: transparent;
-  border: none;
-  border-radius: var(--Radius-R-24);
-  font-size: 14px;
-  color: #707791;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.action-btn:hover,
-.custom-select:hover {
-  color: #434757;
-}
-.action-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-}
-.action-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
+}  
 .sort-btn {
-  width: 44px;
-  height: 44px;
   position: relative;
   z-index: 1;
   background: transparent;
-  border: 1px solid var(--Colors-Primary-500, #6d133b);
   border-radius: 22px;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: none;
   display: flex;
   padding: var(--Space-S-12);
   align-items: center;
@@ -464,8 +208,7 @@
 .search-con {
   display: flex;
   gap: var(--Space-S-16);
-}
-
+} 
 .add-new-btn {
   width: 44px;
   height: 44px;
@@ -483,9 +226,7 @@
 }
 .add-new-btn:hover {
   background-color: var(--Colors-Primary-hover);
-}
-
-/* role toggle */
+} 
 .role-toggle {
   display: inline-flex;
   gap: 10px;
@@ -525,9 +266,7 @@
   padding: 8px 14px;
   font-size: 14px;
   border-radius: 10px;
-}
-
-/* sort dropdown menu */
+} 
 .sort-menu {
   position: absolute;
   top: calc(100% + 8px);
@@ -597,10 +336,6 @@
 .dropdown-menu.sort-menu {
   z-index: 10000 !important;
 }
-
-/* ===========================
-      PAGINATION (kept)
-      =========================== */
 .pagination {
   display: flex;
   flex-direction: column;
@@ -653,85 +388,6 @@
   color: #777199;
   font-size: 14px;
 }
-
-/* ===========================
-      SKELETONS (kept)
-      =========================== */
-.skeleton-org-card {
-  background: var(--Colors-Pure-White);
-  border-radius: var(--Radius-R-16);
-  padding: var(--Space-S-24);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: var(--Space-S-24);
-}
-.skeleton-org-header {
-  display: flex;
-  gap: var(--Space-S-16);
-  align-items: center;
-}
-.skeleton-org-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--Radius-R-12);
-  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite linear;
-}
-.skeleton-org-title {
-  height: 24px;
-  width: 200px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite linear;
-}
-.skeleton-contact-card {
-  background: #f8f8f8;
-  border-radius: var(--Radius-R-12);
-  padding: var(--Space-S-16);
-  margin-top: var(--Space-S-16);
-}
-.skeleton-org-logo,
-.skeleton-org-title,
-.skeleton-contact-name,
-.skeleton-contact-title,
-.skeleton-contact-detail,
-.skeleton-contact-empty .skeleton-contact-name,
-.skeleton-contact-empty .skeleton-contact-title {
-  background: linear-gradient(
-    90deg,
-    rgba(240, 240, 240, 0.8) 25%,
-    rgba(224, 224, 224, 0.8) 50%,
-    rgba(240, 240, 240, 0.8) 75%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite linear;
-}
-.skeleton-contact-name {
-  width: 80%;
-  height: 20px;
-}
-.skeleton-contact-title {
-  width: 60%;
-}
-.skeleton-contact-detail {
-  width: 100%;
-}
-.skeleton-contact-detail.short {
-  width: 70%;
-}
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-/* ===========================
-      MODAL (kept)
-      =========================== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -781,29 +437,7 @@
 .contact-form {
   padding: 0 var(--Space-S-24) var(--Space-S-24) var(--Space-S-24);
 }
-.form-group {
-  margin-bottom: var(--Space-S-20);
-}
-.form-group label {
-  display: block;
-  margin-bottom: var(--Space-S-8);
-  font-weight: 500;
-  color: #374151;
-}
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e5e7eb;
-  border-radius: var(--Radius-R-8);
-  font-size: 14px;
-}
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
+
 .form-actions {
   display: flex;
   gap: var(--Space-S-12);
@@ -1024,50 +658,17 @@
     flex-direction: column !important;
     align-items: center !important;
   }
-}
-.emily-button {
-  position: absolute;
-  top: -17px;
-  right: 27px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: #f4f3ff;
-  color: #4b3df0;
-  border: 1px solid #d4d1ff;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  z-index: 10;
-}
-.contact-btne {
-  font-size: 9px;
-  white-space: nowrap;
-  right: 20px;
-}
-
-.emily-button:hover {
-  background-color: #4b3df0;
-  border: 1px solid #4b3df0;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(75, 61, 240, 0.3);
-}
-
-.emily-button:active {
-  transform: scale(0.96);
-}
-
-.emily-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: currentColor;
-  display: inline-block;
-}
+}  
 .organization-card-wrapper {
   position: relative;
   margin-bottom: 1rem;
+}
+@keyframes floatUpDown {
+  0%,
+  100% {
+    transform: translateY(-40%);
+  }
+  50% {
+    transform: translateY(-55%);
+  }
 }

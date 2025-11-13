@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="campaign-manager-container container-fluid">
+<div class=" container-fluid">
   <div class="title-div">
     <h2 class="title">Campaigns</h2>
   </div>
@@ -97,8 +97,7 @@
   <div
     *ngIf="
       filteredCampaigns && filteredCampaigns.length > 0 && stages.length > 0
-    "
-    class="campaign-manager-body"
+    " 
   >
     <!-- Updated card view to dashboard cards layout -->
     <div class="dashboard-cards-container" *ngIf="viewMode === 'card'">
@@ -294,27 +293,7 @@
               <div class="metric-label">Sites</div>
             </div>
 
-            <div class="metric-item">
-              <div
-                class="metric-value submissions-breakdown"
-                *ngIf="campaign.Submissions"
-              >
-                <span *ngIf="campaign.Submissions" class="count-new">{{
-                  getSubmissionsCountNew(campaign.Submissions)
-                }}</span>
-
-                <span class="separator">|</span>
-                <span class="count-accepted">{{
-                  getSumbmissionsCountAcceppted(campaign.Submissions)
-                }}</span>
-                <span class="separator">|</span>
-                <span class="count-rejected">{{
-                  getSumbmissionsCountRejected(campaign.Submissions)
-                }}</span>
-              </div>
-              <div class="metric-value" *ngIf="!campaign.Submissions">0</div>
-              <div class="metric-label">Submissions</div>
-            </div>
+ 
 
             <div class="metric-item">
               <div class="metric-value">{{ campaign.MailsSent || "0" }}</div>
@@ -950,7 +929,7 @@
       </h4>
     </div>
 
-    <button class="btn btn-primary btn-custom" (click)="modal.close()">
+    <button class="btn btn-primary g-button" (click)="modal.close()">
       X
     </button>
   </div>
@@ -980,7 +959,7 @@
       <!-- Organization -->
       <div
         *ngIf="selectedCampaignDetails?.OrganizationName"
-        class="form-group sec mb-2 grop"
+        class="form-group sec mb-2"
       >
         <label style="width: 150px">Organization:</label>
         <ng-container *ngIf="!isEditing; else editOrg">
@@ -1158,7 +1137,7 @@
 
     <!-- Read-Only JSON -->
     <section
-      *ngIf="parsedCampaignDetails?.length"
+      *ngIf="parsedCampaignDetails.length"
       class="border-top pt-3"
       style="height: fit-content"
     >
@@ -1216,7 +1195,7 @@
     <button *ngIf="!isEditing" class="btn btn-secondary" (click)="startEdit()">
       Edit
     </button>
-    <button *ngIf="isEditing" class="g-button save-btnc" (click)="saveEdit()">
+    <button *ngIf="isEditing" class="g-button" (click)="saveEdit()">
       Save
     </button>
     <button
