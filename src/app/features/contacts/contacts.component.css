@@ -434,29 +434,10 @@
 .close-btn:hover {
   background-color: #f1f5f9;
 }
-.form-group {
-  margin-bottom: var(--Space-S-20);
+.contact-form {
+  padding: 0 var(--Space-S-24) var(--Space-S-24) var(--Space-S-24);
 }
-.form-group label {
-  display: block;
-  margin-bottom: var(--Space-S-8);
-  font-weight: 500;
-  color: #374151;
-}
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e5e7eb;
-  border-radius: var(--Radius-R-8);
-  font-size: 14px;
-}
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
+
 .form-actions {
   display: flex;
   gap: var(--Space-S-12);
