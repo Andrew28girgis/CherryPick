@@ -25,7 +25,6 @@ import { take, filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 import { ViewEncapsulation } from '@angular/core';
 
@@ -149,7 +148,6 @@ export class FloatingChatNotificationsComponent
     private modalService: NgbModal,
     private refreshService: RefreshService,
     private chatModal: ChatModalService,
-    public activeModal: NgbActiveModal          // <-- ADD THIS
 
   ) {}
 
@@ -1490,9 +1488,6 @@ handleDocumentClick(event: MouseEvent): void {
     });
   }
 closeAll(): void {
-  try {
-    this.activeModal.close();  // <-- closes the actual modal
-  } catch {}
 
   // clean overlays
   this.isOverlayMode = false;
