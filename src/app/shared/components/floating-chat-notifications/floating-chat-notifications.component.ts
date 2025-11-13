@@ -26,8 +26,6 @@ import html2pdf from 'html2pdf.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
-import { ViewEncapsulation } from '@angular/core';
-
 
 // import { WebSocketService } from './../../../core/services/notification-signalr.service';
 
@@ -58,20 +56,20 @@ export {};
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './floating-chat-notifications.component.html',
   styleUrls: ['./floating-chat-notifications.component.css'],
- })
+})
 export class FloatingChatNotificationsComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   private intervalId: any;
-  private loadedNotifications: Set<string> = new Set(); // Use notification IDs
+  private loadedNotifications: Set<string> = new Set();
   private awaitingResponse = false;
-  private preSendIds = new Set<string | number>(); // ids present before send
-  private pendingSentText = ''; // optional: to match echo text
-  private shownForIds = new Set<string | number>(); // avoid re-opening same overlay
+  private preSendIds = new Set<string | number>(); 
+  private pendingSentText = '';
+  private shownForIds = new Set<string | number>();
   private scanTrigger$ = new BehaviorSubject<void>(undefined);
   private scanSub?: import('rxjs').Subscription;
   isTyping = false;
-  private typingHideTimer?: any; // to auto-hide after a long delay, just in case
+  private typingHideTimer?: any; 
   private lastUserMessageId: number | null = null;
 
   notifications: Notification[] = [];
@@ -80,7 +78,7 @@ export class FloatingChatNotificationsComponent
   CampaignId: any;
   loaded = false;
   @Input() isChatbotRoute = false;
-  @Output() overlayStateChange = new EventEmitter<boolean>(); // optional, only if you want to sync shell's overlay-active
+  @Output() overlayStateChange = new EventEmitter<boolean>(); 
   @Output() sidebarStateChange = new EventEmitter<{
     isOpen: boolean;
     isFullyOpen: boolean;
@@ -98,8 +96,8 @@ export class FloatingChatNotificationsComponent
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
   @ViewChild('notificationModal') notificationModal!: TemplateRef<any>;
-  @ViewChild('overlayContainer', { read: ElementRef }) overlayContainer!: ElementRef;
-
+  @ViewChild('overlayContainer', { read: ElementRef })
+  overlayContainer!: ElementRef;
 
   outgoingText = '';
   isSending = false;
@@ -112,9 +110,11 @@ export class FloatingChatNotificationsComponent
 
   private overlayModalRef: any;
   private currentHtmlSourceId: number | null = null;
-  private currentHtmlCache = ''; // last html string we showed
+  private currentHtmlCache = '';
   public selectedNotification: Notification | null = null;
-  public isSaving = false; // component-level flag
+  public isSaving = false;
+  private currentOpenNotificationId: number | null = null;
+
   public showSaveToast = false;
   currentMessage: string = '';
   private wasAtBottomBeforeUpdate = false;
@@ -146,9 +146,7 @@ export class FloatingChatNotificationsComponent
     private ngZone: NgZone,
     private modalService: NgbModal,
     private refreshService: RefreshService,
-    private chatModal: ChatModalService,
-
- 
+    private chatModal: ChatModalService
   ) {}
 
   showScrollButton = false;
@@ -240,40 +238,38 @@ export class FloatingChatNotificationsComponent
     this.mo?.disconnect();
     this.ro?.disconnect();
   }
-openOverlayModal(notification: any) {
-  this.loadNotificationViewComponent(notification);
 
-  const fabEl = this.chatModal['fabEl'] as HTMLElement;
-  if (!fabEl) {
-    console.warn('Floating chat button not found');
-    return;
-  }
+  openOverlayModal(notification: any) {
+    this.loadNotificationViewComponent(notification);
+    const existingPanel = document.querySelector('.chat-details-panel');
+    if (existingPanel && this.currentOpenNotificationId === notification.id) {
+      return;
+    }
+    if (existingPanel) {
+      existingPanel.remove();
+    }
 
-  // Remove existing panel if open
-  const existingPanel = document.querySelector('.chat-details-panel');
-  if (existingPanel) {
-    existingPanel.remove();
-    fabEl.style.top =
-      fabEl.style.right =
-      fabEl.style.left =
-      fabEl.style.bottom =
-        '';
-    fabEl.style.position = 'fixed';
-    fabEl.style.transform = '';
-    return;
-  }
+    this.currentOpenNotificationId = notification.id;
 
-  const chatDialog = document.querySelector('.dynamic-position') as HTMLElement;
-  if (!chatDialog) return;
+    const fabEl = this.chatModal['fabEl'] as HTMLElement;
+    if (!fabEl) {
+      console.warn('Floating chat button not found');
+      return;
+    }
 
-  const chatRect = chatDialog.getBoundingClientRect();
-  const detailsPanel = document.createElement('div');
-  detailsPanel.classList.add('chat-details-panel');
+    const chatDialog = document.querySelector(
+      '.dynamic-position'
+    ) as HTMLElement;
+    if (!chatDialog) return;
 
-  const safeHtmlString = (this.overlayHtml as unknown as string) || '';
+    const chatRect = chatDialog.getBoundingClientRect();
+    const detailsPanel = document.createElement('div');
+    detailsPanel.classList.add('chat-details-panel');
 
-  // ================= HTML ====================
-  detailsPanel.innerHTML = `
+    const safeHtmlString =
+      (this.overlayHtml as any)?.changingThisBreaksApplicationSecurity || '';
+
+    detailsPanel.innerHTML = `
     <div class="chat-details-header d-flex justify-content-between align-items-center flex-wrap gap-2">
       <h4 class="mb-0">Details</h4>
 
@@ -281,179 +277,183 @@ openOverlayModal(notification: any) {
         <input type="text" id="pdfTitleInput" placeholder="Enter Title"
           class="form-control form-control-sm" style="width: 180px" />
 
-        <button id="saveTitleBtn" class="btn btn-sm title-btn" disabled>Save Title</button>
-        <button id="savePdfBtn" class="btn btn-sm save-pdf-btn">📄 Save PDF</button>
+        <button id="saveTitleBtn" class="btn btn-sm title-btn" disabled>
+          Save Title
+        </button>
+
+        <button id="savePdfBtn" class="btn btn-sm save-pdf-btn">
+          📄 Save PDF
+        </button>
 
         <button class="chat-details-close btn btn-sm btn-light border">×</button>
       </div>
     </div>
 
     <div class="chat-details-body" id="detailsBody"
-        style="padding: 16px; padding-bottom: 120px;">
+         style="padding: 16px; padding-bottom: 120px;">
       ${safeHtmlString}
     </div>
   `;
 
-  // ================= STYLES ====================
-  detailsPanel.style.position = 'fixed';
-  detailsPanel.style.top = `${chatRect.top}px`;
-  detailsPanel.style.left = `16px`;
-  detailsPanel.style.width = `${chatRect.left - 32}px`;
-  detailsPanel.style.height = `${chatRect.height}px`;
-  detailsPanel.style.background = '#fff';
-  detailsPanel.style.borderRadius = '8px';
-  detailsPanel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
-  detailsPanel.style.overflowY = 'auto';
-  detailsPanel.style.zIndex = '999999999';
-  detailsPanel.style.animation = 'fadeIn 0.25s ease forwards';
+    detailsPanel.style.position = 'fixed';
+    detailsPanel.style.top = `${chatRect.top}px`;
+    detailsPanel.style.left = `16px`;
+    detailsPanel.style.width = `${chatRect.left - 32}px`;
+    detailsPanel.style.height = `${chatRect.height}px`;
+    detailsPanel.style.background = '#fff';
+    detailsPanel.style.borderRadius = '8px';
+    detailsPanel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+    detailsPanel.style.overflowY = 'auto';
+    detailsPanel.style.zIndex = '999999999';
+    detailsPanel.style.animation = 'fadeIn 0.25s ease forwards';
 
-  // ================= CLOSE PANEL ====================
-  const closeOverlay = () => {
-    detailsPanel.style.animation = 'fadeOut 0.2s ease forwards';
+    const closeOverlay = () => {
+      detailsPanel.style.animation = 'fadeOut 0.2s ease forwards';
 
-    setTimeout(() => {
-      detailsPanel.remove();
-      fabEl.style.top =
-        fabEl.style.right =
-        fabEl.style.left =
-        fabEl.style.bottom =
-          '';
-      fabEl.style.position = 'fixed';
-      this.closeOverlayContent();
-    }, 180);
-  };
+      setTimeout(() => {
+        detailsPanel.remove();
+        this.currentOpenNotificationId = null;
 
-  // Prevent inside click from closing
-  detailsPanel.addEventListener('click', e => e.stopPropagation());
+        fabEl.style.top =
+          fabEl.style.right =
+          fabEl.style.left =
+          fabEl.style.bottom =
+            '';
 
-  // ================= TITLE + PDF BUTTON LOGIC ====================
-  const titleInput = detailsPanel.querySelector('#pdfTitleInput') as HTMLInputElement;
-  const saveTitleBtn = detailsPanel.querySelector('#saveTitleBtn') as HTMLButtonElement;
-  const savePdfBtn = detailsPanel.querySelector('#savePdfBtn') as HTMLButtonElement;
+        fabEl.style.position = 'fixed';
+        this.closeOverlayContent();
+      }, 180);
+    };
 
-  const toggleSaveButtons = () => {
-    const hasText = titleInput.value.trim().length > 0;
-    saveTitleBtn.disabled = !hasText;
-    savePdfBtn.disabled = false;
-  };
+    detailsPanel.addEventListener('click', (e) => e.stopPropagation());
 
-  titleInput.addEventListener('input', toggleSaveButtons);
-  toggleSaveButtons();
+    const titleInput = detailsPanel.querySelector(
+      '#pdfTitleInput'
+    ) as HTMLInputElement;
 
-  saveTitleBtn.addEventListener('click', () => {
-    this.pdfTitle = titleInput.value.trim();
-    if (!this.pdfTitle) return;
-    this.saveTitleInNotification();
-    closeOverlay();
-  });
+    const saveTitleBtn = detailsPanel.querySelector(
+      '#saveTitleBtn'
+    ) as HTMLButtonElement;
 
-  savePdfBtn.addEventListener('click', () => {
-    this.pdfTitle = titleInput.value.trim() || 'Emily-Report';
-    const pdfContent = detailsPanel.querySelector('#detailsBody') as HTMLElement;
-    if (pdfContent) this.downloadPDF(pdfContent);
-  });
+    const savePdfBtn = detailsPanel.querySelector(
+      '#savePdfBtn'
+    ) as HTMLButtonElement;
 
-  detailsPanel
-    .querySelector('.chat-details-close')
-    ?.addEventListener('click', e => {
-      e.stopPropagation();
+    const toggleSaveButtons = () => {
+      const hasText = titleInput.value.trim().length > 0;
+      saveTitleBtn.disabled = !hasText;
+      savePdfBtn.disabled = false;
+    };
+
+    titleInput.addEventListener('input', toggleSaveButtons);
+    toggleSaveButtons();
+
+    saveTitleBtn.addEventListener('click', () => {
+      this.pdfTitle = titleInput.value.trim();
+      if (!this.pdfTitle) return;
+      this.saveTitleInNotification();
       closeOverlay();
     });
 
-  // Close overlay when FAB is clicked
-  fabEl.addEventListener('click', closeOverlay, { once: true });
+    savePdfBtn.addEventListener('click', () => {
+      this.pdfTitle = titleInput.value.trim() || 'Emily-Report';
+      const pdfContent = detailsPanel.querySelector(
+        '#detailsBody'
+      ) as HTMLElement;
+      if (pdfContent) this.downloadPDF(pdfContent);
+    });
 
-  // Add to DOM
-  document.body.appendChild(detailsPanel);
+    detailsPanel
+      .querySelector('.chat-details-close')
+      ?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeOverlay();
+      });
 
-  // =====================================================
-  //           NEW — CLICK OUTSIDE TO CLOSE OVERLAY
-  // =====================================================
-  const outsideClickHandler = (event: MouseEvent) => {
-    const target = event.target as HTMLElement;
-
-    const clickedInsidePanel = detailsPanel.contains(target);
-    const clickedInsideChat = chatDialog.contains(target);
-    const clickedFab = fabEl.contains(target);
-
-    if (!clickedInsidePanel && !clickedInsideChat && !clickedFab) {
+    document.body.appendChild(detailsPanel);
+    fabEl.addEventListener('click', () => {
       closeOverlay();
-      document.removeEventListener('click', outsideClickHandler);
-    }
-  };
+    });
+    const outsideClickHandler = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
 
-  // Delay so opening click doesn't trigger closing
-  setTimeout(() => {
-    document.addEventListener('click', outsideClickHandler);
-  }, 50);
+      const clickedInsidePanel = detailsPanel.contains(target);
+      const clickedInsideChat = chatDialog.contains(target);
+      const clickedFab = fabEl.contains(target);
 
-  // =====================================================
-  //    BOTTOM SAVE BUTTON (FOR SPECIFIC NOTIFICATION TYPES)
-  // =====================================================
-  const showSaveButton =
-    this.selectedNotification &&
-    [2, 3, 4].includes(+this.selectedNotification.taskId) &&
-    +this.selectedNotification.isEndInsertion === 0;
+      if (!clickedInsidePanel && !clickedInsideChat && !clickedFab) {
+        closeOverlay();
+        document.removeEventListener('click', outsideClickHandler);
+      }
+    };
 
-  if (showSaveButton) {
-    const bodyEl = detailsPanel.querySelector('#detailsBody') as HTMLElement;
+    setTimeout(() => {
+      document.addEventListener('click', outsideClickHandler);
+    }, 50);
 
-    const saveDiv = document.createElement('div');
-    saveDiv.classList.add('save-div');
+    const showSaveButton =
+      this.selectedNotification &&
+      [2, 3, 4].includes(+this.selectedNotification.taskId) &&
+      +this.selectedNotification.isEndInsertion === 0;
 
-    saveDiv.innerHTML = `
+    if (showSaveButton) {
+      const saveDiv = document.createElement('div');
+      saveDiv.classList.add('save-div');
+
+      saveDiv.innerHTML = `
       <button id="bottomSaveBtn" class="btn save-btn">Save</button>
     `;
 
-    bodyEl.appendChild(saveDiv);
+      detailsPanel.appendChild(saveDiv);
 
-    const bottomBtn = saveDiv.querySelector('#bottomSaveBtn') as HTMLButtonElement;
+      const bottomBtn = saveDiv.querySelector(
+        '#bottomSaveBtn'
+      ) as HTMLButtonElement;
 
-    bottomBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      if (this.isSaving) return;
-      this.saveNotification(this.selectedNotification!);
-      closeOverlay();
-    });
-  }
-}
-
-@HostListener('document:click', ['$event'])
-handleDocumentClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-
-  // 🔥 DO NOT CLOSE CHAT when overlay is open
-  const detailsPanel = document.querySelector('.chat-details-panel');
-  if (detailsPanel && detailsPanel.contains(target)) return;
-
-  // 🔥 Also ignore clicks on overlay panel area
-  if (detailsPanel) {
-    const chatDialog = document.querySelector('.dynamic-position') as HTMLElement;
-    if (chatDialog?.contains(target)) return;
+      bottomBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this.isSaving) return;
+        this.saveNotification(this.selectedNotification!);
+        closeOverlay();
+      });
+    }
   }
 
-  // 🔥 Ignore FAB click
-  const fabEl = this.chatModal['fabEl'] as HTMLElement;
-  if (fabEl?.contains(target)) return;
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
 
-  // Now proceed with the original closing logic
-  const chatButton = this.elementRef.nativeElement.querySelector('.chat-button');
-  const chatDropdown = this.elementRef.nativeElement.querySelector('.chat-dropdown');
+    const detailsPanel = document.querySelector('.chat-details-panel');
+    if (detailsPanel && detailsPanel.contains(target)) return;
 
-  if (chatButton && chatButton.contains(target)) return;
+    if (detailsPanel) {
+      const chatDialog = document.querySelector(
+        '.dynamic-position'
+      ) as HTMLElement;
+      if (chatDialog?.contains(target)) return;
+    }
 
-  if (
-    this.isOpen &&
-    target &&
-    chatDropdown &&
-    !chatDropdown.contains(target)
-  ) {
-    this.notificationService.setChatOpen(false);
-    this.isOpen = false;
-    this.closeAll();
+    const fabEl = this.chatModal['fabEl'] as HTMLElement;
+    if (fabEl?.contains(target)) return;
+
+    const chatButton =
+      this.elementRef.nativeElement.querySelector('.chat-button');
+    const chatDropdown =
+      this.elementRef.nativeElement.querySelector('.chat-dropdown');
+
+    if (chatButton && chatButton.contains(target)) return;
+
+    if (
+      this.isOpen &&
+      target &&
+      chatDropdown &&
+      !chatDropdown.contains(target)
+    ) {
+      this.notificationService.setChatOpen(false);
+      this.isOpen = false;
+      this.closeAll();
+    }
   }
-}
-
 
   getSCsDataFromJsons(flag: boolean): void {
     (window as any).electronMessage.getSCsDataFromJsons(flag);
@@ -1190,8 +1190,8 @@ handleDocumentClick(event: MouseEvent): void {
         }, 2500);
 
         this.isSaving = false;
-        this.pdfTitle = ''; 
-        this.refreshService.triggerUserPagesRefresh(); 
+        this.pdfTitle = '';
+        this.refreshService.triggerUserPagesRefresh();
 
         if (this.overlayModalRef) {
           this.overlayModalRef.close();
@@ -1487,31 +1487,31 @@ handleDocumentClick(event: MouseEvent): void {
       },
     });
   }
-closeAll(): void {
-  try {
-    // this.activeModal.close();  // <-- closes the actual modal
-  } catch {}
+  closeAll(): void {
+    try {
+      // this.activeModal.close();  // <-- closes the actual modal
+    } catch {}
 
-  // clean overlays
-  this.isOverlayMode = false;
-  this.showingMap = false;
-  this.isOverlayhtml = false;
-  this.overlayHtml = '';
+    // clean overlays
+    this.isOverlayMode = false;
+    this.showingMap = false;
+    this.isOverlayhtml = false;
+    this.overlayHtml = '';
 
-  this.notificationService.setMapOpen(false);
-  this.notificationService.setOverlayWide(false);
-  this.notificationService.setHtmlOpen(false);
+    this.notificationService.setMapOpen(false);
+    this.notificationService.setOverlayWide(false);
+    this.notificationService.setHtmlOpen(false);
 
-  this.overlayStateChange.emit(false);
-  this.sidebarStateChange.emit({
-    isOpen: false,
-    isFullyOpen: false,
-    type: 'overlay',
-    overlayActive: false,
-  });
+    this.overlayStateChange.emit(false);
+    this.sidebarStateChange.emit({
+      isOpen: false,
+      isFullyOpen: false,
+      type: 'overlay',
+      overlayActive: false,
+    });
 
-  this.chatModal.close(); 
-}
+    this.chatModal.close();
+  }
 
   private fetchNotifications(): void {
     // Main mode: always prefer specific notifications
