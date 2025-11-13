@@ -336,48 +336,7 @@
   align-items: center;
   justify-content: space-between;
 }
-.title-btn {
- background: var(--Colors-Primary-hover);
-  color: white;
-}
-.title-btn:hover {
-  background: var(--Colors-Primary-hover);
-  color: white;
-}
 
-.save-pdf-btn {
-  border-color: var(--Colors-Primary-500);
-  color: var(--Colors-Primary-500);
-}
-
-.save-pdf-btn:hover {
-  background: var(--Colors-Primary-500);
-  color: white;
-}
-.save-div {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  padding: 12px 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.save-div {
-  position: sticky;
-  bottom: 0;
-  z-index: 1;
-}
-
-/* Existing button styles (you already have these, included for context) */
-.save-btn {
-  background-color: var(--Colors-Primary-500) !important;
-  color: white !important;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-}
 
 
 @keyframes fadeInUp {

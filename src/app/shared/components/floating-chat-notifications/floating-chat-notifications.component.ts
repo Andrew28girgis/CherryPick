@@ -405,7 +405,7 @@ openOverlayModal(notification: any) {
       <button id="bottomSaveBtn" class="btn save-btn">Save</button>
     `;
 
-    bodyEl.appendChild(saveDiv);
+detailsPanel.appendChild(saveDiv);
 
     const bottomBtn = saveDiv.querySelector('#bottomSaveBtn') as HTMLButtonElement;
 
