@@ -123,15 +123,7 @@ import { FloatingChatNotificationsComponent } from './shared/components/floating
       import('./features/tasks/tasks.module').then((m) => m.TasksModule),
     canActivate: [TenantOnlyGuard, AccountLinkedGuard],
   },
-
-  {
-    path: 'submissions/:campaignId',
-    loadChildren: () =>
-      import('./features/Submissions/submissions.module').then(
-        (m) => m.SubmissionsModule
-      ),
-    canActivate: [TenantOnlyGuard],
-  },
+ 
   {
     path: 'campaigns',
     loadChildren: () =>
