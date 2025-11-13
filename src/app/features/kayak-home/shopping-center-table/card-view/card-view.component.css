@@ -836,7 +836,7 @@ label {
   border-radius: 14px;
   border: none;
   font-weight: 600;
-  font-size: 14px; 
+  font-size: 14px;
 }
 .card-badge span {
   white-space: nowrap;
@@ -1388,35 +1388,6 @@ table tbody td {
   font-weight: 500;
   color: #333;
   word-break: break-word;
-}
-
-.emily-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  color: #0075ef;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  z-index: 10;
-}
-
-.emily-button:hover {
-  text-decoration: underline;
-}
-
-.emily-button:active {
-  transform: scale(0.96);
-}
-
-.emily-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: currentColor;
-  display: inline-block;
 }
 .stat-bars > span {
   background: var(--app-color);

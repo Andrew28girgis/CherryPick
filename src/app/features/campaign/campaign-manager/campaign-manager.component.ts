@@ -21,7 +21,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AddCampaignPopupComponent } from '../add-campaign-popup/add-campaign-popup.component';
 import { RefreshService } from 'src/app/core/services/refresh.service';
-import { Tenant } from 'src/app/shared/models/tenant';
 import { PolygonsComponent } from '../../polygons/polygons.component';
 import { CampaignSpecs } from 'src/app/shared/models/campaignSpecs';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
@@ -127,7 +126,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     private router: Router,
     private refreshService: RefreshService,
     private route: ActivatedRoute,
-    private chatModal: ChatModalService,
+    private chatModal: ChatModalService
   ) {}
 
   ngOnInit(): void {
@@ -162,7 +161,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-  @HostListener('window:resize', ['$event'])
+
   onResize() {
     this.checkScreenSize();
   }
@@ -1218,10 +1217,13 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       });
   }
   editWithEMily(campaign: any): void {
-    const body: any = { Chat: 'Please provide any additional information available about this camopaign.',CampaignId: campaign.Id, ConversationId: 1 };
+    const body: any = {
+      Chat: 'Please provide any additional information available about this camopaign.',
+      CampaignId: campaign.Id,
+      ConversationId: 1,
+    };
     this.placesService.sendmessages(body).subscribe({});
     this.chatModal.openForButton();
     this.chatModal.setCampaignId(campaign.Id, 1);
- 
   }
 }

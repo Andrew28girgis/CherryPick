@@ -1835,33 +1835,5 @@ tr.click-disabled td:last-child * {
   height: 700px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
-}
-
-.emily-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  color: #0075ef;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  z-index: 10;
-}
-
-.emily-button:hover {
-  text-decoration: underline;
-}
-
-.emily-button:active {
-  transform: scale(0.96);
-}
-
-.emily-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: currentColor;
-  display: inline-block;
-}
+} 
+ 
