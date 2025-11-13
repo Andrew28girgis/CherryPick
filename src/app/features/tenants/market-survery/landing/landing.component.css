@@ -1005,7 +1005,7 @@ li {
 }
 
 .campaign-card {
-  background-color: var(--Colors-Primary-300);
+  background-color: var(--Colors-Primary-light);
   border-radius: 12px;
   padding: 1.2rem 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -1015,6 +1015,7 @@ li {
   justify-content: space-between;
   align-items: center;
   gap: 15px;
+  margin: 20px 0;
 }
 
 .campaign-header {
@@ -1090,13 +1091,15 @@ li {
 .score.active {
   background: var(--Colors-Primary-light);
 }
- 
 
 /* motion safety */
 @media (prefers-reduced-motion: reduce) {
   .stat-bars > span {
     animation: none;
   }
+}
+.stat-bars > span {
+  background-color: var(--Colors-Primary-500);
 }
 .icon-btn {
   background-color: #fff;

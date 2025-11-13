@@ -1,117 +1,39 @@
-/* === Base Sidebar === */
 .sidebar {
+  position: fixed;
   height: 100vh;
   display: flex;
   flex-direction: column;
   background: #fff;
   border-right: 1px solid #e5e7eb;
 }
-
-/* === Header (Logo + Toggle) === */
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 14px;
-  border-bottom: 1px solid #f0f0f0;
-  background: #fff;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--Colors-Primary-hover);
-  font-weight: 700;
-  font-size: 18px;
-}
-
-.brand img {
-  width: 100px;
-  height: auto;
-  transition: transform 0.3s ease;
-}
-
-.sidebar.collapsed .brand-text {
-  opacity: 0;
-  transform: translateX(-10px);
-  pointer-events: none;
-}
-
-/* Toggle Button */
-.collapse-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.collapse-btn:hover {
-  background: var(--Colors-Primary-light);
-  color: var(--Colors-Primary-hover);
-}
-
-.sidebar.collapsed .collapse-btn svg {
-  transform: rotate(180deg);
-}
-
-/* === Navigation === */
 .sidebar-nav {
   flex: 1;
-  padding: 10px 25px;
+  padding: 1px 25px;
   display: flex;
   flex-direction: column;
   gap: 4px;
   background-color: #fff;
-}
-
+} 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 12px;
   padding-block: 12px;
-  color: #7d7d7d;
+  color: #838383;
   text-decoration: none;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
   position: relative;
-}
-
+} 
 .nav-item:hover {
    color: var(--Colors-Primary-hover);
-}
-
+} 
 .nav-item.active {
   font-weight: 600;
   color: var(--Colors-Primary-500);
-}
-
-/* .nav-item::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 3px;
-  background: var(--Colors-Primary-hover);
-  transform: scaleY(0);
-  transition: transform 0.2s ease;
-} */
-
-.nav-item.active::before {
-  transform: scaleY(1);
-}
-
+}   
 .nav-icon {
   font-size: 18px;
 }
