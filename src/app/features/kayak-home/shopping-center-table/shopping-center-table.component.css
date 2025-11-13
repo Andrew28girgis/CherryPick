@@ -664,9 +664,7 @@
 .header-container {
   display: flex;
   align-items: center;
-  gap: var(--Space-S-16);
-  padding-top: var(--Space-S-24);
-  padding-bottom: 18px;
+  gap: var(--Space-S-16); 
 }
 
 /* Replace the existing search container styles */
@@ -945,11 +943,9 @@
 }
 
 .tenant-name span {
-  color: var(--app-color);
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 56px; /* 127.273% */
+  color: var(--Colors-Primary-500);
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .send-email-button {
