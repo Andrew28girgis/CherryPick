@@ -8,6 +8,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 999999 !important;
 }
 
 .dynamic-position {
@@ -336,8 +337,8 @@
   justify-content: space-between;
 }
 .title-btn {
-  background: var(--Colors-Primary-500);
-  border: none;
+ background: var(--Colors-Primary-hover);
+  color: white;
 }
 .title-btn:hover {
   background: var(--Colors-Primary-hover);
@@ -353,7 +354,6 @@
   background: var(--Colors-Primary-500);
   color: white;
 }
-/* Footer bar for the Save button */
 .save-div {
   flex: 0 0 auto;
   display: flex;
@@ -362,7 +362,6 @@
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* Optional: make it “sticky” if you want it to stay visible even if wrapper scrolls */
 .save-div {
   position: sticky;
   bottom: 0;
@@ -371,18 +370,15 @@
 
 /* Existing button styles (you already have these, included for context) */
 .save-btn {
-  background-color: var(--Colors-Primary-500);
-  color: white;
+  background-color: var(--Colors-Primary-500) !important;
+  color: white !important;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
-.save-btn:active {
-  background-color: var(--Colors-Primary-hover);
-}
+
 
 @keyframes fadeInUp {
   from {
@@ -600,12 +596,6 @@
 .close-button:hover {
   background: var(--Colors-Primary-hover);
  }
-
- 
-
-.close-button svg {
-  pointer-events: none; /* let clicks pass through to button */
-}
 
 .clear-button{
   background-color: #ff3333 !important;

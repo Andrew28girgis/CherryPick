@@ -59,8 +59,7 @@ export {};
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './floating-chat-notifications.component.html',
   styleUrls: ['./floating-chat-notifications.component.css'],
-      encapsulation: ViewEncapsulation.None, // 👈 add this
-
+  encapsulation: ViewEncapsulation.None, // 👈 add this
 })
 export class FloatingChatNotificationsComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -101,6 +100,8 @@ export class FloatingChatNotificationsComponent
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
   @ViewChild('notificationModal') notificationModal!: TemplateRef<any>;
+  @ViewChild('overlayContainer', { read: ElementRef }) overlayContainer!: ElementRef;
+
 
   outgoingText = '';
   isSending = false;
@@ -147,7 +148,9 @@ export class FloatingChatNotificationsComponent
     private ngZone: NgZone,
     private modalService: NgbModal,
     private refreshService: RefreshService,
-    private chatModal: ChatModalService
+    private chatModal: ChatModalService,
+    public activeModal: NgbActiveModal          // <-- ADD THIS
+
   ) {}
 
   showScrollButton = false;
@@ -239,107 +242,220 @@ export class FloatingChatNotificationsComponent
     this.mo?.disconnect();
     this.ro?.disconnect();
   }
-  openOverlayModal(notification: any) {
-    this.loadNotificationViewComponent(notification);
+openOverlayModal(notification: any) {
+  this.loadNotificationViewComponent(notification);
 
-    const fabEl = this.chatModal['fabEl'] as HTMLElement;
-    if (!fabEl) {
-      console.warn('Floating chat button not found');
-      return;
-    }
+  const fabEl = this.chatModal['fabEl'] as HTMLElement;
+  if (!fabEl) {
+    console.warn('Floating chat button not found');
+    return;
+  }
 
-    const existingPanel = document.querySelector('.chat-details-panel');
-    if (existingPanel) {
-      existingPanel.remove();
-      fabEl.style.top = '';
-      fabEl.style.right = '';
-      fabEl.style.left = '';
-      fabEl.style.bottom = '';
-      fabEl.style.position = 'fixed';
-      fabEl.style.transform = '';
-      return;
-    }
+  // Remove existing panel if open
+  const existingPanel = document.querySelector('.chat-details-panel');
+  if (existingPanel) {
+    existingPanel.remove();
+    fabEl.style.top =
+      fabEl.style.right =
+      fabEl.style.left =
+      fabEl.style.bottom =
+        '';
+    fabEl.style.position = 'fixed';
+    fabEl.style.transform = '';
+    return;
+  }
 
+  const chatDialog = document.querySelector('.dynamic-position') as HTMLElement;
+  if (!chatDialog) return;
 
-    const chatDialog = document.querySelector(
-      '.dynamic-position'
-    ) as HTMLElement;
-    if (!chatDialog) return;
+  const chatRect = chatDialog.getBoundingClientRect();
+  const detailsPanel = document.createElement('div');
+  detailsPanel.classList.add('chat-details-panel');
 
-    const chatWidth = 420;
-    const margin = 16;
-    // const top = 80;
-    // const left = window.innerWidth - chatWidth - margin;
-    // chatDialog.style.top = `${top}px`;
-    // chatDialog.style.left = `${left}px`;
+  const safeHtmlString = (this.overlayHtml as unknown as string) || '';
 
-    const chatRect = chatDialog.getBoundingClientRect();
-    const detailsPanel = document.createElement('div');
-    detailsPanel.classList.add('chat-details-panel');
-    detailsPanel.innerHTML = `
-    <div class="chat-details-header">
-      <h4>Details</h4>
-      <button class="chat-details-close">×</button>
+  // ================= HTML ====================
+  detailsPanel.innerHTML = `
+    <div class="chat-details-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <h4 class="mb-0">Details</h4>
+
+      <div class="d-flex align-items-center gap-2">
+        <input type="text" id="pdfTitleInput" placeholder="Enter Title"
+          class="form-control form-control-sm" style="width: 180px" />
+
+        <button id="saveTitleBtn" class="btn btn-sm title-btn" disabled>Save Title</button>
+        <button id="savePdfBtn" class="btn btn-sm save-pdf-btn">📄 Save PDF</button>
+
+        <button class="chat-details-close btn btn-sm btn-light border">×</button>
+      </div>
     </div>
-    <div class="chat-details-body">${this.overlayHtml || ''}</div>
+
+    <div class="chat-details-body" id="detailsBody"
+        style="padding: 16px; padding-bottom: 120px;">
+      ${safeHtmlString}
+    </div>
   `;
 
-    detailsPanel.style.position = 'fixed';
-    detailsPanel.style.top = `${chatRect.top}px`;
-    detailsPanel.style.left = `${16}px`;
-    detailsPanel.style.width = `${chatRect.left - 32}px`;
-    detailsPanel.style.height = `${chatRect.height}px`;
-    detailsPanel.style.background = '#fff';
-    detailsPanel.style.borderRadius = '8px';
-    detailsPanel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
-    detailsPanel.style.overflowY = 'auto';
-    detailsPanel.style.zIndex = '100000';
-    detailsPanel.style.animation = 'popIn 0.25s ease forwards';
+  // ================= STYLES ====================
+  detailsPanel.style.position = 'fixed';
+  detailsPanel.style.top = `${chatRect.top}px`;
+  detailsPanel.style.left = `16px`;
+  detailsPanel.style.width = `${chatRect.left - 32}px`;
+  detailsPanel.style.height = `${chatRect.height}px`;
+  detailsPanel.style.background = '#fff';
+  detailsPanel.style.borderRadius = '8px';
+  detailsPanel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+  detailsPanel.style.overflowY = 'auto';
+  detailsPanel.style.zIndex = '999999999';
+  detailsPanel.style.animation = 'fadeIn 0.25s ease forwards';
 
-    const closeOverlay = () => {
+  // ================= CLOSE PANEL ====================
+  const closeOverlay = () => {
+    detailsPanel.style.animation = 'fadeOut 0.2s ease forwards';
+
+    setTimeout(() => {
       detailsPanel.remove();
-      fabEl.style.top = '';
-      fabEl.style.right = '';
-      fabEl.style.left = '';
-      fabEl.style.bottom = '';
+      fabEl.style.top =
+        fabEl.style.right =
+        fabEl.style.left =
+        fabEl.style.bottom =
+          '';
       fabEl.style.position = 'fixed';
-      fabEl.style.transition = '';
-    };
+      this.closeOverlayContent();
+    }, 180);
+  };
 
-    detailsPanel
-      .querySelector('.chat-details-close')
-      ?.addEventListener('click', closeOverlay);
+  // Prevent inside click from closing
+  detailsPanel.addEventListener('click', e => e.stopPropagation());
 
-    fabEl.addEventListener('click', closeOverlay, { once: true });
+  // ================= TITLE + PDF BUTTON LOGIC ====================
+  const titleInput = detailsPanel.querySelector('#pdfTitleInput') as HTMLInputElement;
+  const saveTitleBtn = detailsPanel.querySelector('#saveTitleBtn') as HTMLButtonElement;
+  const savePdfBtn = detailsPanel.querySelector('#savePdfBtn') as HTMLButtonElement;
 
-    document.body.appendChild(detailsPanel);
+  const toggleSaveButtons = () => {
+    const hasText = titleInput.value.trim().length > 0;
+    saveTitleBtn.disabled = !hasText;
+    savePdfBtn.disabled = false;
+  };
+
+  titleInput.addEventListener('input', toggleSaveButtons);
+  toggleSaveButtons();
+
+  saveTitleBtn.addEventListener('click', () => {
+    this.pdfTitle = titleInput.value.trim();
+    if (!this.pdfTitle) return;
+    this.saveTitleInNotification();
+    closeOverlay();
+  });
+
+  savePdfBtn.addEventListener('click', () => {
+    this.pdfTitle = titleInput.value.trim() || 'Emily-Report';
+    const pdfContent = detailsPanel.querySelector('#detailsBody') as HTMLElement;
+    if (pdfContent) this.downloadPDF(pdfContent);
+  });
+
+  detailsPanel
+    .querySelector('.chat-details-close')
+    ?.addEventListener('click', e => {
+      e.stopPropagation();
+      closeOverlay();
+    });
+
+  // Close overlay when FAB is clicked
+  fabEl.addEventListener('click', closeOverlay, { once: true });
+
+  // Add to DOM
+  document.body.appendChild(detailsPanel);
+
+  // =====================================================
+  //           NEW — CLICK OUTSIDE TO CLOSE OVERLAY
+  // =====================================================
+  const outsideClickHandler = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+
+    const clickedInsidePanel = detailsPanel.contains(target);
+    const clickedInsideChat = chatDialog.contains(target);
+    const clickedFab = fabEl.contains(target);
+
+    if (!clickedInsidePanel && !clickedInsideChat && !clickedFab) {
+      closeOverlay();
+      document.removeEventListener('click', outsideClickHandler);
+    }
+  };
+
+  // Delay so opening click doesn't trigger closing
+  setTimeout(() => {
+    document.addEventListener('click', outsideClickHandler);
+  }, 50);
+
+  // =====================================================
+  //    BOTTOM SAVE BUTTON (FOR SPECIFIC NOTIFICATION TYPES)
+  // =====================================================
+  const showSaveButton =
+    this.selectedNotification &&
+    [2, 3, 4].includes(+this.selectedNotification.taskId) &&
+    +this.selectedNotification.isEndInsertion === 0;
+
+  if (showSaveButton) {
+    const bodyEl = detailsPanel.querySelector('#detailsBody') as HTMLElement;
+
+    const saveDiv = document.createElement('div');
+    saveDiv.classList.add('save-div');
+
+    saveDiv.innerHTML = `
+      <button id="bottomSaveBtn" class="btn save-btn">Save</button>
+    `;
+
+    bodyEl.appendChild(saveDiv);
+
+    const bottomBtn = saveDiv.querySelector('#bottomSaveBtn') as HTMLButtonElement;
+
+    bottomBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (this.isSaving) return;
+      this.saveNotification(this.selectedNotification!);
+      closeOverlay();
+    });
+  }
+}
+
+@HostListener('document:click', ['$event'])
+handleDocumentClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+
+  // 🔥 DO NOT CLOSE CHAT when overlay is open
+  const detailsPanel = document.querySelector('.chat-details-panel');
+  if (detailsPanel && detailsPanel.contains(target)) return;
+
+  // 🔥 Also ignore clicks on overlay panel area
+  if (detailsPanel) {
+    const chatDialog = document.querySelector('.dynamic-position') as HTMLElement;
+    if (chatDialog?.contains(target)) return;
   }
 
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: MouseEvent): void {
+  // 🔥 Ignore FAB click
+  const fabEl = this.chatModal['fabEl'] as HTMLElement;
+  if (fabEl?.contains(target)) return;
 
-    const target = event.target as HTMLElement | null;
-    const chatButton =
-      this.elementRef.nativeElement.querySelector('.chat-button');
-    const chatDropdown =
-      this.elementRef.nativeElement.querySelector('.chat-dropdown');
+  // Now proceed with the original closing logic
+  const chatButton = this.elementRef.nativeElement.querySelector('.chat-button');
+  const chatDropdown = this.elementRef.nativeElement.querySelector('.chat-dropdown');
 
-    if (chatButton && chatButton.contains(target)) {
-      return;
-    }
+  if (chatButton && chatButton.contains(target)) return;
 
-    if (
-      this.isOpen &&
-      target &&
-      chatDropdown &&
-      !chatDropdown.contains(target)
-    ) {
-      this.notificationService.setChatOpen(false);
-      this.isOpen = false;
-      this.closeAll();
-
-    }
+  if (
+    this.isOpen &&
+    target &&
+    chatDropdown &&
+    !chatDropdown.contains(target)
+  ) {
+    this.notificationService.setChatOpen(false);
+    this.isOpen = false;
+    this.closeAll();
   }
+}
+
 
   getSCsDataFromJsons(flag: boolean): void {
     (window as any).electronMessage.getSCsDataFromJsons(flag);
@@ -969,6 +1085,7 @@ export class FloatingChatNotificationsComponent
 
     this.isGeneratingPdf = true;
 
+    // Process images to fix cross-origin issues
     const imgs = Array.from(
       containerEl.querySelectorAll('img')
     ) as HTMLImageElement[];
@@ -979,7 +1096,7 @@ export class FloatingChatNotificationsComponent
             /^https?:\/\//.test(img.src) &&
             !img.src.startsWith(window.location.origin)
           ) {
-            img.src = await this.toDataURL(img.src);
+            img.src = await this.toDataURL(img.src); // Convert image to Data URL
           }
         } catch (err) {
           console.warn('Could not process image:', img.src, err);
@@ -1048,7 +1165,12 @@ export class FloatingChatNotificationsComponent
   }
 
   saveTitleInNotification(): void {
+    if (!this.pdfTitle.trim()) {
+      return;
+    }
+
     this.isSaving = true;
+
     const request = {
       Name: 'SetTitleInNotification',
       Params: {
@@ -1063,14 +1185,15 @@ export class FloatingChatNotificationsComponent
 
         this.showSaveToast = true;
         this.cdRef.detectChanges();
+
         setTimeout(() => {
           this.showSaveToast = false;
           this.cdRef.detectChanges();
         }, 2500);
 
         this.isSaving = false;
-        this.pdfTitle = '';
-        this.refreshService.triggerUserPagesRefresh();
+        this.pdfTitle = ''; 
+        this.refreshService.triggerUserPagesRefresh(); 
 
         if (this.overlayModalRef) {
           this.overlayModalRef.close();
@@ -1164,7 +1287,7 @@ export class FloatingChatNotificationsComponent
         requestAnimationFrame(() => this.scrollToBottomNow());
       });
     }
-  
+
     // recompute for the next cycle
     this.wasSticky = this.isAtBottom();
   }
@@ -1366,34 +1489,32 @@ export class FloatingChatNotificationsComponent
       },
     });
   }
-  closeAll(): void {
-    if (this.electronSideBar) {
-      this.closeSide();
-    } else {
-      this.closeOverlayContent();
-   
-    }
-    this.closeOverlayContent();
+closeAll(): void {
+  try {
+    this.activeModal.close();  // <-- closes the actual modal
+  } catch {}
 
-    if (this.isOverlayMode) {
-      this.isOverlayMode = false;
-      this.showingMap = false;
-      this.isOverlayhtml = false;
-      this.overlayHtml = '';
+  // clean overlays
+  this.isOverlayMode = false;
+  this.showingMap = false;
+  this.isOverlayhtml = false;
+  this.overlayHtml = '';
 
-      this.notificationService.setMapOpen(false);
-      this.notificationService.setOverlayWide(false);
-      this.notificationService.setHtmlOpen(false);
+  this.notificationService.setMapOpen(false);
+  this.notificationService.setOverlayWide(false);
+  this.notificationService.setHtmlOpen(false);
 
-      this.overlayStateChange.emit(false);
-      this.sidebarStateChange.emit({
-        isOpen: this.isOpen,
-        isFullyOpen: this.isOpen,
-        type: 'overlay',
-        overlayActive: false,
-      });
-    }
-  }
+  this.overlayStateChange.emit(false);
+  this.sidebarStateChange.emit({
+    isOpen: false,
+    isFullyOpen: false,
+    type: 'overlay',
+    overlayActive: false,
+  });
+
+  this.chatModal.close(); 
+}
+
   private fetchNotifications(): void {
     // Main mode: always prefer specific notifications
     if (

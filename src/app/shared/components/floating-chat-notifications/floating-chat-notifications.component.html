@@ -10,37 +10,37 @@
           alt="Emily"
         />
         <h3 class="floating-title">Emily</h3>
-        <div style="display: flex; gap: 6px; align-items: center">
-          <button
-            class="g-button clear-button"
-            [ngClass]="{ 'close-route': isChatbotRoute }"
-            style="height: 10px"
-            (click)="clearEmilyChat()"
-            aria-label="Close"
-          >
-            Clear
-          </button>
-        </div>
       </div>
 
-      <button
-        class="close-button"
-        [ngClass]="{ 'close-route': isChatbotRoute }"
-        (click)="closeAll()"
-        aria-label="Close"
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
+      <div style="display: flex; gap: 6px; align-items: center">
+        <button
+          class="g-button clear-button"
+          [ngClass]="{ 'close-route': isChatbotRoute }"
+          style="height: 10px"
+          (click)="clearEmilyChat()"
+          aria-label="Close"
         >
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+          Clear
+        </button>
+      </div>
+      <button
+      class="close-button"
+      [ngClass]="{ 'close-route': isChatbotRoute }"
+       (click)="closeAll()"
+      aria-label="Close"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
     </div>
 
     <div
@@ -280,14 +280,12 @@
                 <button
                   *ngIf="item.notification?.html"
                   class="view-details"
-                  (click)="
-                    openOverlayModal(item.notification!);
-                    loadNotificationViewComponent(item.notification!)
-                  "
+                 (click)="openOverlayModal(item.notification!); loadNotificationViewComponent(item.notification!)"
+
                 >
                   View
                 </button>
-              </div>
+               </div>
 
               <time
                 class="message-time"
