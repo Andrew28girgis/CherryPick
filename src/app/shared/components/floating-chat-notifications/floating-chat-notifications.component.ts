@@ -398,7 +398,7 @@ export class FloatingChatNotificationsComponent
 
     const showSaveButton =
       this.selectedNotification &&
-      [2, 3, 4,5].includes(+this.selectedNotification.taskId) &&
+      [2, 3, 4, 5].includes(+this.selectedNotification.taskId) &&
       +this.selectedNotification.isEndInsertion === 0;
 
     if (showSaveButton) {
@@ -647,9 +647,9 @@ export class FloatingChatNotificationsComponent
     this.showTyping();
 
     const lastNotification =
-    this.notificationService?.notificationsnew[
-      this.notificationService.notificationsnew.length - 2
-    ];
+      this.notificationService?.notificationsnew[
+        this.notificationService.notificationsnew.length - 2
+      ];
     let conversationIdtrust = this.conversationId;
     if (this.conversationId) {
       conversationIdtrust = this.conversationId;
@@ -906,15 +906,6 @@ export class FloatingChatNotificationsComponent
   }
 
   trackByChatItem = (_: number, item: ChatItem) => item.key;
-
-  private sortNotificationsByDateAsc(): void {
-    const arr = this.notificationService?.notificationsnew;
-    if (!Array.isArray(arr)) return;
-    arr.sort(
-      (a, b) =>
-        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
-    );
-  }
 
   private scrollAfterRender(): void {
     // Flush template changes
@@ -1561,7 +1552,6 @@ export class FloatingChatNotificationsComponent
 
         this.previousNotificationsLength =
           this.notificationService.notificationsnew.length;
-        this.sortNotificationsByDateAsc();
         // this.scrollToBottom();
         this.scanTrigger$.next();
       });
@@ -1578,7 +1568,6 @@ export class FloatingChatNotificationsComponent
 
         this.previousNotificationsLength =
           this.notificationService.notifications.length;
-        this.sortNotificationsByDateAsc();
         // this.scrollToBottom();
 
         if (
@@ -1590,7 +1579,7 @@ export class FloatingChatNotificationsComponent
               this.notificationService.notifications.length - 1
             ];
           this.notificationSourceUrl = last.sourceUrl;
-          if (!this.chatModal.lockConversationContext &&last.sourceUrl) {
+          if (!this.chatModal.lockConversationContext && last.sourceUrl) {
             this.conversationId = last.emilyConversationCategoryId;
           }
 
@@ -1616,7 +1605,7 @@ export class FloatingChatNotificationsComponent
           ]
         );
         console.log('first typing ', this.isfirstyping);
-        this.isTyping=true;
+        this.isTyping = true;
         this.chatModal.setFirstTyping(false);
         this.isfirstyping = false;
         console.log('first typing set to false');
