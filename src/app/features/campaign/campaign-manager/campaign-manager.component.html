@@ -6,205 +6,94 @@
   </div>
 
   <div
-    class="w-100 d-flex align-items-center justify-content-end"
-    style="padding-block: 21px"
+    class="d-flex align-items-center gap-3 justify-content-between w-100 py-3"
+    *ngIf="!hideViewToggles"
   >
-    <div
-      class="d-flex align-items-center gap-3 toggle-cont justify-content-between w-100"
-      *ngIf="!hideViewToggles"
-    >
-      <!-- Organization Tabs -->
+    <div *ngIf="filteredCampaigns?.length" class="organization-tabs-container">
       <div
-        *ngIf="filteredCampaigns?.length"
-        class="organization-tabs-container"
+        class="organization-tab"
+        [class.active]="selectedOrganizationId === 'all'"
+        (click)="filterByOrganization('all')"
       >
-        <div
-          class="organization-tab"
-          [class.active]="selectedOrganizationId === 'all'"
-          (click)="filterByOrganization('all')"
-        >
-          All
-        </div>
+        All
+      </div>
 
-        <div
-          class="organization-tab"
-          *ngFor="let org of organizations"
-          [class.active]="selectedOrganizationId === org.id"
-          (click)="filterByOrganization(org.id)"
-        >
-          <!-- <img
-            *ngIf="org.logo; else logoPlaceholder"
+      <div
+        class="organization-tab"
+        *ngFor="let org of organizations"
+        [class.active]="selectedOrganizationId === org.id"
+        (click)="filterByOrganization(org.id)"
+      >
+        <ng-container *ngIf="org.logo; else logoPlaceholder">
+          <img
             [src]="org.logo"
             class="org-c-logo"
-          /> -->
-
-          <ng-container *ngIf="org.logo; else logoPlaceholder">
-            <img
-              [src]="org.logo"
-              class="org-c-logo"
-              #logoImg
-              crossorigin="anonymous"
-            />
-          </ng-container>
-          <ng-template #logoPlaceholder>
-            <div class="org-logo org-c-logo placeholder">
-              {{ getInitials(org.name) }}
-            </div>
-          </ng-template>
-          {{ org.name }}
-        </div>
+            #logoImg
+            crossorigin="anonymous"
+          />
+        </ng-container>
+        <ng-template #logoPlaceholder>
+          <div class="org-logo org-c-logo placeholder">
+            {{ getInitials(org.name) }}
+          </div>
+        </ng-template>
+        <!-- {{ org.name }} -->
       </div>
-      <div class="d-flex align-items-center gap-3 flex-row">
-        <div class="view-toggle" *ngIf="true">
-          <button
-            class="toggle-btn"
-            [class.active]="viewMode === 'table'"
-            (click)="toggleView('table')"
+    </div>
+    <div class="d-flex align-items-center gap-3 flex-row">
+      <div class="view-toggle" *ngIf="true">
+        <button
+          class="toggle-btn"
+          [class.active]="viewMode === 'table'"
+          (click)="toggleView('table')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-table-properties-icon lucide-table-properties"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-table-properties-icon lucide-table-properties"
-            >
-              <path d="M15 3v18" />
-              <rect width="18" height="18" x="3" y="3" rx="2" />
-              <path d="M21 9H3" />
-              <path d="M21 15H3" />
-            </svg>
-          </button>
-          <button
-            class="toggle-btn"
-            [class.active]="viewMode === 'card'"
-            (click)="toggleView('card')"
+            <path d="M15 3v18" />
+            <rect width="18" height="18" x="3" y="3" rx="2" />
+            <path d="M21 9H3" />
+            <path d="M21 15H3" />
+          </svg>
+        </button>
+        <button
+          class="toggle-btn"
+          [class.active]="viewMode === 'card'"
+          (click)="toggleView('card')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
-          </button>
-        </div>
-        <button class="g-button" (click)="openAddCampaign(addCampaign)">
-          <span>Add Campaign</span>
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
         </button>
       </div>
+      <button class="g-button" (click)="openAddCampaign(addCampaign)">
+        <span>Add Campaign</span>
+      </button>
     </div>
   </div>
 
-  <!-- Skeleton loading for Card View -->
-  <!-- <div class="campaign-manager-body" *ngIf="isLoading && viewMode === 'card'">
-    <div class="dashboard-cards-container">
-      <div
-        class="dashboard-card skeleton-card"
-        *ngFor="let i of skeletonCardArray"
-      >
-        <div class="card-header">
-          <div class="skeleton-title"></div>
-          <div class="skeleton-privacy"></div>
-        </div>
-        <div class="card-organization">
-          <div class="skeleton-logo"></div>
-          <div class="skeleton-tenant-name"></div>
-        </div>
-        <div class="card-metrics">
-          <div class="metric-item">
-            <div class="skeleton-stat-value"></div>
-            <div class="skeleton-stat-label"></div>
-          </div>
-          <div class="metric-item">
-            <div class="skeleton-stat-value"></div>
-            <div class="skeleton-stat-label"></div>
-          </div>
-          <div class="metric-item">
-            <div class="skeleton-stat-value"></div>
-            <div class="skeleton-stat-label"></div>
-          </div>
-        </div>
-        <div class="card-actions">
-          <div class="skeleton-button"></div>
-          <div class="skeleton-button"></div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
-  <!-- Skeleton loading for Table View -->
-  <!-- <div class="campaign-manager-body" *ngIf="isLoading && viewMode === 'table'">
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th style="width: 250px">Campaign Name</th>
-            <th style="width: 80px; text-align: center">Emily</th>
-            <th style="width: 120px; text-align: center">Date</th>
-            <th style="width: 100px; text-align: center">Privacy</th>
-            <th style="width: 80px; text-align: center">Sites</th>
-            <th style="width: 120px; text-align: center">Submissions</th>
-            <th style="width: 80px; text-align: center">Sent</th>
-            <ng-container *ngFor="let stage of stages">
-              <th scope="col" style="width: 100px; text-align: center">
-                {{ stage.stageName }}
-              </th>
-            </ng-container>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let i of skeletonTableArray">
-            <td style="width: 250px">
-              <div class="skeleton-campaign-name"></div>
-              <div class="d-flex align-items-center gap-2 mt-2">
-                <div class="skeleton-logo"></div>
-                <div class="skeleton-tenant-name"></div>
-              </div>
-            </td>
-            <td style="text-align: center">
-              <div class="skeleton-date-cell"></div>
-            </td>
-            <td style="text-align: center">
-              <div class="skeleton-privacy-cell"></div>
-            </td>
-            <td style="text-align: center">
-              <div class="skeleton-sites-cell"></div>
-            </td>
-            <td style="text-align: center">
-              <div class="skeleton-submissions-cell"></div>
-            </td>
-            <td style="text-align: center">
-              <div class="skeleton-sent-cell"></div>
-            </td>
-            <td style="text-align: center">
-              <div class="skeleton-actions-cell"></div>
-            </td>
-            <ng-container *ngFor="let j of skeletonStagesArray">
-              <td style="text-align: center">
-                <div class="skeleton-stage-cell"></div>
-              </td>
-            </ng-container>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div> -->
-
-  <!-- Actual content -->
   <div
     *ngIf="
       filteredCampaigns && filteredCampaigns.length > 0 && stages.length > 0
@@ -221,14 +110,6 @@
           [class.click-disabled]="openMenuId === campaign.Id"
           [class.changed]="campaign.changed"
         >
-          <div
-            (click)="editWithEMily(campaign)"
-            class="emily-button"
-            aria-label=" Emily  "
-          >
-            <span class="emily-dot"></span>
-            Emily
-          </div>
           <div class="card-overlay">
             <div class="menu-wrapper" (click)="$event.stopPropagation()">
               <button
@@ -337,13 +218,23 @@
                 </ng-template>
 
                 <!-- Text block -->
-                <div class="title-text">
-                  <div class="campaign-title">{{ campaign.CampaignName }}</div>
+                <div>
                   <div class="organization-name">
-                    {{ campaign.OrganizationName }}
+                    {{ campaign.OrganizationName | uppercase }}
+                  </div>
+                  <div class="campaign-title">
+                    {{ campaign.CampaignName }}
                   </div>
                 </div>
               </a>
+              <div
+                style="margin-left: 70px"
+                (click)="editWithEMily(campaign)"
+                class="emily-button"
+                aria-label=" Emily  "
+              >
+                Ask Emily
+              </div>
             </div>
 
             <!-- <div
@@ -431,54 +322,6 @@
             </div>
           </div>
 
-          <div class="card-actions">
-            <div
-              class="email-action"
-              [routerLink]="[
-                '/organization-mail',
-                campaign.OrganizationId,
-                campaign.Id
-              ]"
-            >
-              <i class="fa-regular fa-envelope"></i>
-              <span>Emily</span>
-            </div>
-            <div
-              *ngIf="campaign.Sites"
-              class="email-action show-details"
-              [routerLink]="[
-                '/dashboard',
-                campaign.OrganizationId,
-                campaign.OrganizationName,
-                campaign.Id
-              ]"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M15.5799 11.9999C15.5799 13.9799 13.9799 15.5799 11.9999 15.5799C10.0199 15.5799 8.41992 13.9799 8.41992 11.9999C8.41992 10.0199 10.0199 8.41992 11.9999 8.41992C13.9799 8.41992 15.5799 10.0199 15.5799 11.9999Z"
-                  stroke="#fff"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M11.9998 20.2702C15.5298 20.2702 18.8198 18.1902 21.1098 14.5902C22.0098 13.1802 22.0098 10.8102 21.1098 9.40021C18.8198 5.80021 15.5298 3.72021 11.9998 3.72021C8.46984 3.72021 5.17984 5.80021 2.88984 9.40021C1.98984 10.8102 1.98984 13.1802 2.88984 14.5902C5.17984 18.1902 8.46984 20.2702 11.9998 20.2702Z"
-                  stroke="#fff"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span>Show Details</span>
-            </div>
-          </div>
-
           <!-- Card stages: tiny chips row -->
           <div class="card-stages always-visible">
             <div class="stages-chips">
@@ -496,16 +339,12 @@
       </ng-container>
     </div>
 
-    <!-- Original Table View -->
-    <div class="table-responsive" *ngIf="viewMode === 'table'">
+    <div class="table-responsive mt-3" *ngIf="viewMode === 'table'">
       <div class="table-inner">
         <table class="table align-middle">
           <thead>
             <tr>
               <th class="col-name">Name</th>
-              <th class="col-emily">Emily</th>
-              <th class="col-sites">Sites</th>
-              <th class="col-submissions">Submissions</th>
               <th class="col-sent">Sent</th>
               <ng-container *ngFor="let stage of stages">
                 <th scope="col" class="col-stage">
@@ -522,35 +361,23 @@
                 <td class="col-name">
                   <div class="campaign-info">
                     <div
-                      class="campaign-name"
-                      [routerLink]="[
-                        '/dashboard',
-                        campaign.OrganizationId,
-                        campaign.OrganizationName,
-                        campaign.Id
-                      ]"
+                      class="t-name d-flex justify-content-between w-100 align-items-center mt-2"
                     >
-                      {{ campaign.CampaignName }} /
-                      {{ campaign.OrganizationName }}
-                    </div>
+                      <div>
+                        <img
+                          [src]="campaign.LogoUrl"
+                          class="org-c-logo"
+                          #logoImg
+                          crossorigin="anonymous"
+                        />
 
-                    <div
-                      (click)="editWithEMily(campaign)"
-                      class="emily-button emily-button-table"
-                      aria-label=" Emily  "
-                    >
-                      <span class="emily-dot"></span>
-                      Emily
-                    </div>
-                    <div
-                      class="date justify-content-between gap-1 w-100"
-                      style="display: flex; align-items: center"
-                    >
-                      {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-                      <!-- Bootstrap Dropdown -->
+                        <span class="ms-2">{{
+                          campaign.OrganizationName | uppercase
+                        }}</span>
+                      </div>
                       <div ngbDropdown container="body" class="dropdown">
                         <button
-                          class="btn btn-light btn-sm"
+                          class="btn btn-light btn-sm p-0"
                           ngbDropdownToggle
                           (click)="$event.stopPropagation()"
                         >
@@ -596,89 +423,52 @@
                           </button>
                         </div>
                       </div>
-
+                    </div>
+                    <div
+                      class="d-flex justify-content-between w-100 align-items-center mt-2"
+                    >
                       <div
-                        class="campaign-privacy"
-                        [ngClass]="{
-                          'campaign-privacy-public':
-                            campaign.CampaignPrivacy == 0,
-                          'campaign-privacy-private':
-                            campaign.CampaignPrivacy == 1
-                        }"
+                        class="campaign-name"
+                        [routerLink]="[
+                          '/dashboard',
+                          campaign.OrganizationId,
+                          campaign.OrganizationName,
+                          campaign.Id
+                        ]"
                       >
-                        <div class="campaign-privacy-icon"></div>
-                        <span>
-                          {{
-                            campaign.CampaignPrivacy == 0 ? "Public" : "Private"
-                          }}
-                        </span>
+                        <p class="m-0" style="font-weight: 500">
+                          {{ campaign.CampaignName }}
+                        </p>
+                      </div>
+                      <div
+                        class="inbox mail"
+                        [routerLink]="[
+                          '/organization-mail',
+                          campaign.OrganizationId,
+                          campaign.Id
+                        ]"
+                      >
+                        <i class="fa-regular fa-envelope"></i>
                       </div>
                     </div>
-                  </div>
-                </td>
-
-                <td class="col-emily">
-                  <div
-                    class="inbox mail"
-                    [routerLink]="[
-                      '/organization-mail',
-                      campaign.OrganizationId,
-                      campaign.Id
-                    ]"
-                  >
-                    <i class="fa-regular fa-envelope"></i>
-                  </div>
-                </td>
-
-                <td class="col-sites">
-                  <div class="sites-info">
-                    <div>{{ campaign.Sites }}</div>
-                    <svg
-                      [routerLink]="[
-                        '/dashboard',
-                        campaign.OrganizationId,
-                        campaign.OrganizationName,
-                        campaign.Id
-                      ]"
-                      class="external-link-icon"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </div>
-                </td>
-
-                <td class="col-submissions">
-                  <div class="submissions-info">
-                    <div *ngIf="campaign.Submissions" class="submission-counts">
-                      <span class="count-new">{{
-                        getSubmissionsCountNew(campaign.Submissions)
-                      }}</span>
-                      <span class="separator">|</span>
-                      <span class="count-accepted">{{
-                        getSumbmissionsCountAcceppted(campaign.Submissions)
-                      }}</span>
-                      <span class="separator">|</span>
-                      <span class="count-rejected">{{
-                        getSumbmissionsCountRejected(campaign.Submissions)
-                      }}</span>
+                    <div class="mt-1">
+                      <div class="sites-info">
+                        <div>{{ campaign.Sites }} Sites Available</div>
+                      </div>
+                      <p class="created-date m-0">
+                        {{
+                          (campaign.CreatedDate | date : "MMM d, y") ?? "N/A"
+                        }}
+                      </p>
                     </div>
-                    <div *ngIf="!campaign.Submissions" class="no-data">N/A</div>
+
+                    <div
+                      (click)="editWithEMily(campaign)"
+                      class="emily-button emily-button-table mt-2"
+                      aria-label=" Emily  "
+                    >
+                      Ask Emily
+                    </div>
                   </div>
                 </td>
 

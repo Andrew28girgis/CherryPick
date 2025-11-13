@@ -2,10 +2,10 @@
 @import "primeng/resources/primeng.css";
 
 :root {
-  --app-color: #14303a;
+  --app-color: #14213d;
   --app-font: "Poppins", sans-serif;
-  --Colors-Primary-500: #252c35;
-  --Colors-Primary-400: #3d444c ;
+  --Colors-Primary-500: #14213d;
+  --Colors-Primary-400: #0e2021;
   --Colors-Primary-300: #868a8f;
   --Colors-Primary-200: #cfd0d2;
   --Colors-Primary-hover: #000;
@@ -310,9 +310,10 @@ a {
 }
 
 .g-button {
-  background: #b5d4f4;
-  padding: var(--Space-S-12) var(--Space-S-24);
-  color: var(--Colors-Primary-500);
+  background: #0075ef;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 13px;
   border-radius: 25px;
   font-weight: 500;
   border: none;
@@ -436,8 +437,8 @@ a {
 }
 
 .title {
-  font-size: 27px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   color: var(--app-color);
   margin: 10px 0;
 }
@@ -561,10 +562,15 @@ a {
   }
 }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
 
 /* motion safety */
 @media (prefers-reduced-motion: reduce) {
