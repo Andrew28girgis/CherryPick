@@ -14,5 +14,6 @@
   overflow-y: auto;
 }
 .right-panel {
-  padding: 18px 25px;
+  padding: 10px 25px;
+  background-color: #f9f9f9;
 }

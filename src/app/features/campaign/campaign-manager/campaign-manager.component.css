@@ -390,17 +390,17 @@
 
 .table-inner {
   border-radius: var(--Radius-R-20);
-  background: var(--Colors-Card-Background); 
+  background: var(--Colors-Card-Background);
 }
 
 .table thead th {
   background: none;
   border: none;
-  padding: var(--Space-S-8) var(--Space-S-16);
   font-weight: 600;
   font-size: 0.875rem;
   color: #475569;
   text-align: center;
+  padding: 10px 15px;
   vertical-align: middle;
   white-space: nowrap;
   top: 0;
@@ -459,10 +459,9 @@
 .table tbody td {
   background: transparent;
   border: none;
-  padding: var(--Space-S-16);
   vertical-align: middle;
+  padding: 10px 15px;
   font-size: 0.875rem;
-  color: #334155;
   text-align: center;
 }
 
@@ -486,14 +485,15 @@
 .campaign-info {
   display: flex;
   flex-direction: column;
-  gap: var(--Space-S-12);
   align-items: flex-start;
 }
 
 .campaign-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #1e293b;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
   cursor: pointer;
   text-decoration: none;
   line-height: 1.4;
@@ -503,6 +503,10 @@
 .campaign-name:hover {
   color: var(--Colors-Primary-hover);
   text-decoration: underline;
+}
+.t-name {
+  font-weight: 700;
+  font-size: 18px;
 }
 
 .organization-info {
@@ -570,12 +574,6 @@
 
 .inbox {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-
-  border: 2px solid var(--Colors-Primary-500);
   border-radius: 50%;
   color: var(--Colors-Primary-500);
   background: transparent;
@@ -584,12 +582,8 @@
   text-decoration: none;
 }
 
-.inbox:hover {
-  background-color: var(--Colors-Primary-300);
-  color: var(--Colors-Primary-500);
-}
-
 .sites-info {
+  color: #616161;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -673,9 +667,9 @@
   min-width: 0;
 }
 
-.title-hover:hover {
-  color: #cfb579;
+.title-hover:hover { 
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .campaign-date {
@@ -724,7 +718,7 @@
   align-items: center;
   text-align: center;
   padding: 16px 12px;
-  background-color: #fffdf6;
+  background-color: #f1f1f1;
   border-radius: 12px;
   border: 1px solid rgba(207, 181, 121, 0.1);
 }
@@ -758,12 +752,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-
-  min-width: 42px;
+  justify-content: center;  
   padding: 4px 6px;
   border-radius: 6px;
-  background: #102e50;
+  background: var(--Colors-Primary-500);
   color: #fff;
   line-height: 1.1;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
@@ -811,7 +803,7 @@
 
 .external-icon {
   cursor: pointer;
-  color: #cfb579;
+  color: var(--Colors-Primary-500);
   transition: all 0.2s ease;
 }
 
@@ -940,23 +932,16 @@
 }
 
 .campaign-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-size: 18px;
+  font-weight: 500; 
 }
 
 .organization-name {
-  font-size: 18px;
-  font-weight: 500;
-  color: #6b7280;
+  font-weight: 700;
+  font-size: 18px; 
 }
 
-.title-hover:hover .campaign-title,
-.title-hover:hover .organization-name {
-  color: #cfb579;
-  text-decoration: underline;
-  cursor: pointer;
-}
+ 
 
 .org-logo {
   width: 56px;
@@ -1491,7 +1476,7 @@
     overflow: visible;
     width: auto;
   }
- 
+
   .stepper {
     gap: 2px;
   }
@@ -1527,7 +1512,7 @@
 }
 
 .organization-tab {
-  padding: 8px 16px; 
+  padding: 2px 16px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -1550,8 +1535,8 @@
   font-weight: 600;
 }
 .org-c-logo {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
 }
 
@@ -1825,9 +1810,9 @@
 .dropdown-toggle {
   border: none;
   background: transparent;
-  padding: 4px;
   cursor: pointer;
 }
+
 .dropdown-toggle::after {
   display: none !important;
 }
@@ -1864,33 +1849,21 @@
   flex: 1 0 0;
   min-width: 300px;
 }
-.emily-button {
-  position: absolute;
-  top: -26px;
-  right: 40px;
+.emily-button { 
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #f4f3ff;
-  color: #4b3df0;
-  border: 1px solid #d4d1ff;
   border-radius: 14px;
   font-size: 0.85rem;
-  font-weight: 500;
-  padding: 5px 12px;
+  color: #0075ef;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   z-index: 10;
-}
-.emily-button-table{
-  position: unset;
-}
+} 
 
 .emily-button:hover {
-  background-color: #4b3df0;
-  border: 1px solid #4b3df0;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(75, 61, 240, 0.3);
+  text-decoration: underline;
 }
 
 .emily-button:active {
@@ -1903,4 +1876,7 @@
   border-radius: 50%;
   background-color: currentColor;
   display: inline-block;
+}
+.created-date {
+  color: #616161;
 }
