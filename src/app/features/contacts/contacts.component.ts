@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, TemplateRef } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
   Contact,
   OrganizationWithContacts,
 } from 'src/app/shared/models/contacts';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-contacts',
@@ -65,10 +66,13 @@ export class ContactsComponent implements OnInit {
   role: 'broker' | 'tenant' = 'broker';
   tenantsOrgs: any;
   brokerOrgs: any;
+  @ViewChild('orgContactsModal') orgContactsModal!: TemplateRef<any>;
+  selectedOrg: any = null;
 
   constructor(
     private PlacesService: PlacesService,
-    private chatModal: ChatModalService
+    private chatModal: ChatModalService,
+    private modalService: NgbModal
   ) {
     this.loadContacts();
     this.loadOrganizations();
@@ -360,4 +364,18 @@ export class ContactsComponent implements OnInit {
     this.chatModal.openForButton();
     this.chatModal.setOrganizationId(contact.id, 5);
   }
+
+  openContactsModal(org: any) {
+    console.log("ORG CLICKED", org);
+  
+    this.selectedOrg = org;  // ← SET IT HERE
+  
+    this.modalService.open(this.orgContactsModal, {
+      size: 'lg',
+      centered: true,
+      scrollable: true
+    });
+  }
+  
+  
 }

@@ -206,6 +206,7 @@
             [ngClass]="{ 'org-hover': org.contacts.length > 0 }"
             class="org-summary"
             aria-controls="contacts-panel"
+            (click)="openContactsModal(org)"
           >
             <span
               *ngIf="org.contacts.length > 0"
@@ -225,27 +226,8 @@
                 Ask Emily
               </div>
             </div>
-
-            <!-- chevron -->
-            <div
-              *ngIf="org.contacts.length > 0"
-              class="org-chevron"
-              aria-hidden="true"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#777199"
-                stroke-width="2"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </div>
           </summary>
 
-          <!-- Expandable contacts panel (display via CSS; no logic changed) -->
           <div
             *ngIf="org.contacts.length > 0"
             class="contacts-panel"
@@ -479,3 +461,47 @@
     </div>
   </div>
 </div>
+<ng-template #orgContactsModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ selectedOrg?.name }} — Contacts</h4>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <div
+      *ngIf="selectedOrg?.contacts?.length > 0; else noContacts"
+      class="contact-modal-grid"
+    >
+      <div class="contact-modal-card" *ngFor="let c of selectedOrg.contacts">
+        <h5 class="contact-name">{{ c.firstName }} {{ c.lastName }}</h5>
+
+        <div class="contact-field" *ngIf="c.jobTitle">
+          <span class="label">Title:</span>
+          <span class="value">{{ c.jobTitle }}</span>
+        </div>
+
+        <div class="contact-field" *ngIf="c.email">
+          <span class="label">Email:</span>
+          <span class="value">{{ c.email }}</span>
+        </div>
+
+        <div class="contact-field" *ngIf="c.phone">
+          <span class="label">Phone:</span>
+          <span class="value">{{ c.phone }}</span>
+        </div>
+
+        <div class="contact-empty" *ngIf="!c.jobTitle && !c.email && !c.phone">
+          <em>No details available</em>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noContacts>
+      <p>No contacts available for this organization.</p>
+    </ng-template>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
