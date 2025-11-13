@@ -1,17 +1,9 @@
-import {
-  Component,
-  OnInit,
-  HostListener,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
   Contact,
   OrganizationWithContacts,
 } from 'src/app/shared/models/contacts';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 @Component({
@@ -20,7 +12,6 @@ import { ChatModalService } from 'src/app/core/services/chat-modal.service';
   styleUrls: ['./contacts.component.css'],
 })
 export class ContactsComponent implements OnInit {
-  // Add Math property
   Math = Math;
 
   searchTerm: string = '';
@@ -350,7 +341,6 @@ export class ContactsComponent implements OnInit {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   editWithEMily(org: any): void {
-     
     const body: any = {
       Chat: 'Please provide any additional information available about this organization.',
       OrganizationId: org.id,
@@ -361,7 +351,6 @@ export class ContactsComponent implements OnInit {
     this.chatModal.setOrganizationId(org.id, 4);
   }
   editContactWithEMily(contact: any): void {
-     
     const body: any = {
       Chat: 'edit this Contact with emily',
       OrganizationId: contact.id,
@@ -371,6 +360,4 @@ export class ContactsComponent implements OnInit {
     this.chatModal.openForButton();
     this.chatModal.setOrganizationId(contact.id, 5);
   }
-
-  
 }
