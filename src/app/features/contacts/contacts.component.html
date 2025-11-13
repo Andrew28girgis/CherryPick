@@ -228,46 +228,7 @@
             </div>
           </summary>
 
-          <div
-            *ngIf="org.contacts.length > 0"
-            class="contacts-panel"
-            id="contacts-panel"
-          >
-            <div class="row w-100" #contactsRow *ngIf="org.contacts.length > 0">
-              <div class="col-md-4" *ngFor="let contact of org.contacts">
-                <div class="contact-card" [class.flipped]="contact.flipped">
-                  <div class="flip-inner">
-                    <!-- Front -->
-                    <div class="flip-front flex-row d-flex">
-                      <div>
-                        <h3 class="contact-name">
-                          {{ contact.firstName }} {{ contact.lastName }}
-                        </h3>
-                        <div class="contact-title" *ngIf="contact.jobTitle">
-                          {{ contact.jobTitle }}
-                        </div>
-                        <div class="contact-item" *ngIf="contact.email">
-                          <span class="value">{{ contact.email }}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- No contacts fallback -->
-            <div class="w-100" *ngIf="org.contacts.length === 0">
-              <div class="contact-card empty">
-                <div class="contact-info">
-                  <h3 class="contact-name">No contacts available</h3>
-                  <p class="contact-title">
-                    You can add a new contact using the button above.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+    
         </details>
       </div>
     </div>
