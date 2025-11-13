@@ -708,7 +708,7 @@ img[alt="logo"] {
 
 .cards-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 40px;
   align-items: stretch;
 }
