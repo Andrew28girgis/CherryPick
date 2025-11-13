@@ -92,9 +92,10 @@ export class NotificationService {
     return this.placesService.GenericAPI(request).pipe(
       tap((response: any) => {
         const previousNotificationsnew = [...this.notificationsnew];
-        this.notificationsnew = ((response.json || []) as Notification[])
-        .filter(n => n.isEmilyChat === true);
-          this.sortNotificationsByDate();
+        this.notificationsnew = (
+          (response.json || []) as Notification[]
+        ).filter((n) => n.isEmilyChat === true);
+        this.sortNotificationsByDate();
 
         if (this.isChatOpen) {
           this.handleNewMessagesWhileChatOpen(previousNotificationsnew);
@@ -130,8 +131,11 @@ export class NotificationService {
           (window as any).electronMessage.startChatAutmation(
             notification.contextExtendPrompt,
             token,
-            notification.sourceUrl || '',
-            notification.emilyConversationCategoryId || 0
+            notification.sourceUrl ?? null,
+            notification.emilyConversationCategoryId ?? null,
+            notification.campaignId ?? null,
+            notification.organizationId ?? null,
+            notification.shoppingCenterId ?? null
           );
         }
         this.markNotificationAsRead(notification);
