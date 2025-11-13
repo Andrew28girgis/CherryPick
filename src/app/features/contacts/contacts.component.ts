@@ -353,6 +353,7 @@ export class ContactsComponent implements OnInit {
     this.PlacesService.sendmessages(body).subscribe({});
     this.chatModal.openForButton();
     this.chatModal.setOrganizationId(org.id, 4);
+    this.chatModal.setFirstTyping(true);
   }
   editContactWithEMily(contact: any): void {
     const body: any = {

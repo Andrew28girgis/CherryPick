@@ -8,60 +8,62 @@ export class ChatModalService {
   private ref?: NgbModalRef;
   private fabEl: HTMLElement | null = null;
   private campaignIdSource = new BehaviorSubject<any>(null);
+  private isFirstTypingSource = new BehaviorSubject<any>(null);
   private shoppingCenterIdSource = new BehaviorSubject<any>(null);
   private organizationIdSource = new BehaviorSubject<any>(null);
   private contactIdSource = new BehaviorSubject<any>(null);
   private conversationIdSource = new BehaviorSubject<any>(null);
   campaignId$ = this.campaignIdSource.asObservable();
+  isfirstyping$ = this.isFirstTypingSource.asObservable();
   shoppingCenterId$ = this.shoppingCenterIdSource.asObservable();
   organizationId$ = this.organizationIdSource.asObservable();
   contactId$ = this.contactIdSource.asObservable();
   conversationId$ = this.conversationIdSource.asObservable();
+   lockConversationContext = false;
   constructor(private modal: NgbModal) {}
 
   setFabElement(el: HTMLElement): void {
     this.fabEl = el;
   }
 
-private calculatePosition(
-  anchor: HTMLElement,
-  opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
-): { top: number; left: number } {
-  const { popupWidth = 360, popupHeight = 560, margin = 24 } = opts;
+  private calculatePosition(
+    anchor: HTMLElement,
+    opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
+  ): { top: number; left: number } {
+    const { popupWidth = 360, popupHeight = 560, margin = 24 } = opts;
 
-  const rect = anchor.getBoundingClientRect();
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
+    const rect = anchor.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
 
-  const gap = 12; // space between the chat button and chat modal
+    const gap = 12; // space between the chat button and chat modal
 
-  // Prefer opening to the right of the FAB if there’s space
-  const openOnRight = rect.right + popupWidth + margin < vw;
-  const left = openOnRight
-    ? rect.right + margin
-    : Math.max(margin, rect.left - popupWidth - margin / 2);
+    // Prefer opening to the right of the FAB if there’s space
+    const openOnRight = rect.right + popupWidth + margin < vw;
+    const left = openOnRight
+      ? rect.right + margin
+      : Math.max(margin, rect.left - popupWidth - margin / 2);
 
-  // Position the modal directly below the FAB
-  let top = rect.bottom + gap;
+    // Position the modal directly below the FAB
+    let top = rect.bottom + gap;
 
-  // Ensure it stays inside the viewport vertically
-  if (top + popupHeight > vh - margin) {
-    top = vh - popupHeight - margin;
+    // Ensure it stays inside the viewport vertically
+    if (top + popupHeight > vh - margin) {
+      top = vh - popupHeight - margin;
+    }
+
+    // Prevent it from going off the top
+    if (top < margin) {
+      top = margin;
+    }
+
+    // If the FAB is very low, prefer aligning it upwards
+    if (rect.bottom > vh - popupHeight - margin) {
+      top = Math.max(margin, rect.top - popupHeight - gap);
+    }
+
+    return { top, left };
   }
-
-  // Prevent it from going off the top
-  if (top < margin) {
-    top = margin;
-  }
-
-  // If the FAB is very low, prefer aligning it upwards
-  if (rect.bottom > vh - popupHeight - margin) {
-    top = Math.max(margin, rect.top - popupHeight - gap);
-  }
-
-  return { top, left };
-}
-
 
   openForButton(
     buttonEl?: HTMLElement,
@@ -123,34 +125,34 @@ private calculatePosition(
     this.ref.closed.subscribe(() => (this.ref = undefined));
     this.ref.dismissed.subscribe(() => (this.ref = undefined));
   }
-disableFabDrag(): void {
-  if (this.fabEl) {
-    this.fabEl.setAttribute('cdkDragDisabled', 'true');
-    this.fabEl.style.pointerEvents = 'none';
+  disableFabDrag(): void {
+    if (this.fabEl) {
+      this.fabEl.setAttribute('cdkDragDisabled', 'true');
+      this.fabEl.style.pointerEvents = 'none';
+    }
   }
-}
 
-enableFabDrag(): void {
-  if (this.fabEl) {
-    this.fabEl.removeAttribute('cdkDragDisabled');
-    this.fabEl.style.pointerEvents = 'auto';
+  enableFabDrag(): void {
+    if (this.fabEl) {
+      this.fabEl.removeAttribute('cdkDragDisabled');
+      this.fabEl.style.pointerEvents = 'auto';
+    }
   }
-}
   public getPositionForAnchor(
-  anchor: HTMLElement,
-  opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
-): { top: number; left: number } {
-  return this.calculatePosition(anchor, opts);
-}
-
-updatePosition(top: number, left: number): void {
-  const dialog = document.querySelector('.dynamic-position') as HTMLElement;
-  if (dialog) {
-    dialog.style.transition = 'top 0.1s linear, left 0.1s linear';
-    dialog.style.left = `${left}px`;
-    dialog.style.top = `${top}px`;
+    anchor: HTMLElement,
+    opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
+  ): { top: number; left: number } {
+    return this.calculatePosition(anchor, opts);
   }
-}
+
+  updatePosition(top: number, left: number): void {
+    const dialog = document.querySelector('.dynamic-position') as HTMLElement;
+    if (dialog) {
+      dialog.style.transition = 'top 0.1s linear, left 0.1s linear';
+      dialog.style.left = `${left}px`;
+      dialog.style.top = `${top}px`;
+    }
+  }
 
   close(): void {
     this.ref?.close();
@@ -166,11 +168,17 @@ updatePosition(top: number, left: number): void {
     this.campaignIdSource.next(campaignId);
     this.conversationIdSource.next(conversationId);
   }
+  setFirstTyping(isFirstTyping: boolean): void {
+    this.isFirstTypingSource.next(isFirstTyping);
+  }
 
   setShoppingCenterId(shoppingCenterId: any, conversationId: any): void {
     this.clearAll();
     this.shoppingCenterIdSource.next(shoppingCenterId);
     this.conversationIdSource.next(conversationId);
+    console.log(`shoppingCenterId: ${shoppingCenterId}`);
+
+    console.log(`coversionId ${conversationId}`);
   }
 
   setOrganizationId(organizationId: any, conversationId: any): void {
@@ -191,4 +199,8 @@ updatePosition(top: number, left: number): void {
     this.contactIdSource.next(null);
     this.conversationIdSource.next(null);
   }
+  lockConversation() {
+    this.lockConversationContext = true;
+  }
+  
 }

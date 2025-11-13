@@ -21,6 +21,7 @@ import { ContactBrokerComponent } from '../kayak-home/shopping-center-table/cont
 import { MapsService } from 'src/app/core/services/maps.service';
 import { signal, effect } from '@angular/core';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
+import { CdkPortal } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-shopping',
@@ -931,8 +932,12 @@ export class ShoppingComponent implements OnInit {
       ShoppingCenterId: center.scId,
       ConversationId: 2,
     };
+
     this.placesService.sendmessages(body).subscribe({});
     this.chatModal.openForButton();
+    this.chatModal.lockConversation();
     this.chatModal.setShoppingCenterId(center.scId, 2);
+    this.chatModal.setFirstTyping(true);
+
   }
 }

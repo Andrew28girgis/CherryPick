@@ -63,13 +63,13 @@ export class FloatingChatNotificationsComponent
   private intervalId: any;
   private loadedNotifications: Set<string> = new Set();
   private awaitingResponse = false;
-  private preSendIds = new Set<string | number>(); 
+  private preSendIds = new Set<string | number>();
   private pendingSentText = '';
   private shownForIds = new Set<string | number>();
   private scanTrigger$ = new BehaviorSubject<void>(undefined);
   private scanSub?: import('rxjs').Subscription;
   isTyping = false;
-  private typingHideTimer?: any; 
+  private typingHideTimer?: any;
   private lastUserMessageId: number | null = null;
 
   notifications: Notification[] = [];
@@ -78,7 +78,7 @@ export class FloatingChatNotificationsComponent
   CampaignId: any;
   loaded = false;
   @Input() isChatbotRoute = false;
-  @Output() overlayStateChange = new EventEmitter<boolean>(); 
+  @Output() overlayStateChange = new EventEmitter<boolean>();
   @Output() sidebarStateChange = new EventEmitter<{
     isOpen: boolean;
     isFullyOpen: boolean;
@@ -136,6 +136,7 @@ export class FloatingChatNotificationsComponent
   conversationId: any;
   newNotificationGetter!: boolean;
   notificationSourceUrl: any;
+  isfirstyping: any;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -226,8 +227,12 @@ export class FloatingChatNotificationsComponent
       this.chatModal.contactId$.subscribe((id) => (this.contactId = id)),
       this.chatModal.conversationId$.subscribe(
         (id) => (this.conversationId = id)
+      ),
+      this.chatModal.isfirstyping$.subscribe(
+        (bool) => (this.isfirstyping = bool)
       )
     );
+    console.log('first typing ', this.isfirstyping);
   }
 
   ngOnDestroy(): void {
@@ -601,6 +606,7 @@ export class FloatingChatNotificationsComponent
   }
 
   sendMessage() {
+    if (this.isfirstyping) return;
     const text = this.outgoingText?.trim();
     if (!text || this.isSending) return;
 
@@ -641,14 +647,19 @@ export class FloatingChatNotificationsComponent
     this.showTyping();
 
     const lastNotification =
-      this.notificationService?.notificationsnew[
-        this.notificationService.notificationsnew.length - 2
-      ];
+    this.notificationService?.notificationsnew[
+      this.notificationService.notificationsnew.length - 2
+    ];
+    let conversationIdtrust = this.conversationId;
+    if (this.conversationId) {
+      conversationIdtrust = this.conversationId;
+    } else if (lastNotification.sourceUrl) {
+      conversationIdtrust = lastNotification.emilyConversationCategoryId;
+    }
+
     const body: any = {
       Chat: text,
-      ConversationId: this.conversationId
-        ? this.conversationId
-        : lastNotification.emilyConversationCategoryId,
+      ConversationId: conversationIdtrust,
     };
     console.log('lastNotificatio mmmmmmn', lastNotification);
 
@@ -677,6 +688,7 @@ export class FloatingChatNotificationsComponent
         body.SourceUrl = lastNotification.sourceUrl;
       this.notificationSourceUrl = lastNotification.sourceUrl;
     }
+    console.log('first typing ', this.isfirstyping);
 
     this.placesService.sendmessages(body).subscribe({
       next: () => {
@@ -1455,10 +1467,9 @@ export class FloatingChatNotificationsComponent
   }
 
   clearEmilyChat() {
-    if(!this.campaignId && !this.shoppingCenterId && !this.organizationId ){
-
+    if (!this.campaignId && !this.shoppingCenterId && !this.organizationId) {
     }
-     const request = {
+    const request = {
       Name: 'DeleteEmilyChat',
       Params: {
         CampaignId: this.campaignId ?? null,
@@ -1579,7 +1590,9 @@ export class FloatingChatNotificationsComponent
               this.notificationService.notifications.length - 1
             ];
           this.notificationSourceUrl = last.sourceUrl;
-          this.conversationId = last.emilyConversationCategoryId;
+          if (!this.chatModal.lockConversationContext &&last.sourceUrl) {
+            this.conversationId = last.emilyConversationCategoryId;
+          }
 
           // ✅ Once we have a valid conversation, immediately switch to specific fetch
           this.fetchSpecificNotifications();
@@ -1592,7 +1605,22 @@ export class FloatingChatNotificationsComponent
   private startPolling(intervalMs: number): void {
     const poll = () => {
       this.wasSticky = this.isAtBottom();
-
+      if (
+        this.notificationService.notificationsnew.length > 0 &&
+        this.isfirstyping
+      ) {
+        console.log(
+          'notification ',
+          this.notificationService.notificationsnew[
+            this.notificationService.notificationsnew.length - 1
+          ]
+        );
+        console.log('first typing ', this.isfirstyping);
+        this.isTyping=true;
+        this.chatModal.setFirstTyping(false);
+        this.isfirstyping = false;
+        console.log('first typing set to false');
+      }
       // Always call main unified method
       this.fetchNotifications();
 

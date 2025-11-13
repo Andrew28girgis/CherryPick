@@ -1225,5 +1225,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     this.placesService.sendmessages(body).subscribe({});
     this.chatModal.openForButton();
     this.chatModal.setCampaignId(campaign.Id, 1);
+    this.chatModal.setFirstTyping(true);
+
   }
 }
