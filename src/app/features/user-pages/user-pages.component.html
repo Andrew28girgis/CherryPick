@@ -1,13 +1,7 @@
 <div>
   <div class="title-div">
     <h2 class="title">Artifacts</h2>
-  </div>
-
-  <div *ngIf="error && !loading" class="error-container">
-    <div class="error-icon">⚠️</div>
-    <p class="error-message">{{ error }}</p>
-    <button (click)="retry()" class="retry-btn">Try Again</button>
-  </div>
+  </div> 
 
   <div *ngIf="!loading && !error" class="cards-view mt-2">
     <div class="cards-grid">
@@ -45,7 +39,7 @@
       (click)="modal.dismiss()"
     ></button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body p-0">
     <div class="preview-wrapper" [innerHTML]="htmlContent"></div>
   </div>
 </ng-template>
