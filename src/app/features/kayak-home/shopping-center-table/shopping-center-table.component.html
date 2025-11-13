@@ -3,136 +3,64 @@
     <p id="toastMessage"></p>
   </div>
 </div>
-<!-- Tenant Header -->
 
-<div class="tab-view-container">
-  <div
-    class="mobileButtons mt-2 d-flex justify-content-between align-items-center"
-    style="padding-left: 12px"
-  >
-    <!-- <div class="custom-icon-container">
-      <div
-        class="icon-option"
-        *ngFor="let option of dropdowmOptions"
-        [class.d-none]="option.status == 2"
-        [class.d-sm-flex]="option.status == 2"
-        (click)="selectOption(option)"
-        [class.displayNone]="
-          (option.status == 6 && isMobile) || (option.status == 4 && isMobile)
-        "
-        [class.selected]="
-          selectedOption === option.status || selectedOption === option
-        "
-      >
-        <img loading="lazy"  [src]="option.icon" [alt]="option.text" class="icon-image" />
-        <span class="icon-text d-none d-sm-flex" *ngIf="!isMobile">{{
-          option.text
-        }}</span> 
-      </div>
-    </div> -->
-    <div class="d-flex">
-      <!-- <button
-        style="border: none; background: none"
-        class="border-none mx-2 d-sm-flex d-none"
-      >
-        <app-link-microsoft style="height: 25px"></app-link-microsoft>
-      </button> -->
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-      <!-- Navigation Tabs -->
-
-      <!-- <button
-        class="action-btn optionMobileColor"
-        [routerLink]="['/campaigns/ataglance', CampaignId]"
-      >
-        <i class="fa-regular fa-star"></i>
-        <span> At a Glance </span>
-      </button>
-      <button class="action-btn optionMobileColor">
-        <a
-          class="action-btn optionMobileColor"
-          [href]="generateSafeUrl()"
-          target="_blank"
-        >
-          <i class="fa-solid fa-house"></i>
-          <span> Market Survey </span>
-        </a>
-      </button> -->
+<div>
+  <ng-template #logoPlaceholder>
+    <div class="org-logo placeholder">
+      {{ getInitials(getCurrentCampaignName()) }}
     </div>
-  </div>
+  </ng-template>
 
-  <div class="main-inner">
+  <ng-container *ngIf="dropdownItemCount > 1; else singleOptionLabel">
     <div
-      class="tenant-header d-flex justify-content-between align-items-center"
+      [class.active]="showTenantDropdown"
+      ngbDropdown
+      #tenantDropdown="ngbDropdown"
+      (openChange)="onDropdownOpenChange($event)"
     >
-      <div class="d-flex align-items-center gap-2">
-        <ng-container *ngIf="0; else logoPlaceholder">
-          <!-- <img
-            loading="lazy"
-            class="tenant-logo"
-            [src]="tenantImageUrl"
-            [alt]="tenantName"
-            (error)="onImageError($event)"
-            (load)="checkImage($event)"
+      <button
+        class="tenant-name"
+        type="button"
+        id="tenantDropdown"
+        ngbDropdownToggle
+        [attr.aria-expanded]="showTenantDropdown"
+      >
+        <span class="tenant-name-text">
+          {{ getCurrentCampaignName() }}
+        </span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+        >
+          <path
+            d="M16 22.4008C15.0667 22.4008 14.1334 22.0408 13.4267 21.3342L4.73336 12.6408C4.34669 12.2542 4.34669 11.6142 4.73336 11.2275C5.12003 10.8408 5.76003 10.8408 6.14669 11.2275L14.84 19.9208C15.48 20.5608 16.52 20.5608 17.16 19.9208L25.8534 11.2275C26.24 10.8408 26.88 10.8408 27.2667 11.2275C27.6534 11.6142 27.6534 12.2542 27.2667 12.6408L18.5734 21.3342C17.8667 22.0408 16.9334 22.4008 16 22.4008Z"
+            fill="#7A8591"
           />
- -->
-        </ng-container>
-        <ng-template #logoPlaceholder>
-          <div class="org-logo placeholder">
-            {{ getInitials(getCurrentCampaignName()) }}
-          </div>
-        </ng-template>
+        </svg>
+      </button>
 
-        <ng-container *ngIf="dropdownItemCount > 1; else singleOptionLabel">
-          <div
-            class="tenant-dropdown-container"
-            [class.active]="showTenantDropdown"
-            ngbDropdown
-            #tenantDropdown="ngbDropdown"
-            (openChange)="onDropdownOpenChange($event)"
-          >
-            <button
-              class="tenant-name"
-              type="button"
-              id="tenantDropdown"
-              ngbDropdownToggle
-              [attr.aria-expanded]="showTenantDropdown"
-            >
-              <span class="tenant-name-text">
-                {{ getCurrentCampaignName() }}
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-              >
-                <path
-                  d="M16 22.4008C15.0667 22.4008 14.1334 22.0408 13.4267 21.3342L4.73336 12.6408C4.34669 12.2542 4.34669 11.6142 4.73336 11.2275C5.12003 10.8408 5.76003 10.8408 6.14669 11.2275L14.84 19.9208C15.48 20.5608 16.52 20.5608 17.16 19.9208L25.8534 11.2275C26.24 10.8408 26.88 10.8408 27.2667 11.2275C27.6534 11.6142 27.6534 12.2542 27.2667 12.6408L18.5734 21.3342C17.8667 22.0408 16.9334 22.4008 16 22.4008Z"
-                  fill="#7A8591"
-                />
-              </svg>
-            </button>
-
+      <div
+        class="tenant-dropdown-menu"
+        ngbDropdownMenu
+        aria-labelledby="tenantDropdown"
+      >
+        <ng-container *ngFor="let letter of alphabetKeys">
+          <ng-container *ngFor="let tenant of groupedTenants[letter]">
             <div
-              class="tenant-dropdown-menu"
-              ngbDropdownMenu
-              aria-labelledby="tenantDropdown"
+              class="tenant-item dropdown-item-custom"
+              [class.active]="selectedCampaignId === campaign.Id"
+              *ngFor="let campaign of tenant.Campaigns"
+              (click)="selectTenant(tenant, campaign)"
             >
-              <ng-container *ngFor="let letter of alphabetKeys">
-                <ng-container *ngFor="let tenant of groupedTenants[letter]">
-                  <div
-                    class="tenant-item dropdown-item-custom"
-                    [class.active]="selectedCampaignId === campaign.Id"
-                    *ngFor="let campaign of tenant.Campaigns"
-                    (click)="selectTenant(tenant, campaign)"
-                  >
-                    <div
-                      class="d-flex align-items-center gap-3 tenant-item-content"
-                    >
-                      <div class="tenant-logo-small">
-                        <ng-container *ngIf="0; else logoPlaceholder">
-                          <!--  <img
+              <div class="d-flex align-items-center gap-3 tenant-item-content">
+                <div class="tenant-logo-small">
+                  <ng-container *ngIf="0; else logoPlaceholder">
+                    <!--  <img
                           loading="lazy"
                           class="tenant-img"
                           [src]="
@@ -143,280 +71,281 @@
                           (error)="onImageError($event)"
                           (load)="checkImage($event)"
                         /> -->
-                        </ng-container>
-                        <ng-template #logoPlaceholder>
-                          <div class="tenant-img laceholder">
-                            {{ getInitials(tenant.name) }}
-                          </div>
-                        </ng-template>
-                      </div>
-                      <div class="tenant-info">
-                        <div class="tenant-title">
-                          {{ tenant.Name }}
-                        </div>
-                        <div class="tenant-subtitle">
-                          {{ campaign.CampaignName }}
-                        </div>
-                      </div>
+                  </ng-container>
+                  <ng-template #logoPlaceholder>
+                    <div class="tenant-img laceholder">
+                      {{ getInitials(tenant.name) }}
                     </div>
+                  </ng-template>
+                </div>
+                <div class="tenant-info">
+                  <div class="tenant-title">
+                    {{ tenant.Name }}
                   </div>
-                </ng-container>
-              </ng-container>
+                  <div class="tenant-subtitle">
+                    {{ campaign.CampaignName }}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </ng-container>
         </ng-container>
-
-        <ng-template #singleOptionLabel>
-          <div style="cursor: default" class="tenant-name" id="tenantDropdown">
-            <span class="tenant-name-text">
-              {{ getCurrentCampaignName() }}
-            </span>
-          </div>
-        </ng-template>
       </div>
-      <div class="d-flex responsive-div">
-        <div class="header-container responsive-div">
-          <div class="search-section">
-            <div class="search-container" [class.expanded]="isSearchExpanded ||isMobile">
-              <button class="search-icon-btn" (click)="toggleSearch()">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    d="M9.58341 17.4998C13.9557 17.4998 17.5001 13.9554 17.5001 9.58317C17.5001 5.21092 13.9557 1.6665 9.58341 1.6665C5.21116 1.6665 1.66675 5.21092 1.66675 9.58317C1.66675 13.9554 5.21116 17.4998 9.58341 17.4998Z"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M18.3334 18.3332L16.6667 16.6665"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-              <input
-                #searchInput
-                *ngIf="isSearchExpanded ||isMobile"
-                type="text"
-                placeholder="Search Properties..."
-                class="search-input"
-                [(ngModel)]="searchQuery"
-                (input)="onSearch($event)"
+    </div>
+  </ng-container>
+
+  <ng-template #singleOptionLabel>
+    <div style="cursor: default" class="tenant-name" id="tenantDropdown">
+      <span class="tenant-name-text">
+        {{ getCurrentCampaignName() }}
+      </span>
+    </div>
+  </ng-template>
+
+  <div class="d-flex responsive-div">
+    <div class="header-container responsive-div">
+      <div class="search-section">
+        <div
+          class="search-container"
+          [class.expanded]="isSearchExpanded || isMobile"
+        >
+          <button class="search-icon-btn" (click)="toggleSearch()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M9.58341 17.4998C13.9557 17.4998 17.5001 13.9554 17.5001 9.58317C17.5001 5.21092 13.9557 1.6665 9.58341 1.6665C5.21116 1.6665 1.66675 5.21092 1.66675 9.58317C1.66675 13.9554 5.21116 17.4998 9.58341 17.4998Z"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
+              <path
+                d="M18.3334 18.3332L16.6667 16.6665"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <input
+            #searchInput
+            *ngIf="isSearchExpanded || isMobile"
+            type="text"
+            placeholder="Search Properties..."
+            class="search-input"
+            [(ngModel)]="searchQuery"
+            (input)="onSearch($event)"
+          />
+        </div>
+      </div>
+      <div class="actions-container">
+        <!-- Sort Button -->
+        <div class="dropdown sort-container m-0 p-0">
+          <!-- Added event parameter to toggleSort call -->
+          <button class="sort-btn" (click)="toggleSort($event)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M8.7083 5.59998L5.60828 2.5L2.5083 5.59998"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5.60815 17.5V2.5"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.2915 14.3999L14.3915 17.4999L17.4915 14.3999"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M14.3916 2.5V17.5"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div
+            class="dropdown-menu sort-menu"
+            *ngIf="isSortMenuOpen"
+            (click)="$event.stopPropagation()"
+          >
+            <div
+              *ngFor="let option of sortOptions"
+              class="dropdown-item sort-option"
+              [class.active]="selectedSortId === option.id"
+              (click)="selectSort(option)"
+            >
+              <i [class]="option.icon"></i>
+              <span>{{ option.text }}</span>
             </div>
           </div>
-          <div class="actions-container">
-            <!-- Sort Button -->
-            <div class="dropdown sort-container m-0 p-0">
-              <!-- Added event parameter to toggleSort call -->
-              <button class="sort-btn" (click)="toggleSort($event)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    d="M8.7083 5.59998L5.60828 2.5L2.5083 5.59998"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M5.60815 17.5V2.5"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M11.2915 14.3999L14.3915 17.4999L17.4915 14.3999"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M14.3916 2.5V17.5"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-              <div
-                class="dropdown-menu sort-menu"
-                *ngIf="isSortMenuOpen"
-                (click)="$event.stopPropagation()"
-              >
-                <div
-                  *ngFor="let option of sortOptions"
-                  class="dropdown-item sort-option"
-                  [class.active]="selectedSortId === option.id"
-                  (click)="selectSort(option)"
-                >
-                  <i [class]="option.icon"></i>
-                  <span>{{ option.text }}</span>
-                </div>
-              </div>
-            </div>
+        </div>
 
-            <!-- Filter Button -->
-            <div class="dropdown sort-container m-0 p-0">
-              <button
-                class="filter-btn"
-                type="button"
-                (click)="toggleFilter($event)"
-                aria-expanded="false"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    d="M4.49992 1.75H15.4999C16.4166 1.75 17.1666 2.5 17.1666 3.41667V5.25C17.1666 5.91667 16.7499 6.75 16.3333 7.16667L12.7499 10.3333C12.2499 10.75 11.9166 11.5833 11.9166 12.25V15.8333C11.9166 16.3333 11.5833 17 11.1666 17.25L9.99992 18C8.91659 18.6667 7.41658 17.9167 7.41658 16.5833V12.1667C7.41658 11.5833 7.08325 10.8333 6.74992 10.4167L3.58325 7.08333C3.16659 6.66667 2.83325 5.91667 2.83325 5.41667V3.5C2.83325 2.5 3.58325 1.75 4.49992 1.75Z"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M9.10833 1.75L5 8.33333"
-                    stroke="#292D32"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-              <div
-                class="dropdown-menu filter-menu"
-                *ngIf="isFilterMenuOpen"
-                (click)="$event.stopPropagation()"
-              >
-                <div
-                  class="dropdown-item sort-option"
-                  [class.active]="selectedStageId === 0"
-                  (click)="selectStagekan(0)"
-                >
-                  <span>All</span>
-                </div>
-                <div
-                  *ngFor="let stage of stages; trackBy: trackByStageId"
-                  class="dropdown-item sort-option"
-                  [class.active]="selectedStageId === stage.id"
-                  [attr.aria-current]="
-                    selectedStageId === stage.id ? 'true' : null
-                  "
-                  (click)="selectStagekan(stage.id)"
-                >
-                  <span>{{ stage.stageName }}</span>
-                </div>
-              </div>
+        <!-- Filter Button -->
+        <div class="dropdown sort-container m-0 p-0">
+          <button
+            class="filter-btn"
+            type="button"
+            (click)="toggleFilter($event)"
+            aria-expanded="false"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M4.49992 1.75H15.4999C16.4166 1.75 17.1666 2.5 17.1666 3.41667V5.25C17.1666 5.91667 16.7499 6.75 16.3333 7.16667L12.7499 10.3333C12.2499 10.75 11.9166 11.5833 11.9166 12.25V15.8333C11.9166 16.3333 11.5833 17 11.1666 17.25L9.99992 18C8.91659 18.6667 7.41658 17.9167 7.41658 16.5833V12.1667C7.41658 11.5833 7.08325 10.8333 6.74992 10.4167L3.58325 7.08333C3.16659 6.66667 2.83325 5.91667 2.83325 5.41667V3.5C2.83325 2.5 3.58325 1.75 4.49992 1.75Z"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.10833 1.75L5 8.33333"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div
+            class="dropdown-menu filter-menu"
+            *ngIf="isFilterMenuOpen"
+            (click)="$event.stopPropagation()"
+          >
+            <div
+              class="dropdown-item sort-option"
+              [class.active]="selectedStageId === 0"
+              (click)="selectStagekan(0)"
+            >
+              <span>All</span>
             </div>
+            <div
+              *ngFor="let stage of stages; trackBy: trackByStageId"
+              class="dropdown-item sort-option"
+              [class.active]="selectedStageId === stage.id"
+              [attr.aria-current]="selectedStageId === stage.id ? 'true' : null"
+              (click)="selectStagekan(stage.id)"
+            >
+              <span>{{ stage.stageName }}</span>
+            </div>
+          </div>
+        </div>
 
-            <!-- View Button -->
-            <div class="m-0 p-0 dropdown view-container">
-              <!-- Added event parameter to toggleView call -->
-              <button class="view-btn" (click)="toggleView($event)">
+        <!-- View Button -->
+        <div class="m-0 p-0 dropdown view-container">
+          <!-- Added event parameter to toggleView call -->
+          <button class="view-btn" (click)="toggleView($event)">
+            <img
+              [src]="getCurrentViewIcon()"
+              [alt]="getCurrentViewName()"
+              class="view-icon"
+            />
+          </button>
+          <!-- Added click event to prevent menu from closing when clicking inside -->
+          <div
+            class="dropdown-menu view-menu"
+            *ngIf="view"
+            (click)="$event.stopPropagation()"
+          >
+            <ul>
+              <li
+                *ngFor="let option of dropdowmOptions"
+                (click)="selectOption(option)"
+              >
                 <img
-                  [src]="getCurrentViewIcon()"
-                  [alt]="getCurrentViewName()"
+                  [src]="option.icon"
+                  [alt]="option.text"
                   class="view-icon"
                 />
-              </button>
-              <!-- Added click event to prevent menu from closing when clicking inside -->
-              <div
-                class="dropdown-menu view-menu"
-                *ngIf="view"
-                (click)="$event.stopPropagation()"
-              >
-                <ul>
-                  <li
-                    *ngFor="let option of dropdowmOptions"
-                    (click)="selectOption(option)"
-                  >
-                    <img
-                      [src]="option.icon"
-                      [alt]="option.text"
-                      class="view-icon"
-                    />
-                    <span>{{ option.text }}</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
+                <span>{{ option.text }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-            <div class="m-0 p-0 dropdown inbox-container">
-              <!-- Added event parameter to toggleView call -->
-              <button
-                class="inbox-btn"
-                [routerLink]="['/organization-mail', OrgId, CampaignId]"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    d="M14.9834 8.99167V12.325C14.9834 12.5417 14.9751 12.75 14.9501 12.95C14.7584 15.2 13.4334 16.3167 10.9917 16.3167H10.6584C10.4501 16.3167 10.2501 16.4167 10.1251 16.5833L9.12509 17.9167C8.68342 18.5083 7.96675 18.5083 7.52508 17.9167L6.52507 16.5833C6.41674 16.4417 6.17508 16.3167 5.99175 16.3167H5.65842C3.00009 16.3167 1.66675 15.6583 1.66675 12.325V8.99167C1.66675 6.55001 2.79176 5.22501 5.03342 5.03334C5.23342 5.00834 5.44176 5 5.65842 5H10.9917C13.6501 5 14.9834 6.33334 14.9834 8.99167Z"
-                    stroke="#240614"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M18.3168 5.65818V8.99151C18.3168 11.4415 17.1918 12.7582 14.9501 12.9498C14.9751 12.7498 14.9834 12.5415 14.9834 12.3248V8.99151C14.9834 6.33318 13.6501 4.99984 10.9918 4.99984H5.65845C5.44178 4.99984 5.23345 5.00818 5.03345 5.03318C5.22511 2.79151 6.55011 1.6665 8.99178 1.6665H14.3251C16.9834 1.6665 18.3168 2.99984 18.3168 5.65818Z"
-                    stroke="#240614"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M11.2462 11.0417H11.2537"
-                    stroke="#240614"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M8.32966 11.0417H8.33716"
-                    stroke="#240614"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M5.41292 11.0417H5.42042"
-                    stroke="#240614"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-            <!-- <button class="delete-btn add-btn" (click)="deleteAutomation()">
+        <div class="m-0 p-0 dropdown inbox-container">
+          <!-- Added event parameter to toggleView call -->
+          <button
+            class="inbox-btn"
+            [routerLink]="['/organization-mail', OrgId, CampaignId]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M14.9834 8.99167V12.325C14.9834 12.5417 14.9751 12.75 14.9501 12.95C14.7584 15.2 13.4334 16.3167 10.9917 16.3167H10.6584C10.4501 16.3167 10.2501 16.4167 10.1251 16.5833L9.12509 17.9167C8.68342 18.5083 7.96675 18.5083 7.52508 17.9167L6.52507 16.5833C6.41674 16.4417 6.17508 16.3167 5.99175 16.3167H5.65842C3.00009 16.3167 1.66675 15.6583 1.66675 12.325V8.99167C1.66675 6.55001 2.79176 5.22501 5.03342 5.03334C5.23342 5.00834 5.44176 5 5.65842 5H10.9917C13.6501 5 14.9834 6.33334 14.9834 8.99167Z"
+                stroke="#240614"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M18.3168 5.65818V8.99151C18.3168 11.4415 17.1918 12.7582 14.9501 12.9498C14.9751 12.7498 14.9834 12.5415 14.9834 12.3248V8.99151C14.9834 6.33318 13.6501 4.99984 10.9918 4.99984H5.65845C5.44178 4.99984 5.23345 5.00818 5.03345 5.03318C5.22511 2.79151 6.55011 1.6665 8.99178 1.6665H14.3251C16.9834 1.6665 18.3168 2.99984 18.3168 5.65818Z"
+                stroke="#240614"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.2462 11.0417H11.2537"
+                stroke="#240614"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8.32966 11.0417H8.33716"
+                stroke="#240614"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5.41292 11.0417H5.42042"
+                stroke="#240614"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <!-- <button class="delete-btn add-btn" (click)="deleteAutomation()">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -461,108 +390,66 @@
                 />
               </svg>
             </button> -->
-            <button class="add-btn" (click)="openUpload()">
-              <i class="fa-solid fa-plus"></i>
-            </button>
-          </div>
-        </div>
-        <!-- <button class="send-email-button mx-1">
+        <button class="add-btn" (click)="openUpload()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+    </div>
+    <!-- <button class="send-email-button mx-1">
           <a class="action-btn optionMobileColor p-0" (click)="navigateToMap()">
             <i class="fa-solid fa-plus text-light mx-1"></i>
             <span> Add sites </span>
           </a>
         </button> -->
-        <!-- <button class="send-email-button mx-1">
+    <!-- <button class="send-email-button mx-1">
           <a class="action-btn optionMobileColor p-0" (click)="findAllContacts()">
             <i class="fa-solid fa-plus text-light mx-1"></i>
             <span> Find All Contacts </span>
           </a>
         </button> -->
-      </div>
-    </div>
-    <div class="nav-tabs-container">
-      <div class="nav-tabs">
-        <!-- <a
+  </div>
+</div>
+<div class="nav-tabs-container">
+  <div class="nav-tabs">
+    <!-- <a
           class="nav-tab"
           [routerLink]="['/campaigns/ataglance', CampaignId]"
           routerLinkActive="active"
           >Campaigns</a
         > -->
-        <a
-          class="nav-tab"
-          [routerLink]="['/dashboard', OrgId, organizationName, CampaignId]"
-          routerLinkActive="active"
-          >Properties</a
-        >
-        <a class="nav-tab" [href]="generateSafeUrl()">Market Survey</a>
-      </div>
-    </div>
-    <!-- <div class="stats-grid stats-grid-3">
-      <div class="stat-card">
-        <div class="stat-label">Date Created</div>
-        <div class="stat-content">
-          <span class="stat-value">Aug 20, 2025</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Initial Site Selection</div>
-        <div class="stat-content"><span class="stat-value">------</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Enriching</div>
-        <div class="stat-content"><span class="stat-value">50</span></div>
-      </div>
-    </div>
-
-    <div class="stats-grid stats-grid-5">
-      <div class="stat-card">
-        <div class="stat-label">Scoring</div>
-        <div class="stat-content scoring">
-          <span class="score-low">17%</span> -
-          <span class="score-mid">15%</span> -
-          <span class="score-high">50%</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Reaching Out</div>
-        <div class="stat-content"><span class="stat-value">120</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Short Listed</div>
-        <div class="stat-content"><span class="stat-value">34</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Shared With Tenant</div>
-        <div class="stat-content"><span class="stat-value">3</span></div>
-      </div>
-    </div> -->
-
-    <div class="row m-0" *ngIf="currentView == 2">
-      <div class="col-12 p-0">
-        <app-side-list-view
-          (highlightMarker)="onHighlightMarker($event)"
-          (unhighlightMarker)="onUnhighlightMarker($event)"
-        ></app-side-list-view>
-      </div>
-    </div>
-    <app-map-view
-      *ngIf="currentView == 1"
-      (viewChange)="onViewChange($event)"
-      #mapView
-    ></app-map-view>
-    <app-card-view *ngIf="currentView == 3"></app-card-view>
-    <app-table-view
-      *ngIf="currentView == 4"
-      (viewChange)="onViewChange($event)"
-    ></app-table-view>
-    <app-social-view
-      *ngIf="currentView == 5"
-      (viewChange)="onViewChange($event)"
-    ></app-social-view>
-    <app-kanban-view *ngIf="currentView == 6"></app-kanban-view>
+    <a
+      class="nav-tab"
+      [routerLink]="['/dashboard', OrgId, organizationName, CampaignId]"
+      routerLinkActive="active"
+      >Properties</a
+    >
+    <a class="nav-tab" [href]="generateSafeUrl()">Market Survey</a>
   </div>
 </div>
-<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="row m-0" *ngIf="currentView == 2">
+  <div class="col-12 p-0">
+    <app-side-list-view
+      (highlightMarker)="onHighlightMarker($event)"
+      (unhighlightMarker)="onUnhighlightMarker($event)"
+    ></app-side-list-view>
+  </div>
+</div>
+<app-map-view
+  *ngIf="currentView == 1"
+  (viewChange)="onViewChange($event)"
+  #mapView
+></app-map-view>
+<app-card-view *ngIf="currentView == 3"></app-card-view>
+<app-table-view
+  *ngIf="currentView == 4"
+  (viewChange)="onViewChange($event)"
+></app-table-view>
+<app-social-view
+  *ngIf="currentView == 5"
+  (viewChange)="onViewChange($event)"
+></app-social-view>
+<app-kanban-view *ngIf="currentView == 6"></app-kanban-view>
 
 <ng-template #uploadTypes let-modal>
   <div class="modal-header fancy-modal-header">
