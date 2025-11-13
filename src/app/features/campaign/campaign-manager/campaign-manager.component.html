@@ -342,7 +342,12 @@
                     <div
                       class="t-name d-flex justify-content-between w-100 align-items-center mt-2"
                     >
-                      <div>
+                      <div class="tenant-title"   [routerLink]="[
+                          '/dashboard',
+                          campaign.OrganizationId,
+                          campaign.OrganizationName,
+                          campaign.Id
+                        ]">
                         <img
                           [src]="campaign.LogoUrl"
                           class="org-c-logo"

@@ -398,7 +398,7 @@ export class FloatingChatNotificationsComponent
 
     const showSaveButton =
       this.selectedNotification &&
-      [2, 3, 4].includes(+this.selectedNotification.taskId) &&
+      [2, 3, 4,5].includes(+this.selectedNotification.taskId) &&
       +this.selectedNotification.isEndInsertion === 0;
 
     if (showSaveButton) {

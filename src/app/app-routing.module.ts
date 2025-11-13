@@ -5,8 +5,7 @@ import { ResetPasswordComponent } from './shared/components/change-password/chan
 import { ForgetPasswordComponent } from './shared/components/forget-password/forget-password.component';
 import { NewPasswordComponent } from './shared/components/new-password/new-password.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
-import { TermsComponent } from './shared/components/terms/terms.component';
-import { TenantComponent } from './features/tenants/tenant/tenant.component';
+import { TermsComponent } from './shared/components/terms/terms.component'; 
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { AuthGuardService } from './core/services/auth-guard.service';
@@ -123,15 +122,7 @@ import { FloatingChatNotificationsComponent } from './shared/components/floating
       import('./features/tasks/tasks.module').then((m) => m.TasksModule),
     canActivate: [TenantOnlyGuard, AccountLinkedGuard],
   },
-
-  {
-    path: 'submissions/:campaignId',
-    loadChildren: () =>
-      import('./features/Submissions/submissions.module').then(
-        (m) => m.SubmissionsModule
-      ),
-    canActivate: [TenantOnlyGuard],
-  },
+ 
   {
     path: 'campaigns',
     loadChildren: () =>
@@ -292,21 +283,7 @@ import { FloatingChatNotificationsComponent } from './shared/components/floating
     component: FloatingChatNotificationsComponent,
   },
   { path: 'emily-chatsbot', component: NotificationsComponent },
-  {
-    path: ':guid',
-    component: TenantComponent,
-    data: { hideHeader: true },
-  },
-  {
-    path: ':guid/:contactId',
-    component: TenantComponent,
-    data: { hideHeader: true },
-  },
-  {
-    path: ':guid/:contactId/:userSubmission',
-    component: TenantComponent,
-    data: { hideHeader: true },
-  },
+
 ];
 
 @NgModule({
