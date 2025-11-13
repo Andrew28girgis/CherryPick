@@ -708,7 +708,7 @@ img[alt="logo"] {
 
 .cards-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 40px;
   align-items: stretch;
 }
@@ -1377,29 +1377,21 @@ table tbody td {
   word-break: break-word;
 }
 
-.emily-button {
-  position: absolute;
-  top: -25px;
-  right: 20px;
+.emily-button { 
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #f4f3ff;
-  color: #4b3df0;
-  border: 1px solid #d4d1ff;
   border-radius: 14px;
   font-size: 0.85rem;
-  font-weight: 500;
-  padding: 5px 12px;
+  color: #0075ef;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   z-index: 10;
-}
+} 
 
 .emily-button:hover {
-  background-color: #4b3df0;
-  border: 1px solid #4b3df0;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(75, 61, 240, 0.3);
+  text-decoration: underline;
 }
 
 .emily-button:active {
