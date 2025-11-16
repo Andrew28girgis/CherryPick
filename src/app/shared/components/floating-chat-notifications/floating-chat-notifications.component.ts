@@ -1292,16 +1292,7 @@ export class FloatingChatNotificationsComponent
     // recompute for the next cycle
     this.wasSticky = this.isAtBottom();
   }
-  // ADD — handle "new X messages" badge only when not sticky
-  private onNewMessagesArrived(count: number): void {
-    if (count <= 0) return;
-    if (this.wasSticky) {
-      // do nothing; Mutation/Resize observers will keep you at bottom
-      return;
-    }
-    this.newNotificationsCount += count;
-    this.showScrollButton = true;
-  }
+ 
   isCompilingReport(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
@@ -1369,80 +1360,7 @@ export class FloatingChatNotificationsComponent
       overlayActive: false,
     });
   }
-
-  // scan(scan: boolean) {
-  //   if (scan) {
-  //     (window as any).electronMessage.enableCREAutomationMode(
-  //       localStorage.getItem('token')
-  //     );
-  //   } else if (!scan) {
-  //     (window as any).electronMessage.disableCREAutomationMode();
-  //   }
-  // }
-  private checkForShoppingCentersReply(newMessages: Notification[]): void {
-    for (const n of newMessages) {
-      const isSystem = !(
-        n.notificationCategoryId === true || n.notificationCategoryId === 1
-      );
-      if (!isSystem) continue;
-
-      const match = n.message?.match(
-        /(?:I have found\s+(\d+)\s+Shopping Centers|(\d+)\s+Shopping Centers are matching the geographic filter for the campaign\s+(.+))/i
-      );
-
-      if (match) {
-        this.refreshService.triggerRefreshOrganizations();
-        break;
-      }
-    }
-  }
-
-  private idKey(n: { id: any }): string | number {
-    return typeof n.id === 'number' ? n.id : String(n.id);
-  }
-
-  private seedKnownIds(list: Notification[]): void {
-    this.knownIds.clear();
-    for (const n of list ?? []) this.knownIds.add(this.idKey(n));
-  }
-
-  /**
-   * Incrementally merges new notifications without re-fetching everything.
-   * Handles scroll stickiness and triggers scanning.
-   */
-  private ingestNotifications(newOnes: Notification[]): void {
-    if (!Array.isArray(newOnes) || !newOnes.length) return;
-
-    const list = this.notificationService.notificationsnew ?? [];
-    let added = 0;
-
-    for (const n of newOnes) {
-      const key = this.idKey(n);
-      if (this.knownIds.has(key)) continue;
-      this.knownIds.add(key);
-      list.push(n);
-      added++;
-    }
-
-    if (!added) return;
-
-    list.sort(
-      (a, b) =>
-        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
-    );
-
-    if (this.wasSticky) {
-      this.cdRef.detectChanges();
-      requestAnimationFrame(() => this.scrollToBottomNow());
-    } else {
-      this.onNewMessagesArrived(added);
-    }
-
-    this.scanTrigger$.next();
-    this.hideTyping();
-    this.awaitingResponse = false;
-  }
-
+ 
   scrollToBottom(): void {
     const el = this.messagesContainer?.nativeElement as HTMLElement | undefined;
     if (!el) return;
