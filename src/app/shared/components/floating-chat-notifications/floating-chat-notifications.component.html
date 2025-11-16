@@ -15,16 +15,14 @@
       <div class="d-flex align-items-center justify-content-center gap-2">
         <button
           class="g-button clear-button"
-          [ngClass]="{ 'close-route': isChatbotRoute }"
-          (click)="clearEmilyChat()"
+           (click)="clearEmilyChat()"
           aria-label="Close"
         >
           Clear
         </button>
         <button
           class="close-button"
-          [ngClass]="{ 'close-route': isChatbotRoute }"
-          (click)="closeAll()"
+           (click)="closeAll()"
           aria-label="Close"
         >
           <svg
@@ -49,7 +47,7 @@
     >
       <div
         class="scroll-down-button"
-        *ngIf="showScrollButton && isOpen"
+        *ngIf="showScrollButton"
         (click)="scrollToBottom()"
       >
         <div class="scroll-icon">

@@ -5,7 +5,6 @@ import {
   HostListener,
   ViewChild,
   AfterViewInit,
-  Input,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -20,20 +19,8 @@ import { filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
-
-type ChatFrom = 'user' | 'system' | 'ai';
-
-type ChatItem = {
-  key: string;
-  from: 'user' | 'system' | 'ai';
-  message: string;
-  created: Date;
-  notification?: Notification;
-  userMsg?: {
-    message: string;
-    createdDate: string;
-  };
-};
+import { ChatItem } from 'src/app/shared/models/Notification';
+import { ChatFrom } from 'src/app/shared/models/Notification';
 declare global {
   interface Window {
     electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
@@ -54,8 +41,6 @@ export class FloatingChatNotificationsComponent
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
-  @Input() isChatbotRoute = false;
-
   private awaitingResponse = false;
   private preSendIds = new Set<string | number>();
   private pendingSentText = '';
@@ -65,18 +50,13 @@ export class FloatingChatNotificationsComponent
   private lastUserMessageId: number | null = null;
   notifications: Notification[] = [];
   messageText = '';
-  CampaignId!: number;
   campaignId!: number;
-
-  public isOpen = true;
-  isNotificationsOpen = false;
   electronSideBar = false;
   outgoingText = '';
   isSending = false;
   sentMessages: any[] = [];
   overlayHtml: SafeHtml = '';
   pdfTitle = '';
-  isGeneratingPdf = false;
 
   private overlayModalRef: any;
   public selectedNotification: Notification | null = null;
@@ -115,16 +95,15 @@ export class FloatingChatNotificationsComponent
     this.listenToRouteChanges();
     this.initializeNotifications();
     this.initializeChatModalSubscriptions();
+    (window as any).electronMessage.onSiteScanned((url: any) => {
+      this.conversationId = 3;
+      this.notificationSourceUrl = url;
+    });
   }
 
   private handleInitialRouteState(): void {
     if (this.router.url.includes('chatbot')) {
       this.electronSideBar = true;
-    }
-    this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(this.router.url);
-    if (this.isChatbotRoute) {
-      this.isOpen = true;
-      setTimeout(() => this.scrollToBottom(), 0);
     }
   }
 
@@ -133,76 +112,25 @@ export class FloatingChatNotificationsComponent
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
         const url = e.urlAfterRedirects || e.url;
-        this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
   }
 
   private initializeNotifications(): void {
-    this.checkNotificationsCall();
+    this.fetchSpecificNotifications();
     this.startPolling(2000);
   }
 
   private startPolling(intervalMs: number): void {
     const poll = () => {
-      this.checkNotificationsCall();
+      this.fetchSpecificNotifications();
       setTimeout(poll, intervalMs);
     };
     poll();
   }
 
-  private checkNotificationsCall(): void {
-    if (
-      this.notificationSourceUrl ||
-      this.notificationService.notificationsnew.length > 0
-    ) {
-      this.fetchSpecificNotifications();
-    } else {
-      this.getAllNotifications();
-    }
-  }
-
-  private getAllNotifications(): void {
-    this.notificationService
-      .fetchUserNotifications(this.CampaignId)
-      .subscribe(() => {
-        this.notificationService.notifications =
-          this.notificationService.notifications.filter(
-            (n) => n.isEmilyChat === true
-          );
-
-        this.previousNotificationsLength =
-          this.notificationService.notifications.length;
-
-        if (
-          !this.notificationSourceUrl &&
-          this.notificationService.notifications.length > 0
-        ) {
-          const last =
-            this.notificationService.notifications[
-              this.notificationService.notifications.length - 1
-            ];
-          this.notificationSourceUrl = last.sourceUrl;
-          if (!this.chatModal.lockConversationContext && last.sourceUrl) {
-            this.conversationId = last.emilyConversationCategoryId;
-          }
-
-          this.fetchSpecificNotifications();
-        }
-      });
-  }
-
   private fetchSpecificNotifications(): void {
-    if (
-      this.campaignId ||
-      this.shoppingCenterId ||
-      this.organizationId ||
-      this.contactId
-    ) {
-      this.notificationSourceUrl = '';
-    }
-
     this.notificationService
-      .fetchUserNotificaetionsSpecific(
+      .fetchUserNotificationsSpecific(
         this.campaignId,
         this.shoppingCenterId,
         this.organizationId,
@@ -422,8 +350,6 @@ export class FloatingChatNotificationsComponent
       return;
     }
 
-    this.isGeneratingPdf = true;
-
     // Process images to fix cross-origin issues
     const imgs = Array.from(
       containerEl.querySelectorAll('img')
@@ -454,21 +380,17 @@ export class FloatingChatNotificationsComponent
       orientation: 'portrait',
     };
 
-    try {
-      await html2pdf()
-        .from(containerEl)
-        .set({
-          filename,
-          margin: 15,
-          image: { type: 'jpeg', quality: 1 },
-          html2canvas: h2cOpts,
-          jsPDF: jsPDFOpts,
-          pagebreak: { mode: ['css', 'legacy'] },
-        })
-        .save();
-    } finally {
-      this.isGeneratingPdf = false;
-    }
+    await html2pdf()
+      .from(containerEl)
+      .set({
+        filename,
+        margin: 15,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: h2cOpts,
+        jsPDF: jsPDFOpts,
+        pagebreak: { mode: ['css', 'legacy'] },
+      })
+      .save();
   }
 
   private async toDataURL(url: string): Promise<string> {
@@ -625,7 +547,7 @@ export class FloatingChatNotificationsComponent
 
     const optimisticMsg = {
       id: `temp-${Date.now()}`,
-      campaignId: this.CampaignId,
+      campaignId: this.campaignId,
       message: text,
       createdDate: new Date().toISOString(),
       notificationCategoryId: 1, // ✅ mark as user
@@ -752,7 +674,7 @@ export class FloatingChatNotificationsComponent
     this.isTyping = true;
 
     this.cdRef.detectChanges();
-    if (this.isAtBottom()) this.scrollToBottomNow();
+    if (this.isAtBottom()) this.scrollToBottom();
   }
 
   private hideTyping() {
@@ -831,16 +753,8 @@ export class FloatingChatNotificationsComponent
     return distance <= this.BOTTOM_STICKY_THRESHOLD;
   }
 
-  private scrollToBottomNow(): void {
-    const el = this.containerEl;
-    if (!el) return;
-    el.scrollTop = el.scrollHeight;
-    this.showScrollButton = false;
-    this.newNotificationsCount = 0;
-  }
-
   ngAfterViewInit(): void {
-    this.scrollToBottomNow();
+    this.scrollToBottom();
     const el = this.containerEl;
     if (!el) return;
     this.wasSticky = this.isAtBottom();
@@ -858,7 +772,7 @@ export class FloatingChatNotificationsComponent
   }
 
   scrollToBottom(): void {
-    const el = this.messagesContainer?.nativeElement as HTMLElement | undefined;
+    const el = this.containerEl;
     if (!el) return;
 
     this.cdRef.detectChanges();
