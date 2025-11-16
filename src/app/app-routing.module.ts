@@ -16,14 +16,12 @@ import { AutomationComponent } from './shared/components/automation/automation.c
 import { AutomationShoppingCentersComponent } from './shared/components/automation-shopping-centers/automation-shopping-centers.component';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
-import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
 import { UserPagesComponent } from './features/user-pages/user-pages.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { PolygonsComponent } from './features/polygons/polygons.component';
 import { Tree2Component } from './features/tree2/tree2.component';
-import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component';
-import { NotificationViewComponent } from './shared/components/notifications/notification-view/notification-view.component';
+import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component'; 
 import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.component';
 import { FloatingChatNotificationsComponent } from './shared/components/floating-chat-notifications/floating-chat-notifications.component';
 
@@ -40,8 +38,6 @@ import { FloatingChatNotificationsComponent } from './shared/components/floating
     component: PolygonsComponent,
     data: { hideHeader: true },
   },
-
-  { path: 'notification-view/:id', component: NotificationViewComponent },
   {
     path: 'accounts-link',
     loadChildren: () =>
@@ -282,7 +278,6 @@ import { FloatingChatNotificationsComponent } from './shared/components/floating
     path: 'chatbot',
     component: FloatingChatNotificationsComponent,
   },
-  { path: 'emily-chatsbot', component: NotificationsComponent },
 
 ];
 

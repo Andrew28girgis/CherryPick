@@ -21,3 +21,15 @@ export interface Notification {
   ispolygon: boolean;
   isEmilyChat: boolean;
 }
+export type ChatItem ={
+  key: string;
+  from: 'user' | 'system' | 'ai';
+  message: string;
+  created: Date;
+  notification?: Notification;
+  userMsg?: {
+    message: string;
+    createdDate: string;
+  };
+}
+export type ChatFrom = 'user' | 'system' | 'ai';

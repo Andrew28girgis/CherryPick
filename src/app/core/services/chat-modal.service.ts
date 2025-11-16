@@ -102,7 +102,7 @@ export class ChatModalService {
 
     const cmp = this.ref
       .componentInstance as FloatingChatNotificationsComponent;
-    cmp.CampaignId = options.campaignId;
+    cmp.campaignId = options.campaignId;
 
     const dialog = document.querySelector('.dynamic-position') as HTMLElement;
     if (!dialog) return;

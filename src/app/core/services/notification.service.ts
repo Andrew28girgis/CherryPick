@@ -73,7 +73,7 @@ export class NotificationService {
       })
     );
   }
-  fetchUserNotificaetionsSpecific(
+  fetchUserNotificationsSpecific(
     campaignId: any,
     shoppingCenterId: any,
     organizationId: any,

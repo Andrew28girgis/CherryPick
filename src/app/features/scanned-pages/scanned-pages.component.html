@@ -5,6 +5,17 @@
     </div>
 
     <div class="controls">
+      <div class="search-container">
+        <i class="fa fa-search search-icon"></i>
+
+        <input
+          type="text"
+          placeholder="Search sources..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+          class="search-input"
+        />
+      </div>
       <div *ngIf="hasMultipleStatuses()" class="status-filter">
         <button
           (click)="changeFilter('all')"

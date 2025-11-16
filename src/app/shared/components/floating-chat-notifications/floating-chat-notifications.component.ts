@@ -3,14 +3,8 @@ import {
   OnInit,
   ElementRef,
   HostListener,
-  OnDestroy,
-  Output,
-  EventEmitter,
   ViewChild,
   AfterViewInit,
-  Input,
-  SimpleChanges,
-  TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -18,31 +12,15 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { Notification } from 'src/app/shared/models/Notification';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef, NgZone } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
-import { take, filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import html2pdf from 'html2pdf.js';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
-
-// import { WebSocketService } from './../../../core/services/notification-signalr.service';
-
-type ChatFrom = 'user' | 'system' | 'ai';
-
-type ChatItem = {
-  key: string;
-  from: 'user' | 'system' | 'ai';
-  message: string;
-  created: Date;
-  notification?: Notification;
-  userMsg?: {
-    message: string;
-    createdDate: string;
-    status: 'sending' | 'sent' | 'failed';
-  };
-};
+import { ChatItem } from 'src/app/shared/models/Notification';
+import { ChatFrom } from 'src/app/shared/models/Notification';
 declare global {
   interface Window {
     electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
@@ -58,85 +36,48 @@ export {};
   styleUrls: ['./floating-chat-notifications.component.css'],
 })
 export class FloatingChatNotificationsComponent
-  implements OnInit, OnDestroy, AfterViewInit
+  implements OnInit, AfterViewInit
 {
-  private intervalId: any;
-  private loadedNotifications: Set<string> = new Set();
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  @ViewChild('messageInput') messageInput!: ElementRef;
+  @ViewChild('contentToDownload') contentToDownload!: ElementRef;
   private awaitingResponse = false;
   private preSendIds = new Set<string | number>();
   private pendingSentText = '';
   private shownForIds = new Set<string | number>();
-  private scanTrigger$ = new BehaviorSubject<void>(undefined);
-  private scanSub?: import('rxjs').Subscription;
   isTyping = false;
   private typingHideTimer?: any;
   private lastUserMessageId: number | null = null;
-
   notifications: Notification[] = [];
-
   messageText = '';
-  CampaignId: any;
-  loaded = false;
-  @Input() isChatbotRoute = false;
-  @Output() overlayStateChange = new EventEmitter<boolean>();
-  @Output() sidebarStateChange = new EventEmitter<{
-    isOpen: boolean;
-    isFullyOpen: boolean;
-    type?: string;
-    overlayActive?: boolean;
-    isChatbotRoute?: boolean;
-  }>();
-
-  public isOpen = true;
-  isNotificationsOpen = false;
-
+  campaignId!: number;
   electronSideBar = false;
-  @ViewChild('overlayModal') overlayModal!: TemplateRef<any>;
-  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
-  @ViewChild('messageInput') messageInput!: ElementRef;
-  @ViewChild('contentToDownload') contentToDownload!: ElementRef;
-  @ViewChild('notificationModal') notificationModal!: TemplateRef<any>;
-  @ViewChild('overlayContainer', { read: ElementRef })
-  overlayContainer!: ElementRef;
-
   outgoingText = '';
   isSending = false;
   sentMessages: any[] = [];
-  isOverlayMode = false;
   overlayHtml: SafeHtml = '';
-  showPdfTitleDialog = false;
   pdfTitle = '';
-  isGeneratingPdf = false;
 
   private overlayModalRef: any;
-  private currentHtmlSourceId: number | null = null;
-  private currentHtmlCache = '';
   public selectedNotification: Notification | null = null;
   public isSaving = false;
   private currentOpenNotificationId: number | null = null;
-
   public showSaveToast = false;
-  currentMessage: string = '';
-  private wasAtBottomBeforeUpdate = false;
-  // ADD — sticky bottom + observers
-  private mo?: MutationObserver;
-  private ro?: ResizeObserver;
+
   private wasSticky = true;
 
   private readonly BOTTOM_STICKY_THRESHOLD = 28;
-  showingMap: boolean = false;
-  isoverlaywide: boolean = false;
-  scanEnabled: boolean = true;
-  private wsConnected = false;
-  private knownIds = new Set<string | number>();
-  campaignId: any;
-  shoppingCenterId: any;
-  organizationId: any;
-  contactId: any;
-  conversationId: any;
-  newNotificationGetter!: boolean;
-  notificationSourceUrl: any;
-  isfirstyping: any;
+
+  shoppingCenterId!: number;
+  organizationId!: number;
+  contactId!: number;
+  conversationId!: number;
+  notificationSourceUrl!: string;
+  showScrollButton = false;
+  newNotificationsCount = 0;
+  previousNotificationsLength = 0;
+  private subs: Subscription[] = [];
+
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -144,78 +85,69 @@ export class FloatingChatNotificationsComponent
     private router: Router,
     private sanitizer: DomSanitizer,
     private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone,
-    private modalService: NgbModal,
     private refreshService: RefreshService,
     private chatModal: ChatModalService
   ) {}
 
-  showScrollButton = false;
-  newNotificationsCount = 0;
-  previousNotificationsLength = 0;
-  scrollThreshold = 100;
-  private chatOpenSub?: Subscription;
-  public isOverlayhtml = false;
-  private subs: Subscription[] = [];
-
   ngOnInit(): void {
+    this.fetchSpecificNotifications();
+    this.handleInitialRouteState();
+    this.listenToRouteChanges();
+    this.initializeNotifications();
+    this.initializeChatModalSubscriptions();
+    (window as any).electronMessage.onSiteScanned((url: any) => {
+      this.conversationId = 3;
+      this.notificationSourceUrl = url;
+    });
+  }
+
+  private handleInitialRouteState(): void {
     if (this.router.url.includes('chatbot')) {
       this.electronSideBar = true;
     }
+  }
 
-    this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(this.router.url);
-    if (this.isChatbotRoute) {
-      this.isOpen = true;
-      setTimeout(() => this.scrollToBottom(), 0);
-    }
-
-    // Handle route changes
+  private listenToRouteChanges(): void {
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
         const url = e.urlAfterRedirects || e.url;
-        this.isChatbotRoute = /^\/emily-chatsbot(\/|$)/.test(url);
       });
+  }
 
-    // Initial fetch (decides whether to fetch specific or general notifications)
-    this.fetchNotifications();
+  private initializeNotifications(): void {
+    this.fetchSpecificNotifications();
     this.startPolling(2000);
+  }
 
-    // Set up reactive UI listeners
-    this.scanSub = this.scanTrigger$.pipe(debounceTime(120)).subscribe(() => {
-      this.scanAndOpenOverlayForHtml();
-      this.scanForShowMap();
-    });
+  private startPolling(intervalMs: number): void {
+    const poll = () => {
+      this.fetchSpecificNotifications();
+      setTimeout(poll, intervalMs);
+    };
+    poll();
+  }
 
-    this.notificationService.openOverlay$.subscribe((notification) => {
-      if (notification) {
-        this.loadNotificationViewComponent(notification);
-      }
-    });
+  private fetchSpecificNotifications(): void {
+    this.notificationService
+      .fetchUserNotificationsSpecific(
+        this.campaignId,
+        this.shoppingCenterId,
+        this.organizationId,
+        this.notificationSourceUrl
+      )
+      .subscribe(() => {
+        this.notificationService.notificationsnew =
+          this.notificationService.notificationsnew.filter(
+            (n) => n.isEmilyChat === true
+          );
 
-    this.sidebarStateChange.emit({ isOpen: true, isFullyOpen: this.isOpen });
-    setTimeout(() => this.scrollToBottom(), 100);
-    this.checkScreenSize();
+        this.previousNotificationsLength =
+          this.notificationService.notificationsnew.length;
+      });
+  }
 
-    this.notificationService.mapOpen$.subscribe((open) => {
-      this.showingMap = open;
-      if (open) this.overlayHtml = '';
-    });
-
-    this.notificationService.overlayWide$.subscribe((wide) => {
-      if (!this.electronSideBar) {
-        this.isoverlaywide = wide;
-        if (wide) {
-          setTimeout(() => this.showTyping(), 2000);
-        }
-      }
-    });
-
-    this.notificationService.htmlOpen$.subscribe((open) => {
-      this.isOverlayhtml = open;
-      if (!open) this.overlayHtml = '';
-    });
-
+  private initializeChatModalSubscriptions(): void {
     this.subs.push(
       this.chatModal.campaignId$.subscribe((id) => (this.campaignId = id)),
       this.chatModal.shoppingCenterId$.subscribe(
@@ -227,21 +159,8 @@ export class FloatingChatNotificationsComponent
       this.chatModal.contactId$.subscribe((id) => (this.contactId = id)),
       this.chatModal.conversationId$.subscribe(
         (id) => (this.conversationId = id)
-      ),
-      this.chatModal.isfirstyping$.subscribe(
-        (bool) => (this.isfirstyping = bool)
       )
     );
-    console.log('first typing ', this.isfirstyping);
-  }
-
-  ngOnDestroy(): void {
-    if (this.intervalId) clearInterval(this.intervalId);
-    this.scanSub?.unsubscribe?.();
-    this.sidebarStateChange.emit({ isOpen: false, isFullyOpen: false });
-    clearTimeout(this.typingHideTimer);
-    this.mo?.disconnect();
-    this.ro?.disconnect();
   }
 
   openOverlayModal(notification: any) {
@@ -326,7 +245,6 @@ export class FloatingChatNotificationsComponent
             '';
 
         fabEl.style.position = 'fixed';
-        this.closeOverlayContent();
       }, 180);
     };
 
@@ -424,10 +342,136 @@ export class FloatingChatNotificationsComponent
     }
   }
 
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
+  async downloadPDF(container?: HTMLElement): Promise<void> {
+    const containerEl = container ?? this.contentToDownload?.nativeElement;
 
+    if (!containerEl) {
+      console.error('Content container not found');
+      return;
+    }
+
+    // Process images to fix cross-origin issues
+    const imgs = Array.from(
+      containerEl.querySelectorAll('img')
+    ) as HTMLImageElement[];
+    await Promise.all(
+      imgs.map(async (img) => {
+        try {
+          if (
+            /^https?:\/\//.test(img.src) &&
+            !img.src.startsWith(window.location.origin)
+          ) {
+            img.src = await this.toDataURL(img.src); // Convert image to Data URL
+          }
+        } catch (err) {
+          console.warn('Could not process image:', img.src, err);
+        }
+      })
+    );
+
+    const filename = `${
+      this.pdfTitle?.trim() || 'Emily-Report'
+    }-${Date.now()}.pdf`;
+
+    const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
+    const jsPDFOpts: any = {
+      unit: 'pt',
+      format: 'a4',
+      orientation: 'portrait',
+    };
+
+    await html2pdf()
+      .from(containerEl)
+      .set({
+        filename,
+        margin: 15,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: h2cOpts,
+        jsPDF: jsPDFOpts,
+        pagebreak: { mode: ['css', 'legacy'] },
+      })
+      .save();
+  }
+
+  private async toDataURL(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  saveNotification(notification: Notification): void {
+    if (!notification?.id) return;
+
+    this.isSaving = true;
+
+    this.placesService.savemessages(notification.id).subscribe({
+      next: (res) => {
+        notification.isEndInsertion = 1;
+        this.showSaveToast = true;
+        this.cdRef.detectChanges();
+        setTimeout(() => {
+          this.showSaveToast = false;
+          this.cdRef.detectChanges();
+        }, 2500);
+        this.refreshService.triggerRefreshOrganizations();
+
+        this.isSaving = false;
+      },
+    });
+  }
+
+  saveTitleInNotification(): void {
+    if (!this.pdfTitle.trim()) {
+      return;
+    }
+
+    this.isSaving = true;
+
+    const request = {
+      Name: 'SetTitleInNotification',
+      Params: {
+        Id: this.selectedNotification?.id,
+        Title: this.pdfTitle.trim(),
+      },
+    };
+
+    this.placesService.GenericAPI(request).subscribe({
+      next: () => {
+        (this.selectedNotification as any).title = this.pdfTitle.trim();
+        this.showSaveToast = true;
+        this.cdRef.detectChanges();
+
+        setTimeout(() => {
+          this.showSaveToast = false;
+          this.cdRef.detectChanges();
+        }, 2500);
+
+        this.isSaving = false;
+        this.pdfTitle = '';
+        this.refreshService.triggerUserPagesRefresh();
+
+        if (this.overlayModalRef) {
+          this.overlayModalRef.close();
+          this.overlayModalRef = null;
+        }
+      },
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutSideClose(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
     const detailsPanel = document.querySelector('.chat-details-panel');
     if (detailsPanel && detailsPanel.contains(target)) return;
 
@@ -448,144 +492,20 @@ export class FloatingChatNotificationsComponent
 
     if (chatButton && chatButton.contains(target)) return;
 
-    if (
-      this.isOpen &&
-      target &&
-      chatDropdown &&
-      !chatDropdown.contains(target)
-    ) {
-      this.notificationService.setChatOpen(false);
-      this.isOpen = false;
+    if (target && chatDropdown && !chatDropdown.contains(target)) {
       this.closeAll();
     }
   }
 
-  getSCsDataFromJsons(flag: boolean): void {
-    (window as any).electronMessage.getSCsDataFromJsons(flag);
-  }
-
-  choose(choice: number, notification: any): void {
-    this.setNotificationLoading(notification, true, choice);
-
-    if (choice === 1) {
-      const request = {
-        Name: 'DeleteJSONNotification',
-        Params: { Id: notification.id },
-      };
-
-      this.placesService.GenericAPI(request).subscribe({
-        next: async (response: any) => {
-          if (response) {
-            try {
-              await this.saveShoppingCenterData(
-                notification.json,
-                notification
-              );
-            } catch (error) {}
-          }
-          this.setNotificationLoading(notification, false);
-          this.loadedNotifications.add(notification.id);
-        },
-        error: (error) => {
-          this.setNotificationLoading(notification, false);
-        },
-      });
-    } else if (choice === 0) {
-      const request = {
-        Name: 'DeleteJSONNotification',
-        Params: { Id: notification.id },
-      };
-
-      this.placesService.GenericAPI(request).subscribe({
-        next: (response: any) => {
-          this.setNotificationLoading(notification, false);
-          this.loadedNotifications.add(notification.id);
-        },
-      });
-    }
-  }
-
-  async saveShoppingCenterData(json: any, notification: any) {
-    try {
-      const parsedJson = JSON.parse(json);
-
-      parsedJson.campaignId = notification.campaignId;
-      parsedJson.AutomationJson = json;
-      const response = await fetch(
-        'https://127.0.0.1:5443/api/Enrichment/EnrichShoppingCenter',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(parsedJson),
-        }
-      );
-
-      return response;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  isNotificationLoaded(notification: any): boolean {
-    return this.loadedNotifications.has(notification.id);
+  closeAll(): void {
+    this.chatModal.close();
   }
 
   closeSide() {
     (window as any).electronMessage.closeEmilySideBrowser();
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    const width = window.innerWidth;
-  }
-
-  isNotificationLoading(notification: any): boolean {
-    return !!notification.isLoading;
-  }
-
-  setNotificationLoading(
-    notification: any,
-    isLoading: boolean,
-    choice?: number
-  ): void {
-    if (isLoading) {
-      notification.isLoading = true;
-      notification.loadingStartTime = Date.now();
-      if (choice !== undefined) {
-        notification.loadingChoice = choice;
-        this.loaded = true;
-      }
-    } else {
-      const minLoadingTime = 1500;
-      const loadingStartTime = notification.loadingStartTime || Date.now();
-      const elapsedTime = Date.now() - loadingStartTime;
-
-      if (elapsedTime >= minLoadingTime) {
-        notification.isLoading = false;
-      } else {
-        const remainingTime = minLoadingTime - elapsedTime;
-        setTimeout(() => {
-          notification.isLoading = false;
-        }, remainingTime);
-      }
-    }
-  }
-
-  isAtTop(): boolean {
-    if (!this.messagesContainer) return false;
-    const container = this.messagesContainer.nativeElement;
-    return container.scrollTop === 0;
-  }
-
   onScroll(): void {
-    this.wasSticky = this.isAtBottom();
-
     if (this.wasSticky) {
       this.showScrollButton = false;
       this.newNotificationsCount = 0;
@@ -606,7 +526,6 @@ export class FloatingChatNotificationsComponent
   }
 
   sendMessage() {
-    if (this.isfirstyping) return;
     const text = this.outgoingText?.trim();
     if (!text || this.isSending) return;
 
@@ -628,7 +547,7 @@ export class FloatingChatNotificationsComponent
 
     const optimisticMsg = {
       id: `temp-${Date.now()}`,
-      campaignId: this.CampaignId,
+      campaignId: this.campaignId,
       message: text,
       createdDate: new Date().toISOString(),
       notificationCategoryId: 1, // ✅ mark as user
@@ -640,7 +559,6 @@ export class FloatingChatNotificationsComponent
     this.sentMessages.push({
       message: text,
       createdDate: optimisticMsg.createdDate,
-      status: 'sending',
     });
 
     this.scrollAfterRender();
@@ -661,7 +579,6 @@ export class FloatingChatNotificationsComponent
       Chat: text,
       ConversationId: conversationIdtrust,
     };
-    console.log('lastNotificatio mmmmmmn', lastNotification);
 
     if (
       this.campaignId ||
@@ -669,13 +586,11 @@ export class FloatingChatNotificationsComponent
       this.organizationId ||
       this.contactId
     ) {
-      this.newNotificationGetter = true;
       if (this.campaignId) body.CampaignId = this.campaignId;
       if (this.shoppingCenterId) body.ShoppingCenterId = this.shoppingCenterId;
       if (this.organizationId) body.OrganizationId = this.organizationId;
       if (this.contactId) body.ContactId = this.contactId;
     } else {
-      console.log('elssssssssssss');
       if (lastNotification?.campaignId)
         body.CampaignId = lastNotification.campaignId;
       if (lastNotification?.shoppingCenterId)
@@ -688,7 +603,6 @@ export class FloatingChatNotificationsComponent
         body.SourceUrl = lastNotification.sourceUrl;
       this.notificationSourceUrl = lastNotification.sourceUrl;
     }
-    console.log('first typing ', this.isfirstyping);
 
     this.placesService.sendmessages(body).subscribe({
       next: () => {
@@ -698,173 +612,16 @@ export class FloatingChatNotificationsComponent
         this.awaitingResponse = true;
         this.isSending = false;
         this.hideTyping();
-        const lastMsg = this.sentMessages[this.sentMessages.length - 1];
-        if (lastMsg) lastMsg.status = 'sent';
-        this.scanTrigger$.next();
       },
-      error: (err) => {
-        this.isSending = false;
-        this.hideTyping();
-        // restore text
-        this.outgoingText = text;
-        if (this.messageInput) this.messageInput.nativeElement.innerText = text;
-
-        // mark last message as failed
-        const lastMsg = this.sentMessages[this.sentMessages.length - 1];
-        if (lastMsg) lastMsg.status = 'failed';
-
-        // cancel turn
-        this.awaitingResponse = false;
-        this.preSendIds.clear();
-        this.pendingSentText = '';
-        ``;
-        this.shownForIds.clear();
-      },
-    });
-  }
-
-  toggleOverlayMode(): void {
-    if (!this.isOpen) return;
-
-    if (this.isOverlayMode || this.showingMap || this.isOverlayhtml) {
-      this.closeOverlayContent();
-    } else {
-      if (!this.electronSideBar) {
-        this.isOverlayMode = true;
-      }
-
-      this.overlayStateChange.emit(true);
-      this.sidebarStateChange.emit({
-        isOpen: this.isOpen,
-        isFullyOpen: this.isOpen,
-        type: 'overlay',
-        overlayActive: true,
-        isChatbotRoute: this.isChatbotRoute,
-      });
-    }
-  }
-
-  onOverlayBackdropClick(event: MouseEvent): void {
-    if (this.isOverlayMode || this.showingMap || this.isOverlayhtml) {
-      this.closeOverlayContent();
-    }
-  }
-
-  setOverlayHtmlFromApi(htmlFromApi: string) {
-    this.overlayHtml = this.sanitizer.bypassSecurityTrustHtml(htmlFromApi);
-  }
-
-  private htmlToString(raw: any): string {
-    if (raw == null) return '';
-    if (typeof raw === 'string') return raw;
-    try {
-      return String(raw);
-    } catch {
-      return '';
-    }
-  }
-
-  private hasHtml(n: Notification): boolean {
-    const htmlContent = this.htmlToString(n?.html).trim();
-    return htmlContent.length > 0 && htmlContent !== n?.message?.trim();
-  }
-
-  private scanAndOpenOverlayForHtml(): void {
-    console.log('not awaiting ');
-
-    if (!this.awaitingResponse) return;
-    console.log(' awaiting ');
-
-    const list = this.notificationService?.notificationsnew ?? [];
-    console.log(' 2 ');
-
-    if (!Array.isArray(list) || list.length === 0) return;
-    console.log(' 1');
-
-    const idKeyOf = (n: Notification) =>
-      typeof n.id === 'number' ? n.id : String(n.id);
-    const isUser = (n: Notification) =>
-      n.notificationCategoryId === true || n.notificationCategoryId === 1;
-    const isSystem = (n: Notification) => !isUser(n);
-    const isNewSinceSend = (n: Notification) =>
-      !this.preSendIds.has(idKeyOf(n));
-    const matchesPendingText = (n: Notification) =>
-      (n.message ?? '').trim() === this.pendingSentText.trim();
-    console.log(' 3 ');
-
-    // 1) Find user echo
-    const userEcho = list.find(
-      (n) => isUser(n) && isNewSinceSend(n) && matchesPendingText(n)
-    );
-    if (!userEcho) return;
-    console.log(' 4 ');
-
-    // 2) Find candidate system notification with HTML
-    const candidate = list.find(
-      (n) => isSystem(n) && isNewSinceSend(n) && this.hasHtml(n)
-    );
-    if (!candidate) return;
-    console.log(' 5 ');
-
-    const candId = idKeyOf(candidate);
-    if (this.shownForIds.has(candId)) return;
-    console.log(' 6 ');
-
-    const htmlStr = this.htmlToString(candidate.html).trim();
-    if (!htmlStr) return;
-
-    console.log(' 7');
-    // Mark shown and stop typing dots
-    this.shownForIds.add(candId);
-    this.awaitingResponse = false;
-    this.hideTyping?.();
-
-    // 🔑 Store candidate for overlay use
-    this.selectedNotification = candidate;
-
-    // Set overlay HTML
-    this.currentHtmlSourceId = candidate.id as any;
-    this.currentHtmlCache = htmlStr;
-    this.setOverlayHtmlFromApi(htmlStr);
-    this.openOverlayModal(this.selectedNotification);
-    console.log(' 8');
-
-    // Ensure overlay visible
-    if (!this.isOpen) {
-      this.isOpen = true;
-      this.notificationService.setChatOpen(true);
-    }
-    if (!this.isOverlayMode) {
-      if (!this.electronSideBar) {
-        this.isOverlayMode = true;
-      }
-    }
-
-    this.sidebarStateChange.emit({
-      isOpen: this.isOpen,
-      isFullyOpen: this.isOpen,
-      type: 'overlay',
-      overlayActive: this.isOverlayMode,
-    });
-
-    // Scroll message into view after CD stabilizes
-    this.cdRef.detectChanges();
-    this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-      this.scrollMessageIntoView(candId);
-      setTimeout(() => this.scrollMessageIntoView(candId), 80);
-      requestAnimationFrame(() => this.scrollMessageIntoView(candId));
     });
   }
 
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0;
 
-    // 🔹 Filter notifications to include only Emily chat messages
     const emilyNotifications = (
       this.notificationService?.notificationsnew ?? []
     ).filter((n) => n.isEmilyChat === true && n.emilyConversationCategoryId);
-
-    // 🔹 Map notifications to ChatItems
     const notificationItems: ChatItem[] = emilyNotifications.map((n) => ({
       key: `n-${n.id}-${seqCounter++}`,
       from: this.mapCategoryToFrom(n.notificationCategoryId),
@@ -908,10 +665,7 @@ export class FloatingChatNotificationsComponent
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 
   private scrollAfterRender(): void {
-    // Flush template changes
     this.cdRef.detectChanges();
-
-    // Let the browser lay out the new DOM, then scroll
     requestAnimationFrame(() => this.scrollToBottom());
   }
 
@@ -920,7 +674,7 @@ export class FloatingChatNotificationsComponent
     this.isTyping = true;
 
     this.cdRef.detectChanges();
-    if (this.isAtBottom()) this.scrollToBottomNow();
+    if (this.isAtBottom()) this.scrollToBottom();
   }
 
   private hideTyping() {
@@ -929,110 +683,12 @@ export class FloatingChatNotificationsComponent
     clearTimeout(this.typingHideTimer);
     this.cdRef.detectChanges();
   }
-  private scrollMessageIntoView(targetId: string | number): void {
-    try {
-      if (!this.messagesContainer) return;
-      const container: HTMLElement = this.messagesContainer.nativeElement;
-      const id =
-        typeof targetId === 'number'
-          ? `msg-${targetId}`
-          : `msg-${String(targetId)}`;
-
-      // Prefer offsetTop so transforms/positioning don’t affect math
-      const el = container.querySelector<HTMLElement>(
-        `#${CSS?.escape ? CSS.escape(id) : id}`
-      );
-      if (!el) return;
-
-      // Compute desired top so the message sits slightly above the bottom
-      const targetTop =
-        el.offsetTop -
-        Math.max(0, container.clientHeight - el.offsetHeight - 40);
-
-      container.scrollTo({ top: targetTop, behavior: 'smooth' });
-
-      // If we effectively reached bottom, clear badges
-      setTimeout(() => {
-        if (this.isAtBottom()) {
-          this.showScrollButton = false;
-          this.newNotificationsCount = 0;
-        }
-      }, 350);
-    } catch {
-      // fallback
-      this.scrollToBottom();
-    }
-  }
 
   private mapCategoryToFrom(categoryId: unknown): ChatFrom {
-    const cat = Number(categoryId); // handles number | string | boolean
+    const cat = Number(categoryId);
     if (categoryId === true || cat === 1) return 'user';
     if (cat === 3) return 'ai';
     return 'system';
-  }
-
-  saveNotification(notification: Notification): void {
-    if (!notification?.id) return;
-
-    this.isSaving = true;
-
-    this.placesService.savemessages(notification.id).subscribe({
-      next: (res) => {
-        if (+notification.taskId === 3) {
-          this.getCampaigns();
-        }
-
-        notification.isEndInsertion = 1;
-
-        // show spinner for 1s then hide
-        this.showSaveToast = true;
-        this.cdRef.detectChanges();
-        setTimeout(() => {
-          this.showSaveToast = false;
-          this.cdRef.detectChanges();
-        }, 2500);
-        this.refreshService.triggerRefreshOrganizations();
-
-        this.isSaving = false;
-      },
-    });
-  }
-
-  getCampaigns(): void {
-    const request = { Name: 'GetCampaignsNeedUrls', Params: {} };
-    this.placesService.GenericAPI(request).subscribe({
-      next: (response: any) => {
-        const id = response?.json?.[0]?.id;
-
-        if (id == null) {
-          return;
-        }
-
-        // try {
-        //   (window as any).electronMessage.getLinksFromGoogle(
-        //     '',
-        //     localStorage.getItem('token'),
-        //     id // <-- send only the id
-        //   );
-        // } catch (e) {}
-      },
-    });
-  }
-
-  get canShowSave(): boolean {
-    const n = this.selectedNotification;
-    if (!n) return false;
-
-    // convert string -> number
-    const taskId = +n.taskId;
-
-    // normalize isEndInsertion (could be 0/1, "0"/"1", boolean)
-    const isEnd =
-      n.isEndInsertion === true ||
-      n.isEndInsertion === 1 ||
-      n.isEndInsertion === '1';
-
-    return (taskId === 2 || taskId === 3) && !isEnd;
   }
 
   loadNotificationViewComponent(notification: Notification): void {
@@ -1043,13 +699,8 @@ export class FloatingChatNotificationsComponent
       return;
     }
 
-    this.isOverlayMode = true;
-    this.showingMap = false;
-
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = notification.html || '';
-
-    // Extract and activate <style> and <link> tags
     const styleTags = tempDiv.querySelectorAll('style');
     styleTags.forEach((styleEl) => {
       const style = document.createElement('style');
@@ -1076,157 +727,6 @@ export class FloatingChatNotificationsComponent
     this.selectedNotification = notification;
   }
 
-  async downloadPDF(container?: HTMLElement): Promise<void> {
-    const containerEl = container ?? this.contentToDownload?.nativeElement;
-
-    if (!containerEl) {
-      console.error('Content container not found');
-      return;
-    }
-
-    this.isGeneratingPdf = true;
-
-    // Process images to fix cross-origin issues
-    const imgs = Array.from(
-      containerEl.querySelectorAll('img')
-    ) as HTMLImageElement[];
-    await Promise.all(
-      imgs.map(async (img) => {
-        try {
-          if (
-            /^https?:\/\//.test(img.src) &&
-            !img.src.startsWith(window.location.origin)
-          ) {
-            img.src = await this.toDataURL(img.src); // Convert image to Data URL
-          }
-        } catch (err) {
-          console.warn('Could not process image:', img.src, err);
-        }
-      })
-    );
-
-    const filename = `${
-      this.pdfTitle?.trim() || 'Emily-Report'
-    }-${Date.now()}.pdf`;
-
-    const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
-    const jsPDFOpts: any = {
-      unit: 'pt',
-      format: 'a4',
-      orientation: 'portrait',
-    };
-
-    try {
-      await html2pdf()
-        .from(containerEl)
-        .set({
-          filename,
-          margin: 15,
-          image: { type: 'jpeg', quality: 1 },
-          html2canvas: h2cOpts,
-          jsPDF: jsPDFOpts,
-          pagebreak: { mode: ['css', 'legacy'] },
-        })
-        .save();
-    } finally {
-      this.isGeneratingPdf = false;
-    }
-  }
-
-  private async toDataURL(url: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL('image/png'));
-      };
-      img.onerror = reject;
-      img.src = url;
-    });
-  }
-  showPdfDialog(): void {
-    this.pdfTitle = `Emily-Report-${new Date().toLocaleDateString()}`;
-    this.showPdfTitleDialog = true;
-  }
-
-  cancelPdfDialog(): void {
-    this.showPdfTitleDialog = false;
-    this.pdfTitle = '';
-  }
-
-  confirmPdfDownload(): void {
-    if (!this.pdfTitle.trim()) return;
-    this.showPdfTitleDialog = false;
-    this.downloadPDF();
-  }
-
-  saveTitleInNotification(): void {
-    if (!this.pdfTitle.trim()) {
-      return;
-    }
-
-    this.isSaving = true;
-
-    const request = {
-      Name: 'SetTitleInNotification',
-      Params: {
-        Id: this.selectedNotification?.id,
-        Title: this.pdfTitle.trim(),
-      },
-    };
-
-    this.placesService.GenericAPI(request).subscribe({
-      next: () => {
-        (this.selectedNotification as any).title = this.pdfTitle.trim();
-
-        this.showSaveToast = true;
-        this.cdRef.detectChanges();
-
-        setTimeout(() => {
-          this.showSaveToast = false;
-          this.cdRef.detectChanges();
-        }, 2500);
-
-        this.isSaving = false;
-        this.pdfTitle = '';
-        this.refreshService.triggerUserPagesRefresh();
-
-        if (this.overlayModalRef) {
-          this.overlayModalRef.close();
-          this.overlayModalRef = null;
-        }
-
-        this.closeOverlayContent();
-      },
-      error: () => {
-        this.isSaving = false;
-      },
-    });
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['isChatbotRoute']?.currentValue === true) {
-      this.isOpen = true;
-    }
-  }
-  showprompt(message: any) {
-    this.currentMessage = message;
-
-    const modalRef = this.modalService.open(this.notificationModal, {
-      size: 'md',
-      centered: true,
-    });
-  }
-
-  sendPromptMessage(message: any) {
-    const body: any = { Chat: message };
-    this.placesService.sendmessages(body).subscribe({});
-  }
   isAutomationLoading(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
@@ -1238,7 +738,6 @@ export class FloatingChatNotificationsComponent
       return false;
     }
 
-    // Stop showing animation when next message arrives
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
@@ -1254,45 +753,13 @@ export class FloatingChatNotificationsComponent
     return distance <= this.BOTTOM_STICKY_THRESHOLD;
   }
 
-  private scrollToBottomNow(): void {
-    const el = this.containerEl;
-    if (!el) return;
-    el.scrollTop = el.scrollHeight;
-    this.showScrollButton = false;
-    this.newNotificationsCount = 0;
-  }
-
   ngAfterViewInit(): void {
-    this.scrollToBottomNow();
-
+    this.scrollToBottom();
     const el = this.containerEl;
     if (!el) return;
-
-    // track stickiness at startup
-    this.wasSticky = this.isAtBottom();
-
-    // Observe DOM mutations (new messages appended)
-    this.mo = new MutationObserver(() => this.onContentMutated());
-    this.mo.observe(el, { childList: true, subtree: true });
-
-    // Observe size changes (images, fonts, etc.)
-    this.ro = new ResizeObserver(() => this.onContentMutated());
-    this.ro.observe(el);
-  }
-  // ADD — called when DOM/size changes happen
-  private onContentMutated(): void {
-    // If user was sticky before the change, keep them pinned to bottom
-    if (this.wasSticky) {
-      this.cdRef.detectChanges();
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => this.scrollToBottomNow());
-      });
-    }
-
-    // recompute for the next cycle
     this.wasSticky = this.isAtBottom();
   }
- 
+
   isCompilingReport(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
@@ -1304,65 +771,8 @@ export class FloatingChatNotificationsComponent
     return !nextItem;
   }
 
-  openPolygonOverlay(notification: Notification): void {
-    this.selectedNotification = notification;
-    this.showingMap = true; // controls <app-polygons> rendering
-    this.overlayHtml = ''; // clear HTML if previously set
-    if (!this.electronSideBar) {
-      this.isOverlayMode = true;
-    }
-    if (!this.isOpen) {
-      this.isOpen = true;
-      this.notificationService.setChatOpen(true);
-    }
-
-    this.sidebarStateChange.emit({
-      isOpen: this.isOpen,
-      isFullyOpen: this.isOpen,
-      type: 'overlay',
-      overlayActive: this.isOverlayMode,
-    });
-
-    this.cdRef.detectChanges();
-  }
-  private scanForShowMap(): void {
-    const list = this.notificationService?.notificationsnew ?? [];
-    if (!Array.isArray(list) || list.length === 0) return;
-
-    for (const n of list) {
-      const idKey = typeof n.id === 'number' ? n.id : String(n.id);
-      if (this.shownForIds.has(idKey)) continue;
-
-      const isSystem = !(
-        n.notificationCategoryId === true || n.notificationCategoryId === 1
-      );
-      if (isSystem && n.message?.toLowerCase().includes('show map')) {
-        this.shownForIds.add(idKey);
-        this.openPolygonOverlay(n);
-      }
-    }
-  }
-  private closeOverlayContent(): void {
-    this.isOverlayMode = false;
-    this.showingMap = false;
-    this.isOverlayhtml = false;
-    this.overlayHtml = '';
-
-    this.notificationService.setMapOpen(false);
-    this.notificationService.setOverlayWide(false);
-    this.notificationService.setHtmlOpen(false);
-
-    this.overlayStateChange.emit(false);
-    this.sidebarStateChange.emit({
-      isOpen: this.isOpen,
-      isFullyOpen: this.isOpen,
-      type: 'overlay',
-      overlayActive: false,
-    });
-  }
- 
   scrollToBottom(): void {
-    const el = this.messagesContainer?.nativeElement as HTMLElement | undefined;
+    const el = this.containerEl;
     if (!el) return;
 
     this.cdRef.detectChanges();
@@ -1390,153 +800,16 @@ export class FloatingChatNotificationsComponent
 
     this.placesService.GenericAPI(request).subscribe({
       next: (response: any) => {
-        // Remove Emily chat messages from the shared notifications array
         if (Array.isArray(this.notificationService.notificationsnew)) {
           this.notificationService.notificationsnew =
             this.notificationService.notificationsnew.filter(
               (n) => !n.isEmilyChat
             );
         }
-
-        // Clear optimistic/local sent messages as well
         this.sentMessages = [];
-
         this.cdRef.detectChanges();
         this.scrollToBottom();
       },
     });
-  }
-  closeAll(): void {
-    try {
-      // this.activeModal.close();  // <-- closes the actual modal
-    } catch {}
-
-    // clean overlays
-    this.isOverlayMode = false;
-    this.showingMap = false;
-    this.isOverlayhtml = false;
-    this.overlayHtml = '';
-
-    this.notificationService.setMapOpen(false);
-    this.notificationService.setOverlayWide(false);
-    this.notificationService.setHtmlOpen(false);
-
-    this.overlayStateChange.emit(false);
-    this.sidebarStateChange.emit({
-      isOpen: false,
-      isFullyOpen: false,
-      type: 'overlay',
-      overlayActive: false,
-    });
-
-    this.chatModal.close();
-  }
-
-  private fetchNotifications(): void {
-    // Main mode: always prefer specific notifications
-    if (
-      this.notificationSourceUrl ||
-      this.notificationService.notificationsnew.length > 0
-    ) {
-      this.fetchSpecificNotifications();
-    } else {
-      // Only go general when we have no conversation yet
-      this.fetchGeneralNotifications();
-    }
-  }
-
-  private fetchSpecificNotifications(): void {
-    console.log('specific fetch called',this.campaignId);
-    
-    if (
-      this.campaignId ||
-      this.shoppingCenterId ||
-      this.organizationId ||
-      this.contactId
-    ) {
-      this.notificationSourceUrl = null;
-    }
-    
-    this.notificationService
-      .fetchUserNotificaetionsSpecific(
-        this.campaignId,
-        this.shoppingCenterId,
-        this.organizationId,
-        this.notificationSourceUrl
-      )
-      .subscribe(() => {
-        // Filter only Emily chat messages
-        this.notificationService.notificationsnew =
-          this.notificationService.notificationsnew.filter(
-            (n) => n.isEmilyChat === true
-          );
-
-        this.previousNotificationsLength =
-          this.notificationService.notificationsnew.length;
-        // this.scrollToBottom();
-        this.scanTrigger$.next();
-      });
-  }
-
-  private fetchGeneralNotifications(): void {
-    this.notificationService
-      .fetchUserNotifications(this.CampaignId)
-      .subscribe(() => {
-        this.notificationService.notifications =
-          this.notificationService.notifications.filter(
-            (n) => n.isEmilyChat === true
-          );
-
-        this.previousNotificationsLength =
-          this.notificationService.notifications.length;
-        // this.scrollToBottom();
-
-        if (
-          !this.notificationSourceUrl &&
-          this.notificationService.notifications.length > 0
-        ) {
-          const last =
-            this.notificationService.notifications[
-              this.notificationService.notifications.length - 1
-            ];
-          this.notificationSourceUrl = last.sourceUrl;
-          if (!this.chatModal.lockConversationContext && last.sourceUrl) {
-            this.conversationId = last.emilyConversationCategoryId;
-          }
-
-          // ✅ Once we have a valid conversation, immediately switch to specific fetch
-          this.fetchSpecificNotifications();
-        }
-
-        this.scanTrigger$.next();
-      });
-  }
-
-  private startPolling(intervalMs: number): void {
-    const poll = () => {
-      this.wasSticky = this.isAtBottom();
-      if (
-        this.notificationService.notificationsnew.length > 0 &&
-        this.isfirstyping
-      ) {
-        console.log(
-          'notification ',
-          this.notificationService.notificationsnew[
-            this.notificationService.notificationsnew.length - 1
-          ]
-        );
-        console.log('first typing ', this.isfirstyping);
-        this.isTyping = true;
-        this.chatModal.setFirstTyping(false);
-        this.isfirstyping = false;
-        console.log('first typing set to false');
-      }
-      // Always call main unified method
-      this.fetchNotifications();
-
-      setTimeout(poll, intervalMs);
-    };
-
-    poll();
   }
 }
