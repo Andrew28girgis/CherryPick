@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FloatingChatNotificationsComponent } from '../../shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
 import { BehaviorSubject } from 'rxjs';
+import { NotificationService } from './notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChatModalService {
@@ -19,8 +20,11 @@ export class ChatModalService {
   organizationId$ = this.organizationIdSource.asObservable();
   contactId$ = this.contactIdSource.asObservable();
   conversationId$ = this.conversationIdSource.asObservable();
-   lockConversationContext = false;
-  constructor(private modal: NgbModal) {}
+  lockConversationContext = false;
+  constructor(
+    private modal: NgbModal,
+    private notificationService: NotificationService
+  ) {}
 
   setFabElement(el: HTMLElement): void {
     this.fabEl = el;
@@ -79,6 +83,7 @@ export class ChatModalService {
 
     const { top, left } = this.calculatePosition(anchor, opts);
     this.open({ campaignId, top, left });
+    this.notificationService.setChatOpenNew(true);
   }
 
   open(options: { campaignId?: any; top?: number; left?: number } = {}): void {
@@ -202,5 +207,4 @@ export class ChatModalService {
   lockConversation() {
     this.lockConversationContext = true;
   }
-  
 }

@@ -62,7 +62,7 @@ export class NotificationService {
         // this.sortNotificationsByDate();
 
         if (this.isChatOpen) {
-          this.handleNewMessagesWhileChatOpen(previousNotifications);
+          this.handleNewMessagesWhileChatOpen([...this.notificationsnew]);
         }
 
         this.updateNotificationCounts();
@@ -114,7 +114,7 @@ export class NotificationService {
     previousNotifications: Notification[]
   ): void {
     const previousIds = new Set(previousNotifications.map((n) => n.id));
-    const newNotifications = this.notifications.filter(
+    const newNotifications = this.notificationsnew.filter(
       (notification) =>
         !previousIds.has(notification.id) && notification.isRead === false
     );
@@ -179,11 +179,16 @@ export class NotificationService {
       this.notificationIdsWhenOpened.clear();
     }
   }
+  setChatOpenNew(isOpen: boolean): void {
+    this.isChatOpen = isOpen;
+  }
 
   markAllAsRead(): void {
-    const unreadNotifications = this.notifications.filter(
+    const unreadNotifications = this.notificationsnew.filter(
       (n) => n.isRead === false && n.isEmilyChat === true
     );
+    console.log(`unreadNotifications: ${unreadNotifications}`);
+    
 
     unreadNotifications.forEach((notification) => {
       if (!notification.contextExtendPrompt) {
