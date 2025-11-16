@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { NotificationsComponent } from './components/notifications/notifications.component';
-import { NotificationViewComponent } from './components/notifications/notification-view/notification-view.component';
+import { RouterModule } from '@angular/router'; 
 
 @NgModule({
   declarations: [],
@@ -11,9 +9,7 @@ import { NotificationViewComponent } from './components/notifications/notificati
     CommonModule,
     FormsModule,
     RouterModule,
-    ReactiveFormsModule,
-    NotificationsComponent,
-    NotificationViewComponent,
+    ReactiveFormsModule, 
   ],
   exports: [],
 })
