@@ -23,8 +23,7 @@ import { PolygonsComponent } from './features/polygons/polygons.component';
 import { Tree2Component } from './features/tree2/tree2.component';
 import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component'; 
 import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.component';
-import { FloatingChatNotificationsComponent } from './shared/components/floating-chat-notifications/floating-chat-notifications.component';
-
+import { FloatingChatNotificationsComponent } from './shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
  const routes: Routes = [
   {
     path: '',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { FloatingChatNotificationsComponent } from '../../shared/components/floating-chat-notifications/floating-chat-notifications.component';
+import { FloatingChatNotificationsComponent } from '../../shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

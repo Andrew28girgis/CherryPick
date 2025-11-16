@@ -41,15 +41,7 @@ export class FloatingChatNotificationsComponent
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
-  private awaitingResponse = false;
-  private preSendIds = new Set<string | number>();
-  private pendingSentText = '';
-  private shownForIds = new Set<string | number>();
   isTyping = false;
-  private typingHideTimer?: any;
-  private lastUserMessageId: number | null = null;
-  notifications: Notification[] = [];
-  messageText = '';
   campaignId!: number;
   electronSideBar = false;
   outgoingText = '';
@@ -57,6 +49,11 @@ export class FloatingChatNotificationsComponent
   sentMessages: any[] = [];
   overlayHtml: SafeHtml = '';
   pdfTitle = '';
+  overlayOpen = false;
+  overlayStyles: any = {};
+  safeHtmlString = '';
+  canSaveTitle = false;
+  showBottomSave = false;
 
   private overlayModalRef: any;
   public selectedNotification: Notification | null = null;
@@ -77,6 +74,8 @@ export class FloatingChatNotificationsComponent
   newNotificationsCount = 0;
   previousNotificationsLength = 0;
   private subs: Subscription[] = [];
+  showOverlay = false;
+  showBottomSaveButton = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -90,12 +89,16 @@ export class FloatingChatNotificationsComponent
   ) {}
 
   ngOnInit(): void {
-    this.fetchSpecificNotifications();
+    this.initializeChatContext();
+    this.initializeChatModalSubscriptions();
+    this.startPolling(2000);
+  }
+  private initializeChatContext(): void {
     this.handleInitialRouteState();
     this.listenToRouteChanges();
-    this.initializeNotifications();
-    this.initializeChatModalSubscriptions();
-    (window as any).electronMessage.onSiteScanned((url: any) => {
+    this.fetchMessages();
+
+    (window as any).electronMessage?.onSiteScanned((url: any) => {
       this.conversationId = 3;
       this.notificationSourceUrl = url;
     });
@@ -116,19 +119,18 @@ export class FloatingChatNotificationsComponent
   }
 
   private initializeNotifications(): void {
-    this.fetchSpecificNotifications();
+    this.previousNotificationsLength = 0;
     this.startPolling(2000);
   }
-
-  private startPolling(intervalMs: number): void {
+  private startPolling(interval: number): void {
     const poll = () => {
-      this.fetchSpecificNotifications();
-      setTimeout(poll, intervalMs);
+      this.fetchMessages();
+      setTimeout(poll, interval);
     };
     poll();
   }
 
-  private fetchSpecificNotifications(): void {
+  private fetchMessages(): void {
     this.notificationService
       .fetchUserNotificationsSpecific(
         this.campaignId,
@@ -139,12 +141,78 @@ export class FloatingChatNotificationsComponent
       .subscribe(() => {
         this.notificationService.notificationsnew =
           this.notificationService.notificationsnew.filter(
-            (n) => n.isEmilyChat === true
+            (n) => n.isEmilyChat
           );
 
-        this.previousNotificationsLength =
-          this.notificationService.notificationsnew.length;
+        this.handleNewMessages();
       });
+  }
+
+  sendMessage(): void {
+    const text = this.outgoingText.trim();
+    if (!text || this.isSending) return;
+
+    this.startSending(text);
+    this.insertOptimisticMessage(text);
+    this.showTyping();
+    this.sendToApi(text);
+  }
+  private startSending(text: string) {
+    this.isSending = true;
+    this.outgoingText = '';
+    this.messageInput.nativeElement.innerText = '';
+  }
+  private sendToApi(text: string): void {
+    const body = {
+      Chat: text,
+      ConversationId: this.conversationId,
+      CampaignId: this.campaignId,
+      ShoppingCenterId: this.shoppingCenterId,
+      OrganizationId: this.organizationId,
+      ContactId: this.contactId,
+      SourceUrl: this.notificationSourceUrl,
+    };
+
+    this.placesService.sendmessages(body).subscribe({
+      next: () => {
+        this.isSending = false;
+        this.hideTyping();
+      },
+    });
+  }
+
+  private handleNewMessages(): void {
+    const list = this.notificationService.notificationsnew;
+    const hasNew = list.length > this.previousNotificationsLength;
+
+    if (!hasNew) return;
+
+    if (this.isAtBottom()) {
+      this.scrollToBottom();
+    } else if (!this.isTyping) {
+      this.newNotificationsCount++;
+      this.showScrollButton = true;
+    }
+
+    this.previousNotificationsLength = list.length;
+  }
+
+  private insertOptimisticMessage(text: string): void {
+    const tempMsg: any = {
+      id: `temp-${Date.now()}`,
+      message: text,
+      createdDate: new Date().toISOString(),
+      notificationCategoryId: 1,
+      isEmilyChat: true,
+      isTemp: true,
+    };
+    this.notificationService.notificationsnew.push(tempMsg);
+    this.sentMessages.push({
+      message: text,
+      createdDate: tempMsg.createdDate,
+    });
+    this.cdRef.detectChanges();
+    this.scrollToBottom();
   }
 
   private initializeChatModalSubscriptions(): void {
@@ -506,7 +574,9 @@ export class FloatingChatNotificationsComponent
   }
 
   onScroll(): void {
-    if (this.wasSticky) {
+    const atBottom = this.isAtBottom();
+    this.wasSticky = atBottom;
+    if (atBottom) {
       this.showScrollButton = false;
       this.newNotificationsCount = 0;
     } else if (this.newNotificationsCount > 0) {
@@ -525,97 +595,6 @@ export class FloatingChatNotificationsComponent
     }
   }
 
-  sendMessage() {
-    const text = this.outgoingText?.trim();
-    if (!text || this.isSending) return;
-
-    this.isSending = true;
-
-    // === TURN START (ID SNAPSHOT) ===
-    this.preSendIds.clear();
-    for (const n of this.notificationService?.notificationsnew ?? []) {
-      const idKey = typeof n.id === 'number' ? n.id : String(n.id);
-      this.preSendIds.add(idKey);
-    }
-    this.pendingSentText = text;
-    this.shownForIds.clear();
-    this.awaitingResponse = true;
-
-    // Clear input immediately
-    this.outgoingText = '';
-    if (this.messageInput) this.messageInput.nativeElement.innerText = '';
-
-    const optimisticMsg = {
-      id: `temp-${Date.now()}`,
-      campaignId: this.campaignId,
-      message: text,
-      createdDate: new Date().toISOString(),
-      notificationCategoryId: 1, // ✅ mark as user
-      isTemp: true,
-    };
-
-    this.notificationService.notificationsnew.push(optimisticMsg as any);
-
-    this.sentMessages.push({
-      message: text,
-      createdDate: optimisticMsg.createdDate,
-    });
-
-    this.scrollAfterRender();
-    this.showTyping();
-
-    const lastNotification =
-      this.notificationService?.notificationsnew[
-        this.notificationService.notificationsnew.length - 2
-      ];
-    let conversationIdtrust = this.conversationId;
-    if (this.conversationId) {
-      conversationIdtrust = this.conversationId;
-    } else if (lastNotification.sourceUrl) {
-      conversationIdtrust = lastNotification.emilyConversationCategoryId;
-    }
-
-    const body: any = {
-      Chat: text,
-      ConversationId: conversationIdtrust,
-    };
-
-    if (
-      this.campaignId ||
-      this.shoppingCenterId ||
-      this.organizationId ||
-      this.contactId
-    ) {
-      if (this.campaignId) body.CampaignId = this.campaignId;
-      if (this.shoppingCenterId) body.ShoppingCenterId = this.shoppingCenterId;
-      if (this.organizationId) body.OrganizationId = this.organizationId;
-      if (this.contactId) body.ContactId = this.contactId;
-    } else {
-      if (lastNotification?.campaignId)
-        body.CampaignId = lastNotification.campaignId;
-      if (lastNotification?.shoppingCenterId)
-        body.ShoppingCenterId = lastNotification.shoppingCenterId;
-      if (lastNotification?.organizationId)
-        body.OrganizationId = lastNotification.organizationId;
-      if (lastNotification?.contactId)
-        body.ContactId = lastNotification.contactId;
-      if (lastNotification?.sourceUrl)
-        body.SourceUrl = lastNotification.sourceUrl;
-      this.notificationSourceUrl = lastNotification.sourceUrl;
-    }
-
-    this.placesService.sendmessages(body).subscribe({
-      next: () => {
-        this.lastUserMessageId = Math.max(
-          ...this.notifications.map((n) => n.id)
-        );
-        this.awaitingResponse = true;
-        this.isSending = false;
-        this.hideTyping();
-      },
-    });
-  }
-
   get chatTimeline(): ChatItem[] {
     let seqCounter = 0;
 
@@ -629,8 +608,6 @@ export class FloatingChatNotificationsComponent
       created: new Date(n.createdDate),
       notification: n,
     }));
-
-    // 🔹 Identify user messages (category 1 or boolean true)
     const userNotificationMessages = new Set(
       emilyNotifications
         .filter(
@@ -641,7 +618,6 @@ export class FloatingChatNotificationsComponent
         .map((n) => n.message.trim()?.toLowerCase())
     );
 
-    // 🔹 Map optimistic (local) user-sent messages
     const sentMessageItems: ChatItem[] = (this.sentMessages ?? [])
       .filter(
         (m) => !userNotificationMessages.has(m.message.trim()?.toLowerCase())
@@ -653,8 +629,6 @@ export class FloatingChatNotificationsComponent
         created: new Date(m.createdDate),
         userMsg: m,
       }));
-
-    // 🔹 Merge and sort all items chronologically
     return [...notificationItems, ...sentMessageItems].sort((a, b) => {
       const diff = a.created.getTime() - b.created.getTime();
       if (diff !== 0) return diff;
@@ -664,11 +638,6 @@ export class FloatingChatNotificationsComponent
 
   trackByChatItem = (_: number, item: ChatItem) => item.key;
 
-  private scrollAfterRender(): void {
-    this.cdRef.detectChanges();
-    requestAnimationFrame(() => this.scrollToBottom());
-  }
-
   private showTyping() {
     if (this.isTyping) return;
     this.isTyping = true;
@@ -676,11 +645,9 @@ export class FloatingChatNotificationsComponent
     this.cdRef.detectChanges();
     if (this.isAtBottom()) this.scrollToBottom();
   }
-
   private hideTyping() {
     if (!this.isTyping) return;
     this.isTyping = false;
-    clearTimeout(this.typingHideTimer);
     this.cdRef.detectChanges();
   }
 
@@ -778,10 +745,9 @@ export class FloatingChatNotificationsComponent
     this.cdRef.detectChanges();
     requestAnimationFrame(() => {
       el.scrollTop = el.scrollHeight;
-      if (this.isAtBottom()) {
-        this.showScrollButton = false;
-        this.newNotificationsCount = 0;
-      }
+      this.wasSticky = true;
+      this.showScrollButton = false;
+      this.newNotificationsCount = 0;
     });
   }
 
@@ -798,18 +764,6 @@ export class FloatingChatNotificationsComponent
       },
     };
 
-    this.placesService.GenericAPI(request).subscribe({
-      next: (response: any) => {
-        if (Array.isArray(this.notificationService.notificationsnew)) {
-          this.notificationService.notificationsnew =
-            this.notificationService.notificationsnew.filter(
-              (n) => !n.isEmilyChat
-            );
-        }
-        this.sentMessages = [];
-        this.cdRef.detectChanges();
-        this.scrollToBottom();
-      },
-    });
+    this.placesService.GenericAPI(request).subscribe({});
   }
 }

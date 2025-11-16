@@ -11,7 +11,7 @@ export interface Notification {
   contactId: number;
   organizationId: number;
   emilyConversationCategoryId: number;
-  sourceUrl:any;
+  sourceUrl: any;
   loaded: boolean;
   html: any;
   notificationCategoryId: any;
@@ -21,7 +21,7 @@ export interface Notification {
   ispolygon: boolean;
   isEmilyChat: boolean;
 }
-export type ChatItem ={
+export type ChatItem = {
   key: string;
   from: 'user' | 'system' | 'ai';
   message: string;
@@ -31,5 +31,6 @@ export type ChatItem ={
     message: string;
     createdDate: string;
   };
-}
+  temp?: boolean;
+};
 export type ChatFrom = 'user' | 'system' | 'ai';
