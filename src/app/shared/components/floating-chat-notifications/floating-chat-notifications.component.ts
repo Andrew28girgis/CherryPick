@@ -231,22 +231,20 @@ export class FloatingChatNotificationsComponent
     detailsPanel.style.zIndex = '999999999';
     detailsPanel.style.animation = 'fadeIn 0.25s ease forwards';
 
-    const closeOverlay = () => {
-      detailsPanel.style.animation = 'fadeOut 0.2s ease forwards';
+ const closeOverlay = () => {
 
-      setTimeout(() => {
-        detailsPanel.remove();
-        this.currentOpenNotificationId = null;
+  detailsPanel.remove();
+  this.currentOpenNotificationId = null;
 
-        fabEl.style.top =
-          fabEl.style.right =
-          fabEl.style.left =
-          fabEl.style.bottom =
-            '';
+  fabEl.style.top =
+    fabEl.style.right =
+    fabEl.style.left =
+    fabEl.style.bottom =
+      '';
 
-        fabEl.style.position = 'fixed';
-      }, 180);
-    };
+  fabEl.style.position = 'fixed';
+};
+
 
     detailsPanel.addEventListener('click', (e) => e.stopPropagation());
 
