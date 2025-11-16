@@ -1,6 +1,9 @@
 .scanned-pages-container {
   color: #111827;
-} 
+}
+.header {
+  display: flex;
+}
 .controls {
   display: flex;
   align-items: center;
@@ -15,7 +18,7 @@
   background: #fff;
   color: #374151;
   padding: 6px 14px;
-  border-radius: 30px;
+  border-radius: 24px;
   font-size: 14px;
   cursor: pointer;
   font-weight: 500;
@@ -30,7 +33,7 @@
   color: #fff;
   border-color: transparent;
   box-shadow: 0 2px 6px rgba(112, 78, 115, 0.25);
-} 
+}
 .table-wrap {
   overflow-x: auto;
   border-radius: 14px;
@@ -84,27 +87,17 @@
   text-decoration: underline;
 }
 
-.status-badge {
-  display: flex;
-  padding: 5px 10px;
-  border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 500;
-  text-transform: capitalize;
-  color: #374151;
-  background-color: #e5e7eb;
-  width: 100%;
-  justify-content: center;
-}
-
 /* zebra striping for subtle depth */
 .table tbody tr:nth-child(odd) {
   background: #fefefe;
 }
 
 .status-badge {
+  display: flex;
+  width: 100%;
+  justify-content: center;
   padding: 4px 10px;
-  border-radius: 9999px;
+  border-radius: 24px;
   font-size: 13px;
   font-weight: 500;
   text-transform: capitalize;
@@ -122,7 +115,7 @@
   justify-content: center;
   display: flex;
   background-color: #fff7ed; /* light orange background */
-  color: #c2410c;   
+  color: #c2410c;
 }
 
 .running-btn {
@@ -141,9 +134,37 @@
 }
 .completed-btn.active {
   background-color: #166534 !important; /* light green background */
-  color: #dcfce7 !important;    
+  color: #dcfce7 !important;
 }
 .pending-button.active {
   background-color: #6b7280 !important;
   color: #fff !important;
+}
+.search-container {
+  position: relative;
+  width: 300px; /* adjust as needed */
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #888;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px 10px 38px; /* space for icon */
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
 }
