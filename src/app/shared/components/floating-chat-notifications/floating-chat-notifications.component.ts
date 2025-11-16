@@ -6,7 +6,6 @@ import {
   ViewChild,
   AfterViewInit,
   Input,
-  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -219,8 +218,6 @@ export class FloatingChatNotificationsComponent
           this.notificationService.notificationsnew.length;
       });
   }
-
-
 
   private initializeChatModalSubscriptions(): void {
     this.subs.push(
@@ -547,9 +544,6 @@ export class FloatingChatNotificationsComponent
           this.overlayModalRef = null;
         }
       },
-      error: () => {
-        this.isSaving = false;
-      },
     });
   }
 
@@ -769,7 +763,7 @@ export class FloatingChatNotificationsComponent
   }
 
   private mapCategoryToFrom(categoryId: unknown): ChatFrom {
-    const cat = Number(categoryId); // handles number | string | boolean
+    const cat = Number(categoryId);
     if (categoryId === true || cat === 1) return 'user';
     if (cat === 3) return 'ai';
     return 'system';
@@ -847,21 +841,8 @@ export class FloatingChatNotificationsComponent
 
   ngAfterViewInit(): void {
     this.scrollToBottomNow();
-
     const el = this.containerEl;
     if (!el) return;
-
-    this.wasSticky = this.isAtBottom();
-  }
-  // ADD — called when DOM/size changes happen
-  private onContentMutated(): void {
-    // If user was sticky before the change, keep them pinned to bottom
-    if (this.wasSticky) {
-      this.cdRef.detectChanges();
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => this.scrollToBottomNow());
-      });
-    }
     this.wasSticky = this.isAtBottom();
   }
 
