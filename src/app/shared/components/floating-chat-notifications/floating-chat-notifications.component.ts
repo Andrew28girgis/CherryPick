@@ -1446,6 +1446,8 @@ export class FloatingChatNotificationsComponent
   }
 
   private fetchSpecificNotifications(): void {
+    console.log('specific fetch called',this.campaignId);
+    
     if (
       this.campaignId ||
       this.shoppingCenterId ||
@@ -1454,6 +1456,7 @@ export class FloatingChatNotificationsComponent
     ) {
       this.notificationSourceUrl = null;
     }
+    
     this.notificationService
       .fetchUserNotificaetionsSpecific(
         this.campaignId,
