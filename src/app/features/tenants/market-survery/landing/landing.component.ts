@@ -370,7 +370,7 @@ export class LandingComponent {
   selectMainImage(imageUrl: string): void {
     const body: any = {
       Name: 'SetImageAsMain',
-      Params: { OldImage: imageUrl },
+      Params: { OldImage: imageUrl, Id: this.ShoppingCenterId },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
@@ -397,7 +397,7 @@ export class LandingComponent {
   deleteImage(imageUrl: string): void {
     const body: any = {
       Name: 'DeleteImage',
-      Params: { OldImage: imageUrl },
+      Params: { OldImage: imageUrl, Id: this.ShoppingCenterId },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
