@@ -1,4 +1,4 @@
-<div class="floating-chat-wrapper">
+<div class="floating-chat-wrapper" #chatWrapper>
   <section class="notifications-overlay">
     <div class="floating-header">
       <div class="header-content">
@@ -270,6 +270,47 @@
       </button>
     </div>
   </section>
+
+  <div
+  class="chat-details-panel"
+  *ngIf="overlayOpen"
+  [ngStyle]="{
+    top: overlayTop + 'px',
+    left: overlayLeft + 'px',
+    width: overlayWidth + 'px',
+    height: overlayHeight + 'px'
+  }"
+>
+  <!-- HEADER -->
+  <div class="chat-details-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h4 class="mb-0">Details</h4>
+
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        placeholder="Enter Title"
+        class="form-control form-control-sm"
+        [(ngModel)]="pdfTitle"
+        (input)="updateSaveButtons()"
+        style="width: 180px"
+      />
+
+      <button class="btn btn-sm title-btn" [disabled]="!canSaveTitle" (click)="saveTitleInOverlay()">Save Title</button>
+      <button class="btn btn-sm save-pdf-btn" (click)="savePdfInOverlay()">📄 Save PDF</button>
+      <button class="chat-details-close btn btn-sm btn-light border" (click)="closeOverlay()">×</button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="chat-details-body" #detailsBody>
+    <div [innerHTML]="safeHtmlString"></div>
+  </div>
+
+  <!-- BOTTOM SAVE BUTTON -->
+  <div class="save-div" *ngIf="showBottomSave">
+    <button class="btn save-btn" (click)="saveNotificationInOverlay()">Save</button>
+  </div>
+</div>
 </div>
 
 <ng-template #savingTpl>
@@ -277,3 +318,4 @@
   <span>Saving…</span>
 </ng-template>
 <div class="save-toast" *ngIf="showSaveToast">Saved successfully</div>
+

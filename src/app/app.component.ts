@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   isChatbotRoute = false;
   isEmilyChatBot = false;
+  notificationView=false;
   hideSidebar = false;
   showingTransition = false;
   overlayActive = false;
@@ -89,6 +90,7 @@ export class AppComponent implements OnInit {
       url === '/emily-chatsbot' || url.startsWith('/emily-chatsbot/');
     this.isChatbotRoute = onEmilyChatRoute;
     this.isEmilyChatBot = this.router.url.includes('chatbot');
+    this.notificationView = this.router.url.includes('notification-view');
     this.setCampaignIdFromRoute();
   }
 

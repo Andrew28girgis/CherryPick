@@ -16,11 +16,11 @@ import { ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import html2pdf from 'html2pdf.js';
 import { RefreshService } from 'src/app/core/services/refresh.service';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 import { ChatItem } from 'src/app/shared/models/Notification';
 import { ChatFrom } from 'src/app/shared/models/Notification';
+import { PdfGeneratorService } from 'src/app/core/services/pdf-generator.service';
 declare global {
   interface Window {
     electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
@@ -41,6 +41,9 @@ export class FloatingChatNotificationsComponent
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
+  @ViewChild('chatWrapper', { static: true }) wrapperEl!: ElementRef;
+  @ViewChild('detailsBody') detailsBody!: ElementRef;
+
   isTyping = false;
   campaignId!: number;
   electronSideBar = false;
@@ -50,12 +53,15 @@ export class FloatingChatNotificationsComponent
   overlayHtml: SafeHtml = '';
   pdfTitle = '';
   overlayOpen = false;
-  overlayStyles: any = {};
-  safeHtmlString = '';
   canSaveTitle = false;
-  showBottomSave = false;
+  showBottomSave: any = false;
+  overlayTop = 0;
+  overlayLeft = 16; // SAME as before!
+  overlayWidth = 0;
+  overlayHeight = 0;
 
-  private overlayModalRef: any;
+  safeHtmlString: SafeHtml = '';
+
   public selectedNotification: Notification | null = null;
   public isSaving = false;
   private currentOpenNotificationId: number | null = null;
@@ -74,9 +80,6 @@ export class FloatingChatNotificationsComponent
   newNotificationsCount = 0;
   previousNotificationsLength = 0;
   private subs: Subscription[] = [];
-  showOverlay = false;
-  showBottomSaveButton = false;
-
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -85,7 +88,8 @@ export class FloatingChatNotificationsComponent
     private sanitizer: DomSanitizer,
     private cdRef: ChangeDetectorRef,
     private refreshService: RefreshService,
-    private chatModal: ChatModalService
+    private chatModal: ChatModalService,
+    private pdfService: PdfGeneratorService
   ) {}
 
   ngOnInit(): void {
@@ -118,10 +122,6 @@ export class FloatingChatNotificationsComponent
       });
   }
 
-  private initializeNotifications(): void {
-    this.previousNotificationsLength = 0;
-    this.startPolling(2000);
-  }
   private startPolling(interval: number): void {
     const poll = () => {
       this.fetchMessages();
@@ -233,21 +233,8 @@ export class FloatingChatNotificationsComponent
 
   openOverlayModal(notification: any) {
     this.loadNotificationViewComponent(notification);
-    const existingPanel = document.querySelector('.chat-details-panel');
-    if (existingPanel && this.currentOpenNotificationId === notification.id) {
-      return;
-    }
-    if (existingPanel) {
-      existingPanel.remove();
-    }
 
     this.currentOpenNotificationId = notification.id;
-
-    const fabEl = this.chatModal['fabEl'] as HTMLElement;
-    if (!fabEl) {
-      console.warn('Floating chat button not found');
-      return;
-    }
 
     const chatDialog = document.querySelector(
       '.dynamic-position'
@@ -255,225 +242,49 @@ export class FloatingChatNotificationsComponent
     if (!chatDialog) return;
 
     const chatRect = chatDialog.getBoundingClientRect();
-    const detailsPanel = document.createElement('div');
-    detailsPanel.classList.add('chat-details-panel');
+    const wrapperRect = this.wrapperEl.nativeElement.getBoundingClientRect();
 
-    const safeHtmlString =
-      (this.overlayHtml as any)?.changingThisBreaksApplicationSecurity || '';
+    // Position relative to chat wrapper (NOT whole page)
+    this.overlayTop = chatRect.top - wrapperRect.top;
+    this.overlayWidth = chatRect.left - wrapperRect.left - 16;
+    this.overlayHeight = chatRect.height;
 
-    detailsPanel.innerHTML = `
-    <div class="chat-details-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-      <h4 class="mb-0">Details</h4>
+    this.safeHtmlString = this.overlayHtml;
+    this.overlayOpen = true;
 
-      <div class="d-flex align-items-center gap-2">
-        <input type="text" id="pdfTitleInput" placeholder="Enter Title"
-          class="form-control form-control-sm" style="width: 180px" />
-
-        <button id="saveTitleBtn" class="btn btn-sm title-btn" disabled>
-          Save Title
-        </button>
-
-        <button id="savePdfBtn" class="btn btn-sm save-pdf-btn">
-          📄 Save PDF
-        </button>
-
-        <button class="chat-details-close btn btn-sm btn-light border">×</button>
-      </div>
-    </div>
-
-    <div class="chat-details-body" id="detailsBody"
-         style="padding: 16px; padding-bottom: 120px;">
-      ${safeHtmlString}
-    </div>
-  `;
-
-    detailsPanel.style.position = 'fixed';
-    detailsPanel.style.top = `${chatRect.top}px`;
-    detailsPanel.style.left = `16px`;
-    detailsPanel.style.width = `${chatRect.left - 32}px`;
-    detailsPanel.style.height = `${chatRect.height}px`;
-    detailsPanel.style.background = '#fff';
-    detailsPanel.style.borderRadius = '8px';
-    detailsPanel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
-    detailsPanel.style.overflowY = 'auto';
-    detailsPanel.style.zIndex = '999999999';
-    detailsPanel.style.animation = 'fadeIn 0.25s ease forwards';
-
- const closeOverlay = () => {
-
-  detailsPanel.remove();
-  this.currentOpenNotificationId = null;
-
-  fabEl.style.top =
-    fabEl.style.right =
-    fabEl.style.left =
-    fabEl.style.bottom =
-      '';
-
-  fabEl.style.position = 'fixed';
-};
-
-
-    detailsPanel.addEventListener('click', (e) => e.stopPropagation());
-
-    const titleInput = detailsPanel.querySelector(
-      '#pdfTitleInput'
-    ) as HTMLInputElement;
-
-    const saveTitleBtn = detailsPanel.querySelector(
-      '#saveTitleBtn'
-    ) as HTMLButtonElement;
-
-    const savePdfBtn = detailsPanel.querySelector(
-      '#savePdfBtn'
-    ) as HTMLButtonElement;
-
-    const toggleSaveButtons = () => {
-      const hasText = titleInput.value.trim().length > 0;
-      saveTitleBtn.disabled = !hasText;
-      savePdfBtn.disabled = false;
-    };
-
-    titleInput.addEventListener('input', toggleSaveButtons);
-    toggleSaveButtons();
-
-    saveTitleBtn.addEventListener('click', () => {
-      this.pdfTitle = titleInput.value.trim();
-      if (!this.pdfTitle) return;
-      this.saveTitleInNotification();
-      closeOverlay();
-    });
-
-    savePdfBtn.addEventListener('click', () => {
-      this.pdfTitle = titleInput.value.trim() || 'Emily-Report';
-      const pdfContent = detailsPanel.querySelector(
-        '#detailsBody'
-      ) as HTMLElement;
-      if (pdfContent) this.downloadPDF(pdfContent);
-    });
-
-    detailsPanel
-      .querySelector('.chat-details-close')
-      ?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeOverlay();
-      });
-
-    document.body.appendChild(detailsPanel);
-    fabEl.addEventListener('click', () => {
-      closeOverlay();
-    });
-    const outsideClickHandler = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-
-      const clickedInsidePanel = detailsPanel.contains(target);
-      const clickedInsideChat = chatDialog.contains(target);
-      const clickedFab = fabEl.contains(target);
-
-      if (!clickedInsidePanel && !clickedInsideChat && !clickedFab) {
-        closeOverlay();
-        document.removeEventListener('click', outsideClickHandler);
-      }
-    };
-
-    setTimeout(() => {
-      document.addEventListener('click', outsideClickHandler);
-    }, 50);
-
-    const showSaveButton =
+    this.showBottomSave =
       this.selectedNotification &&
       [2, 3, 4, 5].includes(+this.selectedNotification.taskId) &&
       +this.selectedNotification.isEndInsertion === 0;
+  }
+  updateSaveButtons() {
+    this.canSaveTitle = this.pdfTitle?.trim().length > 0;
+  }
 
-    if (showSaveButton) {
-      const saveDiv = document.createElement('div');
-      saveDiv.classList.add('save-div');
+  closeOverlay() {
+    this.overlayOpen = false;
+    this.currentOpenNotificationId = null;
+  }
 
-      saveDiv.innerHTML = `
-      <button id="bottomSaveBtn" class="btn save-btn">Save</button>
-    `;
+  saveTitleInOverlay() {
+    if (!this.pdfTitle.trim()) return;
+    this.saveTitleInNotification();
+    this.closeOverlay();
+  }
 
-      detailsPanel.appendChild(saveDiv);
-
-      const bottomBtn = saveDiv.querySelector(
-        '#bottomSaveBtn'
-      ) as HTMLButtonElement;
-
-      bottomBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (this.isSaving) return;
-        this.saveNotification(this.selectedNotification!);
-        closeOverlay();
-      });
+  savePdfInOverlay() {
+    if (this.detailsBody?.nativeElement) {
+      this.pdfService.generatePDF(
+        this.detailsBody.nativeElement,
+        this.pdfTitle || 'Emily-Report'
+      );
     }
   }
 
-  async downloadPDF(container?: HTMLElement): Promise<void> {
-    const containerEl = container ?? this.contentToDownload?.nativeElement;
-
-    if (!containerEl) {
-      console.error('Content container not found');
-      return;
-    }
-
-    // Process images to fix cross-origin issues
-    const imgs = Array.from(
-      containerEl.querySelectorAll('img')
-    ) as HTMLImageElement[];
-    await Promise.all(
-      imgs.map(async (img) => {
-        try {
-          if (
-            /^https?:\/\//.test(img.src) &&
-            !img.src.startsWith(window.location.origin)
-          ) {
-            img.src = await this.toDataURL(img.src); // Convert image to Data URL
-          }
-        } catch (err) {
-          console.warn('Could not process image:', img.src, err);
-        }
-      })
-    );
-
-    const filename = `${
-      this.pdfTitle?.trim() || 'Emily-Report'
-    }-${Date.now()}.pdf`;
-
-    const h2cOpts: any = { scale: 2, useCORS: true, allowTaint: false };
-    const jsPDFOpts: any = {
-      unit: 'pt',
-      format: 'a4',
-      orientation: 'portrait',
-    };
-
-    await html2pdf()
-      .from(containerEl)
-      .set({
-        filename,
-        margin: 15,
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: h2cOpts,
-        jsPDF: jsPDFOpts,
-        pagebreak: { mode: ['css', 'legacy'] },
-      })
-      .save();
-  }
-
-  private async toDataURL(url: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL('image/png'));
-      };
-      img.onerror = reject;
-      img.src = url;
-    });
+  saveNotificationInOverlay() {
+    if (this.isSaving) return;
+    this.saveNotification(this.selectedNotification!);
+    this.closeOverlay();
   }
 
   saveNotification(notification: Notification): void {
@@ -527,9 +338,8 @@ export class FloatingChatNotificationsComponent
         this.pdfTitle = '';
         this.refreshService.triggerUserPagesRefresh();
 
-        if (this.overlayModalRef) {
-          this.overlayModalRef.close();
-          this.overlayModalRef = null;
+        if (this.overlayOpen) {
+          this.closeOverlay();
         }
       },
     });
@@ -707,12 +517,8 @@ export class FloatingChatNotificationsComponent
     return !nextItem;
   }
 
-  private get containerEl(): HTMLElement | null {
-    return this.messagesContainer?.nativeElement ?? null;
-  }
-
   isAtBottom(): boolean {
-    const el = this.containerEl;
+    const el = this.messagesContainer.nativeElement;
     if (!el) return true;
     const distance = el.scrollHeight - (el.scrollTop + el.clientHeight);
     return distance <= this.BOTTOM_STICKY_THRESHOLD;
@@ -720,7 +526,7 @@ export class FloatingChatNotificationsComponent
 
   ngAfterViewInit(): void {
     this.scrollToBottom();
-    const el = this.containerEl;
+    const el = this.messagesContainer.nativeElement;
     if (!el) return;
     this.wasSticky = this.isAtBottom();
   }
@@ -737,7 +543,7 @@ export class FloatingChatNotificationsComponent
   }
 
   scrollToBottom(): void {
-    const el = this.containerEl;
+    const el = this.messagesContainer.nativeElement;
     if (!el) return;
 
     this.cdRef.detectChanges();

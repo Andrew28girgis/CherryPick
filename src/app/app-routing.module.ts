@@ -24,6 +24,7 @@ import { Tree2Component } from './features/tree2/tree2.component';
 import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component'; 
 import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.component';
 import { FloatingChatNotificationsComponent } from './shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
+import { NotificationViewComponent } from './shared/components/floating-chat/notification-view/notification-view.component';
  const routes: Routes = [
   {
     path: '',
@@ -46,6 +47,7 @@ import { FloatingChatNotificationsComponent } from './shared/components/floating
     data: { hideHeader: true },
     canActivate: [AuthGuardService],
   },
+  { path: 'notification-view/:id', component: NotificationViewComponent },
   {
     path: 'settings',
     loadChildren: () =>

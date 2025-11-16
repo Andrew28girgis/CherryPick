@@ -1,0 +1,22 @@
+.title-btn {
+  background: var(--Colors-Primary-500);
+  border: none;
+}
+.title-btn:hover {
+  background: var(--Colors-Primary-hover);
+  color: white;
+}
+/* Toast (alert) */
+.save-toast {
+  position: fixed;
+  right: 30vw;
+  top: 24px;
+  background: var(--Colors-Primary-500); /* success green */
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 3000;
+  font-size: 14px;
+  animation: fadeSlideIn 0.25s ease-out;
+}

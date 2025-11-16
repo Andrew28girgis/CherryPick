@@ -1,8 +1,8 @@
 <div class="row mx-0">
   <div class="col-2 p-0"  *ngIf="!isEmilyChatBot">
-    <app-sidebar *ngIf="shouldShowSidebar && isAuthenticated"></app-sidebar>
+    <app-sidebar *ngIf="shouldShowSidebar && isAuthenticated &&!notificationView"></app-sidebar>
   </div>
-  <div class="col-10 right-panel" [ngClass]="{ 'col-12 p-0': isEmilyChatBot }">
+  <div class="col-10 right-panel" [ngClass]="{ 'col-12 p-0': isEmilyChatBot ||notificationView}">
     <div class="app-container">
       <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
         <div class="main-content-area">
