@@ -1546,21 +1546,111 @@ export class FloatingChatNotificationsComponent
     this.chatModal.close();
   }
 
-  closeSide(): void {
-    (window as any).electronMessage?.closeEmilySideBrowser?.();
+  private fetchNotifications(): void {
+    // Main mode: always prefer specific notifications
+    if (
+      this.notificationSourceUrl ||
+      this.notificationService.notificationsnew.length > 0
+    ) {
+      this.fetchSpecificNotifications();
+    } else {
+      // Only go general when we have no conversation yet
+      this.fetchGeneralNotifications();
+    }
   }
 
-  // ==================== Computed Properties ====================
+  private fetchSpecificNotifications(): void {
+    console.log('specific fetch called',this.campaignId);
+    
+    if (
+      this.campaignId ||
+      this.shoppingCenterId ||
+      this.organizationId ||
+      this.contactId
+    ) {
+      this.notificationSourceUrl = null;
+    }
+    
+    this.notificationService
+      .fetchUserNotificaetionsSpecific(
+        this.campaignId,
+        this.shoppingCenterId,
+        this.organizationId,
+        this.notificationSourceUrl
+      )
+      .subscribe(() => {
+        // Filter only Emily chat messages
+        this.notificationService.notificationsnew =
+          this.notificationService.notificationsnew.filter(
+            (n) => n.isEmilyChat === true
+          );
 
-  get canShowSave(): boolean {
-    const notification = this.selectedNotification;
-    if (!notification) return false;
+        this.previousNotificationsLength =
+          this.notificationService.notificationsnew.length;
+        // this.scrollToBottom();
+        this.scanTrigger$.next();
+      });
+  }
 
-    const taskId = +notification.taskId;
-    const isEnd = notification.isEndInsertion === true ||
-                  notification.isEndInsertion === 1 ||
-                  notification.isEndInsertion === '1';
+  private fetchGeneralNotifications(): void {
+    this.notificationService
+      .fetchUserNotifications(this.CampaignId)
+      .subscribe(() => {
+        this.notificationService.notifications =
+          this.notificationService.notifications.filter(
+            (n) => n.isEmilyChat === true
+          );
 
-    return (taskId === 2 || taskId === 3) && !isEnd;
+        this.previousNotificationsLength =
+          this.notificationService.notifications.length;
+        // this.scrollToBottom();
+
+        if (
+          !this.notificationSourceUrl &&
+          this.notificationService.notifications.length > 0
+        ) {
+          const last =
+            this.notificationService.notifications[
+              this.notificationService.notifications.length - 1
+            ];
+          this.notificationSourceUrl = last.sourceUrl;
+          if (!this.chatModal.lockConversationContext && last.sourceUrl) {
+            this.conversationId = last.emilyConversationCategoryId;
+          }
+
+          // ✅ Once we have a valid conversation, immediately switch to specific fetch
+          this.fetchSpecificNotifications();
+        }
+
+        this.scanTrigger$.next();
+      });
+  }
+
+  private startPolling(intervalMs: number): void {
+    const poll = () => {
+      this.wasSticky = this.isAtBottom();
+      if (
+        this.notificationService.notificationsnew.length > 0 &&
+        this.isfirstyping
+      ) {
+        console.log(
+          'notification ',
+          this.notificationService.notificationsnew[
+            this.notificationService.notificationsnew.length - 1
+          ]
+        );
+        console.log('first typing ', this.isfirstyping);
+        this.isTyping = true;
+        this.chatModal.setFirstTyping(false);
+        this.isfirstyping = false;
+        console.log('first typing set to false');
+      }
+      // Always call main unified method
+      this.fetchNotifications();
+
+      setTimeout(poll, intervalMs);
+    };
+
+    poll();
   }
 }
