@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class=" container-fluid">
+<div class="container-fluid">
   <div class="title-div">
     <h2 class="title">Campaigns</h2>
   </div>
@@ -97,7 +97,7 @@
   <div
     *ngIf="
       filteredCampaigns && filteredCampaigns.length > 0 && stages.length > 0
-    " 
+    "
   >
     <!-- Updated card view to dashboard cards layout -->
     <div class="dashboard-cards-container" *ngIf="viewMode === 'card'">
@@ -293,8 +293,6 @@
               <div class="metric-label">Sites</div>
             </div>
 
- 
-
             <div class="metric-item">
               <div class="metric-value">{{ campaign.MailsSent || "0" }}</div>
               <div class="metric-label">Mails Sent</div>
@@ -342,12 +340,15 @@
                     <div
                       class="t-name d-flex justify-content-between w-100 align-items-center mt-2"
                     >
-                      <div class="tenant-title"   [routerLink]="[
+                      <div
+                        class="tenant-title"
+                        [routerLink]="[
                           '/dashboard',
                           campaign.OrganizationId,
                           campaign.OrganizationName,
                           campaign.Id
-                        ]">
+                        ]"
+                      >
                         <img
                           [src]="campaign.LogoUrl"
                           class="org-c-logo"
@@ -934,9 +935,7 @@
       </h4>
     </div>
 
-    <button class="btn btn-primary g-button" (click)="modal.close()">
-      X
-    </button>
+    <button class="btn btn-primary g-button" (click)="modal.close()">X</button>
   </div>
 
   <!-- Modal Body -->
