@@ -367,22 +367,26 @@ export class LandingComponent {
       centered: true,
     });
   }
-
   selectMainImage(imageUrl: string): void {
-    if (!this.ShoppingCenterId || !imageUrl) return;
+    const body: any = {
+      Name: 'SetImageAsMain',
+      Params: { OldImage: imageUrl },
+    };
 
-    const encodedImage = encodeURIComponent(imageUrl);
-    const apiUrl = `${environment.api}/ShoppingCenter/UpdateMainImage?shoppingCenterId=${this.ShoppingCenterId}&newMainImage=${encodedImage}`;
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res) => {
+        this.showToast('Main image updated successfully!');
 
-    this.http.post(apiUrl, {}).subscribe({
-      next: (res: any) => {
-        if (res === true || res?.json === true) {
-          this.showToast('Main image updated successfully!');
-          this.shoppingCenter.MainImage = imageUrl;
-          this.currentMainImage.set(imageUrl);
-        } else {
-          this.showToast('This image is already set as main or failed.');
-        }
+        this.shoppingCenter.MainImage = imageUrl;
+
+        this.currentMainImage.set(imageUrl);
+
+        this.currentGalleryData.update((images) => images.map((img) => img));
+
+        this.shoppingCenter = {
+          ...this.shoppingCenter,
+          MainImage: imageUrl,
+        };
       },
       error: () => {
         this.showToast('Failed to update main image.');
@@ -391,29 +395,31 @@ export class LandingComponent {
   }
 
   deleteImage(imageUrl: string): void {
-    if (!this.ShoppingCenterId || !imageUrl) return;
+    const body: any = {
+      Name: 'DeleteImage',
+      Params: { OldImage: imageUrl },
+    };
 
-    const encodedImage = encodeURIComponent(imageUrl);
-    const apiUrl = `${environment.api}/ShoppingCenter/DeleteImage?shoppingCenterId=${this.ShoppingCenterId}&imageToDelete=${encodedImage}`;
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res) => {
+        this.showToast('Image deleted successfully!');
 
-    this.http.post(apiUrl, {}).subscribe({
-      next: (res: any) => {
-        if (res === true || res?.json === true) {
-          this.showToast('Image deleted successfully!');
+        this.currentGalleryData.update((images) =>
+          images.filter((img) => img !== imageUrl)
+        );
 
-          this.currentGalleryData.update((images) =>
-            images.filter((img) => img !== imageUrl)
+        if (this.shoppingCenter.Images) {
+          const imgs = this.shoppingCenter.Images.split(',').filter(
+            (i) => i !== imageUrl
           );
-
-          if (this.currentMainImage() === imageUrl) {
-            this.currentMainImage.set('');
-          }
-        } else {
-          this.showToast('Failed to delete image.');
+          this.shoppingCenter.Images = imgs.join(',');
         }
-      },
-      error: (err) => {
-        this.showToast('Error while deleting the image.');
+
+        if (this.currentMainImage() === imageUrl) {
+          this.currentMainImage.set('');
+          this.shoppingCenter.MainImage = '';
+        }
+        this.shoppingCenter = { ...this.shoppingCenter };
       },
     });
   }
