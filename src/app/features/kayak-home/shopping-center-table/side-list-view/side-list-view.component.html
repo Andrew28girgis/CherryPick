@@ -275,11 +275,7 @@
                   </div>
 
                   <div>
-                    <div
-                      *ngIf="place.ShoppingCenter?.Places?.length"
-                      class="table-responsive mt-2"
-                      style="max-height: 150px; overflow-y: auto"
-                    ></div>
+           
 
                     <div *ngIf="getSentMails(place).length > 0" class="mt-2">
                       <ng-container *ngIf="getSentMails(place) as mails">
@@ -308,38 +304,10 @@
                         </div>
                       </ng-container>
                     </div>
-                  </div>
-                  <div class="row m-0">
-                    <div
-                      *ngFor="let item of place.ShoppingCenter?.BuyBoxPlaces"
-                      class="col-12 d-flex flex-column spec"
-                    >
-                      <div class="d-flex flex-column">
-                        <p>
-                          {{ item.RelationOrganizationName }}
-                          <!-- <img loading="lazy" 
-                            class="logo ms-2"
-                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                              item.RelationOrganizationId
-                            }}"
-                            [title]="item.RelationOrganizationName"
-                            alt=""
-                          /> -->
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  </div> 
                 </div>
                 <div class="col-md-12 spec">
-                  <!-- <hr class="small-hr mt-1 mb-1" /> -->
-                  <div
-                    class="spec-head between"
-                    *ngIf="
-                      place.ShoppingCenter?.ManagerOrganization;
-                      else findContacts
-                    "
-                  ></div>
-
+           
                   <ng-template #findContacts>
                     <!-- <a
                       class="target"

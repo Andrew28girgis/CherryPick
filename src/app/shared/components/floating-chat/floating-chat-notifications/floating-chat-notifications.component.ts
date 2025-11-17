@@ -185,10 +185,8 @@ export class FloatingChatNotificationsComponent
   private handleNewMessages(): void {
     const list = this.notificationService.notificationsnew;
     const hasNew = list.length > this.previousNotificationsLength;
-console.log('hasNew', hasNew);
 
     if (!hasNew) return;
-console.log('hasNew', hasNew);
 
     if (this.isAtBottom()) {
       this.scrollToBottom();
