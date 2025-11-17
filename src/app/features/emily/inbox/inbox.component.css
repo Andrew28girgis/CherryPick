@@ -9,7 +9,8 @@
 }
 
 .selected-contact {
-  background: var(--Colors-Primary-500);
+  background: var(--Colors-Primary-300);
+  color: #fff;
 }
 .dropdown-container {
   width: 100%;
@@ -18,7 +19,7 @@
 .org-dropdown {
   display: flex;
   justify-content: space-between;
-  padding: var(--Space-S-12)  15px;
+  padding: var(--Space-S-12) 15px;
   background-color: #f8f8f8;
   border-bottom: 1px solid #eaeaea;
   cursor: pointer;
@@ -27,7 +28,7 @@
 }
 
 .contacts-header {
-  padding:  var(--Space-S-24) ;
+  padding: var(--Space-S-24);
   font-size: 16px;
   font-weight: 600;
   color: #333;
@@ -36,17 +37,16 @@
 }
 
 .namecontact {
-   color: var(--Colors-Neutral-900 );
-   
+  color: var(--Colors-Neutral-900);
+
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 30px;
 }
 .shopping-of-contact {
-   color: var(--Colors-Neutral-500 );
+  color: var(--Colors-Neutral-500);
 
-   
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -55,8 +55,8 @@
 }
 
 .selected-email {
-  border-bottom: 1px solid var(--Colors-Primary-500);
-  background: var(--Colors-Primary-50 );
+  border-bottom: 1px solid var(--Colors-Primary-300);
+  background: var(--Colors-Primary-50);
   padding: 10px;
   margin-bottom: 5px;
 }
@@ -64,12 +64,12 @@
 .org-data {
   display: flex;
   height: 40px;
-  padding: var(--Space-S-8)  ;
+  padding: var(--Space-S-8);
   align-items: center;
-  gap: var(--Space-S-8)  ;
+  gap: var(--Space-S-8);
   align-self: stretch;
-  border-radius:  var(--Radius-R-8) ;
-  background: var(--Colors-Primary-500);
+  border-radius: var(--Radius-R-8);
+  background: var(--Colors-Primary-300);
   width: -webkit-fill-available;
 }
 
@@ -97,7 +97,7 @@
   padding: var(--Space-S-12) var(--Space-S-24);
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid var(--Colors-Primary-light );
+  border-bottom: 1px solid var(--Colors-Primary-light);
   cursor: pointer;
 }
 
@@ -108,12 +108,12 @@
 .dropdownall {
   position: relative;
   display: flex;
-  padding: var(--Space-S-8)   10px;
+  padding: var(--Space-S-8) 10px;
   justify-content: center;
   align-items: center;
-  gap: var(--Space-S-8)  ;
-  border-radius:  var(--Radius-R-8) ;
-  border: 1px solid var(--Colors-Primary-500);
+  gap: var(--Space-S-8);
+  border-radius: var(--Radius-R-8);
+  border: 1px solid var(--Colors-Primary-300);
   background: var(--Colors-Pure-White);
   cursor: pointer;
 }
@@ -136,8 +136,8 @@
   display: none;
   position: absolute;
   background: var(--Colors-Pure-White);
-  border: 1px solid var(--Colors-Primary-500);
-  border-radius:  var(--Radius-R-8) ;
+  border: 1px solid var(--Colors-Primary-300);
+  border-radius: var(--Radius-R-8);
   margin-top: 5px;
   width: 200px;
   padding: 10px;
@@ -154,7 +154,7 @@
 
 /* Filter button styling */
 .filter-button {
-  padding: var(--Space-S-8)   var(--Space-S-12) ;
+  padding: var(--Space-S-8) var(--Space-S-12);
   margin-bottom: 6px;
   cursor: pointer;
 }
@@ -185,9 +185,9 @@
   padding: var(--Space-S-24);
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--Space-S-8, var(--Space-S-8)  );
+  gap: var(--Space-S-8, var(--Space-S-8));
   align-self: stretch;
-  border-bottom: 1px solid var(--Colors-Primary-light );
+  border-bottom: 1px solid var(--Colors-Primary-light);
 }
 .single-mail:hover {
   background-color: var(--Colors-Primary-light);
@@ -210,12 +210,12 @@
 }
 
 .email-details-body {
-  background-color:none;
+  background-color: none;
   display: flex;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--Space-S-32) ;
+  gap: var(--Space-S-32);
   flex: 1 0 0;
 }
 
@@ -225,7 +225,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 32px;
-  padding-bottom: var(--Space-S-32) ;
+  padding-bottom: var(--Space-S-32);
 }
 
 .body-details {
@@ -239,13 +239,13 @@
 }
 
 .new-btn {
-  border-radius:  var(--Radius-R-8) ;
-  background:var(--app-color);
+  border-radius: var(--Radius-R-8);
+  background: var(--app-color);
   display: flex;
-  padding: var(--Space-S-8)   var(--Space-S-16) ;
+  padding: var(--Space-S-8) var(--Space-S-16);
   justify-content: center;
   align-items: center;
-  gap: var(--Space-S-8)  ;
+  gap: var(--Space-S-8);
   height: 40px;
   border: none;
   color: var(--Colors-Pure-White);
@@ -257,12 +257,12 @@
 
 .out-icn {
   cursor: pointer;
-  margin-left: var(--Space-S-12) ;
-  border-radius:  var(--Radius-R-8) ;
-  border: 1px solid var(--Colors-Primary-500);
+  margin-left: var(--Space-S-12);
+  border-radius: var(--Radius-R-8);
+  border: 1px solid var(--Colors-Primary-300);
   background: var(--Colors-Pure-White);
   display: flex;
-  padding: var(--Space-S-8)  ;
+  padding: var(--Space-S-8);
   align-items: center;
   gap: 10px;
 }
@@ -301,7 +301,7 @@
 .card-body:hover::-webkit-scrollbar-thumb {
   background: #ccc;
   /* Customize the scrollbar thumb color */
-  border-radius:var(--Space-S-4);
+  border-radius: var(--Space-S-4);
   /* Make the scrollbar rounded */
 }
 
@@ -313,21 +313,21 @@
   background: none;
   border: none;
   border-radius: 0;
-  border-right: 1px solid var(--Colors-Primary-light );
+  border-right: 1px solid var(--Colors-Primary-light);
 }
 .buybox-name {
-  margin: var(--Space-S-20) ;
+  margin: var(--Space-S-20);
   font-weight: 600;
   color: #22242b;
   cursor: pointer;
   font-size: 13px;
 }
 .replay {
-  border-radius:  var(--Radius-R-16) ;
+  border-radius: var(--Radius-R-16);
   background: var(--Colors-Primary-500);
   display: inline-flex;
   height: 48px;
-  padding: var(--Space-S-14)   var(--Space-S-24) ;
+  padding: var(--Space-S-14) var(--Space-S-24);
   justify-content: center;
   align-items: center;
   gap: 6px;
@@ -344,7 +344,7 @@
 }
 
 .replay:hover {
-  background-color:var(--Colors-Primary-hover);
+  background-color: var(--Colors-Primary-hover);
   color: white;
 }
 .send {
@@ -357,7 +357,6 @@
   font-size: 18px;
 }
 .inbox {
-  color: #fd7e14;
   font-size: 18px;
 }
 
@@ -365,7 +364,7 @@
   padding: 0px 5px;
   margin-right: 5px;
   cursor: pointer;
-  border-radius:var(--Space-S-4);
+  border-radius: var(--Space-S-4);
   font-size: 0.9rem;
   color: #555;
   transition: all 0.2s ease;
@@ -376,7 +375,7 @@
 }
 
 .filter-button.active {
-  background-color:var(--app-color);
+  background-color: var(--app-color);
   color: white;
 }
 
@@ -455,13 +454,13 @@
   align-items: center;
   gap: 5px;
   border: none;
-  color:var(--app-color);
+  color: var(--app-color);
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  background-color: var(--Colors-Primary-500);
-  padding:var(--Space-S-4) var(--Space-S-8)  ;
-  border-radius:  var(--Radius-R-16) ;
+  background-color: var(--Colors-Primary-300);
+  padding: var(--Space-S-4) var(--Space-S-8);
+  border-radius: var(--Radius-R-16);
   transition: all 0.2s ease;
 }
 
@@ -472,14 +471,14 @@
 .new-btnCompose:hover {
   background-color: var(--Colors-Primary-hover);
   color: white;
-  border-radius:  var(--Radius-R-8) ;
+  border-radius: var(--Radius-R-8);
 }
 
 .highlight-open {
   color: var(--Colors-Pure-White);
   border-radius: 10px;
   padding: 7px;
-  background-color: var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-300);
 }
 
 .email-body {
@@ -501,13 +500,12 @@
   background-color: var(--Colors-Pure-White);
   border: 1px solid#ce0000;
   color: #ce0000;
-
 }
 .delete-btn:hover {
   background-color: #f6f1f1;
   color: #ce0000;
 }
- 
+
 .send-icn {
   font-size: 22px;
   margin-top: 7px;
@@ -555,7 +553,7 @@
 .mail-main-container {
   display: flex;
   height: 600px;
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
 
   background: var(--Main-Container-BG);
 
@@ -570,7 +568,7 @@
   align-items: flex-start;
   gap: 10px;
   align-self: stretch;
-  border-bottom: 1px solid var(--Colors-Primary-light );
+  border-bottom: 1px solid var(--Colors-Primary-light);
   cursor: pointer;
 }
 
@@ -590,12 +588,12 @@
   font-weight: 500;
   line-height: 1.5;
   color: #333;
-  background-color: var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-300);
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 16px;
-  border: 1px solid var(--Colors-Primary-500);
-  border-radius:  var(--Radius-R-8) ;
+  border: 1px solid var(--Colors-Primary-300);
+  border-radius: var(--Radius-R-8);
   appearance: none;
   -webkit-appearance: none;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -611,7 +609,7 @@
 
 /* Styling for the options - these will apply when the dropdown is open */
 .form-select option {
-  padding: var(--Space-S-12)  15px;
+  padding: var(--Space-S-12) 15px;
   font-size: 14px;
   background-color: var(--Colors-Pure-White);
   color: #333;
@@ -635,12 +633,12 @@
   display: flex;
   height: 40px;
 
-  padding: var(--Space-S-8   ) var(--Space-S-12 );
+  padding: var(--Space-S-8) var(--Space-S-12);
   align-items: center;
-  gap: var(--Space-S-8 );
+  gap: var(--Space-S-8);
   align-self: stretch;
-  border-radius: var(--Radius-R-48 );
-  background: var(--Colors-Pure-White );
+  border-radius: var(--Radius-R-48);
+  background: var(--Colors-Pure-White);
 }
 
 .org-logo-container {
@@ -667,9 +665,9 @@
   right: 0;
   z-index: 1000;
   background-color: var(--Colors-Pure-White);
-  border: 1px solid var(--Colors-Primary-500);
+  border: 1px solid var(--Colors-Primary-300);
   border-top: none;
-  border-radius:  var(--Radius-R-24) ;
+  border-radius: var(--Radius-R-24);
   max-height: 250px;
   overflow-y: auto;
   animation: fadeIn 0.2s;
@@ -699,10 +697,10 @@
 .dropdown-toggle {
   display: flex;
   align-items: center;
-  gap: var(--Space-S-8)  ;
-  padding: 6px var(--Space-S-12) ;
+  gap: var(--Space-S-8);
+  padding: 6px var(--Space-S-12);
   background-color: white;
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
   border: 1px solid #e0e0e0;
   min-width: 100px;
   justify-content: space-between;
@@ -718,7 +716,7 @@
   z-index: 1000;
   margin-top: 5px;
   background-color: white;
-  border-radius:  var(--Radius-R-8) ;
+  border-radius: var(--Radius-R-8);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 180px;
   display: none;
@@ -740,10 +738,10 @@
 }
 
 .dropdown-label {
-  color: var(--Colors-Primary-500);
+  color: var(--Colors-Primary-300);
 
   /* Body/14/24/SemiBold */
-   
+
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -779,12 +777,12 @@
 
 .dropdown {
   display: flex;
-  padding: var(--Space-S-8 ) var(--Space-S-16 );
+  padding: var(--Space-S-8) var(--Space-S-16);
   justify-content: center;
   align-items: center;
-  gap: var(--Space-S-8 );
-  border-radius:  var(--Radius-R-32) ;
-  background: var(--Colors-Pure-White );
+  gap: var(--Space-S-8);
+  border-radius: var(--Radius-R-32);
+  background: var(--Colors-Pure-White);
 }
 
 .right-section {
@@ -795,12 +793,12 @@
 
 .refresh-button {
   display: flex;
-  padding: var(--Space-S-8 );
+  padding: var(--Space-S-8);
   align-items: center;
   gap: 10px;
-  border-radius:  var(--Radius-R-32) ;
-  border: 1px solid var(--Colors-Primary-light );
-  background: var(--Colors-Pure-White );
+  border-radius: var(--Radius-R-32);
+  border: 1px solid var(--Colors-Primary-light);
+  background: var(--Colors-Pure-White);
   cursor: pointer;
   transition: transform 0.3s ease;
   justify-content: center;
@@ -825,12 +823,12 @@
 .compose-button {
   display: flex;
   align-items: center;
-  gap: var(--Space-S-8)  ;
-  background-color: var(--Colors-Primary-500);
+  gap: var(--Space-S-8);
+  background-color: var(--Colors-Primary-300);
   color: white;
   border: none;
   border-radius: 18px;
-  padding: var(--Space-S-8)   var(--Space-S-16) ;
+  padding: var(--Space-S-8) var(--Space-S-16);
   font-weight: 500;
   cursor: pointer;
 }
@@ -841,7 +839,6 @@
 .main-top {
   color: var(--app-color);
 
-   
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -855,10 +852,10 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  padding: var(--Space-S-12)  var(--Space-S-20) ;
+  padding: var(--Space-S-12) var(--Space-S-20);
   background-color: white;
   color: #333;
-  border-radius:  var(--Radius-R-8) ;
+  border-radius: var(--Radius-R-8);
   box-shadow: 0 var(--Space-S-4) 12px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   opacity: 0;
@@ -873,9 +870,9 @@
 }
 
 .colored-toast {
-  background-color: var(--Colors-Primary-500);
+  background-color: var(--Colors-Primary-300);
   color: white;
-  border-left: 5px solid var(--Colors-Primary-500);
+  border-left: 5px solid var(--Colors-Primary-300);
 }
 
 .toast-content {
@@ -891,7 +888,7 @@
   display: flex;
   align-items: center;
   padding: 3px 10px;
-  border-radius:  var(--Radius-R-20) ;
+  border-radius: var(--Radius-R-20);
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
