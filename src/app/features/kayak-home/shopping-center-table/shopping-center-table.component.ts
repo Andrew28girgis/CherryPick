@@ -285,7 +285,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
     this.intervalId = setInterval(() => {
       this.shoppingCenterService.loadShoppingCenters(this.CampaignId);
-    }, 30000);
+    }, 10000);
   }
 
   // Add method to sync filter state

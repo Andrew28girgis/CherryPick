@@ -106,9 +106,9 @@ export class ShoppingComponent implements OnInit {
     this.isLoading = true;
     this.loadShoppingCenters();
     this.contactID = localStorage.getItem('contactId');
-    // this.refreshInterval = setInterval(() => {
-    //   this.loadShoppingCenters();
-    // }, 30000);
+    this.refreshInterval = setInterval(() => {
+      this.loadShoppingCenters();
+    }, 10000);
     setTimeout(() => {
       this.availableStates.forEach((s) => (this.stateSelections[s] = false));
       this.availableTypes.forEach((t) => (this.typeSelections[t] = false));
