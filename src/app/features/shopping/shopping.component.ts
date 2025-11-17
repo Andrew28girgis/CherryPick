@@ -932,12 +932,12 @@ export class ShoppingComponent implements OnInit {
       ShoppingCenterId: center.scId,
       ConversationId: 2,
     };
-
-    this.placesService.sendmessages(body).subscribe({});
+    this.placesService.sendmessages(body).subscribe({
+      next: () => {
+        this.chatModal.setTyping(false);
+      },
+    });
     this.chatModal.openForButton();
-    this.chatModal.lockConversation();
     this.chatModal.setShoppingCenterId(center.scId, 2);
-    this.chatModal.setFirstTyping(true);
-
   }
 }

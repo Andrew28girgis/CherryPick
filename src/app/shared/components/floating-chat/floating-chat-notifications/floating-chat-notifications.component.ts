@@ -193,7 +193,6 @@ export class FloatingChatNotificationsComponent
       this.newNotificationsCount++;
       this.showScrollButton = true;
     }
-
     this.previousNotificationsLength = list.length;
   }
 
@@ -218,6 +217,7 @@ export class FloatingChatNotificationsComponent
   private initializeChatModalSubscriptions(): void {
     this.subs.push(
       this.chatModal.campaignId$.subscribe((id) => (this.campaignId = id)),
+      this.chatModal.typing$.subscribe((typing) => (this.isTyping = typing)),
       this.chatModal.shoppingCenterId$.subscribe(
         (id) => (this.shoppingCenterId = id)
       ),

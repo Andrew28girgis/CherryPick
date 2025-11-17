@@ -1218,14 +1218,16 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
   }
   editWithEMily(campaign: any): void {
     const body: any = {
-      Chat: 'Please provide any additional information available about this camopaign.',
+      Chat: 'Please provide any additional information available about this campaign.',
       CampaignId: campaign.Id,
       ConversationId: 1,
     };
-    this.placesService.sendmessages(body).subscribe({});
+    this.placesService.sendmessages(body).subscribe({
+      next: () => {
+        this.chatModal.setTyping(false);
+      },
+    });
     this.chatModal.openForButton();
     this.chatModal.setCampaignId(campaign.Id, 1);
-    this.chatModal.setFirstTyping(true);
-
   }
 }

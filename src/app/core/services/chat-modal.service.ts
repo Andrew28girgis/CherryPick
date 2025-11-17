@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FloatingChatNotificationsComponent } from '../../shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { NotificationService } from './notification.service';
 
 @Injectable({ providedIn: 'root' })
@@ -9,18 +9,19 @@ export class ChatModalService {
   private ref?: NgbModalRef;
   private fabEl: HTMLElement | null = null;
   private campaignIdSource = new BehaviorSubject<any>(null);
-  private isFirstTypingSource = new BehaviorSubject<any>(null);
   private shoppingCenterIdSource = new BehaviorSubject<any>(null);
   private organizationIdSource = new BehaviorSubject<any>(null);
   private contactIdSource = new BehaviorSubject<any>(null);
   private conversationIdSource = new BehaviorSubject<any>(null);
+  private typing = new BehaviorSubject<any>(null);
   campaignId$ = this.campaignIdSource.asObservable();
-  isfirstyping$ = this.isFirstTypingSource.asObservable();
   shoppingCenterId$ = this.shoppingCenterIdSource.asObservable();
   organizationId$ = this.organizationIdSource.asObservable();
   contactId$ = this.contactIdSource.asObservable();
   conversationId$ = this.conversationIdSource.asObservable();
   lockConversationContext = false;
+  typing$ = this.typing.asObservable();
+
   constructor(
     private modal: NgbModal,
     private notificationService: NotificationService
@@ -73,28 +74,51 @@ export class ChatModalService {
     buttonEl?: HTMLElement,
     campaignId?: any,
     opts: { popupWidth?: number; popupHeight?: number; margin?: number } = {}
-  ): void {
-    const anchor = buttonEl ?? this.fabEl;
-    if (!anchor) {
-      console.warn('ChatModalService: No anchor element for positioning');
-      this.open({ campaignId });
-      return;
-    }
+  ): Promise<FloatingChatNotificationsComponent | null> {
+    return new Promise((resolve) => {
+      if (this.ref) {
+        try {
+          this.ref.dismiss();
+        } catch {}
+        this.ref = undefined;
+      }
 
-    const { top, left } = this.calculatePosition(anchor, opts);
-    this.open({ campaignId, top, left });
-    this.notificationService.setChatOpenNew(true);
+      setTimeout(() => {
+        const anchor = buttonEl ?? this.fabEl;
+        if (!anchor) {
+          console.warn('ChatModalService: No anchor element for positioning');
+          resolve(this.open({ campaignId }));
+          return;
+        }
+
+        const { top, left } = this.calculatePosition(anchor, opts);
+
+        const cmp = this.open({ campaignId, top, left });
+
+        this.notificationService.setChatOpenNew(true);
+
+        resolve(cmp);
+      }, 0);
+    });
   }
 
-  open(options: { campaignId?: any; top?: number; left?: number } = {}): void {
+  async open(
+    options: { campaignId?: any; top?: number; left?: number } = {}
+  ): Promise<FloatingChatNotificationsComponent | null> {
+    // If modal is already open → destroy it fully first
     if (this.ref) {
       try {
-        this.ref.close();
+        this.ref.dismiss(); // more reliable cleanup
       } catch {}
-      this.ref = undefined;
-      return;
-    }
 
+      this.ref = undefined;
+
+      // ensure Angular destroys component before re-opening
+      await Promise.resolve();
+    }
+    this.notificationService.notificationsnew = [];
+
+    // Open new modal
     this.ref = this.modal.open(FloatingChatNotificationsComponent, {
       backdrop: true,
       container: 'body',
@@ -105,31 +129,35 @@ export class ChatModalService {
       animation: false,
     });
 
+    // Pass input
     const cmp = this.ref
       .componentInstance as FloatingChatNotificationsComponent;
     cmp.campaignId = options.campaignId;
 
+    // Positioning
     const dialog = document.querySelector('.dynamic-position') as HTMLElement;
-    if (!dialog) return;
+    if (dialog) {
+      dialog.style.position = 'fixed';
+      dialog.style.width = '420px';
+      dialog.style.height = '560px';
+      dialog.style.zIndex = '9999';
 
-    dialog.style.position = 'fixed';
-    dialog.style.width = '420px';
-    dialog.style.height = '560px';
-    dialog.style.zIndex = '9999';
-    dialog.style.right = 'auto';
-    dialog.style.bottom = 'auto';
-
-    if (options.left !== undefined && options.top !== undefined) {
-      dialog.style.left = `${options.left}px`;
-      dialog.style.top = `${options.top}px`;
-    } else {
-      dialog.style.right = '24px';
-      dialog.style.bottom = '24px';
+      if (options.left !== undefined && options.top !== undefined) {
+        dialog.style.left = `${options.left}px`;
+        dialog.style.top = `${options.top}px`;
+      } else {
+        dialog.style.right = '24px';
+        dialog.style.bottom = '24px';
+      }
     }
 
+    // Remove reference when closed
     this.ref.closed.subscribe(() => (this.ref = undefined));
     this.ref.dismissed.subscribe(() => (this.ref = undefined));
+
+    return cmp;
   }
+
   disableFabDrag(): void {
     if (this.fabEl) {
       this.fabEl.setAttribute('cdkDragDisabled', 'true');
@@ -160,7 +188,7 @@ export class ChatModalService {
   }
 
   close(): void {
-    this.ref?.close();
+    this.ref?.dismiss();
     this.ref = undefined;
   }
 
@@ -172,30 +200,31 @@ export class ChatModalService {
     this.clearAll();
     this.campaignIdSource.next(campaignId);
     this.conversationIdSource.next(conversationId);
-  }
-  setFirstTyping(isFirstTyping: boolean): void {
-    this.isFirstTypingSource.next(isFirstTyping);
+    this.setTyping(true);
   }
 
   setShoppingCenterId(shoppingCenterId: any, conversationId: any): void {
     this.clearAll();
     this.shoppingCenterIdSource.next(shoppingCenterId);
     this.conversationIdSource.next(conversationId);
-    console.log(`shoppingCenterId: ${shoppingCenterId}`);
-
-    console.log(`coversionId ${conversationId}`);
+    this.setTyping(true);
   }
 
   setOrganizationId(organizationId: any, conversationId: any): void {
     this.clearAll();
     this.organizationIdSource.next(organizationId);
     this.conversationIdSource.next(conversationId);
+    this.setTyping(true);
   }
 
   setContactId(contactId: any, conversationId: any): void {
     this.clearAll();
     this.contactIdSource.next(contactId);
     this.conversationIdSource.next(conversationId);
+    this.setTyping(true);
+  }
+  setTyping(typing: boolean): void {
+    this.typing.next(typing);
   }
   clearAll(): void {
     this.campaignIdSource.next(null);
@@ -203,8 +232,5 @@ export class ChatModalService {
     this.organizationIdSource.next(null);
     this.contactIdSource.next(null);
     this.conversationIdSource.next(null);
-  }
-  lockConversation() {
-    this.lockConversationContext = true;
   }
 }

@@ -765,9 +765,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
       ShoppingCenterId: center.Id,
       ConversationId: 2,
     };
-    this.placesService.sendmessages(body).subscribe({});
+    this.placesService.sendmessages(body).subscribe({
+      next: () => {
+        this.chatModal.setTyping(false);
+      },
+    });
     this.chatModal.openForButton();
     this.chatModal.setShoppingCenterId(center.Id, 2);
-    this.chatModal.setFirstTyping(true);
   }
 }

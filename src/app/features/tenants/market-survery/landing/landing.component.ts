@@ -644,6 +644,7 @@ export class LandingComponent {
         } else {
           this.showToast(`Shopping center  scored successfully`);
         }
+        this.GetShoppingCenterCampaignScore();
       },
       error: () => {
         this.scoringId = null; // also stop loader if error happens

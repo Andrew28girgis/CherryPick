@@ -1,4 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
   Contact,
@@ -350,33 +356,39 @@ export class ContactsComponent implements OnInit {
       OrganizationId: org.id,
       ConversationId: 4,
     };
-    this.PlacesService.sendmessages(body).subscribe({});
+    this.PlacesService.sendmessages(body).subscribe({
+      next: () => {
+        this.chatModal.setTyping(false);
+      },
+    });
     this.chatModal.openForButton();
     this.chatModal.setOrganizationId(org.id, 4);
-    this.chatModal.setFirstTyping(true);
   }
+
   editContactWithEMily(contact: any): void {
     const body: any = {
       Chat: 'edit this Contact with emily',
-      OrganizationId: contact.id,
+      ContactId: contact.id,
       ConversationId: 5,
     };
-    this.PlacesService.sendmessages(body).subscribe({});
+    this.PlacesService.sendmessages(body).subscribe({
+      next: () => {
+        this.chatModal.setTyping(false);
+      },
+    });
     this.chatModal.openForButton();
     this.chatModal.setOrganizationId(contact.id, 5);
   }
 
   openContactsModal(org: any) {
-    console.log("ORG CLICKED", org);
-  
-    this.selectedOrg = org;  // ← SET IT HERE
-  
+    console.log('ORG CLICKED', org);
+
+    this.selectedOrg = org; // ← SET IT HERE
+
     this.modalService.open(this.orgContactsModal, {
       size: 'lg',
       centered: true,
-      scrollable: true
+      scrollable: true,
     });
   }
-  
-  
 }

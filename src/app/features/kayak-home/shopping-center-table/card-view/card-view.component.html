@@ -425,7 +425,7 @@
           </div>
           <div class="row m-0">
             <div
-              *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+              *ngFor="let item of shopping.ShoppingCenter.BuyBoxPlaces"
               class="col-12 d-flex flex-column spec"
             >
               <div class="d-flex flex-column">
@@ -450,7 +450,7 @@
           <div
             class="spec-head between"
             *ngIf="
-              shopping.ShoppingCenter?.ManagerOrganization;
+              shopping.ShoppingCenter.ManagerOrganization;
               else findContacts
             "
           ></div>
