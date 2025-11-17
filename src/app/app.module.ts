@@ -42,6 +42,7 @@ import { Tree2Component } from './features/tree2/tree2.component';
 import { FFlowModule, FConnectionContent } from '@foblex/flow';
 import { DatePipe } from '@angular/common';
 import { FloatingChatComponent } from './shared/components/floating-chat/floating-chat/floating-chat.component'; 
+import { EmailsComponent } from './features/emails/emails.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +60,7 @@ import { FloatingChatComponent } from './shared/components/floating-chat/floatin
     Tree2Component,
     NotificationsOnlyComponentComponent,
     FloatingChatComponent,
+    EmailsComponent,
    ],
   imports: [
     BrowserModule,
