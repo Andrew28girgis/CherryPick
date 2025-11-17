@@ -5,6 +5,7 @@ import {
   HostListener,
   ViewChild,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -184,8 +185,10 @@ export class FloatingChatNotificationsComponent
   private handleNewMessages(): void {
     const list = this.notificationService.notificationsnew;
     const hasNew = list.length > this.previousNotificationsLength;
+console.log('hasNew', hasNew);
 
     if (!hasNew) return;
+console.log('hasNew', hasNew);
 
     if (this.isAtBottom()) {
       this.scrollToBottom();
@@ -570,4 +573,5 @@ export class FloatingChatNotificationsComponent
 
     this.placesService.GenericAPI(request).subscribe({});
   }
+
 }

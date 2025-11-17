@@ -221,9 +221,6 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.checkScreenSize();
 
     this.activatedRoute.params.subscribe((params: any) => {
-      this.OrgId = params.orgId;
-      this.organizationName = params.orgName;
-      this.tenantName = params.orgName || '';
       this.encodedName = encodeURIComponent(this.organizationName);
       this.CampaignId = params.campaignId;
 
@@ -475,7 +472,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   goToTenant(tenant: any) {
     const campaignId =
       tenant.Campaigns?.length > 0 ? tenant.Campaigns[0].Id : 0;
-    this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
+    this.router.navigate(['/dashboard', campaignId]);
   }
 
   selectTenant(tenant: any, campaign?: any): void {
@@ -492,7 +489,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       ? tenant.Campaigns[0].Id
       : 0;
 
-    this.router.navigate(['/dashboard', tenant.id, tenant.name, campaignId]);
+    this.router.navigate(['/dashboard', campaignId]);
     this.shoppingCenterService.loadShoppingCenters(campaignId);
     this.cdr.detectChanges();
     if (this.tenantDropdownRef) {
@@ -501,11 +498,11 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   getCurrentCampaignName(): string {
-    if (!this.selectedTenant || !this.selectedTenant.Campaigns) {
-      return 'Campaign';
-    }
+    // if (!this.selectedTenant || !this.selectedTenant.Campaigns) {
+    //   return 'Campaign';
+    // }
 
-    const campaign = this.selectedTenant.Campaigns.find(
+    const campaign = this.selectedTenant?.Campaigns.find(
       (c: any) => c.Id === this.selectedCampaignId
     );
 
@@ -602,37 +599,52 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   }
 
   getUserBuyBoxes(): void {
-    const body: any = {
-      Name: 'GetAllActiveOrganizations',
-      Params: {},
-    };
+    const body: any = { Name: 'GetAllActiveOrganizations', Params: {} };
 
     this.placesService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        if (!data.json || !data.json.length) {
+        const orgs = data?.json ?? [];
+
+        // No data? Reset everything.
+        if (!orgs.length) {
           this.tenants = [];
           this.filteredTenants = [];
           this.groupTenantsByAlphabet();
           return;
         }
 
-        this.tenants = data.json.map((tenant: any) => ({
+        // Normalize tenant data
+        this.tenants = orgs.map((tenant: any) => ({
           ...tenant,
           Name: tenant.name,
           Id: tenant.id,
           OrganizationId: tenant.id,
-          Campaigns:
-            tenant.Campaigns?.length && !tenant.Campaigns[0]?.Id
-              ? []
-              : tenant.Campaigns || [],
+          Campaigns: Array.isArray(tenant.Campaigns)
+            ? tenant.Campaigns.filter((c: any) => c?.Id) // ignore bad campaigns
+            : [],
         }));
 
         this.filteredTenants = this.tenants;
         this.groupTenantsByAlphabet();
 
+        /** ⭐ Auto-select tenant by campaignId since orgId was removed from route */
         this.selectedTenant =
-          this.tenants.find((t) => t.OrganizationId == this.OrgId) || null;
+          this.tenants.find((t) =>
+            t.Campaigns?.some((c) => c.Id == this.CampaignId)
+          ) || null;
+
+        /** Set selected campaign if found */
+        if (this.selectedTenant) {
+          this.selectedCampaignId = Number(this.CampaignId);
+        }
+
         this.cdr.detectChanges();
+      },
+
+      error: () => {
+        this.tenants = [];
+        this.filteredTenants = [];
+        this.groupTenantsByAlphabet();
       },
     });
   }

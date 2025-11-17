@@ -446,7 +446,7 @@ export class LandingComponent {
     });
   }
 
-  goBack() {
+  goToCampaign() {
     window.history.back();
   }
 

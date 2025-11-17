@@ -191,14 +191,7 @@
                 class="title-with-logo"
                 [ngClass]="{ 'title-hover': campaign.Sites }"
                 [routerLink]="
-                  campaign.Sites
-                    ? [
-                        '/dashboard',
-                        campaign.OrganizationId,
-                        campaign.OrganizationName,
-                        campaign.Id
-                      ]
-                    : null
+                  campaign.Sites ? ['/dashboard', campaign.Id] : null
                 "
               >
                 <!-- Logo or placeholder -->
@@ -255,14 +248,7 @@
               class="metric-item"
               [ngClass]="{ link: campaign.Sites }"
               [routerLink]="
-                campaign.Sites > 0
-                  ? [
-                      '/dashboard',
-                      campaign.OrganizationId,
-                      campaign.OrganizationName,
-                      campaign.Id
-                    ]
-                  : null
+                campaign.Sites > 0 ? ['/dashboard', campaign.Id] : null
               "
             >
               <div class="metric-value" [class.changed]="campaign.changed">
@@ -342,12 +328,7 @@
                     >
                       <div
                         class="tenant-title"
-                        [routerLink]="[
-                          '/dashboard',
-                          campaign.OrganizationId,
-                          campaign.OrganizationName,
-                          campaign.Id
-                        ]"
+                        [routerLink]="['/dashboard', campaign.Id]"
                       >
                         <img
                           [src]="campaign.LogoUrl"
@@ -414,12 +395,7 @@
                     >
                       <div
                         class="campaign-name"
-                        [routerLink]="[
-                          '/dashboard',
-                          campaign.OrganizationId,
-                          campaign.OrganizationName,
-                          campaign.Id
-                        ]"
+                        [routerLink]="['/dashboard', campaign.Id]"
                       >
                         <p class="m-0" style="font-weight: 500">
                           {{ campaign.CampaignName }}
