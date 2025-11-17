@@ -6,6 +6,7 @@
   flex-direction: column;
   background: #fff;
   border-right: 1px solid #e5e7eb;
+  z-index: 9999; 
 }
 .sidebar-nav {
   flex: 1;
