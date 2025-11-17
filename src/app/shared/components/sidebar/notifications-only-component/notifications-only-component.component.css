@@ -25,7 +25,7 @@
 .badge {
   position: absolute;
   top: 2px;
-  right: 2px;
+  right: 100px;
   background: #ef4444;
   color: white;
   border-radius: 50%;
