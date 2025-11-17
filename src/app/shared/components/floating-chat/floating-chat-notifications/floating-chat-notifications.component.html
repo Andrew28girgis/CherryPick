@@ -15,16 +15,12 @@
       <div class="d-flex align-items-center justify-content-center gap-2">
         <button
           class="g-button clear-button"
-           (click)="clearEmilyChat()"
+          (click)="clearEmilyChat()"
           aria-label="Close"
         >
           Clear
         </button>
-        <button
-          class="close-button"
-           (click)="closeAll()"
-          aria-label="Close"
-        >
+        <button class="close-button" (click)="closeAll()" aria-label="Close">
           <svg
             width="16"
             height="16"
@@ -131,6 +127,29 @@
                 <i class="fa-regular fa-file"></i>
               </span>
             </p>
+            <p
+              class="message-text"
+              *ngIf="
+                isScanningPageContents(item, i);
+                else staticScanPageContents
+              "
+            >
+              I am scanning the page contents now
+              <span class="search-loading-icon" aria-hidden="true">
+                <i class="fa fa-search"></i>
+              </span>
+            </p>
+
+            <ng-template #staticScanPageContents>
+              <p
+                class="message-text"
+                *ngIf="
+                  item.message.includes('I am scanning the page contents now')
+                "
+              >
+                I am scanning the page contents now
+              </p>
+            </ng-template>
 
             <ng-template #staticCompiling>
               <p
@@ -177,7 +196,8 @@
                   'I am searching the web now for your request'
                 ) &&
                 !item.message.includes('Compiling them into a nice report') &&
-                !item.message.includes('scanning and analyzing the current ')
+                !item.message.includes('scanning and analyzing the current') &&
+                !item.message.includes('I am scanning the page contents now')
               "
             >
               Search Result
@@ -191,7 +211,8 @@
                   'I am searching the web now for your request'
                 ) &&
                 !item.message.includes('Compiling them into a nice report') &&
-                !item.message.includes('scanning and analyzing the current ')
+                !item.message.includes('scanning and analyzing the current ') &&
+                !item.message.includes('I am scanning the page contents now')
               "
             >
               {{ item.message }}
@@ -272,45 +293,62 @@
   </section>
 
   <div
-  class="chat-details-panel"
-  *ngIf="overlayOpen"
-  [ngStyle]="{
-    top: overlayTop + 'px',
-    left: overlayLeft + 'px',
-    width: overlayWidth + 'px',
-    height: overlayHeight + 'px'
-  }"
->
-  <!-- HEADER -->
-  <div class="chat-details-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-    <h4 class="mb-0">Details</h4>
+    class="chat-details-panel"
+    *ngIf="overlayOpen"
+    [ngStyle]="{
+      top: overlayTop + 'px',
+      left: overlayLeft + 'px',
+      width: overlayWidth + 'px',
+      height: overlayHeight + 'px'
+    }"
+  >
+    <!-- HEADER -->
+    <div
+      class="chat-details-header d-flex justify-content-between align-items-center flex-wrap gap-2"
+    >
+      <h4 class="mb-0">Details</h4>
 
-    <div class="d-flex align-items-center gap-2">
-      <input
-        type="text"
-        placeholder="Enter Title"
-        class="form-control form-control-sm"
-        [(ngModel)]="pdfTitle"
-        (input)="updateSaveButtons()"
-        style="width: 180px"
-      />
+      <div class="d-flex align-items-center gap-2">
+        <input
+          type="text"
+          placeholder="Enter Title"
+          class="form-control form-control-sm"
+          [(ngModel)]="pdfTitle"
+          (input)="updateSaveButtons()"
+          style="width: 180px"
+        />
 
-      <button class="btn btn-sm title-btn" [disabled]="!canSaveTitle" (click)="saveTitleInOverlay()">Save Title</button>
-      <button class="btn btn-sm save-pdf-btn" (click)="savePdfInOverlay()">📄 Save PDF</button>
-      <button class="chat-details-close btn btn-sm btn-light border" (click)="closeOverlay()">×</button>
+        <button
+          class="btn btn-sm title-btn"
+          [disabled]="!canSaveTitle"
+          (click)="saveTitleInOverlay()"
+        >
+          Save Title
+        </button>
+        <button class="btn btn-sm save-pdf-btn" (click)="savePdfInOverlay()">
+          📄 Save PDF
+        </button>
+        <button
+          class="chat-details-close btn btn-sm btn-light border"
+          (click)="closeOverlay()"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="chat-details-body" #detailsBody>
+      <div [innerHTML]="safeHtmlString"></div>
+    </div>
+
+    <!-- BOTTOM SAVE BUTTON -->
+    <div class="save-div" *ngIf="showBottomSave">
+      <button class="btn save-btn" (click)="saveNotificationInOverlay()">
+        Save
+      </button>
     </div>
   </div>
-
-  <!-- BODY -->
-  <div class="chat-details-body" #detailsBody>
-    <div [innerHTML]="safeHtmlString"></div>
-  </div>
-
-  <!-- BOTTOM SAVE BUTTON -->
-  <div class="save-div" *ngIf="showBottomSave">
-    <button class="btn save-btn" (click)="saveNotificationInOverlay()">Save</button>
-  </div>
-</div>
 </div>
 
 <ng-template #savingTpl>
@@ -318,4 +356,3 @@
   <span>Saving…</span>
 </ng-template>
 <div class="save-toast" *ngIf="showSaveToast">Saved successfully</div>
-

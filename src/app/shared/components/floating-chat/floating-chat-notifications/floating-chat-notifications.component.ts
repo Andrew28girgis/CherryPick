@@ -519,7 +519,15 @@ console.log('hasNew', hasNew);
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
-
+  isScanningPageContents(item: ChatItem, index: number): boolean {
+    if (!item.message || !item.message.includes('I am scanning the page contents now')) {
+      return false;
+    }
+  
+    const nextItem = this.chatTimeline[index + 1];
+    return !nextItem; // animate only while waiting for next AI message
+  }
+  
   isAtBottom(): boolean {
     const el = this.messagesContainer.nativeElement;
     if (!el) return true;
