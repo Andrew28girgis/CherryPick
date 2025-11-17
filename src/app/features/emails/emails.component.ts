@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-emails',
@@ -10,7 +11,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 })
 export class EmailsComponent implements OnInit {
   @ViewChild('addEmailTemplate') addEmailTemplate!: TemplateRef<any>;
-  
+
   emailForm!: FormGroup;
   modalRef!: NgbModalRef;
   isSubmitting = false;
@@ -19,6 +20,11 @@ export class EmailsComponent implements OnInit {
   isLoadingEmails = false;
   resendingEmail: string | null = null;
 
+  // Autocomplete properties
+  citySuggestions: any[] = [];
+  isLoadingCities = false;
+  showCitySuggestions = false;
+
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
@@ -26,22 +32,98 @@ export class EmailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Get contactId first
     const storedContactId = localStorage.getItem('contactId');
     if (storedContactId) {
       this.contactId = +storedContactId;
     } else {
       console.error('No contactId found in localStorage');
-      this.contactId = 0; // Default value
+      this.contactId = 0;
     }
 
-    // Initialize form after getting contactId
     this.initializeForm();
-    
-    // Then fetch emails
+
     if (this.contactId) {
       this.GetContactEmails();
     }
+
+    // Setup city autocomplete
+    this.setupCityAutocomplete();
+  }
+
+  setupCityAutocomplete() {
+    this.emailForm
+      .get('city')
+      ?.valueChanges.pipe(
+        debounceTime(300), // Wait 300ms after user stops typing
+        distinctUntilChanged(), // Only emit if value changed
+        switchMap((value) => {
+          if (value && value.length >= 2) {
+            this.isLoadingCities = true;
+            return this.fetchCitySuggestions(value);
+          } else {
+            this.citySuggestions = [];
+            this.showCitySuggestions = false;
+            return of([]);
+          }
+        })
+      )
+      .subscribe({
+        next: (suggestions) => {
+          this.citySuggestions = this.removeDuplicateCities(suggestions);
+          this.showCitySuggestions = suggestions.length > 0;
+          this.isLoadingCities = false;
+        },
+        error: (error) => {
+          console.error('Error fetching city suggestions:', error);
+          this.isLoadingCities = false;
+          this.citySuggestions = [];
+          this.showCitySuggestions = false;
+        },
+      });
+  }
+  removeDuplicateCities(cities: any[]) {
+  const unique = new Map(); // City name → object
+
+  for (const c of cities) {
+    if (!unique.has(c.City)) {
+      unique.set(c.City, c);
+    }
+  }
+
+  return Array.from(unique.values());
+}
+
+  fetchCitySuggestions(input: string) {
+    const body: any = {
+      Name: 'AutoComplePolygonCityState',
+      MainEntity: null,
+      Params: {
+        input: input,
+      },
+      Json: null,
+    };
+
+    return this.placesService.BetaGenericAPI(body).pipe(
+      switchMap((data: any) => {
+        console.log('City/State fetched:', data.json);
+        return of(data.json || []);
+      })
+    );
+  }
+
+  selectCity(city: any) {
+    this.emailForm.patchValue({
+      city: city.City,
+    });
+
+    this.showCitySuggestions = false;
+  }
+
+  onCityInputBlur() {
+    // Delay hiding suggestions to allow click event to fire
+    setTimeout(() => {
+      this.showCitySuggestions = false;
+    }, 200);
   }
 
   GetContactEmails() {
@@ -54,7 +136,7 @@ export class EmailsComponent implements OnInit {
       },
       Json: null,
     };
-    
+
     this.placesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         console.log('Emails fetched:', data.json);
@@ -66,7 +148,7 @@ export class EmailsComponent implements OnInit {
         console.error('Error fetching emails:', error);
         this.emailsList = [];
         this.isLoadingEmails = false;
-      }
+      },
     });
   }
 
@@ -79,16 +161,14 @@ export class EmailsComponent implements OnInit {
       replyTo: ['', [Validators.required, Validators.email]],
       address: ['', [Validators.required, Validators.maxLength(200)]],
       city: ['', [Validators.required, Validators.maxLength(100)]],
-      country: ['', [Validators.required, Validators.maxLength(100)]],
     });
   }
 
   openAddEmailModal() {
-    // Reset form but keep contactId
     this.emailForm.reset({
-      contactId: this.contactId
+      contactId: this.contactId,
     });
-    
+
     this.modalRef = this.modalService.open(this.addEmailTemplate, {
       size: 'lg',
       centered: true,
@@ -100,10 +180,11 @@ export class EmailsComponent implements OnInit {
     if (this.modalRef) {
       this.modalRef.dismiss();
     }
-    // Reset form but preserve contactId
     this.emailForm.reset({
-      contactId: this.contactId
+      contactId: this.contactId,
     });
+    this.citySuggestions = [];
+    this.showCitySuggestions = false;
   }
 
   onSubmit() {
@@ -124,7 +205,7 @@ export class EmailsComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    
+
     const emailData = {
       contactId: this.emailForm.value.contactId,
       nickname: this.emailForm.value.nickname,
@@ -133,7 +214,7 @@ export class EmailsComponent implements OnInit {
       replyTo: this.emailForm.value.replyTo,
       address: this.emailForm.value.address,
       city: this.emailForm.value.city,
-      country: this.emailForm.value.country,
+      country: 'USA',
     };
 
     console.log('Sending email data:', emailData);
@@ -143,14 +224,11 @@ export class EmailsComponent implements OnInit {
         console.log('Email added successfully:', response);
         this.isSubmitting = false;
         this.closeModal();
-        // Refresh the emails list
         this.GetContactEmails();
-        // Add success notification here if you have a toast service
       },
       error: (error) => {
         console.error('Error adding email:', error);
         this.isSubmitting = false;
-        // Add error notification here if you have a toast service
       },
     });
   }
@@ -165,17 +243,14 @@ export class EmailsComponent implements OnInit {
       next: (response) => {
         console.log('Verification email resent successfully:', response);
         this.resendingEmail = null;
-        // Add success notification here if you have a toast service
       },
       error: (error) => {
         console.error('Error resending verification email:', error);
         this.resendingEmail = null;
-        // Add error notification here if you have a toast service
       },
     });
   }
 
-  // Helper method to check if email is pending
   isPending(status: string): boolean {
     return !!(status && status.toLowerCase() === 'pending');
   }

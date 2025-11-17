@@ -185,7 +185,7 @@
         </div>
 
         <!-- Address -->
-        <div class="col-12 mb-3">
+        <div class="col-6 mb-3">
           <label for="address" class="form-label"
             >Address <span class="text-danger">*</span></label
           >
@@ -202,26 +202,53 @@
           </div>
         </div>
 
-        <!-- City -->
+        <!-- City with Autocomplete -->
         <div class="col-md-6 mb-3">
           <label for="city" class="form-label"
             >City <span class="text-danger">*</span></label
           >
-          <input
-            type="text"
-            class="form-control"
-            id="city"
-            formControlName="city"
-            [class.is-invalid]="hasError('city', 'required')"
-            placeholder="Enter city"
-          />
-          <div class="invalid-feedback" *ngIf="hasError('city', 'required')">
-            City is required
+          <div class="position-relative">
+            <input
+              type="text"
+              class="form-control"
+              id="city"
+              formControlName="city"
+              [class.is-invalid]="hasError('city', 'required')"
+              placeholder="Enter city"
+              autocomplete="off"
+              (blur)="onCityInputBlur()"
+            />
+            
+            <!-- Loading Spinner -->
+            <div 
+              *ngIf="isLoadingCities" 
+              class="position-absolute top-50 end-0 translate-middle-y me-3"
+            >
+              <span class="spinner-border spinner-border-sm text-primary"></span>
+            </div>
+            
+            <!-- Autocomplete Dropdown -->
+            <div 
+              *ngIf="showCitySuggestions && citySuggestions.length > 0"
+              class="autocomplete-dropdown"
+            >
+              <div 
+                *ngFor="let city of citySuggestions"
+                class="autocomplete-item"
+                (click)="selectCity(city)"
+              >
+                {{ city.City }}
+              </div>
+            </div>
+            
+            <div class="invalid-feedback" *ngIf="hasError('city', 'required')">
+              City is required
+            </div>
           </div>
         </div>
 
         <!-- Country -->
-        <div class="col-md-6 mb-3">
+        <!-- <div class="col-md-6 mb-3">
           <label for="country" class="form-label"
             >Country <span class="text-danger">*</span></label
           >
@@ -236,7 +263,7 @@
           <div class="invalid-feedback" *ngIf="hasError('country', 'required')">
             Country is required
           </div>
-        </div>
+        </div> -->
       </div>
     </form>
   </div>
