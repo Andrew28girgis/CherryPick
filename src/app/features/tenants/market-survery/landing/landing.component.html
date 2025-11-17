@@ -4,103 +4,129 @@
     <p id="toastMessagesuccess"></p>
   </div>
 </div>
-<div>
-  <div
-    class="d-flex justify-content-between align-items-center my-1 responsive"
-  >
-    <!-- <div class="d-flex align-items-center">
-      <i
-        class="fa-solid fa-arrow-left goback mb-1 me-3"
-        (click)="goBack()"
-        title="Go back"
-        style="cursor: pointer"
-      ></i>
-    </div> -->
-    <div class="responsive-div">
-      <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
-        <i class="fa-solid fa-chevron-left me-1"></i>
-        <span class="me-1">Previous</span>
-        <!-- <span>
-          {{ prevName ? "to:  " + prevName : "" }}
-        </span> -->
-      </button>
-      <div *ngIf="campaignName" class="campaign-header-bar">
-        <span class="campaign-path">
-          <span class="campaign-n" (click)="goBack()">
-            {{ campaignName }}
-          </span>
-          / {{ shoppingCenter.CenterName }}
-        </span>
-      </div>
 
-      <button class="nav-btn nav-btn-next" (click)="goToNext()">
-        <span class="me-1">Next</span>
-        <!-- 
-        <span>
-          {{ nextName ? "to:  " + nextName : "" }}
-        </span> -->
-
-        <i class="fa-solid fa-chevron-right ms-1"></i>
-      </button>
-    </div>
+<div class="responsive-div mb-2">
+  <div *ngIf="campaignName" class="campaign-header-bar">
+    <span class="campaign-path">
+      <span class="campaign-n" [routerLink]="'/dashboard/' + campaignId">
+        {{ campaignName }}
+      </span>
+      / {{ shoppingCenter.CenterName }}
+    </span>
   </div>
+  <div>
+    <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
+      <i class="fa-solid fa-chevron-left me-1"></i>
+    </button>
+    <button class="nav-btn nav-btn-next" (click)="goToNext()">
+      <i class="fa-solid fa-chevron-right ms-1"></i>
+    </button>
+  </div>
+</div>
 
-  <div class="image-map-container">
-    <div class="image-section">
-      <section
-        id="intro"
-        [ngStyle]="{ background: getBackgroundImage() }"
-        [class.has-background]="getBackgroundImage()"
-        [class.no-background]="!getBackgroundImage()"
-      >
-        <div class="intro-container wow fadeIn">
-          <h1
-            *ngIf="shoppingCenter.CenterName"
-            class="mb-2 pb-0"
-            [innerHTML]="shoppingCenter.CenterName | titlecase"
-          ></h1>
-          <p
-            class="mb-2 pb-0 address-city"
-            (click)="openMapViewPlace(mapPopup, shoppingCenter)"
-          >
-            {{ shoppingCenter.CenterAddress }}
-          </p>
-          <ng-container>
-            <div class="d-flex">
-              <ng-container *ngFor="let near of NearByType">
-                <div class="d-flex align-items-center p-0 mbottom">
-                  <ng-container
-                    *ngFor="let branch of near.Branches | slice : 0 : 1"
-                  >
-                    <img
-                      loading="lazy"
-                      [src]="shoppingCenter.MainImage"
-                      alt=""
-                      title="{{ branch.RelationOrganization[0].Name }}"
-                      class="RelationOrganization"
-                    />
-                    <p>{{ branch.RelationOrganization[0].Name }}</p>
+<div class="image-map-container">
+  <div class="image-section">
+    <section
+      id="intro"
+      [ngStyle]="{ background: getBackgroundImage() }"
+      [class.has-background]="getBackgroundImage()"
+      [class.no-background]="!getBackgroundImage()"
+    >
+      <div class="intro-container wow fadeIn">
+        <h1
+          *ngIf="shoppingCenter.CenterName"
+          class="mb-2 pb-0"
+          [innerHTML]="shoppingCenter.CenterName | titlecase"
+        ></h1>
+        <p
+          class="mb-2 pb-0 address-city"
+          (click)="openMapViewPlace(mapPopup, shoppingCenter)"
+        >
+          {{ shoppingCenter.CenterAddress }}
+        </p>
+        <ng-container>
+          <div class="d-flex">
+            <ng-container *ngFor="let near of NearByType">
+              <div class="d-flex align-items-center p-0 mbottom">
+                <ng-container
+                  *ngFor="let branch of near.Branches | slice : 0 : 1"
+                >
+                  <img
+                    loading="lazy"
+                    [src]="shoppingCenter.MainImage"
+                    alt=""
+                    title="{{ branch.RelationOrganization[0].Name }}"
+                    class="RelationOrganization"
+                  />
+                  <p>{{ branch.RelationOrganization[0].Name }}</p>
 
-                    <span class="mx-2" style="color: #fff; font-weight: bold">
-                      {{
-                        branch.RelationOrganization[0].Distance.toFixed(2) +
-                          " Miles "
-                      }}
-                    </span>
-                    <p class="m-0 ps-2">
-                      <b>{{ near.Name }}</b>
-                    </p>
-                  </ng-container>
-                </div>
-              </ng-container>
+                  <span class="mx-2" style="color: #fff; font-weight: bold">
+                    {{
+                      branch.RelationOrganization[0].Distance.toFixed(2) +
+                        " Miles "
+                    }}
+                  </span>
+                  <p class="m-0 ps-2">
+                    <b>{{ near.Name }}</b>
+                  </p>
+                </ng-container>
+              </div>
+            </ng-container>
 
-              <div
-                class="d-flex mx-2"
-                *ngIf="
-                  shoppingCenter.OtherPlaces &&
-                  shoppingCenter.OtherPlaces.length > 0
-                "
+            <div
+              class="d-flex mx-2"
+              *ngIf="
+                shoppingCenter.OtherPlaces &&
+                shoppingCenter.OtherPlaces.length > 0
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
+                <path
+                  d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                  fill="white"
+                />
+                <path
+                  d="M19.8499 18.75H17.3699C16.9599 18.75 16.6199 18.41 16.6199 18C16.6199 17.59 16.9599 17.25 17.3699 17.25H19.8499C20.8699 17.25 21.2499 16.87 21.2499 15.85V4.15002C21.2499 3.13002 20.8699 2.75 19.8499 2.75H15.5499C14.5299 2.75 14.1499 3.13002 14.1499 4.15002V6C14.1499 6.41 13.8099 6.75 13.3999 6.75C12.9899 6.75 12.6499 6.41 12.6499 6V4.15002C12.6499 2.31002 13.7099 1.25 15.5499 1.25H19.8499C21.6899 1.25 22.7499 2.31002 22.7499 4.15002V15.85C22.7499 17.69 21.6899 18.75 19.8499 18.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                  fill="white"
+                />
+              </svg>
+
+              <p class="m-0 px-2">
+                <span class="CustomPlace">{{
+                  shoppingCenter.OtherPlaces.length
+                }}</span>
+
+                Available Units
+              </p>
+            </div>
+          </div>
+          <!-- <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p> -->
+
+          <div class="d-flex">
+            <div class="pe-2" *ngIf="shoppingCenter.DocsLink">
+              <div>
                 <svg
                   width="24"
                   height="24"
@@ -109,729 +135,662 @@
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
                     fill="white"
                   />
                   <path
-                    d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                    d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
                     fill="white"
                   />
                   <path
-                    d="M19.8499 18.75H17.3699C16.9599 18.75 16.6199 18.41 16.6199 18C16.6199 17.59 16.9599 17.25 17.3699 17.25H19.8499C20.8699 17.25 21.2499 16.87 21.2499 15.85V4.15002C21.2499 3.13002 20.8699 2.75 19.8499 2.75H15.5499C14.5299 2.75 14.1499 3.13002 14.1499 4.15002V6C14.1499 6.41 13.8099 6.75 13.3999 6.75C12.9899 6.75 12.6499 6.41 12.6499 6V4.15002C12.6499 2.31002 13.7099 1.25 15.5499 1.25H19.8499C21.6899 1.25 22.7499 2.31002 22.7499 4.15002V15.85C22.7499 17.69 21.6899 18.75 19.8499 18.75Z"
+                    d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
                     fill="white"
                   />
                   <path
-                    d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                    d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
                     fill="white"
                   />
                 </svg>
 
-                <p class="m-0 px-2">
-                  <span class="CustomPlace">{{
-                    shoppingCenter.OtherPlaces.length
-                  }}</span>
-
-                  Available Units
-                </p>
+                <a
+                  class="info-value text-light px-1"
+                  href="{{ shoppingCenter.DocsLink }}"
+                  target="_blank"
+                  >Property Docs</a
+                >
               </div>
             </div>
-            <!-- <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p> -->
+            <div class="pe-2" *ngIf="shoppingCenter.SitePlan">
+              <div>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 17.75C8.9 17.75 8.81 17.73 8.71 17.69C8.43 17.58 8.25 17.3 8.25 17V11C8.25 10.59 8.59 10.25 9 10.25C9.41 10.25 9.75 10.59 9.75 11V15.19L10.47 14.47C10.76 14.18 11.24 14.18 11.53 14.47C11.82 14.76 11.82 15.24 11.53 15.53L9.53 17.53C9.39 17.67 9.19 17.75 9 17.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M9 17.75C8.81 17.75 8.62 17.68 8.47 17.53L6.47 15.53C6.18 15.24 6.18 14.76 6.47 14.47C6.76 14.18 7.24 14.18 7.53 14.47L9.53 16.47C9.82 16.76 9.82 17.24 9.53 17.53C9.38 17.68 9.19 17.75 9 17.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
+                    fill="white"
+                  />
+                </svg>
 
-            <div class="d-flex">
-              <div class="pe-2" *ngIf="shoppingCenter.DocsLink">
-                <div>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
-                      fill="white"
-                    />
-                  </svg>
-
-                  <a
-                    class="info-value text-light px-1"
-                    href="{{ shoppingCenter.DocsLink }}"
-                    target="_blank"
-                    >Property Docs</a
-                  >
-                </div>
+                <a
+                  class="info-value text-light px-1"
+                  href="{{ shoppingCenter.SitePlan }}"
+                  target="_blank"
+                  >View Site Plan</a
+                >
               </div>
-              <div class="pe-2" *ngIf="shoppingCenter.SitePlan">
-                <div>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M9 17.75C8.9 17.75 8.81 17.73 8.71 17.69C8.43 17.58 8.25 17.3 8.25 17V11C8.25 10.59 8.59 10.25 9 10.25C9.41 10.25 9.75 10.59 9.75 11V15.19L10.47 14.47C10.76 14.18 11.24 14.18 11.53 14.47C11.82 14.76 11.82 15.24 11.53 15.53L9.53 17.53C9.39 17.67 9.19 17.75 9 17.75Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M9 17.75C8.81 17.75 8.62 17.68 8.47 17.53L6.47 15.53C6.18 15.24 6.18 14.76 6.47 14.47C6.76 14.18 7.24 14.18 7.53 14.47L9.53 16.47C9.82 16.76 9.82 17.24 9.53 17.53C9.38 17.68 9.19 17.75 9 17.75Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
-                      fill="white"
-                    />
-                  </svg>
-
-                  <a
-                    class="info-value text-light px-1"
-                    href="{{ shoppingCenter.SitePlan }}"
-                    target="_blank"
-                    >View Site Plan</a
-                  >
-                </div>
-              </div>
-            </div>
-          </ng-container>
-
-          <div class="position-relative gallerry-btn">
-            <button
-              *ngIf="shoppingCenter.Images"
-              class="view-gallery"
-              (click)="openGallery(shoppingCenter)"
-            >
-              <i class="fa-regular fa-images me-2"></i>View Gallery
-            </button>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-  <div
-    class="contacts-wrapper d-flex justify-content-between gap-2 flex-column py-2"
-    *ngIf="hasContacts()"
-  >
-    <h2 class="main-heading">Contacts</h2>
-    <div class="contact-container">
-      <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
-        <div
-          class="user-card-wrapper"
-          *ngIf="Manager.FirstName || Manager.LastName || Manager.Email"
-        >
-          <span class="card-badge" *ngIf="Manager.OrganizationName">
-            {{ Manager.OrganizationName }}
-          </span>
-          <div class="user-card gap-2">
-            <div class="org-logo placeholder">
-              {{
-                getInitials(Manager.FirstName, Manager.LastName) ||
-                  getInitial(Manager.OrganizationName || "N/A")
-              }}
-            </div>
-
-            <div class="user-info">
-              <h3
-                class="user-name m-0"
-                *ngIf="Manager.FirstName || Manager.LastName"
-              >
-                <span class="name">{{
-                  Manager.FirstName + " " + Manager.LastName
-                }}</span>
-              </h3>
-              <p
-                class="user-email email-link"
-                *ngIf="Manager.Email"
-                [attr.data-email]="Manager.Email"
-              >
-                <i class="fa-regular fa-envelope"></i>
-                {{ Manager.Email }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-  </div>
-  <div
-    class="contacts-wrapper"
-    *ngIf="shoppingCenter && shoppingCenter.Place.length > 0"
-  >
-    <section>
-      <ng-container>
-        <div class="col-md-12">
-          <div class="d-flex justify-content-between">
-            <h2 class="main-heading">Available spaces</h2>
-          </div>
-          <div class="another-places p-0">
-            <table class="procpect-table">
-              <thead class="procpect-table-head">
-                <tr>
-                  <th>Suite</th>
-                  <th>Listing Type</th>
-                  <th>Price</th>
-                  <th>Unit Size (SF)</th>
-                  <th>Secondary Type</th>
-                  <th>Source</th>
-                  <th>Created Date</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody class="procpect-table-body">
-                <tr *ngFor="let place of shoppingCenter.Place">
-                  <td>
-                    <ng-container
-                      *ngIf="editingPlaceId !== place.Id; else suiteEdit"
-                    >
-                      {{ place.Suite }}
-                    </ng-container>
-                    <ng-template #suiteEdit>
-                      <input
-                        class="form-control form-control-sm"
-                        [(ngModel)]="editModel.Suite"
-                        placeholder="Suite"
-                      />
-                    </ng-template>
-                  </td>
-
-                  <td>
-                    <ng-container
-                      *ngIf="editingPlaceId !== place.Id; else leaseTypeEdit"
-                    >
-                      {{ place.LeaseType }}
-                    </ng-container>
-                    <ng-template #leaseTypeEdit>
-                      <input
-                        class="form-control form-control-sm"
-                        [(ngModel)]="editModel.LeaseType"
-                        placeholder="Lease Type"
-                      />
-                    </ng-template>
-                  </td>
-
-                  <td>
-                    <ng-container
-                      *ngIf="editingPlaceId !== place.Id; else priceEdit"
-                    >
-                      <span *ngIf="place.Price">
-                        {{
-                          place.Price | currency : "USD" : "symbol" : "1.0-0"
-                        }}
-                      </span>
-                    </ng-container>
-                    <ng-template #priceEdit>
-                      <input
-                        type="number"
-                        min="0"
-                        class="form-control form-control-sm"
-                        [(ngModel)]="editModel.Price"
-                        placeholder="Price"
-                      />
-                    </ng-template>
-                  </td>
-
-                  <td>
-                    <ng-container
-                      *ngIf="editingPlaceId !== place.Id; else sizeEdit"
-                    >
-                      <ng-container *ngIf="place.BuildingSizeSf; else noSize">
-                        {{ place.BuildingSizeSf | number : "1.0-0" }} SF
-                      </ng-container>
-                      <ng-template #noSize>On Request</ng-template>
-                    </ng-container>
-                    <ng-template #sizeEdit>
-                      <input
-                        type="number"
-                        min="0"
-                        class="form-control form-control-sm"
-                        [(ngModel)]="editModel.BuildingSizeSf"
-                        placeholder="Size (SF)"
-                      />
-                    </ng-template>
-                  </td>
-
-                  <td>
-                    <ng-container
-                      *ngIf="editingPlaceId !== place.Id; else secTypeEdit"
-                    >
-                      {{ place.SecondaryType }}
-                    </ng-container>
-                    <ng-template #secTypeEdit>
-                      <input
-                        class="form-control form-control-sm"
-                        [(ngModel)]="editModel.SecondaryType"
-                        placeholder="Secondary Type"
-                      />
-                    </ng-template>
-                  </td>
-
-                  <td>
-                    <ng-container
-                      *ngIf="editingPlaceId !== place.Id; else sourceEdit"
-                    >
-                      <ng-container
-                        *ngIf="isLink(place.Source); else plainText"
-                      >
-                        <a
-                          [href]="place.Source"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {{ place.Source }}
-                        </a>
-                      </ng-container>
-                      <ng-template #plainText>
-                        {{ place.Source }}
-                      </ng-template>
-                    </ng-container>
-
-                    <ng-template #sourceEdit>
-                      <input
-                        type="text"
-                        class="form-control form-control-sm"
-                        [(ngModel)]="editModel.Source"
-                        placeholder="Source (URL or text)"
-                      />
-                    </ng-template>
-                  </td>
-
-                  <td>{{ place.CreateDate | date : "mediumDate" }}</td>
-
-                  <td class="text-center">
-                    <div
-                      class="d-flex justify-content-center align-items-center"
-                      *ngIf="editingPlaceId !== place.Id; else editActions"
-                    >
-                      <i
-                        class="fa fa-edit"
-                        title="Edit"
-                        role="button"
-                        tabindex="0"
-                        style="cursor: pointer"
-                        (click)="startEdit(place)"
-                        (keydown.enter)="startEdit(place)"
-                        (keydown.space)="startEdit(place)"
-                      ></i>
-
-                      <i
-                        class="fa fa-trash text-danger ms-3"
-                        title="Delete"
-                        role="button"
-                        tabindex="0"
-                        style="cursor: pointer"
-                        (click)="DeletePlace(place.Id)"
-                        (keydown.enter)="DeletePlace(place.Id)"
-                        (keydown.space)="DeletePlace(place.Id)"
-                      ></i>
-                    </div>
-
-                    <ng-template #editActions>
-                      <div
-                        class="d-flex justify-content-center align-items-center"
-                      >
-                        <i
-                          class="fa fa-check text-success"
-                          title="Save"
-                          role="button"
-                          tabindex="0"
-                          style="cursor: pointer"
-                          (click)="saveEdit()"
-                          (keydown.enter)="saveEdit()"
-                          (keydown.space)="saveEdit()"
-                        ></i>
-
-                        <i
-                          class="fa fa-times text-secondary ms-3"
-                          title="Cancel"
-                          role="button"
-                          tabindex="0"
-                          style="cursor: pointer"
-                          (click)="cancelEdit()"
-                          (keydown.enter)="cancelEdit()"
-                          (keydown.space)="cancelEdit()"
-                        ></i>
-                      </div>
-                    </ng-template>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </ng-container>
-    </section>
-  </div>
-
-  <div class="campaign-section" *ngIf="CampaignScores.length">
-    <h2 class="main-heading">Campaigns Info</h2>
-
-    <div class="campaign-grid">
-      <ng-container *ngFor="let campaign of CampaignScores">
-        <div class="campaign-card" *ngIf="campaign.campaignName">
-          <div class="campaign-header">
-            <h3 class="campaign-name" *ngIf="campaign.campaignName">
-              {{ campaign.campaignName }}
-            </h3>
-            <span
-            (click)="openInfoPopup(campaign, infoModal)"
-              class="campaign-score medium-score"
-              *ngIf="campaign.score"
-              [ngClass]="{
-                'high-score': campaign.score >= 75,
-                'medium-score': campaign.score >= 30 && campaign.score < 75,
-                'low-score': campaign.score < 30
-              }"
-            >
-              {{ campaign.score }}%
-            </span>
-
-            <div *ngIf="!campaign.score">
-              <button
-                class="plus-icon score"
-                [class.active]="scoringId === campaign.Id"
-                (click)="getscore(campaign); $event.stopPropagation()"
-              >
-                <span *ngIf="scoringId !== campaign.campaignId">Get Score</span>
-                <span *ngIf="scoringId === campaign.campaignId">
-                  Getting Score
-                  <span class="stat-bars" aria-hidden="true">
-                    <span></span><span></span><span></span><span></span
-                    ><span></span><span></span>
-                  </span>
-                </span>
-              </button>
-            </div>
-          </div>
-          <button class="icon-btn" (click)="viewSpecsNew(campaign)">
-            <i class="fa fa-eye"></i>
-          </button>
-        </div>
-      </ng-container>
-    </div>
-  </div>
-
-  <!-- <div class="main-section" *ngIf="ShoppingCenter?.SiteSelectionReason">
-      <section id="hero">
-        <ng-container>
-          <div class="col-md-12">
-            <div>
-              <p class="main-name">
-                Why does this location meet your requir0ements?
-              </p>
-              <p [innerHtml]="ShoppingCenter.SiteSelectionReason"></p>
             </div>
           </div>
         </ng-container>
-      </section>
-    </div>
-   -->
 
-  <div class="row py-4 responsive-cotenants">
-    <!-- very short -->
-    <div class="col-md-6 position-relative" *ngIf="tenantGroups.onSite.length">
-      <span class="card-badge cb">
-        {{ tenantGroups.onSite.length }}
-      </span>
-      <div class="tenant-category-card">
-        <h5>Onsite</h5>
-        <div *ngIf="tenantGroups.onSite.length; else noVeryShort">
-          <div
-            *ngFor="let t of tenantGroups.onSite"
-            class="tenant-item d-flex flex-row"
+        <div class="position-relative gallerry-btn">
+          <button
+            *ngIf="shoppingCenter.Images"
+            class="view-gallery"
+            (click)="openGallery(shoppingCenter)"
           >
-            <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
-              <img
-                [src]="t.LogoURL"
-                class="branche-logo"
-                (error)="t.LogoURL = null"
-              />
-            </ng-container>
-            <ng-template #logoPlaceholder>
-              <div class="branche-logo placeholder">
-                {{ getInitial(t.OrganizationName) }}
-              </div>
-            </ng-template>
-            <div class="tenant-text">
-              <span class="tenant-name">{{ t.OrganizationName }}</span>
+            <i class="fa-regular fa-images me-2"></i>View Gallery
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 
-              <!-- <span *ngIf="t.Category" class="tenant-cat">
-                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
-                </span> -->
-            </div>
-            <small
-              *ngIf="
-                t.Category &&
-                t.Category.toLowerCase().trim() !== 'unknown' &&
-                t.Category.toLowerCase().trim() !== 'unkown'
-              "
-              class="tenant-cat"
+<div
+  class="contacts-wrapper d-flex justify-content-between gap-2 flex-column py-2"
+  *ngIf="hasContacts()"
+>
+  <h2 class="main-heading">Contacts</h2>
+  <div class="contact-container">
+    <ng-container *ngFor="let Manager of shoppingCenter.Contacts">
+      <div
+        class="user-card-wrapper"
+        *ngIf="Manager.FirstName || Manager.LastName || Manager.Email"
+      >
+        <span class="card-badge" *ngIf="Manager.OrganizationName">
+          {{ Manager.OrganizationName }}
+        </span>
+        <div class="user-card gap-2">
+          <div class="org-logo placeholder">
+            {{
+              getInitials(Manager.FirstName, Manager.LastName) ||
+                getInitial(Manager.OrganizationName || "N/A")
+            }}
+          </div>
+
+          <div class="user-info">
+            <h3
+              class="user-name m-0"
+              *ngIf="Manager.FirstName || Manager.LastName"
             >
-              {{ getCategoryIcon(t.Category) }}
-              {{ t.Category.replace("_", " ") }}
-            </small>
+              <span class="name">{{
+                Manager.FirstName + " " + Manager.LastName
+              }}</span>
+            </h3>
+            <p
+              class="user-email email-link"
+              *ngIf="Manager.Email"
+              [attr.data-email]="Manager.Email"
+            >
+              <i class="fa-regular fa-envelope"></i>
+              {{ Manager.Email }}
+            </p>
           </div>
         </div>
-        <ng-template #noVeryShort><p>No tenants in this range</p></ng-template>
       </div>
-    </div>
-    <div
-      class="col-md-6 position-relative"
-      *ngIf="tenantGroups.veryShort.length"
-    >
-      <span class="card-badge cb">
-        {{ tenantGroups.veryShort.length }}
-      </span>
-      <div class="tenant-category-card">
-        <h5>Very short walk (100–400 m)</h5>
-        <div *ngIf="tenantGroups.veryShort.length; else noVeryShort">
-          <div
-            *ngFor="let t of tenantGroups.veryShort"
-            class="tenant-item d-flex flex-row"
-          >
-            <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
-              <img [src]="t.LogoURL" class="branche-logo" />
-            </ng-container>
-            <ng-template #logoPlaceholder>
-              <div class="branche-logo placeholder">
-                {{ getInitial(t.OrganizationName) }}
-              </div>
-            </ng-template>
-            <div class="tenant-text">
-              <span class="tenant-name">{{ t.OrganizationName }}</span>
+    </ng-container>
+  </div>
+</div>
 
-              <!-- <span *ngIf="t.Category" class="tenant-cat">
-                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
-                </span> -->
-            </div>
-            <small
-              *ngIf="
-                t.Category &&
-                t.Category.toLowerCase().trim() !== 'unknown' &&
-                t.Category.toLowerCase().trim() !== 'unkown'
-              "
-              class="tenant-cat"
+<div
+  class="contacts-wrapper"
+  *ngIf="shoppingCenter && shoppingCenter.Place.length > 0"
+>
+  <section>
+    <ng-container>
+      <div class="col-md-12">
+        <div class="d-flex justify-content-between">
+          <h2 class="main-heading">Available spaces</h2>
+        </div>
+        <div class="another-places p-0">
+          <table class="procpect-table">
+            <thead class="procpect-table-head">
+              <tr>
+                <th>Suite</th>
+                <th>Listing Type</th>
+                <th>Price</th>
+                <th>Unit Size (SF)</th>
+                <th>Secondary Type</th>
+                <th>Source</th>
+                <th>Created Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody class="procpect-table-body">
+              <tr *ngFor="let place of shoppingCenter.Place">
+                <td>
+                  <ng-container
+                    *ngIf="editingPlaceId !== place.Id; else suiteEdit"
+                  >
+                    {{ place.Suite }}
+                  </ng-container>
+                  <ng-template #suiteEdit>
+                    <input
+                      class="form-control form-control-sm"
+                      [(ngModel)]="editModel.Suite"
+                      placeholder="Suite"
+                    />
+                  </ng-template>
+                </td>
+
+                <td>
+                  <ng-container
+                    *ngIf="editingPlaceId !== place.Id; else leaseTypeEdit"
+                  >
+                    {{ place.LeaseType }}
+                  </ng-container>
+                  <ng-template #leaseTypeEdit>
+                    <input
+                      class="form-control form-control-sm"
+                      [(ngModel)]="editModel.LeaseType"
+                      placeholder="Lease Type"
+                    />
+                  </ng-template>
+                </td>
+
+                <td>
+                  <ng-container
+                    *ngIf="editingPlaceId !== place.Id; else priceEdit"
+                  >
+                    <span *ngIf="place.Price">
+                      {{ place.Price | currency : "USD" : "symbol" : "1.0-0" }}
+                    </span>
+                  </ng-container>
+                  <ng-template #priceEdit>
+                    <input
+                      type="number"
+                      min="0"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="editModel.Price"
+                      placeholder="Price"
+                    />
+                  </ng-template>
+                </td>
+
+                <td>
+                  <ng-container
+                    *ngIf="editingPlaceId !== place.Id; else sizeEdit"
+                  >
+                    <ng-container *ngIf="place.BuildingSizeSf; else noSize">
+                      {{ place.BuildingSizeSf | number : "1.0-0" }} SF
+                    </ng-container>
+                    <ng-template #noSize>On Request</ng-template>
+                  </ng-container>
+                  <ng-template #sizeEdit>
+                    <input
+                      type="number"
+                      min="0"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="editModel.BuildingSizeSf"
+                      placeholder="Size (SF)"
+                    />
+                  </ng-template>
+                </td>
+
+                <td>
+                  <ng-container
+                    *ngIf="editingPlaceId !== place.Id; else secTypeEdit"
+                  >
+                    {{ place.SecondaryType }}
+                  </ng-container>
+                  <ng-template #secTypeEdit>
+                    <input
+                      class="form-control form-control-sm"
+                      [(ngModel)]="editModel.SecondaryType"
+                      placeholder="Secondary Type"
+                    />
+                  </ng-template>
+                </td>
+
+                <td>
+                  <ng-container
+                    *ngIf="editingPlaceId !== place.Id; else sourceEdit"
+                  >
+                    <ng-container *ngIf="isLink(place.Source); else plainText">
+                      <a
+                        [href]="place.Source"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {{ place.Source }}
+                      </a>
+                    </ng-container>
+                    <ng-template #plainText>
+                      {{ place.Source }}
+                    </ng-template>
+                  </ng-container>
+
+                  <ng-template #sourceEdit>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="editModel.Source"
+                      placeholder="Source (URL or text)"
+                    />
+                  </ng-template>
+                </td>
+
+                <td>{{ place.CreateDate | date : "mediumDate" }}</td>
+
+                <td class="text-center">
+                  <div
+                    class="d-flex justify-content-center align-items-center"
+                    *ngIf="editingPlaceId !== place.Id; else editActions"
+                  >
+                    <i
+                      class="fa fa-edit"
+                      title="Edit"
+                      role="button"
+                      tabindex="0"
+                      style="cursor: pointer"
+                      (click)="startEdit(place)"
+                      (keydown.enter)="startEdit(place)"
+                      (keydown.space)="startEdit(place)"
+                    ></i>
+
+                    <i
+                      class="fa fa-trash text-danger ms-3"
+                      title="Delete"
+                      role="button"
+                      tabindex="0"
+                      style="cursor: pointer"
+                      (click)="DeletePlace(place.Id)"
+                      (keydown.enter)="DeletePlace(place.Id)"
+                      (keydown.space)="DeletePlace(place.Id)"
+                    ></i>
+                  </div>
+
+                  <ng-template #editActions>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <i
+                        class="fa fa-check text-success"
+                        title="Save"
+                        role="button"
+                        tabindex="0"
+                        style="cursor: pointer"
+                        (click)="saveEdit()"
+                        (keydown.enter)="saveEdit()"
+                        (keydown.space)="saveEdit()"
+                      ></i>
+
+                      <i
+                        class="fa fa-times text-secondary ms-3"
+                        title="Cancel"
+                        role="button"
+                        tabindex="0"
+                        style="cursor: pointer"
+                        (click)="cancelEdit()"
+                        (keydown.enter)="cancelEdit()"
+                        (keydown.space)="cancelEdit()"
+                      ></i>
+                    </div>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+  </section>
+</div>
+
+<div class="campaign-section" *ngIf="CampaignScores.length">
+  <h2 class="main-heading">Campaigns Info</h2>
+
+  <div class="campaign-grid">
+    <ng-container *ngFor="let campaign of CampaignScores">
+      <div class="campaign-card" *ngIf="campaign.campaignName">
+        <div class="campaign-header">
+          <h3 class="campaign-name" *ngIf="campaign.campaignName">
+            {{ campaign.campaignName }}
+          </h3>
+          <span
+            (click)="openInfoPopup(campaign, infoModal)"
+            class="campaign-score medium-score"
+            *ngIf="campaign.score"
+            [ngClass]="{
+              'high-score': campaign.score >= 75,
+              'medium-score': campaign.score >= 30 && campaign.score < 75,
+              'low-score': campaign.score < 30
+            }"
+          >
+            {{ campaign.score }}%
+          </span>
+
+          <div *ngIf="!campaign.score">
+            <button
+              class="plus-icon score"
+              [class.active]="scoringId === campaign.Id"
+              (click)="getscore(campaign); $event.stopPropagation()"
             >
-              {{ getCategoryIcon(t.Category) }}
-              {{ t.Category.replace("_", " ") }}
-            </small>
+              <span *ngIf="scoringId !== campaign.campaignId">Get Score</span>
+              <span *ngIf="scoringId === campaign.campaignId">
+                Getting Score
+                <span class="stat-bars" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span
+                  ><span></span><span></span>
+                </span>
+              </span>
+            </button>
           </div>
         </div>
-        <ng-template #noVeryShort><p>No tenants in this range</p></ng-template>
+        <button class="icon-btn" (click)="viewSpecsNew(campaign)">
+          <i class="fa fa-eye"></i>
+        </button>
       </div>
-    </div>
+    </ng-container>
+  </div>
+</div>
 
-    <!-- walking -->
-    <div
-      class="col-md-6 mt-4 position-relative"
-      *ngIf="tenantGroups.walking.length"
-    >
-      <span class="card-badge cb">
-        {{ tenantGroups.walking.length }}
-      </span>
-      <div class="tenant-category-card">
-        <h5>Walking distance (400–800 m)</h5>
-        <div *ngIf="tenantGroups.walking.length; else noWalking">
-          <div
-            *ngFor="let t of tenantGroups.walking"
-            class="tenant-item d-flex flex-row"
-          >
-            <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
-              <img [src]="t.LogoURL" class="branche-logo" />
-            </ng-container>
-            <ng-template #logoPlaceholder>
-              <div class="branche-logo placeholder">
-                {{ getInitial(t.OrganizationName) }}
-              </div>
-            </ng-template>
-            <div class="tenant-text">
-              <span class="tenant-name">{{ t.OrganizationName }}</span>
+<div class="row py-4 responsive-cotenants">
+  <!-- very short -->
+  <div class="col-md-6 position-relative" *ngIf="tenantGroups.onSite.length">
+    <span class="card-badge cb">
+      {{ tenantGroups.onSite.length }}
+    </span>
+    <div class="tenant-category-card">
+      <h5>Onsite</h5>
+      <div *ngIf="tenantGroups.onSite.length; else noVeryShort">
+        <div
+          *ngFor="let t of tenantGroups.onSite"
+          class="tenant-item d-flex flex-row"
+        >
+          <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+            <img
+              [src]="t.LogoURL"
+              class="branche-logo"
+              (error)="t.LogoURL = null"
+            />
+          </ng-container>
+          <ng-template #logoPlaceholder>
+            <div class="branche-logo placeholder">
+              {{ getInitial(t.OrganizationName) }}
+            </div>
+          </ng-template>
+          <div class="tenant-text">
+            <span class="tenant-name">{{ t.OrganizationName }}</span>
 
-              <!-- <span *ngIf="t.Category" class="tenant-cat">
+            <!-- <span *ngIf="t.Category" class="tenant-cat">
                   <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
                 </span> -->
-            </div>
-            <small
-              *ngIf="
-                t.Category &&
-                t.Category.toLowerCase().trim() !== 'unknown' &&
-                t.Category.toLowerCase().trim() !== 'unkown'
-              "
-              class="tenant-cat"
-            >
-              {{ getCategoryIcon(t.Category) }}
-              {{ t.Category.replace("_", " ") }}
-            </small>
           </div>
-        </div>
-        <ng-template #noWalking><p>No tenants in this range</p></ng-template>
-      </div>
-    </div>
-
-    <!-- longer -->
-    <div
-      class="col-md-6 mt-4 position-relative"
-      *ngIf="tenantGroups.longer.length"
-    >
-      <span class="card-badge cb">
-        {{ tenantGroups.longer.length }}
-      </span>
-      <div class="tenant-category-card">
-        <h5>Longer but acceptable (800–1200 m)</h5>
-        <div *ngIf="tenantGroups.longer.length; else noLonger">
-          <div
-            *ngFor="let t of tenantGroups.longer"
-            class="tenant-item d-flex flex-row"
+          <small
+            *ngIf="
+              t.Category &&
+              t.Category.toLowerCase().trim() !== 'unknown' &&
+              t.Category.toLowerCase().trim() !== 'unkown'
+            "
+            class="tenant-cat"
           >
-            <!-- <img *ngIf="t.LogoURL" [src]="t.LogoURL" class="orgbranches" alt="" /> -->
-            <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
-              <img [src]="t.LogoURL" class="branche-logo" />
-            </ng-container>
-            <ng-template #logoPlaceholder>
-              <div class="branche-logo placeholder">
-                {{ getInitial(t.OrganizationName) }}
-              </div>
-            </ng-template>
-            <div class="tenant-text">
-              <span class="tenant-name">{{ t.OrganizationName }}</span>
-
-              <!-- <span *ngIf="t.Category" class="tenant-cat">
-                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
-                </span> -->
-            </div>
-            <small
-              *ngIf="
-                t.Category &&
-                t.Category.toLowerCase().trim() !== 'unknown' &&
-                t.Category.toLowerCase().trim() !== 'unkown'
-              "
-              class="tenant-cat"
-            >
-              {{ getCategoryIcon(t.Category) }}
-              {{ t.Category.replace("_", " ") }}
-            </small>
-          </div>
+            {{ getCategoryIcon(t.Category) }}
+            {{ t.Category.replace("_", " ") }}
+          </small>
         </div>
-        <ng-template #noLonger><p>No tenants in this range</p></ng-template>
       </div>
+      <ng-template #noVeryShort><p>No tenants in this range</p></ng-template>
     </div>
   </div>
-  <div class="row m-0 p-0">
-    <div
-      class="col-md-4"
-      *ngIf="OrganizationBranches && OrganizationBranches.Branches.length > 0"
-    >
-      <div class="main-section heightt">
-        <p class="main-name">Branches</p>
-        <ul>
-          <li *ngFor="let place of OrganizationBranches.Branches.slice(0, 5)">
+  <div class="col-md-6 position-relative" *ngIf="tenantGroups.veryShort.length">
+    <span class="card-badge cb">
+      {{ tenantGroups.veryShort.length }}
+    </span>
+    <div class="tenant-category-card">
+      <h5>Very short walk (100–400 m)</h5>
+      <div *ngIf="tenantGroups.veryShort.length; else noVeryShort">
+        <div
+          *ngFor="let t of tenantGroups.veryShort"
+          class="tenant-item d-flex flex-row"
+        >
+          <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+            <img [src]="t.LogoURL" class="branche-logo" />
+          </ng-container>
+          <ng-template #logoPlaceholder>
+            <div class="branche-logo placeholder">
+              {{ getInitial(t.OrganizationName) }}
+            </div>
+          </ng-template>
+          <div class="tenant-text">
+            <span class="tenant-name">{{ t.OrganizationName }}</span>
+
+            <!-- <span *ngIf="t.Category" class="tenant-cat">
+                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
+                </span> -->
+          </div>
+          <small
+            *ngIf="
+              t.Category &&
+              t.Category.toLowerCase().trim() !== 'unknown' &&
+              t.Category.toLowerCase().trim() !== 'unkown'
+            "
+            class="tenant-cat"
+          >
+            {{ getCategoryIcon(t.Category) }}
+            {{ t.Category.replace("_", " ") }}
+          </small>
+        </div>
+      </div>
+      <ng-template #noVeryShort><p>No tenants in this range</p></ng-template>
+    </div>
+  </div>
+
+  <!-- walking -->
+  <div
+    class="col-md-6 mt-4 position-relative"
+    *ngIf="tenantGroups.walking.length"
+  >
+    <span class="card-badge cb">
+      {{ tenantGroups.walking.length }}
+    </span>
+    <div class="tenant-category-card">
+      <h5>Walking distance (400–800 m)</h5>
+      <div *ngIf="tenantGroups.walking.length; else noWalking">
+        <div
+          *ngFor="let t of tenantGroups.walking"
+          class="tenant-item d-flex flex-row"
+        >
+          <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+            <img [src]="t.LogoURL" class="branche-logo" />
+          </ng-container>
+          <ng-template #logoPlaceholder>
+            <div class="branche-logo placeholder">
+              {{ getInitial(t.OrganizationName) }}
+            </div>
+          </ng-template>
+          <div class="tenant-text">
+            <span class="tenant-name">{{ t.OrganizationName }}</span>
+
+            <!-- <span *ngIf="t.Category" class="tenant-cat">
+                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
+                </span> -->
+          </div>
+          <small
+            *ngIf="
+              t.Category &&
+              t.Category.toLowerCase().trim() !== 'unknown' &&
+              t.Category.toLowerCase().trim() !== 'unkown'
+            "
+            class="tenant-cat"
+          >
+            {{ getCategoryIcon(t.Category) }}
+            {{ t.Category.replace("_", " ") }}
+          </small>
+        </div>
+      </div>
+      <ng-template #noWalking><p>No tenants in this range</p></ng-template>
+    </div>
+  </div>
+
+  <!-- longer -->
+  <div
+    class="col-md-6 mt-4 position-relative"
+    *ngIf="tenantGroups.longer.length"
+  >
+    <span class="card-badge cb">
+      {{ tenantGroups.longer.length }}
+    </span>
+    <div class="tenant-category-card">
+      <h5>Longer but acceptable (800–1200 m)</h5>
+      <div *ngIf="tenantGroups.longer.length; else noLonger">
+        <div
+          *ngFor="let t of tenantGroups.longer"
+          class="tenant-item d-flex flex-row"
+        >
+          <!-- <img *ngIf="t.LogoURL" [src]="t.LogoURL" class="orgbranches" alt="" /> -->
+          <ng-container *ngIf="t.LogoURL; else logoPlaceholder">
+            <img [src]="t.LogoURL" class="branche-logo" />
+          </ng-container>
+          <ng-template #logoPlaceholder>
+            <div class="branche-logo placeholder">
+              {{ getInitial(t.OrganizationName) }}
+            </div>
+          </ng-template>
+          <div class="tenant-text">
+            <span class="tenant-name">{{ t.OrganizationName }}</span>
+
+            <!-- <span *ngIf="t.Category" class="tenant-cat">
+                  <i class="cat-dot" aria-hidden="true"></i>{{ t.Category }}
+                </span> -->
+          </div>
+          <small
+            *ngIf="
+              t.Category &&
+              t.Category.toLowerCase().trim() !== 'unknown' &&
+              t.Category.toLowerCase().trim() !== 'unkown'
+            "
+            class="tenant-cat"
+          >
+            {{ getCategoryIcon(t.Category) }}
+            {{ t.Category.replace("_", " ") }}
+          </small>
+        </div>
+      </div>
+      <ng-template #noLonger><p>No tenants in this range</p></ng-template>
+    </div>
+  </div>
+</div>
+
+<div class="row m-0 p-0">
+  <div
+    class="col-md-4"
+    *ngIf="OrganizationBranches && OrganizationBranches.Branches.length > 0"
+  >
+    <div class="main-section heightt">
+      <p class="main-name">Branches</p>
+      <ul>
+        <li *ngFor="let place of OrganizationBranches.Branches.slice(0, 5)">
+          <div class="d-flex align-items-center">
+            <div>
+              <img
+                loading="lazy"
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  OrganizationBranches.Id
+                }}"
+                alt=""
+                class="orgbranches"
+              />
+            </div>
+
+            <div class="d-flex flex-column">
+              <span *ngIf="OrganizationBranches.Name" class="nearset"
+                >{{ OrganizationBranches.Name }}
+              </span>
+              <span class="nearset"
+                >{{ place.City }}<span *ngIf="place.City">,</span>
+                {{ place.State }}</span
+              >
+            </div>
+          </div>
+
+          <span class="ms-2 font-weight-bold nowrap"
+            >{{ place.Distance.toFixed(2) }} MI</span
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-4" *ngFor="let near of NearByType">
+    <div class="main-section">
+      <p class="main-name">{{ near.Name }}</p>
+      <ul>
+        <li *ngFor="let place of near.Branches | slice : 0 : 5">
+          <ng-container *ngFor="let branch of place.RelationOrganization">
             <div class="d-flex align-items-center">
               <div>
                 <img
                   loading="lazy"
                   src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                    OrganizationBranches.Id
+                    branch.id
                   }}"
                   alt=""
                   class="orgbranches"
                 />
               </div>
 
-              <div class="d-flex flex-column">
-                <span *ngIf="OrganizationBranches.Name" class="nearset"
-                  >{{ OrganizationBranches.Name }}
-                </span>
-                <span class="nearset"
-                  >{{ place.City }}<span *ngIf="place.City">,</span>
-                  {{ place.State }}</span
-                >
+              <div>
+                <span *ngIf="branch.Name" class="nearset">{{
+                  branch.Name
+                }}</span>
               </div>
             </div>
-
-            <span class="ms-2 font-weight-bold nowrap"
-              >{{ place.Distance.toFixed(2) }} MI</span
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-md-4" *ngFor="let near of NearByType">
-      <div class="main-section">
-        <p class="main-name">{{ near.Name }}</p>
-        <ul>
-          <li *ngFor="let place of near.Branches | slice : 0 : 5">
-            <ng-container *ngFor="let branch of place.RelationOrganization">
-              <div class="d-flex align-items-center">
-                <div>
-                  <img
-                    loading="lazy"
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      branch.id
-                    }}"
-                    alt=""
-                    class="orgbranches"
-                  />
-                </div>
-
-                <div>
-                  <span *ngIf="branch.Name" class="nearset">{{
-                    branch.Name
-                  }}</span>
-                </div>
-              </div>
-              <!-- 
+            <!-- 
                 <span class="ms-2 font-weight-bold"
                   >{{ branch.Distance.toFixed(2) }} MI</span
                 > -->
-            </ng-container>
-          </li>
-        </ul>
-      </div>
+          </ng-container>
+        </li>
+      </ul>
     </div>
   </div>
+</div>
 
-  <div
-    class="map-section"
-    *ngIf="shoppingCenter.Latitude && this.shoppingCenter.Longitude"
-  >
-    <div class="view-toggle">
-      <button [class.active]="isMapView" (click)="isMapView = true">
-        Map View
-      </button>
-      <button [class.active]="!isMapView" (click)="isMapView = false">
-        Street View
-      </button>
-    </div>
+<div
+  class="map-section"
+  *ngIf="shoppingCenter.Latitude && this.shoppingCenter.Longitude"
+>
+  <div class="view-toggle">
+    <button [class.active]="isMapView" (click)="isMapView = true">
+      Map View
+    </button>
+    <button [class.active]="!isMapView" (click)="isMapView = false">
+      Street View
+    </button>
+  </div>
 
-    <div class="map-street">
-      <div [hidden]="!isMapView" id="map" class="mapView"></div>
-      <div [hidden]="isMapView">
-        <div id="street-view" class="streetview"></div>
-      </div>
+  <div class="map-street">
+    <div [hidden]="!isMapView" id="map" class="mapView"></div>
+    <div [hidden]="isMapView">
+      <div id="street-view" class="streetview"></div>
     </div>
+    
   </div>
 </div>
 
@@ -849,36 +808,36 @@
         [pauseOnHover]="true"
         [interval]="0"
       >
-      <ng-template
-  ngbSlide
-  *ngFor="let img of currentGalleryData(); let i = index"
->
-  <div class="gallery-image-container">
-    <i
-      class="star-overlay"
-      [ngClass]="{
-        'fa-solid fa-star': currentMainImage() === img,
-        'fa-regular fa-star': currentMainImage() !== img
-      }"
-      (click)="selectMainImage(img)"
-      title="Set as main image"
-    ></i>
+        <ng-template
+          ngbSlide
+          *ngFor="let img of currentGalleryData(); let i = index"
+        >
+          <div class="gallery-image-container">
+            <i
+              class="star-overlay"
+              [ngClass]="{
+                'fa-solid fa-star': currentMainImage() === img,
+                'fa-regular fa-star': currentMainImage() !== img
+              }"
+              (click)="selectMainImage(img)"
+              title="Set as main image"
+            ></i>
 
-    <i
-      class="delete-overlay fa-regular fa-trash-can"
-      (click)="deleteImage(img)"
-      title="Delete Image"
-    ></i>
+            <i
+              class="delete-overlay fa-regular fa-trash-can"
+              (click)="deleteImage(img)"
+              title="Delete Image"
+            ></i>
 
-    <!-- The image itself -->
-    <img
-      [src]="img"
-      alt="Gallery image"
-      class="gallery-image"
-      loading="lazy"
-    />
-  </div>
-</ng-template>
+            <!-- The image itself -->
+            <img
+              [src]="img"
+              alt="Gallery image"
+              class="gallery-image"
+              loading="lazy"
+            />
+          </div>
+        </ng-template>
 
         <div
           class="carousel-control-prev"

@@ -20,12 +20,13 @@
   font-weight: 500;
   align-items: center;
   gap: 12px;
+  color: #f3f4f6;
 }
 
 .badge {
   position: absolute;
   top: 2px;
-  right: 2px;
+  right: 100px;
   background: #ef4444;
   color: white;
   border-radius: 50%;

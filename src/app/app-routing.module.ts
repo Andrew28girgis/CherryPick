@@ -5,7 +5,7 @@ import { ResetPasswordComponent } from './shared/components/change-password/chan
 import { ForgetPasswordComponent } from './shared/components/forget-password/forget-password.component';
 import { NewPasswordComponent } from './shared/components/new-password/new-password.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
-import { TermsComponent } from './shared/components/terms/terms.component'; 
+import { TermsComponent } from './shared/components/terms/terms.component';
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { AuthGuardService } from './core/services/auth-guard.service';
@@ -21,12 +21,13 @@ import { UserPagesComponent } from './features/user-pages/user-pages.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
 import { PolygonsComponent } from './features/polygons/polygons.component';
 import { Tree2Component } from './features/tree2/tree2.component';
-import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component'; 
+import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly/linked-succesfuly.component';
 import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.component';
 import { FloatingChatNotificationsComponent } from './shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
 import { NotificationViewComponent } from './shared/components/floating-chat/notification-view/notification-view.component';
 import { EmailsComponent } from './features/emails/emails.component';
  const routes: Routes = [
+const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
@@ -125,7 +126,7 @@ import { EmailsComponent } from './features/emails/emails.component';
       import('./features/tasks/tasks.module').then((m) => m.TasksModule),
     canActivate: [TenantOnlyGuard, AccountLinkedGuard],
   },
- 
+
   {
     path: 'campaigns',
     loadChildren: () =>
@@ -256,7 +257,7 @@ import { EmailsComponent } from './features/emails/emails.component';
     data: { hideHeader: true, hideSidebar: true },
   },
   {
-    path: 'dashboard/:orgId/:orgName/:campaignId',
+    path: 'dashboard/:campaignId',
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
@@ -285,7 +286,6 @@ import { EmailsComponent } from './features/emails/emails.component';
     path: 'chatbot',
     component: FloatingChatNotificationsComponent,
   },
-
 ];
 
 @NgModule({

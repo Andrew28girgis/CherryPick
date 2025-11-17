@@ -21,8 +21,9 @@
 }
 
 .main-heading {
-  font-size: 25px;
-  padding: 5px 0;
+font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
 }
 .table {
   border: 1px solid #dfdfdf;
@@ -971,7 +972,7 @@ li {
 }
 
 .nav-btn-prev {
-  background-color: #6c757d;
+  background-color: var(--Colors-Primary-500);
 }
 
 .nav-btn-next {
@@ -1068,15 +1069,13 @@ li {
 }
 .campaign-header-bar {
   color: #000;
-  padding: 0.8rem 1.5rem;
   border-radius: 8px;
   display: inline-block;
 }
 
 .campaign-path {
   font-size: 18px;
-  font-weight: 300 !important;
-  letter-spacing: 0.3px;
+  font-weight: 400 !important; 
 }
 
 .score {

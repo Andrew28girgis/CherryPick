@@ -5,6 +5,7 @@ import {
   HostListener,
   ViewChild,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -516,7 +517,15 @@ export class FloatingChatNotificationsComponent
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
-
+  isScanningPageContents(item: ChatItem, index: number): boolean {
+    if (!item.message || !item.message.includes('I am scanning the page contents now')) {
+      return false;
+    }
+  
+    const nextItem = this.chatTimeline[index + 1];
+    return !nextItem; // animate only while waiting for next AI message
+  }
+  
   isAtBottom(): boolean {
     const el = this.messagesContainer.nativeElement;
     if (!el) return true;
@@ -570,4 +579,5 @@ export class FloatingChatNotificationsComponent
 
     this.placesService.GenericAPI(request).subscribe({});
   }
+
 }
