@@ -1,0 +1,266 @@
+<div>
+  <div class="header">
+    <div class="title-div">
+      <h2 class="title">Emails</h2>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mb-3">
+    <button class="g-button" (click)="openAddEmailModal()">Add Email</button>
+  </div>
+
+  <!-- Emails List -->
+  <div class="emails-container">
+    <!-- Loading State -->
+    <!-- <div *ngIf="isLoadingEmails" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading emails...</p>
+    </div> -->
+
+    <!-- Empty State -->
+    <div
+      *ngIf="!isLoadingEmails && emailsList.length === 0"
+      class="alert alert-info"
+    >
+      <i class="bi bi-info-circle me-2"></i>
+      No emails found. Click "Add Email" to add your first email.
+    </div>
+
+    <!-- Emails Table -->
+    <div
+      *ngIf="!isLoadingEmails && emailsList.length > 0"
+      class="table-responsive"
+    >
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Email</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let email of emailsList; let i = index">
+            <td>{{ email.email }}</td>
+            <td
+              *ngIf="email.status"
+              [ngClass]="{
+                pending: email.status === 'Pending',
+                verified: email.status === 'Verified'
+              }"
+            >
+              {{ email.status }}
+            </td>
+            <td>
+              <button
+                *ngIf="isPending(email.status)"
+                class="g-button"
+                (click)="resendEmail(email)"
+                [disabled]="resendingEmail === email.email"
+              >
+                <span
+                  *ngIf="resendingEmail === email.email"
+                  class="spinner-border spinner-border-sm me-1"
+                ></span>
+                {{ resendingEmail === email.email ? "Sending..." : "Resend" }}
+              </button>
+              <span *ngIf="!isPending(email.status)" class="text-muted">
+                
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add Email Modal Template -->
+<ng-template #addEmailTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Add New Email</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="closeModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="emailForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <!-- Nickname -->
+        <div class="col-md-6 mb-3">
+          <label for="nickname" class="form-label"
+            >Nickname <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="nickname"
+            formControlName="nickname"
+            [class.is-invalid]="hasError('nickname', 'required')"
+            placeholder="Enter nickname"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="hasError('nickname', 'required')"
+          >
+            Nickname is required
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div class="col-md-6 mb-3">
+          <label for="fromName" class="form-label"
+            >Name <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="fromName"
+            formControlName="fromName"
+            [class.is-invalid]="hasError('fromName', 'required')"
+            placeholder="Enter name"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="hasError('fromName', 'required')"
+          >
+            name is required
+          </div>
+        </div>
+
+        <!-- From Email -->
+        <div class="col-md-6 mb-3">
+          <label for="fromEmail" class="form-label"
+            >Email <span class="text-danger">*</span></label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="fromEmail"
+            formControlName="fromEmail"
+            [class.is-invalid]="
+              hasError('fromEmail', 'required') ||
+              hasError('fromEmail', 'email')
+            "
+            placeholder="example@email.com"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="hasError('fromEmail', 'required')"
+          >
+            Email is required
+          </div>
+          <div class="invalid-feedback" *ngIf="hasError('fromEmail', 'email')">
+            Please enter a valid email
+          </div>
+        </div>
+
+        <!-- Reply To -->
+        <div class="col-md-6 mb-3">
+          <label for="replyTo" class="form-label"
+            >Reply To <span class="text-danger">*</span></label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="replyTo"
+            formControlName="replyTo"
+            [class.is-invalid]="
+              hasError('replyTo', 'required') || hasError('replyTo', 'email')
+            "
+            placeholder="reply@email.com"
+          />
+          <div class="invalid-feedback" *ngIf="hasError('replyTo', 'required')">
+            Reply to email is required
+          </div>
+          <div class="invalid-feedback" *ngIf="hasError('replyTo', 'email')">
+            Please enter a valid email
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="col-12 mb-3">
+          <label for="address" class="form-label"
+            >Address <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="address"
+            formControlName="address"
+            [class.is-invalid]="hasError('address', 'required')"
+            placeholder="Enter address"
+          />
+          <div class="invalid-feedback" *ngIf="hasError('address', 'required')">
+            Address is required
+          </div>
+        </div>
+
+        <!-- City -->
+        <div class="col-md-6 mb-3">
+          <label for="city" class="form-label"
+            >City <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="city"
+            formControlName="city"
+            [class.is-invalid]="hasError('city', 'required')"
+            placeholder="Enter city"
+          />
+          <div class="invalid-feedback" *ngIf="hasError('city', 'required')">
+            City is required
+          </div>
+        </div>
+
+        <!-- Country -->
+        <div class="col-md-6 mb-3">
+          <label for="country" class="form-label"
+            >Country <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="country"
+            formControlName="country"
+            [class.is-invalid]="hasError('country', 'required')"
+            placeholder="Enter country"
+          />
+          <div class="invalid-feedback" *ngIf="hasError('country', 'required')">
+            Country is required
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="closeModal()"
+      [disabled]="isSubmitting"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      [disabled]="isSubmitting"
+    >
+      <span
+        *ngIf="isSubmitting"
+        class="spinner-border spinner-border-sm me-2"
+      ></span>
+      {{ isSubmitting ? "Adding..." : "Add Email" }}
+    </button>
+  </div>
+</ng-template>

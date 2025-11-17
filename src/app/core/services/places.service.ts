@@ -346,6 +346,14 @@ export class PlacesService {
       formData
     );
   }
+
+  public CreateNewSender(emailData: any) {
+    return this.http.post<any>(`${environment.api}/SendGrid/CreateNewSender`, emailData);
+  }
+  public ResendVerificationCode(emailData: any) {
+    return this.http.post<any>(`${environment.api}/SendGrid/ResendVerificationCode`, emailData);
+  }
+
   public SendImagesArray(images: any, shoppingID: any) {
     return this.http.post<any>(
       `${environment.api}/BrokerWithChatGPT/ProcessImagesWithGPT/${shoppingID}`,
@@ -434,7 +442,7 @@ export class PlacesService {
   }
 
   public UpdateCampaign(
-    Id:number,
+    Id: number,
     CampaignName: string,
     OrganizationId: number,
     name: string,

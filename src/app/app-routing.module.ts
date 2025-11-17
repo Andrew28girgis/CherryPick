@@ -25,6 +25,7 @@ import { LinkedSuccesfulyComponent } from './shared/components/linked-succesfuly
 import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.component';
 import { FloatingChatNotificationsComponent } from './shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
 import { NotificationViewComponent } from './shared/components/floating-chat/notification-view/notification-view.component';
+import { EmailsComponent } from './features/emails/emails.component';
  const routes: Routes = [
   {
     path: '',
@@ -59,6 +60,11 @@ import { NotificationViewComponent } from './shared/components/floating-chat/not
   {
     path: 'ResetPassword',
     component: ResetPasswordComponent,
+    data: { hideHeader: true },
+  },
+  {
+    path: 'emails',
+    component: EmailsComponent,
     data: { hideHeader: true },
   },
   {
