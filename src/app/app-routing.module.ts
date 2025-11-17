@@ -26,7 +26,7 @@ import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.co
 import { FloatingChatNotificationsComponent } from './shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
 import { NotificationViewComponent } from './shared/components/floating-chat/notification-view/notification-view.component';
 import { EmailsComponent } from './features/emails/emails.component';
- const routes: Routes = [
+
 const routes: Routes = [
   {
     path: '',
