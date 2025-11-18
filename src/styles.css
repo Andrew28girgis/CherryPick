@@ -328,7 +328,7 @@ a {
 
 .g-button:hover {
   color: #fff;
-  background: var(--Colors-Primary-500);
+  background: #005ebf;
 }
 
 .g-button-outline {
