@@ -71,6 +71,8 @@
 }
 
 .center-card {
+  overflow: visible;
+  position: relative;
   background: #fff;
   border-radius: var(--Radius-R-12);
   overflow: hidden;
@@ -479,17 +481,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   padding: 6px;
 }
-.menu-table {
-  position: absolute;
-  top: -30px;
-  right: 30px;
-  min-width: 220px;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  padding: 6px;
-}
+
 .menu-item {
   display: block;
   width: 100%;
@@ -526,36 +518,6 @@
   outline: none;
 }
 
-.icon-btn:hover {
-  background: rgba(255, 255, 255, 0.6);
-  transform: translateY(-1px);
-}
-
-.icon-btn:active {
-  transform: translateY(0);
-}
-
-.icon-btn.active {
-  background: var(--Colors-Primary-500);
-  color: var(--Colors-Pure-White);
-}
-
-.icon-btn:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.icon-btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.18),
-    0 0 0 1px rgba(41, 98, 255, 0.2);
-  border-radius: var(--Radius-R-16);
-}
-
-.icon-btn:focus:not(:focus-visible) {
-  box-shadow: none;
-  outline: none;
-}
 .add-new-actions {
   display: flex;
   gap: var(--Space-S-8);
@@ -798,11 +760,6 @@
   align-items: center;
   justify-content: center;
   font-size: 14px;
-}
-
-.center-card {
-  overflow: visible;
-  position: relative;
 }
 
 .btn-custom {
