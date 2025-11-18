@@ -289,7 +289,6 @@
   display: none;
 }
 
-/* Skeleton Loading Animation */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
@@ -672,7 +671,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--Colors-Primary-light); /* navy */
+  background: var(--Colors-Primary-light);
   color: var(--Colors-Primary-500);
   line-height: 1.1;
   transition: all 0.2s ease-in-out;
