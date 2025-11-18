@@ -1,11 +1,10 @@
 <div (click)="onDocumentsClick()">
-  <!-- Header Section -->
   <div class="title-div">
     <h2 class="title">Sites Vault</h2>
   </div>
   <div class="header-container d-flex flex-row justify-content-between">
     <div
-      class="search-filter d-flex flex-row"
+      class="d-flex flex-row"
       style="gap: 12px; width: 88% !important"
     >
       <div class="search-section">
@@ -40,7 +39,6 @@
       </div>
     </div>
 
-    <!-- ===================== Upload Button ===================== -->
     <div class="add-new-actions">
       <div class="view-toggle">
         <button
@@ -66,7 +64,6 @@
             <rect width="7" height="7" x="3" y="14" rx="1" />
           </svg>
         </button>
-        <!-- <button  class="toggle-btn"(click)="viewMode = 'table'" [class.active]="viewMode === 'table'">Table</button> -->
         <button
           class="toggle-btn"
           (click)="switchView('map')"
@@ -80,7 +77,6 @@
       </button>
     </div>
 
-    <!-- ===================== Upload Modal =====px-3 mb-3================ -->
     <ng-template #uploadModal let-modal>
       <div class="modal-header">
         <h5 class="modal-title">Upload OM PDF</h5>
@@ -429,65 +425,7 @@
                 >
                   Ask Emily
                 </div>
-                <!-- <div class="center-details">
-                  <span
-                    class="purchase-price"
-                    *ngIf="center.forSalePrice && center.forSalePrice > 0"
-                    >Purchase Price</span
-                  >
-                  <span class="info-badge" *ngIf="center.centerType">{{
-                    center.centerType
-                  }}</span>
-                </div>
-                <div class="price-line" *ngIf="center.buildingSizeSf">
-                  <span
-                    *ngIf="center.forSalePrice && center.forSalePrice > 0"
-                    class="price-per-sf"
-                    >1.2% SF-1.568 SF</span
-                  >
-                  <span *ngIf="center.buildingSizeSf" class="unit-size">
-                    {{ center.buildingSizeSf }} SF</span
-                  >
-                </div> -->
 
-                <!-- <div
-                  class="property-details"
-                  *ngIf="center.shoppingCenter.places"
-                >
-                  <div class="detail-row gap-2">
-                    <span
-                      *ngIf="
-                        getMinMaxSizes(center.shoppingCenter.places) as sizes
-                      "
-                      class="building-size"
-                    >
-                      <span *ngIf="sizes.min !== sizes.max">
-                        {{ sizes.min | number }} - {{ sizes.max | number }} SF
-                      </span>
-                      <span *ngIf="sizes.min === sizes.max">
-                        {{ sizes.min | number }} SF
-                      </span>
-                    </span>
-
-                    <span
-                      *ngIf="
-                        getMinMaxPrices(center.shoppingCenter.places) as prices
-                      "
-                      class="price w-100"
-                    >
-                      <ng-container *ngIf="prices.min > 0 || prices.max > 0">
-                        <ng-container *ngIf="prices.min === prices.max">
-                          ${{ prices.min | number }}
-                        </ng-container>
-                        <ng-container *ngIf="prices.min !== prices.max">
-                          ${{ prices.min | number }} - ${{
-                            prices.max | number
-                          }}
-                        </ng-container>
-                      </ng-container>
-                    </span>
-                  </div>
-                </div> -->
                 <div
                   style="
                     display: flex;
@@ -629,157 +567,7 @@
             </div>
           </div>
         </div>
-        <!-- Shopping Centers Table -->
-        <div
-          class="centers-table-wrap"
-          *ngIf="!isLoading && viewMode === 'table'"
-        >
-          <table class="centers-table">
-            <thead>
-              <tr>
-                <th style="width: 48px"></th>
-                <th
-                  (click)="sortBy = 'name'; onSortChange()"
-                  [class.sorting]="true"
-                >
-                  Name
-                </th>
-                <th
-                  (click)="sortBy = 'address'; onSortChange()"
-                  [class.sorting]="true"
-                >
-                  Address
-                </th>
-                <th>Type</th>
-                <th>Category</th>
-                <th>Last Update Date</th>
-                <th>Manager ORG</th>
-                <th></th>
 
-                <th style="width: 56px"></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr
-                *ngFor="let center of filteredCenters()"
-                [class.click-disabled]="openMenuId === center.scId"
-              >
-                <!-- Thumb -->
-                <td>
-                  <img
-                    loading="lazy"
-                    [src]="center.mainImage || 'assets/Images/placeholder.png'"
-                    [alt]="center.centerName"
-                    class="thumb"
-                    (error)="center.mainImage = 'assets/Images/placeholder.png'"
-                  />
-                </td>
-
-                <!-- Name -->
-                <td>
-                  <div class="name-cell">
-                    <div class="title">{{ center.centerName }}</div>
-                    <div class="id" *ngIf="center.scId">
-                      ID: {{ center.scId }}
-                    </div>
-                  </div>
-                </td>
-
-                <!-- Address -->
-                <td class="muted">{{ center.centerAddress }}</td>
-                <!-- Type -->
-                <td class="muted">{{ center.centerType }}</td>
-                <!-- category -->
-                <td class="muted">{{ center.category }}</td>
-                <!-- last update date -->
-                <td class="muted">{{ center.lastUpdateDate | date }}</td>
-                <!-- manager ORG -->
-                <td class="muted">{{ center.organizationName }}</td>
-                <td class="link-details">
-                  <button
-                    class="icon-btn"
-                    (click)="onRowNavigate(center, $event)"
-                    title="Details"
-                  >
-                    <!-- paste either SVG from above here -->
-                    <!-- stroke-style example -->
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                      focusable="false"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3 12h12"
-                        stroke="currentColor"
-                        stroke-width="2.6"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        fill="none"
-                      />
-                      <path
-                        d="M13 6l7 6-7 6"
-                        stroke="currentColor"
-                        stroke-width="2.6"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        fill="none"
-                      />
-                    </svg>
-                  </button>
-                </td>
-
-                <!-- Actions (same 3-dots dropdown) -->
-                <td (click)="$event.stopPropagation()">
-                  <div class="menu-wrapper">
-                    <button
-                      class="menu-btn"
-                      (click)="toggleMenu(center.scId, $event)"
-                    >
-                      <!-- 3 dots svg -->
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                      >
-                        <path
-                          d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801Z"
-                          fill="#18171F"
-                          stroke="#18171F"
-                        />
-                        <path
-                          d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
-                          fill="#18171F"
-                        />
-                        <path
-                          d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
-                          fill="#18171F"
-                        />
-                      </svg>
-                    </button>
-
-                    <div class="menu-table" *ngIf="openMenuId === center.scId">
-                      <button
-                        class="menu-item"
-                        (click)="onEnriche(center); closeMenu()"
-                      >
-                        Enriche Data
-                      </button>
-                      <button class="menu-item" (click)="closeMenu()">
-                        Upload OM Files
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
         <!-- ===================== Map View ===================== -->
         <div
           class="map-view-container"
@@ -962,7 +750,6 @@
   </div>
 
   <div class="modal-footer">
-    <!-- <button class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button> -->
     <button
       class="btn btn-primary btn-custom"
       (click)="addCenter(currentCenter, selectedCampaign.Id); modal.close()"
