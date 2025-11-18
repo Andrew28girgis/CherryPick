@@ -50,6 +50,12 @@
               }"
             >
               {{ email.status }}
+              <span *ngIf="email.status === 'Verified'">
+                <i class="fa-solid fa-circle-check"></i>
+              </span>
+              <span *ngIf="email.status === 'Pending'">
+                <i class="fa-solid fa-clock"></i>
+              </span>
             </td>
             <td>
               <button
@@ -253,3 +259,9 @@
     </button>
   </div>
 </ng-template>
+
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>

@@ -412,11 +412,11 @@ export class GenerateEmailComponent implements OnInit {
         ShoppingCentersID: centers.map((c) => c.Id.toString()),
       };
 
-      if (!orgMap.has(contact.ID)) {
-        orgMap.set(contact.ID, []);
+      if (!orgMap.has(contact.Id)) {
+        orgMap.set(contact.Id, []);
       }
 
-      orgMap.get(contact.ID)?.push(contactDTO);
+      orgMap.get(contact.Id)?.push(contactDTO);
     });
 
     const result: GetManagerOrgDTO[] = [];

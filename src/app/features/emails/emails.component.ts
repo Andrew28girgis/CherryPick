@@ -1,14 +1,21 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { EmailPollingService } from 'src/app/core/services/email-polling.service';
 
 @Component({
   selector: 'app-emails',
   templateUrl: './emails.component.html',
   styleUrls: ['./emails.component.css'],
 })
-export class EmailsComponent implements OnInit {
+export class EmailsComponent implements OnInit, OnDestroy {
   @ViewChild('addEmailTemplate') addEmailTemplate!: TemplateRef<any>;
   emailForm!: FormGroup;
   modalRef!: NgbModalRef;
@@ -21,7 +28,8 @@ export class EmailsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
-    private placesService: PlacesService
+    private placesService: PlacesService,
+    private emailPollingService: EmailPollingService
   ) {}
 
   ngOnInit() {
@@ -40,6 +48,11 @@ export class EmailsComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    // Stop polling when component is destroyed
+    this.emailPollingService.stopPolling();
+  }
+
   GetContactEmails() {
     this.isLoadingEmails = true;
     const body: any = {
@@ -53,17 +66,25 @@ export class EmailsComponent implements OnInit {
 
     this.placesService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        console.log('Emails fetched:', data.json);
         this.emailsList = data.json || [];
-        console.log('Emails list set:', this.emailsList);
         this.isLoadingEmails = false;
-      },
-      error: (error) => {
-        console.error('Error fetching emails:', error);
-        this.emailsList = [];
-        this.isLoadingEmails = false;
+        this.checkAndStartPolling();
       },
     });
+  }
+
+  private checkAndStartPolling() {
+    const hasPendingEmails = this.emailsList.some((email) =>
+      this.isPending(email.status)
+    );
+    if (hasPendingEmails) {
+      this.emailPollingService.startPolling(this.contactId, (emails) => {
+        this.emailsList = emails;
+        // console.log('Emails updated via polling:', this.emailsList);
+      });
+    } else {
+      this.emailPollingService.stopPolling();
+    }
   }
 
   initializeForm() {
@@ -101,17 +122,13 @@ export class EmailsComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('Form submitted');
-    console.log('Form valid:', this.emailForm.valid);
-    console.log('Form values:', this.emailForm.value);
-
     if (this.emailForm.invalid) {
-      console.log('Form is invalid, marking all fields as touched');
+      this.showToast('Form is invalid, marking all fields as touched');
       Object.keys(this.emailForm.controls).forEach((key) => {
         const control = this.emailForm.get(key);
         control?.markAsTouched();
         if (control?.invalid) {
-          console.log(`${key} is invalid:`, control.errors);
+          this.showToast('Please correct the errors in the form.');
         }
       });
       return;
@@ -130,20 +147,16 @@ export class EmailsComponent implements OnInit {
       country: this.emailForm.value.country,
     };
 
-    console.log('Sending email data:', emailData);
-
     this.placesService.CreateNewSender(emailData).subscribe({
       next: (response) => {
-        console.log('Email added successfully:', response);
+        this.showToast('Email added successfully');
         this.isSubmitting = false;
         this.closeModal();
         this.GetContactEmails();
-        // Add success notification here if you have a toast service
       },
       error: (error) => {
-        console.error('Error adding email:', error);
+        this.showToast('Error adding email. Please try again.');
         this.isSubmitting = false;
-        // Add error notification here if you have a toast service
       },
     });
   }
@@ -156,14 +169,13 @@ export class EmailsComponent implements OnInit {
     };
     this.placesService.ResendVerificationCode(emailData).subscribe({
       next: (response) => {
-        console.log('Verification email resent successfully:', response);
+        this.showToast('Verification email resent successfully');
         this.resendingEmail = null;
-        // Add success notification here if you have a toast service
+        this.checkAndStartPolling();
       },
       error: (error) => {
-        console.error('Error resending verification email:', error);
+        this.showToast('Error resending verification email. Please try again.');
         this.resendingEmail = null;
-        // Add error notification here if you have a toast service
       },
     });
   }
@@ -179,5 +191,16 @@ export class EmailsComponent implements OnInit {
       field.hasError(errorType) &&
       (field.dirty || field.touched)
     );
+  }
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    if (toastMessage && toast) {
+      toastMessage.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
   }
 }

@@ -96,9 +96,14 @@ export class InboxComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       // this.buyBoxId = Number(params.get('buyBoxId'));
       this.campaignId = params.get('campaignId') || null;
-      this.orgId = Number(params.get('organizationId'));
+      this.orgId = Number(params.get('orgId'));
+      console.log("PARENT: orgId from route =", params.get('orgId'));
+
       this.contactId = localStorage.getItem('contactId');
     });
+    console.log("PARENT: orgId from route =", this.orgId);
+
+  
     // this.updateBreadcrumb();
     this.getOrganizations();
     this.getAllEmails();
@@ -683,11 +688,17 @@ export class InboxComponent implements OnInit {
   }
 
   selectOrg(orgId: any) {
+    console.log("PARENT: selectOrg() clicked. selectedOrgId =", orgId);
+  
     this.selectedOrgId = orgId;
+    this.orgId = orgId; // Ensure parent orgId updates
+  
+    console.log("PARENT: orgId UPDATED =", this.orgId);
+  
     this.isOrgDropdownOpen = false;
     this.onOrgSelected();
   }
-
+  
   getSelectedOrg() {
     return this.BuyBoxMicroDeals.find(org => org.OrganizationId === this.selectedOrgId);
   }

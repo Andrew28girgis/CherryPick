@@ -257,7 +257,7 @@ const routes: Routes = [
     data: { hideHeader: true, hideSidebar: true },
   },
   {
-    path: 'dashboard/:campaignId',
+    path: 'dashboard/:orgId/:campaignId',
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
