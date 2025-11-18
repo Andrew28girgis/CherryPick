@@ -71,7 +71,6 @@
 }
 
 .center-card {
-  overflow: visible;
   position: relative;
   background: #fff;
   border-radius: var(--Radius-R-12);
@@ -106,21 +105,15 @@
   left: 12px;
   right: 12px;
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   justify-content: flex-end;
 }
 
 .share-badge {
-  display: flex;
-  align-items: center;
   gap: var(--Space-S-4);
-  padding: var(--Space-S-4) var(--Space-S-8);
   color: white;
-  border-radius: var(--Radius-R-4);
   font-size: 11px;
   font-weight: 500;
-  backdrop-filter: blur(4px);
   border-radius: var(--Radius-R-16);
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(1.5px);
@@ -134,7 +127,6 @@
   border: none;
   border-radius: var(--Radius-R-16);
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(1.5px);
   width: 32px;
   height: 32px;
   display: flex;
@@ -194,29 +186,11 @@
   gap: 4px;
 }
 
-.page-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 80px;
-  height: 32px;
-  padding: 0 16px;
-  border: 1px solid #e5e7eb;
-  background: white;
-  border-radius: 6px;
-  color: #374151;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 14px;
-}
-
 .page-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.page-button:hover:not(:disabled) {
   background: #f3f4f6;
+  color: #9ca3af;
 }
 
 .page-button.prev {
@@ -229,13 +203,6 @@
   background: var(--Colors-Primary-light);
   border-color: var(--Colors-Primary-500);
   color: var(--Colors-Primary-500);
-}
-
-.page-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: #f3f4f6;
-  color: #9ca3af;
 }
 
 .page-number.active {
@@ -252,6 +219,7 @@
 
 .page-button,
 .page-number {
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -853,10 +821,6 @@
 }
 
 .browse-btn {
-  background: none;
-  border: none;
-  background: none;
-  border: none;
   color: #007bff;
   text-decoration: underline;
   cursor: pointer;
