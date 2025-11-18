@@ -128,9 +128,7 @@ export class EmailsComponent implements OnInit, OnDestroy {
         const control = this.emailForm.get(key);
         control?.markAsTouched();
         if (control?.invalid) {
-          this.showToast(
-            `${key} is invalid: ${JSON.stringify(control.errors)}`
-          );
+          this.showToast('Please correct the errors in the form.');
         }
       });
       return;
