@@ -107,7 +107,7 @@ export interface Comment {
 }
 
 export interface ManagerOrganization {
-  ID: number;
+  Id: number;
   Name: string;
   Firstname: string;
   LastName: string;

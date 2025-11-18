@@ -83,6 +83,9 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
   @Output() scrollDown = new EventEmitter<void>();
   CCEmail: any;
   contactSignature: string = '';
+  verifiedEmails: any[] = [];
+  selectedFromEmail: string = '';
+
   constructor(
     private placeService: PlacesService,
     private spinner: NgxSpinnerService,
@@ -97,6 +100,24 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
     this.GetContactSignature();
+    this.GetVerifiedEmails();
+  }
+
+  GetVerifiedEmails() {
+    const body = {
+      Name: 'GetVerifiedEmails',
+      Params: {},
+    };
+
+    this.placeService.GenericAPI(body).subscribe((response: any) => {
+      console.log(response);
+
+      this.verifiedEmails = response.json;
+
+      if (this.verifiedEmails.length === 1) {
+        this.selectedFromEmail = this.verifiedEmails[0].Id;
+      }
+    });
   }
 
   GetContactSignature(): void {
@@ -140,7 +161,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
     const body = {
       Name: 'GetAllContactsByOrganizationId',
       Params: {
-        OrganizationId: this.contacts[0].ID,
+        OrganizationId: this.contacts[0].Id,
       },
     };
 
@@ -223,14 +244,12 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         promptText: prompt?.PromptText || 'No prompt text available',
       }));
 
-
       // Select the first prompt as default, if available
       if (this.prompts.length > 0) {
         this.selectedPromptId = this.prompts[0].id;
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   async PutMailsDraft(): Promise<void> {
@@ -258,10 +277,11 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
               ContactId: this.contactId,
               PromptId: promptId,
               IsCC: this.chooseBrokerObject.sendAsCC,
-              OrganizationId: Number(responseContextEmail.organizationId),
               context: `${responseContextEmail.context}`,
               BatchGuid: this.BatchGuid,
               CampaignId: this.center.CampaignId,
+              OrganizationId: this.contacts[0].Id,
+              ContactEmailId: this.selectedFromEmail,
             },
             Json: null,
           };
@@ -311,6 +331,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
     const toastMessage = document.getElementById('toastMessage');
     toastMessage!.innerText = message;
     toast!.classList.add('show');
+    toast!.classList.add('success');
     setTimeout(() => {
       toast!.classList.remove('show');
     }, 3000);
@@ -337,11 +358,11 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
         ShoppingCentersID: centers.map((c) => c.Id.toString()),
       };
 
-      if (!orgMap.has(contact.ID)) {
-        orgMap.set(contact.ID, []);
+      if (!orgMap.has(contact.Id)) {
+        orgMap.set(contact.Id, []);
       }
 
-      orgMap.get(contact.ID)?.push(contactDTO);
+      orgMap.get(contact.Id)?.push(contactDTO);
     });
 
     const result: GetManagerOrgDTO[] = [];

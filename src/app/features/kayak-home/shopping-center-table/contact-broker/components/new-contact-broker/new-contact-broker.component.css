@@ -428,3 +428,55 @@
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
 }
+.single-email-small {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: var(--Main-Container-BG);
+  font-size: 14px;
+  color: #50536a;
+}
+
+.small-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #707791;
+  margin-bottom: 3px;
+  display: block;
+}
+.send-from-label {
+  font-size: 13px;
+  color: #707791;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.custom-pill-select {
+  border-radius: 50px !important;
+  padding: 10px 18px !important;
+  height: 42px !important;
+}
+
+.send-from-pill {
+  padding: 10px 18px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  min-width: 260px;
+  text-align: left;
+  font-size: 14px;
+  color: #707791;
+}
+
+.send-from-select {
+  border-radius: 24px !important;
+  padding: 10px 14px !important;
+  height: 42px !important;
+  min-width: 260px;
+}
+
+.send-from-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

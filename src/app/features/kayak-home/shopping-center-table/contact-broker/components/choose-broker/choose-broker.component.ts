@@ -59,7 +59,7 @@ export class ChooseBrokerComponent implements OnChanges {
     const body = {
       Name: 'GetAllContactsByOrganizationId',
       Params: {
-        OrganizationId: this.contacts[0].ID,
+        OrganizationId: this.contacts[0].Id,
       },
     };
 
