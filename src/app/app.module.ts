@@ -30,8 +30,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
-import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
-import { HeaderComponent } from './shared/components/header/header.component';
+import { SidebarComponent } from './shared/components/sidebar/sidebar.component'; 
 import { NotificationsOnlyComponentComponent } from './shared/components/sidebar/notifications-only-component/notifications-only-component.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { EditorModule } from 'primeng/editor';
@@ -51,8 +50,7 @@ import { EmailsComponent } from './features/emails/emails.component';
     TermsComponent,
     NumberWithCommasPipe,
     UploadOMComponent,
-    SidebarComponent,
-    HeaderComponent,
+    SidebarComponent, 
     LandingComponent,
     AiChatingComponent,
     AiUiHTMLComponent,

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, type Routes, PreloadAllModules } from '@angular/router';
 import { LoginComponent } from './shared/components/login/login.component';
-import { ResetPasswordComponent } from './shared/components/change-password/change-password.component';
+import { ResetPasswordComponent } from './shared/components/new-password/change-password/change-password.component';
 import { ForgetPasswordComponent } from './shared/components/forget-password/forget-password.component';
 import { NewPasswordComponent } from './shared/components/new-password/new-password.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
@@ -12,8 +12,6 @@ import { AuthGuardService } from './core/services/auth-guard.service';
 import { AccountLinkedGuard } from './core/guards/account-linked.guard';
 import { AiSpinnerComponent } from './shared/components/ai-spinner/ai-spinner.component';
 import { AiFailedComponent } from './shared/components/ai-failed/ai-failed.component';
-import { AutomationComponent } from './shared/components/automation/automation.component';
-import { AutomationShoppingCentersComponent } from './shared/components/automation-shopping-centers/automation-shopping-centers.component';
 import { UploadOMComponent } from './features/kayak-home/shopping-center-table/uploadOM/uploadOM.component';
 import { AiChatingComponent } from './shared/components/ai-chating/ai-chating.component';
 import { AiUiHTMLComponent } from './shared/components/ai-ui-HTML/ai-ui-HTML.component';
@@ -245,17 +243,7 @@ const routes: Routes = [
     path: 'aiFailed',
     component: AiFailedComponent,
     data: { hideHeader: true, hideSidebar: true },
-  },
-  {
-    path: 'automation/:automationId',
-    component: AutomationComponent,
-    data: { hideHeader: true, hideSidebar: true },
-  },
-  {
-    path: 'automationCenters/:automationId',
-    component: AutomationShoppingCentersComponent,
-    data: { hideHeader: true, hideSidebar: true },
-  },
+  }, 
   {
     path: 'dashboard/:orgId/:campaignId',
     loadChildren: () =>
