@@ -2,10 +2,10 @@
 .campaign-manager-body::-webkit-scrollbar {
   height: 10px;
 }
-.tenant-logo {
-  height: 1.75rem;
-  width: 1.75rem;
-  border-radius: 50%;
+.campaign-step .left,
+.campaign-step .right {
+  flex: 1 1 45%;
+  min-width: 280px;
 }
 .tenant-header {
   justify-content: center;
@@ -114,13 +114,7 @@
   font-weight: 700;
   font-size: 18px;
 }
-.tenant-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(226, 232, 240, 0.5);
-}
+
 .tenant-name {
   font-size: 0.8rem;
   color: #64748b;
@@ -439,6 +433,7 @@
   align-items: center;
   gap: 12px;
 }
+
 .tenant-logo {
   width: 64px;
   height: 64px;
@@ -522,7 +517,6 @@
   font-size: 1rem;
   transition: all 0.2s ease;
   background-color: #fff;
-  width: fit-content !important;
 }
 .campaign-step .form-control:focus {
   border-color: #2563eb;
@@ -544,7 +538,6 @@
   background: #f8fafc;
   color: #334155;
   font-weight: 500;
-  font-size: 12px;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
