@@ -368,10 +368,6 @@ export class ShoppingComponent implements OnInit {
     });
   }
 
-  onFileExplorerClose() {
-    // Handle any cleanup when file explorer closes
-  }
-
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -683,7 +679,6 @@ export class ShoppingComponent implements OnInit {
       });
     }
   }
-  // make sure to bind 'this' when declaring the handler
   handleOutsideClick = (event: Event) => {
     const target = event.target as HTMLElement;
     if (!target.closest('.org-mini-menu') && !target.closest('.leased-by')) {
@@ -755,7 +750,7 @@ export class ShoppingComponent implements OnInit {
   }
 
   private updatePagination(): void {
-    const all = this.filteredCenters(); // read signal value
+    const all = this.filteredCenters();
 
     this.totalItems = all.length;
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
@@ -775,12 +770,10 @@ export class ShoppingComponent implements OnInit {
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
 
-    // Always show first page
     if (currentPage > 3) {
       pages.push(1);
-      // Add ellipsis marker that won't be rendered as -1
       if (currentPage > 4) {
-        pages.push(0); // Using 0 as ellipsis marker
+        pages.push(0);
       }
     }
 
@@ -886,22 +879,17 @@ export class ShoppingComponent implements OnInit {
     this.viewMode = mode;
 
     if (mode === 'map') {
-      // Give Angular time to render the <div id="shoppingMap">
       setTimeout(async () => {
         if (!this.map) {
-          await this.initMapView(); // Only create map once
+          await this.initMapView();
         }
-        // Re-render markers after map is ready
         this.updateMarkersOnMap();
       }, 200);
     }
   }
 
   mapEffect = effect(() => {
-    // Skip if map not ready or not in map mode
     if (!this.map || this.viewMode !== 'map') return;
-
-    // Wait a tick to ensure DOM + Google API ready
     queueMicrotask(() => this.updateMarkersOnMap());
   });
 

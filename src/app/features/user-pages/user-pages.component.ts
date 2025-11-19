@@ -11,7 +11,6 @@ interface UserPage {
   html: any;
 }
 
-// type ViewMode = "table" | "cards" | "timeline" | "list"
 type ViewMode = 'cards' | 'list';
 
 @Component({
@@ -49,7 +48,6 @@ export class UserPagesComponent implements OnInit {
   }
 
   loadFakeData(): void {
- 
     this.loading = false;
   }
 

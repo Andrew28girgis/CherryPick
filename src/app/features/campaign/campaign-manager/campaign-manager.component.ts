@@ -385,11 +385,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }
-  // openEmilyWithMap() {
-  //   this.notificationService.setChatOpen(true);
-  //   this.notificationService.setMapOpen(true);
-  //   this.notificationService.setOverlayWide(true);
-  // }
+
 
   getAllActiveOrganizations(onLoaded?: () => void, onEmpty?: () => void): void {
     const body: any = {
@@ -710,37 +706,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       this.closeMenu();
     }
   }
-  //   viewSpecs(campaign: any) {
-  //     const body: any = {
-  //       Name: 'GetCampaignDetailsJSON',
-  //       Params: { CampaignId: campaign.Id },
-  //     };
 
-  //     this.placesService.GenericAPI(body).subscribe({
-  //       next: (response) => {
-  //         this.selectedCampaign = JSON.parse(
-  //           response.json[0].campaignDetailsJSON
-  //         );
-  //         this.campaignlogo = campaign.logoUrl;
-  //         this.placesService
-  //           .sendmessages({
-  //             Chat: `
-  //           Show the Campaign and display all campaign specifications — every field in the JSON must be shown (no field should be ignored or hidden).
-  //           Present all the data in a clean, organized HTML layout that’s easy for the user to read and navigate.
-  //           The campaign name is "${campaign.CampaignName}"
-  //           Its ID is "${campaign.Id}"
-  //           The campaign belongs to the tenant "${campaign.OrganizationName}"
-  //           and aims to expand in the following locations from the JSON below:
-  //           ${response.json[0].campaignDetailsJSON}
-  //           Your goal is to show the full JSON data beautifully in HTML and help the user continue or complete any missing campaign specifications.
-  // `,
-  //             NeedToSaveIt: true,
-  //           })
-  //           .subscribe({});
-  //         // this.modalService.open(this.campaignDetailsTpl, { size: 'xl' });
-  //       },
-  //     });
-  //   }
   viewSpecs(campaign: any, edit?: boolean) {
     const body: any = {
       Name: 'GetCampaignFullDetails',
