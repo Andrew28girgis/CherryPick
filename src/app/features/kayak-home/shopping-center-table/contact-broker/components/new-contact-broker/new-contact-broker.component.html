@@ -56,7 +56,7 @@
       <div
         class="d-flex align-items-center w-100 justify-content-between flex-row"
       >
-        <div>
+        <div *ngIf="prompts.length > 0">
           <select
             class="form-select custom-pill-select"
             [(ngModel)]="selectedPromptId"

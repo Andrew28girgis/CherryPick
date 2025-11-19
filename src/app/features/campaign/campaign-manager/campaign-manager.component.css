@@ -209,7 +209,7 @@
 .card-metrics {
   display: grid;
   padding-block: 10px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
@@ -812,6 +812,7 @@
   transition: all 0.2s ease-in-out;
   font-weight: 500;
   color: var(--Colors-Primary-500);
+  background: var(--Colors-Primary-light);
   white-space: nowrap;
   gap: 10px;
   display: flex;
@@ -819,7 +820,7 @@
   align-items: center;
 }
 .organization-tab:hover {
-  background: var(--Colors-Primary-light);
+  background: var(--Colors-Primary-300);
 }
 .organization-tab.active {
   background: var(--Colors-Primary-500);
