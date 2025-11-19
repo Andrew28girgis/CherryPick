@@ -198,7 +198,7 @@ export class FloatingChatNotificationsComponent
       this.showScrollButton = true;
     }
     this.previousNotificationsLength = list.length;
-    if(this.awaitingresponse && list[list.length -1].html){
+    if(this.awaitingresponse && list[list.length -1].html &&!this.electronSideBar){
       this.openOverlayModal(list[list.length -1]);
       this.awaitingresponse = false;
   }
@@ -474,8 +474,12 @@ export class FloatingChatNotificationsComponent
   }
 
   loadNotificationViewComponent(notification: Notification): void {
-    if (this.electronSideBar) return; 
-
+    if (this.electronSideBar) {
+      (window as any).electronMessage.loadNotificationViewComponent(
+        notification.id
+      );
+      return;
+    }
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = notification.html || '';
     const styleTags = tempDiv.querySelectorAll('style');
