@@ -13,6 +13,7 @@ import { Subscription, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { signal } from '@angular/core';
+import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 
 @Component({
   selector: 'app-landing',
@@ -65,7 +66,11 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private viewManagerService: ViewManagerService,
-    private http: HttpClient
+    private http: HttpClient,
+    private placesService: PlacesService,
+    private chatModal: ChatModalService
+
+    
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -165,6 +170,20 @@ export class LandingComponent {
       SecondaryType: place.SecondaryType ?? '',
       Source: place.Source ?? '',
     };
+  }
+    editWithEMily(center: any): void {
+    const body: any = {
+      Chat: 'Please provide any additional information available about this property.',
+      ShoppingCenterId: center.Id,
+      ConversationId: 2,
+    };
+    this.placesService.sendmessages(body).subscribe({
+      next: () => {
+        this.chatModal.setTyping(false);
+      },
+    });
+    this.chatModal.openForButton();
+    this.chatModal.setShoppingCenterId(center.Id, 2);
   }
 
   cancelEdit() {
