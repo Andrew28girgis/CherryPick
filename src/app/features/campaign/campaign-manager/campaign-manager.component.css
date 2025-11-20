@@ -26,7 +26,7 @@
 .empty-campaigns h4 {
   font-weight: 600;
 }
-.date-created {
+.date-created { 
   font-size: 0.85rem;
   color: #707791;
 }
@@ -535,7 +535,7 @@
   background: #f8fafc;
   color: #334155;
   font-weight: 500;
-  font-size: 10px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
