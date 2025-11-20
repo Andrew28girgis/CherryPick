@@ -31,12 +31,8 @@
   color: #707791;
 }
 .table-responsive {
-  max-height: 500px;
   border-radius: var(--Radius-R-20);
   background: var(--Colors-Card-Background);
-  backdrop-filter: blur(20px);
-  overflow-x: auto;
-  overflow-y: auto;
 }
 .table {
   width: 100%;
