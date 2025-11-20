@@ -44,6 +44,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   campaignLocations: any;
   campaignRelations: any;
   IsStandAlone: any;
+  forSale: boolean = false;
+  forLease: boolean = false;
   locationsDefault: any;
   campaignId: any;
   @Input() set viewMode(value: 'card' | 'table') {
@@ -78,7 +80,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   TenantStepLoad = false;
   step: 'tenant' | 'campaign' | 'polygon' = 'tenant';
   campaignName = '';
-  campaignType: 'standalone' | 'standaloneShopping' | '' = '';
+  campaignType: 'standalone' | 'standaloneShopping' | null = null;
   private modalRef?: NgbModalRef;
   protected newTenant = {
     name: '',
@@ -386,7 +388,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
 
-
   getAllActiveOrganizations(onLoaded?: () => void, onEmpty?: () => void): void {
     const body: any = {
       Name: 'GetAllActiveOrganizations',
@@ -412,7 +413,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.selectedTenant = null;
     this.MaxUnitSize = NaN;
     this.MinUnitSize = NaN;
-    this.campaignType = '';
+    this.campaignType = null;
     this.campaignName = '';
     this.tenantSearch = '';
     this.cotenants = [];
@@ -461,6 +462,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     // Pre-fill the campaign fields with data from selectedCampaignDetails
     this.campaignName = this.selectedCampaignDetails?.CampaignName || '';
     this.IsStandAlone = this.selectedCampaignDetails?.IsStandAlone || false;
+    this.forLease = this.selectedCampaignDetails?.ForLease || false;
+    this.forSale = this.selectedCampaignDetails?.ForSale || false;
+    this.campaignType = this.selectedCampaignDetails?.IsStandAlone
+      ? 'standalone'
+      : 'standaloneShopping';
+
     this.MinUnitSize = this.selectedCampaignDetails?.MinUnitSize || 0;
     this.MaxUnitSize = this.selectedCampaignDetails?.MaxUnitSize || 0;
     this.selectedTenant = this.getSelectedTenantByOrganizationId(
@@ -550,7 +557,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   private resetAddCampaignForm(): void {
     this.selectedTenant = null;
     this.campaignName = '';
-    this.campaignType = '';
+    this.campaignType = null;
     this.polygonsStep = false;
     this.step = 'tenant';
     this.selectedTenants = [];
@@ -581,6 +588,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.selectedTenant.id,
           this.selectedTenant.name,
           isStandalone,
+          this.forLease,
+          this.forSale,
           campaignLocations,
           this.MinUnitSize,
           this.MaxUnitSize,
@@ -1110,6 +1119,8 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       OrganizationId: updated.OrganizationId,
       name: updated.OrganizationName,
       IsStandAlone: updated.IsStandAlone,
+      ForLease: updated.ForLease,
+      ForSale: updated.ForSale,
       CampaignLocations: campaignLocations,
       MinUnitSize: updated.MinUnitSize,
       MaxUnitSize: updated.MaxUnitSize,
@@ -1123,6 +1134,8 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         body.OrganizationId,
         body.name,
         body.IsStandAlone,
+        body.ForLease,
+        body.ForSale,
         body.CampaignLocations,
         body.MinUnitSize,
         body.MaxUnitSize,
@@ -1148,7 +1161,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     relation.IsAdded = relation.IsAdded === false ? true : false;
   }
   updatecampaign(campaignLocations: any) {
-     this.allTenants = [
+    this.allTenants = [
       ...this.complementaryTenantsDefault.map((tenant) => ({
         ...tenant,
         relation: 'complementary',
@@ -1165,6 +1178,8 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         this.selectedTenant.id,
         this.selectedTenant.name,
         this.IsStandAlone,
+        this.forLease,
+        this.forSale,
         campaignLocations,
         this.MinUnitSize,
         this.MaxUnitSize,
@@ -1194,5 +1209,14 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     });
     this.chatModal.openForButton();
     this.chatModal.setCampaignId(campaign.Id, 1);
+  }
+  toggleForLease() {
+    if (!this.forLease) {
+      this.campaignType = null;
+    }
+  }
+  selectLeaseType(type: 'standalone' | 'standaloneShopping') {
+    if (!this.forLease) return;
+    this.campaignType = type;
   }
 }
