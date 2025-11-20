@@ -331,20 +331,26 @@
                       class="t-name d-flex justify-content-between w-100 align-items-center mt-2"
                     >
                       <div
-                        class="tenant-title"
+                        class="tenant-title d-flex align-items-center"
                         [routerLink]="[
                           '/dashboard',
                           campaign.OrganizationId,
                           campaign.Id
                         ]"
                       >
+                      <ng-container *ngIf="campaign.LogoUrl; else logoPlaceholder">
                         <img
                           [src]="campaign.LogoUrl"
                           class="org-c-logo"
                           #logoImg
                           crossorigin="anonymous"
                         />
-
+                      </ng-container>
+                      <ng-template #logoPlaceholder>
+                        <div class="org-logo org-c-logo placeholder">
+                          {{ getInitials(campaign.CampaignName) }}
+                        </div>
+                      </ng-template>
                         <span class="ms-2">{{
                           campaign.OrganizationName | uppercase
                         }}</span>
