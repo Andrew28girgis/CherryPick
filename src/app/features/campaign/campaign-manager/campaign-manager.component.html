@@ -628,27 +628,73 @@
           placeholder="Enter campaign name"
         />
       </div>
-
-      <!-- Right side: Campaign type -->
       <div class="right">
         <label class="form-label">Campaign Type</label>
-        <div class="type-options">
-          <div
-            class="type-option"
-            [class.active]="campaignType === 'standalone'"
-            (click)="campaignType = 'standalone'"
-          >
-            <i class="fa-solid fa-store"></i>
-            <span>Standalone Only</span>
-          </div>
 
-          <div
-            class="type-option"
-            [class.active]="campaignType === 'standaloneShopping'"
-            (click)="campaignType = 'standaloneShopping'"
+        <div class="campaign-type-selection">
+          <label class="campaign-type-card" [class.active]="forSale">
+            <input
+              type="checkbox"
+              [(ngModel)]="forSale"
+              class="visually-hidden"
+            />
+            <div class="card-content">
+              <i class="fa-solid fa-tag"></i>
+              <span>For Sale</span>
+              <div class="custom-checkbox">
+                <i *ngIf="forSale" class="fa-solid fa-check"></i>
+              </div>
+            </div>
+          </label>
+
+          <label
+            class="campaign-type-card"
+            [class.active]="forLease"
+            (click)="toggleForLease()"
           >
-            <i class="fa-solid fa-shop"></i>
-            <span>Standalone + Shopping Center</span>
+            <input
+              type="checkbox"
+              [(ngModel)]="forLease"
+              class="visually-hidden"
+              (change)="toggleForLease()"
+            />
+            <div class="card-content">
+              <i class="fa-solid fa-building-user"></i>
+              <span>For Lease</span>
+              <div class="custom-checkbox">
+                <i *ngIf="forLease" class="fa-solid fa-check"></i>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="lease-options-container" *ngIf="forLease">
+          <div class="type-options">
+            <div
+              class="type-option"
+              [class.active]="campaignType === 'standalone'"
+              (click)="selectLeaseType('standalone')"
+            >
+              <i class="fa-solid fa-store"></i>
+              <span>Standalone Only</span>
+              <i
+                *ngIf="campaignType === 'standalone'"
+                class="fa-solid fa-check check-indicator"
+              ></i>
+            </div>
+
+            <div
+              class="type-option"
+              [class.active]="campaignType === 'standaloneShopping'"
+              (click)="selectLeaseType('standaloneShopping')"
+            >
+              <i class="fa-solid fa-shop"></i>
+              <span>Vacant Spaces Inside Shopping Center</span>
+              <i
+                *ngIf="campaignType === 'standaloneShopping'"
+                class="fa-solid fa-check check-indicator"
+              ></i>
+            </div>
           </div>
         </div>
       </div>
@@ -1211,29 +1257,76 @@
           placeholder="Enter campaign name"
         />
       </div>
-
       <div class="right">
         <label class="form-label">Campaign Type</label>
-        <div class="type-options">
-          <div
-            class="type-option"
-            [class.active]="IsStandAlone === true"
-            (click)="IsStandAlone = true"
+
+        <div class="campaign-type-selection">
+          <label class="campaign-type-card" [class.active]="forSale">
+            <input
+              type="checkbox"
+              [(ngModel)]="forSale"
+              class="visually-hidden"
+            />
+            <div class="card-content">
+              <i class="fa-solid fa-tag"></i>
+              <span>For Sale</span>
+              <div class="custom-checkbox">
+                <i *ngIf="forSale" class="fa-solid fa-check"></i>
+              </div>
+            </div>
+          </label>
+
+          <label
+            class="campaign-type-card"
+            [class.active]="forLease"
+            (click)="toggleForLease()"
           >
-            <i class="fa-solid fa-store"></i>
-            <span>Standalone Only</span>
-          </div>
-          <div
-            class="type-option"
-            [class.active]="IsStandAlone === false"
-            (click)="IsStandAlone = false"
-          >
-            <i class="fa-solid fa-shop"></i>
-            <span>Standalone + Shopping Center</span>
+            <input
+              type="checkbox"
+              [(ngModel)]="forLease"
+              class="visually-hidden"
+              (change)="toggleForLease()"
+            />
+            <div class="card-content">
+              <i class="fa-solid fa-building-user"></i>
+              <span>For Lease</span>
+              <div class="custom-checkbox">
+                <i *ngIf="forLease" class="fa-solid fa-check"></i>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="lease-options-container" *ngIf="forLease">
+          <div class="type-options">
+            <div
+              class="type-option"
+              [class.active]="IsStandAlone === true"
+              (click)="IsStandAlone = true"
+            >
+              <i class="fa-solid fa-store"></i>
+              <span>Standalone Only</span>
+              <i
+                *ngIf="campaignType === 'standalone'"
+                class="fa-solid fa-check check-indicator"
+              ></i>
+            </div>
+
+            <div
+              class="type-option"
+              [class.active]="IsStandAlone === false"
+              (click)="IsStandAlone = false"
+            >
+              <i class="fa-solid fa-shop"></i>
+              <span>Vacant Spaces Inside Shopping Center</span>
+              <i
+                *ngIf="campaignType === 'standaloneShopping'"
+                class="fa-solid fa-check check-indicator"
+              ></i>
+            </div>
           </div>
         </div>
       </div>
-
       <div class="unit-size-section">
         <label class="form-label">Unit Size Range (sq ft)</label>
         <div class="d-flex gap-3">

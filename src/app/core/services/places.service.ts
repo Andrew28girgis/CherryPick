@@ -348,10 +348,16 @@ export class PlacesService {
   }
 
   public CreateNewSender(emailData: any) {
-    return this.http.post<any>(`${environment.api}/SendGrid/CreateNewSender`, emailData);
+    return this.http.post<any>(
+      `${environment.api}/SendGrid/CreateNewSender`,
+      emailData
+    );
   }
   public ResendVerificationCode(emailData: any) {
-    return this.http.post<any>(`${environment.api}/SendGrid/ResendVerificationCode`, emailData);
+    return this.http.post<any>(
+      `${environment.api}/SendGrid/ResendVerificationCode`,
+      emailData
+    );
   }
 
   public SendImagesArray(images: any, shoppingID: any) {
@@ -419,6 +425,8 @@ export class PlacesService {
     OrganizationId: number,
     name: string,
     IsStandAlone: boolean,
+    ForLease: boolean,
+    ForSale: boolean,
     CampaignLocations: any[],
     MinUnitSize: number,
     MaxUnitSize: number,
@@ -429,6 +437,8 @@ export class PlacesService {
       OrganizationId,
       name,
       IsStandAlone,
+      ForLease,
+      ForSale,
       CampaignLocations,
       MinUnitSize,
       MaxUnitSize,
@@ -447,6 +457,8 @@ export class PlacesService {
     OrganizationId: number,
     name: string,
     IsStandAlone: boolean,
+    ForLease: boolean,
+    ForSale: boolean,
     CampaignLocations: any[],
     MinUnitSize: number,
     MaxUnitSize: number,
@@ -458,6 +470,8 @@ export class PlacesService {
       OrganizationId,
       name,
       IsStandAlone,
+      ForLease,
+      ForSale,
       CampaignLocations,
       MinUnitSize,
       MaxUnitSize,
