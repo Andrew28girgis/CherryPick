@@ -1179,7 +1179,7 @@
   transition: all 0.2s ease;
 }
 .campaign-type-card.active .custom-checkbox {
-  background: var(--Colors-Primary-500);
+  background: #fff;
   border-color: var(--Colors-Primary-500);
 }
 .custom-checkbox i {
@@ -1189,7 +1189,8 @@
 
 .lease-options-container .type-options {
   display: flex;
-  flex-direction: row;
+  flex-direction: column-reverse;
+  align-items: flex-start;
   gap: 1rem;
   margin-top: 0;
 }
