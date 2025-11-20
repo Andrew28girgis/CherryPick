@@ -1122,10 +1122,14 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  align-items: start;
 }
-
+.label-container {
+  gap: 20px;
+  flex: 1 1 50%;
+}
 .campaign-type-card {
-  flex-grow: 1;
+  flex: 1 1 50%;
   cursor: pointer;
   padding: 1.25rem 1.5rem;
   border: 2px solid #e2e8f0;

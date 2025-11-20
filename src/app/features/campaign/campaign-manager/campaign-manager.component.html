@@ -646,7 +646,7 @@
               </div>
             </div>
           </label>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column label-container">
             <label
               class="campaign-type-card"
               [class.active]="forLease"
@@ -845,7 +845,7 @@
     <button
       *ngIf="step === 'campaign'"
       class="btn btn-primary next-btn ms-auto"
-      [disabled]="!campaignName || !campaignType"
+      [disabled]="!campaignName || (!forSale && !forLease) || (forLease && !campaignType)"
       (click)="nextStep()"
     >
       Next
