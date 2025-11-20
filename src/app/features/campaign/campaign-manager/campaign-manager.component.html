@@ -618,7 +618,7 @@
     <!-- Step 2: Campaign Details -->
     <div *ngIf="step === 'campaign'" class="campaign-step">
       <!-- Left side: Campaign name -->
-      <div class="left">
+      <div class=" ">
         <label for="campaignName" class="form-label">Campaign Name</label>
         <input
           id="campaignName"
@@ -628,7 +628,7 @@
           placeholder="Enter campaign name"
         />
       </div>
-      <div class="right">
+      <div class="mt-3" >
         <label class="form-label">Campaign Type</label>
 
         <div class="campaign-type-selection">
@@ -639,11 +639,10 @@
               class="visually-hidden"
             />
             <div class="card-content">
-              <i class="fa-solid fa-tag"></i>
-              <span>For Sale</span>
               <div class="custom-checkbox">
                 <i *ngIf="forSale" class="fa-solid fa-check"></i>
               </div>
+              <span>For Sale</span>
             </div>
           </label>
           <div class="d-flex flex-column label-container">
@@ -659,11 +658,10 @@
                 (change)="toggleForLease()"
               />
               <div class="card-content">
-                <i class="fa-solid fa-building-user"></i>
-                <span>For Lease</span>
                 <div class="custom-checkbox">
                   <i *ngIf="forLease" class="fa-solid fa-check"></i>
                 </div>
+                <span>For Lease</span>
               </div>
             </label>
             <div class="lease-options-container" *ngIf="forLease">
@@ -699,7 +697,7 @@
         </div>
       </div>
       <!-- Unit Size Selection -->
-      <div class="unit-size-section">
+      <div class="unit-size-section mt-3">
         <label class="form-label">Unit Size Range (sq ft)</label>
 
         <div class="d-flex gap-3">
@@ -733,7 +731,7 @@
         </div>
       </div>
       <!-- Tenant Search and Selection -->
-      <div class="cotenant-selection">
+      <div class="cotenant-selection mt-3">
         <label for="campaignName" class="form-label"
           >Search Complementary and Conflicting Tenants</label
         >
@@ -845,7 +843,9 @@
     <button
       *ngIf="step === 'campaign'"
       class="btn btn-primary next-btn ms-auto"
-      [disabled]="!campaignName || (!forSale && !forLease) || (forLease && !campaignType)"
+      [disabled]="
+        !campaignName || (!forSale && !forLease) || (forLease && !campaignType)
+      "
       (click)="nextStep()"
     >
       Next
