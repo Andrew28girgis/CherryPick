@@ -190,7 +190,7 @@ export class FloatingChatNotificationsComponent
     const hasNew = list.length > this.previousNotificationsLength;
 
     if (!hasNew) return;
-
+    this.cdRef.detectChanges();
     if (this.isAtBottom()) {
       this.scrollToBottom();
     } else if (!this.isTyping) {
