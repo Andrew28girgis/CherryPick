@@ -81,6 +81,7 @@ export class FloatingChatNotificationsComponent
   newNotificationsCount = 0;
   previousNotificationsLength = 0;
   private subs: Subscription[] = [];
+  awaitingresponse: boolean = false;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -164,6 +165,7 @@ export class FloatingChatNotificationsComponent
     this.messageInput.nativeElement.innerText = '';
   }
   private sendToApi(text: string): void {
+    this.awaitingresponse = false;
     const body = {
       Chat: text,
       ConversationId: this.conversationId,
@@ -176,6 +178,7 @@ export class FloatingChatNotificationsComponent
 
     this.placesService.sendmessages(body).subscribe({
       next: () => {
+        this.awaitingresponse = true;
         this.isSending = false;
         this.hideTyping();
       },
@@ -195,8 +198,11 @@ export class FloatingChatNotificationsComponent
       this.showScrollButton = true;
     }
     this.previousNotificationsLength = list.length;
+    if(this.awaitingresponse && list[list.length -1].html &&!this.electronSideBar){
+      this.openOverlayModal(list[list.length -1]);
+      this.awaitingresponse = false;
   }
-
+}
   private insertOptimisticMessage(text: string): void {
     const tempMsg: any = {
       id: `temp-${Date.now()}`,
@@ -474,7 +480,6 @@ export class FloatingChatNotificationsComponent
       );
       return;
     }
-
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = notification.html || '';
     const styleTags = tempDiv.querySelectorAll('style');
