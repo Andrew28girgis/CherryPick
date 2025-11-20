@@ -1148,8 +1148,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     relation.IsAdded = relation.IsAdded === false ? true : false;
   }
   updatecampaign(campaignLocations: any) {
-    const isStandalone = this.campaignType === 'standalone';
-    this.allTenants = [
+     this.allTenants = [
       ...this.complementaryTenantsDefault.map((tenant) => ({
         ...tenant,
         relation: 'complementary',
