@@ -192,7 +192,7 @@
                 [ngClass]="{ 'title-hover': campaign.Sites }"
                 [routerLink]="
                   campaign.Sites
-                    ? ['/dashboard', campaign.OrganizationId, campaign.Id]
+                    ? ['/dashboard', campaign.Id]
                     : null
                 "
               >
@@ -251,7 +251,7 @@
               [ngClass]="{ link: campaign.Sites }"
               [routerLink]="
                 campaign.Sites > 0
-                  ? ['/dashboard', campaign.OrganizationId, campaign.Id]
+                  ? ['/dashboard', campaign.Id]
                   : null
               "
             >
@@ -334,7 +334,6 @@
                         class="tenant-title d-flex align-items-center"
                         [routerLink]="[
                           '/dashboard',
-                          campaign.OrganizationId,
                           campaign.Id
                         ]"
                       >
@@ -416,7 +415,6 @@
                         class="campaign-name"
                         [routerLink]="[
                           '/dashboard',
-                          campaign.OrganizationId,
                           campaign.Id
                         ]"
                       >
@@ -1271,11 +1269,10 @@
               class="visually-hidden"
             />
             <div class="card-content">
-              <i class="fa-solid fa-tag"></i>
-              <span>For Sale</span>
               <div class="custom-checkbox">
                 <i *ngIf="forSale" class="fa-solid fa-check"></i>
               </div>
+              <span>For Sale</span>
             </div>
           </label>
 
@@ -1291,11 +1288,10 @@
               (change)="toggleForLease()"
             />
             <div class="card-content">
-              <i class="fa-solid fa-building-user"></i>
-              <span>For Lease</span>
               <div class="custom-checkbox">
                 <i *ngIf="forLease" class="fa-solid fa-check"></i>
               </div>
+              <span>For Lease</span>
             </div>
           </label>
         </div>
@@ -1310,7 +1306,7 @@
               <i class="fa-solid fa-store"></i>
               <span>Standalone Only</span>
               <i
-                *ngIf="campaignType === 'standalone'"
+                *ngIf="IsStandAlone"
                 class="fa-solid fa-check check-indicator"
               ></i>
             </div>
@@ -1323,7 +1319,7 @@
               <i class="fa-solid fa-shop"></i>
               <span>Vacant Spaces Inside Shopping Center</span>
               <i
-                *ngIf="campaignType === 'standaloneShopping'"
+                *ngIf="!IsStandAlone"
                 class="fa-solid fa-check check-indicator"
               ></i>
             </div>
