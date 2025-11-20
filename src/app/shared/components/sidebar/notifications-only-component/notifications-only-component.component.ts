@@ -31,7 +31,7 @@ export class NotificationsOnlyComponentComponent {
 
   ngOnInit(): void {
     this.refresh();
-    this.pollId = setInterval(() => this.refresh(), 3000);
+    this.pollId = setInterval(() => this.refresh(), 60000);
   }
 
   ngOnDestroy(): void {
