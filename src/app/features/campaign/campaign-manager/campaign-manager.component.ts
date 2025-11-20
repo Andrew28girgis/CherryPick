@@ -1165,7 +1165,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         this.campaignName,
         this.selectedTenant.id,
         this.selectedTenant.name,
-        isStandalone,
+        this.IsStandAlone,
         campaignLocations,
         this.MinUnitSize,
         this.MaxUnitSize,
