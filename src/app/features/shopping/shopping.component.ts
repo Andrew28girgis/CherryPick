@@ -589,17 +589,11 @@ export class ShoppingComponent implements OnInit {
     try {
       const url = new URL(source);
       let domain = url.hostname.replace(/^www\./, '');
-      
-      // Check if the domain starts with unwanted words
       const unwantedWords = ['search', 'properties', 'listing', 'property'];
       const domainParts = domain.split('.');
-      
-      // If the first part of the domain is in unwanted words, remove it
       if (unwantedWords.includes(domainParts[0])) {
         domain = domainParts.slice(1).join('.');
       }
-      
-      // Return the first part of the cleaned domain
       return domain.split('.')[0];
     } catch {
       return source;
