@@ -31,11 +31,11 @@
 }
 .nav-item:hover {
   color: #6c757d;
-}
+} 
 
 .nav-item.active {
   font-weight: 600;
-  color: #e9c46a;
+  color: #ACC8E5;
 }
 
 .nav-icon {
