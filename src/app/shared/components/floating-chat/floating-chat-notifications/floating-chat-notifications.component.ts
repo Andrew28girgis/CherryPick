@@ -198,11 +198,15 @@ export class FloatingChatNotificationsComponent
       this.showScrollButton = true;
     }
     this.previousNotificationsLength = list.length;
-    if(this.awaitingresponse && list[list.length -1].html &&!this.electronSideBar){
-      this.openOverlayModal(list[list.length -1]);
+    if (
+      this.awaitingresponse &&
+      list[list.length - 1].html &&
+      !this.electronSideBar
+    ) {
+      this.openOverlayModal(list[list.length - 1]);
       this.awaitingresponse = false;
+    }
   }
-}
   private insertOptimisticMessage(text: string): void {
     const tempMsg: any = {
       id: `temp-${Date.now()}`,
@@ -224,7 +228,11 @@ export class FloatingChatNotificationsComponent
   private initializeChatModalSubscriptions(): void {
     this.subs.push(
       this.chatModal.campaignId$.subscribe((id) => (this.campaignId = id)),
-      this.chatModal.typing$.subscribe((typing) => (this.isTyping = typing)),
+      this.chatModal.typing$.subscribe((typing) =>
+        setTimeout(() => {
+          this.isTyping = typing;
+        }, 3000)
+      ),
       this.chatModal.shoppingCenterId$.subscribe(
         (id) => (this.shoppingCenterId = id)
       ),
@@ -523,14 +531,17 @@ export class FloatingChatNotificationsComponent
     return !nextItem;
   }
   isScanningPageContents(item: ChatItem, index: number): boolean {
-    if (!item.message || !item.message.includes('I am scanning the page contents now')) {
+    if (
+      !item.message ||
+      !item.message.includes('I am scanning the page contents now')
+    ) {
       return false;
     }
-  
+
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem; // animate only while waiting for next AI message
   }
-  
+
   isAtBottom(): boolean {
     const el = this.messagesContainer.nativeElement;
     if (!el) return true;
@@ -584,5 +595,4 @@ export class FloatingChatNotificationsComponent
 
     this.placesService.GenericAPI(request).subscribe({});
   }
-
 }

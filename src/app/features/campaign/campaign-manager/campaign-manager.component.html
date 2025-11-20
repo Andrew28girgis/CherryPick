@@ -142,7 +142,7 @@
               <div class="menu-dropdown" *ngIf="openMenuId === campaign.Id">
                 <button
                   class="menu-item"
-                  (click)="viewSpecs(campaign); closeMenu()"
+                  (click)="editWithEMily(campaign); closeMenu()"
                 >
                   View Specs
                 </button>
@@ -388,7 +388,10 @@
                         </button>
 
                         <div ngbDropdownMenu>
-                          <button ngbDropdownItem (click)="viewSpecs(campaign)">
+                          <button
+                            ngbDropdownItem
+                            (click)="editWithEMily(campaign); closeMenu()"
+                          >
                             View Specs
                           </button>
                           <button
@@ -628,7 +631,7 @@
           placeholder="Enter campaign name"
         />
       </div>
-      <div class="mt-3" >
+      <div class="mt-3">
         <label class="form-label">Campaign Type</label>
 
         <div class="campaign-type-selection">
