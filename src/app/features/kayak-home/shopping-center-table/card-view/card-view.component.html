@@ -133,7 +133,10 @@
             style="font-size: 13px"
           >
             Enriching
-            <span class="stat-bars stat-bars-spans auto-stat" aria-hidden="true">
+            <span
+              class="stat-bars stat-bars-spans auto-stat"
+              aria-hidden="true"
+            >
               <span></span><span></span><span></span><span></span><span></span
               ><span></span>
             </span>
@@ -153,9 +156,9 @@
         >
           <span>{{ shopping.Score }} %</span>
         </div>
-        <div  *ngIf="!shopping.Score">
-          <button 
-          class="score-badge"
+        <div *ngIf="!shopping.Score">
+          <button
+            class="score-badge"
             [class.active]="scoringId === shopping.Id"
             (click)="getscore(shopping); $event.stopPropagation()"
           >
@@ -370,6 +373,13 @@
               {{ shopping.CenterState }}
             </span>
           </div>
+          <div
+            (click)="editWithEMily(shopping)"
+            class="emily-button"
+            aria-label="  Emily  "
+          >
+            Ask Emily
+          </div>
 
           <div
             *ngIf="
@@ -535,7 +545,9 @@
               height="30"
               class="mx-1"
             />
-            <span class="MangerORG me-1"> {{ shopping?.ManagerORG || "—" }}</span>
+            <span class="MangerORG me-1">
+              {{ shopping?.ManagerORG || "—" }}</span
+            >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
