@@ -231,6 +231,7 @@ export class FloatingChatNotificationsComponent
       this.chatModal.typing$.subscribe((typing) =>
         setTimeout(() => {
           this.isTyping = typing;
+          this.scrollToBottom();
         }, 3000)
       ),
       this.chatModal.shoppingCenterId$.subscribe(
