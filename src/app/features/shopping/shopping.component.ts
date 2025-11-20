@@ -41,6 +41,8 @@ export class ShoppingComponent implements OnInit {
   filteredCenters = signal<ShoppingCenter[]>([]);
   showFilterDropdown: boolean = false;
   showSortDropdown: boolean = false;
+  filtersOpen:boolean = false;
+
 
   currentPage: number = 1;
   itemsPerPage: number = 30;
@@ -342,6 +344,9 @@ export class ShoppingComponent implements OnInit {
     this.fileExplorer.openModal();
   }
 
+toggleFilters() {
+  this.filtersOpen = !this.filtersOpen;
+}
   onFileSelected(filePath: string) {
     this.spinner.show();
     const body = {

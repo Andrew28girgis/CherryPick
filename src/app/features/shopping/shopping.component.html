@@ -3,10 +3,7 @@
     <h2 class="title">Sites Vault</h2>
   </div>
   <div class="header-container d-flex flex-row justify-content-between">
-    <div
-      class="d-flex flex-row"
-      style="gap: 12px; width: 88% !important"
-    >
+    <div class="d-flex flex-row" style="gap: 12px; width: 88% !important">
       <div class="search-section">
         <div class="search-container">
           <div class="icon">
@@ -74,6 +71,11 @@
       </div>
       <button class="g-button" (click)="openUploadModal(uploadModal)">
         <span class="btn-text">Upload OM Files</span>
+      </button>
+      <button class="open-filter" (click)="toggleFilters()">
+        <span class="btn-text">Open Filters</span>
+        <i *ngIf="!filtersOpen" class="fa-solid fa-chevron-right"></i>
+        <i *ngIf="filtersOpen" class="fa-solid fa-chevron-left"></i>
       </button>
     </div>
 
@@ -189,10 +191,7 @@
     </div>
 
     <div class="row">
-      <!-- Filterations Section -->
-
-      <div class="col-9">
-        <!-- Shopping Centers Grid -->
+      <div class="col-12">
         <div
           class="centers-grid"
           *ngIf="!isLoading && viewMode === 'grid' && !isLoading"
@@ -606,72 +605,70 @@
           </button>
         </div>
       </div>
-      <div class="col-3">
-        <div class="filters-panel">
-          <div class="filters-header">
-            <div class="filters-title">Filter</div>
-            <div class="filters-title clear-filterr" (click)="resetFilters()">
-              Clear Filters
-            </div>
+      <div class="filters-panel">
+        <div class="filters-header">
+          <div class="filters-title">Filter</div>
+          <div class="filters-title clear-filterr" (click)="resetFilters()">
+            Clear Filters
           </div>
+        </div>
 
-          <!-- State Filter -->
-          <div class="filter-block" *ngIf="availableStates.length">
-            <div class="filter-block-title">State</div>
-            <label class="filter-check" *ngFor="let state of availableStates">
-              <input
-                type="checkbox"
-                [value]="state"
-                [(ngModel)]="stateSelections[state]"
-                (change)="onFilterChange()"
-              />
-              <span>{{ state }}</span>
-            </label>
-          </div>
+        <!-- State Filter -->
+        <div class="filter-block" *ngIf="availableStates.length">
+          <div class="filter-block-title">State</div>
+          <label class="filter-check" *ngFor="let state of availableStates">
+            <input
+              type="checkbox"
+              [value]="state"
+              [(ngModel)]="stateSelections[state]"
+              (change)="onFilterChange()"
+            />
+            <span>{{ state }}</span>
+          </label>
+        </div>
 
-          <!-- Lease Type Filter -->
-          <div class="filter-block" *ngIf="availableLeaseTypes.length">
-            <div class="filter-block-title">Lease Type</div>
-            <label
-              class="filter-check"
-              *ngFor="let leaseType of availableLeaseTypes"
-            >
-              <input
-                type="checkbox"
-                [value]="leaseType"
-                [(ngModel)]="leaseTypeSelections[leaseType]"
-                (change)="onFilterChange()"
-              />
-              <span>{{ leaseType }}</span>
-            </label>
-          </div>
+        <!-- Lease Type Filter -->
+        <div class="filter-block" *ngIf="availableLeaseTypes.length">
+          <div class="filter-block-title">Lease Type</div>
+          <label
+            class="filter-check"
+            *ngFor="let leaseType of availableLeaseTypes"
+          >
+            <input
+              type="checkbox"
+              [value]="leaseType"
+              [(ngModel)]="leaseTypeSelections[leaseType]"
+              (change)="onFilterChange()"
+            />
+            <span>{{ leaseType }}</span>
+          </label>
+        </div>
 
-          <!-- Property Type Filter -->
-          <div class="filter-block" *ngIf="availableTypes.length">
-            <div class="filter-block-title">Deal Type</div>
-            <label class="filter-check" *ngFor="let type of availableTypes">
-              <input
-                type="checkbox"
-                [value]="type"
-                [(ngModel)]="typeSelections[type]"
-                (change)="onFilterChange()"
-              />
-              <span>{{ type }}</span>
-            </label>
-          </div>
+        <!-- Property Type Filter -->
+        <div class="filter-block" *ngIf="availableTypes.length">
+          <div class="filter-block-title">Deal Type</div>
+          <label class="filter-check" *ngFor="let type of availableTypes">
+            <input
+              type="checkbox"
+              [value]="type"
+              [(ngModel)]="typeSelections[type]"
+              (change)="onFilterChange()"
+            />
+            <span>{{ type }}</span>
+          </label>
+        </div>
 
-          <div class="filter-block" *ngIf="sources.length">
-            <div class="filter-block-title">Sources</div>
-            <label class="filter-check" *ngFor="let source of sources">
-              <input
-                type="checkbox"
-                [value]="source"
-                [(ngModel)]="sourceSelections[source]"
-                (change)="onFilterChange()"
-              />
-              <span>{{ source }}</span>
-            </label>
-          </div>
+        <div class="filter-block" *ngIf="sources.length">
+          <div class="filter-block-title">Sources</div>
+          <label class="filter-check" *ngFor="let source of sources">
+            <input
+              type="checkbox"
+              [value]="source"
+              [(ngModel)]="sourceSelections[source]"
+              (change)="onFilterChange()"
+            />
+            <span>{{ source }}</span>
+          </label>
         </div>
       </div>
     </div>
@@ -690,6 +687,84 @@
     </div>
   </div>
 </div>
+<div
+  class="filters-overlay"
+  [class.show]="filtersOpen"
+  (click)="toggleFilters()"
+></div>
+
+<div
+  class="filters-drawer"
+  [class.open]="filtersOpen"
+  (click)="$event.stopPropagation()"
+>
+  <!-- Full Filters Block -->
+  <div class="filters-panel">
+    <div class="filters-header">
+      <div class="filters-title">Filter</div>
+      <div class="filters-title clear-filterr" (click)="resetFilters()">
+        Clear Filters
+      </div>
+    </div>
+
+    <!-- State Filter -->
+    <div class="filter-block" *ngIf="availableStates.length">
+      <div class="filter-block-title">State</div>
+      <label class="filter-check" *ngFor="let state of availableStates">
+        <input
+          type="checkbox"
+          [value]="state"
+          [(ngModel)]="stateSelections[state]"
+          (change)="onFilterChange()"
+        />
+        <span>{{ state }}</span>
+      </label>
+    </div>
+
+    <!-- Lease Type Filter -->
+    <div class="filter-block" *ngIf="availableLeaseTypes.length">
+      <div class="filter-block-title">Lease Type</div>
+      <label class="filter-check" *ngFor="let leaseType of availableLeaseTypes">
+        <input
+          type="checkbox"
+          [value]="leaseType"
+          [(ngModel)]="leaseTypeSelections[leaseType]"
+          (change)="onFilterChange()"
+        />
+        <span>{{ leaseType }}</span>
+      </label>
+    </div>
+
+    <!-- Property Type Filter -->
+    <div class="filter-block" *ngIf="availableTypes.length">
+      <div class="filter-block-title">Deal Type</div>
+      <label class="filter-check" *ngFor="let type of availableTypes">
+        <input
+          type="checkbox"
+          [value]="type"
+          [(ngModel)]="typeSelections[type]"
+          (change)="onFilterChange()"
+        />
+        <span>{{ type }}</span>
+      </label>
+    </div>
+
+    <!-- Sources Filter -->
+    <div class="filter-block" *ngIf="sources.length">
+      <div class="filter-block-title">Sources</div>
+      <label class="filter-check" *ngFor="let source of sources">
+        <input
+          type="checkbox"
+          [value]="source"
+          [(ngModel)]="sourceSelections[source]"
+          (change)="onFilterChange()"
+        />
+        <span>{{ source }}</span>
+      </label>
+    </div>
+  </div>
+</div>
+
 <!-- File Explorer Component - Simplified integration -->
 <app-file-explorer
   #fileExplorer
