@@ -1284,6 +1284,232 @@
     ></button>
   </div>
 
+  <div
+    *ngIf="!isLoadingInfo && campaignSpecs && propertySpecs"
+    class="comparison-section"
+  >
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Criteria</th>
+          <th>Campaign Requirements</th>
+          <th>Property Details</th>
+          <th>Match</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Unit Size Row -->
+        <tr>
+          <td class="criteria-label">Unit Size</td>
+          <td class="campaign-value">
+            {{ campaignSpecs.MinUnitSize | number }} -
+            {{ campaignSpecs.MaxUnitSize | number }} SF
+          </td>
+          <td class="property-value">
+            <span
+              *ngIf="
+                propertySpecs.ShoppingCenter?.Places &&
+                propertySpecs.ShoppingCenter.Places.length > 0
+              "
+            >
+              <span
+                *ngFor="
+                  let place of propertySpecs.ShoppingCenter.Places;
+                  let i = index
+                "
+              >
+                {{ place.BuildingSizeSf | number }} SF
+                <span *ngIf="i < propertySpecs.ShoppingCenter.Places.length - 1"
+                  >,
+                </span>
+              </span>
+            </span>
+            <span
+              *ngIf="
+                !propertySpecs.ShoppingCenter?.Places ||
+                propertySpecs.ShoppingCenter.Places.length === 0
+              "
+              class="text-muted"
+            >
+              Not specified
+            </span>
+          </td>
+          <td class="match-indicator">
+            <i
+              *ngIf="checkSizeMatch()"
+              class="fa-solid fa-circle-check text-success"
+            ></i>
+            <i
+              *ngIf="!checkSizeMatch()"
+              class="fa-solid fa-circle-xmark text-danger"
+            ></i>
+          </td>
+        </tr>
+
+        <!-- State Row -->
+        <tr>
+          <td class="criteria-label">State</td>
+          <td class="campaign-value">
+            <div *ngIf="matchedState">
+              <span>
+                {{ propertySpecs.CenterState }}
+              </span>
+            </div>
+          </td>
+          <td class="property-value">{{ propertySpecs.CenterState }}</td>
+          <td class="match-indicator">
+            <i
+              *ngIf="matchedState"
+              class="fa-solid fa-circle-check text-success"
+            ></i>
+            <i
+              *ngIf="!matchedState"
+              class="fa-solid fa-circle-xmark text-danger"
+            ></i>
+          </td>
+        </tr>
+
+        <!-- City Row -->
+        <tr>
+          <td class="criteria-label">City</td>
+          <td class="campaign-value">
+            <span *ngIf="matchedCity">
+              <span>
+                {{ propertySpecs.CenterCity }}
+              </span>
+            </span>
+            <span *ngIf="getCampaignCities().length === 0" class="text-muted"
+              >Any city in state</span
+            >
+          </td>
+          <td class="property-value">{{ propertySpecs.CenterCity }}</td>
+          <td class="match-indicator">
+            <i
+              *ngIf="matchedCity"
+              class="fa-solid fa-circle-check text-success"
+            ></i>
+            <i
+              *ngIf="!matchedCity && getCampaignCities().length > 0"
+              class="fa-solid fa-circle-xmark text-danger"
+            ></i>
+            <i
+              *ngIf="getCampaignCities().length === 0"
+              class="fa-solid fa-minus-circle text-warning"
+            ></i>
+          </td>
+        </tr>
+
+        <!-- Polygon/Neighborhood Row -->
+        <!-- <tr *ngIf="getCampaignPolygons().length > 0">
+            <td class="criteria-label">Neighborhood</td>
+            <td class="campaign-value">
+              <span *ngFor="let polygon of getCampaignPolygons(); let i = index">
+                ID: {{ polygon }}
+                <span *ngIf="i < getCampaignPolygons().length - 1">, </span>
+              </span>
+            </td>
+            <td class="property-value" class="text-muted">Not tracked</td>
+            <td class="match-indicator">
+              <i class="fa-solid fa-minus-circle text-warning"></i>
+            </td>
+          </tr> -->
+
+        <!-- Property Type Row -->
+        <tr>
+          <td class="criteria-label">Property Type</td>
+          <td class="campaign-value">
+            <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
+              >For Sale or Lease</span
+            >
+            <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
+              >For Sale</span
+            >
+            <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
+              >For Lease</span
+            >
+            <span
+              *ngIf="!campaignSpecs.ForSale && !campaignSpecs.ForLease"
+              class="text-muted"
+              >Not specified</span
+            >
+          </td>
+          <td class="property-value" *ngIf="checkPropertyTypeMatch()">
+             <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
+              >For Sale or Lease</span
+            >
+            <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
+              >For Sale</span
+            >
+            <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
+              >For Lease</span
+            >
+          </td>
+          <td class="match-indicator">
+            <i
+              *ngIf="checkPropertyTypeMatch()"
+              class="fa-solid fa-circle-check text-success"
+            ></i>
+            <i
+              *ngIf="!checkPropertyTypeMatch()"
+              class="fa-solid fa-circle-xmark text-danger"
+            ></i>
+          </td>
+        </tr>
+
+        <!-- Availability Row -->
+        <tr>
+          <td class="criteria-label">Space Availability</td>
+          <td class="campaign-value"></td>
+          <td class="property-value">
+            <span *ngIf="matchedPlaces">
+              {{ propertySpecs.ShoppingCenter.Places.length }} space(s)
+              available
+            </span>
+            <span *ngIf="!matchedPlaces" class="text-muted"
+              >No spaces listed</span
+            >
+          </td>
+          <td class="match-indicator">
+            <i
+              *ngIf="matchedPlaces"
+              class="fa-solid fa-circle-check text-success"
+            ></i>
+            <i
+              *ngIf="!matchedPlaces"
+              class="fa-solid fa-circle-xmark text-danger"
+            ></i>
+          </td>
+        </tr>
+
+        <!-- Stand Alone Row -->
+        <tr>
+          <td class="criteria-label">Stand Alone</td>
+          <td class="campaign-value">
+            {{ campaignSpecs.IsStandAlone ? "Yes" : "No" }}
+          </td>
+          <td class="property-value" class="text-muted">Not tracked</td>
+          <td class="match-indicator">
+            <i class="fa-solid fa-minus-circle text-warning"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Summary Stats -->
+    <div class="match-summary">
+      <div class="summary-item">
+        <span class="summary-label">Total Matches:</span>
+        <span class="summary-value"
+          >{{ getTotalMatches() }} / {{ getTotalCriteria() }}</span
+        >
+      </div>
+      <!-- <div class="summary-item">
+          <span class="summary-label">Match Rate:</span>
+          <span class="summary-value">{{ getMatchPercentage() }}%</span>
+        </div> -->
+    </div>
+  </div>
+
   <div class="modal-body score-body">
     <div *ngIf="isLoadingInfo" class="loading">Loading...</div>
 

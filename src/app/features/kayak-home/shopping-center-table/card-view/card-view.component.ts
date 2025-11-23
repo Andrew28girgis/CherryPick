@@ -101,6 +101,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
   dataReady = false;
   scoringId: number | null = null;
   isMobile!: boolean;
+  propertySpecs: any;
+  matchedPlaces: boolean = false;
+  matchedState: boolean = false;
+  matchedCity: boolean = false;
+  campaignSpecs: any;
+  campaignSpecsCampaignDetailsJSON: any;
+  specCampaignId: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -146,6 +153,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.orgId = +params.orgId;
       this.Campaign = params.campaign;
       this.CampaignId = params.campaignId;
+      this.specCampaignId = params.campaignId;
       this.orgName = params.orgName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.orgId);
@@ -623,6 +631,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   openInfoPopup(shopping: any, content: TemplateRef<any>): void {
+    this.GetCampaignFullDetails(this.CampaignId, shopping);
+
     this.isLoadingInfo = true;
     this.infoData = null;
 
@@ -645,6 +655,127 @@ export class CardViewComponent implements OnInit, OnDestroy {
         });
       },
     });
+  }
+
+  GetCampaignFullDetails(campaignId: any, shopping: any) {
+    const body: any = {
+      Name: 'GetCampaignFullDetails',
+      Params: { CampaignId: this.specCampaignId },
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.campaignSpecs = res.json;
+        console.log('campaignSpecs', this.campaignSpecs);
+        this.propertySpecs = shopping;
+        console.log('propertySpecs', this.propertySpecs);
+
+        // Check if places/availability exists
+        if (
+          this.propertySpecs.ShoppingCenter?.Places &&
+          this.propertySpecs.ShoppingCenter.Places.length > 0
+        ) {
+          this.matchedPlaces = true;
+        } else {
+          this.matchedPlaces = false;
+        }
+        console.log('matchPlaces', this.matchedPlaces);
+
+        // Check state match - compare against all campaign locations
+        this.matchedState =
+          this.campaignSpecs.Locations?.some(
+            (loc: any) => loc.State === this.propertySpecs.CenterState
+          ) || false;
+        console.log('matchedState', this.matchedState);
+
+        // Check city match - compare against all campaign locations
+        this.matchedCity =
+          this.campaignSpecs.Locations?.some(
+            (loc: any) => loc.CityName === this.propertySpecs.CenterCity
+          ) || false;
+        console.log('matchedCity', this.matchedCity);
+      },
+    });
+  }
+
+  // Helper method to check if property size matches campaign requirements
+  checkSizeMatch(): boolean {
+    if (
+      !this.propertySpecs.ShoppingCenter?.Places ||
+      this.propertySpecs.ShoppingCenter.Places.length === 0
+    ) {
+      return false;
+    }
+    // Check if any place's size falls within the campaign's min/max range
+    return this.propertySpecs.ShoppingCenter.Places.some((place: any) => {
+      const size = place.BuildingSizeSf;
+      return (
+        size >= this.campaignSpecs.MinUnitSize &&
+        size <= this.campaignSpecs.MaxUnitSize
+      );
+    });
+  }
+  // Helper method to get all cities from campaign locations
+  getCampaignCities(): string[] {
+    if (!this.campaignSpecs?.Locations) return [];
+
+    return this.campaignSpecs.Locations.filter((loc: any) => loc.CityName).map(
+      (loc: any) => loc.CityName
+    );
+  }
+  // Helper method to get all polygon IDs from campaign locations
+  getCampaignPolygons(): number[] {
+    if (!this.campaignSpecs?.Locations) return [];
+
+    return this.campaignSpecs.Locations.filter((loc: any) => loc.PolygonId).map(
+      (loc: any) => loc.PolygonId
+    );
+  }
+  // Helper method to check property type match
+  checkPropertyTypeMatch(): boolean {
+    if (
+      !this.propertySpecs.ShoppingCenter?.Places ||
+      this.propertySpecs.ShoppingCenter.Places.length === 0
+    ) {
+      return false;
+    }
+    // If campaign accepts both sale and lease, it's always a match
+    if (this.campaignSpecs.ForSale && this.campaignSpecs.ForLease) {
+      return true;
+    }
+    // Check if any place has a matching lease type
+    return this.propertySpecs.ShoppingCenter.Places.some((place: any) => {
+      const leaseType = place.LeaseType?.toLowerCase();
+
+      if (this.campaignSpecs.ForSale && leaseType === 'sale') {
+        return true;
+      }
+      if (this.campaignSpecs.ForLease && leaseType === 'lease') {
+        return true;
+      }
+      return false;
+    });
+  }
+  // Helper method to calculate total matches
+  getTotalMatches(): number {
+    let matches = 0;
+    if (this.checkSizeMatch()) matches++;
+    if (this.matchedState) matches++;
+    if (this.matchedCity || this.getCampaignCities().length === 0) matches++;
+    if (this.checkPropertyTypeMatch()) matches++;
+    if (this.matchedPlaces) matches++;
+
+    return matches;
+  }
+  // Helper method to get total criteria count
+  getTotalCriteria(): number {
+    return 5; // Size, State, City, Property Type, Availability
+  }
+  // Helper method to calculate match percentage
+  getMatchPercentage(): number {
+    const total = this.getTotalCriteria();
+    const matches = this.getTotalMatches();
+    return Math.round((matches / total) * 100);
   }
 
   get hasUnscoredCenters(): boolean {
