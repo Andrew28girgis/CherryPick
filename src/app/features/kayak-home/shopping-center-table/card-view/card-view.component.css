@@ -1340,13 +1340,18 @@ table tbody td {
   position: absolute;
   inset: -3px;
   border-radius: 20px;
-  background: linear-gradient(90deg,var(--Colors-Primary-500) 50%, transparent 50%) top / 20px
-      3px repeat-x,
-    linear-gradient(90deg,var(--Colors-Primary-500) 50%, transparent 50%) bottom / 20px 3px
-      repeat-x,
-    linear-gradient(0deg,var(--Colors-Primary-500) 50%, transparent 50%) left / 3px 20px repeat-y,
-    linear-gradient(0deg,var(--Colors-Primary-500) 50%, transparent 50%) right / 3px 20px
-      repeat-y;
+  background: linear-gradient(
+        90deg,
+        var(--Colors-Primary-500) 50%,
+        transparent 50%
+      )
+      top / 20px 3px repeat-x,
+    linear-gradient(90deg, var(--Colors-Primary-500) 50%, transparent 50%)
+      bottom / 20px 3px repeat-x,
+    linear-gradient(0deg, var(--Colors-Primary-500) 50%, transparent 50%) left /
+      3px 20px repeat-y,
+    linear-gradient(0deg, var(--Colors-Primary-500) 50%, transparent 50%) right /
+      3px 20px repeat-y;
   background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
   animation: moveBorder 0.4s linear infinite;
   pointer-events: none;
@@ -1395,4 +1400,100 @@ table tbody td {
 }
 .stat-bars-spans > span {
   background: #fff;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-table th {
+  background: #f8f9fa;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  font-size: 0.9rem;
+}
+
+.comparison-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+}
+
+.comparison-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.criteria-label {
+  font-weight: 600;
+  color: #495057;
+  width: 20%;
+}
+
+.campaign-value {
+  color: #495057;
+  font-weight: 500;
+  width: 35%;
+}
+
+.property-value {
+  color: #495057;
+  font-weight: 500;
+  width: 35%;
+}
+
+.match-indicator {
+  text-align: center;
+  font-size: 1.3rem;
+  width: 10%;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+  font-style: italic;
+}
+
+.match-summary {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea15 0%, #4b74a215 100%);
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.summary-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
 }
