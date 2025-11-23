@@ -1218,4 +1218,10 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     this.chatModal.openForButton();
     this.chatModal.setCampaignId(campaign.Id, 1);
   }
+  toggleForLease() {
+    if (!this.forLease) {
+      this.IsStandAlone = false;
+      this.isVacant = false;
+    }
+  }
 }
