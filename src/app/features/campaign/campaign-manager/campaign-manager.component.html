@@ -637,11 +637,16 @@
             </div>
           </label>
           <div class="d-flex flex-column label-container">
-            <label class="campaign-type-card" [class.active]="forLease">
+            <label
+              class="campaign-type-card"
+              (click)="toggleForLease()"
+              [class.active]="forLease"
+            >
               <input
                 type="checkbox"
                 [(ngModel)]="forLease"
                 class="visually-hidden"
+                (click)="toggleForLease()"
               />
               <div class="card-content">
                 <div class="custom-checkbox">
@@ -1263,11 +1268,16 @@
             </div>
           </label>
 
-          <label class="campaign-type-card" [class.active]="forLease">
+          <label
+            class="campaign-type-card"
+            (click)="toggleForLease()"
+            [class.active]="forLease"
+          >
             <input
               type="checkbox"
               [(ngModel)]="forLease"
               class="visually-hidden"
+              (click)="toggleForLease()"
             />
             <div class="card-content">
               <div class="custom-checkbox">
@@ -1499,7 +1509,11 @@
     <button
       *ngIf="step === 'campaign'"
       class="btn btn-primary next-btn ms-auto"
-      [disabled]="!campaignName"
+      [disabled]="
+        !campaignName ||
+        (!forSale && !forLease) ||
+        (forLease && !(IsStandAlone || isVacant))
+      "
       (click)="nextStep()"
     >
       Next
