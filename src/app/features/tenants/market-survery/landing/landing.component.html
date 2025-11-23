@@ -15,6 +15,13 @@
     </span>
   </div>
   <div>
+    <div
+      (click)="editWithEMily(shoppingCenter)"
+      class="emily-button me-3"
+      aria-label="  Emily  "
+    >
+      Ask Emily
+    </div>
     <button class="nav-btn nav-btn-prev me-2" (click)="goToPrevious()">
       <i class="fa-solid fa-chevron-left me-1"></i>
     </button>
@@ -790,7 +797,6 @@
     <div [hidden]="isMapView">
       <div id="street-view" class="streetview"></div>
     </div>
-    
   </div>
 </div>
 

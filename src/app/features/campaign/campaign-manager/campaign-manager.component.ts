@@ -43,11 +43,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   CampaignDetailsJSON: any;
   campaignLocations: any;
   campaignRelations: any;
-  IsStandAlone: any;
+  IsStandAlone: boolean = false;
   forSale: boolean = false;
   forLease: boolean = false;
   locationsDefault: any;
   campaignId: any;
+  isVacant: any;
   @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
@@ -80,7 +81,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   TenantStepLoad = false;
   step: 'tenant' | 'campaign' | 'polygon' = 'tenant';
   campaignName = '';
-  campaignType: 'standalone' | 'standaloneShopping' | null = null;
   private modalRef?: NgbModalRef;
   protected newTenant = {
     name: '',
@@ -413,7 +413,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.selectedTenant = null;
     this.MaxUnitSize = NaN;
     this.MinUnitSize = NaN;
-    this.campaignType = null;
+    this.IsStandAlone = false;
+    this.forLease = false;
+    this.forSale = false;
+    this.isVacant = false;
     this.campaignName = '';
     this.tenantSearch = '';
     this.cotenants = [];
@@ -464,9 +467,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.IsStandAlone = this.selectedCampaignDetails?.IsStandAlone || false;
     this.forLease = this.selectedCampaignDetails?.ForLease || false;
     this.forSale = this.selectedCampaignDetails?.ForSale || false;
-    this.campaignType = this.selectedCampaignDetails?.IsStandAlone
-      ? 'standalone'
-      : 'standaloneShopping';
+    this.isVacant =
+      this.selectedCampaignDetails?.NeedVacantSpacesInsideShoppingCenter ||
+      false;
 
     this.MinUnitSize = this.selectedCampaignDetails?.MinUnitSize || 0;
     this.MaxUnitSize = this.selectedCampaignDetails?.MaxUnitSize || 0;
@@ -557,7 +560,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   private resetAddCampaignForm(): void {
     this.selectedTenant = null;
     this.campaignName = '';
-    this.campaignType = null;
+    this.IsStandAlone = false;
+    this.forLease = false;
+    this.forSale = false;
+    this.isVacant = false;
     this.polygonsStep = false;
     this.step = 'tenant';
     this.selectedTenants = [];
@@ -569,8 +575,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   handleSave(locationData: any, editing?: boolean) {
-    const isStandalone = this.campaignType === 'standalone';
-
     const campaignLocations = locationData.locationCriteria.locations.map(
       (loc: any) => ({
         State: loc.state ?? '',
@@ -587,9 +591,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.campaignName,
           this.selectedTenant.id,
           this.selectedTenant.name,
-          isStandalone,
+          this.IsStandAlone,
           this.forLease,
           this.forSale,
+          this.isVacant,
           campaignLocations,
           this.MinUnitSize,
           this.MaxUnitSize,
@@ -1121,6 +1126,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       IsStandAlone: updated.IsStandAlone,
       ForLease: updated.ForLease,
       ForSale: updated.ForSale,
+      isVacant: updated.isVacant,
       CampaignLocations: campaignLocations,
       MinUnitSize: updated.MinUnitSize,
       MaxUnitSize: updated.MaxUnitSize,
@@ -1136,6 +1142,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         body.IsStandAlone,
         body.ForLease,
         body.ForSale,
+        body.isVacant,
         body.CampaignLocations,
         body.MinUnitSize,
         body.MaxUnitSize,
@@ -1180,6 +1187,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         this.IsStandAlone,
         this.forLease,
         this.forSale,
+        this.isVacant,
         campaignLocations,
         this.MinUnitSize,
         this.MaxUnitSize,
@@ -1209,14 +1217,5 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
     });
     this.chatModal.openForButton();
     this.chatModal.setCampaignId(campaign.Id, 1);
-  }
-  toggleForLease() {
-    if (!this.forLease) {
-      this.campaignType = null;
-    }
-  }
-  selectLeaseType(type: 'standalone' | 'standaloneShopping') {
-    if (!this.forLease) return;
-    this.campaignType = type;
   }
 }

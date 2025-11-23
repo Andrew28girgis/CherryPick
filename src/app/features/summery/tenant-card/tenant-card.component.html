@@ -89,7 +89,7 @@
     </button> -->
     <ng-container *ngFor="let campaign of tenant.Campaigns; let last = last">
       <div
-        [routerLink]="['/dashboard', tenant.id, tenant.name, campaign.Id]"
+        [routerLink]="['/dashboard', campaign.Id]"
         (click)="closeOffcanvas(); $event.stopPropagation()"
         class="campaign-card"
         [ngClass]="{ 'mb-3': !last }"

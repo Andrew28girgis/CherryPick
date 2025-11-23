@@ -136,7 +136,7 @@ export class AddCampaignPopupComponent implements OnInit {
     const orgName = (this.organizationName || '').trim() || 'org';
   
     this.router.navigate(
-      ['/dashboard', orgId, encodeURIComponent(orgName), campaignId],
+      ['/dashboard', campaignId],
       { queryParams: { openUpload: true } }
     );
   
