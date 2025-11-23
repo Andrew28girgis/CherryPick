@@ -1433,16 +1433,18 @@
               >Not specified</span
             >
           </td>
-          <td class="property-value" *ngIf="checkPropertyTypeMatch()">
-             <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
-              >For Sale or Lease</span
-            >
-            <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
-              >For Sale</span
-            >
-            <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
-              >For Lease</span
-            >
+          <td class="property-value">
+            <div *ngIf="checkPropertyTypeMatch()">
+              <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
+                >For Sale or Lease</span
+              >
+              <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
+                >For Sale</span
+              >
+              <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
+                >For Lease</span
+              >
+            </div>
           </td>
           <td class="match-indicator">
             <i
