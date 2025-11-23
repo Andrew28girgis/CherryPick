@@ -191,9 +191,7 @@
                 class="title-with-logo"
                 [ngClass]="{ 'title-hover': campaign.Sites }"
                 [routerLink]="
-                  campaign.Sites
-                    ? ['/dashboard', campaign.Id]
-                    : null
+                  campaign.Sites ? ['/dashboard', campaign.Id] : null
                 "
               >
                 <!-- Logo or placeholder -->
@@ -250,9 +248,7 @@
               class="metric-item"
               [ngClass]="{ link: campaign.Sites }"
               [routerLink]="
-                campaign.Sites > 0
-                  ? ['/dashboard', campaign.Id]
-                  : null
+                campaign.Sites > 0 ? ['/dashboard', campaign.Id] : null
               "
             >
               <div class="metric-value" [class.changed]="campaign.changed">
@@ -332,10 +328,7 @@
                     >
                       <div
                         class="tenant-title d-flex align-items-center"
-                        [routerLink]="[
-                          '/dashboard',
-                          campaign.Id
-                        ]"
+                        [routerLink]="['/dashboard', campaign.Id]"
                       >
                         <ng-container
                           *ngIf="campaign.LogoUrl; else logoPlaceholder"
@@ -413,10 +406,7 @@
                     >
                       <div
                         class="campaign-name"
-                        [routerLink]="[
-                          '/dashboard',
-                          campaign.Id
-                        ]"
+                        [routerLink]="['/dashboard', campaign.Id]"
                       >
                         <p class="m-0" style="font-weight: 500">
                           {{ campaign.CampaignName }}
@@ -647,16 +637,11 @@
             </div>
           </label>
           <div class="d-flex flex-column label-container">
-            <label
-              class="campaign-type-card"
-              [class.active]="forLease"
-              (click)="toggleForLease()"
-            >
+            <label class="campaign-type-card" [class.active]="forLease">
               <input
                 type="checkbox"
                 [(ngModel)]="forLease"
                 class="visually-hidden"
-                (change)="toggleForLease()"
               />
               <div class="card-content">
                 <div class="custom-checkbox">
@@ -669,26 +654,26 @@
               <div class="type-options">
                 <div
                   class="type-option"
-                  [class.active]="campaignType === 'standalone'"
-                  (click)="selectLeaseType('standalone')"
+                  [class.active]="IsStandAlone"
+                  (click)="IsStandAlone = !IsStandAlone"
                 >
                   <i class="fa-solid fa-store"></i>
                   <span>Standalone Only</span>
                   <i
-                    *ngIf="campaignType === 'standalone'"
+                    *ngIf="IsStandAlone"
                     class="fa-solid fa-check check-indicator"
                   ></i>
                 </div>
 
                 <div
                   class="type-option"
-                  [class.active]="campaignType === 'standaloneShopping'"
-                  (click)="selectLeaseType('standaloneShopping')"
+                  [class.active]="isVacant"
+                  (click)="isVacant = !isVacant"
                 >
                   <i class="fa-solid fa-shop"></i>
                   <span>Vacant Spaces Inside Shopping Center</span>
                   <i
-                    *ngIf="campaignType === 'standaloneShopping'"
+                    *ngIf="isVacant"
                     class="fa-solid fa-check check-indicator"
                   ></i>
                 </div>
@@ -845,7 +830,9 @@
       *ngIf="step === 'campaign'"
       class="btn btn-primary next-btn ms-auto"
       [disabled]="
-        !campaignName || (!forSale && !forLease) || (forLease && !campaignType)
+        !campaignName ||
+        (!forSale && !forLease) ||
+        (forLease && !(IsStandAlone || isVacant))
       "
       (click)="nextStep()"
     >
@@ -1276,16 +1263,11 @@
             </div>
           </label>
 
-          <label
-            class="campaign-type-card"
-            [class.active]="forLease"
-            (click)="toggleForLease()"
-          >
+          <label class="campaign-type-card" [class.active]="forLease">
             <input
               type="checkbox"
               [(ngModel)]="forLease"
               class="visually-hidden"
-              (change)="toggleForLease()"
             />
             <div class="card-content">
               <div class="custom-checkbox">
@@ -1300,8 +1282,8 @@
           <div class="type-options">
             <div
               class="type-option"
-              [class.active]="IsStandAlone === true"
-              (click)="IsStandAlone = true"
+              [class.active]="IsStandAlone"
+              (click)="IsStandAlone = !IsStandAlone"
             >
               <i class="fa-solid fa-store"></i>
               <span>Standalone Only</span>
@@ -1313,15 +1295,12 @@
 
             <div
               class="type-option"
-              [class.active]="IsStandAlone === false"
-              (click)="IsStandAlone = false"
+              [class.active]="isVacant"
+              (click)="isVacant = !isVacant"
             >
               <i class="fa-solid fa-shop"></i>
               <span>Vacant Spaces Inside Shopping Center</span>
-              <i
-                *ngIf="!IsStandAlone"
-                class="fa-solid fa-check check-indicator"
-              ></i>
+              <i *ngIf="isVacant" class="fa-solid fa-check check-indicator"></i>
             </div>
           </div>
         </div>
