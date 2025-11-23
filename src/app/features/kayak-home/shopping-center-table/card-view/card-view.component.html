@@ -1422,10 +1422,10 @@
               >For Sale or Lease</span
             >
             <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
-              >For Sale Only</span
+              >For Sale</span
             >
             <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
-              >For Lease Only</span
+              >For Lease</span
             >
             <span
               *ngIf="!campaignSpecs.ForSale && !campaignSpecs.ForLease"
@@ -1433,8 +1433,16 @@
               >Not specified</span
             >
           </td>
-          <td class="property-value">
-            {{ propertySpecs.CenterType || "Not specified" }}
+          <td class="property-value" *ngIf="checkPropertyTypeMatch()">
+             <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
+              >For Sale or Lease</span
+            >
+            <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
+              >For Sale</span
+            >
+            <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
+              >For Lease</span
+            >
           </td>
           <td class="match-indicator">
             <i
