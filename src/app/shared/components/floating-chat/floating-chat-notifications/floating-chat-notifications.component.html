@@ -352,6 +352,36 @@
     </div>
   </div>
 </div>
+<div *ngIf="isScanning" class="spinner-overlay">
+  <div class="spinner-container">
+    <div *ngIf="!isready" class="spinner-chase">
+      <div class="chase-dot" *ngFor="let dot of dots"></div>
+    </div>
+    <div *ngIf="shoppingCenter">
+      <div class="center-card">
+        <div class="center-image">
+          <img [src]="shoppingCenter.mainImage" alt="{{ shoppingCenter.CenterName }}" />
+        </div>
+      
+        <div class="center-content">
+          <h2 class="center-title">{{ shoppingCenter.CenterName }}</h2>
+      
+          <p class="center-type">
+            <span class="badge">{{ shoppingCenter.CenterType }}</span>
+          </p>
+      
+          <p class="center-address">
+            {{ shoppingCenter.CenterAddress }},
+            {{ shoppingCenter.CenterCity }},
+            {{ shoppingCenter.CenterState }} {{ shoppingCenter.ZipCode }}
+          </p>
+        </div>
+      </div>
+      
+    </div>
+    <p class="spinner-message">{{ scanningmessage }}</p>
+  </div>
+</div>
 
 <ng-template #savingTpl>
   <span class="btn-spinner"></span>

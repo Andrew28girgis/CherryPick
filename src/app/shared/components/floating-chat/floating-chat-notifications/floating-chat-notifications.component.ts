@@ -82,6 +82,13 @@ export class FloatingChatNotificationsComponent
   previousNotificationsLength = 0;
   private subs: Subscription[] = [];
   awaitingresponse: boolean = false;
+  objectForScan: any;
+  scanningmessage!: string;
+  isLastStep!: boolean;
+  shoppingCenter: any;
+  dots = new Array(6);
+  isScanning: boolean = false;
+  isready!: boolean;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -107,6 +114,28 @@ export class FloatingChatNotificationsComponent
     (window as any).electronMessage?.onSiteScanned((url: any) => {
       this.conversationId = 3;
       this.notificationSourceUrl = url;
+    });
+    (window as any).electronMessage?.onSiteScanMessage((object: any) => {
+      if (!this.isLastStep) {
+        this.isScanning = true;
+      }
+      this.objectForScan = object;
+      this.scanningmessage = object.message;
+      this.shoppingCenter = object.data;
+      this.isLastStep = object.isLastStep;
+      if (this.isLastStep && !this.shoppingCenter) {
+        this.scanningmessage = 'Emily is Ready For Your Questions!';
+        this.isready = true;
+        setTimeout(() => {
+          this.isScanning = false;
+        }, 2500);
+      } else if (this.isLastStep && this.shoppingCenter) {
+        this.isready = true;
+      }
+      console.log('objectForScan', this.objectForScan);
+      console.log('scanningmessage', this.scanningmessage);
+      console.log('isLastStep', this.isLastStep);
+      console.log('shoppingCenter', this.shoppingCenter);
     });
   }
 
