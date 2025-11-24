@@ -38,7 +38,7 @@
       <p id="toastMessagesuccess"></p>
     </div>
   </div>
-  <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
+  <ng-container *ngFor="let shopping of centers; trackBy: trackById">
     <!-- *ngIf="shopping.MainImage || shopping.scoreImage" -->
     <div
       class="cardResponsive"
@@ -1378,9 +1378,9 @@
                 {{ propertySpecs.CenterCity }}
               </span>
             </span>
-            <span *ngIf="getCampaignCities().length === 0" class="text-muted"
+            <!-- <span *ngIf="getCampaignCities().length === 0" class="text-muted"
               >Any city in state</span
-            >
+            > -->
           </td>
           <td class="property-value">{{ propertySpecs.CenterCity }}</td>
           <td class="match-indicator">
@@ -1433,16 +1433,18 @@
               >Not specified</span
             >
           </td>
-          <td class="property-value" *ngIf="checkPropertyTypeMatch()">
-             <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
-              >For Sale or Lease</span
-            >
-            <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
-              >For Sale</span
-            >
-            <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
-              >For Lease</span
-            >
+          <td class="property-value">
+            <div *ngIf="checkPropertyTypeMatch()">
+              <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
+                >For Sale or Lease</span
+              >
+              <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
+                >For Sale</span
+              >
+              <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
+                >For Lease</span
+              >
+            </div>
           </td>
           <td class="match-indicator">
             <i
@@ -1496,18 +1498,18 @@
     </table>
 
     <!-- Summary Stats -->
-    <div class="match-summary">
+    <!-- <div class="match-summary">
       <div class="summary-item">
         <span class="summary-label">Total Matches:</span>
         <span class="summary-value"
           >{{ getTotalMatches() }} / {{ getTotalCriteria() }}</span
         >
       </div>
-      <!-- <div class="summary-item">
+      <div class="summary-item">
           <span class="summary-label">Match Rate:</span>
           <span class="summary-value">{{ getMatchPercentage() }}%</span>
-        </div> -->
-    </div>
+        </div>
+    </div> -->
   </div>
 
   <div class="modal-body score-body">

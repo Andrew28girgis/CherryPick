@@ -46,7 +46,7 @@
 <div class="feed-content" *ngIf="!isLoading">
   <div 
     class="property-card" 
-    *ngFor="let shopping of filteredCenters; let i = index; trackBy: trackByShoppingId"
+    *ngFor="let shopping of centers; let i = index; trackBy: trackByShoppingId"
     (dblclick)="handleContentDoubleClick($event, shopping)"
   >
     
@@ -218,7 +218,7 @@
                   <!-- Show More Replies -->
                   <button 
                     class="show-more-replies" 
-                    *ngIf="(getReplies(shopping?.ShoppingCenter?.Comments || [], comment.Id)?.length || 0) > 2 && !showAllReplies[comment.Id]"
+                    *ngIf="(getReplies(shopping?.ShoppingCenter?.Comments || [], comment.Id).length || 0) > 2 && !showAllReplies[comment.Id]"
                     (click)="toggleReplies(comment.Id)">
                     Show More Replies
                   </button>
@@ -283,4 +283,3 @@
     [style.left.px]="heartX - 50"
   ></div>
 </div>
-

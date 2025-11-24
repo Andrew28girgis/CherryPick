@@ -83,6 +83,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   openMenuId: number | null = null;
   openStageId: number | null = null;
   rotatingKeys: { [id: number]: number } = {};
+  @Input() centers: Center[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -381,8 +382,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
           this.selectedStageName = current ? current.stageName : 'Stage';
         }
         this.cdr.detectChanges();
-      }
-  
+      },
     });
   }
 
@@ -474,8 +474,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
     this.viewManagerService.updatePlaceKanbanStage(
       marketSurveyId,
       stageId,
-      shoppingCenter,
-     );
+      shoppingCenter
+    );
 
     setTimeout(() => {
       this.isUpdatingStage = false;
@@ -538,7 +538,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
           backdrop: true,
           centered: true,
         });
-      }
+      },
     });
   }
 

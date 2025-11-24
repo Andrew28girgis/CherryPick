@@ -51,6 +51,8 @@ type Stat =
 export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   @ViewChild('mapView') mapView!: MapViewComponent;
   filteredCenters: any[] = [];
+  filtersOpen: boolean = false;
+  baseCenters: any[] = [];
   filteredCampaigns?: ICampaign[];
   isMobile = false;
   currentView = 3; // Change from 3 to 4
@@ -134,6 +136,36 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     { key: 'text', label: 'Short Listed', value: 34 },
     { key: 'text', label: 'Shared With Tenant', value: 3 },
   ];
+  filters: any = {
+    CenterState: [],
+    CenterCity: [],
+    CenterType: [],
+    ManagerORG: [],
+    stageName: [],
+  };
+
+  selectedFilters: any = {
+    CenterState: [],
+    CenterCity: [],
+    CenterType: [],
+    ManagerORG: [],
+    stageName: [],
+  };
+  filterKeys: string[] = [
+    'CenterState',
+    'CenterCity',
+    'CenterType',
+    'ManagerORG',
+    'stageName',
+  ];
+
+  filterLabels: { [key: string]: string } = {
+    CenterState: 'State',
+    CenterCity: 'City',
+    CenterType: 'Center Type',
+    ManagerORG: 'Manager Organization',
+    stageName: 'Stage',
+  };
 
   selectedSortId = 0;
   isSortMenuOpen = false;
@@ -154,6 +186,7 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
   urls: any = [];
   showWebsiteCardsModal = false;
   websiteCards: CreSite[] = [];
+
   searchTerm = '';
   googleSite: CreSite = {
     name: 'Google',
@@ -197,11 +230,16 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.GetAllActiveOrganizations();
     this.cdr.detectChanges();
 
-    // Subscribe to filtered centers
     this.subscriptions.add(
       this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
-        this.filteredCenters = centers;
+        this.baseCenters = centers || [];
+        this.applyDynamicFilters();
         this.cdr.detectChanges();
+      })
+    );
+    this.subscriptions.add(
+      this.shoppingCenterService.allShoppingCenters$.subscribe((centers) => {
+        this.generateDynamicFilters(centers || []);
       })
     );
 
@@ -299,6 +337,66 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
       this.selectedStageId = serviceStageId;
       this.updateStageName(serviceStageId);
     }
+  }
+  generateDynamicFilters(centers: any[]) {
+    const fields = [
+      'CenterState',
+      'CenterCity',
+      'CenterType',
+      'ManagerORG',
+      'stageName',
+    ];
+
+    fields.forEach((field) => {
+      const uniqueValues = Array.from(
+        new Set(
+          centers
+            .map((c) => c[field])
+            .filter((v) => v !== null && v !== undefined && v !== '')
+        )
+      );
+
+      this.filters[field] = uniqueValues;
+    });
+  }
+  onDynamicFilterChange(field: string, value: string, event: Event) {
+    const input = event.target as HTMLInputElement | null;
+    const checked = !!input?.checked;
+
+    const arr: string[] = this.selectedFilters[field] || [];
+
+    if (checked) {
+      if (!arr.includes(value)) {
+        arr.push(value);
+      }
+    } else {
+      this.selectedFilters[field] = arr.filter((v) => v !== value);
+    }
+
+    this.applyDynamicFilters(); 
+  }
+
+  clearAllFilters() {
+    Object.keys(this.selectedFilters).forEach((field) => {
+      this.selectedFilters[field] = [];
+    });
+
+    this.applyDynamicFilters(); 
+  }
+  applyDynamicFilters() {
+    let centers = [...this.baseCenters];
+
+    Object.keys(this.selectedFilters).forEach((field) => {
+      const selectedValues: string[] = this.selectedFilters[field];
+
+      if (selectedValues && selectedValues.length > 0) {
+        centers = centers.filter((c) =>
+          selectedValues.includes((c as any)[field])
+        );
+      }
+    });
+
+    this.filteredCenters = centers;
   }
 
   private updateStageName(id: number): void {
@@ -571,7 +669,9 @@ export class ShoppingCenterTableComponent implements OnInit, OnDestroy {
     this.isMobile = window.innerWidth <= 767;
     this.filterDropdownOptions();
   }
-
+  toggleFilters() {
+    this.filtersOpen = !this.filtersOpen;
+  }
   ngOnDestroy(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId);

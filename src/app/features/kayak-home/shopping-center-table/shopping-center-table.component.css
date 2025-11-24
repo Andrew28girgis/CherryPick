@@ -77,6 +77,189 @@
   display: flex;
   justify-content: center;
 }
+.filters-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  z-index: 998;
+}
+
+.filters-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.filters-drawer {
+  position: fixed;
+  top: 0;
+  right: -500px;
+  width: 500px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+  transition: 0.35s ease;
+  z-index: 999;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.filters-drawer.open {
+  right: 0;
+}
+
+.filters-panel {
+  background: linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(
+        135deg,
+        rgba(217, 177, 228, 0.35),
+        rgba(184, 210, 255, 0.35)
+      )
+      border-box;
+  border-radius: 16px;
+  padding: 16px 16px 12px;
+  top: 16px;
+}
+
+.filters-panel::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.filters-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filters-panel::-webkit-scrollbar-thumb {
+  background: var(--Colors-Primary-500);
+  border-radius: 10px;
+}
+
+.filters-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--Colors-Primary-hover);
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.filters-title {
+  color: #0c0d0e;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.clear-filterr {
+  font-size: 16px;
+}
+.filters-header .filters-title:last-child {
+  color: var(--Colors-Primary-hover);
+  font-weight: 600;
+  cursor: pointer;
+}
+.filters-header .filters-title:last-child:hover {
+  text-decoration: underline;
+}
+.filter-block {
+  margin-top: 16px;
+}
+.filter-block + .filter-block {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed #ece8f4;
+}
+.filter-block-title {
+  color: #0c0d0e;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 30px;
+  margin-bottom: 10px;
+  letter-spacing: 0.2px;
+}
+.filter-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+.filter-check input[type="checkbox"] {
+  flex: 0 0 24px;
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--Colors-Primary-500);
+  background: #fff;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+.filter-check input[type="checkbox"]:hover {
+  border-color: var(--Colors-Primary-500);
+  box-shadow: 0 0 0 3px var(--Colors-Primary-500);
+}
+
+.filter-check input[type="checkbox"]:active {
+  border-color: var(--Colors-Primary-hover);
+  background: #fef0f5;
+}
+
+.filter-check input[type="checkbox"]:checked {
+  background: var(--Colors-Primary-500);
+  border-color: var(--Colors-Primary-500);
+}
+
+.filter-check input[type="checkbox"]:checked:hover {
+  background: var(--Colors-Primary-500);
+  border-color: var(--Colors-Primary-500);
+}
+.filter-check input[type="checkbox"]:checked:active {
+  background: var(--Colors-Primary-hover);
+  border-color: var(--Colors-Primary-hover);
+}
+.filter-check input[type="checkbox"]:checked::after {
+  content: "✓";
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+}
+
+.filter-check span {
+  color: #1f2937;
+}
+.open-filter {
+  background: var(--Colors-Primary-500);
+  color: #fff;
+  padding: 10px;
+  font-size: 13px;
+  border-radius: 25px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--Space-S-8);
+  white-space: nowrap;
+  margin-left: 20px;
+}
 
 @keyframes spin {
   0% {
@@ -437,6 +620,12 @@
   font-size: 1.1rem;
   color: #333;
   transition: color 0.3s ease;
+}
+
+.open-filter-text {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #fff;
 }
 
 .btn-hover-effect {

@@ -8,6 +8,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -104,6 +105,8 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   openMenuId: number | null = null;
   openStageId: number | null = null;
   dataReady = false;
+  @Input() centers: Center[] = [];
+
 
   constructor(
     private markerService: MapsService,

@@ -7,7 +7,8 @@ import {
   OnDestroy,
   TemplateRef,
   ViewChild,
-  ChangeDetectionStrategy, // Added OnPush import
+  ChangeDetectionStrategy,
+  Input, // Added OnPush import
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -107,7 +108,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
   matchedCity: boolean = false;
   campaignSpecs: any;
   campaignSpecsCampaignDetailsJSON: any;
+
   specCampaignId: any;
+  @Input() centers: Center[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,

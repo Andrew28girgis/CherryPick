@@ -393,6 +393,11 @@
         <button class="add-btn" (click)="openUpload()">
           <i class="fa-solid fa-plus"></i>
         </button>
+        <button class="open-filter" (click)="toggleFilters()">
+          <span class="open-filter-text">Open Filters</span>
+          <i *ngIf="!filtersOpen" class="fa-solid fa-chevron-right"></i>
+          <i *ngIf="filtersOpen" class="fa-solid fa-chevron-left"></i>
+        </button>
       </div>
     </div>
     <!-- <button class="send-email-button mx-1">
@@ -427,25 +432,65 @@
     <app-side-list-view
       (highlightMarker)="onHighlightMarker($event)"
       (unhighlightMarker)="onUnhighlightMarker($event)"
+        [centers]="filteredCenters"
     ></app-side-list-view>
   </div>
 </div>
- 
+
 <app-map-view
   *ngIf="currentView == 1"
   (viewChange)="onViewChange($event)"
   #mapView
 ></app-map-view>
-<app-card-view *ngIf="currentView == 3"></app-card-view>
+<app-card-view *ngIf="currentView == 3" [centers]="filteredCenters"></app-card-view>
 <app-table-view
   *ngIf="currentView == 4"
   (viewChange)="onViewChange($event)"
+  [centers]="filteredCenters"
 ></app-table-view>
 <app-social-view
   *ngIf="currentView == 5"
   (viewChange)="onViewChange($event)"
+  [centers]="filteredCenters"
+
 ></app-social-view>
 <app-kanban-view *ngIf="currentView == 6"></app-kanban-view>
+
+<!-- BACKDROP -->
+<div
+  class="filters-overlay"
+  [class.show]="filtersOpen"
+  (click)="toggleFilters()"
+></div>
+
+<!-- SLIDING DRAWER -->
+<div
+  class="filters-drawer"
+  [class.open]="filtersOpen"
+  (click)="$event.stopPropagation()"
+>
+  <div class="filters-panel">
+    <div class="filters-header">
+      <div class="filters-title">Filters</div>
+      <div class="filters-title clear-filterr" (click)="clearAllFilters()">
+        Clear Filters
+      </div>
+    </div>
+
+    <div class="filter-block" *ngFor="let key of filterKeys">
+      <div class="filter-block-title">{{ filterLabels[key] }}</div>
+
+      <label class="filter-check" *ngFor="let val of filters[key]">
+        <input
+          type="checkbox"
+          [checked]="selectedFilters[key]?.includes(val)"
+          (change)="onDynamicFilterChange(key, val, $event)"
+        />
+        <span>{{ val }}</span>
+      </label>
+    </div>
+  </div>
+</div>
 
 <ng-template #uploadTypes let-modal>
   <div class="modal-header fancy-modal-header">
