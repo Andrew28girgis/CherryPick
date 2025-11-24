@@ -59,7 +59,7 @@
       <tbody class=" ">
         <ng-container
           *ngFor="
-            let shoppingCenter of filteredCenters;
+            let shoppingCenter of centers;
             trackBy: trackByShoppingCenterId
           "
         >
@@ -498,11 +498,11 @@
             </td> -->
             <td
               class="table-text"
-              *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
+              *ngIf="shoppingCenter.ShoppingCenter.Places.length"
             >
               <!-- <P class="mb-0" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></P> -->
               <div
-                *ngIf="shoppingCenter.ShoppingCenter?.Places?.length"
+                *ngIf="shoppingCenter.ShoppingCenter.Places.length"
                 class="table-responsive mt-2"
                 style="max-height: 150px; overflow-y: auto"
               ></div>
@@ -572,7 +572,7 @@
 <!-- No data message -->
 <div
   class="pt-2 d-flex justify-content-center align-items-center heightt"
-  *ngIf="!isLoading && shoppingCenters?.length == 0"
+  *ngIf="!isLoading && centers.length == 0"
 >
   <p class="fontweight">No data Shopping Center</p>
 </div>

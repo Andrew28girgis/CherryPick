@@ -13,6 +13,7 @@ import {
   Output,
   Pipe,
   PipeTransform,
+  Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -136,6 +137,8 @@ export class SocialViewComponent implements OnInit, OnDestroy {
 
   showAllComments: { [key: number]: boolean } = {};
   showAllReplies: { [key: number]: boolean } = {};
+  @Input() centers: Center[] = [];
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -622,10 +625,10 @@ export class SocialViewComponent implements OnInit, OnDestroy {
     return comments.filter((comment) => comment.ParentCommentId === parentId);
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkMobileView();
-  }
+@HostListener('window:resize')
+onResize() {
+  this.checkMobileView();
+}
 
   checkMobileView(): void {
     this.isMobileView = window.innerWidth <= 768;
