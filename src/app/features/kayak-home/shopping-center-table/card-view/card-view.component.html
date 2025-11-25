@@ -31,7 +31,6 @@
   </ng-container>
 </div>
 
-<!-- Actual content when loaded -->
 <div class="cards-row m-0" *ngIf="!isLoading">
   <div id="customToastsuccess" class="custom-toast">
     <div class="toast-content">
@@ -39,7 +38,6 @@
     </div>
   </div>
   <ng-container *ngFor="let shopping of centers; trackBy: trackById">
-    <!-- *ngIf="shopping.MainImage || shopping.scoreImage" -->
     <div
       class="cardResponsive"
       [class.click-disabled]="openMenuId === shopping.Id"
@@ -187,18 +185,7 @@
                 openInfoPopup(shopping, infoModal)
               "
             >
-              <!-- {{ shopping.Score | number : "1.0-0" }}% -->
             </div>
-            <!-- <button
-              (click)="
-                $event.preventDefault();
-                $event.stopPropagation();
-                openInfoPopup(shopping, infoModal)
-              "
-              class="icon-btn"
-            >
-              <i class="fa-solid fa-circle-info"></i>
-            </button> -->
           </div>
           <ng-template #fallback>
             <div class="score-placeholder">
@@ -306,21 +293,6 @@
               >
                 Street View
               </button>
-              <button
-                *ngIf="
-                  checkSubmission(shopping?.ShoppingCenter?.UserSubmmision)
-                "
-                class="menu-item"
-                (click)="
-                  openModalSubmission(
-                    shopping?.ShoppingCenter?.UserSubmmision || [],
-                    submission
-                  );
-                  closeMenu()
-                "
-              >
-                View Submissions
-              </button>
 
               <button
                 class="menu-item"
@@ -380,52 +352,6 @@
           >
             Ask Emily
           </div>
-
-          <div
-            *ngIf="
-              shopping.sizeRange !== null && shopping.sizeRange !== undefined
-            "
-          >
-            <ng-container
-              *ngIf="Array.isArray(shopping.sizeRange); else singleSize"
-            >
-              {{ shopping.sizeRange[0] | number }} -
-              {{ shopping.sizeRange[1] | number }} SF
-            </ng-container>
-            <ng-template #singleSize>
-              {{ shopping.sizeRange | number }} SF
-            </ng-template>
-          </div>
-
-          <div>
-            <div *ngIf="getSentMails(shopping).length > 0" class="mt-2">
-              <ng-container *ngIf="getSentMails(shopping) as mails">
-                <div *ngIf="shopping.lastOutgoingEmail">
-                  <span
-                    class="mail-summary"
-                    (click)="openMailPopup(shopping.lastOutgoingEmail.ID)"
-                  >
-                    Last Sent Email:
-                    <span style="text-decoration: none">{{
-                      shopping.lastOutgoingEmail.Date | date
-                    }}</span>
-                  </span>
-                </div>
-                <div *ngIf="shopping.lastIncomingEmail" class="mt-2">
-                  <span
-                    class="mail-summary"
-                    (click)="openMailPopup(shopping.lastIncomingEmail.ID)"
-                    modal-body
-                  >
-                    Last Received Email:
-                    <span style="text-decoration: none">{{
-                      shopping.lastIncomingEmail.Date | date
-                    }}</span>
-                  </span>
-                </div>
-              </ng-container>
-            </div>
-          </div>
           <div class="row m-0">
             <div
               *ngFor="let item of shopping.ShoppingCenter.BuyBoxPlaces"
@@ -434,165 +360,72 @@
               <div class="d-flex flex-column">
                 <p>
                   {{ item.RelationOrganizationName }}
-                  <!-- <img loading="lazy" 
-                      class="logo ms-2"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        item.RelationOrganizationId
-                      }}"
-                      [title]="item.RelationOrganizationName"
-                      alt=""
-                    /> -->
                 </p>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="col-md-12 spec">
-          <!-- <hr class="small-hr mt-1 mb-1" /> -->
-          <div
-            class="spec-head between"
-            *ngIf="
-              shopping.ShoppingCenter.ManagerOrganization;
-              else findContacts
-            "
-          ></div>
-
-          <ng-template #findContacts>
-            <!-- <a
-                class="target"
-                href="https://www.google.com/search?q=leasing manager for+{{
-                  shopping.CenterName
-                }}+{{ shopping.CenterAddress }}+{{ shopping.CenterCity }}+{{
-                  
-                  shopping.CenterState
-                }}+{{
-                  shopping.ZipCode
-                }}&rlz=1C1FHFK_enEG1100EG1100&oq=city+center&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyDAgAEEUYORixAxiABDIKCAEQABixAxiABDINCAIQLhivARjHARiABDIHCAMQABiABDIKCAQQABixAxiABDINCAUQLhivARjHARiABDIHCAYQABiABDIHCAcQABiABDINCAgQLhivARjHARiABDIHCAkQABiABNIBCDM4MjNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&address={{
-                  shopping.CenterAddress
-                }},{{ shopping.CenterCity }},{{ shopping.CenterState }},{{
-                  shopping.ZipCode
-                }}&shoppingCenterName={{
-                  shopping.CenterName
-                }}&organizationId={{ orgId }}&organizationName={{
-                  orgName
-                }}&campaignId={{ cId }}"
-                target="_blank"
-                (click)="
-                  finContactMessage(
-                    shopping.Id,
-                    shopping.CenterName,
-                    shopping.CenterAddress
-                  )
-                "
-              >
-                Find Contacts
-              </a> -->
-            <!-- <button
-                class="btn find-broker-btn"
-                (click)="finContactMessage(shopping)"
-              >
-                Find Broker
-              </button> -->
-          </ng-template>
-        </div>
-
-        <button
-          *ngIf="checkSubmission(shopping?.ShoppingCenter?.UserSubmmision)"
-          class="submission-button"
-          (click)="
-            openModalSubmission(
-              shopping?.ShoppingCenter?.UserSubmmision || [],
-              submission
-            )
-          "
+      <div class="stats">
+        <div
+          class="leased-by"
+          *ngIf="shopping?.ShoppingCenter?.ManagerOrganization?.length"
+          (click)="toggleOrgMenu(shopping.Id, $event); $event.stopPropagation()"
         >
+          <img
+            *ngIf="shopping.ManagerORGLogoURL"
+            src="{{ shopping.ManagerORGLogoURL }}"
+            alt=""
+            width="30"
+            height="30"
+            class="mx-1"
+          />
+          <span class="MangerORG me-1"> {{ shopping?.ManagerORG || "—" }}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-file-icon lucide-file"
           >
             <path
-              d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+              d="M11.9999 16.3299C9.60992 16.3299 7.66992 14.3899 7.66992 11.9999C7.66992 9.60992 9.60992 7.66992 11.9999 7.66992C14.3899 7.66992 16.3299 9.60992 16.3299 11.9999C16.3299 14.3899 14.3899 16.3299 11.9999 16.3299ZM11.9999 9.16992C10.4399 9.16992 9.16992 10.4399 9.16992 11.9999C9.16992 13.5599 10.4399 14.8299 11.9999 14.8299C13.5599 14.8299 14.8299 13.5599 14.8299 11.9999C14.8299 10.4399 13.5599 9.16992 11.9999 9.16992Z"
+              fill="#292D32"
             />
-            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+            <path
+              d="M12.0001 21.02C8.24008 21.02 4.69008 18.82 2.25008 15C1.19008 13.35 1.19008 10.66 2.25008 8.99998C4.70008 5.17998 8.25008 2.97998 12.0001 2.97998C15.7501 2.97998 19.3001 5.17998 21.7401 8.99998C22.8001 10.65 22.8001 13.34 21.7401 15C19.3001 18.82 15.7501 21.02 12.0001 21.02ZM12.0001 4.47998C8.77008 4.47998 5.68008 6.41998 3.52008 9.80998C2.77008 10.98 2.77008 13.02 3.52008 14.19C5.68008 17.58 8.77008 19.52 12.0001 19.52C15.2301 19.52 18.3201 17.58 20.4801 14.19C21.2301 13.02 21.2301 10.98 20.4801 9.80998C18.3201 6.41998 15.2301 4.47998 12.0001 4.47998Z"
+              fill="#292D32"
+            />
           </svg>
-          View Submissions
-        </button>
-      </div>
-
-      <div class="stats">
-        <div>
-          <div
-            class="leased-by"
-            *ngIf="shopping?.ShoppingCenter?.ManagerOrganization?.length"
-            (click)="
-              toggleOrgMenu(shopping.Id, $event); $event.stopPropagation()
-            "
-          >
-            <img
-              *ngIf="shopping.ManagerORGLogoURL"
-              src="{{ shopping.ManagerORGLogoURL }}"
-              alt=""
-              width="30"
-              height="30"
-              class="mx-1"
-            />
-            <span class="MangerORG me-1">
-              {{ shopping?.ManagerORG || "—" }}</span
+          <!-- trigger -->
+          <div class="org-info-trigger">
+            <div
+              class="org-mini-menu"
+              *ngIf="openOrgMenuId === shopping.Id"
+              [ngStyle]="orgMenuPos"
+              (click)="$event.stopPropagation()"
             >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M11.9999 16.3299C9.60992 16.3299 7.66992 14.3899 7.66992 11.9999C7.66992 9.60992 9.60992 7.66992 11.9999 7.66992C14.3899 7.66992 16.3299 9.60992 16.3299 11.9999C16.3299 14.3899 14.3899 16.3299 11.9999 16.3299ZM11.9999 9.16992C10.4399 9.16992 9.16992 10.4399 9.16992 11.9999C9.16992 13.5599 10.4399 14.8299 11.9999 14.8299C13.5599 14.8299 14.8299 13.5599 14.8299 11.9999C14.8299 10.4399 13.5599 9.16992 11.9999 9.16992Z"
-                fill="#292D32"
-              />
-              <path
-                d="M12.0001 21.02C8.24008 21.02 4.69008 18.82 2.25008 15C1.19008 13.35 1.19008 10.66 2.25008 8.99998C4.70008 5.17998 8.25008 2.97998 12.0001 2.97998C15.7501 2.97998 19.3001 5.17998 21.7401 8.99998C22.8001 10.65 22.8001 13.34 21.7401 15C19.3001 18.82 15.7501 21.02 12.0001 21.02ZM12.0001 4.47998C8.77008 4.47998 5.68008 6.41998 3.52008 9.80998C2.77008 10.98 2.77008 13.02 3.52008 14.19C5.68008 17.58 8.77008 19.52 12.0001 19.52C15.2301 19.52 18.3201 17.58 20.4801 14.19C21.2301 13.02 21.2301 10.98 20.4801 9.80998C18.3201 6.41998 15.2301 4.47998 12.0001 4.47998Z"
-                fill="#292D32"
-              />
-            </svg>
-            <!-- trigger -->
-            <div class="org-info-trigger">
               <div
-                class="org-mini-menu"
-                *ngIf="openOrgMenuId === shopping.Id"
-                [ngStyle]="orgMenuPos"
-                (click)="$event.stopPropagation()"
+                *ngFor="
+                  let org of shopping.ShoppingCenter.ManagerOrganization;
+                  let i = index
+                "
+                class="org-mini-item"
+                (click)="openContactModal(shopping)"
               >
+                <p class="name">
+                  {{ org.Firstname | titlecase }}
+                  {{ org.LastName | titlecase }}
+                </p>
+                <p class="small">{{ org.CellPhone }}</p>
+                <p class="small">{{ org.Email }}</p>
                 <div
-                  *ngFor="
-                    let org of shopping.ShoppingCenter.ManagerOrganization;
-                    let i = index
+                  class="divider"
+                  *ngIf="
+                    i < shopping.ShoppingCenter.ManagerOrganization.length - 1
                   "
-                  class="org-mini-item"
-                  (click)="openContactModal(shopping)"
-                >
-                  <p class="name">
-                    {{ org.Firstname | titlecase }}
-                    {{ org.LastName | titlecase }}
-                  </p>
-                  <p class="small">{{ org.CellPhone }}</p>
-                  <p class="small">{{ org.Email }}</p>
-                  <div
-                    class="divider"
-                    *ngIf="
-                      i < shopping.ShoppingCenter.ManagerOrganization.length - 1
-                    "
-                  ></div>
-                </div>
+                ></div>
               </div>
             </div>
           </div>
@@ -685,575 +518,12 @@
   </ng-container>
 </div>
 
-<!-- <div *ngIf="hasUnscoredCenters && !isMobile">
-  <h3 class="split-heading">
-    <span>Emily is working on scoring these Sites </span>
-    <span class="stat-bars" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span
-      ><span></span>
-    </span>
-  </h3>
-
-  <table class=" ">
-    <thead class=" ">
-      <tr>
-        <th>Name</th>
-        <th>Brokerage Firm</th>
-        <th>Date</th>
-        <th>Score</th>
-        <th>Type</th>
-        <th>Category</th>
-
-        <th>Size Range</th>
-       
-      </tr>
-    </thead>
-    <tbody class=" ">
-      <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
-        <tr *ngIf="!shopping.MainImage">
-          <td>
-            <div
-              [ngClass]="{
-                green: shopping.Score > 50,
-                yellow: shopping.Score < 50,
-                red: !shopping.Score
-              }"
-              class="d-flex flex-column"
-            >
- 
-              <div class="d-flex flex-row justify-content-between">
-                <span
-                  class="table-text"
-                  [innerHTML]="shopping.CenterName | titlecase"
-                ></span>
-
-                <div
-                  class="relativee d-flex justify-content-between flex-row gap-3"
-                  style="position: relative"
-                >
-                  <button
-                    class="plus-icon"
-                    [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
-                    (click)="
-                      InsertAutomation(shopping.Id,1); $event.stopPropagation()
-                    "
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M12.0001 22.75C6.80008 22.75 2.58008 18.52 2.58008 13.33C2.58008 8.13999 6.80008 3.89999 12.0001 3.89999C13.0701 3.89999 14.1101 4.04999 15.1101 4.35999C15.5101 4.47999 15.7301 4.89999 15.6101 5.29999C15.4901 5.69999 15.0701 5.91999 14.6701 5.79999C13.8201 5.53999 12.9201 5.39999 12.0001 5.39999C7.63008 5.39999 4.08008 8.94999 4.08008 13.32C4.08008 17.69 7.63008 21.24 12.0001 21.24C16.3701 21.24 19.9201 17.69 19.9201 13.32C19.9201 11.74 19.4601 10.22 18.5901 8.91999C18.3601 8.57999 18.4501 8.10999 18.8001 7.87999C19.1401 7.64999 19.6101 7.73999 19.8401 8.08999C20.8801 9.63999 21.4301 11.45 21.4301 13.33C21.4201 18.52 17.2001 22.75 12.0001 22.75Z"
-                        fill="#704E73"
-                      />
-                      <path
-                        d="M16.1304 6.06999C15.9204 6.06999 15.7104 5.97999 15.5604 5.80999L12.6704 2.49C12.4004 2.18 12.4304 1.69999 12.7404 1.42999C13.0504 1.15999 13.5304 1.18999 13.8004 1.49999L16.6904 4.82C16.9604 5.13 16.9304 5.60999 16.6204 5.87999C16.4904 6.00999 16.3104 6.06999 16.1304 6.06999Z"
-                        fill="#704E73"
-                      />
-                      <path
-                        d="M12.7602 8.52999C12.5302 8.52999 12.3002 8.41999 12.1502 8.21999C11.9102 7.88999 11.9802 7.41999 12.3102 7.16999L15.6802 4.70999C16.0102 4.45999 16.4802 4.53999 16.7302 4.86999C16.9802 5.19999 16.9002 5.66999 16.5702 5.91999L13.2002 8.38999C13.0702 8.48999 12.9202 8.52999 12.7602 8.52999Z"
-                        fill="#704E73"
-                      />
-                    </svg>
-                  </button>
-                  <div>
-                    <div
-                      class="menu-wrapper"
-                      (click)="$event.stopPropagation()"
-                      [ngClass]="{ 'opened-menu': openMenuId === shopping.Id }"
-                    >
-                      <button
-                        class="menu-btn"
-                        (click)="toggleMenu(shopping.Id, $event)"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                        >
-                          <path
-                            d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
-                            fill="#18171F"
-                            stroke="#18171F"
-                          />
-                          <path
-                            d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
-                            fill="#18171F"
-                          />
-                          <path
-                            d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
-                            fill="#18171F"
-                          />
-                        </svg>
-                      </button>
-
-                       <div
-                        class="menu-dropdown"
-                        *ngIf="openMenuId === shopping.Id"
-                      >
-                        <button
-                          [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,shopping.CampaignId]"
-                          class="menu-item"
-                          (click)="closeMenu()"
-                        >
-                          View Details
-                        </button>
-
-                        <button
-                          class="menu-item"
-                          (click)="openContactModal(shopping); closeMenu()"
-                        >
-                          Contact Broker
-                        </button>
-                        <button
-                          class="menu-item"
-                          (click)="
-                            openMapViewPlace(MapViewPlace, shopping);
-                            closeMenu()
-                          "
-                        >
-                          View Location
-                        </button>
-                        <button
-                          class="menu-item"
-                          (click)="
-                            openStreetViewPlace(StreetViewPlace, shopping);
-                            closeMenu()
-                          "
-                        >
-                          Street View
-                        </button>
-                        <button
-                          *ngIf="
-                            checkSubmission(
-                              shopping?.ShoppingCenter?.UserSubmmision
-                            )
-                          "
-                          class="menu-item"
-                          (click)="
-                            openModalSubmission(
-                              shopping?.ShoppingCenter?.UserSubmmision || [],
-                              submission
-                            );
-                            closeMenu()
-                          "
-                        >
-                          View Submissions
-                        </button>
-
-                        <button
-                          class="menu-item"
-                          (click)="
-                            openAddContactModal(shopping.Id); closeMenu()
-                          "
-                        >
-                          Add Contact
-                        </button>
-                        <button
-                          class="menu-item"
-                          (click)="
-                            deleteCenter(shopping.Id); $event.stopPropagation()
-                          "
-                        >
-                          Delete Center
-                        </button>
-                      </div>
-                    </div>
-                    <div
-                      class="click-shield"
-                      *ngIf="
-                        openStageId === shopping.Id ||
-                        openMenuId === shopping.Id
-                      "
-                      (click)="closeMenu()"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                *ngIf="
-                  shopping.CenterAddress ||
-                  shopping.CenterCity ||
-                  shopping.CenterState
-                "
-              >
-                <div
-                  class="table-text cursor addresss"
-                  (click)="openMapViewPlace(MapViewPlace, shopping)"
-                >
-                  {{ shopping.CenterAddress }}
-                  <span *ngIf="shopping.CenterCity">,</span>
-
-                  {{ shopping.CenterCity | titlecase }}
-                  <span *ngIf="shopping.CenterState">,</span>
-
-                  {{ shopping.CenterState }}
-                </div>
-              </div>
-              <div
-                *ngIf="KanbanStages.length > 0"
-                #dropdownRef
-                class="menu-wrapper"
-                [ngClass]="{ 'opened-stage': openStageId === shopping.Id }"
-                style="width: fit-content"
-              >
-                <div
-                  class="selected-option"
-                  (click)="toggleMenu(shopping.Id, $event, true)"
-                >
-                  {{ getSelectedStageName(shopping.kanbanStageId) }}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                  >
-                    <path
-                      d="M8.00001 11.2C7.53335 11.2 7.06668 11.0201 6.71335 10.6667L2.36668 6.32005C2.17335 6.12672 2.17335 5.80672 2.36668 5.61338C2.56001 5.42005 2.88001 5.42005 3.07335 5.61338L7.42001 9.96005C7.74001 10.2801 8.26001 10.2801 8.58001 9.96005L12.9267 5.61338C13.12 5.42005 13.44 5.42005 13.6333 5.61338C13.8267 5.80672 13.8267 6.12672 13.6333 6.32005L9.28668 10.6667C8.93335 11.0201 8.46668 11.2 8.00001 11.2Z"
-                      fill="#161017"
-                    />
-                  </svg>
-                </div>
-                <div
-                  (click)="$event.stopPropagation()"
-                  class="dropdown-options"
-                  [class.show]="openStageId === shopping.Id"
-                >
-                  <div
-                    *ngFor="let stage of KanbanStages"
-                    class="dropdown-item"
-                    [class.active]="stage.id === shopping.kanbanStageId"
-                    (click)="
-                      selectStage(
-                        shopping.MarketSurveyId,
-                        stage.id,
-                        shopping,
-                        $event
-                      )
-                    "
-                  >
-                    {{ stage.stageName }}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <span
-                  class="badge badge-danger mx-2 h-auto"
-                  *ngIf="shopping.Deleted == true"
-                  >Deleted</span
-                >
-              </div>
-            </div>
-          </td>
-
-          <td class="ManagerOrg">{{ shopping.ManagerORG }}</td>
-          <td class="last-update">{{ shopping.LastUpdateDate | date }}</td>
-          <td class="score" *ngIf="shopping.Score !== null">
-            <span class="d-flex align-items-center"
-              >{{ shopping.Score + "%" }}
-              <button
-                class="icon-btn"
-                (click)="openInfoPopup(shopping, infoModal)"
-              >
-                <i class="fa-solid fa-circle-info"></i></button
-            ></span>
-          </td>
-          <td class="type">{{ shopping.CenterType }}</td>
-          <td class="category">{{ shopping.Category }}</td>
-          <td *ngIf="shopping.sizeRange as sr">
-            <div>
-              <ng-container *ngIf="sr; instanceof: Array; else: single">
-                {{ sr[0] | number }} - {{ sr[1] | number }} SF
-              </ng-container>
-              <ng-template #single> {{ sr | number }} SF </ng-template>
-            </div>
-          </td>
-         
-          <ng-template #emptyTd> </ng-template>
-        </tr>
-      </ng-container>
-    </tbody>
-  </table>
-</div> -->
-
-<!-- <div *ngIf="hasUnscoredCenters && isMobile" class="card-container">
-  <h3 class="split-heading">
-    <span
-      >Emily is working on scoring these Sites
-      <span class="stat-bars" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span
-        ><span></span> </span
-    ></span>
-  </h3>
-
-  <ng-container *ngFor="let shopping of cardsSideList; trackBy: trackById">
-    <div *ngIf="!shopping.MainImage &&shopping.CenterName" class="shopping-card">
-      <span *ngIf="shopping.CenterName" class="center-name">{{ shopping.CenterName }}</span>
-      <button
-        class="plus-icon"
-        [ngClass]="{ rotate: rotatingKeys[shopping.Id] > 0 }"
-        (click)="InsertAutomation(shopping.Id,1); $event.stopPropagation()"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="M12.0001 22.75C6.80008 22.75 2.58008 18.52 2.58008 13.33C2.58008 8.13999 6.80008 3.89999 12.0001 3.89999C13.0701 3.89999 14.1101 4.04999 15.1101 4.35999C15.5101 4.47999 15.7301 4.89999 15.6101 5.29999C15.4901 5.69999 15.0701 5.91999 14.6701 5.79999C13.8201 5.53999 12.9201 5.39999 12.0001 5.39999C7.63008 5.39999 4.08008 8.94999 4.08008 13.32C4.08008 17.69 7.63008 21.24 12.0001 21.24C16.3701 21.24 19.9201 17.69 19.9201 13.32C19.9201 11.74 19.4601 10.22 18.5901 8.91999C18.3601 8.57999 18.4501 8.10999 18.8001 7.87999C19.1401 7.64999 19.6101 7.73999 19.8401 8.08999C20.8801 9.63999 21.4301 11.45 21.4301 13.33C21.4201 18.52 17.2001 22.75 12.0001 22.75Z"
-            fill="#704E73"
-          />
-          <path
-            d="M16.1304 6.06999C15.9204 6.06999 15.7104 5.97999 15.5604 5.80999L12.6704 2.49C12.4004 2.18 12.4304 1.69999 12.7404 1.42999C13.0504 1.15999 13.5304 1.18999 13.8004 1.49999L16.6904 4.82C16.9604 5.13 16.9304 5.60999 16.6204 5.87999C16.4904 6.00999 16.3104 6.06999 16.1304 6.06999Z"
-            fill="#704E73"
-          />
-          <path
-            d="M12.7602 8.52999C12.5302 8.52999 12.3002 8.41999 12.1502 8.21999C11.9102 7.88999 11.9802 7.41999 12.3102 7.16999L15.6802 4.70999C16.0102 4.45999 16.4802 4.53999 16.7302 4.86999C16.9802 5.19999 16.9002 5.66999 16.5702 5.91999L13.2002 8.38999C13.0702 8.48999 12.9202 8.52999 12.7602 8.52999Z"
-            fill="#704E73"
-          />
-        </svg>
-      </button>
-    </div>
-  </ng-container>
-</div> -->
-
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700"></div>
 </ng-template>
 
-<ng-template #ShareLink let-modal>
-  <div class="d-flex p-3 m-3 align-items-center shareelink">
-    <p>{{ shareLink }}</p>
-    <i class="fa-solid fa-copy ms-3 cursor" (click)="copyLink(shareLink)"></i>
-  </div>
-</ng-template>
-
-<!-- <ng-template #StreetViewPlace let-modal>
-  <div *ngIf="General.modalObject.StreetViewURL">
-    <iframe
-      [src]="sanitizedUrl"
-      height="700"
-      width="798px"
-      class="sanitizedUrl"
-      allowfullscreen=""
-    >
-    </iframe>
-  </div>
-  <div
-    id="street-view"
-    class="h700"
-    *ngIf="!General.modalObject.StreetViewURL"
-  ></div>
-</ng-template> -->
 <ng-template #StreetViewPlace let-modal>
   <div id="street-view" class="h700"></div>
-</ng-template>
-
-<ng-template #deleteSingleShoppingCenterModal let-modal>
-  <div class="modal-body-general p-4 rounded deleteShopping">
-    <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
-    <p class="text-center Areyou">
-      Are you sure you want to remove this Shopping Center?
-    </p>
-
-    <div class="d-flex justify-content-end mt-4">
-      <button
-        type="button"
-        class="btn btn-secondary me-2 px-4 py-2 btnborder"
-        (click)="modal.dismiss('Cancel click')"
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #statusModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Center Status</h5>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    ></button>
-  </div>
-  <div class="modal-body">
-    <div *ngIf="isLoadingstatus; else contentTemplate">
-      <div class="skeleton-loader">
-        <div
-          class="skeleton-head"
-          style="
-            height: 24px;
-            width: 40%;
-            margin-bottom: 16px;
-            border-radius: 4px;
-            background-color: #e0e0e0;
-          "
-        ></div>
-        <div class="skeleton-paragraph">
-          <div
-            class="skeleton-line"
-            style="
-              height: 16px;
-              width: 100%;
-              margin-bottom: 8px;
-              border-radius: 4px;
-              background-color: #e0e0e0;
-            "
-          ></div>
-          <div
-            class="skeleton-line"
-            style="
-              height: 16px;
-              width: 95%;
-              margin-bottom: 8px;
-              border-radius: 4px;
-              background-color: #e0e0e0;
-            "
-          ></div>
-          <div
-            class="skeleton-line"
-            style="
-              height: 16px;
-              width: 90%;
-              border-radius: 4px;
-              background-color: #e0e0e0;
-            "
-          ></div>
-        </div>
-      </div>
-    </div>
-    <ng-template #contentTemplate>
-      <div [innerHTML]="htmlContent"></div>
-    </ng-template>
-  </div>
-</ng-template>
-
-<ng-template #submission let-modal>
-  <div class="modal-header d-flex justify-content-between">
-    <h4 class="modal-title">Submissions</h4>
-    <button
-      type="button"
-      class="close"
-      style="background: none; border: none"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <path
-          d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
-          fill="#7A8591"
-        />
-        <path
-          d="M9.16986 15.5799C8.97986 15.5799 8.78986 15.5099 8.63986 15.3599C8.34986 15.0699 8.34986 14.5899 8.63986 14.2999L14.2999 8.63986C14.5899 8.34986 15.0699 8.34986 15.3599 8.63986C15.6499 8.92986 15.6499 9.40986 15.3599 9.69986L9.69986 15.3599C9.55986 15.5099 9.35986 15.5799 9.16986 15.5799Z"
-          fill="#7A8591"
-        />
-        <path
-          d="M14.8299 15.5799C14.6399 15.5799 14.4499 15.5099 14.2999 15.3599L8.63986 9.69986C8.34986 9.40986 8.34986 8.92986 8.63986 8.63986C8.92986 8.34986 9.40986 8.34986 9.69986 8.63986L15.3599 14.2999C15.6499 14.5899 15.6499 15.0699 15.3599 15.3599C15.2099 15.5099 15.0199 15.5799 14.8299 15.5799Z"
-          fill="#7A8591"
-        />
-      </svg>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div *ngFor="let submission of submissions">
-      <div class="submission-details" *ngIf="submission?.SubmmisionLink">
-        <div class="detailsInfo d-flex flex-column">
-          <a
-            [href]="
-              'https://files.cherrypick.com/submissions/' +
-              submission?.SubmmisionLink
-            "
-            target="_blank"
-            class="submission-link"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="8"
-              height="8"
-              viewBox="0 0 8 8"
-              fill="none"
-            >
-              <circle cx="4" cy="4" r="4" fill="#16181D" />
-            </svg>
-
-            https://files.cherrypick.com/submissions/' +
-            submission?.SubmmisionLink
-          </a>
-
-          <div class="user-info d-flex flex-row">
-            <p *ngIf="submission?.FirstName">
-              {{ submission?.FirstName + " " + submission?.LastName }}
-            </p>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="8"
-              height="8"
-              viewBox="0 0 8 8"
-              fill="none"
-            >
-              <circle cx="4" cy="4" r="4" fill="#E2E4E9" />
-            </svg>
-            <p *ngIf="submission?.CreatedDate">
-              {{ submission?.CreatedDate | date : "MMM dd, yyyy" }}
-            </p>
-          </div>
-          <p class="available-space" *ngIf="submission?.AvailableSpace">
-            Available Space:{{ submission?.AvailableSpace }} SF
-          </p>
-        </div>
-        <div class="progress-bar-container">
-          <div class="match-percentage">
-            <div class="circle-progress">
-              <svg viewBox="0 0 36 36" class="circle-svg">
-                <path
-                  class="circle-bg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                  [style.stroke-dasharray]="
-                    getCircleProgressBackground(submission?.Percentage)
-                  "
-                />
-                <path
-                  class="circle-fg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                  [style.stroke-dasharray]="
-                    getCircleProgress(submission?.Percentage)
-                  "
-                />
-              </svg>
-              <div class="circle-label">
-                <span class="match">Match</span>
-                <span class="match-percentage"
-                  >{{ submission?.Percentage }}%</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br />
-    </div>
-  </div>
 </ng-template>
 
 <ng-template #mailModal let-modal>
@@ -1273,6 +543,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #infoModal let-modal>
   <div class="modal-header score-header">
     <h5 class="modal-title score-pill">{{ score || 0 }}%</h5>
