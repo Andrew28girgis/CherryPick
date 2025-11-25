@@ -311,6 +311,10 @@ export class PlacesService {
   public GenericAPIHtml(body: any): Observable<any> {
     return this.http.post(`${environment.api}/GenericAPI/Execute`, body);
   }
+
+  public InsertSC(body: any): Observable<any> {
+    return this.http.post(`${environment.api}/Automation/InsertSC`, body);
+  }
   public generateEmail(
     promptId: number,
     context: string,
