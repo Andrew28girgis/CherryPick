@@ -292,7 +292,7 @@ export class FloatingChatNotificationsComponent
       return false;
     }
 
-    return propertySpecs.ShoppingCenter.Places.some((place: any) => {
+    return propertySpecs.Availability.some((place: any) => {
       const size = place.BuildingSizeSf;
       return (
         size >= campaignSpecs.MinUnitSize && size <= campaignSpecs.MaxUnitSize
@@ -301,7 +301,7 @@ export class FloatingChatNotificationsComponent
   }
   getCampaignCities(details: CampaignComparisonDetails): string[] {
     const campaignSpecs = details.campaignSpecs;
-    if (!campaignSpecs?.Locations) return [];
+    if (!campaignSpecs?.Locations) return [];    
     return campaignSpecs.Locations.filter((loc: any) => loc.CityName).map(
       (loc: any) => loc.CityName
     );
