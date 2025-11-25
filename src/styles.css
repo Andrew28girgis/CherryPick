@@ -153,7 +153,7 @@ a {
 }
 
 .content-title {
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
   font-weight: 700;
   margin: 0;
@@ -311,11 +311,11 @@ a {
 }
 
 .g-button {
-  background: #0075ef;
+  background: #216FED;
   color: #fff;
   padding: 10px 15px;
   font-size: 13px;
-  border-radius: 25px;
+  border-radius: .625rem;
   font-weight: 500;
   border: none;
   cursor: pointer;
@@ -471,14 +471,14 @@ a {
   justify-content: flex-start;
   width: 100%;
 }
-.title::after {
+/* .title::after {
   content: "";
   display: block;
   width: 70%;
   height: 2px;
   background-color: var(--Colors-Primary-500);
   margin-top: 6px;
-}
+} */
 
 /* micro bar-chart loader */
 .stat-bars {

@@ -269,21 +269,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       size: 'lg',
       scrollable: true,
     });
-
-    // Store the modal object
     this.General.modalObject = modalObject;
-
-    // Initialize street view after modal is opened
-    modalRef.result.then(
-      () => {
-        // Cleanup if needed
-      },
-      () => {
-        // Cleanup if needed
-      }
-    );
-
-    // Use setTimeout to ensure DOM is ready
     setTimeout(() => {
       this.viewOnStreet();
     }, 100);
@@ -331,7 +317,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
    */
   trackById(index: number, item: any): number {
     return item?.Id || item?.id || index;
-  } 
+  }
 
   openModalSubmission(
     submissions: any[],

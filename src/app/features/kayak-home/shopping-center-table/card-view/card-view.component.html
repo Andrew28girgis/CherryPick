@@ -154,22 +154,6 @@
         >
           <span>{{ shopping.Score }} %</span>
         </div>
-        <div *ngIf="!shopping.Score">
-          <button
-            class="score-badge"
-            [class.active]="scoringId === shopping.Id"
-            (click)="getscore(shopping); $event.stopPropagation()"
-          >
-            <span *ngIf="scoringId !== shopping.Id">Get Score</span>
-            <span *ngIf="scoringId === shopping.Id">
-              Getting Score
-              <span class="stat-bars" aria-hidden="true">
-                <span></span><span></span><span></span><span></span><span></span
-                ><span></span>
-              </span>
-            </span>
-          </button>
-        </div>
 
         <!--  White div with Score -->
         <ng-template #score>
@@ -184,8 +168,7 @@
                 $event.stopPropagation();
                 openInfoPopup(shopping, infoModal)
               "
-            >
-            </div>
+            ></div>
           </div>
           <ng-template #fallback>
             <div class="score-placeholder">
@@ -345,12 +328,30 @@
               {{ shopping.CenterState }}
             </span>
           </div>
-          <div
-            (click)="editWithEMily(shopping)"
-            class="emily-button"
-            aria-label="  Emily  "
-          >
-            Ask Emily
+          <div class="d-flex justify-content-between mt-3">
+            <div
+              (click)="editWithEMily(shopping)"
+              class="emily-button"
+              aria-label="  Emily  "
+            >
+              Ask Emily
+            </div>
+            <div *ngIf="!shopping.Score">
+              <button
+                class="g-button"
+                [class.active]="scoringId === shopping.Id"
+                (click)="getscore(shopping); $event.stopPropagation()"
+              >
+                <span *ngIf="scoringId !== shopping.Id">Get Score</span>
+                <span *ngIf="scoringId === shopping.Id">
+                  Getting Score
+                  <span class="stat-bars" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span
+                    ><span></span><span></span>
+                  </span>
+                </span>
+              </button>
+            </div>
           </div>
           <div class="row m-0">
             <div
