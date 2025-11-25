@@ -13,127 +13,82 @@
 
 <div
   class="d-flex justify-content-center align-items-center"
-  style="height: 85vh"
+  style="height: 100vh"
 >
-  <div class="row m-0 total-height login-main-container">
-    <div class="col-md-6 px-0">
-      <div class="login-container h-100">
-        <header class="d-flex align-items-center justify-content-start mb-4">
-          <div class="logo-container">
- 
-            <img
-              src="assets/Images/logo.png"
-              alt="Cherrypick"
-              class="cherry-logo"
-            />
-          </div>
-        </header>
-        <div class="login-container-form-main">
-          <div style="width: fit-content">
-            <div class="login-container-form">
-              <div class="text-center d-flex justify-content-start">
-                <h1 class="login-head">Login</h1>
-              </div>
-
-              <form
-                #loginForm="ngForm"
-                (ngSubmit)="loginForm.form.valid && onSubmit()"
-              >
-                <div class="form-group">
-                  <input
-                    type="email"
-                    class="form-control"
-                    placeholder="Email"
-                    name="username"
-                    required
-                    [(ngModel)]="loginData.Email"
-                    aria-label="Email address"
-                  />
-                </div>
-
-                <div class="form-group my-3 position-relative">
-                  <input
-                    [type]="showPassword ? 'text' : 'password'"
-                    class="form-control"
-                    placeholder="Password"
-                    name="password"
-                    required
-                    [(ngModel)]="loginData.Password"
-                    aria-label="Password"
-                    autocomplete="current-password"
-                  />
-                  <i
-                    *ngIf="showPassword"
-                    (click)="togglePassword()"
-                    class="fa-regular fa-eye eye-icon"
-                  ></i>
-                  <i
-                    *ngIf="!showPassword"
-                    (click)="togglePassword()"
-                    class="fa-regular fa- eye-slash eye-icon"
-                  ></i>
-                </div>
-
-                <div
-                  class="d-flex align-items-center justify-content-end cursor mb-3"
-                  [routerLink]="['/ForgetPassword']"
-                >
-                  <span class="ForgetPassword">Forget Password?</span>
-                </div>
-
-                <div class="text-center mt-3">
-                  <button
-                    class="btn login w-100"
-                    type="submit"
-                    [disabled]="!loginForm.form.valid"
-                  >
-                    Login
-                  </button>
-                </div>
-              </form>
+  <div class="login-container col-4">
+    <header class="d-flex align-items-center justify-content-center mb-4">
+      <div class="logo-container text-center">
+        <img
+          src="assets/Images/logo.png"
+          alt="Cherrypick"
+          class="cherry-logo"
+        />
+        <h1 class="login-head mt-3">Login</h1>
+      </div>
+    </header>
+    <div class="login-container-form-main w-100">
+         <div class="login-container-form w-100">
+          <form
+            #loginForm="ngForm"
+            (ngSubmit)="loginForm.form.valid && onSubmit()"
+          >
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Enter your email"
+                name="username"
+                required
+                [(ngModel)]="loginData.Email"
+                aria-label="Email address"
+              />
             </div>
-            <!-- <div>
-              <div class="text-center mt-4 w-100">
-                <span class="signup-text">Don't have an account? </span>
+
+            <div class="form-group my-3">
+              <label class="form-label">Password</label>
+              <div class="position-relative">
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  name="password"
+                  required
+                  [(ngModel)]="loginData.Password"
+                  aria-label="Password"
+                  autocomplete="current-password"
+                />
+                <i
+                  *ngIf="showPassword"
+                  (click)="togglePassword()"
+                  class="fa-regular fa-eye eye-icon"
+                ></i>
+                <i
+                  *ngIf="!showPassword"
+                  (click)="togglePassword()"
+                  class="fa-regular fa-eye-slash eye-icon"
+                ></i>
               </div>
+            </div>
+
+            <div
+              class="d-flex align-items-center justify-content-end cursor mb-3"
+              [routerLink]="['/ForgetPassword']"
+            >
+              <span class="ForgetPassword">Forget Password?</span>
+            </div>
+
+            <div class="text-center mt-3">
               <button
-                type="button"
-                class="btn btn-outline-primary create-account-btn"
-                [routerLink]="['/registeration']"
-              
-                >
-              <span class="create-account-btn-text">
-
-                Create Account
-              </span>
+                class="btn login w-100"
+                type="submit"
+                [disabled]="!loginForm.form.valid"
+              >
+                Login
               </button>
-            </div> -->
-          </div>
+            </div>
+          </form>
         </div>
-      </div>
-    </div>
-
-    <!-- Marketing Section -->
-    <div class="col-md-6 right-container d-none d-md-block">
-      <div class="focus-container">
-        <h2 class="focus">Focus on deals</h2>
-        <p class="worth">worth pursuing.</p>
-        <p class="mt-4 cherry-desc">
-          Emily has helped us access hidden opportunities through their
-          off-market listings. Their mix of technology and industry knowledge is
-          unmatched and has been crucial to our growth.
-        </p>
-
-        <!-- <div class="testimonial mt-4">
-          <p class="testimonial-author">H.H.</p>
-          <p class="testimonial-role">Developer</p>
-        </div> -->
-
-        <!-- <div class="client-logos mt-4">
-          <p class="client-text">Dealing With 20 Tenants</p>
-        
-        </div> -->
-      </div>
-    </div>
+     </div>
   </div>
 </div>

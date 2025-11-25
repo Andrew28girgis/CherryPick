@@ -793,6 +793,7 @@
   max-width: 90vw;
 }
 .center-card {
+  position: relative;
   margin: 20px;
   background: #ffffff;
   border-radius: 14px;
