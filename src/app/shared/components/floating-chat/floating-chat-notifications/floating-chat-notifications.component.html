@@ -357,7 +357,7 @@
     <div *ngIf="!isready" class="spinner-chase">
       <div class="chase-dot" *ngFor="let dot of dots"></div>
     </div>
-    <div *ngIf="shoppingCenter">
+    <div *ngIf="shoppingCenter && !isInserting">
       <div class="center-card">
         <div class="center-image">
           <img [src]="shoppingCenter.mainImage || 'assets/Images/placeholder.png'" alt="{{ shoppingCenter.CenterName }}"
@@ -398,14 +398,14 @@
           {{ campaign.CampaignName }}
         </label>
 
-        <i
+<i
   class="fa-regular fa-eye"
   [class.active-eye]="expandedCampaigns[campaign.Id]"
   (click)="toggleCampaignDetails(campaign.Id)"
 ></i>
       </div>
 <div
-*ngIf="expandedCampaigns[campaign.Id] && campaignSpecs && propertySpecs"
+*ngIf="expandedCampaigns[campaign.Id] && campaignDetails[campaign.Id] as details"
     class="comparison-section"
 >
       <table class="comparison-table">
@@ -421,43 +421,43 @@
         <tr>
           <td class="criteria-label">
                         <i
-              *ngIf="checkSizeMatch()"
+              *ngIf="checkSizeMatch(details)"
               class="fa-solid fa-circle-check text-success"
             ></i>
             <i
-              *ngIf="!checkSizeMatch()"
+              *ngIf="!checkSizeMatch(details)"
               class="fa-solid fa-circle-xmark text-danger"
             ></i>
             Size
 
           </td>
           <td class="campaign-value">
-            {{ campaignSpecs.MinUnitSize | number }} -
-            {{ campaignSpecs.MaxUnitSize | number }} SF
+            {{ details.campaignSpecs.MinUnitSize | number }} -
+            {{ details.campaignSpecs.MaxUnitSize | number }} SF
           </td>
           <td class="property-value">
             <span
               *ngIf="
-                propertySpecs.ShoppingCenter?.Places &&
-                propertySpecs.ShoppingCenter.Places.length > 0
+                details.propertySpecs.ShoppingCenter?.Places &&
+                details.propertySpecs.ShoppingCenter.Places.length > 0
               "
             >
               <span
                 *ngFor="
-                  let place of propertySpecs.ShoppingCenter.Places;
+                  let place of details.propertySpecs.ShoppingCenter.Places;
                   let i = index
                 "
               >
                 {{ place.BuildingSizeSf | number }} SF
-                <span *ngIf="i < propertySpecs.ShoppingCenter.Places.length - 1"
+                <span *ngIf="i < details.propertySpecs.ShoppingCenter.Places.length - 1"
                   >,
                 </span>
               </span>
             </span>
             <span
               *ngIf="
-                !propertySpecs.ShoppingCenter?.Places ||
-                propertySpecs.ShoppingCenter.Places.length === 0
+                !details.propertySpecs.ShoppingCenter?.Places ||
+                details.propertySpecs.ShoppingCenter.Places.length === 0
               "
               class="text-muted"
             >
@@ -491,11 +491,11 @@
           <td class="campaign-value">
             <div *ngIf="matchedState">
               <span>
-                {{ propertySpecs.CenterState }}
+                {{ details.propertySpecs.CenterState }}
               </span>
             </div>
           </td>
-          <td class="property-value">{{ propertySpecs.CenterState }}</td>
+          <td class="property-value">{{ details.propertySpecs.CenterState }}</td>
           <!-- <td class="match-indicator">
             <i
               *ngIf="matchedState"
@@ -516,25 +516,25 @@
               class="fa-solid fa-circle-check text-success"
             ></i>
             <i
-              *ngIf="!matchedCity && getCampaignCities().length > 0"
+              *ngIf="!matchedCity && getCampaignCities(details).length > 0"
               class="fa-solid fa-circle-xmark text-danger"
             ></i>
             <i
-              *ngIf="getCampaignCities().length === 0"
+              *ngIf="getCampaignCities(details).length === 0"
               class="fa-solid fa-minus-circle text-warning"
             ></i>
             City</td>
           <td class="campaign-value">
             <span *ngIf="matchedCity">
               <span>
-                {{ propertySpecs.CenterCity }}
+                {{ details.propertySpecs.CenterCity }}
               </span>
             </span>
             <!-- <span *ngIf="getCampaignCities().length === 0" class="text-muted"
               >Any city in state</span
             > -->
           </td>
-          <td class="property-value">{{ propertySpecs.CenterCity }}</td>
+          <td class="property-value">{{ details.propertySpecs.CenterCity }}</td>
           <!-- <td class="match-indicator">
             <i
               *ngIf="matchedCity"
@@ -570,26 +570,26 @@
         <tr>
           <td class="criteria-label">
             <i
-              *ngIf="checkPropertyTypeMatch()"
+              *ngIf="checkPropertyTypeMatch(details)"
               class="fa-solid fa-circle-check text-success"
             ></i>
             <i
-              *ngIf="!checkPropertyTypeMatch()"
+              *ngIf="!checkPropertyTypeMatch(details)"
               class="fa-solid fa-circle-xmark text-danger"
             ></i>
              Type</td>
           <td class="campaign-value">
-            <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
+            <span *ngIf="details.campaignSpecs.ForSale && details.campaignSpecs.ForLease"
               >For Sale or Lease</span
             >
-            <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
+            <span *ngIf="details.campaignSpecs.ForSale && !details.campaignSpecs.ForLease"
               >For Sale</span
             >
-            <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
+            <span *ngIf="!details.campaignSpecs.ForSale && details.campaignSpecs.ForLease"
               >For Lease</span
             >
             <span
-              *ngIf="!campaignSpecs.ForSale && !campaignSpecs.ForLease"
+              *ngIf="!details.campaignSpecs.ForSale && !details.campaignSpecs.ForLease"
               class="text-muted"
               >
               <!-- Not specified -->
@@ -597,14 +597,14 @@
             >
           </td>
           <td class="property-value">
-            <div *ngIf="checkPropertyTypeMatch()">
-              <span *ngIf="campaignSpecs.ForSale && campaignSpecs.ForLease"
+            <div *ngIf="checkPropertyTypeMatch(details)">
+              <span *ngIf="details.campaignSpecs.ForSale && details.campaignSpecs.ForLease"
                 >For Sale or Lease</span
               >
-              <span *ngIf="campaignSpecs.ForSale && !campaignSpecs.ForLease"
+              <span *ngIf="details.campaignSpecs.ForSale && !details.campaignSpecs.ForLease"
                 >For Sale</span
               >
-              <span *ngIf="!campaignSpecs.ForSale && campaignSpecs.ForLease"
+              <span *ngIf="!details.campaignSpecs.ForSale && details.campaignSpecs.ForLease"
                 >For Lease</span
               >
             </div>
@@ -636,7 +636,7 @@
           <td class="campaign-value"></td>
           <td class="property-value">
             <span *ngIf="matchedPlaces">
-              {{ propertySpecs.ShoppingCenter.Places.length }} space(s)
+              {{ details.propertySpecs.ShoppingCenter.Places.length }} space(s)
               available
             </span>
             <span *ngIf="!matchedPlaces" class="text-muted"
@@ -663,7 +663,7 @@
              <i class="fa-solid fa-minus-circle text-warning"></i>
             Standalone</td>
           <td class="campaign-value">
-            {{ campaignSpecs.IsStandAlone ? "Yes" : "No" }}
+            {{ details.campaignSpecs.IsStandAlone ? "Yes" : "No" }}
           </td>
           <td class="property-value" class="text-muted">
             <!-- Not tracked -->
@@ -702,7 +702,7 @@
       </div>
       
     </div>
-    <p *ngIf="!shoppingCenter" class="spinner-message">{{ scanningmessage }}</p>
+    <p *ngIf="!shoppingCenter  || insertsuccess" class="spinner-message">{{ scanningmessage }}</p>
   </div>
 </div>
 

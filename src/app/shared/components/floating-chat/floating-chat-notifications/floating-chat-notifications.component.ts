@@ -27,6 +27,13 @@ declare global {
   interface Window {
     electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
   }
+  interface CampaignComparisonDetails {
+    campaignSpecs: any;
+    propertySpecs: any;
+    matchedPlaces: boolean;
+    matchedState: boolean;
+    matchedCity: boolean;
+  }
 }
 export {};
 
@@ -54,6 +61,8 @@ export class FloatingChatNotificationsComponent
   matchedState: boolean = false;
   matchedCity: boolean = false;
   expandedCampaigns: { [id: number]: boolean } = {};
+  campaignDetails: { [id: number]: CampaignComparisonDetails } = {};
+  isInserting = false;
 
   isTyping = false;
   campaignId!: number;
@@ -94,6 +103,7 @@ export class FloatingChatNotificationsComponent
   dots = new Array(6);
   isScanning: boolean = false;
   isready!: boolean;
+  insertsuccess!: boolean;
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -147,18 +157,13 @@ export class FloatingChatNotificationsComponent
     });
   }
 
-toggleCampaignDetails(id: number): void {
-  this.expandedCampaigns[id] = !this.expandedCampaigns[id];
+  toggleCampaignDetails(id: number): void {
+    this.expandedCampaigns[id] = !this.expandedCampaigns[id];
 
-  if (this.expandedCampaigns[id]) {
-    // Load details ONLY when opening
-    this.GetCampaignFullDetails(id);
-  } else {
-    // Close the section
-    this.campaignSpecs = null;
-    this.propertySpecs = null;
+    if (this.expandedCampaigns[id] && !this.campaignDetails[id]) {
+      this.GetCampaignFullDetails(id);
+    }
   }
-}
   onCampaignChange(event: any, campaignId: number): void {
     const isChecked = event.target.checked;
 
@@ -211,105 +216,107 @@ toggleCampaignDetails(id: number): void {
       next: (response) => {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json as ICampaign[];
-          console.log('this.campaigns',this.campaigns);
-          
+          console.log('this.campaigns', this.campaigns);
         } else {
           this.campaigns = [];
         }
       },
     });
   }
-  GetCampaignFullDetails(id:any){
-     const body: any = {
+  GetCampaignFullDetails(id: any) {
+    const body: any = {
       Name: 'GetCampaignFullDetails',
       Params: { CampaignId: id },
     };
-     this.placesService.GenericAPI(body).subscribe({
+    this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.campaignSpecs = res.json;
-        console.log('campaignSpecs', this.campaignSpecs);
-        this.propertySpecs = this.shoppingCenter;
-        console.log('propertySpecs', this.propertySpecs);
+        const campaignSpecs = res.json;
+        const propertySpecs = this.shoppingCenter;
+        console.log('campaignSpecs', campaignSpecs);
+        console.log('propertySpecs', propertySpecs);
 
-        // Check if places/availability exists
-        if (
-          this.propertySpecs.ShoppingCenter?.Places &&
-          this.propertySpecs.ShoppingCenter.Places.length > 0
-        ) {
-          this.matchedPlaces = true;
-        } else {
-          this.matchedPlaces = false;
-        }
-        console.log('matchPlaces', this.matchedPlaces);
+        const matchedPlaces =
+          !!propertySpecs.ShoppingCenter?.Places &&
+          propertySpecs.ShoppingCenter.Places.length > 0;
 
-        // Check state match - compare against all campaign locations
-        this.matchedState =
-          this.campaignSpecs.Locations?.some(
-            (loc: any) => loc.State === this.propertySpecs.CenterState
+        const matchedState =
+          campaignSpecs.Locations?.some(
+            (loc: any) => loc.State === propertySpecs.CenterState
           ) || false;
-        console.log('matchedState', this.matchedState);
 
-        // Check city match - compare against all campaign locations
-        this.matchedCity =
-          this.campaignSpecs.Locations?.some(
-            (loc: any) => loc.CityName === this.propertySpecs.CenterCity
+        const matchedCity =
+          campaignSpecs.Locations?.some(
+            (loc: any) => loc.CityName === propertySpecs.CenterCity
           ) || false;
-        console.log('matchedCity', this.matchedCity);
+
+        this.campaignDetails[id] = {
+          campaignSpecs,
+          propertySpecs,
+          matchedPlaces,
+          matchedState,
+          matchedCity,
+        };
       },
     });
   }
-    checkPropertyTypeMatch(): boolean {
+  checkPropertyTypeMatch(details: CampaignComparisonDetails): boolean {
+    const propertySpecs = details.propertySpecs;
+    const campaignSpecs = details.campaignSpecs;
+
     if (
-      !this.propertySpecs.ShoppingCenter?.Places ||
-      this.propertySpecs.ShoppingCenter.Places.length === 0
+      !propertySpecs.ShoppingCenter?.Places ||
+      propertySpecs.ShoppingCenter.Places.length === 0
     ) {
       return false;
     }
-    // If campaign accepts both sale and lease, it's always a match
-    if (this.campaignSpecs.ForSale && this.campaignSpecs.ForLease) {
+
+    if (campaignSpecs.ForSale && campaignSpecs.ForLease) {
       return true;
     }
-    // Check if any place has a matching lease type
-    return this.propertySpecs.ShoppingCenter.Places.some((place: any) => {
-      const leaseType = place.LeaseType?.toLowerCase();
 
-      if (this.campaignSpecs.ForSale && leaseType === 'sale') {
-        return true;
-      }
-      if (this.campaignSpecs.ForLease && leaseType === 'lease') {
-        return true;
-      }
+    return propertySpecs.ShoppingCenter.Places.some((place: any) => {
+      const leaseType = place.LeaseType?.toLowerCase();
+      if (campaignSpecs.ForSale && leaseType === 'sale') return true;
+      if (campaignSpecs.ForLease && leaseType === 'lease') return true;
       return false;
     });
   }
-    checkSizeMatch(): boolean {
+  checkSizeMatch(details: CampaignComparisonDetails): boolean {
+    const propertySpecs = details.propertySpecs;
+    const campaignSpecs = details.campaignSpecs;
+
     if (
-      !this.propertySpecs.ShoppingCenter?.Places ||
-      this.propertySpecs.ShoppingCenter.Places.length === 0
+      !propertySpecs.ShoppingCenter?.Places ||
+      propertySpecs.ShoppingCenter.Places.length === 0
     ) {
       return false;
     }
-    // Check if any place's size falls within the campaign's min/max range
-    return this.propertySpecs.ShoppingCenter.Places.some((place: any) => {
+
+    return propertySpecs.ShoppingCenter.Places.some((place: any) => {
       const size = place.BuildingSizeSf;
       return (
-        size >= this.campaignSpecs.MinUnitSize &&
-        size <= this.campaignSpecs.MaxUnitSize
+        size >= campaignSpecs.MinUnitSize && size <= campaignSpecs.MaxUnitSize
       );
     });
   }
-    getCampaignCities(): string[] {
-    if (!this.campaignSpecs?.Locations) return [];
-
-    return this.campaignSpecs.Locations.filter((loc: any) => loc.CityName).map(
+  getCampaignCities(details: CampaignComparisonDetails): string[] {
+    const campaignSpecs = details.campaignSpecs;
+    if (!campaignSpecs?.Locations) return [];
+    return campaignSpecs.Locations.filter((loc: any) => loc.CityName).map(
       (loc: any) => loc.CityName
     );
   }
 
-  
-
   InsertSCCampaign(): void {
-    this.isready=false;
+    this.isready = false;
+    this.isInserting = true;
+    this.insertsuccess = true;
+    this.scanningmessage = 'Shopping  Center added successfully!';
+
+    setTimeout(() => {
+      this.isready = true;
+      this.scanningmessage = 'Emily is Ready For Your Questions!';
+    }, 2000);
     if (!this.shoppingCenter || this.selectedCampaignIds.length === 0) {
       console.warn('No shopping center or campaigns selected');
       return;
@@ -336,22 +343,17 @@ toggleCampaignDetails(id: number): void {
     // 4️⃣ Send to API
     this.placesService.InsertSC(body).subscribe({
       next: (response) => {
-      console.log('InsertSC response', response);
-      this.isready=true;
+        console.log('InsertSC response', response);
+        this.isready = true;
 
-      // API returns { result: 1085 } — ensure we pass numeric id to InsertAutomation
-      const insertedSCId = Number(response?.result);
-      if (!isNaN(insertedSCId) && insertedSCId > 0) {
-        this.InsertAutomation(insertedSCId);
-      }
+        // API returns { result: 1085 } — ensure we pass numeric id to InsertAutomation
+        const insertedSCId = Number(response?.result);
+        if (!isNaN(insertedSCId) && insertedSCId > 0) {
+          this.InsertAutomation(insertedSCId);
+        }
 
         this.isScanning = false;
         this.selectedCampaignIds = [];
-        this.scanningmessage = 'Shopping Center added successfully!';
-
-        setTimeout(() => {
-          this.scanningmessage = 'Emily is Ready For Your Questions!';
-        }, 2000);
       },
       error: (error) => {
         console.error('InsertSC error', error);
@@ -375,8 +377,8 @@ toggleCampaignDetails(id: number): void {
     this.isScanning = false;
     this.selectedCampaignIds = [];
     this.scanningmessage = 'Emily is Ready For Your Questions!';
-    console.log('notificationSourceUrl',this.notificationSourceUrl);
-    
+    console.log('notificationSourceUrl', this.notificationSourceUrl);
+
     if (this.notificationSourceUrl) {
       (window as any).electronMessage.removeSiteScanJson(
         this.notificationSourceUrl

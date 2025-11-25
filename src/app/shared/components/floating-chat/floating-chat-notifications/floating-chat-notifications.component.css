@@ -690,11 +690,13 @@
 .spinner-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: center;
   gap: 16px;
   overflow-y: auto;
   overflow-x: auto;
   min-height: 100vh;
+  align-items: center;
+  min-width: 200px;
 }
 
 .spinner-chase {
@@ -927,7 +929,7 @@
   color: #007bff;
   font-weight: 600;
 }
-.comparison-section{
+.comparison-section {
   margin-top: 8px;
 }
 .comparison-table {
