@@ -269,21 +269,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       size: 'lg',
       scrollable: true,
     });
-
-    // Store the modal object
     this.General.modalObject = modalObject;
-
-    // Initialize street view after modal is opened
-    modalRef.result.then(
-      () => {
-        // Cleanup if needed
-      },
-      () => {
-        // Cleanup if needed
-      }
-    );
-
-    // Use setTimeout to ensure DOM is ready
     setTimeout(() => {
       this.viewOnStreet();
     }, 100);
@@ -331,29 +317,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
    */
   trackById(index: number, item: any): number {
     return item?.Id || item?.id || index;
-  }
-
-  requestCenterStatus(shoppingCenterId: number, campaignId: any) {
-    this.isLoadingstatus = true;
-
-    this.modalRef = this.modalService.open(this.statusModal, {
-      size: 'lg',
-      scrollable: true,
-    });
-
-    this.placesService
-      .GetSiteCurrentStatus(shoppingCenterId, campaignId)
-      .subscribe({
-        next: (res: any) => {
-          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
-          this.isLoadingstatus = false;
-        },
-        error: () => {
-          const errHtml = '<p>Error loading content</p>';
-          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
-          this.isLoadingstatus = false;
-        },
-      });
   }
 
   openModalSubmission(

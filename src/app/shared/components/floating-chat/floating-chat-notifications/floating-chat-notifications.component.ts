@@ -5,7 +5,6 @@ import {
   HostListener,
   ViewChild,
   AfterViewInit,
-  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -22,6 +21,8 @@ import { ChatModalService } from 'src/app/core/services/chat-modal.service';
 import { ChatItem } from 'src/app/shared/models/Notification';
 import { ChatFrom } from 'src/app/shared/models/Notification';
 import { PdfGeneratorService } from 'src/app/core/services/pdf-generator.service';
+import { ICampaign } from 'src/app/shared/models/icampaign';
+
 declare global {
   interface Window {
     electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
@@ -44,6 +45,15 @@ export class FloatingChatNotificationsComponent
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
   @ViewChild('chatWrapper', { static: true }) wrapperEl!: ElementRef;
   @ViewChild('detailsBody') detailsBody!: ElementRef;
+  // isDropdownOpen = false;
+  campaigns: ICampaign[] = [];
+  selectedCampaignIds: number[] = [];
+  campaignSpecs: any;
+  propertySpecs: any;
+  matchedPlaces: boolean = false;
+  matchedState: boolean = false;
+  matchedCity: boolean = false;
+  expandedCampaigns: { [id: number]: boolean } = {};
 
   isTyping = false;
   campaignId!: number;
@@ -57,21 +67,16 @@ export class FloatingChatNotificationsComponent
   canSaveTitle = false;
   showBottomSave: any = false;
   overlayTop = 0;
-  overlayLeft = 16; // SAME as before!
+  overlayLeft = 16;
   overlayWidth = 0;
   overlayHeight = 0;
-
   safeHtmlString: SafeHtml = '';
-
   public selectedNotification: Notification | null = null;
   public isSaving = false;
   private currentOpenNotificationId: number | null = null;
   public showSaveToast = false;
-
   private wasSticky = true;
-
   private readonly BOTTOM_STICKY_THRESHOLD = 28;
-
   shoppingCenterId!: number;
   organizationId!: number;
   contactId!: number;
@@ -106,6 +111,7 @@ export class FloatingChatNotificationsComponent
     this.initializeChatModalSubscriptions();
     this.startPolling(2000);
   }
+
   private initializeChatContext(): void {
     this.handleInitialRouteState();
     this.listenToRouteChanges();
@@ -115,6 +121,7 @@ export class FloatingChatNotificationsComponent
       this.conversationId = 3;
       this.notificationSourceUrl = url;
     });
+
     (window as any).electronMessage?.onSiteScanMessage((object: any) => {
       if (!this.isLastStep) {
         this.isScanning = true;
@@ -131,12 +138,250 @@ export class FloatingChatNotificationsComponent
         }, 2500);
       } else if (this.isLastStep && this.shoppingCenter) {
         this.isready = true;
+        this.GetUserCampaigns();
       }
       console.log('objectForScan', this.objectForScan);
       console.log('scanningmessage', this.scanningmessage);
       console.log('isLastStep', this.isLastStep);
       console.log('shoppingCenter', this.shoppingCenter);
     });
+  }
+
+toggleCampaignDetails(id: number): void {
+  this.expandedCampaigns[id] = !this.expandedCampaigns[id];
+
+  if (this.expandedCampaigns[id]) {
+    // Load details ONLY when opening
+    this.GetCampaignFullDetails(id);
+  } else {
+    // Close the section
+    this.campaignSpecs = null;
+    this.propertySpecs = null;
+  }
+}
+  onCampaignChange(event: any, campaignId: number): void {
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      // Add campaign ID if checked
+      if (!this.selectedCampaignIds.includes(campaignId)) {
+        this.selectedCampaignIds.push(campaignId);
+      }
+    } else {
+      // Remove campaign ID if unchecked
+      this.selectedCampaignIds = this.selectedCampaignIds.filter(
+        (id) => id !== campaignId
+      );
+    }
+
+    // Trigger change detection to update the dropdown label
+    this.cdRef.detectChanges();
+  }
+
+  getSelectedCampaignsText(): string {
+    if (this.selectedCampaignIds.length === 0) {
+      return 'Select campaigns...';
+    }
+
+    if (this.selectedCampaignIds.length === this.campaigns.length) {
+      return 'All campaigns selected';
+    }
+
+    const selectedCount = this.selectedCampaignIds.length;
+    return `${selectedCount} campaign${selectedCount > 1 ? 's' : ''} selected`;
+  }
+
+  // Close dropdown when clicking outside
+  // @HostListener('document:click', ['$event'])
+  // onDocumentClick(event: MouseEvent): void {
+  //   const target = event.target as HTMLElement;
+  //   if (!target.closest('.campaign-selection')) {
+  //     this.closeDropdown();
+  //   }
+  // }
+
+  // Campaign Methods
+  GetUserCampaigns(): void {
+    const body: any = {
+      Name: 'GetUserCampaigns',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (response) => {
+        if (response.json && response.json.length > 0) {
+          this.campaigns = response.json as ICampaign[];
+          console.log('this.campaigns',this.campaigns);
+          
+        } else {
+          this.campaigns = [];
+        }
+      },
+    });
+  }
+  GetCampaignFullDetails(id:any){
+     const body: any = {
+      Name: 'GetCampaignFullDetails',
+      Params: { CampaignId: id },
+    };
+     this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.campaignSpecs = res.json;
+        console.log('campaignSpecs', this.campaignSpecs);
+        this.propertySpecs = this.shoppingCenter;
+        console.log('propertySpecs', this.propertySpecs);
+
+        // Check if places/availability exists
+        if (
+          this.propertySpecs.ShoppingCenter?.Places &&
+          this.propertySpecs.ShoppingCenter.Places.length > 0
+        ) {
+          this.matchedPlaces = true;
+        } else {
+          this.matchedPlaces = false;
+        }
+        console.log('matchPlaces', this.matchedPlaces);
+
+        // Check state match - compare against all campaign locations
+        this.matchedState =
+          this.campaignSpecs.Locations?.some(
+            (loc: any) => loc.State === this.propertySpecs.CenterState
+          ) || false;
+        console.log('matchedState', this.matchedState);
+
+        // Check city match - compare against all campaign locations
+        this.matchedCity =
+          this.campaignSpecs.Locations?.some(
+            (loc: any) => loc.CityName === this.propertySpecs.CenterCity
+          ) || false;
+        console.log('matchedCity', this.matchedCity);
+      },
+    });
+  }
+    checkPropertyTypeMatch(): boolean {
+    if (
+      !this.propertySpecs.ShoppingCenter?.Places ||
+      this.propertySpecs.ShoppingCenter.Places.length === 0
+    ) {
+      return false;
+    }
+    // If campaign accepts both sale and lease, it's always a match
+    if (this.campaignSpecs.ForSale && this.campaignSpecs.ForLease) {
+      return true;
+    }
+    // Check if any place has a matching lease type
+    return this.propertySpecs.ShoppingCenter.Places.some((place: any) => {
+      const leaseType = place.LeaseType?.toLowerCase();
+
+      if (this.campaignSpecs.ForSale && leaseType === 'sale') {
+        return true;
+      }
+      if (this.campaignSpecs.ForLease && leaseType === 'lease') {
+        return true;
+      }
+      return false;
+    });
+  }
+    checkSizeMatch(): boolean {
+    if (
+      !this.propertySpecs.ShoppingCenter?.Places ||
+      this.propertySpecs.ShoppingCenter.Places.length === 0
+    ) {
+      return false;
+    }
+    // Check if any place's size falls within the campaign's min/max range
+    return this.propertySpecs.ShoppingCenter.Places.some((place: any) => {
+      const size = place.BuildingSizeSf;
+      return (
+        size >= this.campaignSpecs.MinUnitSize &&
+        size <= this.campaignSpecs.MaxUnitSize
+      );
+    });
+  }
+    getCampaignCities(): string[] {
+    if (!this.campaignSpecs?.Locations) return [];
+
+    return this.campaignSpecs.Locations.filter((loc: any) => loc.CityName).map(
+      (loc: any) => loc.CityName
+    );
+  }
+
+  
+
+  InsertSCCampaign(): void {
+    this.isready=false;
+    if (!this.shoppingCenter || this.selectedCampaignIds.length === 0) {
+      console.warn('No shopping center or campaigns selected');
+      return;
+    }
+    if (this.notificationSourceUrl) {
+      (window as any).electronMessage.removeSiteScanJson(
+        this.notificationSourceUrl
+      );
+    }
+
+    // 1️⃣ Check if shoppingCenter has "campaignIds" field
+    if (Array.isArray(this.shoppingCenter.campaignIds)) {
+      // 2️⃣ Replace empty array with selectedCampaignIds
+      this.shoppingCenter.campaignIds = [...this.selectedCampaignIds];
+    } else {
+      // If shoppingCenter does NOT have campaignIds at all, add it
+      this.shoppingCenter.campaignIds = [...this.selectedCampaignIds];
+    }
+
+    // 3️⃣ Final JSON to send — ONLY the shoppingCenter object
+    const body = this.shoppingCenter;
+    console.log('Sending ShoppingCenter JSON:', body);
+
+    // 4️⃣ Send to API
+    this.placesService.InsertSC(body).subscribe({
+      next: (response) => {
+      console.log('InsertSC response', response);
+      this.isready=true;
+
+      // API returns { result: 1085 } — ensure we pass numeric id to InsertAutomation
+      const insertedSCId = Number(response?.result);
+      if (!isNaN(insertedSCId) && insertedSCId > 0) {
+        this.InsertAutomation(insertedSCId);
+      }
+
+        this.isScanning = false;
+        this.selectedCampaignIds = [];
+        this.scanningmessage = 'Shopping Center added successfully!';
+
+        setTimeout(() => {
+          this.scanningmessage = 'Emily is Ready For Your Questions!';
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('InsertSC error', error);
+        this.scanningmessage =
+          'Error adding shopping center. Please try again.';
+
+        setTimeout(() => {
+          this.scanningmessage = 'Emily is Ready For Your Questions!';
+          this.isScanning = false;
+        }, 3000);
+      },
+    });
+  }
+
+  InsertAutomation(id: any) {
+    this.placesService.InsertAutomation(id).subscribe({
+      next: () => {},
+    });
+  }
+  cancelInsertion() {
+    this.isScanning = false;
+    this.selectedCampaignIds = [];
+    this.scanningmessage = 'Emily is Ready For Your Questions!';
+    console.log('notificationSourceUrl',this.notificationSourceUrl);
+    
+    if (this.notificationSourceUrl) {
+      (window as any).electronMessage.removeSiteScanJson(
+        this.notificationSourceUrl
+      );
+    }
   }
 
   private handleInitialRouteState(): void {

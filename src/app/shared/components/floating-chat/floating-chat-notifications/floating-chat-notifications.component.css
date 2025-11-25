@@ -692,9 +692,13 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 100vh;
 }
 
 .spinner-chase {
+  margin-top: 20px;
   width: 50px;
   height: 50px;
   position: relative;
@@ -794,14 +798,13 @@
 }
 .center-card {
   position: relative;
-  margin: 20px;
+  margin: 5px;
   background: #ffffff;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   transition: all 0.25s ease;
   cursor: pointer;
-  font-family: "Inter", sans-serif;
 }
 
 .center-card:hover {
@@ -811,6 +814,8 @@
 
 .center-image img {
   width: 100%;
+  height: 140px;
+  object-fit: cover;
 }
 
 .center-content {
@@ -839,4 +844,197 @@
   color: #555;
   font-size: 0.9rem;
   line-height: 1.4;
+}
+
+.campaign-selection {
+  margin: 5px 0;
+  width: 100%;
+}
+
+.campaign-selection h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.campaign-list-container {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.campaign-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.campaign-item {
+  padding: 6px;
+  background-color: white;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.campaign-item:last-child {
+  border-bottom: none;
+}
+
+.campaign-item:hover {
+  background-color: #f8f9fa;
+}
+
+.campaign-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin: 0;
+  font-size: 14px;
+  width: 100%;
+}
+
+.campaign-label input[type="checkbox"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.campaign-name {
+  flex: 1;
+  color: #333;
+  font-weight: 500;
+}
+
+.no-campaigns {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+
+/* Optional: Add some styling for selected items */
+.campaign-item.selected {
+  background-color: #e3f2fd;
+  border-left: 3px solid #007bff;
+}
+
+.campaign-item.selected .campaign-name {
+  color: #007bff;
+  font-weight: 600;
+}
+.comparison-section{
+  margin-top: 8px;
+}
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-table th {
+  background: #14213d;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-size: 0.7rem;
+}
+
+.comparison-table td {
+  padding: 2px;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+.comparison-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.criteria-label {
+  font-weight: 600;
+  color: #495057;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.campaign-value {
+  color: #495057;
+  font-weight: 500;
+  width: 35%;
+}
+
+.property-value {
+  color: #495057;
+  font-weight: 500;
+  width: 35%;
+}
+
+.match-indicator {
+  text-align: center;
+  font-size: 1rem;
+  width: 10%;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+  font-style: italic;
+}
+
+.match-summary {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea15 0%, #4b74a215 100%);
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.65rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.summary-value {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #667eea;
+}
+.fa-eye {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.fa-eye.active-eye {
+  color: #007bff !important; /* blue when active */
 }
