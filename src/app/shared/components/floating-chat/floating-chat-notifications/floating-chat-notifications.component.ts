@@ -22,8 +22,8 @@ import { ChatItem } from 'src/app/shared/models/Notification';
 import { ChatFrom } from 'src/app/shared/models/Notification';
 import { PdfGeneratorService } from 'src/app/core/services/pdf-generator.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
-
-declare global {
+import { SpinnerComponent } from './spinner/spinner.component';
+ declare global {
   interface Window {
     electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
   }
@@ -40,7 +40,7 @@ export {};
 @Component({
   selector: 'app-floating-chat-notifications',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule,SpinnerComponent],
   templateUrl: './floating-chat-notifications.component.html',
   styleUrls: ['./floating-chat-notifications.component.css'],
 })
@@ -52,17 +52,7 @@ export class FloatingChatNotificationsComponent
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
   @ViewChild('chatWrapper', { static: true }) wrapperEl!: ElementRef;
   @ViewChild('detailsBody') detailsBody!: ElementRef;
-  // isDropdownOpen = false;
-  campaigns: ICampaign[] = [];
-  selectedCampaignIds: number[] = [];
-  campaignSpecs: any;
-  propertySpecs: any;
-  matchedPlaces: boolean = false;
-  matchedState: boolean = false;
-  matchedCity: boolean = false;
-  expandedCampaigns: { [id: number]: boolean } = {};
-  campaignDetails: { [id: number]: CampaignComparisonDetails } = {};
-  isInserting = false;
+ 
 
   isTyping = false;
   campaignId!: number;
@@ -96,14 +86,7 @@ export class FloatingChatNotificationsComponent
   previousNotificationsLength = 0;
   private subs: Subscription[] = [];
   awaitingresponse: boolean = false;
-  objectForScan: any;
-  scanningmessage!: string;
-  isLastStep!: boolean;
-  shoppingCenter: any;
-  dots = new Array(6);
-  isScanning: boolean = false;
-  isready!: boolean;
-  insertsuccess!: boolean;
+
   constructor(
     private elementRef: ElementRef,
     public notificationService: NotificationService,
@@ -132,260 +115,10 @@ export class FloatingChatNotificationsComponent
       this.notificationSourceUrl = url;
     });
 
-    (window as any).electronMessage?.onSiteScanMessage((object: any) => {
-      if (!this.isLastStep) {
-        this.isScanning = true;
-      }
-      this.objectForScan = object;
-      this.scanningmessage = object.message;
-      this.shoppingCenter = object.data;
-      this.isLastStep = object.isLastStep;
-      if (this.isLastStep && !this.shoppingCenter) {
-        this.scanningmessage = 'Emily is Ready For Your Questions!';
-        this.isready = true;
-        setTimeout(() => {
-          this.isScanning = false;
-        }, 2500);
-      } else if (this.isLastStep && this.shoppingCenter) {
-        this.isready = true;
-        this.GetUserCampaigns();
-      }
-      console.log('objectForScan', this.objectForScan);
-      console.log('scanningmessage', this.scanningmessage);
-      console.log('isLastStep', this.isLastStep);
-      console.log('shoppingCenter', this.shoppingCenter);
-    });
+
   }
 
-  toggleCampaignDetails(id: number): void {
-    this.expandedCampaigns[id] = !this.expandedCampaigns[id];
-
-    if (this.expandedCampaigns[id] && !this.campaignDetails[id]) {
-      this.GetCampaignFullDetails(id);
-    }
-  }
-  onCampaignChange(event: any, campaignId: number): void {
-    const isChecked = event.target.checked;
-
-    if (isChecked) {
-      // Add campaign ID if checked
-      if (!this.selectedCampaignIds.includes(campaignId)) {
-        this.selectedCampaignIds.push(campaignId);
-      }
-    } else {
-      // Remove campaign ID if unchecked
-      this.selectedCampaignIds = this.selectedCampaignIds.filter(
-        (id) => id !== campaignId
-      );
-    }
-
-    // Trigger change detection to update the dropdown label
-    this.cdRef.detectChanges();
-  }
-
-  getSelectedCampaignsText(): string {
-    if (this.selectedCampaignIds.length === 0) {
-      return 'Select campaigns...';
-    }
-
-    if (this.selectedCampaignIds.length === this.campaigns.length) {
-      return 'All campaigns selected';
-    }
-
-    const selectedCount = this.selectedCampaignIds.length;
-    return `${selectedCount} campaign${selectedCount > 1 ? 's' : ''} selected`;
-  }
-
-  // Close dropdown when clicking outside
-  // @HostListener('document:click', ['$event'])
-  // onDocumentClick(event: MouseEvent): void {
-  //   const target = event.target as HTMLElement;
-  //   if (!target.closest('.campaign-selection')) {
-  //     this.closeDropdown();
-  //   }
-  // }
-
-  // Campaign Methods
-  GetUserCampaigns(): void {
-    const body: any = {
-      Name: 'GetUserCampaigns',
-      Params: {},
-    };
-
-    this.placesService.GenericAPI(body).subscribe({
-      next: (response) => {
-        if (response.json && response.json.length > 0) {
-          this.campaigns = response.json as ICampaign[];
-          console.log('this.campaigns', this.campaigns);
-        } else {
-          this.campaigns = [];
-        }
-      },
-    });
-  }
-  GetCampaignFullDetails(id: any) {
-    const body: any = {
-      Name: 'GetCampaignFullDetails',
-      Params: { CampaignId: id },
-    };
-    this.placesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        const campaignSpecs = res.json;
-        const propertySpecs = this.shoppingCenter;
-        console.log('campaignSpecs', campaignSpecs);
-        console.log('propertySpecs', propertySpecs);
-
-        const matchedPlaces =
-          !!propertySpecs.ShoppingCenter?.Places &&
-          propertySpecs.ShoppingCenter.Places.length > 0;
-
-        const matchedState =
-          campaignSpecs.Locations?.some(
-            (loc: any) => loc.State === propertySpecs.CenterState
-          ) || false;
-
-        const matchedCity =
-          campaignSpecs.Locations?.some(
-            (loc: any) => loc.CityName === propertySpecs.CenterCity
-          ) || false;
-
-        this.campaignDetails[id] = {
-          campaignSpecs,
-          propertySpecs,
-          matchedPlaces,
-          matchedState,
-          matchedCity,
-        };
-      },
-    });
-  }
-  checkPropertyTypeMatch(details: CampaignComparisonDetails): boolean {
-    const propertySpecs = details.propertySpecs;
-    const campaignSpecs = details.campaignSpecs;
-
-    if (
-      !propertySpecs.ShoppingCenter?.Places ||
-      propertySpecs.ShoppingCenter.Places.length === 0
-    ) {
-      return false;
-    }
-
-    if (campaignSpecs.ForSale && campaignSpecs.ForLease) {
-      return true;
-    }
-
-    return propertySpecs.ShoppingCenter.Places.some((place: any) => {
-      const leaseType = place.LeaseType?.toLowerCase();
-      if (campaignSpecs.ForSale && leaseType === 'sale') return true;
-      if (campaignSpecs.ForLease && leaseType === 'lease') return true;
-      return false;
-    });
-  }
-  checkSizeMatch(details: CampaignComparisonDetails): boolean {
-    const propertySpecs = details.propertySpecs;
-    const campaignSpecs = details.campaignSpecs;
-
-    if (
-      !propertySpecs.ShoppingCenter?.Places ||
-      propertySpecs.ShoppingCenter.Places.length === 0
-    ) {
-      return false;
-    }
-
-    return propertySpecs.Availability.some((place: any) => {
-      const size = place.BuildingSizeSf;
-      return (
-        size >= campaignSpecs.MinUnitSize && size <= campaignSpecs.MaxUnitSize
-      );
-    });
-  }
-  getCampaignCities(details: CampaignComparisonDetails): string[] {
-    const campaignSpecs = details.campaignSpecs;
-    if (!campaignSpecs?.Locations) return [];
-    return campaignSpecs.Locations.filter((loc: any) => loc.CityName).map(
-      (loc: any) => loc.CityName
-    );
-  }
-
-  InsertSCCampaign(): void {
-    this.isready = false;
-    this.isInserting = true;
-    this.insertsuccess = true;
-    this.scanningmessage = 'Shopping  Center added successfully!';
-
-    setTimeout(() => {
-      this.isready = true;
-      this.scanningmessage = 'Emily is Ready For Your Questions!';
-    }, 2000);
-    if (!this.shoppingCenter || this.selectedCampaignIds.length === 0) {
-      console.warn('No shopping center or campaigns selected');
-      return;
-    }
-    if (this.notificationSourceUrl) {
-      (window as any).electronMessage.removeSiteScanJson(
-        this.notificationSourceUrl
-      );
-    }
-
-    // 1️⃣ Check if shoppingCenter has "campaignIds" field
-    if (Array.isArray(this.shoppingCenter.campaignIds)) {
-      // 2️⃣ Replace empty array with selectedCampaignIds
-      this.shoppingCenter.campaignIds = [...this.selectedCampaignIds];
-    } else {
-      // If shoppingCenter does NOT have campaignIds at all, add it
-      this.shoppingCenter.campaignIds = [...this.selectedCampaignIds];
-    }
-
-    // 3️⃣ Final JSON to send — ONLY the shoppingCenter object
-    const body = this.shoppingCenter;
-    console.log('Sending ShoppingCenter JSON:', body);
-
-    // 4️⃣ Send to API
-    this.placesService.InsertSC(body).subscribe({
-      next: (response) => {
-        console.log('InsertSC response', response);
-        this.isready = true;
-
-        // API returns { result: 1085 } — ensure we pass numeric id to InsertAutomation
-        const insertedSCId = Number(response?.result);
-        if (!isNaN(insertedSCId) && insertedSCId > 0) {
-          this.InsertAutomation(insertedSCId);
-        }
-
-        this.isScanning = false;
-        this.selectedCampaignIds = [];
-      },
-      error: (error) => {
-        console.error('InsertSC error', error);
-        this.scanningmessage =
-          'Error adding shopping center. Please try again.';
-
-        setTimeout(() => {
-          this.scanningmessage = 'Emily is Ready For Your Questions!';
-          this.isScanning = false;
-        }, 3000);
-      },
-    });
-  }
-
-  InsertAutomation(id: any) {
-    this.placesService.InsertAutomation(id).subscribe({
-      next: () => {},
-    });
-  }
-  cancelInsertion() {
-    this.isScanning = false;
-    this.selectedCampaignIds = [];
-    this.scanningmessage = 'Emily is Ready For Your Questions!';
-    console.log('notificationSourceUrl', this.notificationSourceUrl);
-
-    if (this.notificationSourceUrl) {
-      (window as any).electronMessage.removeSiteScanJson(
-        this.notificationSourceUrl
-      );
-    }
-  }
-
+//=====================Andrew=========================
   private handleInitialRouteState(): void {
     if (this.router.url.includes('chatbot')) {
       this.electronSideBar = true;
