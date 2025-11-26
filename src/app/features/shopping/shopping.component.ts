@@ -21,8 +21,7 @@ import { ContactBrokerComponent } from '../kayak-home/shopping-center-table/cont
 import { MapsService } from 'src/app/core/services/maps.service';
 import { signal, effect } from '@angular/core';
 import { ChatModalService } from 'src/app/core/services/chat-modal.service';
-import { CdkPortal } from '@angular/cdk/portal';
-
+ 
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
