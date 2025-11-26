@@ -23,7 +23,7 @@ import { ChatFrom } from 'src/app/shared/models/Notification';
 import { PdfGeneratorService } from 'src/app/core/services/pdf-generator.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
 import { SpinnerComponent } from './spinner/spinner.component';
- declare global {
+declare global {
   interface Window {
     electronAPI?: { chatbotOverlayVisible: (visible: boolean) => void };
   }
@@ -40,7 +40,7 @@ export {};
 @Component({
   selector: 'app-floating-chat-notifications',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule,SpinnerComponent],
+  imports: [CommonModule, RouterModule, FormsModule, SpinnerComponent],
   templateUrl: './floating-chat-notifications.component.html',
   styleUrls: ['./floating-chat-notifications.component.css'],
 })
@@ -52,7 +52,6 @@ export class FloatingChatNotificationsComponent
   @ViewChild('contentToDownload') contentToDownload!: ElementRef;
   @ViewChild('chatWrapper', { static: true }) wrapperEl!: ElementRef;
   @ViewChild('detailsBody') detailsBody!: ElementRef;
- 
 
   isTyping = false;
   campaignId!: number;
@@ -114,11 +113,9 @@ export class FloatingChatNotificationsComponent
       this.conversationId = 3;
       this.notificationSourceUrl = url;
     });
-
-
   }
 
-//=====================Andrew=========================
+  //=====================Andrew=========================
   private handleInitialRouteState(): void {
     if (this.router.url.includes('chatbot')) {
       this.electronSideBar = true;
@@ -198,24 +195,38 @@ export class FloatingChatNotificationsComponent
     const list = this.notificationService.notificationsnew;
     const hasNew = list.length > this.previousNotificationsLength;
 
-    if (!hasNew) return;
-    this.cdRef.detectChanges();
-    if (this.isAtBottom()) {
-      this.scrollToBottom();
-    } else if (!this.isTyping) {
-      this.newNotificationsCount++;
-      this.showScrollButton = true;
+    if (!hasNew) {
+      return;
     }
+
+    const wasAtBottomBeforeRender = this.isAtBottom();
+
     this.previousNotificationsLength = list.length;
-    if (
-      this.awaitingresponse &&
-      list[list.length - 1].html &&
-      !this.electronSideBar
-    ) {
-      this.openOverlayModal(list[list.length - 1]);
-      this.awaitingresponse = false;
-    }
+
+    this.cdRef.detectChanges();
+
+    requestAnimationFrame(() => {
+      const atBottomAfter = this.isAtBottom();
+      if (wasAtBottomBeforeRender) {
+        this.scrollToBottom(true);
+        this.wasSticky = true;
+      } else if (atBottomAfter) {
+        this.scrollToBottom(true);
+        this.wasSticky = true;
+      } else {
+        this.showScrollButton = true;
+        this.newNotificationsCount++;
+        this.wasSticky = false;
+      }
+
+      const lastMsg = list[list.length - 1];
+      if (this.awaitingresponse && lastMsg?.html && !this.electronSideBar) {
+        this.openOverlayModal(lastMsg);
+        this.awaitingresponse = false;
+      }
+    });
   }
+
   private insertOptimisticMessage(text: string): void {
     const tempMsg: any = {
       id: `temp-${Date.now()}`,
@@ -241,7 +252,7 @@ export class FloatingChatNotificationsComponent
         setTimeout(() => {
           this.isTyping = typing;
           this.scrollToBottom();
-        }, 3000)
+        }, 2000)
       ),
       this.chatModal.shoppingCenterId$.subscribe(
         (id) => (this.shoppingCenterId = id)
@@ -408,12 +419,12 @@ export class FloatingChatNotificationsComponent
 
   onScroll(): void {
     const atBottom = this.isAtBottom();
-    this.wasSticky = atBottom;
     if (atBottom) {
+      this.wasSticky = true;
       this.showScrollButton = false;
       this.newNotificationsCount = 0;
-    } else if (this.newNotificationsCount > 0) {
-      this.showScrollButton = true;
+    } else {
+      this.wasSticky = false;
     }
   }
 
@@ -540,7 +551,7 @@ export class FloatingChatNotificationsComponent
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
-  
+
   isScanningPageContents(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
@@ -554,10 +565,18 @@ export class FloatingChatNotificationsComponent
   }
 
   isAtBottom(): boolean {
-    const el = this.messagesContainer.nativeElement;
-    if (!el) return true;
-    const distance = el.scrollHeight - (el.scrollTop + el.clientHeight);
-    return distance <= this.BOTTOM_STICKY_THRESHOLD;
+    const el = this.messagesContainer?.nativeElement;
+    if (!el) {
+      return true;
+    }
+
+    const scrollTop = el.scrollTop;
+    const clientHeight = el.clientHeight;
+    const scrollHeight = el.scrollHeight;
+
+    const scrollBottom = scrollHeight - (scrollTop + clientHeight);
+
+    return scrollBottom <= 60;
   }
 
   ngAfterViewInit(): void {
@@ -578,13 +597,20 @@ export class FloatingChatNotificationsComponent
     return !nextItem;
   }
 
-  scrollToBottom(): void {
-    const el = this.messagesContainer.nativeElement;
-    if (!el) return;
+  scrollToBottom(smooth: boolean = false): void {
+    const el = this.messagesContainer?.nativeElement;
+    if (!el) {
+      return;
+    }
 
-    this.cdRef.detectChanges();
     requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
+      const maxScroll = el.scrollHeight - el.clientHeight;
+
+      el.scrollTo({
+        top: maxScroll,
+        behavior: smooth ? 'smooth' : 'auto',
+      });
+
       this.wasSticky = true;
       this.showScrollButton = false;
       this.newNotificationsCount = 0;
