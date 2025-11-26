@@ -540,6 +540,7 @@ export class FloatingChatNotificationsComponent
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
+  
   isScanningPageContents(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
