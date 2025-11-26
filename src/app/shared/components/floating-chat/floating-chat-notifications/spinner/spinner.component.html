@@ -256,7 +256,11 @@
                         Standalone
                       </td>
                       <td class="campaign-value">
-                        {{ details.campaignSpecs.IsStandAlone ? "Yes" : "No" }}
+                        <!-- {{ details.campaignSpecs.IsStandAlone ? "Yes" : "No" }} -->
+                          <div *ngIf="details.campaignSpecs.ForSale &&
+                            !details.campaignSpecs.ForLease">
+                            <span>Yes</span>
+                            </div>
                       </td>
                       <td class="property-value" class="text-muted">
                         <!-- Not tracked -->
