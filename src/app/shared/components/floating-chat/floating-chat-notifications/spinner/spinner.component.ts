@@ -35,7 +35,7 @@ export class SpinnerComponent implements OnInit {
     private placesService: PlacesService,
     private cdRef: ChangeDetectorRef
   ) {}
-  ngOnInit(): void {    
+  ngOnInit(): void {
     (window as any).electronMessage?.onSiteScanMessage((object: any) => {
       if (!this.isLastStep) {
         this.isScanning = true;
@@ -53,7 +53,7 @@ export class SpinnerComponent implements OnInit {
       } else if (this.isLastStep && this.shoppingCenter) {
         this.isready = true;
         this.GetUserCampaigns();
-      } 
+      }
     });
   }
 
@@ -224,10 +224,7 @@ export class SpinnerComponent implements OnInit {
       return;
     }
     if (this.sourceUrl) {
- 
-      (window as any).electronMessage.removeSiteScanJson(
-        this.sourceUrl
-      );
+      (window as any).electronMessage.removeSiteScanJson(this.sourceUrl);
     }
 
     if (Array.isArray(this.shoppingCenter.campaignIds)) {
@@ -273,11 +270,9 @@ export class SpinnerComponent implements OnInit {
     this.isScanning = false;
     this.selectedCampaignIds = [];
     this.scanningmessage = 'Emily is Ready For Your Questions!';
- 
+
     if (this.sourceUrl) {
-       (window as any).electronMessage.removeSiteScanJson(
-        this.sourceUrl
-      );
+      (window as any).electronMessage.removeSiteScanJson(this.sourceUrl);
     }
   }
 }
