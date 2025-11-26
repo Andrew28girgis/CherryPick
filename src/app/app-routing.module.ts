@@ -201,14 +201,7 @@ const routes: Routes = [
         (m) => m.ShoppingModule
       ),
     canActivate: [AuthGuardService, TenantOnlyGuard],
-  },
-  {
-    path: 'extractShopping/:id',
-    loadChildren: () =>
-      import(
-        './features/extract-shopping-center/extract-shopping-center.module'
-      ).then((m) => m.ExtractShoppingCenterModule),
-  },
+  }, 
   {
     path: 'spinner',
     component: AiSpinnerComponent,
