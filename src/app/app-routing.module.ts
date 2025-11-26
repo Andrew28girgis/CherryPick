@@ -97,26 +97,7 @@ const routes: Routes = [
     path: 'landing/:id/:shoppiongCenterId/:campaignId',
     component: LandingComponent,
     data: { hideHeader: true },
-  },
-  //   {
-  //   path: 'landing/:id/:shoppiongCenterId/:campaignId',
-  //   component: Landing2Component,
-  //   data: { hideHeader: true },
-  // },
-  {
-    path: 'landlord',
-    loadChildren: () =>
-      import('./features/landlord/landlord.module').then(
-        (m) => m.LandlordModule
-      ),
-    canActivate: [LandlordAccessGuard],
-  },
-  {
-    path: 'summary',
-    loadChildren: () =>
-      import('./features/summery/summery.module').then((m) => m.SummeryModule),
-    canActivate: [AuthGuardService],
-  },
+  }, 
 
   {
     path: 'overview',
@@ -150,13 +131,7 @@ const routes: Routes = [
         (m) => m.AddTenantsModule
       ),
     canActivate: [TenantOnlyGuard, AuthGuardService],
-  },
-  {
-    path: 'summary/:orgId',
-    loadChildren: () =>
-      import('./features/summery/summery.module').then((m) => m.SummeryModule),
-    canActivate: [TenantOnlyGuard, AuthGuardService],
-  },
+  }, 
 
   {
     path: 'market-survey',

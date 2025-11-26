@@ -301,7 +301,7 @@ export class FloatingChatNotificationsComponent
   }
   getCampaignCities(details: CampaignComparisonDetails): string[] {
     const campaignSpecs = details.campaignSpecs;
-    if (!campaignSpecs?.Locations) return [];    
+    if (!campaignSpecs?.Locations) return [];
     return campaignSpecs.Locations.filter((loc: any) => loc.CityName).map(
       (loc: any) => loc.CityName
     );
@@ -807,6 +807,7 @@ export class FloatingChatNotificationsComponent
     const nextItem = this.chatTimeline[index + 1];
     return !nextItem;
   }
+  
   isScanningPageContents(item: ChatItem, index: number): boolean {
     if (
       !item.message ||
