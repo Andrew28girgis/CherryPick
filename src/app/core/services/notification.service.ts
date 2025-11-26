@@ -128,7 +128,7 @@ export class NotificationService {
           notification.contextExtendPrompt.trim().toLowerCase() !== 'null'
         ) {
           const token = localStorage.getItem('token') || '';
-          (window as any).electronMessage.startChatAutmation(
+          (window as any).electronMessage.startChatAutomation(
             notification.contextExtendPrompt,
             token,
             notification.sourceUrl ?? null,
