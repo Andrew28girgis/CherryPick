@@ -229,7 +229,7 @@ export class NewContactBrokerComponent implements OnInit, OnChanges {
       const promptsBody = {
         name: 'GetPrompts',
         MainEntity: null,
-        params: { Id: categoryId },
+        params: { PromptCategoryId: categoryId },
         Json: null,
       };
       const promptsResponse = await firstValueFrom(

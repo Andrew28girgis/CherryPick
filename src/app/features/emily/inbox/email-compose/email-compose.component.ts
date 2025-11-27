@@ -174,7 +174,7 @@ export class EmailComposeComponent implements OnInit {
       this.places.BetaGenericAPI({
         name: 'GetPrompts',
         MainEntity: null,
-        params: { Id: catId },
+        params: { PromptCategoryId: catId },
         Json: null,
       })
     );

@@ -557,7 +557,7 @@ export class NewMulipleEmailComponent implements OnInit {
           name: 'GetPrompts',
           MainEntity: null,
           params: {
-            Id: categoryId,
+            PromptCategoryId: categoryId,
           },
           Json: null,
         };
