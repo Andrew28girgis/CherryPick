@@ -217,14 +217,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
-  },
-  {
-    path: 'emailInfo/:mailId',
-    loadChildren: () =>
-      import('./features/email-info/email-info.module').then(
-        (m) => m.EmailInfoModule
-      ),
-  },
+  }, 
   {
     path: 'contacts',
     component: ContactsComponent,
