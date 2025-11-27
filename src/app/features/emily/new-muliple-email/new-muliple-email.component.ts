@@ -105,7 +105,7 @@ export class NewMulipleEmailComponent implements OnInit {
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
     private emilyService: EmilyService,
-    private modalService: NgbModal,
+    private modalService: NgbModal
   ) {}
 
   async ngOnInit() {
@@ -787,7 +787,7 @@ export class NewMulipleEmailComponent implements OnInit {
     }
 
     const body = {
-      name: 'EditEmailPrompt',
+      name: 'EditPrompt',
       params: {
         PromptText: this.editablePromptText,
         PromptId: Number(this.selectedPromptId),
