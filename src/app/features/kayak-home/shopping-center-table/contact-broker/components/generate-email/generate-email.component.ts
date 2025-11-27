@@ -204,7 +204,7 @@ export class GenerateEmailComponent implements OnInit {
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
-        CampaignId:this.center.CampaignId,
+        CampaignId: this.center.CampaignId,
       },
     };
     const data = await firstValueFrom(this.placeService.GenericAPI(body));
@@ -249,7 +249,7 @@ export class GenerateEmailComponent implements OnInit {
       const promptsBody = {
         name: 'GetPrompts',
         MainEntity: null,
-        params: { Id: categoryId },
+        params: { PromptCategoryId: categoryId },
         Json: null,
       };
       const promptsResponse = await firstValueFrom(
@@ -263,7 +263,6 @@ export class GenerateEmailComponent implements OnInit {
         name: prompt?.Name || 'Unnamed Prompt',
         promptText: prompt?.PromptText || 'No prompt text available',
       }));
-
 
       // Select the first prompt as default, if available
       if (this.prompts.length > 0) {
@@ -288,7 +287,7 @@ export class GenerateEmailComponent implements OnInit {
     }
 
     const body = {
-      name: 'EditEmailPrompt',
+      name: 'EditPrompt',
       params: {
         PromptText: this.editablePromptText,
         PromptId: Number(this.selectedPromptId),

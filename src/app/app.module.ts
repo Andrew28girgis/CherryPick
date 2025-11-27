@@ -42,6 +42,7 @@ import { FFlowModule, FConnectionContent } from '@foblex/flow';
 import { DatePipe } from '@angular/common';
 import { FloatingChatComponent } from './shared/components/floating-chat/floating-chat/floating-chat.component'; 
 import { EmailsComponent } from './features/emails/emails.component';
+import { ContactsComponent } from './features/contacts/contacts.component';
  @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +60,7 @@ import { EmailsComponent } from './features/emails/emails.component';
     NotificationsOnlyComponentComponent,
     FloatingChatComponent,
     EmailsComponent, 
+    ContactsComponent
    ],
   imports: [
     BrowserModule,
