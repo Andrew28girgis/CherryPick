@@ -219,7 +219,7 @@ export class SpinnerComponent implements OnInit {
       this.isready = true;
       this.scanningmessage = 'Emily is Ready For Your Questions!';
     }, 2000);
-    if (!this.shoppingCenter || this.selectedCampaignIds.length === 0) {
+    if (!this.shoppingCenter) {
       console.warn('No shopping center or campaigns selected');
       return;
     }
@@ -227,11 +227,7 @@ export class SpinnerComponent implements OnInit {
       (window as any).electronMessage.removeSiteScanJson(this.sourceUrl);
     }
 
-    if (Array.isArray(this.shoppingCenter.campaignIds)) {
-      this.shoppingCenter.campaignIds = [...this.selectedCampaignIds];
-    } else {
-      this.shoppingCenter.campaignIds = [...this.selectedCampaignIds];
-    }
+    this.shoppingCenter.campaignIds = [...this.selectedCampaignIds];
 
     const body = this.shoppingCenter;
     console.log('Sending ShoppingCenter JSON:', body);
