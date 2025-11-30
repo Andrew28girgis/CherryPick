@@ -106,8 +106,7 @@ export class ShoppingComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.loadShoppingCenters();
-    this.contactID = localStorage.getItem('contactId');
-    this.refreshInterval = setInterval(() => {
+     this.refreshInterval = setInterval(() => {
       this.loadShoppingCenters();
     }, 10000);
     setTimeout(() => {
