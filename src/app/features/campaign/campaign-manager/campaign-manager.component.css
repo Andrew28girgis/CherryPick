@@ -1237,4 +1237,89 @@
   font-size: 0.8rem;
   color: var(--Colors-Primary-500);
   margin-left: auto;
+} 
+.table-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table thead {
+  background: #4a90e2;
+  color: white;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+.styled-table tbody tr:hover {
+  background: #f7faff;
+}
+
+/* Input box style */
+.input-box {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: all 0.2s ease;
+}
+
+.input-box:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
+  outline: none;
+}
+
+/* Buttons */
+.btn-search {
+  padding: 8px 14px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-search:hover {
+  background: #3b78c2;
+}
+
+.btn-submit {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  transition: 0.2s ease;
+}
+
+.btn-submit:hover {
+  background: #1e8f4e;
 }

@@ -26,8 +26,6 @@ export class RefreshService {
   sendPolygonSavedData(data: string): void {
     this.polygonSavedDataSource.next(data);
   }
-  
-
 
   triggerUserPagesRefresh() {
     this.refreshUserPagesSource.next();

@@ -49,6 +49,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   locationsDefault: any;
   campaignId: any;
   isVacant: any;
+  sectionsInputs: any[] = [];
   @Input() set viewMode(value: 'card' | 'table') {
     if (!this.isMobile) {
       this._viewMode = value;
@@ -79,7 +80,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   selectedTenant: any = null;
   polygonsStep = false;
   TenantStepLoad = false;
-  step: 'tenant' | 'campaign' | 'polygon' = 'tenant';
+  step: 'tenant' | 'campaign' | 'polygon' | 'sections' = 'tenant';
   campaignName = '';
   private modalRef?: NgbModalRef;
   protected newTenant = {
@@ -146,6 +147,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     });
 
     this.getAllCampaigns();
+    this.GetCampaignSections();
     this.refreshService.refreshOrganizations$.subscribe(() => {
       this.getAllCampaigns();
     });
@@ -517,42 +519,48 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.selectedTenant = tenant;
   }
   nextStep() {
-    // Step 1: Tenant → Campaign
     if (this.step === 'tenant') {
-      if (!this.selectedTenant) return;
       this.step = 'campaign';
-      this.polygonsStep = false;
       return;
     }
-
-    // Step 2: Campaign → Polygon
+  
     if (this.step === 'campaign') {
       this.saveSelectedTenants();
-
       this.step = 'polygon';
       this.polygonsStep = true;
       return;
     }
+  
+    if (this.step === 'polygon') {
+      this.polygonsStep = false;
+      this.step = 'sections';
+      return;
+    }
   }
-
+  
   prevStep() {
-    // Step back from Polygon → Campaign
+    if (this.step === 'sections') {
+      this.step = 'polygon';
+      this.polygonsStep = true;
+      return;
+    }
+  
     if (this.step === 'polygon') {
       this.step = 'campaign';
       this.polygonsStep = false;
       return;
     }
-
-    // Step back from Campaign → Tenant
+  
     if (this.step === 'campaign') {
       this.step = 'tenant';
-      this.polygonsStep = false;
       return;
     }
   }
+  
 
   finish(): void {
-    if (!this.selectedTenant) return;
+    // if (!this.selectedTenant) return;
+console.log('1111111111');
 
     this.refreshService.requestPolygonSave(this.selectedTenant.id);
   }
@@ -575,6 +583,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   handleSave(locationData: any, editing?: boolean) {
+    console.log('rrrrrrrrrrrrrrrrr');
+    
     const campaignLocations = locationData.locationCriteria.locations.map(
       (loc: any) => ({
         State: loc.state ?? '',
@@ -598,7 +608,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           campaignLocations,
           this.MinUnitSize,
           this.MaxUnitSize,
-          this.selectedTenants
+          this.selectedTenants,
+          this.sectionsInputs
         )
         .subscribe({
           next: (response) => {
@@ -1223,5 +1234,36 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       this.IsStandAlone = false;
       this.isVacant = false;
     }
+  }
+
+  GetCampaignSections() {
+    const body: any = {
+      Name: 'GetCampaignSections',
+      Params: {},
+    };
+  
+    this.placesService.BetaGenericAPI(body).subscribe({
+      next: (response) => {
+        this.sectionsInputs = response.json;
+  
+         this.sectionsInputs.forEach(item => {
+          item.userInput = "";
+        });
+      },
+      error: err => console.error(err)
+    });
+  }
+  
+  submit() {
+    const payload = this.sectionsInputs.map(section => ({
+      id: section.id,
+      userInput: section.userInput
+    }));
+  
+    console.log("Payload:", payload);
+  }
+  onSearch(section: any) {
+    console.log("Section:", section.sectionName);
+    console.log("Input value:", section.userInput);
   }
 }

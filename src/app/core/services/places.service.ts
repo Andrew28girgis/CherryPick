@@ -435,7 +435,9 @@ export class PlacesService {
     CampaignLocations: any[],
     MinUnitSize: number,
     MaxUnitSize: number,
-    OrganizationRelationsDTO?: any
+    OrganizationRelationsDTO?: any,
+    sectionsInputs?: any
+
   ) {
     const body = {
       CampaignName,
@@ -449,6 +451,7 @@ export class PlacesService {
       MinUnitSize,
       MaxUnitSize,
       OrganizationRelationsDTO,
+      sectionsInputs
     };
 
     return this.http.post<any>(

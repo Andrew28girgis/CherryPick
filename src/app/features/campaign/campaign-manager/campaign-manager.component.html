@@ -5,32 +5,17 @@
     <h2 class="title">Campaigns</h2>
   </div>
 
-  <div
-    class="d-flex align-items-center gap-3 justify-content-between w-100 py-3"
-    *ngIf="!hideViewToggles"
-  >
+  <div class="d-flex align-items-center gap-3 justify-content-between w-100 py-3" *ngIf="!hideViewToggles">
     <div *ngIf="filteredCampaigns?.length" class="organization-tabs-container">
-      <div
-        class="organization-tab"
-        [class.active]="selectedOrganizationId === 'all'"
-        (click)="filterByOrganization('all')"
-      >
+      <div class="organization-tab" [class.active]="selectedOrganizationId === 'all'"
+        (click)="filterByOrganization('all')">
         All
       </div>
 
-      <div
-        class="organization-tab"
-        *ngFor="let org of organizations"
-        [class.active]="selectedOrganizationId === org.id"
-        (click)="filterByOrganization(org.id)"
-      >
+      <div class="organization-tab" *ngFor="let org of organizations" [class.active]="selectedOrganizationId === org.id"
+        (click)="filterByOrganization(org.id)">
         <ng-container *ngIf="org.logo; else logoPlaceholder">
-          <img
-            [src]="org.logo"
-            class="org-c-logo"
-            #logoImg
-            crossorigin="anonymous"
-          />
+          <img [src]="org.logo" class="org-c-logo" #logoImg crossorigin="anonymous" />
         </ng-container>
         <ng-template #logoPlaceholder>
           <div class="org-logo org-c-logo placeholder">
@@ -42,45 +27,19 @@
     </div>
     <div class="d-flex align-items-center gap-3 flex-row">
       <div class="view-toggle" *ngIf="true">
-        <button
-          class="toggle-btn"
-          [class.active]="viewMode === 'table'"
-          (click)="toggleView('table')"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-table-properties-icon lucide-table-properties"
-          >
+        <button class="toggle-btn" [class.active]="viewMode === 'table'" (click)="toggleView('table')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-table-properties-icon lucide-table-properties">
             <path d="M15 3v18" />
             <rect width="18" height="18" x="3" y="3" rx="2" />
             <path d="M21 9H3" />
             <path d="M21 15H3" />
           </svg>
         </button>
-        <button
-          class="toggle-btn"
-          [class.active]="viewMode === 'card'"
-          (click)="toggleView('card')"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+        <button class="toggle-btn" [class.active]="viewMode === 'card'" (click)="toggleView('card')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
             <rect x="14" y="14" width="7" height="7"></rect>
@@ -94,68 +53,39 @@
     </div>
   </div>
 
-  <div
-    *ngIf="
+  <div *ngIf="
       filteredCampaigns && filteredCampaigns.length > 0 && stages.length > 0
-    "
-  >
+    ">
     <!-- Updated card view to dashboard cards layout -->
     <div class="dashboard-cards-container" *ngIf="viewMode === 'card'">
-      <ng-container
-        *ngFor="let campaign of filteredCampaigns; let index = index"
-      >
-        <div
-          class="dashboard-card"
-          [class.click-disabled]="openMenuId === campaign.Id"
-          [class.changed]="campaign.changed"
-        >
+      <ng-container *ngFor="let campaign of filteredCampaigns; let index = index">
+        <div class="dashboard-card" [class.click-disabled]="openMenuId === campaign.Id"
+          [class.changed]="campaign.changed">
           <div class="card-overlay">
             <div class="menu-wrapper" (click)="$event.stopPropagation()">
-              <button
-                class="menu-btn"
-                (click)="toggleMenu(campaign.Id, $event)"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
+              <button class="menu-btn" (click)="toggleMenu(campaign.Id, $event)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path
                     d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
-                    fill="#18171F"
-                    stroke="#18171F"
-                  />
+                    fill="#18171F" stroke="#18171F" />
                   <path
                     d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
-                    fill="#18171F"
-                  />
+                    fill="#18171F" />
                   <path
                     d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
-                    fill="#18171F"
-                  />
+                    fill="#18171F" />
                 </svg>
               </button>
 
               <!-- DROPDOWN -->
               <div class="menu-dropdown" *ngIf="openMenuId === campaign.Id">
-                <button
-                  class="menu-item"
-                  (click)="editWithEMily(campaign); closeMenu()"
-                >
+                <button class="menu-item" (click)="editWithEMily(campaign); closeMenu()">
                   View Specs
                 </button>
-                <button
-                  class="menu-item"
-                  (click)="deleteCampaign(campaign.Id); closeMenu()"
-                >
+                <button class="menu-item" (click)="deleteCampaign(campaign.Id); closeMenu()">
                   Delete Campaign
                 </button>
-                <button
-                  class="menu-item"
-                  (click)="viewSpecsNew(campaign, true); closeMenu()"
-                >
+                <button class="menu-item" (click)="viewSpecsNew(campaign, true); closeMenu()">
                   Edit Campaign
                 </button>
                 <!-- <button
@@ -166,42 +96,26 @@
                 </button> -->
               </div>
             </div>
-            <div
-              class="click-shield"
-              *ngIf="openMenuId === campaign.Id"
-              (click)="closeMenu()"
-            ></div>
+            <div class="click-shield" *ngIf="openMenuId === campaign.Id" (click)="closeMenu()"></div>
           </div>
 
-          <div
-            class="card-badge date-flag"
-            [attr.aria-label]="campaign.CreatedDate | date : 'MMMM d, y'"
-          >
+          <div class="card-badge date-flag" [attr.aria-label]="campaign.CreatedDate | date : 'MMMM d, y'">
             <span class="date-flag__day">{{
               campaign.CreatedDate | date : "d"
-            }}</span>
+              }}</span>
             <span class="date-flag__mon">{{
               campaign.CreatedDate | date : "MMM"
-            }}</span>
+              }}</span>
           </div>
 
           <div class="card-header">
             <div class="campaign-title-section">
-              <a
-                class="title-with-logo"
-                [ngClass]="{ 'title-hover': campaign.Sites }"
-                [routerLink]="
+              <a class="title-with-logo" [ngClass]="{ 'title-hover': campaign.Sites }" [routerLink]="
                   campaign.Sites ? ['/dashboard', campaign.Id] : null
-                "
-              >
+                ">
                 <!-- Logo or placeholder -->
                 <ng-container *ngIf="campaign.LogoUrl; else logoPlaceholder">
-                  <img
-                    [src]="campaign.LogoUrl"
-                    class="org-logo"
-                    #logoImg
-                    crossorigin="anonymous"
-                  />
+                  <img [src]="campaign.LogoUrl" class="org-logo" #logoImg crossorigin="anonymous" />
                 </ng-container>
                 <ng-template #logoPlaceholder>
                   <div class="org-logo placeholder">
@@ -219,12 +133,8 @@
                   </div>
                 </div>
               </a>
-              <div
-                style="margin-left: 70px"
-                (click)="editWithEMily(campaign)"
-                class="emily-button"
-                aria-label=" Emily  "
-              >
+              <div style="margin-left: 70px" (click)="editWithEMily(campaign)" class="emily-button"
+                aria-label=" Emily  ">
                 Ask Emily
               </div>
             </div>
@@ -244,36 +154,22 @@
           </div>
 
           <div class="card-metrics">
-            <div
-              class="metric-item"
-              [ngClass]="{ link: campaign.Sites }"
-              [routerLink]="
+            <div class="metric-item" [ngClass]="{ link: campaign.Sites }" [routerLink]="
                 campaign.Sites > 0 ? ['/dashboard', campaign.Id] : null
-              "
-            >
+              ">
               <div class="metric-value" [class.changed]="campaign.changed">
                 <span>{{ campaign.Sites }}</span>
-                <svg
-                  *ngIf="campaign.Sites"
-                  class="external-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
+                <svg *ngIf="campaign.Sites" class="external-icon" xmlns="http://www.w3.org/2000/svg" width="16"
+                  height="16" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                    fill="currentColor"
-                  />
+                    fill="currentColor" />
                   <path
                     d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                    fill="currentColor"
-                  />
+                    fill="currentColor" />
                   <path
                     d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                    fill="currentColor"
-                  />
+                    fill="currentColor" />
                 </svg>
               </div>
               <div class="metric-label">Sites</div>
@@ -317,28 +213,14 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container
-              *ngFor="let campaign of filteredCampaigns; let index = index"
-            >
+            <ng-container *ngFor="let campaign of filteredCampaigns; let index = index">
               <tr>
                 <td class="col-name">
                   <div class="campaign-info">
-                    <div
-                      class="t-name d-flex justify-content-between w-100 align-items-center mt-2"
-                    >
-                      <div
-                        class="tenant-title d-flex align-items-center"
-                        [routerLink]="['/dashboard', campaign.Id]"
-                      >
-                        <ng-container
-                          *ngIf="campaign.LogoUrl; else logoPlaceholder"
-                        >
-                          <img
-                            [src]="campaign.LogoUrl"
-                            class="org-c-logo"
-                            #logoImg
-                            crossorigin="anonymous"
-                          />
+                    <div class="t-name d-flex justify-content-between w-100 align-items-center mt-2">
+                      <div class="tenant-title d-flex align-items-center" [routerLink]="['/dashboard', campaign.Id]">
+                        <ng-container *ngIf="campaign.LogoUrl; else logoPlaceholder">
+                          <img [src]="campaign.LogoUrl" class="org-c-logo" #logoImg crossorigin="anonymous" />
                         </ng-container>
                         <ng-template #logoPlaceholder>
                           <div class="org-logo org-c-logo placeholder">
@@ -347,79 +229,49 @@
                         </ng-template>
                         <span class="ms-2">{{
                           campaign.OrganizationName | uppercase
-                        }}</span>
+                          }}</span>
                       </div>
                       <div ngbDropdown container="body" class="dropdown">
-                        <button
-                          class="btn btn-light btn-sm p-0"
-                          ngbDropdownToggle
-                          (click)="$event.stopPropagation()"
-                        >
+                        <button class="btn btn-light btn-sm p-0" ngbDropdownToggle (click)="$event.stopPropagation()">
                           <!-- Three Dots Icon -->
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                          >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                            fill="none">
                             <path
                               d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z"
-                              fill="#18171F"
-                              stroke="#18171F"
-                            />
+                              fill="#18171F" stroke="#18171F" />
                             <path
                               d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z"
-                              fill="#18171F"
-                            />
+                              fill="#18171F" />
                             <path
                               d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z"
-                              fill="#18171F"
-                            />
+                              fill="#18171F" />
                           </svg>
                         </button>
 
                         <div ngbDropdownMenu>
-                          <button
-                            ngbDropdownItem
-                            (click)="editWithEMily(campaign); closeMenu()"
-                          >
+                          <button ngbDropdownItem (click)="editWithEMily(campaign); closeMenu()">
                             View Specs
                           </button>
-                          <button
-                            ngbDropdownItem
-                            (click)="viewSpecsNew(campaign, true)"
-                          >
+                          <button ngbDropdownItem (click)="viewSpecsNew(campaign, true)">
                             Edit Campaign
                           </button>
-                          <button
-                            ngbDropdownItem
-                            (click)="deleteCampaign(campaign.Id)"
-                          >
+                          <button ngbDropdownItem (click)="deleteCampaign(campaign.Id)">
                             Delete Campaign
                           </button>
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="d-flex justify-content-between w-100 align-items-center mt-2"
-                    >
-                      <div
-                        class="campaign-name"
-                        [routerLink]="['/dashboard', campaign.Id]"
-                      >
+                    <div class="d-flex justify-content-between w-100 align-items-center mt-2">
+                      <div class="campaign-name" [routerLink]="['/dashboard', campaign.Id]">
                         <p class="m-0" style="font-weight: 500">
                           {{ campaign.CampaignName }}
                         </p>
                       </div>
-                      <div
-                        class="inbox mail"
-                        [routerLink]="[
+                      <div class="inbox mail" [routerLink]="[
                           '/organization-mail',
                           campaign.OrganizationId,
                           campaign.Id
-                        ]"
-                      >
+                        ]">
                         <i class="fa-regular fa-envelope"></i>
                       </div>
                     </div>
@@ -429,16 +281,13 @@
                       </div>
                       <p class="created-date m-0">
                         {{
-                          (campaign.CreatedDate | date : "MMM d, y") ?? "N/A"
+                        (campaign.CreatedDate | date : "MMM d, y") ?? "N/A"
                         }}
                       </p>
                     </div>
 
-                    <div
-                      (click)="editWithEMily(campaign)"
-                      class="emily-button emily-button-table mt-2"
-                      aria-label=" Emily  "
-                    >
+                    <div (click)="editWithEMily(campaign)" class="emily-button emily-button-table mt-2"
+                      aria-label=" Emily  ">
                       Ask Emily
                     </div>
                   </div>
@@ -446,8 +295,7 @@
 
                 <td class="col-sent">
                   <ng-container *ngIf="campaign.MailsSent">
-                    {{ campaign.MailsSent }}</ng-container
-                  >
+                    {{ campaign.MailsSent }}</ng-container>
                 </td>
 
                 <ng-container *ngFor="let stage of stages">
@@ -465,10 +313,7 @@
     </div>
   </div>
 
-  <div
-    *ngIf="!(filteredCampaigns && filteredCampaigns.length > 0)"
-    class="empty-campaigns"
-  >
+  <div *ngIf="!(filteredCampaigns && filteredCampaigns.length > 0)" class="empty-campaigns">
     <h4>Campaigns Will Appear Here!</h4>
     <p>Create, Track, and Manage Expansion Campaigns Here.</p>
   </div>
@@ -477,19 +322,12 @@
 <ng-template #content let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Add Campaign</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    ></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div class="campaign-drawing-component">
-      <app-campaign-drawing
-        [userBuyBoxes]="userBuyBoxes"
-        (onCampaignCreated)="onCampaignCreated()"
-      ></app-campaign-drawing>
+      <app-campaign-drawing [userBuyBoxes]="userBuyBoxes"
+        (onCampaignCreated)="onCampaignCreated()"></app-campaign-drawing>
     </div>
   </div>
 </ng-template>
@@ -500,11 +338,7 @@
 
     <div class="selected-tenant-header mx-3" *ngIf="selectedTenant">
       <ng-container *ngIf="selectedTenant.logoUrl; else logoPlaceholder">
-        <img
-          [src]="selectedTenant.logoUrl"
-          class="tenant-logop"
-          crossorigin="anonymous"
-        />
+        <img [src]="selectedTenant.logoUrl" class="tenant-logop" crossorigin="anonymous" />
       </ng-container>
       <ng-template #logoPlaceholder>
         <div class="tenant-logop placeholder">
@@ -517,48 +351,40 @@
       </span>
     </div>
 
-    <button
-      type="button"
-      class="btn-close d-flex align-items-center justify-content-center"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    >
+    <button type="button" class="btn-close d-flex align-items-center justify-content-center" aria-label="Close"
+      (click)="modal.dismiss()">
       <i class="fa-solid fa-xmark"></i>
     </button>
   </div>
 
   <div class="modal-body">
     <!-- Stepper + Finish button inline -->
-    <div
-      class="stepper-container d-flex justify-content-between align-items-center mb-2 gap-2"
-    >
+    <div class="stepper-container d-flex justify-content-between align-items-center mb-2 gap-2">
       <!-- Stepper -->
       <div class="stepper d-flex align-items-center">
         <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
         <div class="step-line"></div>
         <div class="step" [class.active]="step === 'campaign'">
+
           Campaign Details
         </div>
         <div class="step-line"></div>
         <div class="step" [class.active]="step === 'polygon'">Locations</div>
+        <div class="step-line"></div>
+        <div class="step" [class.active]="step === 'sections'">Sections</div>
+
       </div>
 
       <!-- Finish button -->
       <div>
-        <button
-          *ngIf="step === 'polygon'"
-          class="btn btn-primary next-btn"
-          (click)="finish()"
-        >
+        <!-- Finish on Sections -->
+        <button *ngIf="step === 'sections'" class="btn btn-success next-btn ms-auto" (click)="finish()">
           Finish
         </button>
       </div>
     </div>
 
-    <div
-      *ngIf="TenantStepLoad"
-      class="d-flex justify-content-center align-items-center p-5"
-    >
+    <div *ngIf="TenantStepLoad" class="d-flex justify-content-center align-items-center p-5">
       <div class="spinner-border custom-spinner" role="status">
         <span class="visually-hidden">Loading tenants...</span>
       </div>
@@ -566,20 +392,12 @@
     <!-- Step 1: Tenants -->
     <div *ngIf="!TenantStepLoad && step === 'tenant'">
       <div class="tenant-cards-grid">
-        <div
-          *ngFor="let tenant of tenants"
-          class="tenant-card"
-          [class.selected]="selectedTenant === tenant"
-          (click)="selectTenant(tenant)"
-        >
+        <div *ngFor="let tenant of tenants" class="tenant-card" [class.selected]="selectedTenant === tenant"
+          (click)="selectTenant(tenant)">
           <!-- logo + name -->
           <div class="tenant-header">
             <ng-container *ngIf="tenant.logoUrl; else logoPlaceholder">
-              <img
-                [src]="tenant.logoUrl"
-                class="tenant-logo"
-                crossorigin="anonymous"
-              />
+              <img [src]="tenant.logoUrl" class="tenant-logo" crossorigin="anonymous" />
             </ng-container>
             <ng-template #logoPlaceholder>
               <div class="tenant-logo placeholder">
@@ -594,10 +412,7 @@
           <!-- selection mark -->
           <div class="tenant-check" *ngIf="selectedTenant === tenant">✓</div>
         </div>
-        <div
-          class="tenant-card add-card"
-          (click)="openAddTenantModal(tenantModal)"
-        >
+        <div class="tenant-card add-card" (click)="openAddTenantModal(tenantModal)">
           <div class="add-card-content">
             <div class="plus-icon">+</div>
             <h3 class="tenant-name">Add Tenant</h3>
@@ -611,24 +426,15 @@
       <!-- Left side: Campaign name -->
       <div class=" ">
         <label for="campaignName" class="form-label">Campaign Name</label>
-        <input
-          id="campaignName"
-          type="text"
-          class="form-control"
-          [(ngModel)]="campaignName"
-          placeholder="Enter campaign name"
-        />
+        <input id="campaignName" type="text" class="form-control" [(ngModel)]="campaignName"
+          placeholder="Enter campaign name" />
       </div>
       <div class="mt-3">
         <label class="form-label">Campaign Type</label>
 
         <div class="campaign-type-selection">
           <label class="campaign-type-card" [class.active]="forSale">
-            <input
-              type="checkbox"
-              [(ngModel)]="forSale"
-              class="visually-hidden"
-            />
+            <input type="checkbox" [(ngModel)]="forSale" class="visually-hidden" />
             <div class="card-content">
               <div class="custom-checkbox">
                 <i *ngIf="forSale" class="fa-solid fa-check"></i>
@@ -637,17 +443,8 @@
             </div>
           </label>
           <div class="d-flex flex-column label-container">
-            <label
-              class="campaign-type-card"
-              (click)="toggleForLease()"
-              [class.active]="forLease"
-            >
-              <input
-                type="checkbox"
-                [(ngModel)]="forLease"
-                class="visually-hidden"
-                (click)="toggleForLease()"
-              />
+            <label class="campaign-type-card" (click)="toggleForLease()" [class.active]="forLease">
+              <input type="checkbox" [(ngModel)]="forLease" class="visually-hidden" (click)="toggleForLease()" />
               <div class="card-content">
                 <div class="custom-checkbox">
                   <i *ngIf="forLease" class="fa-solid fa-check"></i>
@@ -657,30 +454,16 @@
             </label>
             <div class="lease-options-container" *ngIf="forLease">
               <div class="type-options">
-                <div
-                  class="type-option"
-                  [class.active]="IsStandAlone"
-                  (click)="IsStandAlone = !IsStandAlone"
-                >
+                <div class="type-option" [class.active]="IsStandAlone" (click)="IsStandAlone = !IsStandAlone">
                   <i class="fa-solid fa-store"></i>
                   <span>Standalone Only</span>
-                  <i
-                    *ngIf="IsStandAlone"
-                    class="fa-solid fa-check check-indicator"
-                  ></i>
+                  <i *ngIf="IsStandAlone" class="fa-solid fa-check check-indicator"></i>
                 </div>
 
-                <div
-                  class="type-option"
-                  [class.active]="isVacant"
-                  (click)="isVacant = !isVacant"
-                >
+                <div class="type-option" [class.active]="isVacant" (click)="isVacant = !isVacant">
                   <i class="fa-solid fa-shop"></i>
                   <span>Vacant Spaces Inside Shopping Center</span>
-                  <i
-                    *ngIf="isVacant"
-                    class="fa-solid fa-check check-indicator"
-                  ></i>
+                  <i *ngIf="isVacant" class="fa-solid fa-check check-indicator"></i>
                 </div>
               </div>
             </div>
@@ -693,85 +476,47 @@
 
         <div class="d-flex gap-3">
           <div class="flex-grow-1">
-            <input
-              type="number"
-              class="form-control"
-              placeholder="Min Unit Size"
-              [(ngModel)]="MinUnitSize"
-              min="0"
-            />
+            <input type="number" class="form-control" placeholder="Min Unit Size" [(ngModel)]="MinUnitSize" min="0" />
           </div>
 
           <div class="flex-grow-1">
-            <input
-              type="number"
-              class="form-control"
-              placeholder="Max Unit Size"
-              [(ngModel)]="MaxUnitSize"
-              [min]="MinUnitSize || 0"
-            />
+            <input type="number" class="form-control" placeholder="Max Unit Size" [(ngModel)]="MaxUnitSize"
+              [min]="MinUnitSize || 0" />
           </div>
         </div>
 
         <!-- Optional small validation message -->
-        <div
-          class="text-danger mt-1"
-          *ngIf="MaxUnitSize && MinUnitSize && MaxUnitSize < MinUnitSize"
-        >
+        <div class="text-danger mt-1" *ngIf="MaxUnitSize && MinUnitSize && MaxUnitSize < MinUnitSize">
           Max unit size cannot be smaller than min unit size.
         </div>
       </div>
+
       <!-- Tenant Search and Selection -->
       <div class="cotenant-selection mt-3">
-        <label for="campaignName" class="form-label"
-          >Search Complementary and Conflicting Tenants</label
-        >
-        <input
-          type="text"
-          class="form-control cotenant-search"
-          placeholder="Search tenants..."
-          [(ngModel)]="tenantSearch"
-          (ngModelChange)="onTenantSearchChange($event)"
-        />
+        <label for="campaignName" class="form-label">Search Complementary and Conflicting Tenants</label>
+        <input type="text" class="form-control cotenant-search" placeholder="Search tenants..."
+          [(ngModel)]="tenantSearch" (ngModelChange)="onTenantSearchChange($event)" />
 
         <!-- Tenants list -->
         <div *ngIf="cotenants.length > 0" class="cotenant-cards">
-          <div
-            class="cotenant-card"
-            *ngFor="let tenant of cotenants"
-            [ngClass]="{
+          <div class="cotenant-card" *ngFor="let tenant of cotenants" [ngClass]="{
               'complementary-border': isSelected(tenant, 'complementary'),
               'conflicting-border': isSelected(tenant, 'conflicting')
-            }"
-          >
-            <div
-              class="card-badge"
-              [ngClass]="{
+            }">
+            <div class="card-badge" [ngClass]="{
                 'complementary-badge': isSelected(tenant, 'complementary'),
                 'conflicting-badge': isSelected(tenant, 'conflicting')
-              }"
-            >
-              <span
-                class="complementary"
-                *ngIf="isSelected(tenant, 'complementary')"
-              >
+              }">
+              <span class="complementary" *ngIf="isSelected(tenant, 'complementary')">
                 Complementary
               </span>
-              <span
-                class="conflicting"
-                *ngIf="isSelected(tenant, 'conflicting')"
-              >
+              <span class="conflicting" *ngIf="isSelected(tenant, 'conflicting')">
                 Conflicting
               </span>
             </div>
 
             <div>
-              <img
-                *ngIf="tenant.logoURL"
-                [src]="tenant.logoURL"
-                alt="{{ tenant.name }}"
-                class="cotenant-logo"
-              />
+              <img *ngIf="tenant.logoURL" [src]="tenant.logoURL" alt="{{ tenant.name }}" class="cotenant-logo" />
               <div *ngIf="!tenant.logoURL" class="cotenant-logo-placeholder">
                 <i class="fa-solid fa-store"></i>
               </div>
@@ -782,17 +527,11 @@
             </div>
 
             <div class="cotenant-buttons">
-              <button
-                class="btn btn-success btn-sm"
-                (click)="addComplementary(tenant, true)"
-              >
+              <button class="btn btn-success btn-sm" (click)="addComplementary(tenant, true)">
                 Complementary
               </button>
 
-              <button
-                class="btn btn-danger btn-sm"
-                (click)="addConflicting(tenant, true)"
-              >
+              <button class="btn btn-danger btn-sm" (click)="addConflicting(tenant, true)">
                 Conflicting
               </button>
             </div>
@@ -802,47 +541,70 @@
     </div>
 
     <!-- Step 3: Polygons -->
-    <div *ngIf="step === 'polygon'">
-      <app-polygons
-        *ngIf="polygonsStep"
-        (saveLocationCriteria)="handleSave($event)"
-      >
+    <div [hidden]="!polygonsStep">
+      <app-polygons [hidden]="!polygonsStep" (saveLocationCriteria)="handleSave($event)">
       </app-polygons>
     </div>
+
+    <!-- Step 4: Sections -->
+    <div *ngIf="step === 'sections'">
+      <div class="table-container">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Section</th>
+              <th>Input</th>
+              <th>Search</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let sec of sectionsInputs">
+              <td>{{ sec.sectionName }}</td>
+
+              <td>
+                <input type="text" [(ngModel)]="sec.userInput" class="input-box"
+                  [placeholder]="'Enter ' + sec.sectionName+'...'" />
+              </td>
+
+              <td>
+                <button class="btn-search" (click)="onSearch(sec)">Search</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+       </div>
+
+
+    </div>
   </div>
+
   <div class="modal-footer modal-nav-footer">
     <!-- Previous button -->
-    <button
-      *ngIf="step !== 'tenant'"
-      class="btn btn-outline-secondary back-btn"
-      (click)="prevStep()"
-    >
+    <button *ngIf="step !== 'tenant'" class="btn btn-outline-secondary back-btn" (click)="prevStep()">
       Previous
     </button>
 
     <!-- Next from Tenant -->
-    <button
-      *ngIf="step === 'tenant'"
-      class="btn btn-primary next-btn ms-auto"
-      [disabled]="!selectedTenant"
-      (click)="nextStep()"
-    >
+    <button *ngIf="step === 'tenant'" class="btn btn-primary next-btn ms-auto" [disabled]="!selectedTenant"
+      (click)="nextStep()">
       Next
     </button>
 
     <!-- Next from Campaign -->
-    <button
-      *ngIf="step === 'campaign'"
-      class="btn btn-primary next-btn ms-auto"
-      [disabled]="
+    <button *ngIf="step === 'campaign'" class="btn btn-primary next-btn ms-auto" [disabled]="
         !campaignName ||
         (!forSale && !forLease) ||
         (forLease && !(IsStandAlone || isVacant))
-      "
-      (click)="nextStep()"
-    >
+      " (click)="nextStep()">
       Next
     </button>
+    <button *ngIf="step === 'polygon'" class="btn btn-primary next-btn ms-auto" (click)="nextStep()">
+      Next
+    </button>
+
+
   </div>
 </ng-template>
 <ng-template #tenantModal let-modal>
@@ -850,93 +612,45 @@
     <h5 class="modal-title" id="modal-basic-title" ngbAutofocus>
       Add New Tenant
     </h5>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    ></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body" style="height: fit-content !important">
     <form #tenantForm="ngForm">
       <div class="mb-3">
         <label for="name" class="form-label d-flex align-items-center gap-2">
           Name *
-          <span
-            class="text-danger name-isrequired"
-            *ngIf="nameInput.invalid && nameInput.touched"
-          >
+          <span class="text-danger name-isrequired" *ngIf="nameInput.invalid && nameInput.touched">
             required
           </span>
         </label>
 
-        <input
-          type="text"
-          id="name"
-          class="form-control"
-          name="name"
-          required
-          [(ngModel)]="newTenant.name"
-          #nameInput="ngModel"
-          [ngClass]="{
+        <input type="text" id="name" class="form-control" name="name" required [(ngModel)]="newTenant.name"
+          #nameInput="ngModel" [ngClass]="{
             'is-invalid': nameInput.invalid && nameInput.touched
-          }"
-        />
+          }" />
       </div>
 
       <div class="mb-3">
         <label for="url" class="form-label">URL</label>
-        <input
-          type="url"
-          id="url"
-          class="form-control"
-          name="url"
-          pattern="https?://.+"
-          [(ngModel)]="newTenant.url"
-          #urlInput="ngModel"
-        />
+        <input type="url" id="url" class="form-control" name="url" pattern="https?://.+" [(ngModel)]="newTenant.url"
+          #urlInput="ngModel" />
       </div>
 
       <div class="mb-3">
         <label for="linkedin" class="form-label">LinkedIn</label>
-        <input
-          type="text"
-          id="linkedin"
-          class="form-control"
-          name="linkedin"
-          [(ngModel)]="newTenant.linkedin"
-        />
+        <input type="text" id="linkedin" class="form-control" name="linkedin" [(ngModel)]="newTenant.linkedin" />
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button
-      type="button"
-      class="g-button g-button-outline cancel-tenant-btn"
-      (click)="modal.close('Save click')"
-    >
+    <button type="button" class="g-button g-button-outline cancel-tenant-btn" (click)="modal.close('Save click')">
       <span>Cancel</span>
     </button>
 
-    <button
-      class="g-button g-button-primary add-tenant-btn-text"
-      [disabled]="tenantForm.invalid"
-      (click)="addNewTenant()"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <path
-          d="M6 12H18M12 18V6"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
+    <button class="g-button g-button-primary add-tenant-btn-text" [disabled]="tenantForm.invalid"
+      (click)="addNewTenant()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M6 12H18M12 18V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
       <span class="add-tenant-text">Add Tenant</span>
     </button>
@@ -948,12 +662,7 @@
   <div class="modal-header">
     <div class="d-flex align-items-center flex-row gap-2">
       <ng-container *ngIf="campaignLogo; else logoPlaceholder">
-        <img
-          [src]="campaignLogo"
-          class="tenant-logo"
-          style="width: 50px; height: 50px"
-          crossorigin="anonymous"
-        />
+        <img [src]="campaignLogo" class="tenant-logo" style="width: 50px; height: 50px" crossorigin="anonymous" />
       </ng-container>
       <ng-template #logoPlaceholder>
         <div class="tenant-logo placeholder">
@@ -982,46 +691,31 @@
       </div>
 
       <!-- Organization -->
-      <div
-        *ngIf="selectedCampaignDetails?.OrganizationName"
-        class="form-group sec mb-2"
-      >
+      <div *ngIf="selectedCampaignDetails?.OrganizationName" class="form-group sec mb-2">
         <label style="width: 150px">Organization:</label>
         <div>{{ selectedCampaignDetails?.OrganizationName }}</div>
       </div>
 
       <!-- Standalone -->
-      <div
-        *ngIf="selectedCampaignDetails?.IsStandAlone ?? false"
-        class="form-group sec mb-2"
-      >
+      <div *ngIf="selectedCampaignDetails?.IsStandAlone ?? false" class="form-group sec mb-2">
         <label>Standalone:</label>
         <div>{{ selectedCampaignDetails?.IsStandAlone ? "Yes" : "No" }}</div>
       </div>
 
       <!-- Min Unit Size -->
-      <div
-        *ngIf="selectedCampaignDetails?.MinUnitSize"
-        class="form-group sec mb-2"
-      >
+      <div *ngIf="selectedCampaignDetails?.MinUnitSize" class="form-group sec mb-2">
         <label>Min Unit Size:</label>
         <div>{{ selectedCampaignDetails?.MinUnitSize }}</div>
       </div>
 
       <!-- Max Unit Size -->
-      <div
-        *ngIf="selectedCampaignDetails?.MaxUnitSize"
-        class="form-group sec mb-2"
-      >
+      <div *ngIf="selectedCampaignDetails?.MaxUnitSize" class="form-group sec mb-2">
         <label>Max Unit Size:</label>
         <div>{{ selectedCampaignDetails?.MaxUnitSize }}</div>
       </div>
 
       <!-- Created Date -->
-      <div
-        *ngIf="selectedCampaignDetails?.CreatedDate"
-        class="form-group sec mb-2"
-      >
+      <div *ngIf="selectedCampaignDetails?.CreatedDate" class="form-group sec mb-2">
         <label>Created Date:</label>
         <div>{{ selectedCampaignDetails?.CreatedDate | date : "medium" }}</div>
       </div>
@@ -1033,10 +727,7 @@
 
       <!-- Read Mode -->
       <div class="pills-container">
-        <span
-          *ngFor="let loc of selectedCampaignDetails.Locations"
-          class="data-pill"
-        >
+        <span *ngFor="let loc of selectedCampaignDetails.Locations" class="data-pill">
           {{ loc.CityName ? loc.CityName + ", " : ""
           }}{{ loc.State ? loc.State : "" }}
         </span>
@@ -1044,33 +735,22 @@
     </section>
 
     <!-- Relations -->
-    <section
-      *ngIf="selectedCampaignDetails?.Relations?.length"
-      style="height: fit-content"
-    >
+    <section *ngIf="selectedCampaignDetails?.Relations?.length" style="height: fit-content">
       <h5 class="mt-3">Relations</h5>
 
       <!-- Read Mode -->
       <div class="pills-container">
-        <span
-          *ngFor="let r of selectedCampaignDetails.Relations"
-          class="data-pill"
-          [ngClass]="{
+        <span *ngFor="let r of selectedCampaignDetails.Relations" class="data-pill" [ngClass]="{
             'complementary-pill': r.RelationType === 'complementary',
             'conflict-pill': r.RelationType === 'conflict'
-          }"
-        >
+          }">
           {{ r.RelationOrganizationName }} ({{ r.RelationType }})
         </span>
       </div>
     </section>
 
     <!-- Read-Only JSON -->
-    <section
-      *ngIf="parsedCampaignDetails.length"
-      class="border-top pt-3"
-      style="height: fit-content"
-    >
+    <section *ngIf="parsedCampaignDetails.length" class="border-top pt-3" style="height: fit-content">
       <h5>Campaign Details (JSON)</h5>
       <div class="key-value-list">
         <ng-container *ngFor="let entry of parsedCampaignDetails">
@@ -1082,9 +762,7 @@
                   <ng-container *ngFor="let item of entry.value">
                     <ng-container *ngIf="isObject(item); else simpleItem">
                       <div class="nested">
-                        <ng-container
-                          *ngFor="let sub of getKeyValuePairs(item)"
-                        >
+                        <ng-container *ngFor="let sub of getKeyValuePairs(item)">
                           <div class="key-value-item">
                             <div class="key">{{ sub.key }}:</div>
                             <div class="value">{{ sub.value }}</div>
@@ -1101,9 +779,7 @@
               <ng-template #nonArray>
                 <ng-container *ngIf="isObject(entry.value); else simpleValue">
                   <div class="nested">
-                    <ng-container
-                      *ngFor="let sub of getKeyValuePairs(entry.value)"
-                    >
+                    <ng-container *ngFor="let sub of getKeyValuePairs(entry.value)">
                       <div class="key-value-item">
                         <div class="key">{{ sub.key }}:</div>
                         <div class="value">{{ sub.value }}</div>
@@ -1143,11 +819,7 @@
 
     <div class="selected-tenant-header mx-3" *ngIf="selectedTenant">
       <ng-container *ngIf="selectedTenant.logoUrl; else logoPlaceholder">
-        <img
-          [src]="selectedTenant.logoUrl"
-          class="tenant-logop"
-          crossorigin="anonymous"
-        />
+        <img [src]="selectedTenant.logoUrl" class="tenant-logop" crossorigin="anonymous" />
       </ng-container>
       <ng-template #logoPlaceholder>
         <div class="tenant-logop placeholder">
@@ -1160,21 +832,15 @@
       </span>
     </div>
 
-    <button
-      type="button"
-      class="btn-close d-flex align-items-center justify-content-center"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    >
+    <button type="button" class="btn-close d-flex align-items-center justify-content-center" aria-label="Close"
+      (click)="modal.dismiss()">
       <i class="fa-solid fa-xmark"></i>
     </button>
   </div>
 
   <div class="modal-body">
     <!-- Stepper + Finish button inline -->
-    <div
-      class="stepper-container d-flex justify-content-between align-items-center mb-2 gap-2"
-    >
+    <div class="stepper-container d-flex justify-content-between align-items-center mb-2 gap-2">
       <div class="stepper d-flex align-items-center">
         <div class="step" [class.active]="step === 'tenant'">Select Tenant</div>
         <div class="step-line"></div>
@@ -1186,21 +852,14 @@
       </div>
 
       <div>
-        <button
-          *ngIf="step === 'polygon'"
-          class="btn btn-primary next-btn"
-          (click)="finish()"
-        >
+        <button *ngIf="step === 'polygon'" class="btn btn-primary next-btn" (click)="finish()">
           Finish
         </button>
       </div>
     </div>
 
     <!-- Loading state -->
-    <div
-      *ngIf="TenantStepLoad"
-      class="d-flex justify-content-center align-items-center p-5"
-    >
+    <div *ngIf="TenantStepLoad" class="d-flex justify-content-center align-items-center p-5">
       <div class="spinner-border custom-spinner" role="status">
         <span class="visually-hidden">Loading tenants...</span>
       </div>
@@ -1209,19 +868,11 @@
     <!-- Step 1: Select Tenant -->
     <div *ngIf="!TenantStepLoad && step === 'tenant'">
       <div class="tenant-cards-grid">
-        <div
-          *ngFor="let tenant of tenants"
-          class="tenant-card"
-          [class.selected]="selectedTenant.id === tenant.id"
-          (click)="selectTenant(tenant)"
-        >
+        <div *ngFor="let tenant of tenants" class="tenant-card" [class.selected]="selectedTenant.id === tenant.id"
+          (click)="selectTenant(tenant)">
           <div class="tenant-header">
             <ng-container *ngIf="tenant.logoUrl; else logoPlaceholder">
-              <img
-                [src]="tenant.logoUrl"
-                class="tenant-logo"
-                crossorigin="anonymous"
-              />
+              <img [src]="tenant.logoUrl" class="tenant-logo" crossorigin="anonymous" />
             </ng-container>
             <ng-template #logoPlaceholder>
               <div class="tenant-logo placeholder">
@@ -1242,24 +893,15 @@
     <div *ngIf="step === 'campaign'" class="campaign-step">
       <div class="left">
         <label for="campaignName" class="form-label">Campaign Name</label>
-        <input
-          id="campaignName"
-          type="text"
-          class="form-control"
-          [(ngModel)]="campaignName"
-          placeholder="Enter campaign name"
-        />
+        <input id="campaignName" type="text" class="form-control" [(ngModel)]="campaignName"
+          placeholder="Enter campaign name" />
       </div>
       <div class="right">
         <label class="form-label">Campaign Type</label>
 
         <div class="campaign-type-selection">
           <label class="campaign-type-card" [class.active]="forSale">
-            <input
-              type="checkbox"
-              [(ngModel)]="forSale"
-              class="visually-hidden"
-            />
+            <input type="checkbox" [(ngModel)]="forSale" class="visually-hidden" />
             <div class="card-content">
               <div class="custom-checkbox">
                 <i *ngIf="forSale" class="fa-solid fa-check"></i>
@@ -1268,17 +910,8 @@
             </div>
           </label>
 
-          <label
-            class="campaign-type-card"
-            (click)="toggleForLease()"
-            [class.active]="forLease"
-          >
-            <input
-              type="checkbox"
-              [(ngModel)]="forLease"
-              class="visually-hidden"
-              (click)="toggleForLease()"
-            />
+          <label class="campaign-type-card" (click)="toggleForLease()" [class.active]="forLease">
+            <input type="checkbox" [(ngModel)]="forLease" class="visually-hidden" (click)="toggleForLease()" />
             <div class="card-content">
               <div class="custom-checkbox">
                 <i *ngIf="forLease" class="fa-solid fa-check"></i>
@@ -1290,24 +923,13 @@
 
         <div class="lease-options-container" *ngIf="forLease">
           <div class="type-options">
-            <div
-              class="type-option"
-              [class.active]="IsStandAlone"
-              (click)="IsStandAlone = !IsStandAlone"
-            >
+            <div class="type-option" [class.active]="IsStandAlone" (click)="IsStandAlone = !IsStandAlone">
               <i class="fa-solid fa-store"></i>
               <span>Standalone Only</span>
-              <i
-                *ngIf="IsStandAlone"
-                class="fa-solid fa-check check-indicator"
-              ></i>
+              <i *ngIf="IsStandAlone" class="fa-solid fa-check check-indicator"></i>
             </div>
 
-            <div
-              class="type-option"
-              [class.active]="isVacant"
-              (click)="isVacant = !isVacant"
-            >
+            <div class="type-option" [class.active]="isVacant" (click)="isVacant = !isVacant">
               <i class="fa-solid fa-shop"></i>
               <span>Vacant Spaces Inside Shopping Center</span>
               <i *ngIf="isVacant" class="fa-solid fa-check check-indicator"></i>
@@ -1319,80 +941,39 @@
         <label class="form-label">Unit Size Range (sq ft)</label>
         <div class="d-flex gap-3">
           <div class="flex-grow-1">
-            <input
-              type="number"
-              class="form-control"
-              placeholder="Min Unit Size"
-              [(ngModel)]="MinUnitSize"
-              min="0"
-            />
+            <input type="number" class="form-control" placeholder="Min Unit Size" [(ngModel)]="MinUnitSize" min="0" />
           </div>
 
           <div class="flex-grow-1">
-            <input
-              type="number"
-              class="form-control"
-              placeholder="Max Unit Size"
-              [(ngModel)]="MaxUnitSize"
-              [min]="MinUnitSize || 0"
-            />
+            <input type="number" class="form-control" placeholder="Max Unit Size" [(ngModel)]="MaxUnitSize"
+              [min]="MinUnitSize || 0" />
           </div>
         </div>
 
-        <div
-          class="text-danger mt-1"
-          *ngIf="MaxUnitSize && MinUnitSize && MaxUnitSize < MinUnitSize"
-        >
+        <div class="text-danger mt-1" *ngIf="MaxUnitSize && MinUnitSize && MaxUnitSize < MinUnitSize">
           Max unit size cannot be smaller than min unit size.
         </div>
       </div>
       <!-- Tenant Search and Selection -->
       <div class="cotenant-selection">
-        <label for="tenantSearch" class="form-label"
-          >Search Complementary and Conflicting Tenants</label
-        >
-        <input
-          type="text"
-          class="form-control cotenant-search"
-          placeholder="Search tenants..."
-          [(ngModel)]="tenantSearch"
-          (ngModelChange)="onTenantSearchChange($event)"
-        />
+        <label for="tenantSearch" class="form-label">Search Complementary and Conflicting Tenants</label>
+        <input type="text" class="form-control cotenant-search" placeholder="Search tenants..."
+          [(ngModel)]="tenantSearch" (ngModelChange)="onTenantSearchChange($event)" />
         <div class="contenats-wrapper">
           <div *ngIf="cotenants.length > 0" class="cotenant-cards">
-            <div
-              class="cotenant-card"
-              *ngFor="let tenant of cotenants"
-              [ngClass]="{
+            <div class="cotenant-card" *ngFor="let tenant of cotenants" [ngClass]="{
                 'complementary-border': isSelected(tenant, 'complementary'),
                 'conflicting-border': isSelected(tenant, 'conflicting')
-              }"
-            >
-              <div
-                class="card-badge"
-                [ngClass]="{
+              }">
+              <div class="card-badge" [ngClass]="{
                   'complementary-badge': isSelected(tenant, 'complementary'),
                   'conflicting-badge': isSelected(tenant, 'conflicting')
-                }"
-              >
-                <span
-                  class="complementary"
-                  *ngIf="isSelected(tenant, 'complementary')"
-                  >Complementary</span
-                >
-                <span
-                  class="conflicting"
-                  *ngIf="isSelected(tenant, 'conflicting')"
-                  >Conflicting</span
-                >
+                }">
+                <span class="complementary" *ngIf="isSelected(tenant, 'complementary')">Complementary</span>
+                <span class="conflicting" *ngIf="isSelected(tenant, 'conflicting')">Conflicting</span>
               </div>
               <div>
-                <img
-                  *ngIf="tenant.logoURL"
-                  [src]="tenant.logoURL"
-                  alt="{{ tenant.name }}"
-                  class="cotenant-logo"
-                />
+                <img *ngIf="tenant.logoURL" [src]="tenant.logoURL" alt="{{ tenant.name }}" class="cotenant-logo" />
                 <div *ngIf="!tenant.logoURL" class="cotenant-logo-placeholder">
                   <i class="fa-solid fa-store"></i>
                 </div>
@@ -1401,16 +982,10 @@
                 </div>
               </div>
               <div class="cotenant-buttons">
-                <button
-                  class="btn btn-success btn-sm"
-                  (click)="addComplementary(tenant, true)"
-                >
+                <button class="btn btn-success btn-sm" (click)="addComplementary(tenant, true)">
                   Complementary
                 </button>
-                <button
-                  class="btn btn-danger btn-sm"
-                  (click)="addConflicting(tenant, true)"
-                >
+                <button class="btn btn-danger btn-sm" (click)="addConflicting(tenant, true)">
                   Conflicting
                 </button>
               </div>
@@ -1418,59 +993,33 @@
           </div>
 
           <div *ngIf="allTenants.length > 0" class="cotenant-cards">
-            <div
-              class="cotenant-card"
-              *ngFor="let tenant of allTenants"
-              [ngClass]="{
+            <div class="cotenant-card" *ngFor="let tenant of allTenants" [ngClass]="{
                 'complementary-border': isSelected2(tenant, 'complementary'),
                 'conflicting-border': isSelected2(tenant, 'conflicting')
-              }"
-            >
-              <div
-                class="card-badge"
-                [ngClass]="{
+              }">
+              <div class="card-badge" [ngClass]="{
                   'complementary-badge': isSelected2(tenant, 'complementary'),
                   'conflicting-badge': isSelected2(tenant, 'conflicting')
-                }"
-              >
-                <span
-                  class="complementary"
-                  *ngIf="isSelected2(tenant, 'complementary')"
-                  >Complementary</span
-                >
-                <span
-                  class="conflicting"
-                  *ngIf="isSelected2(tenant, 'conflicting')"
-                  >Conflicting</span
-                >
+                }">
+                <span class="complementary" *ngIf="isSelected2(tenant, 'complementary')">Complementary</span>
+                <span class="conflicting" *ngIf="isSelected2(tenant, 'conflicting')">Conflicting</span>
               </div>
               <div>
-                <img
-                  *ngIf="tenant.logoURL"
-                  [src]="tenant.logoURL"
-                  alt="{{ tenant.name }}"
-                  class="cotenant-logo"
-                />
+                <img *ngIf="tenant.logoURL" [src]="tenant.logoURL" alt="{{ tenant.name }}" class="cotenant-logo" />
                 <div *ngIf="!tenant.logoURL" class="cotenant-logo-placeholder">
                   <i class="fa-solid fa-store"></i>
                 </div>
                 <div class="cotenant-info">
                   <span class="cotenant-name">{{
                     tenant.RelationOrganizationName
-                  }}</span>
+                    }}</span>
                 </div>
               </div>
               <div class="cotenant-buttons">
-                <button
-                  class="btn btn-success btn-sm"
-                  (click)="addComplementary(tenant)"
-                >
+                <button class="btn btn-success btn-sm" (click)="addComplementary(tenant)">
                   Complementary
                 </button>
-                <button
-                  class="btn btn-danger btn-sm"
-                  (click)="addConflicting(tenant)"
-                >
+                <button class="btn btn-danger btn-sm" (click)="addConflicting(tenant)">
                   Conflicting
                 </button>
               </div>
@@ -1482,40 +1031,24 @@
 
     <!-- Step 3: Locations -->
     <div *ngIf="step === 'polygon'">
-      <app-polygons
-        *ngIf="polygonsStep"
-        (saveLocationCriteria)="handleSave($event, true)"
-        [campaignId]="campaignId"
-      ></app-polygons>
+      <app-polygons *ngIf="polygonsStep" (saveLocationCriteria)="handleSave($event, true)"
+        [campaignId]="campaignId"></app-polygons>
     </div>
   </div>
 
   <div class="modal-footer modal-nav-footer">
-    <button
-      *ngIf="step !== 'tenant'"
-      class="btn btn-outline-secondary back-btn"
-      (click)="prevStep()"
-    >
+    <button *ngIf="step !== 'tenant'" class="btn btn-outline-secondary back-btn" (click)="prevStep()">
       Previous
     </button>
-    <button
-      *ngIf="step === 'tenant'"
-      class="btn btn-primary next-btn ms-auto"
-      [disabled]="!selectedTenant"
-      (click)="nextStep()"
-    >
+    <button *ngIf="step === 'tenant'" class="btn btn-primary next-btn ms-auto" [disabled]="!selectedTenant"
+      (click)="nextStep()">
       Next
     </button>
-    <button
-      *ngIf="step === 'campaign'"
-      class="btn btn-primary next-btn ms-auto"
-      [disabled]="
+    <button *ngIf="step === 'campaign'" class="btn btn-primary next-btn ms-auto" [disabled]="
         !campaignName ||
         (!forSale && !forLease) ||
         (forLease && !(IsStandAlone || isVacant))
-      "
-      (click)="nextStep()"
-    >
+      " (click)="nextStep()">
       Next
     </button>
   </div>
