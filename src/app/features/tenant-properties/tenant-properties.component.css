@@ -65,7 +65,7 @@
 }
 .middle-panel {
   background: #ffffff;
-  padding: 20px;
+  padding: 2px 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
@@ -73,9 +73,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  /* width: 100%; */
-  margin-bottom: 25px;
+  align-items: center; 
 }
 
 .property-dropdown-btn {
@@ -155,8 +153,8 @@
  }
 
 .editor-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
  }
 
 .editor-grid {

@@ -12,7 +12,7 @@
         <div class="info-grid">
             <div class="info-row">
                 <span class="label">Brand</span>
-                <span class="value">{{ tenant.organizationName }}</span>
+                <span class="value">{{ tenant.organizationName | titlecase}}</span>
             </div>
 
             <div class="info-row">
@@ -120,7 +120,7 @@
         <div class="d-flex justify-content-between   w-100 align-items-center">
 
 
-            <h3 class="editor-title">Property Values</h3>
+            <h3 class="editor-title m-0">OPERATOR BUY BOX</h3>
             <div class="property-dropdown dropdown" (click)="$event.stopPropagation()">
 
                 <button class="property-dropdown-btn" (click)="toggleDropdown()">
