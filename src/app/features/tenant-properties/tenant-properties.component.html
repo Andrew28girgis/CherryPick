@@ -1,0 +1,92 @@
+ <div class="tenant-header" *ngIf="tenant">
+    <div class="tenant-info-section">
+      <img [src]="tenant.organizationLogo" class="tenant-logo" />
+      <div>
+        <h2 class="tenant-title">{{ tenant.organizationName }}</h2>
+        <p class="tenant-subtext">Manage property specifications</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="layout-container">
+  
+     <aside class="side-nav">
+      <h3 class="side-nav-title">Properties</h3>
+  
+      <div class="side-nav-list">
+        <div
+          class="side-nav-item"
+          *ngFor="let spec of generalSpecs"
+          [class.active]="selectedPropertyIds.includes(spec.id)"
+          (click)="onPropertyToggle(spec.id)"
+        >
+          <span>{{ spec.specificationName }}</span>
+  
+          <input
+            type="checkbox"
+            class="side-check"
+            [checked]="selectedPropertyIds.includes(spec.id)"
+            (click)="$event.stopPropagation()"
+            (change)="onPropertyToggle(spec.id)"
+          />
+        </div>
+      </div>
+    </aside>
+  
+  
+     <main class="editor-panel" *ngIf="selectedProperties.length > 0">
+      <h3 class="editor-title">Property Values</h3>
+  
+      <div class="editor-grid">
+  
+        <div class="editor-card" *ngFor="let property of selectedProperties">
+  
+          <label class="editor-label">{{ property.specificationName }}</label>
+  
+           <label *ngIf="isBool(property.specificationType)" class="switch">
+            <input type="checkbox" [(ngModel)]="property.value" (change)="updateBooleanValue(property)" />
+            <span class="slider"></span>
+          </label>
+  
+           <input
+            *ngIf="isNumeric(property.specificationType)"
+            type="number"
+            class="editor-input"
+            [(ngModel)]="property.value"
+            (focus)="recordInitialValue(property)"
+            (blur)="updatePropertyValue(property)"
+          />
+  
+           <input
+            *ngIf="isDate(property.specificationType)"
+            type="date"
+            class="editor-input"
+            [(ngModel)]="property.value"
+            (focus)="recordInitialValue(property)"
+            (blur)="updatePropertyValue(property)"
+          />
+  
+           <input
+            *ngIf="isText(property.specificationType)"
+            type="text"
+            class="editor-input"
+            [(ngModel)]="property.value"
+            (focus)="recordInitialValue(property)"
+            (blur)="updatePropertyValue(property)"
+          />
+  
+        </div>
+  
+      </div>
+    </main>
+  
+  </div>
+  
+  
+   <div id="customToast" class="custom-toast delete-toast">
+    <div class="toast-content">
+      <p id="toastMessage"></p>
+    </div>
+  </div>
+  

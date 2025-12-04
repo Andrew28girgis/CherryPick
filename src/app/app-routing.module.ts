@@ -24,6 +24,7 @@ import { ScannedPagesComponent } from './features/scanned-pages/scanned-pages.co
 import { FloatingChatNotificationsComponent } from './shared/components/floating-chat/floating-chat-notifications/floating-chat-notifications.component';
 import { NotificationViewComponent } from './shared/components/floating-chat/notification-view/notification-view.component';
 import { EmailsComponent } from './features/emails/emails.component';
+import { TenantPropertiesComponent } from './features/tenant-properties/tenant-properties.component';
 
 const routes: Routes = [
   {
@@ -97,7 +98,7 @@ const routes: Routes = [
     path: 'landing/:id/:shoppiongCenterId/:campaignId',
     component: LandingComponent,
     data: { hideHeader: true },
-  }, 
+  },
 
   {
     path: 'overview',
@@ -131,7 +132,7 @@ const routes: Routes = [
         (m) => m.AddTenantsModule
       ),
     canActivate: [TenantOnlyGuard, AuthGuardService],
-  }, 
+  },
 
   {
     path: 'market-survey',
@@ -155,6 +156,12 @@ const routes: Routes = [
     path: 'linked',
     component: LinkedSuccesfulyComponent,
     data: { hideHeader: true },
+  },
+  {
+    path: 'tenant-properties/:organizationId',
+ 
+    component: TenantPropertiesComponent,
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'Kanban',
@@ -201,7 +208,7 @@ const routes: Routes = [
         (m) => m.ShoppingModule
       ),
     canActivate: [AuthGuardService, TenantOnlyGuard],
-  }, 
+  },
   {
     path: 'spinner',
     component: AiSpinnerComponent,
@@ -211,13 +218,13 @@ const routes: Routes = [
     path: 'aiFailed',
     component: AiFailedComponent,
     data: { hideHeader: true, hideSidebar: true },
-  }, 
+  },
   {
     path: 'dashboard/:campaignId',
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
-  }, 
+  },
   {
     path: 'contacts',
     component: ContactsComponent,

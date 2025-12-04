@@ -43,6 +43,9 @@ import { DatePipe } from '@angular/common';
 import { FloatingChatComponent } from './shared/components/floating-chat/floating-chat/floating-chat.component'; 
 import { EmailsComponent } from './features/emails/emails.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
+import { TenantPropertiesComponent } from './features/tenant-properties/tenant-properties.component';
+ import { CommonModule } from '@angular/common';
+ 
  @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +63,8 @@ import { ContactsComponent } from './features/contacts/contacts.component';
     NotificationsOnlyComponentComponent,
     FloatingChatComponent,
     EmailsComponent, 
-    ContactsComponent
+    ContactsComponent,
+    TenantPropertiesComponent,
    ],
   imports: [
     BrowserModule,
@@ -68,6 +72,7 @@ import { ContactsComponent } from './features/contacts/contacts.component';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    CommonModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
     NgbModule,

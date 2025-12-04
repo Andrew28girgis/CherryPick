@@ -523,45 +523,42 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       this.step = 'campaign';
       return;
     }
-  
+
     if (this.step === 'campaign') {
       this.saveSelectedTenants();
       this.step = 'polygon';
       this.polygonsStep = true;
       return;
     }
-  
+
     if (this.step === 'polygon') {
       this.polygonsStep = false;
       this.step = 'sections';
       return;
     }
   }
-  
+
   prevStep() {
     if (this.step === 'sections') {
       this.step = 'polygon';
       this.polygonsStep = true;
       return;
     }
-  
+
     if (this.step === 'polygon') {
       this.step = 'campaign';
       this.polygonsStep = false;
       return;
     }
-  
+
     if (this.step === 'campaign') {
       this.step = 'tenant';
       return;
     }
   }
-  
 
   finish(): void {
     // if (!this.selectedTenant) return;
-console.log('1111111111');
-
     this.refreshService.requestPolygonSave(this.selectedTenant.id);
   }
 
@@ -583,8 +580,6 @@ console.log('1111111111');
   }
 
   handleSave(locationData: any, editing?: boolean) {
-    console.log('rrrrrrrrrrrrrrrrr');
-    
     const campaignLocations = locationData.locationCriteria.locations.map(
       (loc: any) => ({
         State: loc.state ?? '',
@@ -601,7 +596,7 @@ console.log('1111111111');
           this.campaignName,
           this.selectedTenant.id,
           this.selectedTenant.name,
-          this.IsStandAlone?this.IsStandAlone:this.forSale?true:false,
+          this.IsStandAlone ? this.IsStandAlone : this.forSale ? true : false,
           this.forLease,
           this.forSale,
           this.isVacant,
@@ -1150,7 +1145,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         body.CampaignName,
         body.OrganizationId,
         body.name,
-        body.IsStandAlone?body.IsStandAlone:body.ForSale?true:false,
+        body.IsStandAlone ? body.IsStandAlone : body.ForSale ? true : false,
         body.ForLease,
         body.ForSale,
         body.isVacant,
@@ -1195,7 +1190,7 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
         this.campaignName,
         this.selectedTenant.id,
         this.selectedTenant.name,
-        this.IsStandAlone?this.IsStandAlone:this.forSale?true:false,
+        this.IsStandAlone ? this.IsStandAlone : this.forSale ? true : false,
         this.forLease,
         this.forSale,
         this.isVacant,
@@ -1241,29 +1236,24 @@ Encourage the broker to provide any missing details, and if needed, offer to sea
       Name: 'GetCampaignSections',
       Params: {},
     };
-  
+
     this.placesService.BetaGenericAPI(body).subscribe({
       next: (response) => {
         this.sectionsInputs = response.json;
-  
-         this.sectionsInputs.forEach(item => {
-          item.userInput = "";
+
+        this.sectionsInputs.forEach((item) => {
+          item.userInput = '';
         });
       },
-      error: err => console.error(err)
+      error: (err) => console.error(err),
     });
   }
-  
+
   submit() {
-    const payload = this.sectionsInputs.map(section => ({
+    const payload = this.sectionsInputs.map((section) => ({
       id: section.id,
-      userInput: section.userInput
+      userInput: section.userInput,
     }));
-  
-    console.log("Payload:", payload);
   }
-  onSearch(section: any) {
-    console.log("Section:", section.sectionName);
-    console.log("Input value:", section.userInput);
-  }
+  onSearch(section: any) {}
 }

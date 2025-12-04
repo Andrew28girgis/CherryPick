@@ -88,6 +88,9 @@
                 <button class="menu-item" (click)="viewSpecsNew(campaign, true); closeMenu()">
                   Edit Campaign
                 </button>
+                <button class="menu-item" [routerLink]="['/tenant-properties', campaign.OrganizationId]">
+                  properties
+                </button>
                 <!-- <button
                   class="menu-item"
                   (click)="editWithEMily(campaign); closeMenu()"
@@ -257,6 +260,9 @@
                           </button>
                           <button ngbDropdownItem (click)="deleteCampaign(campaign.Id)">
                             Delete Campaign
+                          </button>
+                          <button class="menu-item" [routerLink]="['/tenant-properties', campaign.OrganizationId]">
+                            properties
                           </button>
                         </div>
                       </div>

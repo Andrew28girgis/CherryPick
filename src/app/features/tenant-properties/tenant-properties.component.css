@@ -1,0 +1,170 @@
+ 
+.tenant-header {
+  background: #fff;
+  padding: 20px 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+.tenant-info-section {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.tenant-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.tenant-subtext {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+} 
+.layout-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 25px;
+}
+
+ 
+.side-nav {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  height: fit-content;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.side-nav-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.side-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.side-nav-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.side-nav-item:hover {
+  background: #eef2ff;
+}
+
+.side-nav-item.active {
+  background: #e0e7ff;
+  border-color: #6366f1;
+  font-weight: 600;
+}
+
+.side-check {
+  width: 18px;
+  height: 18px;
+}
+
+ 
+.editor-panel {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.editor-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.editor-card {
+  background: #f9fafc;
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  transition: 0.2s ease;
+}
+
+.editor-card:hover {
+  background: #eef2ff;
+}
+
+.editor-label {
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.editor-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  transition: 0.2s ease;
+}
+
+.editor-input:focus {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+
+ .switch {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  display: inline-block;
+}
+
+.switch input {
+  opacity: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 22px;
+  transition: 0.25s;
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  left: 2px;
+  top: 2px;
+  transition: 0.25s;
+}
+
+input:checked + .slider {
+  background: #6366f1;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
