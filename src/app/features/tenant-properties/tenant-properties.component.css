@@ -3,6 +3,7 @@
   grid-template-columns: 300px 1fr;
   gap: 24px;
   margin-top: 20px;
+  align-items: start;
 }
 .snapshot-panel {
   background: #ffffff;
