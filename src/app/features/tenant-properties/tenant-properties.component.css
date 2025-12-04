@@ -75,7 +75,32 @@
   border: 1px solid #e5e7eb;
   transition: 0.2s ease;
 }
- 
+.tenant-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.property-dropdown-menu {
+  animation: dropdownFadeStrong 0.35s ease-out;
+  transform-origin: top center;
+}
+
+@keyframes dropdownFadeStrong {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+  }
+  60% {
+    opacity: 0.6;
+    transform: translateY(-4px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 
 .editor-label {
   font-weight: 600;
