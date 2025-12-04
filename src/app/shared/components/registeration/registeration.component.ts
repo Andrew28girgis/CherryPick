@@ -112,7 +112,7 @@ export class RegisterationComponent implements OnInit {
                 this.spinner.hide();
               },
             });
-          }
+          },
         });
       },
     });

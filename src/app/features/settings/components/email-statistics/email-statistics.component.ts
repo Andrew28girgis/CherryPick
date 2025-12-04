@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { Statistics } from 'src/app/shared/models/email-statistics';
- 
 
 @Component({
   selector: 'app-email-statistics',

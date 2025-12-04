@@ -2,8 +2,8 @@
     <div class="tenant-info-section">
         <img [src]="tenant.organizationLogo" class="tenant-logo" />
         <div>
-            <h2 class="tenant-title">{{ tenant.organizationName }}</h2>
-            <p class="tenant-subtext">Manage property specifications</p>
+            <h2 class="tenant-title">{{ tenant.organizationName | uppercase}}</h2>
+            <p class="tenant-subtext"><b>{{ tenant.organizationName | titlecase }}</b> Command Center</p>
         </div>
     </div>
 
@@ -36,7 +36,7 @@
 </div>
 
 <main class="editor-panel" *ngIf="selectedProperties.length > 0">
-    <h3 class="editor-title">Property Values</h3>
+    <h3 class="editor-title">OPERATOR BUY BOX</h3>
 
     <div class="editor-grid">
 
