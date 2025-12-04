@@ -15,6 +15,7 @@ export class TenantPropertiesComponent implements OnInit {
   selectedProperties: any[] = [];
   previousValues: { [id: number]: any } = {};
   dropdownOpen = false;
+  searchText = '';
 
   constructor(
     private placesService: PlacesService,
@@ -77,7 +78,7 @@ export class TenantPropertiesComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   closeDropdownOnClickOutside(event: any) {
-    if (!event.target.closest('.dropdown')) {
+    if (!event.target.closest('.property-dropdown')) {
       this.dropdownOpen = false;
     }
   }
