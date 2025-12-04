@@ -8,11 +8,17 @@ import { PlacesService } from 'src/app/core/services/places.service';
   styleUrls: ['./tenant-properties.component.css'],
 })
 export class TenantPropertiesComponent implements OnInit {
+  
   organizationId: any;
   tenant: any = null;
+
   generalSpecs: any[] = [];
   selectedPropertyIds: number[] = [];
   selectedProperties: any[] = [];
+
+  groupedGeneralSpecs: Record<string, any[]> = {};
+  groupedSelectedProperties: Record<string, any[]> = {};
+  
   previousValues: { [id: number]: any } = {};
   dropdownOpen = false;
   searchText = '';
@@ -31,14 +37,23 @@ export class TenantPropertiesComponent implements OnInit {
     this.loadOrganizationSpecifications();
   }
 
+  /* -----------------------------------------------------
+     LOAD GENERAL SPECS
+     ----------------------------------------------------- */
   loadGeneralSpecifications() {
     const body = { Name: 'GetGeneralSpecifications', Params: {} };
 
     this.placesService.GenericAPI(body).subscribe({
-      next: (res: any) => (this.generalSpecs = res.json || []),
+      next: (res: any) => {
+        this.generalSpecs = res.json || [];
+        this.groupedGeneralSpecs = this.groupByGroup(this.generalSpecs);
+      },
     });
   }
 
+  /* -----------------------------------------------------
+     LOAD ORG SPECS
+     ----------------------------------------------------- */
   loadOrganizationSpecifications() {
     const body = {
       Name: 'GetOrganizationSpecs',
@@ -48,7 +63,7 @@ export class TenantPropertiesComponent implements OnInit {
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         const result = res.json || [];
-        if (result.length === 0) return;
+        if (!result.length) return;
 
         this.tenant = {
           organizationName: result[0].organizationName,
@@ -61,17 +76,35 @@ export class TenantPropertiesComponent implements OnInit {
             id: x.realEstateSpecificationId,
             specificationName: x.realEstateSpecificationName,
             specificationType: x.specificationType,
+            specificationGroup: x.specificationGroup,   // ⭐ NEW
             value: x.value,
           }));
 
         setTimeout(() => {
-          this.selectedPropertyIds = props.map((p: any) => p.id);
+          this.selectedPropertyIds = props.map((p:any) => p.id);
           this.selectedProperties = [...props];
+          this.groupedSelectedProperties = this.groupByGroup(this.selectedProperties);
         }, 0);
       },
     });
   }
 
+  /* -----------------------------------------------------
+     GROUPING FUNCTION (USED BY BOTH DROPDOWN & EDITOR)
+     ----------------------------------------------------- */
+  groupByGroup(list: any[]) {
+    const groups: any = {};
+    list.forEach(item => {
+      const groupName = item.specificationGroup || 'Other';
+      if (!groups[groupName]) groups[groupName] = [];
+      groups[groupName].push(item);
+    });
+    return groups;
+  }
+
+  /* -----------------------------------------------------
+     DROPDOWN CONTROL
+     ----------------------------------------------------- */
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
   }
@@ -83,32 +116,23 @@ export class TenantPropertiesComponent implements OnInit {
     }
   }
 
-  showToast(message: string) {
-    const toast = document.getElementById('customToast');
-    const msg = document.getElementById('toastMessage');
-    if (!toast || !msg) return;
-
-    msg.innerText = message;
-    toast.classList.add('show');
-
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  }
-
-  onPropertyToggle(specId: number) {
-    const isSelected = this.selectedPropertyIds.includes(specId);
-
+  /* -----------------------------------------------------
+     SELECTION CONTROL
+     ----------------------------------------------------- */
+  onPropertyToggle(id: number) {
+    const isSelected = this.selectedPropertyIds.includes(id);
     if (isSelected) {
-      this.removePropertySelection(specId);
+      this.removePropertySelection(id);
     } else {
-      this.addPropertySelection(specId);
+      this.addPropertySelection(id);
     }
-   }
+  }
 
   addPropertySelection(id: number) {
     if (!this.selectedPropertyIds.includes(id)) {
       this.selectedPropertyIds.push(id);
     }
-  
+
     const body = {
       Name: 'InsertOrganizationSpecsRef',
       Params: {
@@ -116,19 +140,17 @@ export class TenantPropertiesComponent implements OnInit {
         RealEstateSpecificationIds: id.toString(),
       },
     };
-  
+
     this.placesService.GenericAPI(body).subscribe(() => {
       this.showToast('Property added');
-  
-       this.loadOrganizationSpecifications();
+      this.loadOrganizationSpecifications();
     });
   }
-  
 
   removePropertySelection(id: number) {
-    this.selectedPropertyIds = this.selectedPropertyIds.filter((x) => x !== id);
+    this.selectedPropertyIds = this.selectedPropertyIds.filter(x => x !== id);
     delete this.previousValues[id];
-  
+
     const body = {
       Name: 'DeleteOrganizationSpec',
       Params: {
@@ -136,14 +158,16 @@ export class TenantPropertiesComponent implements OnInit {
         RealEstateSpecificationId: id,
       },
     };
-  
+
     this.placesService.GenericAPI(body).subscribe(() => {
       this.showToast('Property removed');
-  
-       this.loadOrganizationSpecifications();
+      this.loadOrganizationSpecifications();
     });
   }
-  
+
+  /* -----------------------------------------------------
+     VALUE EDITING
+     ----------------------------------------------------- */
   recordInitialValue(property: any) {
     this.previousValues[property.id] = property.value;
   }
@@ -154,14 +178,12 @@ export class TenantPropertiesComponent implements OnInit {
 
     if (oldValue === newValue || (oldValue == null && newValue === '')) return;
 
-    const value = this.convertValue(property);
-
     const body = {
       Name: 'InsertOrganizationSpecValue',
       Params: {
         RealEstateSpecificationId: property.id,
         OrganizationId: this.organizationId,
-        Value: value,
+        Value: this.convertValue(property),
       },
     };
 
@@ -172,14 +194,12 @@ export class TenantPropertiesComponent implements OnInit {
   }
 
   updateBooleanValue(property: any) {
-    const value = this.convertValue(property);
-
     const body = {
       Name: 'InsertOrganizationSpecValue',
       Params: {
         RealEstateSpecificationId: property.id,
         OrganizationId: this.organizationId,
-        Value: value,
+        Value: this.convertValue(property),
       },
     };
 
@@ -188,14 +208,15 @@ export class TenantPropertiesComponent implements OnInit {
     });
   }
 
+  /* -----------------------------------------------------
+     VALUE CONVERSION HELPERS
+     ----------------------------------------------------- */
   convertValue(prop: any) {
     const type = (prop.specificationType || '').toLowerCase();
 
     if (['bool', 'boolean'].includes(type)) return prop.value === true;
 
-    if (
-      ['double', 'float', 'decimal', 'number', 'int', 'integer'].includes(type)
-    ) {
+    if (['double', 'float', 'decimal', 'number', 'int', 'integer'].includes(type)) {
       const num = Number(prop.value);
       return isNaN(num) ? null : num;
     }
@@ -207,24 +228,46 @@ export class TenantPropertiesComponent implements OnInit {
     return prop.value?.toString() || '';
   }
 
+  /* -----------------------------------------------------
+     TYPE HELPERS
+     ----------------------------------------------------- */
   isBool(type: any) {
     return ['bool', 'boolean'].includes((type || '').toLowerCase());
   }
 
   isNumeric(type: any) {
-    return ['double', 'float', 'decimal', 'number', 'int', 'integer'].includes(
-      (type || '').toLowerCase()
-    );
+    return ['double', 'float', 'decimal', 'number', 'int', 'integer']
+      .includes((type || '').toLowerCase());
   }
 
   isDate(type: any) {
-    return ['date', 'datetime', 'timestamp'].includes(
-      (type || '').toLowerCase()
-    );
+    return ['date', 'datetime', 'timestamp']
+      .includes((type || '').toLowerCase());
   }
 
   isText(type: any) {
     return !this.isBool(type) && !this.isNumeric(type) && !this.isDate(type);
+  }
+
+  /* -----------------------------------------------------
+     TOAST
+     ----------------------------------------------------- */
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const msg = document.getElementById('toastMessage');
+    if (!toast || !msg) return;
+
+    msg.innerText = message;
+    toast.classList.add('show');
+
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+  groupHasMatches(group: any[], searchText: string): boolean {
+    if (!searchText) return true;
+    const text = searchText.toLowerCase();
+    return group.some(x =>
+      x.specificationName.toLowerCase().includes(text)
+    );
   }
   
 }

@@ -1,71 +1,237 @@
-<div class="tenant-header" *ngIf="tenant">
-    <div class="tenant-info-section">
-        <img [src]="tenant.organizationLogo" class="tenant-logo" />
-        <div>
-            <h2 class="tenant-title">{{ tenant.organizationName | uppercase}}</h2>
-            <p class="tenant-subtext"><b>{{ tenant.organizationName | titlecase }}</b> Command Center</p>
+<div class="layout-container">
+
+    <!-- LEFT SNAPSHOT PANEL (STRUCTURE FROM IMAGE) -->
+
+    <aside class="snapshot-panel" *ngIf="tenant">
+
+        <!-- PANEL TITLE -->
+        <h3 class="panel-title">OPERATOR SNAPSHOT</h3>
+        <div class="panel-divider"></div>
+
+        <!-- TENANT INFO GRID (matches screenshot layout) -->
+        <div class="info-grid">
+            <div class="info-row">
+                <span class="label">Brand</span>
+                <span class="value">{{ tenant.organizationName }}</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Concept</span>
+                <span class="value">Premium Casual</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Cuisine</span>
+                <span class="value">Global Fusion</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Units</span>
+                <span class="value">12 Open</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Model</span>
+                <span class="value">Aggressive Expansion</span>
+            </div>
         </div>
-    </div>
 
-    <!-- DROPDOWN MOVED HERE -->
-    <div class="property-dropdown dropdown" (click)="$event.stopPropagation()">
-        <button class="property-dropdown-btn" (click)="toggleDropdown()">
-            Select Properties
-            <i class="fa-solid fa-angle-down" [class.open]="dropdownOpen"></i>
-        </button>
+        <!-- RISKS -->
+        <p class="info-note">
+            Note: Position attracts affluent lunch diners.
+        </p>
 
-        <div class="property-dropdown-menu" *ngIf="dropdownOpen">
+        <!-- GEOGRAPHY SECTION -->
+        <h3 class="panel-title">GEOGRAPHY & TRADE</h3>
+        <div class="panel-divider"></div>
 
-            <input type="text" class="property-search" placeholder="Search properties..." [(ngModel)]="searchText" />
+        <div class="info-block">
+            <div class="info-subrow">
+                <span class="label">Primary</span>
+                <span class="value">Metro Region</span>
+            </div>
+            <div class="info-subrow">
+                <span class="label">Drive Time</span>
+                <span class="value">7 - 10 min</span>
+            </div>
+            <div class="info-subrow">
+                <span class="label">Env</span>
+                <span class="value">Grocery Anchored</span>
+            </div>
+        </div>
 
-            <div class="property-dropdown-list">
-                <ng-container *ngFor="let spec of generalSpecs">
-                    <div class="property-dropdown-item"
-                        *ngIf="!searchText || spec.specificationName.toLowerCase().includes(searchText.toLowerCase())"
-                        [class.active]="selectedPropertyIds.includes(spec.id)" (click)="onPropertyToggle(spec.id)">
-                        <span>{{ spec.specificationName }}</span>
+        <!-- GROUNDING LAYERS -->
+        <h3 class="panel-title">GROUNDING LAYERS</h3>
+        <div class="panel-divider"></div>
 
-                        <input type="checkbox" [checked]="selectedPropertyIds.includes(spec.id)"
-                            (click)="$event.stopPropagation()" (change)="onPropertyToggle(spec.id)" />
+        <div class="layer-row">
+            <span class="layer-ind green"></span>
+            <span>Co-Tenancy Pack</span>
+        </div>
+        <div class="layer-row">
+            <span class="layer-ind blue"></span>
+            <span>Trade Area Pack</span>
+        </div>
+        <div class="layer-row">
+            <span class="layer-ind yellow"></span>
+            <span>Legal & Zoning</span>
+        </div>
+        <div class="layer-row">
+            <span class="layer-ind red"></span>
+            <span>Incentives Pack</span>
+        </div>
+
+<!-- KNOWLEDGE DOCK SECTION -->
+<h3 class="panel-title mt-3">KNOWLEDGE DOCK</h3>
+<div class="panel-divider"></div>
+
+<div class="dock-list">
+
+  <div class="dock-item">
+    <i class="fa-regular fa-file-lines dock-icon"></i>
+    <span>Lease Abstract.pdf</span>
+  </div>
+
+  <div class="dock-item">
+    <i class="fa-regular fa-file-lines dock-icon"></i>
+    <span>Brand Guidelines.dxf</span>
+  </div>
+
+  <div class="dock-item">
+    <i class="fa-regular fa-file-lines dock-icon"></i>
+    <span>Operational Playbook.pdf</span>
+  </div>
+
+  <div class="dock-item">
+    <i class="fa-regular fa-file-lines dock-icon"></i>
+    <span>Expansion Strategy Notes.pdf</span>
+  </div>
+
+</div>
+
+
+    </aside>
+
+
+    <!-- MIDDLE PANEL (YOUR DROPDOWN + PROPERTY VALUES) -->
+    <section class="middle-panel">
+
+        <!-- Searchable Grouped Dropdown -->
+        <div class="d-flex justify-content-between   w-100 align-items-center">
+
+
+            <h3 class="editor-title">Property Values</h3>
+            <div class="property-dropdown dropdown" (click)="$event.stopPropagation()">
+
+                <button class="property-dropdown-btn" (click)="toggleDropdown()">
+                    Select Properties
+                    <i class="fa-solid fa-angle-down" [class.open]="dropdownOpen"></i>
+                </button>
+
+                <div class="property-dropdown-menu" *ngIf="dropdownOpen">
+
+                    <!-- SEARCH INPUT -->
+                    <input type="text" class="property-search" placeholder="Search properties..."
+                        [(ngModel)]="searchText" />
+
+                    <!-- GROUPED LIST -->
+                    <div class="property-dropdown-list">
+
+                        <!-- Loop through groups -->
+                        <ng-container *ngFor="let group of groupedGeneralSpecs | keyvalue">
+
+                            <!-- Show group ONLY if it has visible items -->
+                            <ng-container *ngIf="groupHasMatches(group.value, searchText)">
+                          
+                              <!-- GROUP TITLE -->
+                              <div class="dropdown-group-title">
+                                {{ group.key }}
+                              </div>
+                          
+                              <!-- ITEMS -->
+                              <ng-container *ngFor="let spec of group.value">
+                                <div
+                                  class="property-dropdown-item"
+                                  *ngIf="!searchText || spec.specificationName.toLowerCase().includes(searchText.toLowerCase())"
+                                  [class.active]="selectedPropertyIds.includes(spec.id)"
+                                  (click)="onPropertyToggle(spec.id)"
+                                >
+                                  <span>{{ spec.specificationName }}</span>
+                          
+                                  <input
+                                    type="checkbox"
+                                    [checked]="selectedPropertyIds.includes(spec.id)"
+                                    (click)="$event.stopPropagation()"
+                                    (change)="onPropertyToggle(spec.id)"
+                                  />
+                                </div>
+                              </ng-container>
+                          
+                            </ng-container>
+                          
+                          </ng-container>
+                          
+
                     </div>
-                </ng-container>
+                </div>
             </div>
 
         </div>
-    </div>
+
+
+        <main class="editor-panel" *ngIf="selectedProperties.length > 0">
+
+            <div class="editor-group" *ngFor="let group of (groupedSelectedProperties | keyvalue)">
+
+                <!-- GROUP TITLE -->
+                <div class="editor-group-title">
+                    {{ group.key }}
+                </div>
+
+                <!-- GROUP ROWS -->
+                <div class="spec-row" *ngFor="let property of group.value">
+
+                    <div class="spec-label">{{ property.specificationName }}</div>
+
+                    <div class="spec-input">
+
+                        <!-- BOOL -->
+                        <label *ngIf="isBool(property.specificationType)" class="switch">
+                            <input type="checkbox" [(ngModel)]="property.value"
+                                (change)="updateBooleanValue(property)" />
+                            <span class="slider"></span>
+                        </label>
+
+                        <!-- NUMBER -->
+                        <input *ngIf="isNumeric(property.specificationType)" type="number" class="spec-field"
+                            [(ngModel)]="property.value" (focus)="recordInitialValue(property)"
+                            (blur)="updatePropertyValue(property)" />
+
+                        <!-- DATE -->
+                        <input *ngIf="isDate(property.specificationType)" type="date" class="spec-field"
+                            [(ngModel)]="property.value" (focus)="recordInitialValue(property)"
+                            (blur)="updatePropertyValue(property)" />
+
+                        <!-- TEXT -->
+                        <input *ngIf="isText(property.specificationType)" type="text" class="spec-field"
+                            [(ngModel)]="property.value" (focus)="recordInitialValue(property)"
+                            (blur)="updatePropertyValue(property)" />
+
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+
+
+    </section>
+
 </div>
 
-<main class="editor-panel" *ngIf="selectedProperties.length > 0">
-    <h3 class="editor-title">OPERATOR BUY BOX</h3>
 
-    <div class="editor-grid">
-
-        <div class="editor-card" *ngFor="let property of selectedProperties">
-
-            <label class="editor-label">{{ property.specificationName }}</label>
-
-            <label *ngIf="isBool(property.specificationType)" class="switch">
-                <input type="checkbox" [(ngModel)]="property.value" (change)="updateBooleanValue(property)" />
-                <span class="slider"></span>
-            </label>
-
-            <input *ngIf="isNumeric(property.specificationType)" type="number" class="editor-input"
-                [(ngModel)]="property.value" (focus)="recordInitialValue(property)"
-                (blur)="updatePropertyValue(property)" />
-
-            <input *ngIf="isDate(property.specificationType)" type="date" class="editor-input"
-                [(ngModel)]="property.value" (focus)="recordInitialValue(property)"
-                (blur)="updatePropertyValue(property)" />
-
-            <input *ngIf="isText(property.specificationType)" type="text" class="editor-input"
-                [(ngModel)]="property.value" (focus)="recordInitialValue(property)"
-                (blur)="updatePropertyValue(property)" />
-
-        </div>
-
-    </div>
-</main>
-
+<!-- Toast -->
 <div id="customToast" class="custom-toast delete-toast">
     <div class="toast-content">
         <p id="toastMessage"></p>
